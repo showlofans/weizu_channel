@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="ie8" lang="en"><![endif]-->
+<!--[if IE 9]><html class="ie9" lang="en"><![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+ <!--<![endif]-->
+ <head>
+ 	<META HTTP-EQUIV="Pragma" CONTENT="no-cache"> 
+	<META HTTP-EQUIV="Cache-Control" CONTENT="no-cache"> 
+	<META HTTP-EQUIV="Expires" CONTENT="0"> 
+  <title>流量充值</title>
+  <!--[if IE]><meta http-equiv='X-UA-Compatible' content="IE=edge,IE=9,IE=8,chrome=1" /><![endif]-->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,minimum-scale=1,maximum-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta content="" name="description" />
+  <meta content="" name="author" />
+<link href="../view/static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+<link href="../view/static/h-ui.admin/css/H-ui.login.css" rel="stylesheet" type="text/css" />
+<link href="../view/static/h-ui.admin/css/style.css" rel="stylesheet" type="text/css" />
+<link href="../view/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+ </head>
+ <body>
+ <article class="page-container">
+ 	<form class="form form-horizontal" action="pg_charge.do" method="post" id="form-admin-add">
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机号码：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" onblur="ajaxPhone()" value="" placeholder="" id="chargeTel" name="chargeTel">
+			<span class="error"></span>
+		</div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>归属地：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" autocomplete="off"  placeholder="" id="chargeTelDetail" name="chargeTelDetail">
+		</div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流量面值：</label>
+		<div id="pg" class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" autocomplete="off"  placeholder="" id="pgName" name="pgName">
+			<!-- <div>
+				<span class="pgName"></span>
+				<span style="display:none;" class="pgName"></span>
+				<span style="display:none;" class="pgPrice"></span>
+				<span style="display:none;"  class="pgName"></span>
+			</div> -->
+			<!-- <input type="password" class="input-text" autocomplete="off"  placeholder="确认新密码" id="password2" name="password2"> -->
+		</div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>采购金额：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="password" class="input-text" autocomplete="off" value="" placeholder="密码" id="password" name="password">
+		</div>
+	</div>
+	</form>
+</article>
+ </body>
+  <script type="text/javascript" src="../view/lib/jquery/1.9.1/jquery.min.js"></script> 
+ <script type="text/javascript">
+ /**通过用户手机号获得基本信息*/
+ 	var tel;
+ 	var operators;
+    var ajax=function(){
+        //淘宝接口    
+        $.ajax({
+             type: "get",
+             url: 'http://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel='+tel,
+             dataType: "jsonp",
+             contentType: "application/x-www-form-urlencoded; charset=utf-8", 
+             jsonp: "callback",
+             success: function(data){
+                console.log(data);
+                operators = data.catName;
+                ajax2();
+               // $('.error').css('display','none');
+               var location = data.location;
+               var  carrier = data.carrier,
+                province = data.province,
+                    num = data.telString; 
+             $('#chargeTelDetail').val(carrier);  
+              //$('#chargeTelDetail').val(location);  
+                
+               /*  $('.num span').html(num);
+                
+                $('.province span').html(province);
+                $('.operators span').html(operators);
+                $('.carrier span').html(carrier); */
+             },
+             error:function (){    
+             /*    $('li span').html(''); */   
+                $('.error').html('手机号不合法 ').css('display','block');     
+             }
+         });
+    };
+    /**radio选中事件*/
+    function changeValue(vart){
+    	if($(vart).is(':checked')){
+    		$("#pgName").val(vart.val());
+    		alert($(vart).privous().val());
+    	}
+    }
+    var ajax2=function(){
+        //查询流量包
+        $.ajax({
+             type: "get",
+             async: false,
+             url: '../pgList_forPurchase.do?operatorType='+ operators,
+             dataType: "json",
+             contentType: "application/x-www-form-urlencoded; charset=utf-8", 
+             jsonp: "callback",
+             success: function(data){
+                for(var i=0; i < data.length; i++){
+                	var og = data[i];
+                	/* if((i+1) % 2 == 0){
+                		var dott = "<br/>";
+                		dott.appendTo('#pg');
+                	} */
+                	$('<input />', {
+    	    	        name: 'pgName',
+    	    	        type: 'radio',
+    	    	        onclick:changeValue(this),
+    	    	        val: og.pgName
+    	    	      }).appendTo($('#pg'));
+                	$('<label>', {
+    	    	        text:og.pgName
+    	    	      }).appendTo($('#pg'));
+                	$('<input />', {
+    	    	        name: 'pgPrice',
+    	    	        type: 'hidden',
+    	    	        value: og.pgPrice
+    	    	      }).appendTo($('#pg')); 
+                }
+             },
+             error:function (){    
+                $('.error').html('手机号不合法 ').css('display','block');     
+             }
+         });
+    }
+   
+    var reg = /^(13|15|18)[0-9]{9}$/;//点击查询
+    function ajaxPhone(){
+    	 tel=$('input[name=chargeTel]').val();
+         if(tel){
+             if(reg.test(tel)){
+                 ajax();
+                 
+             }else{
+                 $('.error').html('手机号不合法 ').css('display','block');    
+             }
+         }
+    }
+    //键盘事件
+    $(window).keydown(function(event){
+        tel=$('input[name=chargeTel]').val();
+        if(event.keyCode==13) {
+            if(tel){
+                if(reg.test(tel)){
+                    ajax();
+                }else{
+                    $('.error').html('手机号不合法 ').css('display','block');    
+                }
+            }
+        }
+    });
+ </script>
+</html>

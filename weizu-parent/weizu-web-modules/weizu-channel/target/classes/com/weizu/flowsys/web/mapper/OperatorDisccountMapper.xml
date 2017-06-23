@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weizu.flowsys.web.activity.dao.IOperatorDiscountDao" >
+  <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.activity.pojo.OperatorDiscountPo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="operator_type" property="operatorType" jdbcType="INTEGER" />
+    <result column="scope_name" property="scopeName" jdbcType="VARCHAR" />
+    <result column="discount" property="discount" jdbcType="DOUBLE" />
+    <result column="rate_name" property="rateName" jdbcType="VARCHAR" />
+    <result column="rate_id" property="rateId" jdbcType="BIGINT" />
+    <result column="root_agency_id" property="rootAgencyId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, operator_type, scope_name, discount, rate_name, root_agency_id,rate_id
+  </sql>
+  
+  <sql id="t_odisccount">operator_discount</sql>
+  
+  <!-- 批量添加费率 -->
+  <insert id="disccount_addList" useGeneratedKeys="true" parameterType="java.util.List">
+  	insert into <include refid="t_odisccount"></include>
+  	(operator_type, scope_name, discount, rate_name, root_agency_id,rate_id)
+  	values
+  	<foreach collection="list" item="item" separator="," index="index">
+  		(#{item.operatorType},#{item.scopeName},#{item.discount},
+  		#{item.rateName},#{item.rootAgencyId},#{item.rateId})
+  	</foreach>
+  </insert>
+  
+  
+  <!-- 通过登录用户id查询费率列表 -->
+  <!-- <select id="selectByAgencyId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	SELECT * FROM <include refid="t_odisccount"></include> 
+  	<where>
+  		<include refid="ByAgencyId_sql"></include>
+  	</where>
+  	<if test="start != null">
+	 	limit #{start}
+	 </if>
+	 <if test="end != null">
+	 	, #{end}
+	 </if>
+	 <if test="start == null &amp; end == null">
+	 	limit 0,10
+	 </if> 
+  </select>
+  <sql id="ByAgencyId_sql">
+  	<if test="_paramter != null">
+  		AND root_agency_id = #{_paramter}
+  	</if>
+  	<if test="rootAgencyId != null">
+  		AND root_agency_id = #{rootAgencyId}
+  	</if>
+  </sql> -->
+  <!-- 通过条件查询费率列表 -->
+   <select id="selectDiscountByPo" parameterType="com.weizu.flowsys.web.activity.pojo.OperatorDiscountPo" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List"></include> 
+  	FROM <include refid="t_odisccount"></include> 
+  	<where>
+  		<include refid="rate_condition_sql"></include>
+  	</where>
+   </select>
+  
+  <!-- 通过登录用户id查询费率列表 -->
+ <!--  <select id="countByAgencyId" parameterType="java.lang.Integer">
+  	SELECT count(*) FROM <include refid="t_odisccount"></include> 
+  	where root_agency_id = #{_parameter};
+  </select> -->
+  
+  <!-- 查询登录用户是否有该费率名称 -->
+  <select id="checkRateName" parameterType="com.weizu.flowsys.web.activity.pojo.OperatorDiscountPo" resultType="java.lang.Integer">
+  	SELECT count(rate_name) FROM <include refid="t_odisccount"></include>
+  	<where>
+  		<include refid="rate_name_sql"></include>
+  	</where>
+  </select>
+  <sql id="rate_condition_sql">
+  		<if test="operatorType != null">
+  			AND operator_type = #{operatorType}
+  		</if>
+  		<if test="scopeName != null">
+  			AND scope_name = concat("%",trim(#{scopeName}),"%") 
+  		</if>
+  		<if test="rateName != null">
+  			AND rate_name = concat("%",trim(#{rateName}),"%")
+  		</if>
+  		<if test="rateId != null">
+  			AND rate_id = #{rateId}
+  		</if>
+  		<if test="rootAgencyId != null">
+  			AND root_agency_id = #{rootAgencyId}
+  		</if>
+  </sql>
+  <sql id="rate_name_sql">
+  	<if test="rootAgencyId != null">
+  		AND root_agency_id = #{rootAgencyId}
+  	</if>
+  	<!-- 利用等值判断看是否存在 -->
+  	<if test="rateName != null">
+  		AND rate_name = #{rateName}
+  	</if>
+  </sql>
+</mapper>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weizu.flowsys.web.agency.dao.ChargeAccountDaoInterface">
+	
+	<sql id="t_account">charge_account</sql>
+	<resultMap id="BaseResultMap" type="com.weizu.flowsys.web.agency.pojo.ChargeAccountPo">
+	   <id column="id" jdbcType="INTEGER" property="id" />
+	    <result column="account_balance" jdbcType="DOUBLE" property="accountBalance" />
+	    <result column="remittance_way" jdbcType="VARCHAR" property="remittanceWay" />
+	    <result column="remittance_bank_account" jdbcType="VARCHAR" property="remittanceBankAccount" />
+	    <result column="account_credit" jdbcType="DOUBLE" property="accountCredit" />
+	    <result column="agency_id" jdbcType="INTEGER" property="agencyId" />
+	 </resultMap>
+	 <sql id="Base_Column_List">
+    	id, account_balance, remittance_way, remittance_bank_account, account_credit, agency_id
+ 	 </sql>
+	 
+	 <!-- 只把账户余额和信用值查出来 -->
+	<resultMap id="OtherMap" type="com.weizu.flowsys.web.agency.pojo.ChargeAccountPo">
+	    <id column="id" jdbcType="INTEGER" property="id" />
+	    <result column="account_balance" jdbcType="DOUBLE" property="accountBalance" />
+	    <result column="account_credit" jdbcType="DOUBLE" property="accountCredit" />
+	    <result column="agency_id" jdbcType="INTEGER" property="agencyId" />
+	 </resultMap>
+	 <sql id="Balance_Account_List">
+    	id, account_balance, account_credit,agency_id
+ 	 </sql>
+	 
+	 <!-- 通过代理商id更新代理商账户信息 -->
+	 <update id="updateByAgencyId" parameterType="com.weizu.flowsys.web.agency.pojo.ChargeAccountPo">
+	 	update <include refid="t_account"></include>
+	 	<include refid="set_sql"></include>
+	 	<where>
+	 		<include refid="update_sql"></include>
+	 	</where>
+	 </update>
+	 
+	 <sql id="update_sql">
+	 	<if test="agencyId != null">
+	 		AND agency_id = #{agencyId}
+	 	</if>
+	 	<if test="id != null">
+	 		AND id = #{id}
+	 	</if>
+	 </sql>
+	 <sql id="set_sql">
+	 	<set>
+	 		<if test="accountBalance != null">
+	 			account_balance = #{accountBalance},
+	 		</if>
+	 		<if test="remittanceBankAccount != null">
+	 			remittance_bank_account = #{remittanceBankAccount},
+	 		</if>
+	 		<if test="remittanceWay != null">
+	 			remittance_way = #{remittanceWay},
+	 		</if>
+	 		<if test="accountCredit != null">
+	 			account_credit = #{accountCredit},
+	 		</if>
+	 	</set>
+	 </sql>
+	 
+	 <select id="selectByAgencyId" parameterType="java.lang.Integer" resultMap="OtherMap">
+    select 
+    <include refid="Balance_Account_List" />
+    from charge_account
+    where agency_id = #{agency_id,jdbcType=INTEGER}
+  </select>
+	
+</mapper>

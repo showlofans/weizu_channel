@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.weizu.web</groupId>
+    <artifactId>weizu-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>weizu-web-modules</artifactId>
+  <packaging>pom</packaging>
+  <modules>
+    <module>weizu-channel</module>
+  </modules>
+  
+  <dependencies>
+        <dependency>
+                <groupId>com.weizu.web</groupId>
+                <artifactId>weizu-web-foundation</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+                <groupId>com.weizu.web</groupId>
+                <artifactId>weizu-web-api</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <!-- servlet -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>taglibs</groupId>
+            <artifactId>standard</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+
+    </dependencies>
+  
+</project>

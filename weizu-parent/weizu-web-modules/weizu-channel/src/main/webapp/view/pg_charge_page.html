@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="ie8" lang="en"><![endif]-->
+<!--[if IE 9]><html class="ie9" lang="en"><![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+ <!--<![endif]-->
+ <head>
+  <title>流量充值</title>
+  <!--[if IE]><meta http-equiv='X-UA-Compatible' content="IE=edge,IE=9,IE=8,chrome=1" /><![endif]-->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,minimum-scale=1,maximum-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta content="" name="description" />
+  <meta content="" name="author" />
+<link href="../view/static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+<link href="../view/static/h-ui.admin/css/H-ui.login.css" rel="stylesheet" type="text/css" />
+<link href="../view/static/h-ui.admin/css/style.css" rel="stylesheet" type="text/css" />
+<link href="../view/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+ </head>
+ <body>
+ 	<div class="zhuce_body">
+    <div class="zhuce_kong">
+    	<div class="zctwo">
+        	<div class="bj_bai">
+            <h3>欢迎充值</h3>
+       	  	  <form class="form form-horizontal" id="lgForm" action="goLogin.do" method="post">
+                <input id="userName" value="${userName }" required name="userName" onblur="checkName()" autocomplete="off" type="text" placeholder="xiao" class="kuang_txt phone input-text size-L">
+                <input id="" name="userPass" value="${userPass }" required autocomplete="off" type="text" placeholder="xiao" class="kuang_txt possword input-text size-L">
+              		 <input class="btn_zhuce" type="submit" value="&nbsp;立即充值&nbsp;">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+ </body>
+ </html>

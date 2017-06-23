@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weizu.flowsys.web.trade.dao.PurchaseDao" >
+  <sql id="t_purchase">purchase</sql>
+  <sql id="t_agency">agency_backward</sql>
+  <sql id="t_pg">operator_pg_data</sql>
+  <sql id="t_channel">channel_forward</sql>
+  <sql id="t_ep">exchange_platform</sql>
+  
+  
+  
+  <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.trade.pojo.PurchasePo" >
+    <id column="order_id" property="orderId" jdbcType="BIGINT" />
+    <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
+    <result column="charge_tel" property="chargeTel" jdbcType="VARCHAR" />
+    <result column="pg_id" property="pgId" jdbcType="INTEGER" />
+    <result column="order_arrive_time" property="orderArriveTime" jdbcType="BIGINT" />
+    <result column="order_back_time" property="orderBackTime" jdbcType="BIGINT" />
+    <result column="charge_tel_detail" property="chargeTelDetail" jdbcType="VARCHAR" />
+    <result column="charge_tel_city" property="chargeTelCity" jdbcType="VARCHAR" />
+    <result column="order_platform_path" property="orderPlatformPath" jdbcType="INTEGER" />
+    <result column="order_result" property="orderResult" jdbcType="INTEGER" />
+    <result column="channel_id" property="channelId" jdbcType="INTEGER" />
+    <result column="order_result_detail" property="orderResultDetail" jdbcType="VARCHAR" />
+    <result column="order_amount" property="orderAmount" jdbcType="DOUBLE" />
+  </resultMap>
+  <!--  订单页面 -->
+  <resultMap id="VOResultMap" type="com.weizu.flowsys.web.trade.pojo.PurchaseVO" >
+    <id column="order_id" property="orderId" jdbcType="BIGINT" />
+    <result column="order_id_api" property="orderIdApi" jdbcType="VARCHAR" />
+    <result column="user_name" property="agencyName" jdbcType="INTEGER" />
+    <result column="charge_tel" property="chargeTel" jdbcType="VARCHAR" />
+    <result column="pg_size" property="pgSize" />
+    <result column="operator_type" property="operatorType" />
+    <result column="pg_price" property="pgPrice" />
+    
+    <result column="order_arrive_time" property="orderArriveTime" jdbcType="BIGINT" />
+    <result column="order_back_time" property="orderBackTime" jdbcType="BIGINT" />
+    <result column="charge_tel_detail" property="chargeTelDetail" jdbcType="VARCHAR" />
+    <result column="charge_tel_city" property="chargeTelCity" jdbcType="VARCHAR" />
+    <result column="order_platform_path" property="orderPlatformPath" jdbcType="INTEGER" />
+    <result column="order_result" property="orderResult" jdbcType="INTEGER" />
+    <result column="order_result_detail" property="orderResultDetail" jdbcType="VARCHAR" />
+    <result column="order_amount" property="orderAmount" jdbcType="DOUBLE" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="channel_id" property="channelId" jdbcType="VARCHAR" />
+    <!-- 平台相关信息 -->
+    <result column="id" jdbcType="INTEGER" property="ep.id" />
+    <result column="ep_name" jdbcType="VARCHAR" property="ep.epName" />
+    <result column="ep_purchase_ip" jdbcType="VARCHAR" property="ep.epPurchaseIp" />
+    <result column="product_list_ip" jdbcType="VARCHAR" property="ep.productListIp" />
+    <result column="pgdata_check_ip" jdbcType="VARCHAR" property="ep.pgdataCheckIp" />
+    <result column="ep_balance_ip" jdbcType="VARCHAR" property="ep.epBalanceIp" />
+    <result column="ep_user_name" jdbcType="VARCHAR" property="ep.epUserName" />
+    <result column="ep_user_pass" jdbcType="VARCHAR" property="ep.epUserPass" />
+    <result column="ep_balance" jdbcType="DOUBLE" property="ep.epBalance" />
+    <result column="ep_apikey" jdbcType="VARCHAR" property="ep.epApikey" />
+    <result column="ep_ip" jdbcType="VARCHAR" property="ep.epIp" />
+    
+  </resultMap>
+   <sql id="Base_Column_List" >
+    order_id,order_id_api, agency_id, root_agency_id, charge_tel, pg_id, order_arrive_time, order_back_time, charge_tel_detail, 
+    charge_tel_city, order_platform_path, order_result, channel_id, order_result_detail,order_amount
+  </sql>
+  <sql id="VO_Column_List"><!-- 订单页面 -->
+  	ep.*,agency.user_name, pur.order_id, pur.order_id_api, pur.charge_tel, pg.pg_size, pg.operator_type, pg.pg_price, pur.order_arrive_time,
+  	pur.order_back_time, pur.charge_tel_detail, pur.charge_tel_city, pur.order_platform_path,pur.order_result,
+  	pur.order_amount, pur.order_result_detail,channel.channel_name,pur.channel_id
+  </sql>
+  <!-- 查询订单分页 -->
+   <select id="getPurchase" resultMap="VOResultMap" parameterType="map" >
+    select 
+    <include refid="VO_Column_List" />
+     FROM <include refid="t_purchase"></include> pur
+	INNER join <include refid="t_agency"></include> agency
+	on pur.agency_id=agency.id
+	INNER join <include refid="t_pg"></include> pg
+	on pg.id = pur.pg_id
+	inner join <include refid="t_channel"></include> channel
+	on pur.channel_id = channel.id
+	inner join <include refid="t_ep"></include> ep
+	on channel.ep_id = ep.id
+    <where>
+    	<include refid="condition_sql"></include>
+    </where>
+  	order by order_arrive_time desc 
+    <if test="start != null">
+	 	limit #{start}
+	 </if>
+	<if test="end != null">
+	 	, #{end}
+	 </if>
+	 <if test="start == null &amp; end == null">
+	 	limit 0,10
+	 </if>
+  </select>
+  
+  
+  <!-- updatePurState更新订单状态 -->
+  <update id="updatePurState" parameterType="com.weizu.flowsys.web.trade.pojo.PurchaseStateParams">	
+  	update <include refid="t_purchase"></include>
+  	<set>
+  		<if test="orderBackTime != null">
+  			order_back_time = #{orderBackTime},
+  		</if>
+  		<if test="orderResult != null">
+  			order_result = #{orderResult},
+  		</if>
+  		<if test="orderResultDetail != null">
+  			order_result_detail = #{orderResultDetail}
+  		</if>
+  	</set>
+  	<where>order_id = #{orderId}</where>
+  </update>
+  
+  <!-- 根据参数订单总记录数 -->
+  <select id="countPurchase" resultType="java.lang.Integer" parameterType="map" >
+    select 
+    count(*)
+     FROM <include refid="t_purchase"></include> pur
+	INNER join <include refid="t_agency"></include> agency
+	on pur.agency_id=agency.id
+	INNER join <include refid="t_pg"></include> pg
+	on pg.id = pur.pg_id
+	inner join <include refid="t_channel"></include> channel
+	on pur.channel_id = channel.id
+    <where>
+    	<include refid="condition_sql"></include>
+    </where>
+  </select>
+  <sql id="condition_sql">
+  	<if test="chargeTel != null">
+  		AND pur.charge_tel LIKE concat("%",trim(#{chargeTel}) ,"%") 
+  	</if>
+  	<if test="rootAgencyId != null">
+  		AND pur.root_agency_id LIKE #{rootAgencyId}
+  	</if>
+  	<if test="agencyName != null">
+  		AND agency.user_name LIKE concat("%",trim(#{agencyName}) ,"%") 
+  	</if>
+  	<if test="orderId != null">
+  		AND pur.order_id LIKE concat("%",trim(#{orderId}) ,"%")
+  	</if>
+  	<if test="chargeTelDetail != null">
+  		AND pur.charge_tel_detail LIKE concat("%",trim(#{chargeTelDetail}) ,"%")
+  	</if>
+  	<if test="operatorType != null">
+  		AND pg.operator_type = #{operatorType}
+  	</if>
+  	<if test="channelName != null">
+  		AND channel.channel_name LIKE concat("%",trim(#{channelName}) ,"%")
+  	</if>
+  	<if test="startTime != null">
+		AND pur.order_arrive_time &gt;= #{startTime}
+	</if>
+	<if test="endTime != null">
+		AND pur.order_arrive_time &lt;= #{endTime}
+	</if>
+  </sql>
+  
+  <insert id="addPurchase" parameterType="com.weizu.flowsys.web.trade.pojo.PurchasePo">
+  	insert into <include refid="t_purchase"></include>
+  	( <include refid="Base_Column_List"></include> )
+  	values (#{orderId},#{orderIdApi},#{agencyId},#{rootAgencyId},#{chargeTel},#{pgId},#{orderArriveTime},#{orderBackTime},
+  	#{chargeTelDetail},#{chargeTelCity},#{orderPlatformPath},#{orderResult},#{channelId},
+  	#{orderResultDetail},#{orderAmount})
+  </insert>
+  
+</mapper>

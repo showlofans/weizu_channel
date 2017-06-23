@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weizu.flowsys.web.channel.dao.IProductCodeDAO" >
+  <sql id="t_pcode">product_code</sql>
+  <sql id="t_opd">operator_pg_data</sql>
+  <sql id="t_ep">exchange_platform</sql>
+  
+  <resultMap type="com.weizu.flowsys.web.channel.pojo.ProductCodePo" id="SimpleResultMap">
+  	<id column="id" property="id" jdbcType="BIGINT" />
+    <result column="pg_id" property="pgId" jdbcType="INTEGER" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="scope_city_code" property="scopeCityCode" jdbcType="VARCHAR" />
+    <result column="pg_encode_price" property="pgEncodePrice" jdbcType="DOUBLE" />
+    <result column="ep_id" property="epId" jdbcType="INTEGER" />
+    <result column="product_code" property="productCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.ProductCodePo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="pg_id" property="pgId" jdbcType="INTEGER" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="scope_city_code" property="scopeCityCode" jdbcType="VARCHAR" />
+    <result column="pg_encode_price" property="pgEncodePrice" jdbcType="DOUBLE" />
+    <result column="ep_id" property="epId" jdbcType="INTEGER" />
+    <result column="product_code" property="productCode" jdbcType="VARCHAR" />
+    
+    <result column="pg_size" property="pgSize" jdbcType="INTEGER" />
+    <result column="pg_price" property="pgPrice" jdbcType="DOUBLE" />
+    <result column="pg_name" property="pgName" jdbcType="VARCHAR" />
+    <result column="operator_type" property="operatorType" jdbcType="INTEGER" />
+    <result column="service_type" property="serviceType" jdbcType="INTEGER" />
+    <result column="ep_name" property="epName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    pc.*,opd.pg_size,opd.pg_price,opd.pg_name,opd.operator_type,opd.service_type,ep.ep_name
+  </sql>
+  <sql id="Simple_Column_List" >
+    pc.*
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from <include refid="t_pcode"></include> pc
+    inner join <include refid="t_opd"></include> opd
+    on opd.id = pc.pg_id 
+    inner join <include refid="t_ep"></include> ep
+    on pc.ep_id = ep.id
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <!-- 查询编码列表 -->
+  <select id="getProductCode" resultMap="BaseResultMap" parameterType="map" >
+    select 
+    <include refid="Base_Column_List" />
+    from <include refid="t_pcode"></include> pc
+    inner join <include refid="t_opd"></include> opd
+    on opd.id = pc.pg_id 
+    inner join <include refid="t_ep"></include> ep
+    on pc.ep_id = ep.id
+    <where>
+    	<include refid="condition_sql"></include>
+    </where>
+    order by pc.id desc
+    <if test="start != null">
+	 	limit #{start}
+	 </if>
+	<if test="end != null">
+	 	, #{end}
+	 </if>
+	 <if test="start == null &amp; end == null">
+	 	limit 0,10
+	 </if>
+  </select>
+  <!-- 根据参数查询编码总记录数 -->
+  <select id="countProductCode" resultType="java.lang.Integer" parameterType="map" >
+    select 
+    count(*)
+    from <include refid="t_pcode"></include> pc
+    inner join <include refid="t_opd"></include> opd
+    on opd.id = pc.pg_id 
+    inner join <include refid="t_ep"></include> ep
+    on pc.ep_id = ep.id
+    <where>
+    	<include refid="condition_sql"></include>
+    </where>
+  </select>
+  <!-- 根据参数查询产品编码 -->
+  <select id="getOneProductCode" parameterType="map" resultMap="SimpleResultMap">
+  	select <include refid="Simple_Column_List"></include> 
+  	from <include refid="t_pcode"></include> pc
+    inner join <include refid="t_opd"></include> opd
+    on opd.id = pc.pg_id 
+    inner join <include refid="t_ep"></include> ep
+    on pc.ep_id = ep.id
+    <where>
+    	<include refid="getOneProduct_sql"></include>
+    </where>
+  </select>
+  <!-- 通过参数查询一个产品编码 -->
+  <sql id="getOneProduct_sql">
+  <!-- WHERE pc.scope_city_code = 14 and opd.pg_size=6144 and opd.operator_type = 0 and opd.service_type = 0; -->
+	<if test="scopeCityCode != null">
+  		AND pc.scope_city_code = #{scopeCityCode}
+  	</if>
+  	<!-- 用等值判断 -->
+	<if test="pgSize != null">
+  		AND opd.pg_size = #{pgSize}
+  	</if>
+	<if test="operatorType != null">
+  		AND opd.operator_type = #{operatorType}
+  	</if>
+  	<!-- 用等值判断 -->
+	<if test="serviceType != null">
+  		AND opd.service_type = #{serviceType}
+  	</if>
+  </sql>
+  
+  
+  <!-- 查询是否存在该编码 -->
+  <select id="existProductCode" parameterType="map" resultType="java.lang.Integer">
+  	select count(id) from <include refid="t_pcode"></include>
+  	<where>
+  		<include refid="exist_condition_sql"></include>
+  	</where>
+  </select>
+  <!-- 查询是否存在该编码 -->
+  <sql id="exist_condition_sql">
+	<if test="epId != null">
+  		AND ep_id = #{epId}
+  	</if>
+  	<!-- 用等值判断 -->
+	<if test="productName != null">
+  		AND product_name = #{productName}
+  	</if>
+  </sql>
+  
+  <sql id="condition_sql">
+  	<if test="pgSize != null">
+  		AND pg_size = #{pgSize}
+  	</if>
+  	<if test="productCode != null">
+  		AND product_code like concat("%",trim(#{productCode}),"%")
+  	</if>
+  	<if test="operatorType != null">
+  		AND opd.operator_type = #{operatorType}
+  	</if>
+  	<if test="productName != null">
+  		AND product_name like concat("%",trim(#{productName}),"%")
+  	</if>
+  	<if test="epId != null">
+  		AND ep_id = #{epId}
+  	</if>
+  	<!-- <if test="epId != null">
+  		AND ep_id = #{epId}
+  	</if>
+  	<if test="epId != null">
+  		AND ep_id = #{epId}
+  	</if> -->
+  </sql>
+</mapper>

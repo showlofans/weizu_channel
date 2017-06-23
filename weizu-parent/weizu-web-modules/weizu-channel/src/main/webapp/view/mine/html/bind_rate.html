@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<form action="edit_agency.do" method="post" class="form form-horizontal" id="form-change-password">
+		<h3>编辑代理商</h3>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>代理商名称</label>
+			<div class="formControls col-xs-8 col-sm-9 c-red"> ${resultMap.agencyUserName } </div>
+		</div> 
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">充值额：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" autocomplete="off" placeholder="请输入double值" name="rechargeAmount" id="rechargeAmount">元
+				<input type="hidden" name="accountId" value="${resultMap.chargeAccount.id }">
+				<input type="hidden" name="accountType" value="0"> <!-- 设置为充值 -->
+				<input type="hidden" name="agencyId" value="${resultMap.agencyId }"> <!-- 代理商id -->
+				
+				<span class="select-box inline">
+					<select name="billType" class="select">
+					<c:forEach items="${resultMap.billTypeEnum }" var="billType" varStatus="vs">
+						<option value="${billType.value }">${billType.desc }</option>
+					</c:forEach>
+						 <!-- <c:forEach items="${resultMap.pgInEnums }" var="pgIn" varStatus="vs1">
+							<option value="${pgIn.value }" <c:if test="${pgIn.value == resultMap.params.pgInService }"> selected</c:if>>${pgIn.desc }</option>
+						</c:forEach> -->
+					</select>
+				</span>
+			</div>
+			
+			
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input class="btn btn-primary radius" onclick="save()" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			</div>
+		</div>
+	</form>
+</body>
+</html>

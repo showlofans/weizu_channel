@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface">
+  <sql id="t_ep">exchange_platform</sql>
+  <sql id="t_agencyEp">agency_ep</sql>
+  
+  
+  <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="ep_name" jdbcType="VARCHAR" property="epName" />
+    <result column="ep_purchase_ip" jdbcType="VARCHAR" property="epPurchaseIp" />
+    <result column="product_list_ip" jdbcType="VARCHAR" property="productListIp" />
+    <result column="pgdata_check_ip" jdbcType="VARCHAR" property="pgdataCheckIp" />
+    <result column="ep_balance_ip" jdbcType="VARCHAR" property="epBalanceIp" />
+    <result column="ep_user_name" jdbcType="VARCHAR" property="epUserName" />
+    <result column="ep_user_pass" jdbcType="VARCHAR" property="epUserPass" />
+    <result column="ep_balance" jdbcType="DOUBLE" property="epBalance" />
+    <result column="ep_apikey" jdbcType="VARCHAR" property="epApikey" />
+    <result column="ep_ip" jdbcType="VARCHAR" property="epIp" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, ep_name, ep_purchase_ip, product_list_ip, pgdata_check_ip, ep_balance_ip, 
+    ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip
+  </sql>
+  <sql id="Other_Column_List">
+    ep.id, ep.ep_name, ep_purchase_ip, product_list_ip, pgdata_check_ip, ep_balance_ip, 
+    ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip
+  </sql>
+  <sql id="Simple_Column_List">
+    id, ep_name
+  </sql>
+  <!-- 获得所有平台名称(减少数据库负担) -->
+  <select id="getSimpleEp" parameterType="String" resultMap="BaseResultMap">
+   		select <include refid="Simple_Column_List"></include>
+   		 from <include refid="t_ep"></include>
+  </select>
+  <!-- 根据代理商id和其他参数获得该代理商下对接过的平台列表 -->
+  <select id="getEp" parameterType="map" resultMap="BaseResultMap">
+   		select <include refid="Other_Column_List"></include>
+   		 from <include refid="t_ep"></include> ep
+   		 inner join <include refid="t_agencyEp"></include> aep
+   		 on ep.id = aep.ep_id
+   		<!-- 前提条件 -->
+   		<where>
+   		 	<if test="agencyId != null">
+  				AND aep.agency_id = #{agencyId}
+  		 		<include refid="condition_sql"></include>
+  		 		<if test="start != null">
+				 	limit #{start}
+				 </if>
+				 <if test="end != null">
+				 	, #{end}
+				 </if>
+				 <if test="start == null &amp; end == null">
+				 	limit 0,10
+				 </if> 
+			</if>
+   		</where>
+  </select>
+  <!-- 平台列表记录数 -->
+  <select id="countEp" parameterType="map" resultType="java.lang.Integer">
+   		select count(*)
+   		 from <include refid="t_ep"></include> ep
+   		 inner join <include refid="t_agencyEp"></include> aep
+   		 on ep.id = aep.ep_id
+   		<!-- 前提条件 -->
+   		 <where>
+   		 	<if test="agencyId != null">
+   				AND aep.agency_id = #{agencyId}
+   		 		<include refid="condition_sql"></include>
+   		 	</if>
+   		 </where>
+  </select>
+  
+   	<sql id="condition_sql">
+   		<if test="epName != null">
+   			AND ep.ep_name like CONCAT('%', TRIM(#{epName}), '%')
+   		</if>
+   		<!-- <if test="agencyId != null">
+   			AND aep.agency_id = #{agencyId}
+   		</if>
+   		<if test="agencyId != null">
+   			AND aep.agency_id = #{agencyId}
+   		</if> -->
+   	</sql>
+  <!-- 通过平台名获得平台信息 -->
+   	<select id="getEpByEpName" parameterType="String" resultMap="BaseResultMap">
+   		select <include refid="Base_Column_List"></include> from <include refid="t_ep"></include>
+   		<where>
+   			<include refid="byEpName_sql"></include>
+   		</where>
+   	</select>
+   	<sql id="byEpName_sql">
+   		<if test="_parameter != null">
+   			AND ep_name like CONCAT('%', TRIM(#{_parameter}), '%')
+   		</if>
+   	</sql>
+  
+</mapper>

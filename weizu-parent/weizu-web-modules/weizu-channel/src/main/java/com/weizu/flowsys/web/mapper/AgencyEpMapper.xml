@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weizu.flowsys.web.channel.dao.IAgencyEpDAO" >
+	<sql id="t_agency_ep">agency_ep</sql>
+  <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.AgencyEpPo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
+    <result column="agency_name" property="agencyName" jdbcType="VARCHAR" />
+    <result column="ep_id" property="epId" jdbcType="INTEGER" />
+    <result column="ep_name" property="epName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, agency_id, agency_name, ep_id, ep_name
+  </sql>
+  <!-- 通过代理商ID获得所有平台列表 -->
+  <select id="getAgencyEpByAgencyId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"></include>
+  	from <include refid="t_agency_ep"></include>
+  	<where>
+  		<if test="_parameter != null">
+  			AND agency_id = #{_parameter}
+  		</if>
+  		<!-- <if test="_parameter != null">
+  			AND ep_id = #{_parameter}
+  		</if> -->
+  	</where>
+  </select>
+</mapper>

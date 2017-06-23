@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weizu.flowsys.web.activity.dao.IRateBackwardDao" >
+  <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.activity.pojo.RateBackwardPo" >
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="rate_name" jdbcType="VARCHAR" property="rateName" />
+    <result column="root_agency_id" jdbcType="INTEGER" property="rootAgencyId" />
+    <result column="rate_price_0" jdbcType="VARCHAR" property="ratePrice0" />
+    <result column="rate_price_1" jdbcType="VARCHAR" property="ratePrice1" />
+    <result column="rate_price_2" jdbcType="VARCHAR" property="ratePrice2" />
+    <result column="rate_state" jdbcType="INTEGER" property="rateState" />
+  </resultMap>
+  <sql id="t_rate">rate_backward</sql>
+  <sql id="Base_Column_List" >
+    id, rate_name, root_agency_id, rate_price_0, rate_price_1, rate_price_2, rate_state
+  </sql>
+  <select id="selectByPagePo" parameterType="com.weizu.flowsys.web.activity.pojo.RateBackwardPo" resultMap="BaseResultMap">
+  	SELECT * FROM <include refid="t_rate"></include> 
+  	<where>
+  		<include refid="condition_sql"></include>
+  	</where>
+  	<if test="start != null">
+	 	limit #{start}
+	 </if>
+	 <if test="end != null">
+	 	, #{end}
+	 </if>
+	 <if test="start == null &amp; end == null">
+	 	limit 0,10
+	 </if> 
+  </select>
+  
+  <!-- 查询代理商全部费率 -->
+  <select id="selectByRootId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	SELECT * FROM <include refid="t_rate"></include> 
+  	<where>
+	  	<if test="_parameter != null">
+	  		AND root_agency_id = #{_parameter}
+	  	</if>
+  	</where>
+  </select>
+  
+  <select id="countByPo" parameterType="map" resultType="java.lang.Integer">
+  	SELECT count(*) FROM <include refid="t_rate"></include> 
+  	<where>
+  		<include refid="condition_sql"></include>
+  	</where>
+  </select>
+  
+  <sql id="condition_sql">
+  	<if test="rootAgencyId != null">
+  		AND root_agency_id = #{rootAgencyId}
+  	</if>
+  	<if test="ratePrice0 != null">
+  		AND rate_price_0 LIKE concat('%',trim(#{ratePrice0}),'%')
+  	</if>
+  	<if test="ratePrice1 != null">
+  		AND rate_price_1 LIKE concat('%',trim(#{ratePrice1}),'%')
+  	</if>
+  	<if test="ratePrice2 != null">
+  		AND rate_price_2 LIKE concat('%',trim(#{ratePrice2}),'%')
+  	</if>
+  	<if test="rateName != null">
+  		AND rate_name LIKE concat('%',trim(#{rateName}),'%')
+  	</if>
+  </sql>
+  
+</mapper>
