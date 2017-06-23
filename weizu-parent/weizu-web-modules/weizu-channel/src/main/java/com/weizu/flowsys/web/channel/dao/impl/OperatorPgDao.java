@@ -20,7 +20,7 @@ import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
  * @createTime:2017年4月26日 下午12:01:22
  * @version 1.0
  */
-@Repository
+@Repository(value="operatorPgDao")
 public class OperatorPgDao extends DaoImpl<OperatorPgDataPo, Integer> implements OperatorPgDaoInterface {
 	@Resource
 	private SqlSessionTemplate sqlSessionTemplateASS;
