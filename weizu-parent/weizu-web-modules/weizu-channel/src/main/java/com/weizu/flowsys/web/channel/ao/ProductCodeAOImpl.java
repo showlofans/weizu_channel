@@ -183,6 +183,7 @@ public class ProductCodeAOImpl implements ProductCodeAO {
 		paramsMap.put("serviceType", paramsPo.getServiceType());
 		paramsMap.put("pgSize", paramsPo.getPgSize());
 		paramsMap.put("scopeCityCode", paramsPo.getScopeCityCode());
+		paramsMap.put("epId", paramsPo.getEpId());
 		return productCodeDAO.getOneProductCode(paramsMap);
 	}
 

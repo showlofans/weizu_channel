@@ -112,6 +112,9 @@
 	<if test="serviceType != null">
   		AND opd.service_type = #{serviceType}
   	</if>
+	<if test="epId != null">
+  		AND pc.ep_id = #{epId}
+  	</if>
   </sql>
   
   
@@ -147,7 +150,7 @@
   		AND product_name like concat("%",trim(#{productName}),"%")
   	</if>
   	<if test="epId != null">
-  		AND ep_id = #{epId}
+  		AND pc.ep_id = #{epId}
   	</if>
   	<!-- <if test="epId != null">
   		AND ep_id = #{epId}

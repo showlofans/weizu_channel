@@ -177,7 +177,7 @@ public class ChargePgController {
 				OperatorScopeVO operatorScopeVO = new OperatorScopeVO(scopeCityName,agencyVO.getId(),operatorType);
 				BestChannelPO bestChannel = channelForwardAO.getBestChannel(operatorScopeVO);
 				if(bestChannel != null){
-					if(productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, pgSize, operatorType, serviceType)) != null)
+					if(productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, pgSize, operatorType, serviceType, bestChannel.getEpd())) != null)
 					{
 						//并且存在该包体编码dataPo.getPgPrice() * bestChannel.getChannelDiscount()
 						resultMap.put("price", NumberTool.mul(dataPo.getPgPrice(),bestChannel.getChannelDiscount()));

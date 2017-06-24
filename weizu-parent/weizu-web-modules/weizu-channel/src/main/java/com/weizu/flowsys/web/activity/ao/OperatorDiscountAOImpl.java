@@ -59,6 +59,7 @@ public class OperatorDiscountAOImpl implements OperatorDiscountAO {
 			int operatorType = Integer.parseInt(discounts.get(i).getOperatorType()) ;
 			
 			List<ScopeDiscount> scopeList = discounts.get(i).getList();
+			
 			for (ScopeDiscount scopeDiscount : scopeList) {
 				String scopeName = scopeDiscount.getScopeCityName();
 				double discount = StringUtil2.getDiscount(scopeDiscount.getChannelDiscount());
@@ -72,8 +73,12 @@ public class OperatorDiscountAOImpl implements OperatorDiscountAO {
 			ratePrice[operatorType] = JSONArray.toJSONString(map).toString();
 		}
 		RateBackwardPo rateBackwardPo = new RateBackwardPo(rateName, rootAgencyId, ratePrice[0], ratePrice[1], ratePrice[2], 0);
-		
+		Long rateId = rateBackwardDao.nextId();
 		int res = rateBackwardDao.add(rateBackwardPo);
+		for (OperatorDiscountPo odp : list) {
+			odp.setRateId(rateId);//设置费率Id
+		}
+		
 		if(rateBackwardVo.getAgencyId() != null){//判断是否是自动绑定到代理商
 			Long id = rateBackwardDao.nextId()-1;//费率列表id
 			AgencyBackwardPo agencyPo = new AgencyBackwardPo();

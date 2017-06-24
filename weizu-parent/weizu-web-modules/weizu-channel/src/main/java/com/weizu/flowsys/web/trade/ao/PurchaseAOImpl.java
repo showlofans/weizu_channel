@@ -112,7 +112,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 		//通过归属地和包体获得产品编码
 		Map<String, Object> scopeCityMap = PurchaseUtil.getScopeCityByCarrier(purchasePo.getChargeTelDetail());
 		String scopeCityCode = scopeCityMap.get("scopeCityCode").toString();//地区编码
-		ProductCodePo product =  productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, pgPo.getPgSize(), pgPo.getOperatorType(), pgPo.getServiceType()));
+		ProductCodePo product =  productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, pgPo.getPgSize(), pgPo.getOperatorType(), pgPo.getServiceType(), channelPo.getEpId()));
+		
+		
 		
 //		channelPo.setChannelTotalUse();
 		channelPo.addTotalUse();
@@ -126,11 +128,11 @@ public class PurchaseAOImpl implements PurchaseAO {
 			e.printStackTrace();
 		}
 		purchasePo.setOrderPlatformPath(OrderPathEnum.WEB_PAGE.getValue());
-		if(recordRes + channelRes -1 >0){
+		if(recordRes + channelRes -1 >0 && product  != null){
 			
 			ChargeBase chargeBase = ChargeFactory.getChargeBase(epPo.getEpName());
-			
-			ChargeResultPage chargeResultPage = chargeBase.charge(new ChargeParamsPage(epPo.getEpPurchaseIp(), epPo.getEpName(), epPo.getEpUserName(), epPo.getEpApikey(), purchasePo.getChargeTel(), pgPo.getPgSize()+""));
+			//
+			ChargeResultPage chargeResultPage = chargeBase.charge(new ChargeParamsPage(epPo.getEpPurchaseIp(), epPo.getEpName(), epPo.getEpUserName(), epPo.getEpApikey(), purchasePo.getChargeTel(), product.getProductCode()));
 			
 			//初始化订单结果
 			ChargePageOrder chargePageOrder = chargeResultPage.getChargePageOrder();

@@ -14,7 +14,7 @@ import org.weizu.api.base.ParamsPageBase;
 public class ChargeParamsPage extends ParamsPageBase implements PageParams {
 	
 	private String number;				//充值号码
-	private String flowsize;			//流量大小
+	private String flowsize;			//流量大小(编码)
 	private String timestamp;			//充值时间戳
 	private String user_order_id;		//系统生成的唯一订单
 	

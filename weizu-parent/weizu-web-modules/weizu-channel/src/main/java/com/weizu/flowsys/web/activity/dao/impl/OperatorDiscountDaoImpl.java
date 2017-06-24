@@ -94,5 +94,18 @@ public class OperatorDiscountDaoImpl extends DaoImpl<OperatorDiscountPo, Long> i
 		
 		return sqlSessionTemplate.selectList("selectDiscountByPo", operatorDiscountPo);
 	}
+	/**
+	 * @description:通过部分查询整体
+	 * @param operatorDiscountPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月24日 下午4:14:49
+	 */
+	@Override
+	public OperatorDiscountPo selectOneDiscountByPo(
+			OperatorDiscountPo operatorDiscountPo) {
+		
+		return sqlSessionTemplate.selectOne("selectOneDiscountByPo", operatorDiscountPo);
+	}
 
 }

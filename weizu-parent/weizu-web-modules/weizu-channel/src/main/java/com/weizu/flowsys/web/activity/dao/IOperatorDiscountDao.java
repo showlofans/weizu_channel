@@ -53,4 +53,13 @@ public interface IOperatorDiscountDao {
 	 */
 	List<OperatorDiscountPo> selectDiscountByPo(OperatorDiscountPo operatorDiscountPo);
 	
+	/**
+	 * @description: 通过部分查询整体
+	 * @param operatorDiscountPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月24日 下午4:14:23
+	 */
+	public OperatorDiscountPo selectOneDiscountByPo(OperatorDiscountPo operatorDiscountPo);
+	
 }

@@ -11,11 +11,19 @@ import org.weizu.web.foundation.http.HttpRequest;
 @ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
 public class APITest {
 	
+//	@Test
+//	public void testAccountAPI(){
+//		String requestUrl = "http://127.0.0.1:8080/weizuAPI/myBalance.do";
+//		String sign = MD5.getMd5("402880ef5cd2b925015cd2b925b90000");
+//		String params = "username=456&sign="+ sign;
+//		String resultStr = HttpRequest.sendGet(requestUrl, params);
+//		System.out.println(resultStr);
+//	}
 	@Test
-	public void testAccountAPI(){
-		String requestUrl = "http://127.0.0.1:8080/weizuAPI/myBalance.do";
+	public void testChargeAPI(){
+		String requestUrl = "http://127.0.0.1:8080/weizuAPI/chargePg.do";
 		String sign = MD5.getMd5("402880ef5cd2b925015cd2b925b90000");
-		String params = "username=456&sign="+ sign;
+		String params = "userName=456&number=15858343638&pgSize=6144&scope=0&sign="+ sign;
 		String resultStr = HttpRequest.sendGet(requestUrl, params);
 		System.out.println(resultStr);
 	}

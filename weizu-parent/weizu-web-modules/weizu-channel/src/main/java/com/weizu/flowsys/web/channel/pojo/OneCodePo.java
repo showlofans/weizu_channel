@@ -18,17 +18,28 @@ public class OneCodePo {
 	
 	private Integer serviceType;
 	
+	private Integer epId;
+	
 	public OneCodePo() {
 		super();
 	}
 
 	public OneCodePo(String scopeCityCode, Integer pgSize,
-			Integer operatorType, Integer serviceType) {
+			Integer operatorType, Integer serviceType, Integer epId) {
 		super();
+		this.epId = epId;
 		this.scopeCityCode = scopeCityCode;
 		this.pgSize = pgSize;
 		this.operatorType = operatorType;
 		this.serviceType = serviceType;
+	}
+	
+	public Integer getEpId() {
+		return epId;
+	}
+
+	public void setEpId(Integer epId) {
+		this.epId = epId;
 	}
 
 	public String getScopeCityCode() {

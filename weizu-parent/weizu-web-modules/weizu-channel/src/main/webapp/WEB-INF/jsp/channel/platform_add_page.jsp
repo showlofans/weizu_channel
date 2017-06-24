@@ -149,6 +149,9 @@ $().ready(function() {
             if(d=="error"){
                 layer.msg('保存异常!');
             }
+            if(d=="errorEp"){
+                layer.msg('保存异常,已经添加过该平台了!');
+            }
         }
     });
 	return false;

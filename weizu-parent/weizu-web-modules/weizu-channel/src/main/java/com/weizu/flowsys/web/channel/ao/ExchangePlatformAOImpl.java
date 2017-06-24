@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.dao.impl.AgencyEpDAOImpl;
 import com.weizu.flowsys.web.channel.dao.impl.ExchangePlatformDao;
@@ -68,11 +69,25 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 	@Transactional
 	@Override
 	public String addEp(ExchangePlatformPo exchangePlatformPo, int agencyId,String agencyName) {
-		int epId = new Long(exchangePlatformDao.nextId()).intValue();
 //		exchangePlatformPo.setId(epId);
-		int res2 = exchangePlatformDao.add(exchangePlatformPo);
+		//查看看系统是否已经对接过该平台，如果对接过就不用添加该平台
+		ExchangePlatformPo epPo = exchangePlatformDao.get(new WherePrams("ep_name", "=", exchangePlatformPo.getEpName()));
+		int res2 = 0;
+		int epId = 0;
+		if(epPo == null)
+		{//有该平台名称的平台，但同时要保证用户名和密码apikey不一样
+			epId = new Long(exchangePlatformDao.nextId()).intValue();
+			res2 = exchangePlatformDao.add(exchangePlatformPo);
+			AgencyEpPo agencyEp = agencyEpDAO.get(new WherePrams("agency_id", "=", agencyId));
+			if(agencyEp != null)
+			{
+				return "errorEp";
+			}
+		}else{
+			epId = epPo.getId();
+		}
 		int res1 = agencyEpDAO.add(new AgencyEpPo(agencyId, agencyName, epId, exchangePlatformPo.getEpName()));
-		if((res1 + res2) >= 2){
+		if((res1 + res2) >= 1){
 			return "success";
 		}else{
 			return "error";

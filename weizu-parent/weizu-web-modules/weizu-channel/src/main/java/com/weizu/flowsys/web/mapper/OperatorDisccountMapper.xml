@@ -60,6 +60,14 @@
   		<include refid="rate_condition_sql"></include>
   	</where>
    </select>
+   <!-- 通过部分查询整体 -->
+   <select id="selectOneDiscountByPo" parameterType="com.weizu.flowsys.web.activity.pojo.OperatorDiscountPo"  resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List"></include> 
+  	FROM <include refid="t_odisccount"></include> 
+  	<where>
+  		<include refid="rate_condition_sql"></include>
+  	</where>
+   </select>
   
   <!-- 通过登录用户id查询费率列表 -->
  <!--  <select id="countByAgencyId" parameterType="java.lang.Integer">
@@ -79,10 +87,10 @@
   			AND operator_type = #{operatorType}
   		</if>
   		<if test="scopeName != null">
-  			AND scope_name = concat("%",trim(#{scopeName}),"%") 
+  			AND scope_name like concat("%",trim(#{scopeName}),"%") 
   		</if>
   		<if test="rateName != null">
-  			AND rate_name = concat("%",trim(#{rateName}),"%")
+  			AND rate_name like concat("%",trim(#{rateName}),"%")
   		</if>
   		<if test="rateId != null">
   			AND rate_id = #{rateId}

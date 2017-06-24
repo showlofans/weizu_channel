@@ -22,7 +22,6 @@ public class OperatorScopeVO {
 	
 	private Integer otype;		//运营商类型查询参数
 	
-
 	public OperatorScopeVO() {
 		super();
 	}

@@ -49,16 +49,17 @@ public class ValiUser {
 	}
 	
 	/**
-	 * @description: 验证流量大小是否合法
+	 * @description: 验证流量包是否存在
 	 * @param scope
+	 * @param operatorType
 	 * @param pgSize
 	 * @return
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月23日 下午4:59:55
 	 */
-	public OperatorPgDataPo findPg(int scope, int pgSize)
+	public OperatorPgDataPo findPg(int scope, int pgSize, int operatorType)
 	{
-		OperatorPgDataPo pgData = operatorPgDao.get(new WherePrams("service_type", "=", scope).and("pg_size", "=", pgSize));
+		OperatorPgDataPo pgData = operatorPgDao.get(new WherePrams("service_type", "=", scope).and("pg_size", "=", pgSize).and("operator_type", "=", operatorType));
 		return pgData;
 	}
 	
