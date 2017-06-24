@@ -5,6 +5,12 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
+        <dependent-module archiveName="weizu-web-foundation-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/weizu-web-foundation/weizu-web-foundation">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="weizu-web-api-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/weizu-web-api/weizu-web-api">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="weizu-channel"/>
         <property name="java-output-path" value="/weizu-channel/target/classes"/>
     </wb-module>
