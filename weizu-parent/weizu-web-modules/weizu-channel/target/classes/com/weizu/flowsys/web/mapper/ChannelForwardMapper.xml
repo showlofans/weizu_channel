@@ -30,6 +30,14 @@
     <result column="epd" jdbcType="INTEGER" property="epd" />
   </resultMap>
   
+  <!--  通过通道ID找到所属平台 -->
+  <select id="getEpByChannelId" parameterType="java.lang.Integer" resultMap="com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface.BaseResultMap">
+  	SELECT ep.* 
+  	FROM <include refid="t_ep"></include> ep 
+  	WHERE ep.id = (SELECT ep_id from <include refid="t_channel"></include>
+  	channel where channel.id = #{_parameter})
+  </select>
+  
   <!-- 连表查询字段 -->
   <sql id="Base_Column_List" >
     channel.id, channel_name, agency_id, pg_size, scope_city_name, channel.operator_type, service_id, channel_discount, ep_id, channel_total_use, 

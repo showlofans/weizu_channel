@@ -8,6 +8,7 @@ import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.pojo.OperatorScopeVO;
 import com.weizu.flowsys.web.channel.pojo.BestChannelPO;
 import com.weizu.flowsys.web.channel.pojo.ChannelForwardPo;
+import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 
 /**
  * @description:对上通道接口
@@ -71,4 +72,13 @@ public interface ChannelForwardAO {
 	 * @createTime:2017年5月18日 上午11:14:30
 	 */
 	BestChannelPO getBestChannel(OperatorScopeVO operatorScopeVO);
+	
+	/**
+	 * @description:通过通道ID找到所属平台
+	 * @param channelId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月26日 下午1:24:13
+	 */
+	ExchangePlatformPo getEpByChannelId(Integer channelId);
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.channel.pojo.BestChannelPO;
 import com.weizu.flowsys.web.channel.pojo.ChannelForwardPo;
+import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 
 /**
  * @description:上家通道折扣dao层接口
@@ -52,5 +53,14 @@ public interface ChannelForwardDaoInterface extends Dao<ChannelForwardPo, Intege
 	 * @createTime:2017年5月18日 上午11:00:20
 	 */
 	BestChannelPO getBestChannel(Map<String, Object> paramsMap);
+	
+	/**
+	 * @description:通过通道ID找到所属平台
+	 * @param channelId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月26日 下午1:24:13
+	 */
+	ExchangePlatformPo getEpByChannelId(Integer channelId);
 
 }

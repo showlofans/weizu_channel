@@ -23,6 +23,7 @@ import com.weizu.flowsys.web.base.ATT;
 import com.weizu.flowsys.web.channel.dao.impl.ChannelForwardDao;
 import com.weizu.flowsys.web.channel.pojo.BestChannelPO;
 import com.weizu.flowsys.web.channel.pojo.ChannelForwardPo;
+import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 
 /**
  * @description:对上通道接口实现
@@ -227,6 +228,18 @@ public class ChannelForwardAOImpl implements ChannelForwardAO {
 			bestChannelPO.setDiscount(str.substring(0,str.indexOf(".")));
 		}
 		return bestChannelPO;
+	}
+	/**
+	 * @description: 通过通道ID找到所属平台
+	 * @param channelId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月26日 下午1:38:18
+	 */
+	@Override
+	public ExchangePlatformPo getEpByChannelId(Integer channelId) {
+		
+		return channelForwardDao.getEpByChannelId(channelId);
 	}
 	
 

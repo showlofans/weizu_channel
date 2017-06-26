@@ -13,19 +13,19 @@ public class OrderIn {
 	private String orderId;
 	private String number;
 	private String pgSize;
-	private String charge_fee;
-	private String created_at;
+	private String chargeFee;
+	private String createdAt;
 	private int status;
 	private String msg;
 	
 	public OrderIn(String orderId, String number, String pgSize,
-			String charge_fee, String created_at, int status, String msg) {
+			String chargeFee, String createdAt, int status, String msg) {
 		super();
 		this.orderId = orderId;
 		this.number = number;
 		this.pgSize = pgSize;
-		this.charge_fee = charge_fee;
-		this.created_at = created_at;
+		this.chargeFee = chargeFee;
+		this.createdAt = createdAt;
 		this.status = status;
 		this.msg = msg;
 	}
@@ -50,17 +50,17 @@ public class OrderIn {
 	public void setPgSize(String pgSize) {
 		this.pgSize = pgSize;
 	}
-	public String getCharge_fee() {
-		return charge_fee;
+	public String getChargeFee() {
+		return chargeFee;
 	}
-	public void setCharge_fee(String charge_fee) {
-		this.charge_fee = charge_fee;
+	public void setChargeFee(String chargeFee) {
+		this.chargeFee = chargeFee;
 	}
-	public String getCreated_at() {
-		return created_at;
+	public String getCreatedAt() {
+		return createdAt;
 	}
-	public void setCreated_at(String created_at) {
-		this.created_at = created_at;
+	public void setCreatedAt(String createdAt) {
+		this.createdAt = createdAt;
 	}
 	public int getStatus() {
 		return status;

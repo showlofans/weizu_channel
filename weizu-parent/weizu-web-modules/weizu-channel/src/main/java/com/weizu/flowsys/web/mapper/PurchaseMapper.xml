@@ -11,6 +11,7 @@
   
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.trade.pojo.PurchasePo" >
     <id column="order_id" property="orderId" jdbcType="BIGINT" />
+    <id column="order_id_api" property="orderIdApi" jdbcType="VARCHAR" />
     <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
     <result column="charge_tel" property="chargeTel" jdbcType="VARCHAR" />
     <result column="pg_id" property="pgId" jdbcType="INTEGER" />
@@ -67,6 +68,14 @@
   	pur.order_back_time, pur.charge_tel_detail, pur.charge_tel_city, pur.order_platform_path,pur.order_result,
   	pur.order_amount, pur.order_result_detail,channel.channel_name,pur.channel_id
   </sql>
+  
+  <!-- 通过订单号查询订单 -->
+  <select id="getOnePurchase" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"></include>
+  	from <include refid="t_purchase"></include>
+  	where order_id = #{_parameter}
+  </select>
+  
   <!-- 查询订单分页 -->
    <select id="getPurchase" resultMap="VOResultMap" parameterType="map" >
     select 
@@ -133,7 +142,7 @@
   		AND pur.charge_tel LIKE concat("%",trim(#{chargeTel}) ,"%") 
   	</if>
   	<if test="rootAgencyId != null">
-  		AND pur.root_agency_id LIKE #{rootAgencyId}
+  		AND (pur.root_agency_id = #{rootAgencyId} OR pur.agency_id = #{rootAgencyId} ) 
   	</if>
   	<if test="agencyName != null">
   		AND agency.user_name LIKE concat("%",trim(#{agencyName}) ,"%") 

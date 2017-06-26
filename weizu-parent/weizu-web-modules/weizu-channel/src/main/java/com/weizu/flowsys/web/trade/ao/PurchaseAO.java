@@ -2,6 +2,8 @@ package com.weizu.flowsys.web.trade.ao;
 
 import java.util.Map;
 
+import org.weizu.api.facet.orderState.PageOrder;
+
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
@@ -48,6 +50,24 @@ public interface PurchaseAO {
 	 */
 	OrderStateResult purchaseByWeizuAPI(ParamsEntityWeiZu paramsEntity);
 	
+	/**
+	 * @description: 更新查看订单状态
+	 * @param pageOrder
+	 * @param purchaseVO
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月26日 下午12:57:43
+	 */
+	int checkOrderState(PageOrder pageOrder, PurchaseVO purchaseVO);
+	
+	/**
+	 * @description: 通过订单Id查询订单
+	 * @param orderId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月26日 下午1:04:25
+	 */
+	PurchasePo getOnePurchase(long orderId);
 	
 	
 }

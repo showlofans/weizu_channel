@@ -10,10 +10,12 @@ import org.weizu.web.foundation.MD5;
 import org.weizu.web.foundation.http.HttpRequest;
 
 import com.alibaba.fastjson.JSON;
+import com.weizu.flowsys.web.http.ParamsEntityWeiZu;
 import com.weizu.flowsys.web.http.weizu.OrderStateParams;
 import com.weizu.flowsys.web.http.weizu.OrderStateResult;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
+import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -49,22 +51,22 @@ public class PurchaseAOImplTest {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月16日 下午12:23:17
 	 */
-//	@Test
-//	public void testPurchase(){
-//		//浙江移动的通道（号码）：15858343638
-//		//apikey: 	722c16de0a83e5bd2f988e3c7bc9fee8
-//		String username="CS111111";
-//		String apikey = "722c16de0a83e5bd2f988e3c7bc9fee8";
-//		String sign = MD5.getMd5("username="+username+"&apikey="+apikey);
-//		System.out.println(sign);
-//		String number = "15858343638";
-//		
-//		ParamsEntityWeiZu httpEntity = new ParamsEntityWeiZu(username, number, "500", sign);
-////		String resTel = HttpRequest.sendGet("http://tcc.taobao.com/cc/json/mobile_tel_segment.htm", "tel=" + number);
-//		String resMsg = HttpRequest.sendGet("http://139.224.70.161:32001/api/v1/sendOrder", httpEntity.toString());
-//		System.out.println(resMsg);
-////		System.out.println(resTel);
-//	}
+	@Test
+	public void testPurchase(){
+		//浙江移动的通道（号码）：15858343638
+		//apikey: 	722c16de0a83e5bd2f988e3c7bc9fee8
+		String username="CS111111";
+		String apikey = "722c16de0a83e5bd2f988e3c7bc9fee8";
+		String sign = MD5.getMd5("username="+username+"&apikey="+apikey);
+		System.out.println(sign);
+		String number = "15858343638";
+		
+		ParamsEntityWeiZu httpEntity = new ParamsEntityWeiZu(username, number, "500", sign);
+//		String resTel = HttpRequest.sendGet("http://tcc.taobao.com/cc/json/mobile_tel_segment.htm", "tel=" + number);
+		String resMsg = HttpRequest.sendGet("http://139.224.70.161:32001/api/v1/sendOrder", httpEntity.toString());
+		System.out.println(resMsg);
+//		System.out.println(resTel);
+	}
 	
 	/**
 	 * @description: 测试余额接口
@@ -95,31 +97,31 @@ public class PurchaseAOImplTest {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月16日 下午5:20:58
 	 */
-	@Test
-	public void testOrderState(){
-		//用户名： CS111111
-		//apikey: 722c16de0a83e5bd2f988e3c7bc9fee8
-		String username="CS111111";
-		String apikey = "722c16de0a83e5bd2f988e3c7bc9fee8";
-		String sign = MD5.getMd5("username="+username+"&apikey="+apikey);
-		//解析返回的json数据
-		//获得账户余额
-		//获得订单详情
-		
-		//利用单例模式，对某一个系统生成唯一的sign（根据url分配apikey）
-		//利用反射自动生成toString的方法
-		//Json可以统一解析的Json对象
-		System.out.println(sign);
-		String order_id = "20170622122808967868";
-		OrderStateParams osp = new OrderStateParams(username,order_id, sign);
-		String resMsg = HttpRequest.sendGet("http://139.224.70.161:32001/api/v1/orderState", osp.toString());
-		OrderStateResult osr = JSON.parseObject(resMsg, OrderStateResult.class);
-		System.out.println(osr.getOrder().getStatus());//订单状态
-		System.out.println(osr.getOrder().getMsg());//订单状态
-		System.out.println(osr.getErrmsg());
-		System.out.println(osr.getErrcode());//返回参数
-//		System.out.println(resMsg);
-	}
+//	@Test
+//	public void testOrderState(){
+//		//用户名： CS111111
+//		//apikey: 722c16de0a83e5bd2f988e3c7bc9fee8
+//		String username="CS111111";
+//		String apikey = "722c16de0a83e5bd2f988e3c7bc9fee8";
+//		String sign = MD5.getMd5("username="+username+"&apikey="+apikey);
+//		//解析返回的json数据
+//		//获得账户余额
+//		//获得订单详情
+//		
+//		//利用单例模式，对某一个系统生成唯一的sign（根据url分配apikey）
+//		//利用反射自动生成toString的方法
+//		//Json可以统一解析的Json对象
+//		System.out.println(sign);
+//		String order_id = "20170622122808967868";
+//		OrderStateParams osp = new OrderStateParams(username,order_id, sign);
+//		String resMsg = HttpRequest.sendGet("http://139.224.70.161:32001/api/v1/orderState", osp.toString());
+//		OrderStateResult osr = JSON.parseObject(resMsg, OrderStateResult.class);
+//		System.out.println(osr.getOrder().getStatus());//订单状态
+//		System.out.println(osr.getOrder().getMsg());//订单状态
+//		System.out.println(osr.getErrmsg());
+//		System.out.println(osr.getErrcode());//返回参数
+////		System.out.println(resMsg);
+//	}
 	/**
 	 * @description:测试通过发来的地址分发apikey
 	 * @author:POP产品研发部 宁强
@@ -142,7 +144,13 @@ public class PurchaseAOImplTest {
 //		System.out.println(resMsg);
 ////		System.out.println(resTel);
 //	}
-	
-	
+//	@Test
+//	public void testGetPurchaseById(){
+//		PurchasePo po = purchaseDAO.getOnePurchase("705129750095470592");
+//		if(po != null)
+//		{
+//			System.out.println("success");
+//		}
+//	}
 	
 }

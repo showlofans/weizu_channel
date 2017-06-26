@@ -50,5 +50,14 @@ public interface PurchaseDao {
 	 * @createTime:2017年6月13日 下午12:47:09
 	 */
 	List<PurchaseVO> getPurchase(Map<String,Object> paramsMap);
+	
+	/**
+	 * @description: 通过订单号查询订单
+	 * @param orderId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月26日 下午12:08:31
+	 */
+	PurchasePo getOnePurchase(Long orderId);
 
 }

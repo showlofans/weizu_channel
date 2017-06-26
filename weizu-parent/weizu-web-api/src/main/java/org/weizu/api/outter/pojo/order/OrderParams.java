@@ -9,25 +9,25 @@ package org.weizu.api.outter.pojo.order;
  * @version 1.0
  */
 public class OrderParams {
-	private String username;			//用户账号
+	private String userName;			//用户账号
 	private String sign;				//密钥
-	private String order_id;			//充值订单号
+	private String orderId;			//充值订单号
 	private String number;				//充值号码
 	
-	public OrderParams(String username, String sign, String order_id) {
+	public OrderParams(String userName, String sign, String orderId) {
 		super();
-		this.username = username;
+		this.userName = userName;
 		this.sign = sign;
-		this.order_id = order_id;
+		this.orderId = orderId;
 	}
 	public OrderParams() {
 		super();
 	}
-	public String getUsername() {
-		return username;
+	public String getUserName() {
+		return userName;
 	}
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 	public String getSign() {
 		return sign;
@@ -35,11 +35,11 @@ public class OrderParams {
 	public void setSign(String sign) {
 		this.sign = sign;
 	}
-	public String getOrder_id() {
-		return order_id;
+	public String getOrderId() {
+		return orderId;
 	}
-	public void setOrder_id(String order_id) {
-		this.order_id = order_id;
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 	public String getNumber() {
 		return number;

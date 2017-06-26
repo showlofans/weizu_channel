@@ -160,6 +160,14 @@ public class PurchaseAOImpl implements PurchaseAO {
 			
 			
 			purchasePo.setRootAgencyId(accountPo.getAgencyId());//设为当前登陆账户的订单
+			 Map<String, Object> telMap = PurchaseUtil.getOperatorsByTel(purchasePo.getChargeTel());
+			 String chargeTelCity = null;
+			 if(telMap != null)
+			{
+				chargeTelCity = telMap.get("chargeTelCity").toString();
+			}
+			purchasePo.setChargeTelCity(chargeTelCity);
+			
 			//更新订单表
 			int purResult = purchaseDAO.addPurchase(purchasePo);
 			
@@ -254,27 +262,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 					//更新加载的订单状态信息
 					//判断是否与数据库中的数据相等,如果不相等，就更新页面和数据库信息
 					PageOrder pageOrder = osrp.getPageOrder();
-					
-					if(purchaseVO2.getOrderResult() != pageOrder.getStatus())
-					{
-						purchaseVO2.setOrderResult(pageOrder.getStatus());
-						//如果过
-						if(StringHelper.isEmpty(pageOrder.getMsg())){
-							for (OrderStateEnum enumt : OrderStateEnum.values()) {
-								if(pageOrder.getStatus() == enumt.getValue())
-								{
-									purchaseVO2.setOrderResultDetail(enumt.getDesc());
-									break;
-								}
-								
-							}
-						}else{
-							purchaseVO2.setOrderResultDetail(pageOrder.getMsg());
-						}
-						String created_at_api = pageOrder.getCreated_at();
-						purchaseVO2.setOrderBackTimeStr(created_at_api);
-						purchaseDAO.updatePurchaseState(new PurchaseStateParams(purchaseVO2.getOrderId(), DateUtil.strToDate(created_at_api, "").getTime() , purchaseVO2.getOrderResult(), purchaseVO2.getOrderResultDetail()));
-					}else if(purchaseVO2.getOrderBackTime() != null)
+					//更新查看订单状态
+					checkOrderState(pageOrder, purchaseVO2);
+					if(purchaseVO2.getOrderBackTime() != null)
 					{
 						purchaseVO2.setOrderBackTimeStr(DateUtil.formatAll(purchaseVO2.getOrderBackTime()));
 					}
@@ -307,5 +297,51 @@ public class PurchaseAOImpl implements PurchaseAO {
 		
 		return osr;
 	}
+	/**
+	 * @description:   更新查看订单状态
+	 * @param pageOrder
+	 * @param purchaseVO
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月26日 下午12:57:18
+	 */
+	@Override
+	public int checkOrderState(PageOrder pageOrder, PurchaseVO purchaseVO) {
+		int updateRes = 0;
+		if(purchaseVO.getOrderResult() != pageOrder.getStatus())
+		{
+			purchaseVO.setOrderResult(pageOrder.getStatus());
+			//如果过
+			if(StringHelper.isEmpty(pageOrder.getMsg())){
+				for (OrderStateEnum enumt : OrderStateEnum.values()) {
+					if(pageOrder.getStatus() == enumt.getValue())
+					{
+						purchaseVO.setOrderResultDetail(enumt.getDesc());
+						break;
+					}
+				}
+			}else{
+				purchaseVO.setOrderResultDetail(pageOrder.getMsg());
+			}
+			String created_at_api = pageOrder.getCreated_at();
+			purchaseVO.setOrderBackTimeStr(created_at_api);
+			updateRes = purchaseDAO.updatePurchaseState(new PurchaseStateParams(purchaseVO.getOrderId(), DateUtil.strToDate(created_at_api, "").getTime() , purchaseVO.getOrderResult(), purchaseVO.getOrderResultDetail()));
+		}
+		return updateRes;
+	}
+
+	/**
+	 * @description: 通过订单Id查询订单
+	 * @param orderId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月26日 下午1:05:03
+	 */
+	@Override
+	public PurchasePo getOnePurchase(long orderId) {
+		return purchaseDAO.getOnePurchase(orderId);
+	}
+
+	
 
 }

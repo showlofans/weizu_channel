@@ -12,6 +12,7 @@ import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.web.channel.dao.ChannelForwardDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.BestChannelPO;
 import com.weizu.flowsys.web.channel.pojo.ChannelForwardPo;
+import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 
 @Repository(value="channelForwardDao")
 public class ChannelForwardDao extends DaoImpl<ChannelForwardPo, Integer> implements
@@ -70,6 +71,18 @@ public class ChannelForwardDao extends DaoImpl<ChannelForwardPo, Integer> implem
 	public BestChannelPO getBestChannel(Map<String, Object> paramsMap) {
 		// TODO Auto-generated method stub
 		return sqlSessionTemplate.selectOne("getBestChannel",paramsMap);
+	}
+	/**
+	 * @description: 通过通道ID找到所属平台
+	 * @param channelId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月26日 下午1:25:01
+	 */
+	@Override
+	public ExchangePlatformPo getEpByChannelId(Integer channelId) {
+		
+		return sqlSessionTemplate.selectOne("getEpByChannelId",channelId);
 	}
 
 }

@@ -77,4 +77,16 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePo, Long> implements Purcha
 		return sqlSessionTemplate.update("updatePurState", purchaseParams);
 	}
 
+	/**
+	 * @description: 通过订单号查询订单
+	 * @param orderId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月26日 下午12:08:57
+	 */
+	@Override
+	public PurchasePo getOnePurchase(Long orderId) {
+		return sqlSessionTemplate.selectOne("getOnePurchase", orderId);
+	}
+
 }

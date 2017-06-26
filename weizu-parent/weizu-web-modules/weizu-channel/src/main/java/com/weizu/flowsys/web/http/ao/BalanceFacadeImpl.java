@@ -3,6 +3,7 @@ package com.weizu.flowsys.web.http.ao;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.weizu.api.outter.enums.BalanceCheckEnum;
 import org.weizu.api.outter.facade.BalanceFacade;
 import org.weizu.api.outter.pojo.BalanceDTO;
 
@@ -39,14 +40,17 @@ public class BalanceFacadeImpl implements BalanceFacade {
 	public BalanceDTO myBalance(String userName, String sign) {
 		AgencyBackwardPo backPo = valiUser.findAgency(userName, sign);
 		BalanceDTO balanceDTO = null;
+		BalanceCheckEnum bcEnum = null;
 		if(backPo == null)
 		{
-			balanceDTO = new BalanceDTO(0, "用户验证失败","0","0");
+			bcEnum = BalanceCheckEnum.AUTHENTICATION_FAILURE;
+			balanceDTO = new BalanceDTO(bcEnum.getValue(), bcEnum.getDesc(),"0","0");
 		}
 		else
 		{
 			ChargeAccountPo account = chargeAccountAO.getAccountByAgencyId(backPo.getId());
-			balanceDTO = new BalanceDTO(1, "用户验证成功",account.getAccountBalance() + "",account.getAccountCredit()+ "");
+			bcEnum = BalanceCheckEnum.AUTHENTICATION_SUCCESS;
+			balanceDTO = new BalanceDTO(bcEnum.getValue(), bcEnum.getDesc(), account.getAccountBalance() + "",account.getAccountCredit()+ "");
 		}
 		return balanceDTO;
 	}

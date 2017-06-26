@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.weizu.flowsys.web.activity.pojo.OperatorScopeVO;
 import com.weizu.flowsys.web.channel.ao.ChannelForwardAO;
 import com.weizu.flowsys.web.channel.pojo.BestChannelPO;
+import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -38,6 +39,15 @@ public class ChannelForwardAOTest {
 //		BestChannelPO bcp = channelForwardAO.getBestChannel(scopeVO);
 //		if(bcp != null){
 //			System.out.println("最优通道折扣："+bcp.getChannelDiscount());
+//		}else{
+//			System.out.println("没找到记录！！");
+//		}
+//	}
+//	@Test
+//	public void testGetEpByChannelId(){
+//		ExchangePlatformPo ep = channelForwardAO.getEpByChannelId(30);
+//		if(ep != null){
+//			System.out.println("success");
 //		}else{
 //			System.out.println("没找到记录！！");
 //		}

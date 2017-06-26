@@ -16,6 +16,7 @@ import org.weizu.api.facet.orderState.OrderStateBase;
 import org.weizu.api.facet.orderState.OrderStateFactory;
 import org.weizu.api.facet.orderState.impl.OrderStateParamsPage;
 import org.weizu.api.facet.orderState.impl.OrderStateResultPage;
+import org.weizu.api.outter.enums.ChargeStatusEnum;
 import org.weizu.api.outter.facade.ChargeFacade;
 import org.weizu.api.outter.pojo.charge.ChargeDTO;
 import org.weizu.api.outter.pojo.charge.ChargeOrder;
@@ -95,6 +96,7 @@ public class ChargeFacadeImpl implements ChargeFacade {
 		
 		OperatorPgDataPo pgData = null;
 		int otype = -1;
+		ChargeStatusEnum chargeEnum = null;
 		try {
 			int scope = Integer.parseInt(chargeParams.getScope());
 			int pgSize = Integer.parseInt(chargeParams.getFlowsize());
@@ -102,17 +104,20 @@ public class ChargeFacadeImpl implements ChargeFacade {
 			pgData = valiUser.findPg(scope, pgSize,otype);//
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
-			return new ChargeDTO(7, "数据参数格式不对", null);
+			chargeEnum = ChargeStatusEnum.INT_REQUIRED;
+			return new ChargeDTO(chargeEnum.getValue(),chargeEnum.getDesc(), null);
 		} 
 		//充值用户不合法
 		if(backPo == null)
 		{
-			chargeDTO = new ChargeDTO(0, "用户验证失败", null);
+			chargeEnum = ChargeStatusEnum.AUTHENTICATION_FAILURE;
+			chargeDTO = new ChargeDTO(chargeEnum.getValue(),chargeEnum.getDesc(), null);
 		}
 		//充值流量包体不存在
 		else if(pgData == null)
 		{
-			chargeDTO = new ChargeDTO(8, "充值包体不存在", null);
+			chargeEnum = ChargeStatusEnum.PG_NOT_FOUND;
+			chargeDTO = new ChargeDTO(chargeEnum.getValue(),chargeEnum.getDesc(), null);
 		}else
 		{//充值并返回最新的订单（状态）
 			PurchasePo purchasePo = new PurchasePo();
@@ -170,6 +175,7 @@ public class ChargeFacadeImpl implements ChargeFacade {
 						}
 						purchasePo.setOrderPlatformPath(OrderPathEnum.CHARGE_SOCKET.getValue());
 						purchasePo.setAgencyId(backPo.getId());
+						purchasePo.setRootAgencyId(backPo.getRootAgencyId());
 						
 						purchasePo.setOrderBackTime(chargePageOrder.getOrderBackTime());
 						purchasePo.setOrderIdApi(chargePageOrder.getTransaction_id());
@@ -193,12 +199,11 @@ public class ChargeFacadeImpl implements ChargeFacade {
 				int purResult = purchaseDAO.addPurchase(purchasePo);
 				if(channelRes + purResult >= 2){
 					ChargeOrder chargeOrder = new ChargeOrder(purchasePo.getOrderId()+"", purchasePo.getChargeTel(), pgData.getPgSize()+"");
-					chargeDTO = new ChargeDTO(1, "充值成功", chargeOrder);
-					System.out.println();
+					chargeEnum = ChargeStatusEnum.AUTHENTICATION_FAILURE;
+					chargeDTO = new ChargeDTO(chargeEnum.getValue(),chargeEnum.getDesc(), chargeOrder);
 				}
 			}
 		}
-		
 		return chargeDTO;
 	}
 
