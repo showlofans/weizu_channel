@@ -88,6 +88,7 @@ public class AccountController {
 		}
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVo != null){
+			chargeRecordPo.setAccountType(AccountTypeEnum.INCREASE.getValue());
 			Pagination<ChargeRecordPo> pagination =  chargeRecordAO.listChargeRecord(agencyVo.getId(), chargeRecordPo, pageParam);
 			resultMap.put("pagination", pagination);
 			resultMap.put("billTypeEnum", BillTypeEnum.toList());
@@ -102,6 +103,45 @@ public class AccountController {
 			resultMap.put("searchParams", chargeRecordPo);
 		}
 		return new ModelAndView("/account/charge_list", "resultMap", resultMap);
+	}
+	/**
+	 * @description: 消费记录
+	 * @param pageNo
+	 * @param request
+	 * @param chargeRecordPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月27日 下午5:09:11
+	 */
+	@RequestMapping(value= AccountURL.CONSUME_LIST)
+	public ModelAndView getConsumeList(@RequestParam(value = "pageNo", required = false) String pageNo,
+			HttpServletRequest request,ChargeRecordPo chargeRecordPo){
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		PageParam pageParam = null;
+		if(StringHelper.isNotEmpty(pageNo)){
+			pageParam = new PageParam(Integer.parseInt(pageNo), 10);
+		}else{
+			chargeRecordPo.setStartTimeStr(DateUtil.formatAll(DateUtil.getStartTime()));
+			chargeRecordPo.setEndTimeStr(DateUtil.formatAll(DateUtil.getEndTime()));
+			pageParam = new PageParam(1, 10);
+		}
+		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		if(agencyVo != null){
+			chargeRecordPo.setAccountType(AccountTypeEnum.DECREASE.getValue());
+			Pagination<ChargeRecordPo> pagination =  chargeRecordAO.listChargeRecord(agencyVo.getId(), chargeRecordPo, pageParam);
+			resultMap.put("pagination", pagination);
+			resultMap.put("billTypeEnum", BillTypeEnum.toList());
+			resultMap.put("accountTypeEnum", AccountTypeEnum.toList());
+			//点击金额进入连接，自动填充代理商名称
+			if(chargeRecordPo.getUserName() == null && chargeRecordPo.getAgencyId() != null){
+				AgencyBackwardPo agencyPO = agencyAO.getAgencyById(chargeRecordPo.getAgencyId()+"");
+				if(agencyPO != null){
+					chargeRecordPo.setUserName(agencyPO.getUserName());
+				}
+			}
+			resultMap.put("searchParams", chargeRecordPo);
+		}
+		return new ModelAndView("/account/consume_list", "resultMap", resultMap);
 	}
 	
 	/**

@@ -35,5 +35,13 @@ public class ChannelURL extends BaseURL{
 	/**
 	 * 平台搜索
 	 */
-	public static final String SEARCH_PLATFORM = "/search_platform";
+	public static final String SEARCH_PLATFORM = "/search_platform"+ DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 通道使用状态更新
+	 */
+	public static final String CHANNEL_USE_STATE_UPDATE = "/channel_use_state_update"+ DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 通道状态更新
+	 */
+	public static final String CHANNEL_STATE_UPDATE = "/channel_state_update"+ DYNAMIC_WEB_SUFFIX;
 }

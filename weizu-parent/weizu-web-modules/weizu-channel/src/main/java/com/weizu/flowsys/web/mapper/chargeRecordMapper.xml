@@ -95,7 +95,6 @@
 		<if test="endTime != null">
 			AND remittance_time &lt;= #{endTime}
 		</if>
-		
 	</sql>
 	
 </mapper>

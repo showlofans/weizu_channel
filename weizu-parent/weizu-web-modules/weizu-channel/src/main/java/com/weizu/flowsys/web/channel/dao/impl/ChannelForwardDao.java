@@ -1,5 +1,6 @@
 package com.weizu.flowsys.web.channel.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -83,6 +84,36 @@ public class ChannelForwardDao extends DaoImpl<ChannelForwardPo, Integer> implem
 	public ExchangePlatformPo getEpByChannelId(Integer channelId) {
 		
 		return sqlSessionTemplate.selectOne("getEpByChannelId",channelId);
+	}
+	/**
+	 * @description:更新通道使用状态
+	 * @param channelId
+	 * @param channelUseState
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月27日 上午11:52:39
+	 */
+	@Override
+	public int updateChannelUseState(int channelId, int channelUseState) {
+		Map<String, Object> parameter = new HashMap<String, Object>(); 
+		parameter.put("id", channelId);
+		parameter.put("channelUseState", channelUseState);
+		return sqlSessionTemplate.update("updateChannelUseState", parameter);
+	}
+	/**
+	 * @description: 更新通道状态
+	 * @param channelId
+	 * @param channelState
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月27日 上午11:52:26
+	 */
+	@Override
+	public int updateChannelState(int channelId, int channelState) {
+		Map<String, Object> parameter = new HashMap<String, Object>(); 
+		parameter.put("id", channelId);
+		parameter.put("channelState", channelState);
+		return sqlSessionTemplate.update("updateChannelState", parameter);
 	}
 
 }

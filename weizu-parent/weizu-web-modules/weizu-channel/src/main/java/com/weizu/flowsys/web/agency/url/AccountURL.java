@@ -29,6 +29,10 @@ public class AccountURL extends BaseURL {
 	 * 账户充值记录
 	 */
 	public static final String CHARGE_LIST = "/charge_list" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 账户消费记录
+	 */
+	public static final String CONSUME_LIST = "/consume_list" + DYNAMIC_WEB_SUFFIX;
 	
 	
 }

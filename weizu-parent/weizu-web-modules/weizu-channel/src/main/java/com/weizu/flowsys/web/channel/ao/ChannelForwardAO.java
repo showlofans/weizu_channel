@@ -81,4 +81,24 @@ public interface ChannelForwardAO {
 	 * @createTime:2017年6月26日 下午1:24:13
 	 */
 	ExchangePlatformPo getEpByChannelId(Integer channelId);
+	
+	/**
+	 * @description: 更新通道使用状态
+	 * @param channelId
+	 * @param channelUseState
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月27日 上午11:50:57
+	 */
+	int updateChannelUseState(String channelId, String channelUseState);
+	
+	/**
+	 * @description: 更新通道状态
+	 * @param channelId
+	 * @param channelUseState
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月27日 上午11:50:57
+	 */
+	int updateChannelState(String channelId, String channelUseState);
 }

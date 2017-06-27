@@ -60,17 +60,17 @@ public class PaginationTag extends SimpleTagSupport {
 			// 上一页
 			if (pagination.getPageNo() == 1) {
 				// strBuf.append(" <a href=\"#\"><span class=\"first_link\">首页</span></a> ");
-				strBuf.append(" <span class=\"disabled\">").append(" << </span> ");
+				strBuf.append(" <span class=\"disabled\">").append(" 上一页 </span> ");
 			} else {
 				// strBuf.append(" <a href=\"#\" onclick=\"paga_toPage(1);\"><span class=\"first_link\">首页</span></a> ");
-				strBuf.append(" <a href=\"#\" onclick=\"paga_toPage(")
-						.append(pagination.getPageNo() - 1).append(")\"> << </a> ");
+				strBuf.append(" <a href=\"#\" class=\"laypage_prev\" onclick=\"paga_toPage(")
+						.append(pagination.getPageNo() - 1).append(")\"> 上一页  </a> ");
 			}
 	
 			for (int i = pagination.getStartIndex(); i <= pagination.getEndIndex(); i++) {
 				if (pagination.getPageNo() == i) {
-					strBuf.append("<span class=\"current\">").append(i)
-							.append("</span>");
+					strBuf.append("<span class=\"laypage_curr\">").append(i)
+							.append("</span>"); 
 				} else {
 					strBuf.append("<a href=\"#\"")
 							.append(" onclick=\"paga_toPage(").append(i)
@@ -80,11 +80,11 @@ public class PaginationTag extends SimpleTagSupport {
 	
 			// 下一页
 			if (pagination.getPageNo() == pagination.getTotalPage()) {
-				strBuf.append(" <span class=\"disabled\">").append(" >> </span> ");
+				strBuf.append(" <span class=\"disabled\">").append(" 下一页 </span> ");
 				// strBuf.append(" <a href=\"#\"><span class=\"end_link\">末页</span></a> ");
 			} else {
-				strBuf.append(" <a href=\"#\" onclick=\"paga_toPage(")
-						.append(pagination.getPageNo() + 1).append(")\"> >> </a> ");
+				strBuf.append(" <a href=\"#\" class=\"laypage_next\" onclick=\"paga_toPage(")
+						.append(pagination.getPageNo() + 1).append(")\"> 下一页 </a> ");
 				// strBuf.append(" <a href=\"#\" onclick=\"paga_toPage(").append(pagination.getTotalPage()).append(")\"><span class=\"end_link\">末页</span></a> ");
 			}
 			strBuf.append("<span class=\"info\">(第").append(pagination.getPageNo())

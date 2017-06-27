@@ -31,7 +31,7 @@ public class APITest {
 //	public void testOrderStateAPI(){
 //		String requestUrl = "http://127.0.0.1:8080/weizuAPI/myOrderState.do";
 //		String sign = MD5.getMd5("402880ef5cd2b925015cd2b925b90000");
-//		String params = "userName=456&sign="+ sign+"&orderId=705162055119802368&number=13699562589";
+//		String params = "userName=456&sign="+ sign+"&orderId=705162055119802368&number=15858343638";
 //		String resultStr = HttpRequest.sendGet(requestUrl, params);
 //		System.out.println(resultStr);
 //	}

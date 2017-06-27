@@ -20,6 +20,7 @@ import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSONObject;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
+import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
@@ -148,6 +149,7 @@ public class ChannelController {
 		resultMap.put("pagination", pagination);
 		resultMap.put("searchParam", channelForwardPo);
 		resultMap.put("channelStateEnums", ChannelStateEnum.toList());
+		resultMap.put("channelUseStateEnums", ChannelUseStateEnum.toList());
 		resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
 		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 		
@@ -207,4 +209,50 @@ public class ChannelController {
 	            System.out.println(e);
 	        }
 	}
+	
+	/**
+	 * @description: 通道使用状态更新
+	 * @param id
+	 * @param channelUseState
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月27日 下午12:02:12
+	 */
+	@RequestMapping(value=ChannelURL.CHANNEL_USE_STATE_UPDATE)
+	public void updateUseState(String id, String channelUseState, HttpServletResponse response){
+		int updateRes = channelForwardAO.updateChannelUseState(id, channelUseState);
+		response.setContentType("text/html;charset=utf-8");
+		try {
+			if(updateRes > 0)
+			{
+				response.getWriter().print("success");
+			}else{
+				response.getWriter().print("error");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * @description: 通道状态更新
+	 * @param id
+	 * @param channelUseState
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月27日 下午12:02:17
+	 */
+	@RequestMapping(value=ChannelURL.CHANNEL_STATE_UPDATE)
+	public void updateState(String id, String channelState, HttpServletResponse response){
+		int updateRes = channelForwardAO.updateChannelState(id, channelState);
+		response.setContentType("text/html;charset=utf-8");
+		try {
+			if(updateRes > 0)
+			{
+				response.getWriter().print("success");
+			}else{
+				response.getWriter().print("error");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

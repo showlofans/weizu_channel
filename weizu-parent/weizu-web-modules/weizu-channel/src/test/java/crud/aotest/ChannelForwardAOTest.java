@@ -52,4 +52,19 @@ public class ChannelForwardAOTest {
 //			System.out.println("没找到记录！！");
 //		}
 //	}
+	/**
+	 * @description: 测试更新状态
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月27日 下午1:05:45
+	 */
+//	@Test
+//	public void testUpdateState(){
+////		int res = channelForwardAO.updateChannelUseState("35", "0");//停用通道
+//		int res2 = channelForwardAO.updateChannelState("35", "0");//暂停通道
+//		if(res2 > 0 ){
+//			System.out.println("success");
+//		}else{
+//			System.out.println("没找到记录！！");
+//		}
+//	}
 }

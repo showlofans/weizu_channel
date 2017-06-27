@@ -38,7 +38,7 @@
 		通道名称：<input type="text" value="${resultMap.searchParam.channelName }" name="channelName" id="" placeholder=" 通道名称" style="width:250px" class="input-text">
 		通道状态
 		<span class="select-box inline">
-			<select name="channelState" class="select">
+			<select name="channelState" class="select" onchange="getChannelList(this)">
 			<option value="">请选择</option>
 			<c:forEach items="${resultMap.channelStateEnums }" var="cstate" varStatus="vs1">
 				<option value="${cstate.value }" <c:if test="${cstate.value == resultMap.searchParam.channelState }"> selected</c:if>>${cstate.desc }</option>
@@ -70,6 +70,7 @@
 					<th width="60">通道折扣</th>
 					<th width="75">通道余额</th>
 					<th width="60">通道状态</th>
+					<th width="60">通道使用状态</th>
 					<th width="60">通道规格</th>
 					
 					<th width="120">操作</th>
@@ -90,20 +91,54 @@
 						</td>
 						<td>
 							<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
-							<c:if test="${channel.serviceType == serviceTypeEnum.value }"> ${serviceTypeEnum.desc }</c:if>
+								<c:if test="${channel.serviceType == serviceTypeEnum.value }"> ${serviceTypeEnum.desc }</c:if>
 							</c:forEach>
 						</td>
 						<td>"${channel.scopeCityName }" : "${channel.channelDiscount}"</td> 
 						<td>${channel.channelBalance }</td> 
 						
-						<td>
+						<td class="td-status">
 							<c:forEach items="${resultMap.channelStateEnums }" var="cState" varStatus="vs1">
-							<c:if test="${channel.channelState == cState.value }"> ${cState.desc }</c:if>
+								<c:if test="${channel.channelState == cState.value && channel.channelState==0  }"> <span class="label label-success radius">${cState.desc }</span></c:if>
+								<c:if test="${channel.channelState == cState.value && channel.channelState==1  }"> <span class="label radius">${cState.desc }</span></c:if>
+							</c:forEach>
+						</td>
+						<td class="td-status">
+							<c:forEach items="${resultMap.channelUseStateEnums }" var="cUseState" varStatus="vs1">
+								<c:if test="${channel.channelUseState == cUseState.value  && channel.channelUseState==0}"> <span class="label label-success radius">${cUseState.desc }</span></c:if>
+								<c:if test="${channel.channelUseState == cUseState.value  && channel.channelUseState==1}"> <span class="label radius">${cUseState.desc }</span></c:if>
 							</c:forEach>
 						</td>
 						<td>${channel.pgSize }</td>
 					<!-- 	<td class="td-status"><span class="label label-success radius">已发布</span></td> -->
-						<td class="f-14 td-manage"><a style="text-decoration:none" onClick="article_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> <a style="text-decoration:none" class="ml-5" onClick="article_edit('资讯编辑','article-add.html','10001')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> <a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+						<td class="f-14 td-manage">
+						<c:if test="${channel.channelState == 1 }"><!-- 暂停 -->
+							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeCState(this,'1')" href="javascript:;" title="运行">
+								<input type="hidden" value="${channel.id }" >
+								<i class="Hui-iconfont">&#xe6e6;</i>
+							</a> 
+						</c:if>
+						<c:if test="${channel.channelState == 0 }"><!-- 运行 -->
+							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeCState(this,'0')" href="javascript:;" title="暂停">
+								<input type="hidden" value="${channel.id }" >
+								<i class="Hui-iconfont">&#xe6e5;</i>
+							</a> 
+						</c:if>
+						<c:if test="${channel.channelUseState == 1 }"><!-- 已暂停 -->
+							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeUseState(this,'1')" href="javascript:;" title="启用">
+								<input type="hidden" value="${channel.id }" >
+								<i class="Hui-iconfont">&#xe615;</i>
+							</a> 
+						</c:if>
+						<c:if test="${channel.channelUseState == 0 }"><!-- 已启用 -->
+							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeUseState(this,'0')" href="javascript:;" title="停用">
+								<input type="hidden" value="${channel.id }" >
+								<i class="Hui-iconfont">&#xe631;</i>
+							</a> 
+						</c:if>
+						<a style="text-decoration:none" class="ml-5" onClick="article_edit('资讯编辑','article-add.html','10001')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> 
+						<!-- <a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a> -->
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -138,24 +173,11 @@
 	});
 }); */
 
-//3个参数的名字可以随便命名,但必须是3个参数,少一个都不行
-function retrieveData( sSource111,aoData, fnCallback111) {
-	alert(aoData[0].name);  
-    // alert(JSON.stringify(aoData));  
-    $.ajax( {    
-        "type": "get",     
-        "contentType": "application/json",    
-        "url": sSource111,     
-        "dataType": "json",    
-        "data": { aoData: JSON.stringify(aoData) }, // 以json格式传递  
-        "success": function(resp) {    
-        	fnCallback111(resp.aaData); 
-        },
-        "error":function(msg){
-        	alert(msg);
-        }
-    }); 
-}  
+/*onchange通道状态*/
+function getChannelList(vart){
+	//alert($(vart).val());
+	$('form').submit();
+}
 
 /*资讯-添加*/
 function article_add(title,url,w,h){
@@ -192,6 +214,7 @@ function article_edit(title,url,id,w,h){
 }
 /*资讯-删除*/
 function article_del(obj,id){
+	var tag = "";
 	layer.confirm('确认要删除吗？',function(index){
 		$.ajax({
 			type: 'POST',
@@ -206,6 +229,123 @@ function article_del(obj,id){
 			},
 		});		
 	});
+}
+/*通道状态-修改*/
+function changeCState(obj,state){
+	var id = $(obj).children().eq(0).val();
+	var tag = "";
+	
+	if(state == "1"){
+		layer.confirm('确认要运行该通道吗？',function(index){
+			$.ajax({
+				type: 'POST',
+				url: '/flowsys/channel/channel_state_update.do',
+				dataType: 'json',
+				data: {id:id, channelState:state},
+				async: false,
+				success: function(data){
+					tag = data;
+					/* alert(data);
+					if(data=="success")
+					{
+						location.reload();
+					}else{
+						layer.msg('更新通道失败!',{icon:1,time:1000});
+					} */
+				},
+				error:function(data) {
+					console.log(data.msg);
+				},
+			});		
+			if(tag == "success"){
+				layer.msg('删除成功', {icon:5,time:1000});
+			}
+			layer.close(index);
+			location.reload();
+		});
+	}else{
+		layer.confirm('确认要暂停该通道吗？',function(index){
+			$.ajax({
+				type: 'POST',
+				async: false,
+				url: '/flowsys/channel/channel_state_update.do',
+				dataType: 'json',
+				data: {id:id, channelState:state},
+				success: function(data){
+					tag = data;
+					alert(data);
+					if(data=="success")
+					{
+						location.reload();
+					}else{
+						layer.msg('更新通道失败!',{icon:1,time:1000});
+					}
+				},
+				error:function(data) {
+					console.log(data.msg);
+				},
+			});	
+			if(tag == "success"){
+				layer.msg('删除成功', {icon:5,time:1000});
+			}
+			layer.close(index);
+			location.reload();
+		});
+	}
+}
+/*通道使用状态-修改*/
+function changeUseState(obj,useState){
+	var id = $(obj).children().eq(0).val();
+	//alert(id);
+	if(useState == "1"){
+		layer.confirm('确认要启用该通道吗？',function(index){
+			$.ajax({
+				type: 'POST',
+				async: false,
+				url: '/flowsys/channel/channel_use_state_update.do',
+				dataType: 'json',
+				data: {id:id, channelUseState:useState},
+				success: function(data){
+					alert(data);
+					if(data=="success")
+					{
+						location.reload();
+					}else{
+						layer.msg('更新通道失败!',{icon:1,time:1000});
+					}
+				},
+				error:function(data) {
+					console.log(data.msg);
+				},
+			});	
+			layer.close(index);
+			location.reload();
+		});
+	}else{
+		layer.confirm('确认要停用该通道吗？',function(index){
+			$.ajax({
+				type: 'POST',
+				async: false,
+				url: '/flowsys/channel/channel_use_state_update.do',
+				dataType: 'json',
+				data: {id:id, channelUseState:useState},
+				success: function(data){
+					alert(data);
+					if(data=="success")
+					{
+						location.reload();
+					}else{
+						layer.msg('更新通道失败!',{icon:1,time:1000});
+					}
+				},
+				error:function(data) {
+					console.log(data.msg);
+				},
+			});	
+			layer.close(index);
+			location.reload();
+		});
+	}
 }
 
 /*资讯-审核*/

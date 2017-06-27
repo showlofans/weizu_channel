@@ -40,7 +40,7 @@ public class ChannelForwardPo extends Po implements Cloneable {
     @TempField
     private List<ScopeDiscount> discountList;	//城市名+折扣
 
-    private Integer epId = 1;				//平台所属ID（外键）
+    private Integer epId;				//平台所属ID（外键）
 
     private Integer channelTotalUse = 0;	//通道交易总单数
 
@@ -48,7 +48,9 @@ public class ChannelForwardPo extends Po implements Cloneable {
 
 	private Double channelBalance = 0.0d;		//通道余额
 
-    private Integer channelState = 0;		//通道状态（0-运行 1-暂停）
+    private Integer channelState;		//通道状态（0-运行 1-暂停）
+    
+    private Integer channelUseState = 0;		//通道使用状态（0-已使用 1-已暂停）
     
     
     @Override
@@ -86,6 +88,14 @@ public class ChannelForwardPo extends Po implements Cloneable {
     	this.channelTotalAmount = NumberTool.add(this.channelTotalAmount, amount);
     }
     
+	public Integer getChannelUseState() {
+		return channelUseState;
+	}
+
+	public void setChannelUseState(Integer channelUseState) {
+		this.channelUseState = channelUseState;
+	}
+
 	public Integer getAgencyId() {
 		return agencyId;
 	}

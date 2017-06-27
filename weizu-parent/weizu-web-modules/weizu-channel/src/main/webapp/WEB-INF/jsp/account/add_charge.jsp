@@ -33,18 +33,32 @@
 </head>
 <body>
 <article class="page-container">
-	<form action="flowsys/account/add_charge.do" method="post" class="form form-horizontal" id="charge-form">
+	<form class="form form-horizontal" id="charge-form">
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>代理商名称</label>
 			<div class="formControls col-xs-8 col-sm-9 c-red"> ${resultMap.agencyUserName } </div>
 		</div> 
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>账户余额</label>
-			<div class="formControls col-xs-8 col-sm-9 c-red"> ${resultMap.chargeAccount.accountBalance } </div>
+			<c:choose>
+				<c:when test="${resultMap.chargeAccount.accountBalance > 0 }">
+					<div class="formControls col-xs-8 col-sm-9"> ${resultMap.chargeAccount.accountBalance } </div>
+				</c:when>
+				<c:otherwise>
+					<div class="formControls col-xs-8 col-sm-9 c-red"> ${resultMap.chargeAccount.accountBalance } </div>
+				</c:otherwise>
+			</c:choose>
 		</div> 
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>信用额度</label>
-			<div class="formControls col-xs-8 col-sm-9 c-red"> ${resultMap.chargeAccount.accountCredit } </div>
+			<c:choose>
+				<c:when test="${resultMap.chargeAccount.accountCredit > 0 }">
+					<div class="formControls col-xs-8 col-sm-9"> ${resultMap.chargeAccount.accountCredit } </div>
+				</c:when>
+				<c:otherwise>
+					<div class="formControls col-xs-8 col-sm-9 c-red"> ${resultMap.chargeAccount.accountCredit } </div>
+				</c:otherwise>
+			</c:choose>
 		</div> 
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">充值额：</label>
@@ -72,6 +86,24 @@
 			</div>
 		</div>
 		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">充值凭证：</label>
+			<span class="btn-upload form-group">
+				<input class="input-text upload-url" type="text" name="uploadfile-1" id="uploadfile-1" readonly style="width:200px">
+				<a href="javascript:void();" class="btn btn-primary upload-btn"><i class="Hui-iconfont">&#xe642;</i> 上传logo</a>
+				<input type="file" multiple name="file-1" class="input-file">
+			</span>
+		</div>
+		
+		<!-- <div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">附件：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="btn-upload form-group">
+				<input class="input-text upload-url" type="text" name="uploadfile-2" id="uploadfile-2" readonly style="width:200px">
+				<a href="javascript:void();" class="btn btn-primary upload-btn"><i class="Hui-iconfont">&#xe642;</i> 上传logo</a>
+				<input type="file" multiple name="file-2" class="input-file">
+			</span> 
+			 </div>
+		</div> -->
+		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
 				<input class="btn btn-primary radius" onclick="save()" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
 			</div>
@@ -92,11 +124,30 @@
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script> 
 <script type="text/javascript">
 $().ready(function() {
-	$("#charge-form").validate({});
+	$("#charge-form").validate({
+		submitHandler : function(form) {
+			$.ajax({
+		        type:"post",
+		        url:"/flowsys/account/add_charge.do",
+		        data: $('form').serialize(),//表单数据
+		        async : false,
+		        success:function(d){
+		            if(d=="success"){
+		                layer.msg('保存成功！');//保存成功提示
+		            }
+		            if(d=="error"){
+		                layer.msg('保存异常!');
+		            }
+		            var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+		            parent.layer.close(index); //执行关闭
+		        }
+		    }); 
+		}
+	});
 	
 })
 function save(){
-	$("#rechargeAmount").focus();
+	/* $("#rechargeAmount").focus();
 	var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
 	$.ajax({
         type:"post",
@@ -112,7 +163,7 @@ function save(){
             }
             parent.layer.close(index); //执行关闭
         }
-    });
+    });  */
 }
 
 /* $(function(){

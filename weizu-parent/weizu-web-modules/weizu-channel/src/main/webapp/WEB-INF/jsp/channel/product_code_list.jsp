@@ -49,7 +49,7 @@
 		产品编码：<input type="text" value="${resultMap.searchParam.productCode }" name="productCode" id="" placeholder=" 产品编码" style="width:250px" class="input-text">
 		对接平台：
 		<span class="select-box inline">
-			<select name="epId" class="select">
+			<select name="epId" class="select" onchange="submitForm()">
 			<c:forEach items="${resultMap.epList }" var="ep" varStatus="vs2">
 				<option value="${ep.epId }" <c:if test="${ep.epId == resultMap.searchParam.epId }"> selected</c:if>>${ep.epName }</option>
 			</c:forEach>
@@ -57,7 +57,7 @@
 		</span> 
 		运营商类型：
 		<span class="select-box inline">
-			<select name="operatorType" class="select">
+			<select name="operatorType" onchange="submitForm()" class="select">
 			<option value="">请选择</option>
 			<c:forEach items="${resultMap.operatorTypeEnums }" var="otypeEnum" varStatus="vs2">
 				<option value="${otypeEnum.value }" <c:if test="${otypeEnum.value == resultMap.searchParam.operatorType }"> selected</c:if>>${otypeEnum.desc }</option>
@@ -79,7 +79,7 @@
 				<tr class="text-c">
 					<!-- <th width="80">流量包Id</th> -->
 					<th width="80">ID</th>
-					<th width="80">包体编码名称</th>
+					<th width="200">包体编码名称</th>
 					<th width="80">包大小</th>
 					<th width="80">产品编码</th>
 					<!-- <th width="120">支持城市</th> -->
@@ -170,6 +170,10 @@ function retrieveData( sSource111,aoData, fnCallback111) {
         }
     }); 
 }  
+/*提交表单**/
+function submitForm(){
+	$('form').submit();
+}
 
 /*资讯-添加*/
 function article_add(title,url,w,h){

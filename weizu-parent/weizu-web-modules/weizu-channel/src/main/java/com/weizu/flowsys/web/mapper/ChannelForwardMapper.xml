@@ -20,6 +20,7 @@
     <result column="channel_total_amount" jdbcType="DOUBLE" property="channelTotalAmount" />
     <result column="channel_balance" jdbcType="DOUBLE" property="channelBalance" />
     <result column="channel_state" jdbcType="INTEGER" property="channelState" />
+    <result column="channel_use_state" jdbcType="INTEGER" property="channelUseState" />
     <result column="last_access" jdbcType="BIGINT" property="lastAccess" />
   </resultMap>
   
@@ -41,18 +42,18 @@
   <!-- 连表查询字段 -->
   <sql id="Base_Column_List" >
     channel.id, channel_name, agency_id, pg_size, scope_city_name, channel.operator_type, service_id, channel_discount, ep_id, channel_total_use, 
-    channel_total_amount, channel_balance, channel_state,channel.last_access
+    channel_total_amount, channel_balance, channel_state, channel_use_state, channel.last_access
   </sql>
   
   
   <insert id="channel_addList" useGeneratedKeys="true" parameterType="java.util.List">
   	insert into <include refid="t_channel"></include>
   	(channel_name, agency_id, pg_size,operator_type, service_id, channel_discount, ep_id, channel_total_use,
-  	channel_total_amount, channel_balance, channel_state,last_access)
+  	channel_total_amount, channel_balance, channel_state, channel_use_state, last_access)
   	values
   	<foreach collection="list" separator="," item="channel" index="index">
   		(#{channel.channelName},#{channel.agencyId},#{channel.pgSize},#{channel.operatorType},#{channel.serviceId},#{channel.channelDiscount},#{channel.epId},
-  		#{channel.channelTotalUse},#{channel.channelTotalAmount},#{channel.channelBalance},#{channel.channelState},#{channel.lastAccess})
+  		#{channel.channelTotalUse},#{channel.channelTotalAmount},#{channel.channelBalance},#{channel.channelState},#{channel.channelUseState},#{channel.lastAccess})
   	</foreach>
   </insert>
   
@@ -120,5 +121,28 @@
   		AND agency_id = #{agencyId}
   	</if>
   </sql>
+  
+  <!-- 更新通道使用状态 -->
+  <update id="updateChannelUseState" parameterType="map">
+  	update <include refid="t_channel"></include>
+  	<set>
+  		channel_use_state = #{channelUseState}
+  	</set>
+  	<where>
+  		id = #{id}
+  	</where>
+  </update>
+  
+  <!-- 更新通道状态 -->
+  <update id="updateChannelState" parameterType="map">
+  	update <include refid="t_channel"></include>
+  	<set>
+  		channel_state = #{channelState}
+  	</set>
+  	<where>
+  		id = #{id}
+  	</where>
+  </update>
+  
   
 </mapper>

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.weizu.api.facet.charge.ChargeBase;
@@ -31,8 +32,10 @@ import com.weizu.flowsys.web.activity.dao.IOperatorDiscountDao;
 import com.weizu.flowsys.web.activity.dao.impl.OperatorDiscountDaoImpl;
 import com.weizu.flowsys.web.activity.pojo.OperatorDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.OperatorScopeVO;
+import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.dao.impl.AgencyBackwardDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
+import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.channel.ao.ChannelForwardAO;
 import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
 import com.weizu.flowsys.web.channel.dao.impl.ChannelForwardDao;
@@ -79,6 +82,9 @@ public class ChargeFacadeImpl implements ChargeFacade {
 	@Resource
 	private PurchaseDao purchaseDAO;
 	
+	@Resource
+	private ChargeAccountAo chargeAccountAO;
+	
 	/**
 	 * @description: 充值接口
 	 * @param chargeParams
@@ -91,8 +97,9 @@ public class ChargeFacadeImpl implements ChargeFacade {
 	public ChargeDTO charge(ChargeParams chargeParams) {
 		ChargeDTO chargeDTO = null;
 		AgencyBackwardPo backPo = valiUser.findAgency(chargeParams.getUsername(), chargeParams.getSign());
+		String chargeTel = chargeParams.getNumber();
 		
-		Map<String, Object> resMap = PurchaseUtil.getOperatorsByTel(chargeParams.getNumber());
+		Map<String, Object> resMap = PurchaseUtil.getOperatorsByTel(chargeTel);
 		
 		OperatorPgDataPo pgData = null;
 		int otype = -1;
@@ -126,81 +133,111 @@ public class ChargeFacadeImpl implements ChargeFacade {
 			String scopeName = resMap.get("scopeName").toString();
 			String chargeTelCity = resMap.get("chargeTelCity").toString();
 			String chargeTelDetail = resMap.get("chargeTelDetail").toString();
-			purchasePo.setChargeTel(chargeParams.getNumber());
+			purchasePo.setChargeTel(chargeTel);
 			
 			OperatorDiscountPo operatorDiscountPo = new OperatorDiscountPo();
 			operatorDiscountPo.setScopeName(scopeName);
-			Long rateId = backPo.getRateId();
-			operatorDiscountPo.setRateId(rateId);
+			operatorDiscountPo.setOperatorType(otype);
+			operatorDiscountPo.setRateId(backPo.getRateId());
 			OperatorDiscountPo discountPo = operatorDiscountDao.selectOneDiscountByPo(operatorDiscountPo);
-			
-			Double rateDisccount = discountPo.getDiscount();//费率折扣
-			
-			purchasePo.setChargeTelCity(chargeTelCity);
-			purchasePo.setChargeTelDetail(chargeTelDetail);
-			
-			int pgId = pgData.getId();
-			Double orderAmount = NumberTool.mul(pgData.getPgPrice(), rateDisccount);
-			
-			purchasePo.setPgId(pgId);
-			purchasePo.setOrderAmount(orderAmount);
-			
-			/*******************最优通道*******************/
-			String scopeCityCode = "";
-			for (Map<String, Object> cityMap : ScopeCityEnum.toList()) {
-				String cityName = cityMap.get("desc").toString();
-				if(cityName.contains(scopeName))
-				{
-					scopeCityCode = cityMap.get("value").toString();
-				}
+			//没有找到相关地区折扣
+			if(discountPo == null)
+			{
+				chargeEnum = ChargeStatusEnum.SCOPE_RATE_UNDEFINED;
+				chargeDTO = new ChargeDTO(chargeEnum.getValue(),chargeTelDetail+chargeEnum.getDesc(), null);
 			}
-			BestChannelPO bestChannel = channelForwardAO.getBestChannel(new OperatorScopeVO(scopeName, backPo.getId(), otype));
-			if(bestChannel  != null){
+			else
+			{
+				Double rateDisccount = discountPo.getDiscount();//费率折扣
 				
-				ProductCodePo product =  productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, pgData.getPgSize(), pgData.getOperatorType(), pgData.getServiceType(),bestChannel.getEpd()));
-				if(product != null){
-					ExchangePlatformPo epPo = exchangePlatformDao.get(bestChannel.getEpd());
-					ChargeBase chargeBase = ChargeFactory.getChargeBase(bestChannel.getEpName());
-					//充值
-					ChargeResultPage chargeResultPage = chargeBase.charge(new ChargeParamsPage(epPo.getEpPurchaseIp(), epPo.getEpName(), epPo.getEpUserName(), epPo.getEpApikey(), chargeParams.getNumber(), product.getProductCode()));
-					ChargePageOrder chargePageOrder = chargeResultPage.getChargePageOrder();
-					if(chargePageOrder != null)
-					{
-						/**订单信息添加*/
-						OrderUril ou1 = new OrderUril(2);
-						try {
-							purchasePo.setOrderId(ou1.nextId());//设置订单号
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						purchasePo.setOrderPlatformPath(OrderPathEnum.CHARGE_SOCKET.getValue());
-						purchasePo.setAgencyId(backPo.getId());
-						purchasePo.setRootAgencyId(backPo.getRootAgencyId());
-						
-						purchasePo.setOrderBackTime(chargePageOrder.getOrderBackTime());
-						purchasePo.setOrderIdApi(chargePageOrder.getTransaction_id());
-						//查看订单状态
-						OrderStateBase orderStatePage = OrderStateFactory.getOrderStateBase(epPo.getEpName());
-						OrderStateResultPage osrp = orderStatePage.getOrderState(new OrderStateParamsPage(epPo.getPgdataCheckIp(), chargePageOrder.getTransaction_id(), epPo.getEpName(), epPo.getEpUserName(), epPo.getEpApikey()));
-						purchasePo.setOrderResult(osrp.getPageOrder().getStatus());
-						purchasePo.setOrderResultDetail(osrp.getPageOrder().getMsg());
-					}
+				purchasePo.setChargeTelCity(chargeTelCity);
+				purchasePo.setChargeTelDetail(chargeTelDetail);
+				
+				int pgId = pgData.getId();
+				Double orderAmount = NumberTool.mul(pgData.getPgPrice(), rateDisccount);
+				
+				purchasePo.setPgId(pgId);
+				purchasePo.setOrderAmount(orderAmount);
+				
+				ChargeAccountPo chargeAccount = chargeAccountAO.getAccountByAgencyId(backPo.getId());
+				Double balance = 0.00d;//账户余额信息
+				if(chargeAccount != null)
+				{
+					balance = chargeAccount.getAccountBalance();
 				}
-				int channelId = bestChannel.getChanneld();//
-				Double channelDiscount = bestChannel.getChannelDiscount();
-				Double channelAmount = NumberTool.mul(pgData.getPgPrice(), channelDiscount);//通道交易增加额
-				purchasePo.setChannelId(channelId);
-				ChannelForwardPo channelPo = channelForwardDao.get(channelId);
-				channelPo.setId(channelId);
-				channelPo.addTotalUse();
-				channelPo.addTotalAmount(channelAmount);
-				int channelRes = channelForwardDao.update(channelPo);
-				//更新订单表
-				int purResult = purchaseDAO.addPurchase(purchasePo);
-				if(channelRes + purResult >= 2){
-					ChargeOrder chargeOrder = new ChargeOrder(purchasePo.getOrderId()+"", purchasePo.getChargeTel(), pgData.getPgSize()+"");
-					chargeEnum = ChargeStatusEnum.AUTHENTICATION_FAILURE;
-					chargeDTO = new ChargeDTO(chargeEnum.getValue(),chargeEnum.getDesc(), chargeOrder);
+				/**订单号信息添加*/
+				OrderUril ou1 = new OrderUril(2);
+				try {
+					purchasePo.setOrderId(ou1.nextId());//设置订单号
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				if(balance < orderAmount)
+				{
+					//新增欠费订单（该订单没有走任何的通道）
+					int purResult = purchaseDAO.addPurchase(purchasePo);
+					if(purResult > 0 )
+					{
+						chargeEnum = ChargeStatusEnum.LACK_OF_BALANCE;
+						return new ChargeDTO(chargeEnum.getValue(), chargeEnum.getDesc(), new ChargeOrder(purchasePo.getOrderId()+"", chargeTel+"", pgData.getPgSize()+""));
+					}else
+					{
+						Logger log = Logger.getLogger(ChargeFacadeImpl.class); 
+						log.info("添加订单失败！");
+					}
+				}else{
+					/*******************最优通道*******************/
+					String scopeCityCode = "";
+					for (Map<String, Object> cityMap : ScopeCityEnum.toList()) {
+						String cityName = cityMap.get("desc").toString();
+						if(cityName.contains(scopeName))
+						{
+							scopeCityCode = cityMap.get("value").toString();
+						}
+					}
+					BestChannelPO bestChannel = channelForwardAO.getBestChannel(new OperatorScopeVO(scopeName, backPo.getId(), otype));
+					if(bestChannel  != null){
+						
+						ProductCodePo product =  productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, pgData.getPgSize(), pgData.getOperatorType(), pgData.getServiceType(),bestChannel.getEpd()));
+						if(product != null){
+							ExchangePlatformPo epPo = exchangePlatformDao.get(bestChannel.getEpd());
+							ChargeBase chargeBase = ChargeFactory.getChargeBase(bestChannel.getEpName());
+							//充值
+							ChargeResultPage chargeResultPage = chargeBase.charge(new ChargeParamsPage(epPo.getEpPurchaseIp(), epPo.getEpName(), epPo.getEpUserName(), epPo.getEpApikey(), chargeTel, product.getProductCode()));
+							ChargePageOrder chargePageOrder = chargeResultPage.getChargePageOrder();
+							if(chargePageOrder != null)
+							{
+								purchasePo.setOrderPlatformPath(OrderPathEnum.CHARGE_SOCKET.getValue());
+								purchasePo.setAgencyId(backPo.getId());
+								purchasePo.setRootAgencyId(backPo.getRootAgencyId());
+								
+								purchasePo.setOrderBackTime(chargePageOrder.getOrderBackTime());
+								purchasePo.setOrderIdApi(chargePageOrder.getTransaction_id());
+								//查看订单状态
+								OrderStateBase orderStatePage = OrderStateFactory.getOrderStateBase(epPo.getEpName());
+								OrderStateResultPage osrp = orderStatePage.getOrderState(new OrderStateParamsPage(epPo.getPgdataCheckIp(), chargePageOrder.getTransaction_id(), epPo.getEpName(), epPo.getEpUserName(), epPo.getEpApikey()));
+								purchasePo.setOrderResult(osrp.getPageOrder().getStatus());
+								purchasePo.setOrderResultDetail(osrp.getPageOrder().getMsg());
+							}
+						}
+						int channelId = bestChannel.getChanneld();//
+						Double channelDiscount = bestChannel.getChannelDiscount();
+						Double channelAmount = NumberTool.mul(pgData.getPgPrice(), channelDiscount);//通道交易增加额
+						purchasePo.setChannelId(channelId);
+						ChannelForwardPo channelPo = channelForwardDao.get(channelId);
+						channelPo.setId(channelId);
+						channelPo.addTotalUse();
+						channelPo.addTotalAmount(channelAmount);
+						int channelRes = channelForwardDao.update(channelPo);
+						//更新订单表
+						int purResult = purchaseDAO.addPurchase(purchasePo);
+						if(channelRes + purResult >= 2){
+							ChargeOrder chargeOrder = new ChargeOrder(purchasePo.getOrderId()+"", purchasePo.getChargeTel(), pgData.getPgSize()+"");
+							chargeEnum = ChargeStatusEnum.AUTHENTICATION_FAILURE;
+							chargeDTO = new ChargeDTO(chargeEnum.getValue(),chargeEnum.getDesc(), chargeOrder);
+						}
+					}
 				}
 			}
 		}

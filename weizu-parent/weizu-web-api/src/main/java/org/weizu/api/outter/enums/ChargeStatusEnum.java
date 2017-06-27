@@ -22,15 +22,23 @@ public enum ChargeStatusEnum {
 	/**
 	 * 充值成功
 	 */
-	CHARGE_SUCCESS("充值成功",0),
+	CHARGE_SUCCESS("充值成功",1),
 	/**
-	 * 充值包体不存在
+	 * 欠费等待
 	 */
-	PG_NOT_FOUND("充值包体不存在",8),
+	LACK_OF_BALANCE("欠费等待",2),
+	/**
+	 * 缺少通道配置
+	 */
+	SCOPE_RATE_UNDEFINED("缺少通道配置",3),
 	/**
 	 * 包体参数必须为整数
 	 */
-	INT_REQUIRED("包体参数必须为整数(包体大小;包体范围;运营商类型)",7);
+	INT_REQUIRED("包体参数必须为整数(包体大小;包体范围;运营商类型)",7),
+	/**
+	 * 充值包体不存在
+	 */
+	PG_NOT_FOUND("充值包体不存在",8);
 	
 	private String desc;
 	private Integer value;

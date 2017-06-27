@@ -71,7 +71,7 @@
 			</thead>
 			<tbody>
 				<c:forEach items="${resultMap.pagination.records }" var="agency" varStatus="vs">
-					<tr class="text-c">
+					<tr class="text-c font-red">
 						<!-- <td><input type="checkbox" value="" name=""></td> -->
 						<%-- <td>${pg.pgId }</td> --%>
 						<%-- <form action="agency_edit_page.do" method="post">
@@ -95,7 +95,18 @@
 						<td>${agency.agencyIp }</td>
 						<td style="display:none">${loginContext.id }</td>
 						<!-- title="/flowsys/account/charge_list.do?agencyId=${agency.id }" -->
-						<td><a data-href="/flowsys/account/charge_list.do?agencyId=${agency.id }" data-toggle="tooltip" data-placement="top" title="点击查看记录" data-title="充值扣款记录" style="text-decoration:none"  onclick="Hui_admin_tab(this)">${agency.accountBalance }</a></td>
+						<td>
+						<c:choose>
+							<c:when test="${agency.accountBalance <=0  }">
+								<a class="c-error" data-href="/flowsys/account/charge_list.do?agencyId=${agency.id }" data-toggle="tooltip" data-placement="top" title="点击查看记录" data-title="充值扣款记录" style="text-decoration:none"  onclick="Hui_admin_tab(this)">
+							${agency.accountBalance }</a>
+							</c:when>
+							<c:otherwise>
+								<a data-href="/flowsys/account/charge_list.do?agencyId=${agency.id }" data-toggle="tooltip" data-placement="top" title="点击查看记录" data-title="充值扣款记录" style="text-decoration:none"  onclick="Hui_admin_tab(this)">
+							${agency.accountBalance }</a>
+							</c:otherwise>
+						</c:choose>
+						</td>
 						<td>${agency.accountCredit }</td>
 						<!-- title="/flowsys/rate/rate_add_page.do"  -->
 						<td><a data-toggle="tooltip" data-placement="top" title="点击编辑费率" data-href="/flowsys/rate/rate_edit_page.do?rateId=${agency.rateId }" data-title="费率编辑" style="text-decoration:none" onclick="Hui_admin_tab(this)">${agency.rateName }</a></td>

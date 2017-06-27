@@ -120,6 +120,16 @@
 			</ul>
 		</dd>
 	</dl>
+	<dl id="menu-member">
+		<dt><i class="Hui-iconfont">&#xe6c6;</i> 账户管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+		<dd>
+			<ul>
+				<li><a data-href="/flowsys/operatorPg/operatorPg_list.do" data-title="认证信息" href="javascript:void(0)">认证信息</a></li>
+				<li><a data-href="/flowsys/account/consume_list.do" data-title="消费记录" href="javascript:void(0)">消费记录</a></li>
+				<li><a data-href="/flowsys/account/charge_list.do" data-title="充值记录" href="javascript:void(0)">充值记录</a></li>
+			</ul>
+		</dd>
+	</dl>
 		<!-- <dl id="menu-member">
 			<dt><i class="Hui-iconfont">&#xe60d;</i> 会员管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>

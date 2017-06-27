@@ -65,9 +65,9 @@
 					<tr class="text-c">
 						<td>${rate.id }</td>
 						<td>${rate.rateName }</td>
-						<td>${rate.ratePrice0 }</td>
-						 <td>${rate.ratePrice1 }</td>
-						<td>${rate.ratePrice2 }</td>
+						<td  class="text-l">${rate.ratePrice0 }</td>
+						 <td class="text-l">${rate.ratePrice1 }</td>
+						<td class="text-l">${rate.ratePrice2 }</td>
 						
 						<td class="td-manage"><a style="text-decoration:none" onClick="article_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
 						<a style="text-decoration:none" class="ml-5" onClick="article_edit('账户充值',${agency.userName },${agency.id })" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> 

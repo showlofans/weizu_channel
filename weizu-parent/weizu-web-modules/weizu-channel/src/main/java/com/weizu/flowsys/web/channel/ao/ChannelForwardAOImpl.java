@@ -14,6 +14,8 @@ import org.weizu.web.foundation.StringUtil;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
+import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
+import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.util.StringUtil2;
@@ -240,6 +242,53 @@ public class ChannelForwardAOImpl implements ChannelForwardAO {
 	public ExchangePlatformPo getEpByChannelId(Integer channelId) {
 		
 		return channelForwardDao.getEpByChannelId(channelId);
+	}
+	/**
+	 * @description: 更新通道使用状态
+	 * @param channelId
+	 * @param channelUseState
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月27日 下午12:04:26
+	 */
+	@Transactional
+	@Override
+	public int updateChannelUseState(String channelId, String channelUseState) {
+		int id = Integer.parseInt(channelId);
+		int useState = Integer.parseInt(channelUseState);
+		
+		if(ChannelUseStateEnum.CLOSE.getValue() == useState)
+		{
+			useState = ChannelUseStateEnum.OPEN.getValue();
+		}else{
+			useState = ChannelUseStateEnum.CLOSE.getValue();
+		}
+		
+		return channelForwardDao.updateChannelUseState(id, useState);
+	}
+	
+	/**
+	 * @description: 更新通道状态
+	 * @param channelId
+	 * @param channelUseState
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月27日 下午12:04:31
+	 */
+	@Transactional
+	@Override
+	public int updateChannelState(String channelId, String channelState) {
+		int id = Integer.parseInt(channelId);
+		int cState = Integer.parseInt(channelState);
+		
+		if(ChannelStateEnum.CLOSE.getValue() == cState)
+		{
+			cState = ChannelStateEnum.OPEN.getValue();
+		}else{
+			cState = ChannelStateEnum.CLOSE.getValue();
+		}
+		
+		return channelForwardDao.updateChannelState(id, cState);
 	}
 	
 

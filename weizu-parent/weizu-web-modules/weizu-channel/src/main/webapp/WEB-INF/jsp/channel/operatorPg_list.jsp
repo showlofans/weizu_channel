@@ -37,7 +37,7 @@
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
 	  运营商类型：
 	 <span class="select-box inline">
-		<select name="operatorType" class="select">
+		<select name="operatorType" class="select"  onchange="submitForm()">
 			<option value="">运营商类型</option>
 			<c:forEach items="${resultMap.pgTypeEnums }" var="pgType" varStatus="vs1">
 				<option value="${pgType.value }" <c:if test="${pgType.value == resultMap.params.operatorType }"> selected</c:if>>${pgType.desc }</option>
@@ -46,7 +46,7 @@
 	</span> 
 	  流量类型：
 	 <span class="select-box inline">
-		<select name="serviceType" class="select">
+		<select name="serviceType" class="select" onchange="submitForm()">
 			<option value="">流量类型</option>
 			<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
 				<option value="${serviceTypeEnum.value }" <c:if test="${serviceTypeEnum.value == resultMap.params.serviceType }"> selected</c:if>>${serviceTypeEnum.desc }</option>
@@ -55,7 +55,7 @@
 	</span> 
 		包状态
 		<span class="select-box inline">
-			<select name="pgInService" class="select">
+			<select name="pgInService" class="select"  onchange="submitForm()">
 			<option value="">请选择</option>
 			<c:forEach items="${resultMap.pgInEnums }" var="pgIn" varStatus="vs1">
 				<option value="${pgIn.value }" <c:if test="${pgIn.value == resultMap.params.pgInService }"> selected</c:if>>${pgIn.desc }</option>
@@ -83,7 +83,7 @@
 				<tr class="text-c">
 					<th width="25"><input type="checkbox" name="" value=""></th>
 					<!-- <th width="80">流量包Id</th> -->
-					<th width="80">流量包名称</th>
+					<th width="200">流量包名称</th>
 					<th width="80">流量类型</th>
 					<th width="80">流量大小</th>
 					<th width="80">运营商类型</th>
@@ -118,7 +118,11 @@
 						<c:if test="${pg.pgInService == pgIn.value }"> ${pgIn.desc }</c:if>
 						</c:forEach></td>
 					<!-- 	<td class="td-status"><span class="label label-success radius">已发布</span></td> -->
-						<td class="f-14 td-manage"><a style="text-decoration:none" onClick="article_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> <a style="text-decoration:none" class="ml-5" onClick="article_edit('资讯编辑','article-add.html','10001')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> <a style="text-decoration:none" class="ml-5" onClick="pg_del(this,${pg.id})" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+						<td class="f-14 td-manage">
+						<!-- <a style="text-decoration:none" onClick="article_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
+						<a style="text-decoration:none" class="ml-5" onClick="article_edit('资讯编辑','article-add.html','10001')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> --> 
+						<a style="text-decoration:none" class="ml-5" onClick="pg_del(this,${pg.id})" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -171,7 +175,10 @@ function retrieveData( sSource111,aoData, fnCallback111) {
         }
     }); 
 }  
-
+/**onchange提交表单*/
+function submitForm(){
+	$('form').submit();
+}
 /*资讯-添加*/
 function article_add(title,url,w,h){
 	var index = layer.open({
@@ -209,18 +216,23 @@ function article_edit(title,url,id,w,h){
 function pg_del(obj,id){
 	layer.confirm("确认要删除该包体吗？",function(index){
 		//alert(index);
+		var tag = "";
 		$.ajax({
 			type: "post",
 			url: "/flowsys/operatorPg/pg_delete.do?pgId="+ id,
 			dataType: "json",
 			async: false,
 			success: function(data){	
-					
+				tag = data;
 			},
 			error:function(data) {
+				tag = data;
 				console.log(data.msg);
 			},
 		});	
+		if(tag == "success"){
+			layer.msg('删除成功', {icon:5,time:1000});
+		}
 		layer.close(index);
 		location.reload();
 	});
