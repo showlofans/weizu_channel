@@ -352,7 +352,7 @@ public class AgencyController {
 		return  new ModelAndView("/agency/child_agency_edit", "resultMap", resultMap);
 	}
 	/**
-	 * @description:修改代理商信息（自己和子代理商）
+	 * @description:修改代理商信息（子代理商）
 	 * @param po
 	 * @param request
 	 * @param response
@@ -366,9 +366,9 @@ public class AgencyController {
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		int result = agencyAO.updateAgency(vo);
-		if(result > 0){
-			request.getSession().setAttribute("loginContext", vo);
-		}
+//		if(result > 0){
+//			request.getSession().setAttribute("loginContext", vo);
+//		}
 		response.getWriter().print(result);
 	}
 }

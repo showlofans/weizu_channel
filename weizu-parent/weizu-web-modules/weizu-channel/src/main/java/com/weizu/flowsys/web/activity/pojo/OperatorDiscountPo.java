@@ -35,6 +35,8 @@ public class OperatorDiscountPo extends Po {
     
     @TempField
     private String operatorScope;	//地区和运营商
+    @TempField
+    private List<Map<String,Object>> scopeCityNames;
     
     public OperatorDiscountPo(Integer operatorType, String scopeName,
 			Double discount, String rateName, Integer rootAgencyId) {
@@ -45,6 +47,16 @@ public class OperatorDiscountPo extends Po {
 		this.rateName = rateName;
 		this.rootAgencyId = rootAgencyId;
 	}
+
+	public List<Map<String, Object>> getScopeCityNames() {
+		return scopeCityNames;
+	}
+
+	public void setScopeCityNames(List<Map<String, Object>> scopeCityNames) {
+		this.scopeCityNames = scopeCityNames;
+	}
+
+
 
 	public String getOperatorScope() {
 		return operatorScope;

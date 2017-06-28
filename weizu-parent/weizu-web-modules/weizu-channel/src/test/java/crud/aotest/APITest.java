@@ -23,7 +23,7 @@ public class APITest {
 	public void testChargeAPI(){
 		String requestUrl = "http://127.0.0.1:8080/weizuAPI/chargePg.do";
 		String sign = MD5.getMd5("402880ef5cd2b925015cd2b925b90000");
-		String params = "userName=456&number=13699562589&pgSize=6144&scope=0&sign="+ sign;
+		String params = "userName=456&number=15858343638&pgSize=6144&scope=0&sign="+ sign;
 		String resultStr = HttpRequest.sendGet(requestUrl, params);
 		System.out.println(resultStr);
 	}
