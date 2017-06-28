@@ -127,46 +127,7 @@
 				<input type="text" class="input-text" value="${resultMap.discountList[0].rateName }" placeholder="${resultMap.discountList[0].rateName }" id="rateName" name="rateName">
 			</div>
 		</div>
-		<%-- <div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>运营商类型：</label>
-			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
-				<div class="radio-box" id="head">
-					<ul>
-					<c:forEach items="${resultMap.operatorTypes }" var="operatorEnum" varStatus="vs">
-							<li id="L${vs.index+1 }" onclick="Tab(${vs.index+1 })"><a href="#">${operatorEnum.desc}</a></li>
-							<input name="operatorType" class="radioItem" type="radio" id="operatorType-${vs.index }" value="${operatorEnum.value }" <c:if test="${vs.index==0 }">checked</c:if> >
-							${${operatorEnum.desc} }
-							<label for="operatorType-${vs.index }"></label>
-					</c:forEach>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<c:forEach items="${resultMap.operatorTypes }" var="operatorEnum" varStatus="vs">
-			<div class="row cl" id="d${vs.index+1 }">
-				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>地区折扣：</label><br>
-				<div class="formControls col-xs-8 col-sm-9 skin-minimal">
-				<table>
-					<c:forEach items="${resultMap.scopeCityNames }" var="scopeCityName" varStatus="vs">
-						<c:if test="${vs.index % 4==0 }"><tr></c:if>
-							<td> 
-								<div class="radio-box">
-									<input class="cbox" onClick="checkBoxes(this)" type="checkbox" id="scopeCityName-${vs.index }" value="${scopeCityName.value }">
-									${scopeCityName.desc }
-									<label for="operatorType-${vs.index }"></label>
-									<!-- 输入两位折扣数字 -->
-									<input class="disscount" style="display: none; " type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
-								</div>
-							</td>
-						<c:if test="${(vs.index+1) % 4==0 }"></tr></c:if>
-						<!-- <div class="formControls col-xs-3 col-sm-3">
-							<input type="text" placeholder="1.00" name="channelDiscount" id="channelDiscount">
-						</div> -->
-					</c:forEach>
-				</table>
-				</div>
-			</div>
-		</c:forEach>  --%>
+		
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">费率：</label>
 			<div role="tabpanel" class="tab formControls col-xs-8 col-sm-9 skin-minimal">
@@ -186,39 +147,55 @@
 					<div class="tab-content tabs">
 						<div role="tabpanel" class="tab-pane fade in active" id="Section1">
 							<table>
-							<%--
-							Map<String,Object> map = request.getParameter("resultMap");
-							for(int i=1;i<10;i++){  
-					            for(int j=0;j<i;j++){  
-					                out.println(j);  //调用 jsp的 out对象  在页面上显示了哦  
-					            }  
-					            out.println("<br/>");  
-					        }
-							
-							--%>
-							
-									<c:forEach begin="0" end="${fn:length(resultMap.discountList) }" var="discountV" varStatus="vsm">
+								<c:forEach items="${resultMap.scopeCityNames }" var="cityEnum" varStatus="vs">
 								<c:if test="${vs.index % 4==0 }"><tr></c:if>
 									<td> 
-										<c:forEach items="${resultMap.scopeCityNames }" var="scopeCityName" varStatus="vs">
-										<c:choose>
-											<c:when test="${scopeCityName.desc == resultMap.discountList[discountV].scopeName && resultMap.operatorTypes[0].value == resultMap.discountList[discountV].operatorType}">
-												<input class="cbox0" checked="checked" onClick="checkBoxes(this)" type="checkbox" id="scopeCityName-${vs.index }" value="${scopeCityName.desc }">
-												${scopeCityName.desc }
-												<input class="disscount" value="${resultMap.discountList[discountV].discount }"  type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")'>
-											</c:when>
-											<c:otherwise>
-												<input class="cbox0" onClick="checkBoxes(this)" type="checkbox" id="scopeCityName-${vs.index }" value="${scopeCityName.desc }">
-												${scopeCityName.desc }
-												<input class="disscount" style="display: none; " type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
-											</c:otherwise>
-										</c:choose>
-									</c:forEach>
+										<div class="radio-box">
+											<c:set value="${resultMap.discountList }" var="discountList" />
+												<c:forEach items="${discountList }" var="discountV" end="${exitId }">
+													<c:choose>
+														<c:when test="${cityEnum.desc == discountV.scopeName && resultMap.operatorTypes[0].value == discountV.operatorType}">
+															<input class="cbox0" checked="checked" onClick="checkBoxes(this)" type="checkbox"  value="${cityEnum.desc }">
+															${cityEnum.desc }
+															<input style=" width:50px; " value="${discountV.discount }"  type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")'>
+															<c:set var="exitId" value="0" ></c:set>
+														</c:when>
+														<c:otherwise>
+															<input class="cbox0" onClick="checkBoxes(this)" type="checkbox"  value="${cityEnum.desc }">
+															${cityEnum.desc }
+															<input style="display: none; width:50px;  " type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
+														</c:otherwise>
+													</c:choose>
+												</c:forEach>
 												<!-- 显示平台和通道折扣 -->
 												<span class="price" style="display: none; "></span>
+										</div>
 									</td>
 								<c:if test="${vs.index+1 % 4==0 }"></tr></c:if>
 								</c:forEach>
+								
+										<%-- <c:forEach begin="0" end="${fn:length(resultMap.discountList) }" var="discountV" varStatus="vsm">
+									<c:if test="${vs.index % 4==0 }"><tr></c:if>
+										<td> 
+											<c:forEach items="${resultMap.scopeCityNames }" var="scopeCityName" varStatus="vs">
+											<c:choose>
+												<c:when test="${scopeCityName.desc == resultMap.discountList[discountV].scopeName && resultMap.operatorTypes[0].value == resultMap.discountList[discountV].operatorType}">
+													<input class="cbox0" checked="checked" onClick="checkBoxes(this)" type="checkbox" id="scopeCityName-${vs.index }" value="${scopeCityName.desc }">
+													${scopeCityName.desc }
+													<input class="disscount" value="${resultMap.discountList[discountV].discount }"  type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")'>
+												</c:when>
+												<c:otherwise>
+													<input class="cbox0" onClick="checkBoxes(this)" type="checkbox" id="scopeCityName-${vs.index }" value="${scopeCityName.desc }">
+													${scopeCityName.desc }
+													<input class="disscount" style="display: none; " type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
+												</c:otherwise>
+											</c:choose>
+										</c:forEach>
+													<!-- 显示平台和通道折扣 -->
+													<span class="price" style="display: none; "></span>
+										</td>
+									<c:if test="${vs.index+1 % 4==0 }"></tr></c:if>
+									</c:forEach> --%>
 							</table>
 						</div>
 						<div role="tabpanel" class="tab-pane fade" id="Section2">
@@ -227,17 +204,19 @@
 								<c:if test="${vs.index % 4==0 }"><tr></c:if>
 									<td> 
 										<div class="radio-box">
-												<c:forEach items="${resultMap.discountList }" var="discountV">
+												<c:set value="${resultMap.discountList }" var="discountList2" />
+												<c:forEach items="${discountList2 }" var="discountV1"  end="${exitId1 }">
 													<c:choose>
-														<c:when test="${scopeCityName.desc == discountV.scopeName && resultMap.operatorTypes[1].value == discountV.operatorType}">
-															<input class="cbox1" checked="checked" onClick="checkBoxes(this)" type="checkbox" id="scopeCityName-${vs.index }" value="${scopeCityName.desc }">
+														<c:when test="${scopeCityName.desc == discountV1.scopeName && resultMap.operatorTypes[1].value == discountV1.operatorType}">
+															<input class="cbox1" checked="checked" onClick="checkBoxes(this)" type="checkbox" value="${scopeCityName.desc }">
 															${scopeCityName.desc }
-															<input class="disscount" value="${discountV.discount }"  type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")'>
+															<input style="width:50px;" value="${discountV1.discount }"  type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")'>
+															<c:set var="exitId1" value="0" ></c:set>
 														</c:when>
 														<c:otherwise>
-															<input class="cbox1" onClick="checkBoxes(this)" type="checkbox" id="scopeCityName-${vs.index }" value="${scopeCityName.desc }">
+															<input class="cbox1" onClick="checkBoxes(this)" type="checkbox" value="${scopeCityName.desc }">
 															${scopeCityName.desc }
-															<input class="disscount" style="display: none; " type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
+															<input style="display: none;width:50px; " type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
 														</c:otherwise>
 													</c:choose>
 												</c:forEach>
@@ -255,17 +234,19 @@
 								<c:if test="${vs.index % 4==0 }"><tr></c:if>
 									<td> 
 										<div class="radio-box">
-												<c:forEach items="${resultMap.discountList }" var="discountV" varStatus="vsm">
+												<c:set value="${resultMap.discountList }" var="discountList3" />
+												<c:forEach items="${discountList3 }" var="discountV2"  end="${exitId2 }">
 													<c:choose>
-														<c:when test="${scopeCityName.desc == discountV.scopeName && resultMap.operatorTypes[2].value == discountV.operatorType}">
-															<input class="cbox2" checked="checked" onClick="checkBoxes(this)" type="checkbox" id="scopeCityName-${vs.index }" value="${scopeCityName.desc }">
+														<c:when test="${scopeCityName.desc == discountV2.scopeName && resultMap.operatorTypes[2].value == discountV2.operatorType}">
+															<input class="cbox2" checked="checked" onClick="checkBoxes(this)" type="checkbox" value="${scopeCityName.desc }">
 															${scopeCityName.desc }
-															<input class="disscount" value="${discountV.discount }"  type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")'>
+															<input value="${discountV2.discount }" style="width:50px;" type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")'>
+															<c:set var="exitId2" value="0" ></c:set>
 														</c:when>
 														<c:otherwise>
-															<input class="cbox2" onClick="checkBoxes(this)" type="checkbox" id="scopeCityName-${vs.index }" value="${scopeCityName.desc }">
+															<input class="cbox2" onClick="checkBoxes(this)" type="checkbox" value="${scopeCityName.desc }">
 															${scopeCityName.desc }
-															<input class="disscount" style="display: none; " type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
+															<input style="display: none; width:50px; " type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
 														</c:otherwise>
 													</c:choose>
 												</c:forEach>

@@ -26,6 +26,7 @@ import org.weizu.api.outter.pojo.charge.ChargeParams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
+import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.util.OrderUril;
 import com.weizu.flowsys.web.activity.dao.IOperatorDiscountDao;
@@ -128,8 +129,14 @@ public class ChargeFacadeImpl implements ChargeFacade {
 		}else
 		{//充值并返回最新的订单（状态）
 			PurchasePo purchasePo = new PurchasePo();
-			
 			purchasePo.setOrderArriveTime(System.currentTimeMillis());
+			/**订单号信息添加*/
+			OrderUril ou1 = new OrderUril(2);
+			try {
+				purchasePo.setOrderId(ou1.nextId());//设置订单号
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			String scopeName = resMap.get("scopeName").toString();
 			String chargeTelCity = resMap.get("chargeTelCity").toString();
 			String chargeTelDetail = resMap.get("chargeTelDetail").toString();
@@ -143,8 +150,17 @@ public class ChargeFacadeImpl implements ChargeFacade {
 			//没有找到相关地区折扣
 			if(discountPo == null)
 			{
-				chargeEnum = ChargeStatusEnum.SCOPE_RATE_UNDEFINED;
-				chargeDTO = new ChargeDTO(chargeEnum.getValue(),chargeTelDetail+chargeEnum.getDesc(), null);
+				purchasePo.setOrderResult(OrderStateEnum.UNCHARGE.getValue());//未充
+				purchasePo.setOrderResultDetail(ChargeStatusEnum.SCOPE_RATE_UNDEFINED.getDesc());//产品（费率）未配置
+				int purResult = purchaseDAO.addPurchase(purchasePo);
+				if(purResult > 0){
+					chargeEnum = ChargeStatusEnum.SCOPE_RATE_UNDEFINED;
+					chargeDTO = new ChargeDTO(chargeEnum.getValue(),chargeTelDetail+chargeEnum.getDesc(), null);
+				}else
+				{
+					Logger log = Logger.getLogger(ChargeFacadeImpl.class); 
+					log.info("添加订单失败！");
+				}
 			}
 			else
 			{
@@ -165,17 +181,13 @@ public class ChargeFacadeImpl implements ChargeFacade {
 				{
 					balance = chargeAccount.getAccountBalance();
 				}
-				/**订单号信息添加*/
-				OrderUril ou1 = new OrderUril(2);
-				try {
-					purchasePo.setOrderId(ou1.nextId());//设置订单号
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				
 				
 				if(balance < orderAmount)
 				{
 					//新增欠费订单（该订单没有走任何的通道）
+					purchasePo.setOrderResult(OrderStateEnum.UNCHARGE.getValue());//未充
+					purchasePo.setOrderResultDetail(ChargeStatusEnum.LACK_OF_BALANCE.getDesc());//欠费等待
 					int purResult = purchaseDAO.addPurchase(purchasePo);
 					if(purResult > 0 )
 					{
@@ -203,6 +215,11 @@ public class ChargeFacadeImpl implements ChargeFacade {
 						if(product != null){
 							ExchangePlatformPo epPo = exchangePlatformDao.get(bestChannel.getEpd());
 							ChargeBase chargeBase = ChargeFactory.getChargeBase(bestChannel.getEpName());
+							
+							//添加待充订单
+							purchasePo.setOrderResult(OrderStateEnum.DAICHONG.getValue());
+//							purchasePo.setOrderRe
+							int addPurResult = purchaseDAO.addPurchase(purchasePo);
 							//充值
 							ChargeResultPage chargeResultPage = chargeBase.charge(new ChargeParamsPage(epPo.getEpPurchaseIp(), epPo.getEpName(), epPo.getEpUserName(), epPo.getEpApikey(), chargeTel, product.getProductCode()));
 							ChargePageOrder chargePageOrder = chargeResultPage.getChargePageOrder();
@@ -217,9 +234,15 @@ public class ChargeFacadeImpl implements ChargeFacade {
 								//查看订单状态
 								OrderStateBase orderStatePage = OrderStateFactory.getOrderStateBase(epPo.getEpName());
 								OrderStateResultPage osrp = orderStatePage.getOrderState(new OrderStateParamsPage(epPo.getPgdataCheckIp(), chargePageOrder.getTransaction_id(), epPo.getEpName(), epPo.getEpUserName(), epPo.getEpApikey()));
-								purchasePo.setOrderResult(osrp.getPageOrder().getStatus());
+								int orderStateAPI = osrp.getPageOrder().getStatus();
+								//如果成功，就更新该订单；失败就拦下来设置为未冲
+								
+								purchasePo.setOrderResult(orderStateAPI);
 								purchasePo.setOrderResultDetail(osrp.getPageOrder().getMsg());
 							}
+						}
+						else{//缺少通道编码
+							
 						}
 						int channelId = bestChannel.getChanneld();//
 						Double channelDiscount = bestChannel.getChannelDiscount();
@@ -231,8 +254,7 @@ public class ChargeFacadeImpl implements ChargeFacade {
 						channelPo.addTotalAmount(channelAmount);
 						int channelRes = channelForwardDao.update(channelPo);
 						//更新订单表
-						int purResult = purchaseDAO.addPurchase(purchasePo);
-						if(channelRes + purResult >= 2){
+						if(channelRes > 0){
 							ChargeOrder chargeOrder = new ChargeOrder(purchasePo.getOrderId()+"", purchasePo.getChargeTel(), pgData.getPgSize()+"");
 							chargeEnum = ChargeStatusEnum.AUTHENTICATION_FAILURE;
 							chargeDTO = new ChargeDTO(chargeEnum.getValue(),chargeEnum.getDesc(), chargeOrder);

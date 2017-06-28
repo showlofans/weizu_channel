@@ -117,14 +117,16 @@ public class RateController {
 			OperatorDiscountPo opo = new OperatorDiscountPo();
 			opo.setRateId(Long.parseLong(rateId));
 			List<OperatorDiscountPo> list = operatorDiscountAO.listDiscountByPo(opo);
-//			for (OperatorDiscountPo operatorDiscountPo : list) {//设置编码
+			
+			for (OperatorDiscountPo operatorDiscountPo : list) {//设置编码
+				operatorDiscountPo.setScopeCityNames( ScopeCityEnum.toList());
 //				for (Map<String,Object> map : OperatorTypeEnum.toList()) {
 //					if(operatorDiscountPo.getOperatorType()==Integer.parseInt(map.get("value").toString())){
 //						String operatorName = map.get("desc").toString();
 //						operatorDiscountPo.setOperatorScope(operatorName + operatorDiscountPo.getScopeName());
 //					}
 //				}
-//			}
+			}
 			resultMap.put("discountList", list);
 			resultMap.put("rateId", rateId);
 		}

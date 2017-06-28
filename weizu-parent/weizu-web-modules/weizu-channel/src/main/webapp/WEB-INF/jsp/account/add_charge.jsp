@@ -86,11 +86,11 @@
 			</div>
 		</div>
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">充值凭证：</label>
+			充值凭证：<br>
 			<span class="btn-upload form-group">
-				<input class="input-text upload-url" type="text" name="uploadfile-1" id="uploadfile-1" readonly style="width:200px">
+				<input class="input-text upload-url" type="text" name="uploadfile-2" id="uploadfile-2" readonly style="width:200px">
 				<a href="javascript:void();" class="btn btn-primary upload-btn"><i class="Hui-iconfont">&#xe642;</i> 上传logo</a>
-				<input type="file" multiple name="file-1" class="input-file">
+				<input type="file" multiple name="file-2" class="input-file">
 			</span>
 		</div>
 		
