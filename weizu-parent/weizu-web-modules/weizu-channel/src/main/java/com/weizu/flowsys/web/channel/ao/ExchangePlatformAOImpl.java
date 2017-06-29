@@ -78,13 +78,13 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 		{//有该平台名称的平台，但同时要保证用户名和密码apikey不一样
 			epId = new Long(exchangePlatformDao.nextId()).intValue();
 			res2 = exchangePlatformDao.add(exchangePlatformPo);
-			AgencyEpPo agencyEp = agencyEpDAO.get(new WherePrams("agency_id", "=", agencyId));
+		}else{
+			epId = epPo.getId();
+			AgencyEpPo agencyEp = agencyEpDAO.get(new WherePrams("agency_id", "=", agencyId).and("ep_id", "=", epId));
 			if(agencyEp != null)
 			{
 				return "errorEp";
 			}
-		}else{
-			epId = epPo.getId();
 		}
 		int res1 = agencyEpDAO.add(new AgencyEpPo(agencyId, agencyName, epId, exchangePlatformPo.getEpName()));
 		if((res1 + res2) >= 1){

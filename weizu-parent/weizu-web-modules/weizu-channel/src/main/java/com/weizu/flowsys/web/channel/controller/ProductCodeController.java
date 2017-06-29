@@ -58,11 +58,7 @@ public class ProductCodeController {
 	@RequestMapping(value = ProductCodeURL.PRODUCTCODE_ADD_PAGE)
 	public ModelAndView addProdouctCodePage(String pageTitle, HttpServletRequest request){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		try {
-			resultMap.put("pageTitle", new String(pageTitle.getBytes("ISO8859-1"), "utf-8"));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+			resultMap.put("pageTitle", pageTitle);
 		//查询所有平台名称
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO != null){

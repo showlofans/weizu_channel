@@ -1,18 +1,9 @@
 package crud.aotest;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
+import java.util.Map;
 
-import org.weizu.web.foundation.http.HttpRequest;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.weizu.flowsys.web.trade.PurchaseUtil;
 
 public class TestMobileCity {
 
@@ -106,42 +97,48 @@ public class TestMobileCity {
 //    }
 //    
 	public static void main(String[] args) throws IOException {
-		URL u=new URL("http://api.k780.com/?app=phone.get&phone=13699562589&appkey=26408&sign=39c448bd783fea5ecbe7a1047b3c5113&format=json");
-        InputStream in=u.openStream();
-        ByteArrayOutputStream out=new ByteArrayOutputStream();
-        try {
-            byte buf[]=new byte[1024];
-            int read = 0;
-            while ((read = in.read(buf)) > 0) {
-                out.write(buf, 0, read);
-            }
-        }  finally {
-            if (in != null) {
-                in.close();
-            }
-        }
-        byte b[]=out.toByteArray( );
-        String res = new String(b,"utf-8");
-        System.out.println(res);
-        JSONObject jsonObj = JSON.parseObject(res);
-       String result = jsonObj.get("result").toString();
-       String status = JSON.parseObject(result).get("status").toString();
-       if("ALREADY_ATT".equals(status))
-       {
-    	   System.out.println("有归属地");
-       }else if("NOT_ATT".equals(status)){
-    	   System.out.println(JSON.parseObject(result).get("msg").toString());
-    	   //暂无相关归属地信息
-       }else{
-    	   System.out.println(1);
-       }
-       String att = JSON.parseObject(result).get("att").toString();
-       String operators = JSON.parseObject(result).get("operators").toString();
-       String[] atts = att.split(",");//
-	   String otype = operators.substring(2); //去掉中国得到移动两字
-	   String chargeDetail = atts[1] + otype;//省份和运营商（地区）
-      System.out.println(chargeDetail);
-      System.out.println(atts[atts.length-1]);//城市
+		//重庆电信
+//		Map<String, Object> map = PurchaseUtil.getOperatorsByTel("17708374210");
+//		String chargeTelCity = map.get("chargeTelCity").toString();
+//		String chargeTelDetail = map.get("chargeTelDetail").toString();
+//		System.out.println(chargeTelCity +chargeTelDetail);
+		
+//		URL u=new URL("http://api.k780.com/?app=phone.get&phone=17708374210&appkey=26408&sign=39c448bd783fea5ecbe7a1047b3c5113&format=json");
+//        InputStream in=u.openStream();
+//        ByteArrayOutputStream out=new ByteArrayOutputStream();
+//        try {
+//            byte buf[]=new byte[1024];
+//            int read = 0;
+//            while ((read = in.read(buf)) > 0) {
+//                out.write(buf, 0, read);
+//            }
+//        }  finally {
+//            if (in != null) {
+//                in.close();
+//            }
+//        }
+//        byte b[]=out.toByteArray( );
+//        String res = new String(b,"utf-8");
+//        System.out.println(res);
+//        JSONObject jsonObj = JSON.parseObject(res);
+//       String result = jsonObj.get("result").toString();
+//       String status = JSON.parseObject(result).get("status").toString();
+//       if("ALREADY_ATT".equals(status))
+//       {
+//    	   System.out.println("有归属地");
+//       }else if("NOT_ATT".equals(status)){
+//    	   System.out.println(JSON.parseObject(result).get("msg").toString());
+//    	   //暂无相关归属地信息
+//       }else{
+//    	   System.out.println(1);
+//       }
+//       String att = JSON.parseObject(result).get("att").toString();
+//       String operators = JSON.parseObject(result).get("operators").toString();
+//       String[] atts = att.split(",");//
+//	   String otype = operators.substring(2); //去掉中国得到移动两字
+//	   String chargeDetail = atts[1] + otype;//省份和运营商（地区）
+//      System.out.println(chargeDetail);
+//      System.out.println(atts[atts.length-1]);//城市
        
 //       System.out.println(JSON.parseObject(result).get("style_citynm").toString());//中华人民共和国,江西省,南昌市
 //       System.out.println(JSON.parseObject(result).get("att").toString());//中国,江西,南昌

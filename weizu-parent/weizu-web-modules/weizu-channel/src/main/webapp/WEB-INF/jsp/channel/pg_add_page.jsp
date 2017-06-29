@@ -33,7 +33,7 @@
 <body>
 <article class="page-container">
 	<h4>${resultMap.pageTitle }</h4>
-	<form action="/flowsys/operatorPg/pg_add.do" method="post" class="form form-horizontal" id="form-article-add" onsubmit="save()">
+	<form action="" method="" class="form form-horizontal" id="form-pg-add">
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>流量包名称：</label>
 			<div class="formControls col-xs-8 col-sm-9">
@@ -43,7 +43,7 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">流量大小：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text"  style="width:200px" value="" placeholder="" id="pgSize" name="pgSize">M
+				<input type="text" class="input-text" required="required"  style="width:100px" value="" placeholder="" id="pgSize" name="pgSize">M
 			</div>
 		</div>
 		<div class="row cl">
@@ -66,7 +66,7 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">原价：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" style="width:200px" class="input-text"  value="" placeholder="" id="pgPrice" name="pgPrice">元
+				<input type="text" style="width:100px" required="required" class="input-text"  value="" placeholder="" id="pgPrice" name="pgPrice">元
 			</div>
 		</div>
 		<div class="row cl">
@@ -113,11 +113,30 @@
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/validate-methods.js"></script> 
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 <script type="text/javascript" src="/view/lib/webuploader/0.1.5/webuploader.min.js"></script> 
-<script type="text/javascript" src="/view/lib/ueditor/1.4.3/ueditor.config.js"></script> 
-<script type="text/javascript" src="/view/lib/ueditor/1.4.3/ueditor.all.min.js"> </script> 
 <script type="text/javascript" src="/view/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
 <script type="text/javascript">
-
+$().ready(function() {
+    $("#form-pg-add").validate({
+    	submitHandler : function(form) {
+    		$.ajax({
+		        type:"post",
+		        url:"/flowsys/operatorPg/pg_add.do",
+		        data: $('form').serialize(),//表单数据
+		        async : false,
+		        success:function(d){
+		            if(d=="success"){
+		                layer.msg('保存成功！');//保存成功提示
+		            }
+		            if(d=="error"){
+		                layer.msg('保存异常!');
+		            }
+		            var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+		            parent.layer.close(index); //执行关闭
+		        }
+		    }); 
+		}
+    });
+});
 /**根据运营商类型设置运营商名字*/
 function btnChange(values){
 	var operatorName = "";
@@ -132,7 +151,7 @@ function btnChange(values){
 	$("#operatorName").val(operatorName);
 }
 
-function save(){
+/* function save(){
 	//$("#rechargeAmount").focus();
 	var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
 	$.ajax({
@@ -150,7 +169,7 @@ function save(){
             }
         }
     });
-}
+} */
 
 /* $(function(){
 	$('.skin-minimal input').iCheck({

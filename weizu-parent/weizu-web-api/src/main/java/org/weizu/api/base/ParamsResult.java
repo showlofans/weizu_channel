@@ -27,4 +27,5 @@ public interface ParamsResult {
 	 * @createTime:2017年6月19日 下午6:12:34
 	 */
 	PageResult resetResult(APIResult apir);
+	
 }

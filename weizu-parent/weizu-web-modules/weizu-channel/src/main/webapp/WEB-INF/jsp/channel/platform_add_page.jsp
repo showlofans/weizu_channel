@@ -26,14 +26,14 @@
 <![endif]-->
 <!--/meta 作为公共模版分离出去-->
 
-<title>新增流量包 - 流量包体管理 - H-ui.admin 3.0</title>
+<title> H-ui.admin 3.0</title>
 <meta name="keywords" content="H-ui.admin 3.0,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
 <meta name="description" content="H-ui.admin 3.0，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
 </head>
 <body>
 <article class="page-container">
 	<h3>${pageTitle }</h3>
-	<form action="/flowsys/platform/platform_add.do" method="post" onsubmit="return save();" class="form form-horizontal" id="platfrom">
+	<form action="" method=""  class="form form-horizontal" id="platfrom">
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>平台名称：</label>
 			<div class="formControls col-xs-8 col-sm-9">
@@ -125,10 +125,38 @@
 <script type="text/javascript" src="/view/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
 <script type="text/javascript">
 $().ready(function() {
-    $("#platfrom").validate({});
+    $("#platfrom").validate({
+    	submitHandler : function(form) {
+    		
+    		$.ajax({
+                type:"post",
+                url:"/flowsys/platform/platform_add.do",
+                data: $('form').serialize(),//表单数据
+                async : false,
+                success:function(d){
+                    if(d=="success"){
+                        layer.msg('保存成功！');//保存成功提示
+                        var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+                        if($("h3").html().trim() != ""){//列表打开
+                    		parent.layer.close(index); // 执行关闭
+                        }else{
+                        	window.location.pathname = "/flowsys/platform/platform_list.do";
+                        }
+                    }
+                    if(d=="error"){
+                        layer.msg('保存异常!');
+                    }
+                    if(d=="errorEp"){
+                        alert('保存异常,已经添加过该平台了!');
+                        
+                    }
+                }
+            });
+    	}
+    });
 })
 
- function save(){
+ /* function save(){
 	//$("#rechargeAmount").focus();
 	var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
 	$.ajax({
@@ -155,7 +183,7 @@ $().ready(function() {
         }
     });
 	return false;
-}
+} */
 
 /*  $(function(){
 	$('.skin-minimal input').iCheck({

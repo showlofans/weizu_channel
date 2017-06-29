@@ -22,6 +22,7 @@ import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
+import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
@@ -76,12 +77,12 @@ public class ChargePgController {
 			purchasePo.setOrderArriveTime(System.currentTimeMillis());
 			
 			Integer purResult = purchaseAO.purchase(purchasePo,accountPo);
-//			if(purResult == OrderResultEnum.SUCCESS.getCode())
-//			{
+			if(purResult == OrderResultEnum.SUCCESS.getCode())
+			{
 				return purchaseList(request, new PurchaseVO(), "1");
-//			}else{
-//				return null;
-//			}
+			}else{//重新选择通道充值
+				return pg_charge_page();
+			}
 		}
 		
 		return null;
@@ -124,7 +125,6 @@ public class ChargePgController {
 			response.getWriter().print(JSON.toJSONString(list));
 			System.out.println(JSON.toJSONString(list));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -137,7 +137,7 @@ public class ChargePgController {
 	 * @createTime:2017年5月31日 下午12:04:22
 	 */
 	@RequestMapping(value=ChargePgURL.PG_CHARGE_PAGE)
-	public ModelAndView pg_charge_page(HttpServletResponse response) throws UnsupportedEncodingException{
+	public ModelAndView pg_charge_page(){
 		Map<String,Object> resultMap = new HashMap<String,Object>();
 		resultMap.put("serviceTypeEnum", ServiceTypeEnum.toList());
 		

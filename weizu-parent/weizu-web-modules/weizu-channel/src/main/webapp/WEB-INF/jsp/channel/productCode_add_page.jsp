@@ -34,7 +34,7 @@
 <article class="page-container">
 	<h3>${resultMap.pageTitle }</h3>
 	
-	<form action="/flowsys/productCode/product_code_add.do" method="post" onsubmit="save()" class="form form-horizontal" id="product_form">
+	<form action="" method="" class="form form-horizontal" id="product_form">
 		<div class="row cl">
 		<label class="form-label col-xs-4 col-sm-3">平台</label>
 			<div class="formControls col-xs-8 col-sm-9">
@@ -111,7 +111,7 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">包体编码：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="productCode" name="productCode">
+				<input type="text" class="input-text" required="required" value="" placeholder="" id="productCode" name="productCode">
 			</div>
 		</div>
 		<div class="row cl">
@@ -188,16 +188,16 @@ function changePg(){
 /***表单提交*/
  function save(){
 	//$("#rechargeAmount").focus();
-	var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
 	$.ajax({
         type:"post",
         url:"/flowsys/productCode/product_code_add.do",
-        data: $('#product_form').serialize(),//表单数据
+        data: $('form').serialize(),//表单数据
         async : false,
         success:function(d){
             if(d=="success"){
                 layer.msg('保存成功！');//保存成功提示
-            parent.layer.close(index); //执行关闭
+				var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+	            parent.layer.close(index); //执行关闭
             }
             if(d=="error"){
                 layer.msg('保存异常!');

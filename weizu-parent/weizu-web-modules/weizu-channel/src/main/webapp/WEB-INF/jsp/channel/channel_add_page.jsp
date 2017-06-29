@@ -182,6 +182,8 @@ $(".radioItem").change(
  	 });
 });
 $(document).ready(function(){
+	
+	
 	/* if($("input[type='checkbox']").is(':checked')){
 		$("input[type='checkbox']").next().hide();
 	} */

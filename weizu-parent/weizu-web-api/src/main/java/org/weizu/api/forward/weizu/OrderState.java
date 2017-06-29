@@ -5,6 +5,7 @@ import org.weizu.api.base.APIResult;
 import org.weizu.api.base.PageParams;
 import org.weizu.api.base.PageResult;
 import org.weizu.api.facet.orderState.OrderStateBase;
+import org.weizu.api.facet.orderState.OrderStatePageEnum;
 import org.weizu.api.facet.orderState.PageOrder;
 import org.weizu.api.facet.orderState.impl.OrderStateParamsPage;
 import org.weizu.api.facet.orderState.impl.OrderStateResultPage;
@@ -49,7 +50,8 @@ public class OrderState implements OrderStateBase{
 		Order order = osrapi.getOrder();//api orderd对象
 		PageOrder pageOrder = null;
 		if(order != null){
-			pageOrder = new PageOrder(order.getTransaction_id(), order.getUser_order_id(), order.getNumber(), order.getFlowsize(), order.getCharge_fee(), order.getCreated_at(), order.getStatus(), order.getMsg());
+			int status = convertState(order.getStatus()).getValue();
+			pageOrder = new PageOrder(order.getTransaction_id(), order.getUser_order_id(), order.getNumber(), order.getFlowsize(), order.getCharge_fee(), order.getCreated_at(), status, order.getMsg());
 		}
 		OrderStateResultPage osrp = new OrderStateResultPage(osrapi.getErrcode(), osrapi.getErrmsg(),pageOrder);
 		
@@ -71,6 +73,39 @@ public class OrderState implements OrderStateBase{
 		OrderStateResultAPI osrapi = JSON.parseObject(jsonStr, OrderStateResultAPI.class);
 		OrderStateResultPage osrp = (OrderStateResultPage)resetResult(osrapi);
 		return osrp;
+	}
+
+	/**
+	 * @description:将api返回的状态转成订单页面状态
+	 * @param apiStatus api返回的状态
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月29日 上午9:44:29
+	 */
+	@Override
+	public OrderStatePageEnum convertState(int apiStatus) {
+		OrderStatePageEnum ospe = null;
+		switch (apiStatus) {
+		case 0:
+			ospe = OrderStatePageEnum.WEICHONG;
+			break;
+		case 1:
+			ospe = OrderStatePageEnum.DAICHONG;		
+			break;
+		case 2:
+			ospe = OrderStatePageEnum.CHARGING;
+			break;
+		case 4:
+			ospe = OrderStatePageEnum.CHARGED;
+			break;
+		case 8:
+			ospe = OrderStatePageEnum.UNCHARGE;
+			break;
+		default:
+			ospe = OrderStatePageEnum.UNCHARGE;
+			break;
+		}
+		return ospe;
 	}
 
 }

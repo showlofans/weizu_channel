@@ -37,11 +37,11 @@ public class PurchasePo extends Po {
 
     private Integer orderPlatformPath;			//充值方式(0-接口，1-本平台)
 
-    private Integer orderResult;				//结果（enum:）
+    private Integer orderResult;				//结果（enum:）(0-失败，1-成功，3-待充，4-为充)
 
     private Integer channelId;					//通道id（外键）
 
-    private String orderResultDetail;			//结果描述
+    private String orderResultDetail;			//结果描述(失败原因)
     
     private Double orderAmount;					//扣款
     
