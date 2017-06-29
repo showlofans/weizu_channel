@@ -25,7 +25,7 @@
  </head>
  <body>
  <article class="page-container">
- 	<form class="form form-horizontal" action="/flowsys/chargePg/pg_charge.do" method="post"  id="form-admin-add">
+ 	<form class="form form-horizontal" action="/flowsys/chargePg/pg_charge.do" method="post"  id="form-charge">
  	<input type="hidden" name="channelId" id="channelId">
  	<input type="hidden" name="pgId" id="pgId">
 	
@@ -109,7 +109,27 @@
   <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
  <script type="text/javascript">
  $().ready(function() {
-	    $("#form-admin-add").validate({});
+	    $("#form-charge").validate({
+	    	submitHandler : function(form) {
+	    		$('form').submit();
+	    		/* $.ajax({
+			        type:"post",
+			        url:"/flowsys/chargePg/pg_charge.do",
+			        data: $('form').serialize(),//表单数据
+			        async : false,
+			        success:function(d){
+			           if(d=="success"){
+			                layer.msg('保存成功！');//保存成功提示
+			            }
+			            if(d=="error"){
+			                layer.msg('保存异常!');
+			            }
+			            var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+			            parent.layer.close(index); //执行关闭 
+			        }
+			    }); */ 
+			}
+	    });
 });
  /* function submitPur(){
 	 var tel = $('input[name=chargeTel]').val();

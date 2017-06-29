@@ -19,6 +19,7 @@ import org.weizu.api.facet.orderState.OrderStateFactory;
 import org.weizu.api.facet.orderState.PageOrder;
 import org.weizu.api.facet.orderState.impl.OrderStateParamsPage;
 import org.weizu.api.facet.orderState.impl.OrderStateResultPage;
+import org.weizu.api.outter.facade.ChargeFacade;
 import org.weizu.web.foundation.DateUtil;
 import org.weizu.web.foundation.String.StringHelper;
 import org.weizu.web.foundation.http.HttpRequest;
@@ -48,6 +49,7 @@ import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.http.ParamsEntityWeiZu;
+import com.weizu.flowsys.web.http.ao.ChargeFacadeImpl;
 import com.weizu.flowsys.web.http.weizu.OrderStateResult;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
@@ -76,6 +78,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 	private OperatorPgAO operatorPgAO;
 	@Resource
 	private ProductCodeAO productCodeAO;
+//	@Resource
+//	private ChargeFacade chargeFacade;
 	
 	/**
 	 * @description: 页面上充值
@@ -104,10 +108,12 @@ public class PurchaseAOImpl implements PurchaseAO {
 		
 		/****************更新通道交易总额和交易总单数********************/
 		ChannelForwardPo channelPo = channelForwardDao.get(purchasePo.getChannelId());
+		if(channelPo == null)
+		{
+			return OrderResultEnum.ERROR.getCode();
+		}
 		//获取通道所属平台信息
 		ExchangePlatformPo epPo = exchangePlatformAO.getEpById(channelPo.getEpId());
-		
-		
 		OperatorPgDataPo pgPo = operatorPgAO.getPgById(purchasePo.getPgId());//
 		//通过归属地和包体获得产品编码
 		Map<String, Object> scopeCityMap = PurchaseUtil.getScopeCityByCarrier(purchasePo.getChargeTelDetail());
@@ -262,6 +268,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 					//更新加载的订单状态信息
 					//判断是否与数据库中的数据相等,如果不相等，就更新页面和数据库信息
 					PageOrder pageOrder = osrp.getPageOrder();
+					//如果失败，把等待状态转换成未充状态
+					pageOrder.setStatus(ChargeFacadeImpl.getStatusByStatus(pageOrder.getStatus())); 
+					
 					//更新查看订单状态
 					checkOrderState(pageOrder, purchaseVO2);
 					if(purchaseVO2.getOrderBackTime() != null)
@@ -325,7 +334,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 			}
 			String created_at_api = pageOrder.getCreated_at();
 			purchaseVO.setOrderBackTimeStr(created_at_api);
-			updateRes = purchaseDAO.updatePurchaseState(new PurchaseStateParams(purchaseVO.getOrderId(), DateUtil.strToDate(created_at_api, "").getTime() , purchaseVO.getOrderResult(), purchaseVO.getOrderResultDetail()));
+			updateRes = purchaseDAO.updatePurchaseState(new PurchaseStateParams(purchaseVO.getOrderId(), DateUtil.strToDate(created_at_api, "").getTime() , purchaseVO.getOrderResult(), purchaseVO.getOrderResultDetail(),pageOrder.getTransaction_id()));
 		}
 		return updateRes;
 	}

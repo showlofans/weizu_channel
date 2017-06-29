@@ -22,4 +22,13 @@ public interface OrderStateBase extends ParamsResult{
 	 * @createTime:2017年6月19日 下午6:04:02
 	 */
 	OrderStateResultPage getOrderState(OrderStateParamsPage ospp);
+	
+	/**
+	 * @description: 返回订单页面状态
+	 * @param apiStatus api返回的状态
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月29日 上午9:44:29
+	 */
+	OrderStatePageEnum convertState(int apiStatus);
 }

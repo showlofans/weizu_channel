@@ -13,16 +13,25 @@ public class PurchaseStateParams {
 	private Long orderBackTime;					//充值时间（本平台获得返回结果，或者返回给下游平台结果的时间戳）
 	private Integer orderResult;				//结果（enum:）
 	private String orderResultDetail;			//结果描述
+	private String orderIdApi;					//接口订单号
 	public PurchaseStateParams() {
 		super();
 	}
 	public PurchaseStateParams(Long orderId, Long orderBackTime,
-			Integer orderResult, String orderResultDetail) {
+			Integer orderResult, String orderResultDetail,String orderIdApi) {
 		super();
+		this.orderIdApi = orderIdApi;
 		this.orderId = orderId;
 		this.orderBackTime = orderBackTime;
 		this.orderResult = orderResult;
 		this.orderResultDetail = orderResultDetail;
+	}
+	
+	public String getOrderIdApi() {
+		return orderIdApi;
+	}
+	public void setOrderIdApi(String orderIdApi) {
+		this.orderIdApi = orderIdApi;
 	}
 	public Long getOrderId() {
 		return orderId;

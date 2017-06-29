@@ -116,8 +116,12 @@
   			order_result = #{orderResult},
   		</if>
   		<if test="orderResultDetail != null">
-  			order_result_detail = #{orderResultDetail}
+  			order_result_detail = #{orderResultDetail},
   		</if>
+  		<if test="orderIdApi != null">
+  			order_id_api = trim(#{orderIdApi})
+  		</if>
+  		
   	</set>
   	<where>order_id = #{orderId}</where>
   </update>

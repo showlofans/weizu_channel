@@ -19,6 +19,12 @@ public class ChargeOrder {
 		this.number = number;
 		this.pgSize = pgSize;
 	}
+	public ChargeOrder(Long orderId, String number, int pgSize) {
+		super();
+		this.orderId = orderId+"";
+		this.number = number;
+		this.pgSize = pgSize+"";
+	}
 	public ChargeOrder() {
 		super();
 	}

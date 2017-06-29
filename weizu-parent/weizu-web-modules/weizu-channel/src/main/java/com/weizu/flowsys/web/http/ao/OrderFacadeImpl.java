@@ -108,7 +108,7 @@ public class OrderFacadeImpl implements OrderFacade {
 				}
 				String created_at_api = pageOrder.getCreated_at();
 				purchasePo.setOrderBackTime(DateUtil.strToDate(created_at_api, null).getTime());
-				purchaseDAO.updatePurchaseState(new PurchaseStateParams(purchasePo.getOrderId(), DateUtil.strToDate(created_at_api, "").getTime() , purchasePo.getOrderResult(), purchasePo.getOrderResultDetail()));
+				purchaseDAO.updatePurchaseState(new PurchaseStateParams(purchasePo.getOrderId(), DateUtil.strToDate(created_at_api, "").getTime() , purchasePo.getOrderResult(), purchasePo.getOrderResultDetail(),pageOrder.getTransaction_id()));
 			}
 			
 			int pgSize = operatorPgDao.get(purchasePo.getPgId()).getPgSize();

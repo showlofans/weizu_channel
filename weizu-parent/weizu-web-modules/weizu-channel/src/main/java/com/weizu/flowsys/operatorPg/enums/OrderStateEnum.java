@@ -24,7 +24,7 @@ public enum OrderStateEnum {
 	 */
 	CHARGED("成功",1),
 	/**
-	 * 充值成功
+	 * 充值失败
 	 */
 	UNCHARGE("失败",0);
 	
