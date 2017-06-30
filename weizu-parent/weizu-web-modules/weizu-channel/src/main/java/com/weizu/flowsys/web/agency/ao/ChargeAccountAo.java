@@ -1,5 +1,9 @@
 package com.weizu.flowsys.web.agency.ao;
 
+import java.io.IOException;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 
 /**
@@ -20,6 +24,15 @@ public interface ChargeAccountAo {
 	 * @createTime:2017年5月6日 上午10:43:09
 	 */
 	int createAccount(ChargeAccountPo chargeAccountPo);
+	
+	/**
+	 * @description: 创建一个对公账户
+	 * @param chargeAccountPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月30日 下午4:06:11
+	 */
+	Integer createCompanyAccount(String realPath, ChargeAccountPo chargeAccountPo,MultipartFile file);
 	
 	/**
 	 * @description:更新账户

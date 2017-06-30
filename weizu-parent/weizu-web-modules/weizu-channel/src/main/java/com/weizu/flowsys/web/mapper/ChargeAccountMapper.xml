@@ -63,11 +63,12 @@
 	 	</set>
 	 </sql>
 	 
-	 <select id="selectByAgencyId" parameterType="java.lang.Integer" resultMap="OtherMap">
+	 <select id="selectByAgencyId" parameterType="map" resultMap="OtherMap">
     select 
     <include refid="Balance_Account_List" />
     from charge_account
-    where agency_id = #{agency_id,jdbcType=INTEGER}
+    where agency_id = #{agencyId,jdbcType=INTEGER}
+    and bill_type = #{billType}
   </select>
 	
 </mapper>

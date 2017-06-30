@@ -26,8 +26,8 @@ public class AgencyVODao extends DaoImpl<AgencyBackwardVO, Integer> implements A
 	 * @createTime:2017年5月22日 下午5:20:42
 	 */
 	@Override
-	public List<AgencyBackwardVO> selectByAgencyVO(Map<String, Object> paramsMap) {
-		return sqlSessionTemplateASS.selectList("selectByAgencyVO",paramsMap);
+	public List<AgencyBackwardVO> selectByAgencyVO(Map<String,Object> map) {
+		return sqlSessionTemplateASS.selectList("selectByAgencyVO",map);
 	}
 
 	/**

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.weizu.web.foundation.DateUtil;
 
@@ -27,6 +28,7 @@ import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.agency.url.AccountURL;
+import com.weizu.flowsys.web.agency.util.FileUpload;
 
 /**
  * @description:代理商账户管理
@@ -190,5 +192,45 @@ public class AccountController {
 		}else{
 			response.getWriter().print("error");
 		}*/
+	}
+	
+	/**
+	 * @description: 对公账户开通页面
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月30日 下午3:34:19
+	 */
+	@RequestMapping(value=AccountURL.OPEN_COMPANY_ACCOUNT_PAGE)
+	public ModelAndView openCompanyAccountPage(){
+		
+		
+		return new ModelAndView("/account/open_company_account_page");
+	}
+	/**
+	 * @description: 开通对公账户
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月30日 下午4:03:56
+	 */
+	@RequestMapping(value=AccountURL.OPEN_COMPANY_ACCOUNT)
+	public ModelAndView openCompanyAccount(@RequestParam("certification_img") MultipartFile file, ChargeAccountPo chargeAccountPo,HttpServletRequest request){
+		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		if(agencyVo != null)
+		{
+			chargeAccountPo.setAgencyId(agencyVo.getId());
+//			String realPath=request.getSession().getServletContext().getRealPath("/");
+			
+			String realPath = "";
+			try {
+				realPath = FileUpload.uploadFile(file, request);
+				System.out.println(realPath);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			chargeAccountPo.setCertificationImg(realPath);
+			chargeAccountAO.createCompanyAccount(realPath, chargeAccountPo,file);
+			return new ModelAndView("/account/open_company_account_page");
+		}
+		return new ModelAndView("/account/open_company_account_page");
 	}
 }

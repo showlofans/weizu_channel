@@ -37,6 +37,9 @@ public class AgencyBackwardVO extends Po {
 
 	private Long rateId;
 	private String rateName;
+	
+	private Long billRateId;
+	private String billRateName;
 
 	private Long createTime;		//注册时间
 	@TempField
@@ -69,6 +72,26 @@ public class AgencyBackwardVO extends Po {
 		this.verifyCode = verifyCode;
 	}
 	
+	public Long getBillRateId() {
+		return billRateId;
+	}
+
+	public void setBillRateId(Long billRateId) {
+		this.billRateId = billRateId;
+	}
+
+	public String getBillRateName() {
+		return billRateName;
+	}
+
+
+
+	public void setBillRateName(String billRateName) {
+		this.billRateName = billRateName;
+	}
+
+
+
 	public String getUserApiKey() {
 		return userApiKey;
 	}

@@ -68,12 +68,23 @@
 			</div>
 		</div>
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>费率：</label>
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>不带票费率：</label>
 			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
 				<select name="rateId" class="select">
 					<option value="">请选择</option>
 					<c:forEach items="${resultMap.rateList }" var="rate" varStatus="vs1">
 						<option value="${rate.id }" <c:if test='${rate.id==resultMap.agencyPo.rateId }'>selected</c:if>>${rate.rateName }</option>
+					</c:forEach>
+				</select>
+				</span> </div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>带票费率：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select name="rateId" class="select">
+					<option value="">请选择</option>
+					<c:forEach items="${resultMap.billRateList }" var="billRate" varStatus="vs1">
+						<option value="${billRate.id }" <c:if test='${billRate.id==resultMap.agencyPo.billRateId }'>selected</c:if>>${billRate.rateName }</option>
 					</c:forEach>
 				</select>
 				</span> </div>

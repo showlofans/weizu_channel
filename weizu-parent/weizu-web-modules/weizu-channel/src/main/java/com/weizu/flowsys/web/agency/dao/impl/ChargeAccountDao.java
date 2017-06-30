@@ -1,5 +1,8 @@
 package com.weizu.flowsys.web.agency.dao.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -23,9 +26,11 @@ public class ChargeAccountDao extends DaoImpl<ChargeAccountPo, Long> implements 
 	 * @createTime:2017年5月8日 上午9:44:24
 	 */
 	@Override
-	public ChargeAccountPo selectByAgencyId(int agencyId) {
-		// TODO Auto-generated method stub
-		return sqlSessionTemplate.selectOne("selectByAgencyId", agencyId);
+	public ChargeAccountPo selectByAgencyId(int agencyId, int billType) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("agencyId", agencyId);
+		map.put("billType", billType);
+		return sqlSessionTemplate.selectOne("selectByAgencyId", map);
 	}
 
 	/**

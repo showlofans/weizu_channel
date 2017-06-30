@@ -178,6 +178,27 @@
 			</div>
 		</c:forEach>  --%>
 		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>票务类型：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<c:choose>
+					<c:when test="${not empty resultMap.billTypes }">
+						<c:forEach items="${resultMap.billTypes }" var="billTypeEnum" varStatus="vs">
+							<div class="radio-box">
+								<input name="billType" class="radioItem" type="radio" value="${billTypeEnum.value }" <c:if test="${vs.index==0 }">checked</c:if>>
+								${billTypeEnum.desc }
+							</div>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<input name="billType" class="radioItem" type="radio"  value="${resultMap.billType }" checked>
+								对私
+					</c:otherwise>
+				</c:choose>
+				
+				
+			</div>
+		</div>
+		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">费率：</label>
 			<div role="tabpanel" class="tab formControls col-xs-8 col-sm-9 skin-minimal">
 					<!-- Nav tabs -->

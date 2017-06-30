@@ -15,14 +15,16 @@ public interface IRateBackwardDao {
 	 */
 	List<RateBackwardPo> selectByPagePo(Map<String,Object> paramsMap);
 	
+	
 	/**
-	 * @description:  查询代理商全部费率 
+	 * @description: 查询代理商全部费率 
 	 * @param rootAgencyId
+	 * @param billType
 	 * @return
 	 * @author:POP产品研发部 宁强
-	 * @createTime:2017年5月22日 上午10:51:25
+	 * @createTime:2017年6月30日 上午11:58:24
 	 */
-	List<RateBackwardPo> selectByRootId(Integer rootAgencyId);
+	List<RateBackwardPo> selectByRootId(Integer rootAgencyId,Integer billType);
 	
 	/**
 	 * @description:根据条件查询总记录数

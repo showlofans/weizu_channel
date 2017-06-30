@@ -38,7 +38,7 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">通道名称：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="${resultMap.channelName }" placeholder="" id="channelName" name="channelName">
+				<input type="text" class="input-text" value="${resultMap.channelName }" placeholder="例如：wzkj江西移动省内" id="channelName" name="channelName">
 			</div>
 		</div>
 		<div class="row cl">
@@ -83,7 +83,7 @@
 								${scopeCityName.desc }
 								<%-- <label for="operatorType-${vs.index }"></label> --%>
 								<!-- 输入两位折扣数字 -->
-								<input class="disscount" style="display: none; " type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
+								<input class="disscount" style="display: none; width:50px;" type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
 							</div>
 						</td>
 					<c:if test="${(vs.index+1) % 4==0 }"></tr></c:if>
@@ -97,7 +97,7 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>平台搜索：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" onKeyUp="ajaxGet()" value="" required="required" placeholder="" id="channel_search" name="epName">
+				<input type="text" class="input-text" onKeyUp="ajaxGet()" value="" required="required" placeholder="英文请用空格键结束" id="channel_search" name="epName">
 			</div>
 		</div>
 		<!-- 平台ID -->
@@ -228,6 +228,7 @@ function changeName(){
 		//alert(i);
 		return true;
 	}else{
+		alert("没有配置地区折扣")	;
 		return false;
 	}
 	/* $(".disscount").each(function(){

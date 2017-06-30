@@ -48,7 +48,7 @@ public class ChannelForwardPo extends Po implements Cloneable {
 
 	private Double channelBalance = 0.0d;		//通道余额
 
-    private Integer channelState = 1;		//通道状态（0-运行 1-暂停）
+    private Integer channelState;		//通道状态（0-运行 1-暂停）
     
     private Integer channelUseState = 0;		//通道使用状态（0-已使用 1-已暂停）
     

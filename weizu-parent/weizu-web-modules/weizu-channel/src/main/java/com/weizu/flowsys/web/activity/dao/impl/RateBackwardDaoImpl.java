@@ -1,5 +1,6 @@
 package com.weizu.flowsys.web.activity.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,16 +50,23 @@ public class RateBackwardDaoImpl extends DaoImpl<RateBackwardPo, Long> implement
 	public int countByPo(Map<String,Object> paramsMap) {
 		return sqlSessionTemplate.selectOne("countByPo",paramsMap);
 	}
-	/**
-	 * @description:查询代理商全部费率 
+	
+	/** 
+	 * @description: 查询代理商全部费率 
 	 * @param rootAgencyId
+	 * @param billType
 	 * @return
 	 * @author:POP产品研发部 宁强
-	 * @createTime:2017年5月22日 上午10:51:50
+	 * @createTime:2017年6月30日 上午11:58:36
 	 */
 	@Override
-	public List<RateBackwardPo> selectByRootId(Integer rootAgencyId) {
-		return sqlSessionTemplate.selectList("selectByRootId",rootAgencyId);
+	public List<RateBackwardPo> selectByRootId(Integer rootAgencyId,Integer billType) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("rootAgencyId", rootAgencyId);
+		if(billType != null){
+			map.put("billType", billType);
+		}
+		return sqlSessionTemplate.selectList("selectByRootId",map);
 	}
 
 }

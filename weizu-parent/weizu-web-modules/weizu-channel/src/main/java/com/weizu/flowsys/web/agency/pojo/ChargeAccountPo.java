@@ -25,8 +25,28 @@ public class ChargeAccountPo extends Po {
     private Double accountBalance = 0.00d;			//账户余额
     
     private Double accountCredit = 0.00d;			//透支额
+    
+    private Integer billType;				//票务类型
+    
+    private String certificationImg;		//认证图片		
 
-    /**
+    
+    public ChargeAccountPo(Integer agencyId, Double accountBalance,
+			Double accountCredit) {
+		super();
+		this.agencyId = agencyId;
+		this.accountBalance = accountBalance;
+		this.accountCredit = accountCredit;
+	}
+
+
+	public ChargeAccountPo() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
+	/**
      * @description:实例化加款后的账户
      * @param addBalance 加款额
      * @return
@@ -42,7 +62,26 @@ public class ChargeAccountPo extends Po {
     	return this.accountBalance;
     }
     
-    public Integer getId() {
+    
+    public Integer getBillType() {
+		return billType;
+	}
+
+	public void setBillType(Integer billType) {
+		this.billType = billType;
+	}
+
+	public String getCertificationImg() {
+		return certificationImg;
+	}
+
+	public void setCertificationImg(String certificationImg) {
+		this.certificationImg = certificationImg;
+	}
+
+
+
+	public Integer getId() {
 		return id;
 	}
 

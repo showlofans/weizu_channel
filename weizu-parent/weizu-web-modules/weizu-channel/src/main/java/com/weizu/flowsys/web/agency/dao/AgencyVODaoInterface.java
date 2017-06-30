@@ -14,7 +14,7 @@ public interface AgencyVODaoInterface {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月22日 下午5:20:34
 	 */
-	List<AgencyBackwardVO> selectByAgencyVO(Map<String,Object> paramsMap);
+	List<AgencyBackwardVO> selectByAgencyVO(Map<String,Object> map);
 	
 	/**
 	 * @description:更新代理商信息

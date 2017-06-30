@@ -5,6 +5,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="rate_name" jdbcType="VARCHAR" property="rateName" />
     <result column="root_agency_id" jdbcType="INTEGER" property="rootAgencyId" />
+    <result column="bill_type" jdbcType="INTEGER" property="billType" />
     <result column="rate_price_0" jdbcType="VARCHAR" property="ratePrice0" />
     <result column="rate_price_1" jdbcType="VARCHAR" property="ratePrice1" />
     <result column="rate_price_2" jdbcType="VARCHAR" property="ratePrice2" />
@@ -12,10 +13,10 @@
   </resultMap>
   <sql id="t_rate">rate_backward</sql>
   <sql id="Base_Column_List" >
-    id, rate_name, root_agency_id, rate_price_0, rate_price_1, rate_price_2, rate_state
+    id, rate_name, root_agency_id, rate_price_0, rate_price_1, rate_price_2, rate_state, bill_type
   </sql>
   <select id="selectByPagePo" parameterType="com.weizu.flowsys.web.activity.pojo.RateBackwardPo" resultMap="BaseResultMap">
-  	SELECT * FROM <include refid="t_rate"></include> 
+  	SELECT <include refid="Base_Column_List"></include> FROM <include refid="t_rate"></include> 
   	<where>
   		<include refid="condition_sql"></include>
   	</where>
@@ -30,12 +31,15 @@
 	 </if> 
   </select>
   
-  <!-- 查询代理商全部费率 -->
-  <select id="selectByRootId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-  	SELECT * FROM <include refid="t_rate"></include> 
+ <!-- 查询代理商全部费率 -->
+  <select id="selectByRootId" parameterType="map" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List"></include> FROM <include refid="t_rate"></include> 
   	<where>
-	  	<if test="_parameter != null">
-	  		AND root_agency_id = #{_parameter}
+	  	<if test="rootAgencyId != null">
+	  		AND root_agency_id = #{rootAgencyId}
+	  	</if>
+	  	<if test="billType != null">
+	  		AND bill_type = #{billType}
 	  	</if>
   	</where>
   </select>

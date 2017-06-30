@@ -37,6 +37,7 @@
     <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
     <result column="agency_ip" jdbcType="VARCHAR" property="agencyIp" />
     <result column="rate_id" jdbcType="BIGINT" property="rateId" />
+    <result column="bill_rate_id" jdbcType="BIGINT" property="billRateId" />
     <result column="account_credit" jdbcType="DOUBLE" property="accountCredit" />
     <result column="account_balance" jdbcType="DOUBLE" property="accountBalance" />
     <result column="create_time" property="createTime" />
@@ -44,7 +45,7 @@
     <result column="verify_code" property="verifyCode" />
   </resultMap>
   <sql id="other_Column_List">
-    agb.id, root_agency_id, user_name, user_real_name, agency_tel, user_email, 
+    agb.id,agb.bill_rate_id, root_agency_id, user_name, user_real_name, agency_tel, user_email, 
     agency_ip, rate_id, account_credit, account_balance, create_time
   </sql>
   
@@ -149,6 +150,9 @@
 		<if test="rootAgencyId != null">
 			AND root_agency_id = #{rootAgencyId}
 		</if>
+		<!-- <if test="billType != null">
+			AND bill_type = #{billType}
+		</if> -->
 		<if test="id != null">
 			AND id = #{id}
 		</if>

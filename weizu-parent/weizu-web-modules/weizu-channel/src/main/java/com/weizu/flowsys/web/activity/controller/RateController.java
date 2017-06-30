@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSONObject;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
+import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.RateStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
@@ -31,6 +32,7 @@ import com.weizu.flowsys.web.activity.pojo.RateBackwardPo;
 import com.weizu.flowsys.web.activity.pojo.RateBackwardVo;
 import com.weizu.flowsys.web.activity.url.RateURL;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
+import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.channel.ao.ChannelForwardAO;
 import com.weizu.flowsys.web.channel.pojo.BestChannelPO;
 
@@ -64,6 +66,18 @@ public class RateController {
 	@RequestMapping(value= RateURL.RATE_ADD_PAGE)
 	public ModelAndView rateAddPage(HttpServletRequest request,@RequestParam(value="agencyId", required = false)String agencyId,@RequestParam(value="rateId", required = false)String rateId) throws UnsupportedEncodingException{
 		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		
+		ChargeAccountPo chargeAccount = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
+		if(chargeAccount != null){
+			if(chargeAccount.getBillType() != null &&  chargeAccount.getBillType() == 1)
+			{
+				resultMap.put("billTypes", BillTypeEnum.toList());
+			}else{
+				resultMap.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+			}
+		}
+		
 		resultMap.put("operatorTypes", OperatorTypeEnum.toList());
 		resultMap.put("scopeCityNames", ScopeCityEnum.toList());
 		if (rateId != null) {
@@ -212,6 +226,7 @@ public class RateController {
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 			resultMap.put("params",rateBackwardPo);
 			resultMap.put("rateStateEnums", RateStateEnum.toList());
+			resultMap.put("billTypeEnums", BillTypeEnum.toList());
 			
 			resultMap.put("pagination", pagination);
 			
