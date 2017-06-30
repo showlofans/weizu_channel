@@ -53,6 +53,7 @@
 				<tr class="text-c">
 					<th>Id</th>
 					<th>费率名称</th>
+					<th>票务类型</th>
 					<th>移动折扣</th>
 					<th>联通折扣</th>
 					<th>电信折扣</th>
@@ -65,6 +66,11 @@
 					<tr class="text-c">
 						<td>${rate.id }</td>
 						<td>${rate.rateName }</td>
+						 <td>
+						 	<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+							<c:if test="${rate.billType == billTypeEnum.value }"> ${billTypeEnum.desc }</c:if>
+							</c:forEach>
+						</td> 
 						<td  class="text-l">${rate.ratePrice0 }</td>
 						 <td class="text-l">${rate.ratePrice1 }</td>
 						<td class="text-l">${rate.ratePrice2 }</td>

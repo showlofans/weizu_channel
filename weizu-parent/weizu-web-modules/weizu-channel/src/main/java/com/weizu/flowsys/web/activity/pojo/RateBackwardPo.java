@@ -18,6 +18,8 @@ public class RateBackwardPo extends Po {
     private String ratePrice2;	//电信-费率列表
 
     private Integer rateState;
+    
+    private Integer billType;		//票务 1-带票，0-不带票
 
     public RateBackwardPo(String rateName, Integer rootAgencyId,
 			String ratePrice0, String ratePrice1, String ratePrice2,
@@ -31,9 +33,31 @@ public class RateBackwardPo extends Po {
 		this.rateState = rateState;
 	}
 
+	public RateBackwardPo(String rateName, Integer rootAgencyId,
+			String ratePrice0, String ratePrice1, String ratePrice2,
+			Integer rateState, Integer billType) {
+		super();
+		this.rateName = rateName;
+		this.rootAgencyId = rootAgencyId;
+		this.ratePrice0 = ratePrice0;
+		this.ratePrice1 = ratePrice1;
+		this.ratePrice2 = ratePrice2;
+		this.rateState = rateState;
+		this.billType = billType;
+	}
+
+
 	public RateBackwardPo() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	public Integer getBillType() {
+		return billType;
+	}
+
+	public void setBillType(Integer billType) {
+		this.billType = billType;
 	}
 
 	public Long getId() {

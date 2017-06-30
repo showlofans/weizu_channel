@@ -14,6 +14,7 @@ import org.weizu.web.foundation.DateUtil;
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
+import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.util.UUIDGenerator;
 import com.weizu.flowsys.web.activity.dao.impl.RateBackwardDaoImpl;
@@ -36,6 +37,8 @@ public class AgencyAOImpl implements AgencyAO {
 	private RateBackwardDaoImpl rateBackwardDao;
 	@Resource
 	private ChargeAccountDao chargeAccountDao;
+	@Resource
+	private ChargeAccountAo chargeAccountAO;
 
 	/**
 	 * @description:注册平台代理商（账户）
@@ -101,7 +104,7 @@ public class AgencyAOImpl implements AgencyAO {
 	@Override
 	public int updateAgency(AgencyBackwardVO agencyBackwardVO) {
 		//主要取信用值和代理商id
-		ChargeAccountPo chargeAccountPo = chargeAccountDao.selectByAgencyId(agencyBackwardVO.getId());
+		ChargeAccountPo chargeAccountPo =  chargeAccountAO.getAccountByAgencyId(agencyBackwardVO.getId());
 		chargeAccountPo.setAccountCredit(agencyBackwardVO.getAccountCredit());
 		
 		chargeAccountDao.updateByAgencyId(chargeAccountPo);//更新信用值信息
@@ -202,12 +205,12 @@ public class AgencyAOImpl implements AgencyAO {
 		int pageSize = pageParam.getPageSize();
 		
 		/**为得到总记录数而准备参数 whereParams*/
-		WherePrams whereParams = new WherePrams("root_agency_id","=",rootAgencyId);
+//		WherePrams whereParams = new WherePrams("root_agency_id","=",rootAgencyId);
 		Map<String, Object> searchMap = getSearchParam(agencyBackwardVO);
-		if(searchMap.get("userName") != null){
-			String userName = searchMap.get("userName").toString();
-			whereParams.and("user_name", "like", userName);
-		}
+//		if(searchMap.get("userName") != null){
+//			String userName = searchMap.get("userName").toString();
+//			whereParams.and("user_name", "like", userName);
+//		}
 		agencyBackwardVO.setRootAgencyId(rootAgencyId);
 		int totalRecord = agencyVODao.countByAgencyVO(agencyBackwardVO);
 //		whereParams.limit(pageNo * pageSize, pageSize);
@@ -217,7 +220,8 @@ public class AgencyAOImpl implements AgencyAO {
 		searchMap.put("end", pageSize);
 		searchMap.put("rootAgencyId", rootAgencyId);
 		List<AgencyBackwardVO> records = agencyVODao.selectByAgencyVO(searchMap);
-		List<RateBackwardPo> rateList = rateBackwardDao.selectByRootId(rootAgencyId);//查一遍rate列表
+		List<RateBackwardPo> rateList = rateBackwardDao.selectByRootId(rootAgencyId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());//查一遍rate列表
+		List<RateBackwardPo> billRateList = rateBackwardDao.selectByRootId(rootAgencyId,BillTypeEnum.CORPORATE_BUSINESS.getValue());//查一遍rate列表
 		//根据引用直接修改值，不需要重新放到一个新的list当中
 		for (AgencyBackwardVO agencyBackwardVO2 : records) {
 			if(agencyBackwardVO2.getCreateTime() != null){
@@ -226,6 +230,11 @@ public class AgencyAOImpl implements AgencyAO {
 			for (RateBackwardPo rateBackwardPo : rateList) {//在内存中初始化
 				if(rateBackwardPo.getId() == agencyBackwardVO2.getRateId()){
 					agencyBackwardVO2.setRateName(rateBackwardPo.getRateName());
+				}
+			}
+			for (RateBackwardPo rateBackwardPo : billRateList) {//在内存中初始化
+				if(rateBackwardPo.getId() == agencyBackwardVO2.getBillRateId()){
+					agencyBackwardVO2.setBillRateName(rateBackwardPo.getRateName());
 				}
 			}
 		}
@@ -263,8 +272,10 @@ public class AgencyAOImpl implements AgencyAO {
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-			List<RateBackwardPo> list = rateBackwardDao.selectByRootId(agBackwardPo.getRootAgencyId());
-			resultMap.put("rateList", list);//费率列表
+			List<RateBackwardPo> rateList = rateBackwardDao.selectByRootId(agBackwardPo.getRootAgencyId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());//查一遍rate列表
+			List<RateBackwardPo> billRateList = rateBackwardDao.selectByRootId(agBackwardPo.getRootAgencyId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());//查一遍rate列表
+			resultMap.put("rateList", rateList);//费率列表
+			resultMap.put("billRateList", billRateList);//费率列表
 			resultMap.put("agencyPo", agBackwardPo);
 		}
 		return resultMap;
@@ -294,15 +305,17 @@ public class AgencyAOImpl implements AgencyAO {
 				}
 			}
 			
-			ChargeAccountPo chargeAccountPo = chargeAccountDao.selectByAgencyId(Integer.parseInt(id));
+			ChargeAccountPo chargeAccountPo = chargeAccountAO.getAccountByAgencyId(Integer.parseInt(id));
 			if(agBackwardPo != null){
 				if(StringHelper.isNotEmpty(agBackwardPo.getUserRealName())){
 					agBackwardPo.setUserRealName(agBackwardPo.getUserRealName());
 				}
 				agBackwardPo.setAccountCredit(chargeAccountPo.getAccountCredit());//设置信用值
 				
-				List<RateBackwardPo> list = rateBackwardDao.selectByRootId(agBackwardPo.getRootAgencyId());
+				List<RateBackwardPo> list = rateBackwardDao.selectByRootId(agBackwardPo.getRootAgencyId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+				List<RateBackwardPo> billList = rateBackwardDao.selectByRootId(agBackwardPo.getRootAgencyId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
 				resultMap.put("rateList", list);//费率列表
+				resultMap.put("billRateList", billList);//带票费率列表
 				resultMap.put("agencyPo", agBackwardPo);
 			}
 		}

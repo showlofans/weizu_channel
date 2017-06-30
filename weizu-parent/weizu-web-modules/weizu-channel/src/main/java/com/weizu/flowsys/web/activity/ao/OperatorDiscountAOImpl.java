@@ -72,7 +72,7 @@ public class OperatorDiscountAOImpl implements OperatorDiscountAO {
 			}
 			ratePrice[operatorType] = JSONArray.toJSONString(map).toString();
 		}
-		RateBackwardPo rateBackwardPo = new RateBackwardPo(rateName, rootAgencyId, ratePrice[0], ratePrice[1], ratePrice[2], 0);
+		RateBackwardPo rateBackwardPo = new RateBackwardPo(rateName, rootAgencyId, ratePrice[0], ratePrice[1], ratePrice[2], 0,rateBackwardVo.getBillType());
 		Long rateId = rateBackwardDao.nextId();
 		int res = rateBackwardDao.add(rateBackwardPo);
 		for (OperatorDiscountPo odp : list) {

@@ -92,8 +92,7 @@ public class RateBackwardAOImpl implements RateBackwardAO {
 	 */
 	@Override
 	public List<RateBackwardPo> selectByRootId(Integer rootAgencyId) {
-		
-		return rateBackwardDao.selectByRootId(rootAgencyId);
+		return rateBackwardDao.selectByRootId(rootAgencyId,null);
 	}
 	@Override
 	public RateBackwardPo getByPoId(Long id) {

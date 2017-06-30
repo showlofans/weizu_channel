@@ -17,12 +17,21 @@ public class RateBackwardVo {
 	@TempField
 	private Integer agencyId;	//代理商id
 	
+	private Integer billType;	//票务类型
+	
 	private String rateName;	
 	
 	@TempField
 	private List<OperatorDiscount> operatorDiscount;
 
-	
+	public Integer getBillType() {
+		return billType;
+	}
+
+	public void setBillType(Integer billType) {
+		this.billType = billType;
+	}
+
 	public Integer getAgencyId() {
 		return agencyId;
 	}

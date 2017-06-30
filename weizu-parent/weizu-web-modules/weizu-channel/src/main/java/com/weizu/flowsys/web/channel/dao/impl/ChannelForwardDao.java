@@ -33,6 +33,9 @@ public class ChannelForwardDao extends DaoImpl<ChannelForwardPo, Integer> implem
 		
 		for (int i = 0; i < list.size(); i++) {
 			list.get(i).setId(Integer.valueOf(startId + i + ""));
+			//初始化通道状态和使用状态
+			list.get(i).setChannelUseState(0);
+			list.get(i).setChannelState(0);//
 		}
 		return sqlSessionTemplate.insert("channel_addList", list);
 		
