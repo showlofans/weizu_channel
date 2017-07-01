@@ -49,7 +49,7 @@
 		产品编码：<input type="text" value="${resultMap.searchParam.productCode }" name="productCode" id="" placeholder=" 产品编码" style="width:250px" class="input-text">
 		对接平台：
 		<span class="select-box inline">
-			<select name="epId" class="select" onchange="submitForm()">
+			<select id="epId" name="epId" class="select" onchange="submitForm()">
 			<c:forEach items="${resultMap.epList }" var="ep" varStatus="vs2">
 				<option value="${ep.epId }" <c:if test="${ep.epId == resultMap.searchParam.epId }"> selected</c:if>>${ep.epName }</option>
 			</c:forEach>
@@ -117,7 +117,10 @@
 							</c:forEach>
 						</td> --%>
 					<!-- 	<td class="td-status"><span class="label label-success radius">已发布</span></td> -->
-						<td class="f-14 td-manage"><a style="text-decoration:none" onClick="article_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> <a style="text-decoration:none" class="ml-5" onClick="article_edit('资讯编辑','article-add.html','10001')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> <a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+						<td class="f-14 td-manage">
+						<!-- <a style="text-decoration:none" onClick="article_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
+						<a style="text-decoration:none" class="ml-5" onClick="article_edit('资讯编辑','article-add.html','10001')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> --> 
+						<a style="text-decoration:none" class="ml-5" onClick="produce_del('/flowsys/productCode/productcode_delete.do',${product.id })" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -151,6 +154,49 @@
         "fnServerData": retrieveData // 获取数据的处理函数
 	});
 }); */
+/*编码-删除*/
+function produce_del(url,codeId){
+	layer.confirm('确认要删除吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			url: url,
+			data: {codeId:codeId},
+			//dataType: 'json',
+			success: function(data){
+				if(data=="success")
+				{
+					layer.msg('删除编码成功!',{icon:1,time:1000});
+					location.reload();
+				}else{
+					layer.msg('删除编码失败!',{icon:1,time:1000});
+				}
+			},
+			error:function(data) {
+				console.log(data.msg);
+			}
+		});		
+	});
+	/* var isStop = confirm("确认要下架吗？");
+	$.ajax({
+		type: 'POST',
+		async: false,
+		url: url,
+		//dataType: 'json',
+		data: {codeId:codeId},
+		success: function(data){
+			if(data=="success")
+			{
+				layer.msg('删除编码成功!',{icon:1,time:1000});
+				location.reload();
+			}else{
+				layer.msg('删除编码失败!',{icon:1,time:1000});
+			}
+		},
+		error:function(data) {
+			console.log(data.msg);
+		}
+	});	 */
+}
 
 //3个参数的名字可以随便命名,但必须是3个参数,少一个都不行
 function retrieveData( sSource111,aoData, fnCallback111) {
@@ -187,13 +233,15 @@ function article_add(title,url,w,h){
 /*产品编码-添加*/
 function pCode_add(title,url){
 	//alert("sd");
+	var epId = $('#epId').val();//选中的平台
+	//alert(epId);
 	layer.open({
         type: 2,
         title: false,
         area: ['430px', '500px'],
         maxmin: false,
         closeBtn: 1,
-        content: url+'?pageTitle=' + title,
+        content: url+'?pageTitle=' + title + '&epId='+ epId,
          end: function () {
             location.reload();
         }

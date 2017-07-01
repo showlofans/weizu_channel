@@ -101,4 +101,13 @@ public interface ChannelForwardAO {
 	 * @createTime:2017年6月27日 上午11:50:57
 	 */
 	int updateChannelState(String channelId, String channelUseState);
+	
+	/**
+	 * @description: 删除通道
+	 * @param channelId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月1日 下午3:26:36
+	 */
+	int deleteChannel(String channelId);
 }

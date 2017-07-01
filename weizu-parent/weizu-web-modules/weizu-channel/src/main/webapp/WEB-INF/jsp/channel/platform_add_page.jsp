@@ -127,7 +127,6 @@
 $().ready(function() {
     $("#platfrom").validate({
     	submitHandler : function(form) {
-    		
     		$.ajax({
                 type:"post",
                 url:"/flowsys/platform/platform_add.do",

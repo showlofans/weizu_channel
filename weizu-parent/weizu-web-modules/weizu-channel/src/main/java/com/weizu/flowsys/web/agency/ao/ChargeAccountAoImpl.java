@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
@@ -124,6 +125,20 @@ public class ChargeAccountAoImpl implements ChargeAccountAo {
 		
 		chargeAccountPo.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());
 		return chargeAccountDao.add(chargeAccountPo);
+	}
+
+	/**
+	 * @description: 通过代理商id和票务信息获得账户信息
+	 * @param agencyId 
+	 * @param billType
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月1日 下午5:55:20
+	 */
+	@Override
+	public ChargeAccountPo getAccountByAgencyId(int agencyId, int billType) {
+		ChargeAccountPo accountPo = chargeAccountDao.get(new WherePrams("agency_id", "=", agencyId).and("bill_type", "=", billType));
+		return accountPo;
 	}
 
 

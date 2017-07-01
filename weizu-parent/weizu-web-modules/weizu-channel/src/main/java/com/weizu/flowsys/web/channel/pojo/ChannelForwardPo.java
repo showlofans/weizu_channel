@@ -35,6 +35,8 @@ public class ChannelForwardPo extends Po implements Cloneable {
     @TempField
     private String scopeCityName;			//包城市名
     
+    private Integer billType;				//票务类型：1-带票，0-不带票
+    
     private Double channelDiscount = 1.00d;	//折扣
     
     @TempField
@@ -88,6 +90,14 @@ public class ChannelForwardPo extends Po implements Cloneable {
     	this.channelTotalAmount = NumberTool.add(this.channelTotalAmount, amount);
     }
     
+	public Integer getBillType() {
+		return billType;
+	}
+
+	public void setBillType(Integer billType) {
+		this.billType = billType;
+	}
+
 	public Integer getChannelUseState() {
 		return channelUseState;
 	}

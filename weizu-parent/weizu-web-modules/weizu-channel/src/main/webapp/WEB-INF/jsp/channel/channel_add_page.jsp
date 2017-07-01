@@ -47,6 +47,34 @@
 				<input type="text" class="input-text" value="${resultMap.pgSizeStr }" placeholder="${resultMap.pgSizeStr }" id="pgSize" name="pgSize">
 			</div>
 		</div>
+		<input type="hidden" id="billTypeId" value="${resultMap.billType }">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">通道类型：</label>
+			<!-- billTypes -->
+			<div class="formControls col-xs-8 col-sm-9">
+				<c:forEach items="${resultMap.billTypes }" var="billEnum" varStatus="vs">
+					<c:choose>
+						<c:when test="${vs.index == 0 }">
+							<div class="radio-box">
+								<input name="billType" class="radioItem" type="radio" value="${billEnum.value }" checked>
+								${billEnum.desc }
+							</div>
+						</c:when>
+						<c:otherwise>
+							<div class="radio-box">
+								<input name="billType" class="radioItem" <c:if test="${resultMap.billType!= 1 }">disabled</c:if> type="radio" value="${billEnum.value }" checked>
+								${billEnum.desc }
+							</div>
+						</c:otherwise>
+					</c:choose>
+					<%-- <div class="radio-box">
+						<input name="billType" class="radioItem" type="radio" disabled value="${billEnum.value }" <c:if test="${vs.index==0 }">checked</c:if>>
+						${billEnum.desc }
+						<label for="operatorType-${vs.index }"></label>
+					</div> --%>
+				</c:forEach>
+			</div>
+		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>运营商类型：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
@@ -166,6 +194,16 @@
 </body>
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
 <script type="text/javascript">
+/* 设置
+function getMsg(){
+	var billType = $("#billTypeId").val();
+	//alert(billType);//会没有值
+	if(billType != 1){
+		alert("请先开通对公账户");
+		$("input[name='billType']:eq(0)").attr("checked",true); 
+		$("input[name='billType']:eq(1)").attr("disabled",'disabled'); 
+	}
+} */
 /**根据运营商改变通道规格 */
 $(".radioItem").change(  
  function() { 

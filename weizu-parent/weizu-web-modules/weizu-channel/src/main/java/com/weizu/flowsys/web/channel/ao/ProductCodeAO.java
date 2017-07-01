@@ -63,4 +63,13 @@ public interface ProductCodeAO {
 	 */
 	ProductCodePo getOneProductCode(OneCodePo productCodeParams);
 	
+	/**
+	 * @description: 删除产品编码
+	 * @param codeId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月1日 下午3:41:44
+	 */
+	int deleteProductCode(String codeId);
+	
 }

@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSONObject;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
+import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
@@ -26,7 +27,9 @@ import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.ServiceScopeAO;
+import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
+import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.channel.ao.ChannelForwardAO;
 import com.weizu.flowsys.web.channel.ao.ExchangePlatformAO;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
@@ -62,6 +65,9 @@ public class ChannelController {
 	@Resource
 	private OperatorPgAO operatorPgAO;
 	
+	@Resource
+	private ChargeAccountAo chargeAccountAO;
+	
 	/**
 	 * @description:通道添加页面
 	 * @param request
@@ -78,6 +84,21 @@ public class ChannelController {
 		resultMap.put("operatorTypes", OperatorTypeEnum.toList());
 		resultMap.put("scopeCityNames", ScopeCityEnum.toList());
 		resultMap.put("serviceTypes", ServiceTypeEnum.toList());
+		
+		//查看代理商有没有对公的账户
+		//默认对私通道
+		//ChargeAccountPo chargeAccount =  (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		if(agencyVO != null){
+			ChargeAccountPo chargeAccount = chargeAccountAO.getAccountByAgencyId(agencyVO.getId(), BillTypeEnum.CORPORATE_BUSINESS.getValue());
+			if(chargeAccount != null)
+			{
+				resultMap.put("billType", BillTypeEnum.CORPORATE_BUSINESS.getValue());
+			}
+		}
+		
+		
+		resultMap.put("billTypes", BillTypeEnum.toList());
 		//默认用移动的包体
 		resultMap.put("pgSizeStr", operatorPgAO.pgSizeStr(0,0));
 		
@@ -253,6 +274,38 @@ public class ChannelController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	/**
+	 * @description: 活动通道列表
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月1日 上午11:36:49
+	 */
+	@RequestMapping(value=ChannelURL.ACTIVITY_CHANNEL_LIST)
+	public ModelAndView activityChannelList(){
+		return new ModelAndView("/channel/activity_channel_list");
+	}
+	/**
+	 * @description: 下架删除通道
+	 * @param channelId
+	 * @param response
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月1日 下午3:29:53
+	 */
+	@RequestMapping(value=ChannelURL.CHANNEL_DELETE)
+	@ResponseBody
+	public void deleteChannel(String channelId,HttpServletResponse response){
+		try {
+			int delResult = channelForwardAO.deleteChannel(channelId);
+			if(delResult > 0){
+				response.getWriter().print("success");
+			}else{
+				response.getWriter().print("error");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+//		return new ModelAndView("/channel/activity_channel_list");
 	}
 	
 }

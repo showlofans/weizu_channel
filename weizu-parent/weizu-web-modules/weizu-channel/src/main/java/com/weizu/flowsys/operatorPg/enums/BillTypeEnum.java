@@ -18,11 +18,11 @@ public enum BillTypeEnum {
 	/**
 	 * 对公业务
 	 */
-	CORPORATE_BUSINESS("对公",1),
+	CORPORATE_BUSINESS("高配",1),
 	/**
 	 * 对私业务
 	 */
-	BUSINESS_INDIVIDUAL("对私",0);
+	BUSINESS_INDIVIDUAL("一般",0);
 	
 	private String desc;
 	private Integer value;

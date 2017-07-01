@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="/WEB-INF/MyTaglib.tld" prefix="mytag"%>
-<!DOCTYPE >
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
@@ -22,65 +22,78 @@
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/skin/default/skin.css" id="skin" />
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/style.css" />
 <link rel="stylesheet" type="text/css" href="/view/mine/paging.css" />
+<link rel="stylesheet" href="/view/mine/bootstrap-datetimepicker.css">
 
 <!--[if IE 6]>
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
-<title>通道列表</title>
+<title>费率列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 平台通道管理 <span class="c-gray en">&gt;</span>平台列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 下游管理 <span class="c-gray en">&gt;</span> 费率列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
-	<div class="text-c">
-	<form action="/flowsys/platform/platform_list.do" method="post" id="formD" name="dataListForm">
-		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
-		平台名称：<input type="text" value="${resultMap.searchParam.epName }" name="epName" id="" placeholder=" 通道名称" style="width:250px" class="input-text">
-		<button type="reset"class="btn btn-success" value="重置">重置</button>
-		<a style="text-decoration:none" class="btn btn-success" onClick="platform_add('平台添加','/flowsys/platform/platform_add_page.do')" href="javascript:;" title="添加">添加</a>
-		<input value="查询" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
-		<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
+	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
+	<%-- <div class="text-c">
+		<form action="/flowsys/rate/rate_list.do" method="post" id="formD" name="dataListForm">
+				<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
+				费率名称:<input type="text" value="${resultMap.params.rateName }" name="rateName" id="" placeholder=" 费率名称" style="width:150px" class="input-text">
+				移动省份:<input type="text" value="${resultMap.params.ratePrice0 }" name="ratePrice0" id="" placeholder=" 移动省份" style="width:150px" class="input-text">
+				联通省份:<input type="text" value="${resultMap.params.ratePrice1 }" name="ratePrice1" id="" placeholder=" 联通省份" style="width:150px" class="input-text">
+				电信省份:<input type="text" value="${resultMap.params.ratePrice2 }" name="ratePrice2" id="" placeholder=" 电信省份" style="width:150px" class="input-text">
+				<button type="reset"class="btn btn-success" value="重置">重置</button>
+				<button name="" id="" class="btn btn-success"  type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+				<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 		</form>
-	</div>
+	</div> --%>
 	<!-- <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加资讯" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加资讯</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div> -->
 	<div class="mt-20">
+			<sapn>通道名称：微族科技</sapn>
+			<sapn>是否带票：不带票</sapn>
+			<sapn>通道折扣：云南85</sapn>
+			<a style="text-decoration:none" class="btn btn-success" onClick="rate_add('费率添加','/flowsys/rate/rate_join_channel_page.do')" href="javascript:;" title="绑定代理商">绑定代理商</a>
 		<table class="table table-border table-bordered table-bg table-hover table-sort">
 			<thead>
 				<tr class="text-c">
-					<!-- <th width="80">流量包Id</th> -->
-					<th width="80">平台名称</th>
-					<th width="80">流量订购地址</th>
-					<th width="80">产品列表地址</th>
-					<!-- <th width="120">支持城市</th> -->
-					<th width="60">流量查询地址</th>
-					<th width="60">余额查询地址</th>
-					<th width="75">账号</th>
-					<th width="60">密码</th>
-					<th width="60">平台余额</th>
-					<th width="60">apikey</th>
-					<th width="60">平台官网地址</th>
-					<th width="120">操作</th>
+					<th>代理商名称</th>
+					<th>费率折扣</th>
+					<th>添加时间</th>
+					<th>操作</th>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${resultMap.pagination.records }" var="platform" varStatus="vs">
+				<td>456</td> 
+				<td>86</td> 
+				<td>2017-07-01 01:16:34</td> 
+				<td><a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a> 
+				<!-- <a style="text-decoration:none" class="ml-5" onClick="article_edit('资讯编辑','article-add.html','10001')" href="javascript:;" title="参与代理商"><i class="Hui-iconfont">&#xe6df;</i></a> --> 
+				</td> 
+				<%-- <c:forEach items="${resultMap.pagination.records }" var="rate" varStatus="vs">
 					<tr class="text-c">
-						<td class="f-14 td-manage">${platform.epName }</td>
-						<td><div class="f-12 c-999"><a href="${platform.epPurchaseIp }" target="_blank">${platform.epPurchaseIp }</a></div></td>
-						<td><div class="f-12 c-999"><a href="${platform.productListIp }">${platform.productListIp }</a></div></td>
-						<td><div class="f-12 c-999"><a href="${platform.pgdataCheckIp }">${platform.pgdataCheckIp }</a></div></td>
-						<td><div class="f-12 c-999"><a href="${platform.epBalanceIp }">${platform.epBalanceIp }</a></div></td>
-						<td class="f-14 td-manage">${platform.epUserName }</td>
-						<td class="f-14 td-manage">${platform.epUserPass }</td>
-						<td class="f-14 td-manage">${platform.epBalance }</td>
-						<td class="f-14 td-manage">${platform.epApikey }</td>
-						<td><div class="f-12 c-999"><a href="${platform.epIp }">${platform.epIp }</a></div></td>
-						<td class="f-14 td-manage"><a style="text-decoration:none" onClick="article_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> <a style="text-decoration:none" class="ml-5" onClick="article_edit('资讯编辑','article-add.html','10001')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> <a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+						<td>${rate.id }</td>
+						<td>${rate.rateName }</td>
+						 <td>
+						 	<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+							<c:if test="${rate.billType == billTypeEnum.value }"> ${billTypeEnum.desc }</c:if>
+							</c:forEach>
+						</td> 
+						<td  class="text-l">${rate.ratePrice0 }</td>
+						 <td class="text-l">${rate.ratePrice1 }</td>
+						<td class="text-l">${rate.ratePrice2 }</td>
+						
+						<td class="td-manage"><a style="text-decoration:none" onClick="article_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
+						<a style="text-decoration:none" class="ml-5" onClick="article_edit('账户充值',${agency.userName },${agency.id })" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> 
+						<a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+						 <td class="td-status"><c:forEach items="${resultMap.rateStateEnums }" var="stateEnum" varStatus="vs1">
+						<c:if test="${rate.rateState == stateEnum.value }"> ${stateEnum.desc }</c:if>
+						</c:forEach></td> 
+					<!-- 	<td class="td-status"><span class="label label-success radius">已发布</span></td> -->
+						
 					</tr>
-				</c:forEach>
+				</c:forEach> --%>
 			</tbody>
 		</table>
-		<mytag:Pagination pagination="${resultMap.pagination}" queryForm="dataListForm" divId="platformlistId" />  
+		<%-- <mytag:Pagination pagination="${resultMap.pagination}" queryForm="dataListForm" divId="rateId" /> --%>  
 	</div>
 </div>
 <!--_footer 作为公共模版分离出去-->
@@ -93,53 +106,16 @@
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript" src="/view/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
 <!-- jQuery -->
+
 <script type="text/javascript" charset="utf8" src="/view/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="/view/lib/laypage/1.2/laypage.js"></script>
+<!-- 时间选择器 -->
+<!--  <script src="/view/lib/moment.js"></script>
+<script src="/view/lib/bootstrap-datetimepicker.min.js"></script>
+<script src="/view/lib/bootstrap-datetimepicker.zh-CN.js"></script> -->
 <script type="text/javascript">
-/* $(document).ready(function() {
-	$('.table-sort').dataTable({
-        "bServerSide": true,//这个用来指明是通过服务端来取数据
-        "sAjaxSource": "testAoData",//这个是请求的地址
-        'bPaginate':true, 
-        "sPaginationType": "full_numbers", //分页风格，full_number会把所有页码显示出来（大概是，自己尝试）
-        "bDestroy" : true,
-        "bLengthChange": true, //改变每页显示数据数量
-        "bAutoWidth": true,//自动宽度  
-        
-        "fnServerData": retrieveData // 获取数据的处理函数
-	});
-}); */
-
-//3个参数的名字可以随便命名,但必须是3个参数,少一个都不行
-function retrieveData( sSource111,aoData, fnCallback111) {
-	alert(aoData[0].name);  
-    // alert(JSON.stringify(aoData));  
-    $.ajax( {    
-        "type": "get",     
-        "contentType": "application/json",    
-        "url": sSource111,     
-        "dataType": "json",    
-        "data": { aoData: JSON.stringify(aoData) }, // 以json格式传递  
-        "success": function(resp) {    
-        	fnCallback111(resp.aaData); 
-        },
-        "error":function(msg){
-        	alert(msg);
-        }
-    }); 
-}  
-
-/*资讯-添加*/
-function article_add(title,url,w,h){
-	var index = layer.open({
-		type: 2,
-		title: title,
-		content: url
-	});
-	layer.full(index);
-}
-/*平台-添加*/
-function platform_add(title,url){
+/*包体-添加*/
+function rate_add(title,url){
 	//alert("sd");
 	layer.open({
         type: 2,
@@ -153,14 +129,41 @@ function platform_add(title,url){
         }
     });
 }
-/*资讯-编辑*/
-function article_edit(title,url,id,w,h){
+
+/* $(document).ready(function() {
+	
+}); */
+
+/*资讯-添加*/
+function article_add(title,url,w,h){
 	var index = layer.open({
 		type: 2,
 		title: title,
 		content: url
 	});
-	//layer.full(index);
+	layer.full(index);
+}
+/*资讯-编辑*/
+function article_edit(title,agencyUserName,id){
+	/* layer.open({
+		area: [w+'px', h +'px'],
+		type: 1,
+		title: title,
+		content: '<form action="add_charge" class="page-container">代理客户名称：'+addstr+'<br>冲值金额:<input type="text" class="input-text"></input>元<br><input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;充值&nbsp;&nbsp;"></input></form>'
+	}); */
+	//layer_show(title,url,w,h);
+	/* layer.open({
+        type: 2,
+        title: false,
+        area: ['430px', '500px'],
+        maxmin: false,
+        closeBtn: 1,
+        content: 'add_charge.do?agencyId=' + id + '&userName=' + agencyUserName,
+        end: function () {
+            location.reload();
+        }
+    }); */
+	/* layer.full(index); */
 }
 /*资讯-删除*/
 function article_del(obj,id){

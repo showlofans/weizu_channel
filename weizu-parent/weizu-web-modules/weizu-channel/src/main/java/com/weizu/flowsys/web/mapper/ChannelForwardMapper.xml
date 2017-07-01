@@ -22,6 +22,7 @@
     <result column="channel_state" jdbcType="INTEGER" property="channelState" />
     <result column="channel_use_state" jdbcType="INTEGER" property="channelUseState" />
     <result column="last_access" jdbcType="BIGINT" property="lastAccess" />
+    <result column="bill_type" jdbcType="INTEGER" property="billType" />
   </resultMap>
   
   <resultMap id="BestChannelMap" type="com.weizu.flowsys.web.channel.pojo.BestChannelPO" >
@@ -42,18 +43,19 @@
   <!-- 连表查询字段 -->
   <sql id="Base_Column_List" >
     channel.id, channel_name, agency_id, pg_size, scope_city_name, channel.operator_type, service_id, channel_discount, ep_id, channel_total_use, 
-    channel_total_amount, channel_balance, channel_state, channel_use_state, channel.last_access
+    channel_total_amount, channel_balance, channel_state, channel_use_state, channel.last_access,channel.bill_type
   </sql>
   
   
   <insert id="channel_addList" useGeneratedKeys="true" parameterType="java.util.List">
   	insert into <include refid="t_channel"></include>
   	(channel_name, agency_id, pg_size,operator_type, service_id, channel_discount, ep_id, channel_total_use,
-  	channel_total_amount, channel_balance, channel_state, channel_use_state, last_access)
+  	channel_total_amount, channel_balance, channel_state, channel_use_state, last_access,bill_type)
   	values
   	<foreach collection="list" separator="," item="channel" index="index">
   		(#{channel.channelName},#{channel.agencyId},#{channel.pgSize},#{channel.operatorType},#{channel.serviceId},#{channel.channelDiscount},#{channel.epId},
-  		#{channel.channelTotalUse},#{channel.channelTotalAmount},#{channel.channelBalance},#{channel.channelState},#{channel.channelUseState},#{channel.lastAccess})
+  		#{channel.channelTotalUse},#{channel.channelTotalAmount},#{channel.channelBalance},#{channel.channelState},#{channel.channelUseState},#{channel.lastAccess}
+  		,#{channel.billType})
   	</foreach>
   </insert>
   
@@ -119,6 +121,9 @@
   	</if>
   	<if test="agencyId != null">
   		AND agency_id = #{agencyId}
+  	</if>
+  	<if test="billType != null">
+  		AND bill_type = #{billType}
   	</if>
   </sql>
   

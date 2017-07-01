@@ -53,6 +53,18 @@ public interface ChargeAccountAo {
 	ChargeAccountPo getAccountByAgencyId(int agencyId);
 	
 	/**
+	 * @description: 通过代理商id和票务信息获得账户信息
+	 * @param agencyId
+	 * @param billType
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月1日 下午5:54:08
+	 */
+	ChargeAccountPo getAccountByAgencyId(int agencyId, int billType);
+	
+//	ChargeAccountPo getAccountByAgencyId(int agencyId);
+	
+	/**
 	 * @description:删除账户
 	 * @param chargeAccountPo
 	 * @return

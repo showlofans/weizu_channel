@@ -56,7 +56,7 @@ public class ProductCodeController {
 	 * @createTime:2017年6月9日 上午9:49:00
 	 */
 	@RequestMapping(value = ProductCodeURL.PRODUCTCODE_ADD_PAGE)
-	public ModelAndView addProdouctCodePage(String pageTitle, HttpServletRequest request){
+	public ModelAndView addProdouctCodePage(String pageTitle,ProductCodePo product_add, HttpServletRequest request){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 			resultMap.put("pageTitle", pageTitle);
 		//查询所有平台名称
@@ -72,6 +72,8 @@ public class ProductCodeController {
 		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 		resultMap.put("pgTypeEnums", OperatorTypeEnum.toList());
 		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
+		resultMap.put("product_add", product_add);
+//		resultMap.put("epId", Integer.parseInt(epId));
 //		operatorPgAO.l
 		return new ModelAndView("/channel/productCode_add_page", "resultMap", resultMap);
 	}
@@ -186,5 +188,30 @@ public class ProductCodeController {
 		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 		
 		return new ModelAndView("/channel/product_code_list", "resultMap", resultMap);
+	}
+	
+	/**
+	 * @description: 删除产品编码
+	 * @param codeId
+	 * @param response
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月1日 下午3:45:48
+	 */
+	@RequestMapping(value=ProductCodeURL.PRODUCTCODE_DELETE)
+	public void deleteProductCode(String codeId,HttpServletResponse response){
+		
+		int delResult = productCodeAO.deleteProductCode(codeId);
+		try {
+			if(delResult > 0 )
+			{
+				response.getWriter().print("success");
+			}
+			else{
+				response.getWriter().print("error");
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

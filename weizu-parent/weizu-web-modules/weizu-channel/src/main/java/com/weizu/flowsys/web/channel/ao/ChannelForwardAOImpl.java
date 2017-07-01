@@ -14,6 +14,7 @@ import org.weizu.web.foundation.StringUtil;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
+import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
@@ -67,9 +68,12 @@ public class ChannelForwardAOImpl implements ChannelForwardAO {
 	public List<ChannelForwardPo> initAddListByPo(
 			ChannelForwardPo channelForwardPo) {
 		List<ChannelForwardPo> list = new LinkedList<ChannelForwardPo>();
-		if(channelForwardPo.getDiscountList().size() > 0){
+		
+		List<ScopeDiscount> disccountList = channelForwardPo.getDiscountList();
+		if(disccountList != null && disccountList.size() > 0){
 			/**初始化要添加的list*/
-			for (ScopeDiscount scopeDiscount : channelForwardPo.getDiscountList()) {
+			for (ScopeDiscount scopeDiscount : disccountList) {
+				//克隆原通道，并在原通道基础上分离出多个通道
 				if(scopeDiscount != null ){
 					ChannelForwardPo addPo = channelForwardPo.clone();
 					//			System.out.println(scopeDiscount.getScopeCityName());
@@ -89,6 +93,10 @@ public class ChannelForwardAOImpl implements ChannelForwardAO {
 					sb.append(addPo.getServiceType());
 					//设置服务范围ID
 					addPo.setServiceId(sb.toString());
+					//默认对私通道
+					if(addPo.getBillType() == null){
+						addPo.setBillType(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+					}
 					list.add(addPo);
 				}
 			}
@@ -289,6 +297,18 @@ public class ChannelForwardAOImpl implements ChannelForwardAO {
 		}
 		
 		return channelForwardDao.updateChannelState(id, cState);
+	}
+	/**
+	 * @description: 删除通道
+	 * @param channelId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月1日 下午3:27:14
+	 */
+	@Override
+	public int deleteChannel(String channelId) {
+		int id = Integer.parseInt(channelId);
+		return channelForwardDao.del(id);
 	}
 	
 

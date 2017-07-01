@@ -81,12 +81,13 @@
 </header>
 <aside class="Hui-aside">
 	<div class="menu_dropdown bk_2">
-		<dl id="menu-picture">
+		<dl id="menu-picture"><!-- menu_dropdown-arrow -->
 			<dt><i class="Hui-iconfont">&#xe679;</i> 平台通道管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
 					<li><a data-href="/flowsys/channel/channel_add_page.do" data-title="通道添加" href="javascript:void(0)">通道添加</a></li>
 					<li><a data-href="/flowsys/channel/channel_list.do" data-title="通道列表" href="javascript:void(0)">通道列表</a></li>
+					<li><a data-href="/flowsys/channel/activity_channel_list.do" data-title="活动通道" href="javascript:void(0)">活动通道</a></li>
 					<li><a data-href="/flowsys/platform/platform_list.do" data-title="对接平台管理" href="javascript:void(0)">对接平台管理</a></li>
 					<li><a data-href="/flowsys/productCode/product_code_list.do" data-title="产品编码" href="javascript:void(0)">产品编码</a></li>
 			</ul>
