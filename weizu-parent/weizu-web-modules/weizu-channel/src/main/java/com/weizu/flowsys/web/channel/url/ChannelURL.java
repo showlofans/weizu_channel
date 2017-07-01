@@ -44,4 +44,12 @@ public class ChannelURL extends BaseURL{
 	 * 通道状态更新
 	 */
 	public static final String CHANNEL_STATE_UPDATE = "/channel_state_update"+ DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 通道下架删除
+	 */
+	public static final String CHANNEL_DELETE = "/channel_delete"+ DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 活动通道列表
+	 */
+	public static final String ACTIVITY_CHANNEL_LIST= "/activity_channel_list"+ DYNAMIC_WEB_SUFFIX;
 }

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -30,6 +31,7 @@ import com.weizu.flowsys.web.activity.pojo.OperatorDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.OperatorScopeVO;
 import com.weizu.flowsys.web.activity.pojo.RateBackwardPo;
 import com.weizu.flowsys.web.activity.pojo.RateBackwardVo;
+import com.weizu.flowsys.web.activity.pojo.RateJoinChannelPo;
 import com.weizu.flowsys.web.activity.url.RateURL;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
@@ -87,14 +89,14 @@ public class RateController {
 			OperatorDiscountPo opo = new OperatorDiscountPo();
 			opo.setRateId(Long.parseLong(rateId));
 			List<OperatorDiscountPo> list = operatorDiscountAO.listDiscountByPo(opo);
-			for (OperatorDiscountPo operatorDiscountPo : list) {//设置编码
-				for (Map<String,Object> map : OperatorTypeEnum.toList()) {
-					if(operatorDiscountPo.getOperatorType()==Integer.parseInt(map.get("value").toString())){
-						String operatorName = map.get("desc").toString();
-						operatorDiscountPo.setOperatorScope(operatorName + operatorDiscountPo.getScopeName());
-					}
-				}
-			}
+//			for (OperatorDiscountPo operatorDiscountPo : list) {//设置编码
+//				for (Map<String,Object> map : OperatorTypeEnum.toList()) {
+//					if(operatorDiscountPo.getOperatorType()==Integer.parseInt(map.get("value").toString())){
+//						String operatorName = map.get("desc").toString();
+//						operatorDiscountPo.setOperatorScope(operatorName + operatorDiscountPo.getScopeName());
+//					}
+//				}
+//			}
 			resultMap.put("discountList", list);
 			resultMap.put("agencyId", agencyId);
 			
@@ -269,6 +271,50 @@ public class RateController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	/**
+	 * @description: 通道配置费率列表
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月1日 上午11:43:53
+	 */
+	@RequestMapping(value=RateURL.RATE_JOIN_CHANNEL_LIST)
+	public ModelAndView rateJoinChannel()
+	{
+		return new ModelAndView("/rate/rate_join_channel_list");
+	}
+	/**
+	 * @description: 绑定代理商
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月1日 下午12:26:09
+	 */
+	@RequestMapping(value=RateURL.RATE_JOIN_CHANNEL_PAGE)
+	public ModelAndView rateJoinChannelPage(@RequestParam(value="pageTitle",required=false)String pageTitle)
+	{
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("pageTitle", pageTitle);
+		resultMap.put("scopeCityNames", ScopeCityEnum.toList());
+		resultMap.put("operatorTypes", OperatorTypeEnum.toList());
+		return new ModelAndView("/rate/rate_join_channel_page","resultMap",resultMap);
+	}
+	/**
+	 * @description: 费率添加
+	 * @param rjcp
+	 * @param response
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月1日 下午12:36:01
+	 */
+	@RequestMapping(value=RateURL.RATE_JOIN_CHANNEL)
+	@ResponseBody
+	public void rateJoinChannel(RateJoinChannelPo rjcp,HttpServletResponse response)
+	{
+		try {
+			response.getWriter().print("success");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		//return new ModelAndView("/rate/rate_join_channel_page","pageTitle","pageTitle");
 	}
 	
 }

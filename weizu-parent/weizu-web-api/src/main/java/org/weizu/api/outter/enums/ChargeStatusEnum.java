@@ -36,6 +36,10 @@ public enum ChargeStatusEnum {
 	 */
 	INT_REQUIRED("包体参数必须为整数(包体大小;包体范围;运营商类型)",7),
 	/**
+	 * 通道禁止提单
+	 */
+	CHANNEL_CLOSED("通道被关停",4),
+	/**
 	 * 充值包体不存在
 	 */
 	PG_NOT_FOUND("充值包体不存在",8);

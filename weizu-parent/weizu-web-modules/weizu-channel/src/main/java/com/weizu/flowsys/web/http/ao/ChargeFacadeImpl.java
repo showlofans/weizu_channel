@@ -212,6 +212,7 @@ public class ChargeFacadeImpl implements ChargeFacade {
 					}
 					BestChannelPO bestChannel = channelForwardAO.getBestChannel(new OperatorScopeVO(scopeName, backPo.getId(), otype));
 					if(bestChannel  != null){//走了通道
+//						if()
 						chargeDTO = doChannel( bestChannel, pgData, purchasePo, backPo, scopeCityCode, chargeTel);
 					}
 				}

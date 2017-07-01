@@ -41,10 +41,14 @@
 				<span class="select-box inline">
 					<select id="selectEpId" name="epId" class="select">
 						<c:forEach items="${resultMap.epList }" var="ep" varStatus="vs1">
-							<c:if test="${ep.id==product_add.epId }">
-								<option value="${ep.epId }" selected="selected" >${ep.epName }</option>
-							</c:if>
-							<option value="${ep.epId }" >${ep.epName }</option>
+							<c:choose>
+								<c:when test="${ep.epId==resultMap.product_add.epId }">
+									<option value="${ep.epId }" selected="selected" >${ep.epName }</option>
+								</c:when>
+								<c:otherwise>
+									<option value="${ep.epId }" >${ep.epName }</option>
+								</c:otherwise>
+							</c:choose>
 						</c:forEach>
 					</select>
 				</span>
@@ -74,7 +78,7 @@
 				 <span class="select-box inline">
 					<select name="serviceType" id="serviceType" class="select" onchange="ajaxGetPg()">
 						<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
-							<c:if test="${serviceTypeEnum.value == product_add.operatorType }">
+							<c:if test="${serviceTypeEnum.value == resultMap.product_add.operatorType }">
 								<option value="${serviceTypeEnum.value }" selected="selected" >${serviceTypeEnum.desc }</option>
 							</c:if>
 							<option value="${serviceTypeEnum.value }" >${serviceTypeEnum.desc }</option>

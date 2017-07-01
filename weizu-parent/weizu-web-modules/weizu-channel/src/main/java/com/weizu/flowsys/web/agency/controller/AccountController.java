@@ -228,7 +228,12 @@ public class AccountController {
 				e.printStackTrace();
 			}
 			chargeAccountPo.setCertificationImg(realPath);
-			chargeAccountAO.createCompanyAccount(realPath, chargeAccountPo,file);
+			int createRes = chargeAccountAO.createCompanyAccount(realPath, chargeAccountPo,file);
+			if(createRes > 0){
+				ChargeAccountPo chargeAccount =  (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
+				chargeAccount.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());
+				request.getSession().setAttribute("chargeAccount", chargeAccount);;
+			}
 			return new ModelAndView("/account/open_company_account_page");
 		}
 		return new ModelAndView("/account/open_company_account_page");

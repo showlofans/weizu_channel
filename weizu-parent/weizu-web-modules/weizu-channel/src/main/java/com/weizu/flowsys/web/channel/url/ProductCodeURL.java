@@ -28,6 +28,10 @@ public class ProductCodeURL extends BaseURL{
 	 */
 	public static final String PRODUCTCODE_ADD_PAGE = "/productCode_add_page" + DYNAMIC_WEB_SUFFIX;
 	/**
+	 * 删除产品编码
+	 */
+	public static final String PRODUCTCODE_DELETE = "/productcode_delete" + DYNAMIC_WEB_SUFFIX;
+	/**
 	 * 初始化包体列表
 	 */
 	public static final String AJAX_PG_LIST = "/productCode_add_page/ajax_pg_list" + DYNAMIC_WEB_SUFFIX;

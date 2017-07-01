@@ -36,7 +36,7 @@
 	<form action="/flowsys/channel/channel_list.do" method="post" id="formD" name="dataListForm">
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
 		通道名称：<input type="text" value="${resultMap.searchParam.channelName }" name="channelName" id="" placeholder=" 通道名称" style="width:250px" class="input-text">
-		通道状态
+		配置
 		<span class="select-box inline">
 			<select name="channelState" class="select" onchange="getChannelList(this)">
 			<option value="">请选择</option>
@@ -47,6 +47,7 @@
 		</span>
 		
 		通道省份：<input type="text" value="${resultMap.searchParam.scopeCityName }" name="scopeCityName" id="" placeholder=" 通道省份" style="width:250px" class="input-text">
+		代理商名称：<input type="text" value="${resultMap.searchParam.agencyName }" name="agencyName" id="" placeholder=" 通道省份" style="width:250px" class="input-text">
 		
 		<button type="reset"class="btn btn-success" value="重置">重置</button>
 		<input value="查询" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
@@ -60,24 +61,37 @@
 			<thead>
 				<tr class="text-c">
 					<!-- <th width="80">流量包Id</th> -->
-					<th width="80">ID</th>
+					<!-- <th width="80">ID</th> -->
 					<th width="80">通道名称</th>
-					<th width="80">交易单数</th>
-					<th width="80">交易总额</th>
+					<th width="80">票务</th>
+					<th width="80">活动时间</th>
+					<!-- <th width="80">交易单数</th>
+					<th width="80">交易总额</th> -->
 					<!-- <th width="120">支持城市</th> -->
 					<th width="60">运营商类型</th>
 					<th width="60">包体类型</th>
 					<th width="60">通道折扣</th>
-					<th width="75">通道余额</th>
+					<!-- <th width="75">通道余额</th>
 					<th width="60">通道状态</th>
-					<th width="60">通道使用状态</th>
+					<th width="60">通道使用状态</th> -->
 					<th width="60">通道规格</th>
 					
 					<th width="120">操作</th>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${resultMap.pagination.records }" var="channel" varStatus="vs">
+				<td>微族科技</td> 
+				<td>不带票</td> 
+				<td>2017-07-01 01:16:34</td> 
+				<td>移动</td> 
+				<td>全国</td> 
+				<td>{"北京","0.65"}</td> 
+				<td>100& 500&</td> 
+				<td><a style="text-decoration:none" class="ml-5" onClick="article_edit('资讯编辑','article-add.html','10001')" href="javascript:;" title="绑定代理商"><i class="Hui-iconfont">&#xe6df;</i></a> 
+				<!-- <a style="text-decoration:none" class="ml-5" onClick="article_edit('资讯编辑','article-add.html','10001')" href="javascript:;" title="参与代理商"><i class="Hui-iconfont">&#xe6df;</i></a> --> 
+				<a style="text-decoration:none" class="ml-5" href="/flowsys/rate/rate_join_channel_list.do" title="参与代理商"><i class="Hui-iconfont">&#xe6de;;</i></a> 
+				</td> 
+				<%-- <c:forEach items="${resultMap.pagination.records }" var="channel" varStatus="vs">
 					<tr class="text-c">
 						<td>${channel.id }</td> 
 						<td>${channel.channelName }</td>
@@ -136,14 +150,14 @@
 								<i class="Hui-iconfont">&#xe631;</i>
 							</a> 
 						</c:if>
-						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="channel_stop('/flowsys/channel/channel_delete.do',${channel.id})" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
+						<a style="text-decoration:none" class="ml-5" onClick="article_edit('资讯编辑','article-add.html','10001')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> 
 						<!-- <a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a> -->
 						</td>
 					</tr>
-				</c:forEach>
+				</c:forEach> --%>
 			</tbody>
 		</table>
-		<mytag:Pagination pagination="${resultMap.pagination}" queryForm="dataListForm" divId="channellistId" />  
+		<%-- <mytag:Pagination pagination="${resultMap.pagination}" queryForm="dataListForm" divId="channellistId" /> --%>  
 	</div>
 </div>
 <!--_footer 作为公共模版分离出去-->
@@ -368,48 +382,14 @@ function article_shenhe(obj,id){
     	layer.msg('未通过', {icon:5,time:1000});
 	});	
 }
-/*通道-下架*/
-function channel_stop(url,channelId){
+/*资讯-下架*/
+function article_stop(obj,id){
 	layer.confirm('确认要下架吗？',function(index){
-		$.ajax({
-			type: 'POST',
-			url: url,
-			data: {channelId:channelId},
-			success: function(data){
-				if(data=="success")
-				{
-					layer.msg('下架通道成功!',{icon:1,time:1000});
-					location.reload();
-				}else{
-					layer.msg('下架通道失败!',{icon:1,time:1000});
-				}
-			},
-			error:function(data) {
-				console.log(data.msg);
-			}
-		});		
+		$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="article_start(this,id)" href="javascript:;" title="发布"><i class="Hui-iconfont">&#xe603;</i></a>');
+		$(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已下架</span>');
+		$(obj).remove();
+		layer.msg('已下架!',{icon: 5,time:1000});
 	});
-	
-	/* var isStop = confirm("确认要下架吗？");
-	$.ajax({
-		type: 'POST',
-		async: false,
-		url: url,
-		//dataType: 'json',
-		data: {channelId:channelId},
-		success: function(data){
-			if(data=="success")
-			{
-				layer.msg('删除通道成功!',{icon:1,time:1000});
-				location.reload();
-			}else{
-				layer.msg('删除通道失败!',{icon:1,time:1000});
-			}
-		},
-		error:function(data) {
-			console.log(data.msg);
-		}
-	});	 */
 }
 
 /*资讯-发布*/

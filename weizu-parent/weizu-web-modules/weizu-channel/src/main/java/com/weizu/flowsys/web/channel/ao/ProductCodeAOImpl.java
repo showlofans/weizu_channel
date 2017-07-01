@@ -187,4 +187,18 @@ public class ProductCodeAOImpl implements ProductCodeAO {
 		return productCodeDAO.getOneProductCode(paramsMap);
 	}
 
+	/**
+	 * @description: 删除产品编码
+	 * @param codeId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月1日 下午3:42:18
+	 */
+	@Transactional
+	@Override
+	public int deleteProductCode(String codeId) {
+		Long id = Long.parseLong(codeId);
+		return productCodeDAO.del(id);
+	}
+
 }

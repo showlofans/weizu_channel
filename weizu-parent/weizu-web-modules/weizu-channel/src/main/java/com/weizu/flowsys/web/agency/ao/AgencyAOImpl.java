@@ -61,6 +61,7 @@ public class AgencyAOImpl implements AgencyAO {
 			//利用nextId函数获得当前注册代理商id,同时注册一个账户
 			int agencyId = (int) (agencyBackwardDao.nextId()-1);//适用于自动增长
 			ChargeAccountPo chargePo = new ChargeAccountPo();
+			chargePo.setBillType(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());//默认开通对私账户
 			chargePo.setAgencyId(agencyId);
 			int addCharge = chargeAccountDao.add(chargePo);
 			
