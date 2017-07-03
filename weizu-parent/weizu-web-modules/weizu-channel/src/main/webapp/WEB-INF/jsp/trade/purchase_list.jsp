@@ -53,6 +53,15 @@
 						</c:forEach>
 					</select>
 					</span> 
+					通道类型：
+					<span class="select-box inline">
+						<select name="billType" class="select">
+						<option value="">请选择</option>
+						<c:forEach items="${resultMap.billTypeEnums }" var="bTypeEnum" varStatus="vs2">
+							<option value="${bTypeEnum.value }" <c:if test="${bTypeEnum.value == resultMap.searchParams.billType }"> selected</c:if>>${bTypeEnum.desc }</option>
+						</c:forEach>
+					</select>
+					</span> 
 					通道名称:<input type="text"  value="${resultMap.searchParams.channelName }" name="channelName" id="" placeholder=" 通道名称" style="width:250px" class="input-text">
 					
 					
@@ -90,6 +99,7 @@
 					<th width="80px">结果</th>
 					<th width="60px">扣款</th>
 					<th width="120px">通道名称</th>
+					<th width="120px">通道类型</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -124,6 +134,13 @@
 						
 						<td>${purchase.orderAmount }</td>
 						<td>${purchase.channelName }</td>
+						<td>
+							<c:forEach items="${resultMap.billTypeEnums }" var="bTypeEnum" varStatus="vs">
+								<c:if test="${purchase.billType == bTypeEnum.value }">
+									${bTypeEnum.desc }
+								</c:if>
+							</c:forEach>
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>

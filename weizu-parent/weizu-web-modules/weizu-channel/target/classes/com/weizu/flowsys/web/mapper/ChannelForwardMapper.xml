@@ -30,6 +30,7 @@
     <result column="channeld" jdbcType="INTEGER" property="channeld" />
     <result column="discount" jdbcType="DOUBLE" property="channelDiscount" />
     <result column="epd" jdbcType="INTEGER" property="epd" />
+    <result column="bill_type" jdbcType="INTEGER" property="billType" />
   </resultMap>
   
   <!--  通过通道ID找到所属平台 -->
@@ -69,7 +70,7 @@
   </select>
    <!-- 获取最优通道 -->
   <sql id="best_channel_list">
-  	channel.channel_discount discount,channel.id channeld,ep.id epd,ep.ep_name 
+  	channel.channel_discount discount,channel.id channeld,ep.id epd,ep.ep_name,channel.bill_type 
   </sql>
   <!-- 获取最优通道 -->
   <select id="getBestChannel" resultMap="BestChannelMap" parameterType="com.weizu.flowsys.web.activity.pojo.OperatorScopeVO">

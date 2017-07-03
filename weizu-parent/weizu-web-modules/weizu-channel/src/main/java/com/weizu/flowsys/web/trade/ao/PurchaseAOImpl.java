@@ -98,10 +98,12 @@ public class PurchaseAOImpl implements PurchaseAO {
 		/**充值额（）*/
 		Double orderAmount = purchasePo.getOrderAmount();
 		/** 向消费记录表插入登陆用户数据 */
+		Long nextIdRecord = chargeRecordDao.nextId();
 		chargeRecordDao.add(new ChargeRecordPo(System
 				.currentTimeMillis(), orderAmount,
 				agencyBeforeBalance, NumberTool.sub(agencyBeforeBalance, orderAmount), 
 				BillTypeEnum.BUSINESS_INDIVIDUAL.getValue(),AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), purchasePo.getAgencyId(),1));
+		
 		accountPo.addBalance(orderAmount,-1);
 		/** 更新登录用户账户信息**/
 		int recordRes = chargeAccountAO.updateAccount(accountPo);
@@ -173,9 +175,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 				chargeTelCity = telMap.get("chargeTelCity").toString();
 			}
 			purchasePo.setChargeTelCity(chargeTelCity);
-			
+			purchasePo.setRecordId(nextIdRecord);
 			//更新订单表
 			int purResult = purchaseDAO.addPurchase(purchasePo);
+//			purchasePo
 			
 			/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
 			if(purResult > 0){

@@ -51,7 +51,7 @@
 				<ul class="cl">
 					<!-- <li>超级管理员</li> -->
 					<li>个人信用：<a href="#"><c:if test="${empty chargeAccount.accountCredit }">0.00</c:if> ${chargeAccount.accountCredit }</a></li>
-					<li>余额：<a title="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-href="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-title="充值扣款记录" onclick="Hui_admin_tab(this)"><c:if test="${empty chargeAccount.accountBalance }">0.00</c:if> ${chargeAccount.accountBalance}</a></li>
+					<li>余额：<a title="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-href="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-title="充值扣款记录" onclick="Hui_admin_tab(this)"><c:if test="${empty chargeAccount.accountBalance && empty chargeAccount1.accountBalance }">0.00</c:if> ${chargeAccount.accountBalance + chargeAccount1.accountBalance}</a></li>
 					<li class="dropDown dropDown_hover">
 						<a href="javascript:;" onClick="myselfinfo()" class="dropDown_A">${loginContext.userName} <i class="Hui-iconfont">&#xe6d5;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
@@ -82,14 +82,16 @@
 <aside class="Hui-aside">
 	<div class="menu_dropdown bk_2">
 		<dl id="menu-picture"><!-- menu_dropdown-arrow -->
-			<dt><i class="Hui-iconfont">&#xe679;</i> 平台通道管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dt><i class="Hui-iconfont">&#xe679;</i> 通道管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
 					<li><a data-href="/flowsys/channel/channel_add_page.do" data-title="通道添加" href="javascript:void(0)">通道添加</a></li>
 					<li><a data-href="/flowsys/channel/channel_list.do" data-title="通道列表" href="javascript:void(0)">通道列表</a></li>
 					<li><a data-href="/flowsys/channel/activity_channel_list.do" data-title="活动通道" href="javascript:void(0)">活动通道</a></li>
-					<li><a data-href="/flowsys/platform/platform_list.do" data-title="对接平台管理" href="javascript:void(0)">对接平台管理</a></li>
-					<li><a data-href="/flowsys/productCode/product_code_list.do" data-title="产品编码" href="javascript:void(0)">产品编码</a></li>
+					<c:if test="${power== 'no'}">
+						<li><a data-href="/flowsys/platform/platform_list.do" data-title="对接平台管理" href="javascript:void(0)">对接平台管理</a></li>
+						<li><a data-href="/flowsys/productCode/product_code_list.do" data-title="产品编码" href="javascript:void(0)">产品编码</a></li>
+					</c:if>
 			</ul>
 		</dd>
 	</dl>
@@ -126,11 +128,12 @@
 		<dd>
 			<ul>
 				<!-- <li><a data-href="/flowsys/account/open_company_account_page.do" data-title="认证信息" href="javascript:void(0)">认证信息</a></li> -->
-				<c:if test="${chargeAccount.billType != 1 }">
+				<c:if test="${chargeAccount1 == null }">
 					<li><a data-href="/flowsys/account/open_company_account_page.do" data-title="开通对公账号" href="javascript:void(0)">开通对公账号</a></li>
 				</c:if>
 				<li><a data-href="/flowsys/account/consume_list.do" data-title="消费记录" href="javascript:void(0)">消费记录</a></li>
 				<li><a data-href="/flowsys/account/charge_list.do" data-title="充值记录" href="javascript:void(0)">充值记录</a></li>
+				<li><a data-href="/flowsys/account/account_info.do" data-title="账户信息" href="javascript:void(0)">账户信息</a></li>
 			</ul>
 		</dd>
 	</dl>

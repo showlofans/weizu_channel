@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.web.agency.dao.ChargeRecordDaoInterface;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
+import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
 
 @Repository("chargeRecordDao")
 public class ChargeRecordDao extends DaoImpl<ChargeRecordPo, Integer> implements ChargeRecordDaoInterface {
@@ -28,7 +29,6 @@ public class ChargeRecordDao extends DaoImpl<ChargeRecordPo, Integer> implements
 	 */
 	@Override
 	public List<ChargeRecordPo> listChargeRecord(Map<String, Object> paramsMap) {
-		// TODO Auto-generated method stub
 		return sqlSessionTemplate.selectList("selectChargeList", paramsMap);
 	}
 
@@ -42,8 +42,33 @@ public class ChargeRecordDao extends DaoImpl<ChargeRecordPo, Integer> implements
 	 */
 	@Override
 	public int countRecord(Map<String, Object> paramsMap) {
-		// TODO Auto-generated method stub
 		return sqlSessionTemplate.selectOne("countRecord", paramsMap);
+	}
+
+
+	/**
+	 * @description: 查询消费列表
+	 * @param paramsMap
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月3日 下午5:11:40
+	 */
+	@Override
+	public List<ConsumeRecordPo> getConsume(Map<String, Object> paramsMap) {
+		return sqlSessionTemplate.selectList("getConsume", paramsMap);
+	}
+
+
+	/**
+	 * @description: 获得消费记录总数
+	 * @param paramsMap
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月3日 下午5:11:54
+	 */
+	@Override
+	public int countConsume(Map<String, Object> paramsMap) {
+		return sqlSessionTemplate.selectOne("countConsume", paramsMap);
 	}
 	
 }

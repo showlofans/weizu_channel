@@ -103,4 +103,13 @@ public interface AgencyAO {
 	 */
 	AgencyBackwardPo getAgencyById(String id);
 	
+	/**
+	 * @description: 查询是否id属于二级代理商以下(限制登陆用户权限)
+	 * @param agencyId
+	 * @return 1，属于
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月3日 上午10:20:20
+	 */
+	int checkSecondAgency(int agencyId);
+	
 }

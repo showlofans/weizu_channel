@@ -62,7 +62,7 @@
 						</c:when>
 						<c:otherwise>
 							<div class="radio-box">
-								<input name="billType" class="radioItem" <c:if test="${resultMap.billType!= 1 }">disabled</c:if> type="radio" value="${billEnum.value }" checked>
+								<input name="billType" class="radioItem" <c:if test="${chargeAccount1 == null }">disabled</c:if> type="radio" value="${billEnum.value }">
 								${billEnum.desc }
 							</div>
 						</c:otherwise>

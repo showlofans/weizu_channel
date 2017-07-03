@@ -44,28 +44,28 @@ public class ChargeAccountAoImpl implements ChargeAccountAo {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月8日 上午9:43:55
 	 */
-	@Override
-	public ChargeAccountPo getAccountByAgencyId(int agencyId) {
-		ChargeAccountPo cpo1 = chargeAccountDao.selectByAgencyId(agencyId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-		ChargeAccountPo cpo2 = chargeAccountDao.selectByAgencyId(agencyId,BillTypeEnum.CORPORATE_BUSINESS.getValue());
-		Double credit = 0.0d;
-		Double balance = 0.0d;
-		if(cpo1 != null)
-		{
-			credit = NumberTool.add(credit, cpo1.getAccountCredit());
-			balance = NumberTool.add(balance, cpo1.getAccountBalance());
-		}
-		ChargeAccountPo accountPo = new ChargeAccountPo(agencyId, balance, credit);
-		if(cpo2 != null)
-		{
-			credit = NumberTool.add(credit, cpo2.getAccountCredit());
-			balance = NumberTool.add(balance, cpo2.getAccountBalance());
-			accountPo.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());
-			accountPo.setAccountBalance(balance);
-			accountPo.setAccountCredit(credit);
-		}
-		return accountPo;
-	}
+//	@Override
+//	public ChargeAccountPo getAccountByAgencyId(int agencyId) {
+//		ChargeAccountPo cpo1 = chargeAccountDao.selectByAgencyId(agencyId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+//		ChargeAccountPo cpo2 = chargeAccountDao.selectByAgencyId(agencyId,BillTypeEnum.CORPORATE_BUSINESS.getValue());
+//		Double credit = 0.0d;
+//		Double balance = 0.0d;
+//		if(cpo1 != null)
+//		{
+//			credit = NumberTool.add(credit, cpo1.getAccountCredit());
+//			balance = NumberTool.add(balance, cpo1.getAccountBalance());
+//		}
+//		ChargeAccountPo accountPo = new ChargeAccountPo(agencyId, balance, credit);
+//		if(cpo2 != null)
+//		{
+//			credit = NumberTool.add(credit, cpo2.getAccountCredit());
+//			balance = NumberTool.add(balance, cpo2.getAccountBalance());
+//			accountPo.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());
+//			accountPo.setAccountBalance(balance);
+//			accountPo.setAccountCredit(credit);
+//		}
+//		return accountPo;
+//	}
 
 	/**
 	 * @description: 创建一个对公账户

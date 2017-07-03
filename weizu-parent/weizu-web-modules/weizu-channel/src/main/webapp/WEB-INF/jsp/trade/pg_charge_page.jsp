@@ -27,6 +27,7 @@
  <article class="page-container">
  	<form class="form form-horizontal" action="/flowsys/chargePg/pg_charge.do" method="post"  id="form-charge">
  	<input type="hidden" name="channelId" id="channelId">
+ 	<input type="hidden" name="billType" id="billType">
  	<input type="hidden" name="pgId" id="pgId">
 	
 	<div class="row cl">
@@ -269,8 +270,9 @@
         		    alert(key+":"+value);  
         		});  */
          	 //$("#orderAmount").val(data);
+         	 $("#billType").val(data.billType);
          	 $("#orderAmount").val(data.price);
-         	 $("#channelId").val(data.channel_id);
+         	 $("#channelId").val(data.channelId);
            }
        })
 	   

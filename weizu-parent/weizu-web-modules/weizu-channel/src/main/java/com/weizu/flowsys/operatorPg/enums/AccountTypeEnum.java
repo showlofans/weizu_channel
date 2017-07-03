@@ -20,6 +20,10 @@ public enum AccountTypeEnum {
 	 */
 	DECREASE("扣款",1),
 	/**
+	 * 充值失败：补款
+	 */
+	Replenishment("补款",2),
+	/**
 	 * 充值
 	 */
 	INCREASE("充值",0);

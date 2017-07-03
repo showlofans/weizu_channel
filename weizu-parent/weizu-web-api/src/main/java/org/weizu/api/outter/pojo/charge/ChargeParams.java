@@ -15,6 +15,7 @@ public class ChargeParams {
 	private String flowsize;			//流量大小
 	private String scope;				//流量范围
 	private String sign;				//密钥
+	private Integer billType;			//是否带票0-不带票，1-带票
 	
 	public ChargeParams(String scope, String username, String number, String flowsize,
 			String sign) {
@@ -25,6 +26,26 @@ public class ChargeParams {
 		this.scope = scope;
 		this.sign = sign;
 	}
+	public ChargeParams(String username, String number, String flowsize,
+			String scope, String sign, Integer billType) {
+		super();
+		this.username = username;
+		this.number = number;
+		this.flowsize = flowsize;
+		this.scope = scope;
+		this.sign = sign;
+		this.billType = billType;
+	}
+
+
+	public Integer getBillType() {
+		return billType;
+	}
+
+	public void setBillType(Integer billType) {
+		this.billType = billType;
+	}
+
 	public ChargeParams() {
 		super();
 	}

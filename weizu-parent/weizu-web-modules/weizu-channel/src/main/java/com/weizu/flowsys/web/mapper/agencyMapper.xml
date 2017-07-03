@@ -157,4 +157,10 @@
 			AND id = #{id}
 		</if>
 	</sql>
+	<!-- 查询是否id属于二级代理商以下(限制登陆用户权限) -->
+	<select id="checkSecondAgency" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select count(*) from <include refid="agency_backward"></include>
+		where root_agency_id not IN (select id from agency_backward WHERE root_agency_id=0)
+		and id = #{_parameter}
+	</select>
 </mapper>

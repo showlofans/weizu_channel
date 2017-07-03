@@ -76,7 +76,14 @@
 				<span class="select-box inline">
 						<select name="billType" class="select" style="width:80px;">
 						<c:forEach items="${resultMap.billTypeEnum }" var="billType" varStatus="vs">
-							<option value="${billType.value }">${billType.desc }</option>
+							<c:choose>
+								<c:when test=""${billType.value == resultMap.billType }">
+									<option value="${billType.value }" selected="selected">${billType.desc }</option>
+								</c:when>
+								<c:otherwise>
+									<option value="${billType.value }">${billType.desc }</option>
+								</c:otherwise>
+							</c:choose>
 						</c:forEach>
 							<%-- <c:forEach items="${resultMap.pgInEnums }" var="pgIn" varStatus="vs1">
 								<option value="${pgIn.value }" <c:if test="${pgIn.value == resultMap.params.pgInService }"> selected</c:if>>${pgIn.desc }</option>

@@ -7,6 +7,7 @@
 
 <sql id="t_agency">agency_backward</sql>
 <sql id="t_record">charge_record</sql>
+<sql id="t_pc">purchase</sql>
 
    <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.agency.pojo.ChargeRecordPo">
     <id column="id" jdbcType="BIGINT" property="id" />
@@ -43,6 +44,28 @@
     record.id, remittance_time, recharge_amount, charge_before, charge_after, bill_type, account_type, 
     account_id, agency_id, charge_for, user_name, user_real_name
   </sql>
+  
+  <!-- 消费记录 -->
+   <resultMap id="ConsumeRecordMap" type="com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="remittance_time" jdbcType="BIGINT" property="remittanceTime" />
+    <result column="recharge_amount" jdbcType="DOUBLE" property="rechargeAmount" />
+    <result column="charge_before" jdbcType="DOUBLE" property="chargeBefore" />
+    <result column="charge_after" jdbcType="DOUBLE" property="chargeAfter" />
+    <result column="bill_type" jdbcType="INTEGER" property="billType" />
+    <result column="account_type" jdbcType="INTEGER" property="accountType" />
+    <result column="account_id" jdbcType="INTEGER" property="accountId" />
+    <result column="agency_id" jdbcType="INTEGER" property="agencyId" />
+    <result column="charge_for" jdbcType="INTEGER" property="chargeFor" />
+    <result column="user_name" property="userName" />
+    <result column="order_id" jdbcType="BIGINT" property="orderId" />
+    <result column="charge_tel" property="chargeTel" />
+  </resultMap>
+  <sql id="Consume_Column_List">
+    cr.*,pc.order_id,pc.charge_tel,agb.user_name
+  </sql>
+  
+  
   <!-- 查询充值列表 -->
   <select id="selectChargeList" parameterType="com.weizu.flowsys.web.agency.pojo.ChargeRecordPo" resultMap="OtherMap">
   	select <include refid="other_Column_List"></include> 
@@ -64,7 +87,6 @@
    		 	limit 0,10
    		 </if> 
   </select>
-  
   <select id="countRecord" parameterType="com.weizu.flowsys.web.agency.pojo.ChargeRecordPo" resultType="int">
   	select count(*)
   	from <include refid="t_agency"></include> agency
@@ -96,5 +118,59 @@
 			AND remittance_time &lt;= #{endTime}
 		</if>
 	</sql>
-	
+	<!-- 查询消费列表 -->
+  <select id="countConsume" parameterType="com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo" resultType="int">	
+  	select count(*) 
+  	from <include refid="t_record"></include> cr
+  	inner join <include refid="t_pc"></include> pc
+  	on cr.id = pc.record_id
+	INNER join <include refid="t_agency"></include> agb
+	on cr.agency_id = agb.id
+  </select>
+  <select id="getConsume" parameterType="com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo" resultMap="ConsumeRecordMap">	
+  	select <include refid="Consume_Column_List"></include>
+  	from <include refid="t_record"></include> cr
+  	inner join <include refid="t_pc"></include> pc
+  	on cr.id = pc.record_id
+	INNER join <include refid="t_agency"></include> agb
+	on cr.agency_id = agb.id
+	<where>
+		<include refid="consume_condition_sql"></include>
+	</where>
+	order by remittance_time desc 
+  	<!-- order by -->
+	<if test="start != null">
+		 	limit #{start}
+		 </if>
+	<if test="end != null">
+	 	, #{end}
+	 </if>
+	 <if test="start == null &amp; end == null">
+	 	limit 0,10
+	 </if> 
+  </select>
+  <sql id="consume_condition_sql">
+		<if test="userName != null">
+			AND user_name LIKE CONCAT('%', TRIM(#{userName}), '%')
+		</if>
+		<if test="accountType != null">
+			AND account_type = #{accountType}
+		</if>
+		<if test="agencyId != null">
+			AND agency_id = #{agencyId}
+		</if>
+		<if test="contextAgencyId != null">
+			AND (agb.id = #{contextAgencyId} OR agb.root_agency_id = #{contextAgencyId})
+		</if>
+		
+		<if test="startTime != null">
+			AND remittance_time &gt;= #{startTime}
+		</if>
+		<if test="endTime != null">
+			AND remittance_time &lt;= #{endTime}
+		</if>
+		<if test="chargeTel != null">
+			AND charge_tel LIKE CONCAT('%', TRIM(#{chargeTel}), '%')
+		</if>
+	</sql>
 </mapper>

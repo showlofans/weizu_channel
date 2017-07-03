@@ -7,6 +7,7 @@ import org.weizu.api.outter.enums.BalanceCheckEnum;
 import org.weizu.api.outter.facade.BalanceFacade;
 import org.weizu.api.outter.pojo.BalanceDTO;
 
+import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
@@ -48,9 +49,11 @@ public class BalanceFacadeImpl implements BalanceFacade {
 		}
 		else
 		{
-			ChargeAccountPo account = chargeAccountAO.getAccountByAgencyId(backPo.getId());
+			ChargeAccountPo account = chargeAccountAO.getAccountByAgencyId(backPo.getId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+			ChargeAccountPo account1 = chargeAccountAO.getAccountByAgencyId(backPo.getId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
+			
 			bcEnum = BalanceCheckEnum.AUTHENTICATION_SUCCESS;
-			balanceDTO = new BalanceDTO(bcEnum.getValue(), bcEnum.getDesc(), account.getAccountBalance() + "",account.getAccountCredit()+ "");
+			balanceDTO = new BalanceDTO(bcEnum.getValue(), bcEnum.getDesc(), account.getAccountBalance() + account1.getAccountBalance() + "",account.getAccountCredit()+ "");
 		}
 		return balanceDTO;
 	}

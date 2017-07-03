@@ -42,5 +42,16 @@ public class AccountURL extends BaseURL {
 	 */
 	public static final String OPEN_COMPANY_ACCOUNT = "/open_company_account" + DYNAMIC_WEB_SUFFIX;
 	
+	/**
+	 * 账户信息
+	 * <br>/flowsys/account/account_info.do
+	 */
+	public static final String ACCOUNT_INFO = "/account_info" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 账户信息更新
+	 * <br>/flowsys/account/account_info_edit.do
+	 */
+	public static final String ACCOUNT_INFO_EDIT = "/account_info_edit" + DYNAMIC_WEB_SUFFIX;
+	
 	
 }

@@ -80,5 +80,17 @@ public class AgencyVODao extends DaoImpl<AgencyBackwardVO, Integer> implements A
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	/**
+	 * @description: 查询是否id属于二级代理商以下(限制登陆用户权限)
+	 * @param agencyId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月3日 上午10:21:06
+	 */
+	@Override
+	public int checkSecondAgency(int agencyId) {
+		return sqlSessionTemplateASS.selectOne("checkSecondAgency",agencyId);//asset-只有一个结果
+	}
 	
 }

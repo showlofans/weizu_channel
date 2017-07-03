@@ -88,16 +88,16 @@ public class ChannelController {
 		//查看代理商有没有对公的账户
 		//默认对私通道
 		//ChargeAccountPo chargeAccount =  (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
-		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		if(agencyVO != null){
-			ChargeAccountPo chargeAccount = chargeAccountAO.getAccountByAgencyId(agencyVO.getId(), BillTypeEnum.CORPORATE_BUSINESS.getValue());
-			if(chargeAccount != null)
-			{
-				resultMap.put("billType", BillTypeEnum.CORPORATE_BUSINESS.getValue());
-			}
-		}
-		
-		
+//		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//		if(agencyVO != null){
+//			ChargeAccountPo chargeAccount = chargeAccountAO.getAccountByAgencyId(agencyVO.getId(), BillTypeEnum.CORPORATE_BUSINESS.getValue());
+//			if(chargeAccount != null)
+//			{
+//				resultMap.put("billType", BillTypeEnum.CORPORATE_BUSINESS.getValue());
+//			}
+//		}
+//		
+//		
 		resultMap.put("billTypes", BillTypeEnum.toList());
 		//默认用移动的包体
 		resultMap.put("pgSizeStr", operatorPgAO.pgSizeStr(0,0));
