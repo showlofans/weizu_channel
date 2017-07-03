@@ -20,6 +20,7 @@ import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
+import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
@@ -71,11 +72,17 @@ public class ChargePgController {
 	@RequestMapping(value = ChargePgURL.PG_CHARGE)
 	public ModelAndView pgCharge(HttpServletRequest request,PurchasePo purchasePo){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
 		if(agencyVO != null){
 			purchasePo.setAgencyId(agencyVO.getId());
 			purchasePo.setOrderArriveTime(System.currentTimeMillis());
-			
+			ChargeAccountPo accountPo = null;
+			if(purchasePo.getBillType()==BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())
+			{
+				accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
+			}else if(purchasePo.getBillType()==BillTypeEnum.CORPORATE_BUSINESS.getValue())
+			{
+				accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
+			}
 			Integer purResult = purchaseAO.purchase(purchasePo,accountPo);
 			if(purResult == OrderResultEnum.SUCCESS.getCode())
 			{
@@ -181,7 +188,8 @@ public class ChargePgController {
 					{
 						//并且存在该包体编码dataPo.getPgPrice() * bestChannel.getChannelDiscount()
 						resultMap.put("price", NumberTool.mul(dataPo.getPgPrice(),bestChannel.getChannelDiscount()));
-						resultMap.put("channel_id", bestChannel.getChanneld());
+						resultMap.put("channelId", bestChannel.getChanneld());
+						resultMap.put("billType", bestChannel.getBillType());
 						response.getWriter().print(JSON.toJSONString(resultMap));
 					}else{//編碼不存在
 						resultMap.put("price", dataPo.getPgPrice());
@@ -228,6 +236,7 @@ public class ChargePgController {
 		resultMap.put("pagination", pagination);
 		resultMap.put("searchParams", purchaseVO);
 		resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
+		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		resultMap.put("orderPathEnums", OrderPathEnum.toList());
 		resultMap.put("orderStateEnums", OrderStateEnum.toList());
 		return new ModelAndView("/trade/purchase_list", "resultMap", resultMap);

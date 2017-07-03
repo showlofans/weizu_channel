@@ -45,16 +45,48 @@ public class PurchasePo extends Po {
     
     private Double orderAmount;					//扣款
     
-	public PurchasePo(Long orderId, String orderIdApi,Integer agencyId,Integer rootAgencyId, String chargeTel,
-			Integer pgId, Long orderArriveTime, Long orderBackTime,
-			String chargeTelDetail, String chargeTelCity,
-			Integer orderPlatformPath, Integer orderResult, Integer channelId,
-			String orderResultDetail, Double orderAmount) {
+    private Long recordId;						//消费记录id-外键
+    
+    private Integer billType;					//票务类型
+    
+//	public PurchasePo(Long orderId, String orderIdApi,Integer agencyId,Integer rootAgencyId, String chargeTel,
+//			Integer pgId, Long orderArriveTime, Long orderBackTime,
+//			String chargeTelDetail, String chargeTelCity,
+//			Integer orderPlatformPath, Integer orderResult, Integer channelId,
+//			String orderResultDetail, Double orderAmount) {
+//		super();
+//		this.orderIdApi = orderIdApi;
+//		this.orderId = orderId;
+//		this.rootAgencyId = rootAgencyId;
+//		this.agencyId = agencyId;
+//		this.chargeTel = chargeTel;
+//		this.pgId = pgId;
+//		this.orderArriveTime = orderArriveTime;
+//		this.orderBackTime = orderBackTime;
+//		this.chargeTelDetail = chargeTelDetail;
+//		this.chargeTelCity = chargeTelCity;
+//		this.orderPlatformPath = orderPlatformPath;
+//		this.orderResult = orderResult;
+//		this.channelId = channelId;
+//		this.orderResultDetail = orderResultDetail;
+//		this.orderAmount = orderAmount;
+//	}
+	
+	public PurchasePo() {
 		super();
-		this.orderIdApi = orderIdApi;
+	}
+	
+	public PurchasePo(Long orderId, String orderIdApi, Integer agencyId,
+			Integer rootAgencyId, String chargeTel, Integer pgId,
+			Long orderArriveTime, Long orderBackTime, String chargeTelDetail,
+			String chargeTelCity, Integer orderPlatformPath, Integer orderResult,
+			Integer channelId, String orderResultDetail, Double orderAmount,
+			Long recordId, Integer billType) {
+		super();
 		this.orderId = orderId;
-		this.rootAgencyId = rootAgencyId;
+		this.orderIdApi = orderIdApi;
 		this.agencyId = agencyId;
+		this.rootAgencyId = rootAgencyId;
 		this.chargeTel = chargeTel;
 		this.pgId = pgId;
 		this.orderArriveTime = orderArriveTime;
@@ -66,12 +98,51 @@ public class PurchasePo extends Po {
 		this.channelId = channelId;
 		this.orderResultDetail = orderResultDetail;
 		this.orderAmount = orderAmount;
+		this.recordId = recordId;
+		this.billType = billType;
 	}
+
+//	public PurchasePo(Long orderId, String orderIdApi, Integer agencyId,
+//		Integer rootAgencyId, String chargeTel, Integer pgId,
+//		Long orderArriveTime, Long orderBackTime, String chargeTelDetail,
+//		String chargeTelCity, Integer orderPlatformPath, Integer orderResult,
+//		Integer channelId, String orderResultDetail, Double orderAmount,
+//		Long recordId) {
+//		super();
+//		this.orderId = orderId;
+//		this.orderIdApi = orderIdApi;
+//		this.agencyId = agencyId;
+//		this.rootAgencyId = rootAgencyId;
+//		this.chargeTel = chargeTel;
+//		this.pgId = pgId;
+//		this.orderArriveTime = orderArriveTime;
+//		this.orderBackTime = orderBackTime;
+//		this.chargeTelDetail = chargeTelDetail;
+//		this.chargeTelCity = chargeTelCity;
+//		this.orderPlatformPath = orderPlatformPath;
+//		this.orderResult = orderResult;
+//		this.channelId = channelId;
+//		this.orderResultDetail = orderResultDetail;
+//		this.orderAmount = orderAmount;
+//		this.recordId = recordId;
+//	}
 	
-	public PurchasePo() {
-		super();
+	public Integer getBillType() {
+		return billType;
 	}
-	
+
+	public void setBillType(Integer billType) {
+		this.billType = billType;
+	}
+
+	public Long getRecordId() {
+		return recordId;
+	}
+
+	public void setRecordId(Long recordId) {
+		this.recordId = recordId;
+	}
+
 	public String getOrderIdApi() {
 		return orderIdApi;
 	}

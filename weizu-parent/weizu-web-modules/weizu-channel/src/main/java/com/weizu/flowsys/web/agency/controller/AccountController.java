@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.weizu.web.foundation.DateUtil;
@@ -27,6 +28,7 @@ import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
+import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
 import com.weizu.flowsys.web.agency.url.AccountURL;
 import com.weizu.flowsys.web.agency.util.FileUpload;
 
@@ -63,7 +65,9 @@ public class AccountController {
 		resultMap.put("agencyUserName", userName); // 代理商名字
 		resultMap.put("agencyId", agencyId); // 代理商ID
 		resultMap.put("billTypeEnum", BillTypeEnum.toList());
-		resultMap.put("chargeAccount",chargeAccountAO.getAccountByAgencyId(agencyId));//通过代理商Id获得充值账户基本信息
+		resultMap.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL);//默认对私
+		resultMap.put("chargeAccount",chargeAccountAO.getAccountByAgencyId(agencyId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));//通过代理商Id获得充值账户基本信息
+		resultMap.put("chargeAccount1",chargeAccountAO.getAccountByAgencyId(agencyId,BillTypeEnum.CORPORATE_BUSINESS.getValue()));//通过代理商Id获得充值账户基本信息
 		return new ModelAndView("account/add_charge", "resultMap", resultMap);
 	}
 
@@ -117,31 +121,30 @@ public class AccountController {
 	 */
 	@RequestMapping(value= AccountURL.CONSUME_LIST)
 	public ModelAndView getConsumeList(@RequestParam(value = "pageNo", required = false) String pageNo,
-			HttpServletRequest request,ChargeRecordPo chargeRecordPo){
+			HttpServletRequest request,ConsumeRecordPo consumeRecordPo){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		PageParam pageParam = null;
 		if(StringHelper.isNotEmpty(pageNo)){
 			pageParam = new PageParam(Integer.parseInt(pageNo), 10);
 		}else{
-			chargeRecordPo.setStartTimeStr(DateUtil.formatAll(DateUtil.getStartTime()));
-			chargeRecordPo.setEndTimeStr(DateUtil.formatAll(DateUtil.getEndTime()));
+			consumeRecordPo.setStartTimeStr(DateUtil.formatAll(DateUtil.getStartTime()));
+			consumeRecordPo.setEndTimeStr(DateUtil.formatAll(DateUtil.getEndTime()));
 			pageParam = new PageParam(1, 10);
 		}
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVo != null){
-			chargeRecordPo.setAccountType(AccountTypeEnum.DECREASE.getValue());
-			Pagination<ChargeRecordPo> pagination =  chargeRecordAO.listChargeRecord(agencyVo.getId(), chargeRecordPo, pageParam);
+			Pagination<ConsumeRecordPo> pagination =  chargeRecordAO.listConsumeRecord(agencyVo.getId(), consumeRecordPo, pageParam);
 			resultMap.put("pagination", pagination);
 			resultMap.put("billTypeEnum", BillTypeEnum.toList());
 			resultMap.put("accountTypeEnum", AccountTypeEnum.toList());
 			//点击金额进入连接，自动填充代理商名称
-			if(chargeRecordPo.getUserName() == null && chargeRecordPo.getAgencyId() != null){
-				AgencyBackwardPo agencyPO = agencyAO.getAgencyById(chargeRecordPo.getAgencyId()+"");
+			if(consumeRecordPo.getUserName() == null && consumeRecordPo.getAgencyId() != null){
+				AgencyBackwardPo agencyPO = agencyAO.getAgencyById(consumeRecordPo.getAgencyId()+"");
 				if(agencyPO != null){
-					chargeRecordPo.setUserName(agencyPO.getUserName());
+					consumeRecordPo.setUserName(agencyPO.getUserName());
 				}
 			}
-			resultMap.put("searchParams", chargeRecordPo);
+			resultMap.put("searchParams", consumeRecordPo);
 		}
 		return new ModelAndView("/account/consume_list", "resultMap", resultMap);
 	}
@@ -232,10 +235,71 @@ public class AccountController {
 			if(createRes > 0){
 				ChargeAccountPo chargeAccount =  (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
 				chargeAccount.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());
-				request.getSession().setAttribute("chargeAccount", chargeAccount);;
+				request.getSession().setAttribute("chargeAccount", chargeAccount);
 			}
 			return new ModelAndView("/account/open_company_account_page");
 		}
 		return new ModelAndView("/account/open_company_account_page");
 	}
+	
+	/**
+	 * @description: 账户信息
+	 * @param request
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月3日 上午11:33:37
+	 */
+	@RequestMapping(value=AccountURL.ACCOUNT_INFO)
+	public ModelAndView accountInfo(HttpServletRequest request){
+//		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//		ChargeAccountPo chargeAccount = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
+//		ChargeAccountPo chargeAccount1 = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
+//		Map<String,Object> resultMap = new HashMap<String, Object>();
+		
+		return new ModelAndView("/account/account_info");
+//		return new ModelAndView("/account/account_info","resultMap",resultMap);
+	}
+	/**
+	 * @description: 账户信息更新
+	 * @param request
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月3日 上午11:56:01
+	 */
+	@RequestMapping(value=AccountURL.ACCOUNT_INFO_EDIT)
+	@ResponseBody
+	public void editAccountInfo(HttpServletRequest request,ChargeAccountPo chargeAccount,HttpServletResponse response){
+		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//		Map<String,Object> resultMap = new HashMap<String, Object>();
+		chargeAccount.setAgencyId(agencyVo.getId());
+		int res = chargeAccountAO.updateAccount(chargeAccount);
+		try {
+			if(res > 0 )
+			{
+				//更新session中相关账户信息
+				if(chargeAccount.getBillType() == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())
+				{
+//					ChargeAccountPo chargeAccount0 =  (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
+//					chargeAccount0.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());
+					request.getSession().setAttribute("chargeAccount", chargeAccount);
+				}else if(chargeAccount.getBillType() == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())
+				{
+//					ChargeAccountPo chargeAccount1 =  (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
+//					chargeAccount1.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());
+					request.getSession().setAttribute("chargeAccount1", chargeAccount);
+				}
+				
+				response.getWriter().print("success");
+			}
+			else
+			{
+				response.getWriter().print("error");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+//		return new ModelAndView("/account/account_info","resultMap",resultMap);
+	}
+	
 }

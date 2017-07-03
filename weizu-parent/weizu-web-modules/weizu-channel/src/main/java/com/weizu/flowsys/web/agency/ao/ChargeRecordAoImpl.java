@@ -21,6 +21,7 @@ import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeRecordDao;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
+import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
 
 @Service("chargeRecordAO")
 public class ChargeRecordAoImpl implements ChargeRecordAO {
@@ -116,6 +117,76 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		
 		return new Pagination<ChargeRecordPo>(records,totalRecords,pageNo,pageSize);
 	}
+	
+	/**
+	 * @description: 封装查询参数
+	 * @param chargeRecordPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月3日 下午5:19:30
+	 */
+	@Override
+	public Map<String, Object> getMapByConsume(ConsumeRecordPo consumeRecordPo) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		if(StringHelper.isNotEmpty(consumeRecordPo.getUserName())){
+			params.put("userName", consumeRecordPo.getUserName());
+		}
+		if(consumeRecordPo.getStartTime() != null){
+			params.put("startTime", consumeRecordPo.getStartTime());
+		}
+//		else{//设置当天开始时间
+//			params.put("startTime", DateUtil.getStartTime().getTime());
+//		}
+		if(consumeRecordPo.getEndTime() != null){
+			params.put("endTime", consumeRecordPo.getEndTime());
+		}
+//		else{//设置当天结束时间
+//			params.put("endTime", DateUtil.getEndTime().getTime());
+//		}
+		if(consumeRecordPo.getAccountType() != null){
+			params.put("accountType", consumeRecordPo.getAccountType());
+		}
+		if(consumeRecordPo.getChargeTel() != null){
+			params.put("chargeTel", consumeRecordPo.getChargeTel());
+		}
+		
+		if(consumeRecordPo.getAgencyId() != null){
+			params.put("agencyId", consumeRecordPo.getAgencyId());
+		}
+		
+		return params;
+	}
+
+	/**
+	 * @description: 加载分页消费记录列表
+	 * @param contextAgencyId
+	 * @param consumeRecordPo
+	 * @param pageParam
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月3日 下午5:18:50
+	 */
+	@Override
+	public Pagination<ConsumeRecordPo> listConsumeRecord(Integer contextAgencyId,
+			ConsumeRecordPo consumeRecordPo, PageParam pageParam) {
+		Map<String, Object> params = getMapByConsume(consumeRecordPo);
+		
+		params.put("contextAgencyId", contextAgencyId);
+		int totalRecords = chargeRecordDao.countConsume(params);
+		
+		int pageSize = pageParam.getPageSize();
+		int pageNo = pageParam.getPageNo();
+		
+		params.put("start", (pageNo-1) * pageSize);
+		params.put("end", pageSize);
+		List<ConsumeRecordPo> records = chargeRecordDao.getConsume(params);
+		//初始化时间(引用变量)
+		for (ConsumeRecordPo consumeRecordPo2 : records) {
+			consumeRecordPo2.setRemittanceTimeStr(DateUtil.formatAll(consumeRecordPo2.getRemittanceTime()));
+		}
+		
+		return new Pagination<ConsumeRecordPo>(records,totalRecords,pageNo,pageSize);
+	}
 
 	/**
 	 * @description:通过实体封装查询参数
@@ -184,9 +255,4 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		
 		return null;
 	}
-
-	
-	
-	
-
 }

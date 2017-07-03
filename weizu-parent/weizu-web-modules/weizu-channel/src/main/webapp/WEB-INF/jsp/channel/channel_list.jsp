@@ -38,7 +38,7 @@
 		通道名称：<input type="text" value="${resultMap.searchParam.channelName }" name="channelName" id="" placeholder=" 通道名称" style="width:250px" class="input-text">
 		通道状态
 		<span class="select-box inline">
-			<select name="channelState" class="select" onchange="getChannelList(this)">
+			<select name="channelState" class="select" onchange="getChannelList()">
 			<option value="">请选择</option>
 			<c:forEach items="${resultMap.channelStateEnums }" var="cstate" varStatus="vs1">
 				<option value="${cstate.value }" <c:if test="${cstate.value == resultMap.searchParam.channelState }"> selected</c:if>>${cstate.desc }</option>
@@ -174,7 +174,7 @@
 }); */
 
 /*onchange通道状态*/
-function getChannelList(vart){
+function getChannelList(){
 	//alert($(vart).val());
 	$('form').submit();
 }

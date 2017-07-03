@@ -20,6 +20,8 @@ import org.weizu.api.outter.pojo.order.OrderParams;
 import org.weizu.web.foundation.String.StringHelper;
 
 import com.alibaba.fastjson.JSON;
+import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.web.agency.dao.impl.ChargeRecordDao;
 import com.weizu.flowsys.web.http.ao.ValiUser;
 
 /**
@@ -73,11 +75,15 @@ public class OuterAPIController {
 	@RequestMapping(value="/chargePg.do")
 	@ResponseBody
 	public void chargePg(String userName, String number, String pgSize,
-			String scope, String sign,HttpServletResponse response){
+			String scope, String sign,@RequestParam(value="billType",required=false) Integer billType,HttpServletResponse response){
 		ChargeDTO chargeDTO = null;
 		try {
-				
-			chargeDTO = chargeFacade.charge(new ChargeParams(scope, userName, number, pgSize, sign));
+			if(billType == null){//默认对私
+				int bType = BillTypeEnum.BUSINESS_INDIVIDUAL.getValue();
+				chargeDTO = chargeFacade.charge(new ChargeParams(scope, userName, number, pgSize, sign, bType));
+			}else{
+				chargeDTO = chargeFacade.charge(new ChargeParams(scope, userName, number, pgSize, sign, billType));
+			}
 			String jsonResult = JSON.toJSON(chargeDTO).toString();
 			response.setCharacterEncoding("UTF-8");
 			response.getWriter().print(jsonResult);

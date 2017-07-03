@@ -1,0 +1,27 @@
+查看这个代理商是否有上级代理商和下级代理商
+如果同时有，就是中间代理商
+
+select DISTINCT(root_agency_id) from agency_backward where root_agency_id = 4
+select DISTINCT(id) from agency_backward where id = 4
+看两者是否相等
+
+##查询第三级代理商
+select a1.id from agency_backward a1 where a1.root_agency_id in
+(SELECT a2.id from agency_backward a2 where a2.root_agency_id = 1)
+
+#查询所有三级代理商
+select id from agency_backward
+where root_agency_id not IN (select id from agency_backward WHERE root_agency_id=0)
+
+三级代理商以下（包涵3级）
+25（2级代理商）不是
+21（3级代理商）是
+26（4级代理商）是
+
+
+先有消费明细和明细id，再有订单中的明细id
+消费明细（订单号，代理商，手机号，三个金额，交易类型，交易时间，通道类型）
+
+ 
+
+

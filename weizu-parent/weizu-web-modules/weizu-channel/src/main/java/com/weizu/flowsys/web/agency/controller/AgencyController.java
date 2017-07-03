@@ -19,6 +19,7 @@ import org.weizu.web.foundation.VerifyCodeUtils;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
+import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.OperatorDiscountAO;
 import com.weizu.flowsys.web.activity.ao.RateBackwardAO;
@@ -108,14 +109,30 @@ public class AgencyController {
 		String resultMsg = resultMap.get("msg").toString();
 		//一定要分开来查，不能连表查
 		if (resultPo != null && "success".equals(resultMsg)) {
+			ChargeAccountPo chargeAccountPo1 = chargeAccountAO
+					.getAccountByAgencyId(resultPo.getId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
+			//对私账户
 			ChargeAccountPo chargeAccountPo = chargeAccountAO
-					.getAccountByAgencyId(resultPo.getId());
+					.getAccountByAgencyId(resultPo.getId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 			AgencyBackwardVO agencyVO = agencyAO.getVOByPo(resultPo);
 			HttpSession session = request.getSession();
 			session.setMaxInactiveInterval(24*60*60);//一天
-			session.setAttribute("chargeAccount", chargeAccountPo);//注册的时候已经保证了可以进行表连接
+			//注册的时候已经保证了可以进行表连接
+			session.setAttribute("chargeAccount", chargeAccountPo);//对私
+			session.setAttribute("chargeAccount1", chargeAccountPo1);//对公
 //			List<RateBackwardPo> rateList = rateBackwardDao.selectByRootId(resultPo.getId());
 			session.setAttribute("loginContext", agencyVO);// 保存登陆实体到session中
+			
+			if(agencyAO.checkSecondAgency(agencyVO.getId()) == 1){
+				//设置访问权限为限制
+				session.setAttribute("power", "limited");
+			}
+			else{
+				session.setAttribute("power", "no");
+			}
+			session.setAttribute("loginContext", agencyVO);// 保存登陆实体到session中
+			
+			
 			return new ModelAndView("/index");// 返回登录人主要账户信息（余额，透支额）
 		} else {
 			return new ModelAndView("/agency/login_page", "msg", resultMsg);
@@ -239,6 +256,13 @@ public class AgencyController {
 			//注册用户
 			AgencyBackwardVO agencyVO = agencyAO.addAgency(agencyBackward);
 			if (agencyVO != null) {
+				if(agencyAO.checkSecondAgency(agencyVO.getId()) == 1){
+					//设置访问权限为限制
+					httpSession.setAttribute("power", "limited");
+				}
+				else{
+					httpSession.setAttribute("power", "no");
+				}
 				httpSession.setAttribute("loginContext", agencyVO);
 				return new ModelAndView("index");
 			} else {
@@ -365,6 +389,9 @@ public class AgencyController {
 	public void editAgency(AgencyBackwardVO vo,
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
+		
+//		ChargeAccountPo chargeAccountPo = (ChargeAccountPo) request.getSession().getAttribute("chargeAccount");//对私
+//		ChargeAccountPo chargeAccountPo1 = (ChargeAccountPo) request.getSession().getAttribute("chargeAccount1");//对公
 		int result = agencyAO.updateAgency(vo);
 //		if(result > 0){
 //			request.getSession().setAttribute("loginContext", vo);

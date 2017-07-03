@@ -7,6 +7,7 @@ import com.aiyi.base.pojo.PurchasePo;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
+import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
 
 public interface ChargeRecordAO {
 	/**
@@ -41,7 +42,25 @@ public interface ChargeRecordAO {
 	 */
 	Pagination<ChargeRecordPo> listChargeRecord(Integer contextAgencyId,ChargeRecordPo chargeRecordPo, PageParam pageParam);
 	
+	/**
+	 * @description: 封装查询参数
+	 * @param chargeRecordPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月3日 下午5:17:57
+	 */
+	Map<String,Object> getMapByConsume(ConsumeRecordPo consumeRecordPo);
 	
+	/**
+	 * @description: 加载分页消费记录列表
+	 * @param contextAgencyId
+	 * @param consumeRecordPo
+	 * @param pageParam
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月3日 下午5:17:19
+	 */
+	Pagination<ConsumeRecordPo> listConsumeRecord(Integer contextAgencyId,ConsumeRecordPo consumeRecordPo, PageParam pageParam);
 	
 	/**
 	 * @description:购买流量

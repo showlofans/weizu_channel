@@ -20,8 +20,18 @@ public class BestChannelPO extends Po {
 	
 	private Double channelDiscount = 0.0d;
 	
+	private Integer billType;		//票务类型
+	
 	@TempField
 	private String discount;
+
+	public Integer getBillType() {
+		return billType;
+	}
+
+	public void setBillType(Integer billType) {
+		this.billType = billType;
+	}
 
 	public String getDiscount() {
 		return discount;

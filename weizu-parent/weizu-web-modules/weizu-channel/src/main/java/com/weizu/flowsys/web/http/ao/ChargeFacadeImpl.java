@@ -25,6 +25,8 @@ import org.weizu.api.outter.pojo.charge.ChargeOrder;
 import org.weizu.api.outter.pojo.charge.ChargeParams;
 
 import com.weizu.flowsys.core.util.NumberTool;
+import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
@@ -36,8 +38,10 @@ import com.weizu.flowsys.web.activity.pojo.OperatorDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.OperatorScopeVO;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.dao.impl.AgencyBackwardDao;
+import com.weizu.flowsys.web.agency.dao.impl.ChargeRecordDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
+import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.channel.ao.ChannelForwardAO;
 import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
 import com.weizu.flowsys.web.channel.dao.impl.ChannelForwardDao;
@@ -89,6 +93,9 @@ public class ChargeFacadeImpl implements ChargeFacade {
 	@Resource
 	private ChargeAccountAo chargeAccountAO;
 	
+	@Resource
+	private ChargeRecordDao chargeRecordDao;
+	
 	/**
 	 * @description: 充值接口
 	 * @param chargeParams
@@ -106,6 +113,12 @@ public class ChargeFacadeImpl implements ChargeFacade {
 		OperatorPgDataPo pgData = null;
 		int otype = -1;
 		ChargeStatusEnum chargeEnum = null;
+		int billType = chargeParams.getBillType();
+		BillTypeEnum billTypeE = BillTypeEnum.getEnum(billType);
+		if(billTypeE == null){
+			chargeEnum = ChargeStatusEnum.INVALID_BILL_TYPE;
+			chargeDTO = new ChargeDTO(chargeEnum.getValue(),chargeEnum.getDesc(), null);
+		}
 		//初始化包体和运营商类型
 		try {
 			int scope = Integer.parseInt(chargeParams.getScope());
@@ -131,6 +144,7 @@ public class ChargeFacadeImpl implements ChargeFacade {
 		}
 		else//开始有订单，也会返回订单
 		{//充值并返回最新的订单（状态）
+			
 			PurchasePo purchasePo = new PurchasePo();
 			purchasePo.setOrderArriveTime(System.currentTimeMillis());
 			/**订单号信息添加*/
@@ -150,15 +164,17 @@ public class ChargeFacadeImpl implements ChargeFacade {
 			operatorDiscountPo.setOperatorType(otype);
 			operatorDiscountPo.setRateId(backPo.getRateId());
 			OperatorDiscountPo discountPo = operatorDiscountDao.selectOneDiscountByPo(operatorDiscountPo);
+			
 			//没有找到相关地区折扣
 			if(discountPo == null)
 			{
 				purchasePo.setOrderResult(OrderStateEnum.UNCHARGE.getValue());//未充
 				purchasePo.setOrderResultDetail(ChargeStatusEnum.SCOPE_RATE_UNDEFINED.getDesc());//产品（费率）未配置
+				purchasePo.setBillType(chargeParams.getBillType());
 				int purResult = purchaseDAO.addPurchase(purchasePo);
 				if(purResult > 0){
 					chargeEnum = ChargeStatusEnum.SCOPE_RATE_UNDEFINED;
-					ChargeOrder chargeOrder = new ChargeOrder(purchasePo.getOrderId(), chargeTel, pgData.getPgSize());
+					ChargeOrder chargeOrder = new ChargeOrder(purchasePo.getOrderId(), chargeTel, pgData.getPgSize(),billType);
 					chargeDTO = new ChargeDTO(chargeEnum.getValue(),chargeTelDetail+chargeEnum.getDesc(), chargeOrder);
 				}else
 				{
@@ -179,7 +195,17 @@ public class ChargeFacadeImpl implements ChargeFacade {
 				purchasePo.setPgId(pgId);
 				purchasePo.setOrderAmount(orderAmount);
 				
-				ChargeAccountPo chargeAccount = chargeAccountAO.getAccountByAgencyId(backPo.getId());
+//				switch (chargeParams.getBillType()) {
+//				case 0:
+//					billType = BillTypeEnum.BUSINESS_INDIVIDUAL.getValue();
+//					break;
+//				case 1:
+//					billType = BillTypeEnum.CORPORATE_BUSINESS.getValue();
+//					break;
+//				default:
+//					break;
+//				}
+				ChargeAccountPo chargeAccount = chargeAccountAO.getAccountByAgencyId(backPo.getId(),billType);
 				Double balance = 0.00d;//账户余额信息
 				if(chargeAccount != null)
 				{
@@ -190,17 +216,23 @@ public class ChargeFacadeImpl implements ChargeFacade {
 					//新增欠费订单（该订单没有走任何的通道）
 					purchasePo.setOrderResult(OrderStateEnum.UNCHARGE.getValue());//未充
 					purchasePo.setOrderResultDetail(ChargeStatusEnum.LACK_OF_BALANCE.getDesc());//欠费等待
+					purchasePo.setBillType(chargeParams.getBillType());
 					int purResult = purchaseDAO.addPurchase(purchasePo);
 					if(purResult > 0 )
 					{
 						chargeEnum = ChargeStatusEnum.LACK_OF_BALANCE;
-						return new ChargeDTO(chargeEnum.getValue(), chargeEnum.getDesc(), new ChargeOrder(purchasePo.getOrderId()+"", chargeTel+"", pgData.getPgSize()+""));
+						return new ChargeDTO(chargeEnum.getValue(), chargeEnum.getDesc(), new ChargeOrder(purchasePo.getOrderId()+"", chargeTel+"", pgData.getPgSize()+"",billType));
 					}else
 					{
 						Logger log = Logger.getLogger(ChargeFacadeImpl.class); 
 						log.info("添加订单失败！");
 					}
 				}else{
+					Long nextIdRecord = chargeRecordDao.nextId();
+					chargeRecordDao.add(new ChargeRecordPo(System
+							.currentTimeMillis(), orderAmount,
+							balance, NumberTool.sub(balance, orderAmount), 
+							BillTypeEnum.BUSINESS_INDIVIDUAL.getValue(),AccountTypeEnum.DECREASE.getValue(), chargeAccount.getId(), purchasePo.getAgencyId(),1));
 					/*******************最优通道*******************/
 					String scopeCityCode = "";
 					for (Map<String, Object> cityMap : ScopeCityEnum.toList()) {
@@ -213,7 +245,8 @@ public class ChargeFacadeImpl implements ChargeFacade {
 					BestChannelPO bestChannel = channelForwardAO.getBestChannel(new OperatorScopeVO(scopeName, backPo.getId(), otype));
 					if(bestChannel  != null){//走了通道
 //						if()
-						chargeDTO = doChannel( bestChannel, pgData, purchasePo, backPo, scopeCityCode, chargeTel);
+						purchasePo.setRecordId(nextIdRecord);
+						chargeDTO = doChannel( bestChannel, pgData, purchasePo, backPo, scopeCityCode, chargeTel, billType);
 					}
 				}
 			}
@@ -234,7 +267,7 @@ public class ChargeFacadeImpl implements ChargeFacade {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月29日 上午11:14:38
 	 */
-	private ChargeDTO doChannel(BestChannelPO bestChannel,OperatorPgDataPo pgData,PurchasePo purchasePo,AgencyBackwardPo backPo,String scopeCityCode,String chargeTel) {
+	private ChargeDTO doChannel(BestChannelPO bestChannel,OperatorPgDataPo pgData,PurchasePo purchasePo,AgencyBackwardPo backPo,String scopeCityCode,String chargeTel,int billType) {
 		ChargeStatusEnum chargeEnum = null;
 		ProductCodePo product =  productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, pgData.getPgSize(), pgData.getOperatorType(), pgData.getServiceType(),bestChannel.getEpd()));
 		if(product != null){
@@ -284,7 +317,7 @@ public class ChargeFacadeImpl implements ChargeFacade {
 		int channelRes = channelForwardDao.update(channelPo);
 		//更新订单表
 		if(channelRes > 0){
-			ChargeOrder chargeOrder = new ChargeOrder(purchasePo.getOrderId()+"", purchasePo.getChargeTel(), pgData.getPgSize()+"");
+			ChargeOrder chargeOrder = new ChargeOrder(purchasePo.getOrderId()+"", purchasePo.getChargeTel(), pgData.getPgSize()+"",billType);
 			chargeEnum = ChargeStatusEnum.CHARGE_SUCCESS;
 			return new ChargeDTO(chargeEnum.getValue(),chargeEnum.getDesc(), chargeOrder);
 		}

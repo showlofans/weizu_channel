@@ -32,13 +32,18 @@ public enum ChargeStatusEnum {
 	 */
 	SCOPE_RATE_UNDEFINED("缺少通道配置",3),
 	/**
-	 * 包体参数必须为整数
-	 */
-	INT_REQUIRED("包体参数必须为整数(包体大小;包体范围;运营商类型)",7),
-	/**
 	 * 通道禁止提单
 	 */
 	CHANNEL_CLOSED("通道被关停",4),
+	/**
+	 * 票务类型错误
+	 */
+	INVALID_BILL_TYPE("票务类型错误",5),
+	/**
+	 * 包体参数必须为整数
+	 */
+	INT_REQUIRED("包体参数必须为整数(包体大小;包体范围;运营商类型)",7),
+	
 	/**
 	 * 充值包体不存在
 	 */

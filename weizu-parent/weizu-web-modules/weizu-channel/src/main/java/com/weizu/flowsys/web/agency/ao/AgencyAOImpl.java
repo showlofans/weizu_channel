@@ -105,10 +105,13 @@ public class AgencyAOImpl implements AgencyAO {
 	@Override
 	public int updateAgency(AgencyBackwardVO agencyBackwardVO) {
 		//主要取信用值和代理商id
-		ChargeAccountPo chargeAccountPo =  chargeAccountAO.getAccountByAgencyId(agencyBackwardVO.getId());
+		ChargeAccountPo chargeAccountPo =  chargeAccountAO.getAccountByAgencyId(agencyBackwardVO.getId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+		ChargeAccountPo chargeAccountPo1 =  chargeAccountAO.getAccountByAgencyId(agencyBackwardVO.getId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
 		chargeAccountPo.setAccountCredit(agencyBackwardVO.getAccountCredit());
+		chargeAccountPo1.setAccountCredit(agencyBackwardVO.getAccountCredit());
 		
 		chargeAccountDao.updateByAgencyId(chargeAccountPo);//更新信用值信息
+		chargeAccountDao.updateByAgencyId(chargeAccountPo1);//更新信用值信息
 		//取代理商的其他信息
 		int upresult = agencyVODao.updateByAgencyPO(getPoByVo(agencyBackwardVO));
 		return upresult;
@@ -305,8 +308,8 @@ public class AgencyAOImpl implements AgencyAO {
 					agBackwardPo.setUserApiKey("");//不能让页面提交过来
 				}
 			}
-			
-			ChargeAccountPo chargeAccountPo = chargeAccountAO.getAccountByAgencyId(Integer.parseInt(id));
+			//取随便一家的信用值，因为对公对私的信用额统一了
+			ChargeAccountPo chargeAccountPo = chargeAccountAO.getAccountByAgencyId(Integer.parseInt(id),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 			if(agBackwardPo != null){
 				if(StringHelper.isNotEmpty(agBackwardPo.getUserRealName())){
 					agBackwardPo.setUserRealName(agBackwardPo.getUserRealName());
@@ -350,6 +353,17 @@ public class AgencyAOImpl implements AgencyAO {
 			return agencyBackwardDao.get(intId);
 		}
 		return null;
+	}
+	/**
+	 * @description: 查询是否id属于二级代理商以下(限制登陆用户权限)
+	 * @param agencyId
+	 * @return 1，属于
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月3日 上午10:25:19
+	 */
+	@Override
+	public int checkSecondAgency(int agencyId) {
+		return agencyVODao.checkSecondAgency(agencyId);
 	}
 
 }
