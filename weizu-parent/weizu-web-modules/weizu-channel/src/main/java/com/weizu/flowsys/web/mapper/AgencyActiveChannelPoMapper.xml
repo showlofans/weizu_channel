@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weizu.flowsys.web.channel.dao.ActiveChannelDao" >
+
+<sql id="t_channel">channel_forward</sql>
+<sql id="t_active">agency_activechannel</sql>
+<sql id="t_agency">agency_backward</sql>
+<sql id="t_discount">channel_discount</sql>
+
+  <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.ActiveChannelPo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
+    <result column="channel_id" property="channelId" jdbcType="INTEGER" />
+    <result column="agency_name" property="agencyName" jdbcType="VARCHAR" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="active_time" property="activeTime" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, agency_id, channel_id, agency_name, channel_name, active_time
+  </sql>
+  <!-- <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from agency_activechannel
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from agency_activechannel
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="weizu.flowsys.entity.AgencyActiveChannelPo" >
+    insert into agency_activechannel (id, agency_id, channel_id, 
+      agency_name, channel_name, active_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{agencyId,jdbcType=INTEGER}, #{channelId,jdbcType=INTEGER}, 
+      #{agencyName,jdbcType=VARCHAR}, #{channelName,jdbcType=VARCHAR}, #{activeTime,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="weizu.flowsys.entity.AgencyActiveChannelPo" >
+    insert into agency_activechannel
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="agencyId != null" >
+        agency_id,
+      </if>
+      <if test="channelId != null" >
+        channel_id,
+      </if>
+      <if test="agencyName != null" >
+        agency_name,
+      </if>
+      <if test="channelName != null" >
+        channel_name,
+      </if>
+      <if test="activeTime != null" >
+        active_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="agencyId != null" >
+        #{agencyId,jdbcType=INTEGER},
+      </if>
+      <if test="channelId != null" >
+        #{channelId,jdbcType=INTEGER},
+      </if>
+      <if test="agencyName != null" >
+        #{agencyName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="activeTime != null" >
+        #{activeTime,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="weizu.flowsys.entity.AgencyActiveChannelPo" >
+    update agency_activechannel
+    <set >
+      <if test="agencyId != null" >
+        agency_id = #{agencyId,jdbcType=INTEGER},
+      </if>
+      <if test="channelId != null" >
+        channel_id = #{channelId,jdbcType=INTEGER},
+      </if>
+      <if test="agencyName != null" >
+        agency_name = #{agencyName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        channel_name = #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="activeTime != null" >
+        active_time = #{activeTime,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="weizu.flowsys.entity.AgencyActiveChannelPo" >
+    update agency_activechannel
+    set agency_id = #{agencyId,jdbcType=INTEGER},
+      channel_id = #{channelId,jdbcType=INTEGER},
+      agency_name = #{agencyName,jdbcType=VARCHAR},
+      channel_name = #{channelName,jdbcType=VARCHAR},
+      active_time = #{activeTime,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update> -->
+</mapper>

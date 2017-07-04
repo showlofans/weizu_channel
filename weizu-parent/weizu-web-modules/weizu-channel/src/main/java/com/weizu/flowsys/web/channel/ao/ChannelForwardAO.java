@@ -28,6 +28,15 @@ public interface ChannelForwardAO {
 	int channel_addList(List<ChannelForwardPo> list);
 	
 	/**
+	 * @description: 添加通道
+	 * @param channelPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月4日 下午5:04:26
+	 */
+	int channel_addList(ChannelForwardPo channelPo);
+	
+	/**
 	 * @description:通道如果是多个，将实体变为多个通道
 	 * @param channelForwardPo
 	 * @return
@@ -110,4 +119,6 @@ public interface ChannelForwardAO {
 	 * @createTime:2017年7月1日 下午3:26:36
 	 */
 	int deleteChannel(String channelId);
+	
+//	Pagination<ChannelForwardPo> getActiveChannel()
 }

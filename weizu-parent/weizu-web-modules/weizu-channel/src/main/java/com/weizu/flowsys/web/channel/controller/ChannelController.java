@@ -121,8 +121,8 @@ public class ChannelController {
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		channelForwardPo.setAgencyId(agencyVO.getId());
 		
-		List<ChannelForwardPo> list = channelForwardAO.initAddListByPo(channelForwardPo);	//初始化list
-		int result = channelForwardAO.channel_addList(list);
+//		List<ChannelForwardPo> list = channelForwardAO.initAddListByPo(channelForwardPo);	//初始化list
+		int result = channelForwardAO.channel_addList(channelForwardPo);
 		//System.out.println(result);
 		
 //		System.out.println(channelForwardPo.getScopeCityName());
@@ -283,7 +283,12 @@ public class ChannelController {
 	 */
 	@RequestMapping(value=ChannelURL.ACTIVITY_CHANNEL_LIST)
 	public ModelAndView activityChannelList(){
-		return new ModelAndView("/channel/activity_channel_list");
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		resultMap.put("billTypeEnums", BillTypeEnum.toList());
+		resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
+		resultMap.put("serviceTypeEnums",  ServiceTypeEnum.toList());//包体类型
+		return new ModelAndView("/channel/activity_channel_list","resultMap",resultMap);
 	}
 	/**
 	 * @description: 下架删除通道

@@ -25,6 +25,13 @@ public interface ChannelForwardDaoInterface extends Dao<ChannelForwardPo, Intege
 	 * @createTime:2017年5月11日 上午9:21:12
 	 */
 	int channel_addList(List<ChannelForwardPo> list);
+	/**
+	 * @description:添加通道
+	 * @param list
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年5月11日 上午9:21:12
+	 */
+	int channel_addList(ChannelForwardPo channelPo);
 	
 	/**
 	 * @description:查询通道列表

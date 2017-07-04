@@ -133,6 +133,9 @@
   	update <include refid="t_channel"></include>
   	<set>
   		channel_use_state = #{channelUseState}
+  		<if test="lastAccess != null">
+  			,last_access = #{lastAccess}
+  		</if>
   	</set>
   	<where>
   		id = #{id}
@@ -144,6 +147,9 @@
   	update <include refid="t_channel"></include>
   	<set>
   		channel_state = #{channelState}
+  		<if test="lastAccess != null">
+  			,last_access = #{lastAccess}
+  		</if>
   	</set>
   	<where>
   		id = #{id}

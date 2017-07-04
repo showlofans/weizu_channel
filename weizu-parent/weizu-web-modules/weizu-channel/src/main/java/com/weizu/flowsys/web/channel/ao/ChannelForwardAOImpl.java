@@ -27,6 +27,7 @@ import com.weizu.flowsys.web.channel.dao.impl.ChannelForwardDao;
 import com.weizu.flowsys.web.channel.pojo.BestChannelPO;
 import com.weizu.flowsys.web.channel.pojo.ChannelForwardPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
+import com.weizu.flowsys.web.channel.util.ChannelUtil;
 
 /**
  * @description:对上通道接口实现
@@ -56,6 +57,24 @@ public class ChannelForwardAOImpl implements ChannelForwardAO {
 	public int channel_addList(List<ChannelForwardPo> list) {
 		
 		return channelForwardDao.channel_addList(list);
+	}
+	/**
+	 * @description: 添加通道
+	 * @param channelPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月4日 下午5:04:26
+	 */
+	@Transactional(isolation = Isolation.SERIALIZABLE)
+	@Override
+	public int channel_addList(ChannelForwardPo channelPo){
+		//初始化通道状态和使用状态
+		channelPo.setChannelUseState(0);
+		channelPo.setChannelState(0);
+		
+		//获得城市编码
+		String scopeCityCode = scopeDiscount.getScopeCityName();
+		return channelForwardDao.channel_addList(channelPo);
 	}
 	/**
 	 * @description:通道如果是多个，将实体变为多个通道
@@ -150,13 +169,8 @@ public class ChannelForwardAOImpl implements ChannelForwardAO {
 			paramsMap.put("end", pageSize);
 		}
 		List<ChannelForwardPo> records = channelForwardDao.listChannel(paramsMap);
-		//初始化业务类型并返回
-		for (ChannelForwardPo channelForwardPo2 : records) {
-			String serviceId = channelForwardPo2.getServiceId();
-			if(StringHelper.isNotEmpty(channelForwardPo2.getServiceId())){
-				channelForwardPo2.setServiceType(Integer.parseInt(serviceId.substring(3)));
-			}
-		}
+		//初始化业务类型
+		ChannelUtil.initServiceTypeByList(records);
 		
 		return new Pagination<ChannelForwardPo>(records, toatalRecord, pageNo, pageSize);
 	}

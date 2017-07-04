@@ -47,7 +47,7 @@
 		</span>
 		
 		通道省份：<input type="text" value="${resultMap.searchParam.scopeCityName }" name="scopeCityName" id="" placeholder=" 通道省份" style="width:250px" class="input-text">
-		代理商名称：<input type="text" value="${resultMap.searchParam.agencyName }" name="agencyName" id="" placeholder=" 通道省份" style="width:250px" class="input-text">
+		代理商名称：<input type="text" value="${resultMap.searchParam.agencyName }" name="agencyName" id="" placeholder=" 代理商名称" style="width:250px" class="input-text">
 		
 		<button type="reset"class="btn btn-success" value="重置">重置</button>
 		<input value="查询" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
@@ -63,7 +63,7 @@
 					<!-- <th width="80">流量包Id</th> -->
 					<!-- <th width="80">ID</th> -->
 					<th width="80">通道名称</th>
-					<th width="80">票务</th>
+					<th width="80">通道类型</th>
 					<th width="80">活动时间</th>
 					<!-- <th width="80">交易单数</th>
 					<th width="80">交易总额</th> -->
