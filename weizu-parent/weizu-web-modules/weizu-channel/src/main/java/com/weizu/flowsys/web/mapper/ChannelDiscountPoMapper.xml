@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo" >
+<mapper namespace="com.weizu.flowsys.web.channel.dao.ChannelDiscountDao" >
   <sql id="t_cDiscount">channel_discount</sql>
   
-  <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.dao.ChannelDiscountDao" >
+  <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo" >
     <result column="id" property="id" jdbcType="BIGINT" />
-    <result column="channel_id" property="channelId" jdbcType="INTEGER" />
+    <result column="channel_id" property="channelId" jdbcType="BIGINT" />
     <result column="scope_city_code" property="scopeCityCode" jdbcType="VARCHAR" />
     <result column="channel_discount" property="channelDiscount" jdbcType="DOUBLE" />
     <result column="channel_name" property="channelName" jdbcType="DOUBLE" />

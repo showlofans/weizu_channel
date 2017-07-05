@@ -103,12 +103,12 @@
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>地区折扣：</label><br>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 			<table>
-				<c:forEach items="${resultMap.scopeCityNames }" var="scopeCityName" varStatus="vs">
+				<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum" varStatus="vs">
 					<c:if test="${vs.index % 4==0 }"><tr></c:if>
 						<td> 
 							<div class="radio-box">
-								<input class="cbox" onClick="checkBoxes(this)" type="checkbox" id="scopeCityName-${vs.index }" value="${scopeCityName.value }">
-								${scopeCityName.desc }
+								<input class="cbox" onClick="checkBoxes(this)" type="checkbox" id="scopeCityCode-${vs.index }" value="${scopeCityEnum.value }">
+								${scopeCityEnum.desc }
 								<%-- <label for="operatorType-${vs.index }"></label> --%>
 								<!-- 输入两位折扣数字 -->
 								<input class="disscount" style="display: none; width:50px;" type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
@@ -254,7 +254,7 @@ function changeName(){
     	          } */
     	      }).appendTo($('#ep_id'));
     		$('<input />', {
-    	        name: 'discountList['+ i +'].scopeCityName',
+    	        name: 'discountList['+ i +'].scopeCityCode',
     	        type: 'hidden',
     	        value: $(this).prev().val()
     	      }).appendTo($('#ep_id'));

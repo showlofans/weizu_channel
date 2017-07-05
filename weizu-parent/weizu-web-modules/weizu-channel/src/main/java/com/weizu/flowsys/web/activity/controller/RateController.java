@@ -2,6 +2,7 @@ package com.weizu.flowsys.web.activity.controller;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,32 +12,31 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.aiyi.base.pojo.PageParam;
-import com.alibaba.fastjson.JSONObject;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.RateStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.web.activity.ao.AgencyActiveChannelAO;
 import com.weizu.flowsys.web.activity.ao.OperatorDiscountAO;
 import com.weizu.flowsys.web.activity.ao.RateBackwardAO;
 import com.weizu.flowsys.web.activity.pojo.OperatorDiscountPo;
-import com.weizu.flowsys.web.activity.pojo.OperatorScopeVO;
 import com.weizu.flowsys.web.activity.pojo.RateBackwardPo;
 import com.weizu.flowsys.web.activity.pojo.RateBackwardVo;
 import com.weizu.flowsys.web.activity.pojo.RateJoinChannelPo;
 import com.weizu.flowsys.web.activity.url.RateURL;
+import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
-import com.weizu.flowsys.web.channel.ao.ChannelForwardAO;
-import com.weizu.flowsys.web.channel.pojo.BestChannelPO;
+import com.weizu.flowsys.web.channel.ao.ChannelChannelAO;
+import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 
 /**
  * @description:费率管理
@@ -55,7 +55,11 @@ public class RateController {
 	@Resource
 	private RateBackwardAO rateBackwardAO;
 	@Resource
-	private ChannelForwardAO channelForwardAO;
+	private ChannelChannelAO channelChannelAO;
+	@Resource
+	private ChargeAccountAo chargeAccountAO;
+	@Resource
+	private AgencyActiveChannelAO agencyActiveChannelAO;
 	
 	/**
 	 * @description:跳转到费率添加页面
@@ -244,33 +248,76 @@ public class RateController {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月18日 上午10:22:11
 	 */
+//	@RequestMapping(value= RateURL.GET_BEST_CHANNEL)
+//	public void getBestChannel(HttpServletRequest request, HttpServletResponse response, OperatorScopeVO operatorScopeVO)
+//	{
+//		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//		operatorScopeVO.setAid(agencyVO.getId());
+//		try {
+//			String scopeCityName = operatorScopeVO.getScopeCityName();
+//			if(StringHelper.isNotEmpty(scopeCityName)){
+//				scopeCityName = new String(scopeCityName.getBytes("iso-8859-1"),"utf-8");
+//				operatorScopeVO.setScopeCityName(scopeCityName);
+//			}
+//		} catch (UnsupportedEncodingException e1) {
+//			e1.printStackTrace();
+//		}
+//		BestChannelPO bestChannelPo = channelForwardAO.getBestChannel(operatorScopeVO);
+////		Map<String, Object> resultMap = new HashMap<String, Object>();
+////		resultMap.put("bestChannelPo", bestChannelPo);
+//		try {
+//			if(bestChannelPo != null){
+//			response.getWriter().print(JSONObject.toJSON(bestChannelPo).toString());
+//			response.getWriter().print(JSONObject.parse("['error']").toString());
+//			}
+//			else{
+//				response.getWriter().print(JSONObject.parse("['error']").toString());
+//			}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 	@RequestMapping(value= RateURL.GET_BEST_CHANNEL)
-	public void getBestChannel(HttpServletRequest request, HttpServletResponse response, OperatorScopeVO operatorScopeVO)
+	public void getBestChannel(HttpServletRequest request, HttpServletResponse response, ChannelChannelPo channelPo)//设置运营商类型和地区筛选
 	{
+//		ChargeAccountPo chargeAccount1 = (ChargeAccountPo) request.getSession().getAttribute("chargeAccount1");
+//		ChargeAccountPo chargeAccount = (ChargeAccountPo) request.getSession().getAttribute("chargeAccount");
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		operatorScopeVO.setAid(agencyVO.getId());
-		try {
-			String scopeCityName = operatorScopeVO.getScopeCityName();
-			if(StringHelper.isNotEmpty(scopeCityName)){
-				scopeCityName = new String(scopeCityName.getBytes("iso-8859-1"),"utf-8");
-				operatorScopeVO.setScopeCityName(scopeCityName);
-			}
-		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
+//		String agencyName = request.getSession().getAttribute("childAgencyName").toString();
+		String childAgencyIdStr = request.getSession().getAttribute("childAgencyId").toString();
+		if(agencyVO == null){//未登录用户
+			System.out.println("no login");
+//			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 		}
-		BestChannelPO bestChannelPo = channelForwardAO.getBestChannel(operatorScopeVO);
-//		Map<String, Object> resultMap = new HashMap<String, Object>();
-//		resultMap.put("bestChannelPo", bestChannelPo);
-		try {
-			if(bestChannelPo != null){
-				response.getWriter().print(JSONObject.toJSON(bestChannelPo).toString());
+		channelPo.setBelongAgencyId(agencyVO.getId());//设置代理商
+		//设置是否带票
+		if(StringHelper.isNotEmpty(childAgencyIdStr))
+		{
+			int childAgencyId = Integer.parseInt(childAgencyIdStr);
+			ChargeAccountPo chargeAccountPo1 = chargeAccountAO
+					.getAccountByAgencyId(childAgencyId,BillTypeEnum.CORPORATE_BUSINESS.getValue());
+			ChargeAccountPo chargeAccountPo = chargeAccountAO
+					.getAccountByAgencyId(childAgencyId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+			if(chargeAccountPo1 != null && chargeAccountPo == null)
+			{
+				channelPo.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());
+			}else
+			{//
+				channelPo.setBillType(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 			}
-			else{
-				response.getWriter().print(JSONObject.parse("['error']").toString());
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
+		
+//		request.getSession().setAttribute("childAgencyName", childAgencyName);
+		
+		List<ChannelChannelPo> channelList = new ArrayList<ChannelChannelPo>();
+		
+		//简易通道列表
+		channelList = channelChannelAO.listChannel(channelPo);
+		request.getSession().setAttribute("channelList", channelList);
+//		resultMap.put("channelList", channelList);
+//		resultMap.put("childAgencyId", childAgencyId);
+//		resultMap.put("agencyName", agencyName);
+		
 	}
 	/**
 	 * @description: 通道配置费率列表
@@ -278,10 +325,13 @@ public class RateController {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月1日 上午11:43:53
 	 */
-	@RequestMapping(value=RateURL.RATE_JOIN_CHANNEL_LIST)
-	public ModelAndView rateJoinChannel()
+	@RequestMapping(value=RateURL.BIND_CHANNEL_LIST)
+	public ModelAndView bindChannelList(HttpServletRequest request,String childAgencyId, String childAgencyName)
 	{
-		return new ModelAndView("/rate/rate_join_channel_list");
+//		agencyActiveChannelAO.listActive(pageParam, activePo)
+		request.getSession().setAttribute("childAgencyId", childAgencyId);
+		request.getSession().setAttribute("childAgencyName", childAgencyName);
+		return new ModelAndView("/activity/bind_channel_list");
 	}
 	/**
 	 * @description: 绑定代理商
@@ -289,26 +339,28 @@ public class RateController {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月1日 下午12:26:09
 	 */
-	@RequestMapping(value=RateURL.RATE_JOIN_CHANNEL_PAGE)
-	public ModelAndView rateJoinChannelPage(@RequestParam(value="pageTitle",required=false)String pageTitle)
+	@RequestMapping(value=RateURL.BIND_CHANNEL_PAGE)
+	public ModelAndView rateJoinChannelPage(@RequestParam(value="pageTitle",required=false)String pageTitle,ChannelChannelPo channelPo,HttpServletRequest request)
 	{
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("pageTitle", pageTitle);
 		resultMap.put("scopeCityNames", ScopeCityEnum.toList());
 		resultMap.put("operatorTypes", OperatorTypeEnum.toList());
-		return new ModelAndView("/rate/rate_join_channel_page","resultMap",resultMap);
+		return new ModelAndView("/activity/bind_channel","resultMap",resultMap);
 	}
 	/**
-	 * @description: 费率添加
+	 * @description: 代理商绑定通道
 	 * @param rjcp
 	 * @param response
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月1日 下午12:36:01
 	 */
-	@RequestMapping(value=RateURL.RATE_JOIN_CHANNEL)
+	@RequestMapping(value=RateURL.BIND_CHANNEL)
 	@ResponseBody
-	public void rateJoinChannel(RateJoinChannelPo rjcp,HttpServletResponse response)
+	public void rateJoinChannel(RateJoinChannelPo rjcp,HttpServletResponse response, HttpServletRequest request)
 	{
+		String agencyId = request.getSession().getAttribute("childAgencyId").toString();
+		String agencyName = request.getSession().getAttribute("childAgencyName").toString();
 		try {
 			response.getWriter().print("success");
 		} catch (IOException e) {

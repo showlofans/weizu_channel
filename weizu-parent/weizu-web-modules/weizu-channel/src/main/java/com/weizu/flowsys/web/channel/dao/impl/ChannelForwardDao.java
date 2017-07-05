@@ -31,29 +31,29 @@ public class ChannelForwardDao extends DaoImpl<ChannelForwardPo, Integer> implem
 	@Resource
 	private ChannelDiscountDao channelDiscountDao;
 	
-	/**
-	 * @description: 添加通道
-	 * @param channelPo
-	 * @return
-	 * @author:POP产品研发部 宁强
-	 * @createTime:2017年7月4日 下午4:58:59
-	 */
-	@Override
-	public int channel_addList(ChannelForwardPo channelPo) {
-		List<ChannelDiscountPo> disList = new LinkedList<ChannelDiscountPo>();
-		int channelRes = add(channelPo);
-		Integer channelId = Integer.parseInt(nextId()+"")-1;
-		for(ScopeDiscount sd: channelPo.getDiscountList())
-		{
-			long nextId = channelDiscountDao.nextId();
-			double channelDiscount = StringUtil2.getDiscount(sd.getChannelDiscount());
-			ChannelDiscountPo cdp = new ChannelDiscountPo(channelId, sd.getScopeCityName(), channelDiscount, channelPo.getChannelName());
-			cdp.setId(nextId);
-			disList.add(cdp);
-		}
-		int discountRes = channelDiscountDao.discount_addList(disList);
-		return channelRes;
-	}
+//	/**
+//	 * @description: 添加通道
+//	 * @param channelPo
+//	 * @return
+//	 * @author:POP产品研发部 宁强
+//	 * @createTime:2017年7月4日 下午4:58:59
+//	 */
+//	@Override
+//	public int channel_addList(ChannelForwardPo channelPo) {
+//		List<ChannelDiscountPo> disList = new LinkedList<ChannelDiscountPo>();
+//		int channelRes = add(channelPo);
+//		Integer channelId = Integer.parseInt(nextId()+"")-1;
+//		for(ScopeDiscount sd: channelPo.getDiscountList())
+//		{
+//			long nextId = channelDiscountDao.nextId();
+//			double channelDiscount = StringUtil2.getDiscount(sd.getChannelDiscount());
+//			ChannelDiscountPo cdp = new ChannelDiscountPo(channelId, sd.getScopeCityName(), channelDiscount, channelPo.getChannelName());
+//			cdp.setId(nextId);
+//			disList.add(cdp);
+//		}
+//		int discountRes = channelDiscountDao.discount_addList(disList);
+//		return channelRes;
+//	}
 	/**
 	 * @description:批量添加通道
 	 * @param list

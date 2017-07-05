@@ -49,6 +49,30 @@ public class StringUtil2 {
 		}
 		return discount;
 	}
+	
+	/**
+	 * @description: 根据前台传的double转成相应的折扣(56.0转成0.56)
+	 * @param channelDiscount
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月5日 上午11:11:31
+	 */
+	public static Double getDiscount(Double channelDiscount){
+		double discount = 1.00d;
+		String discountStr = channelDiscount +"";
+		int indexDot = discountStr.trim().indexOf(".");
+		String discountIndex = discountStr.substring(0, indexDot);
+		if(channelDiscount != null){
+			if(discountIndex.substring(0).equals("0") || discountIndex.length() == 1){//只有一个数字，或者第一个数字是0
+				discount = StringUtil.getDouble(discountIndex)/ATT.SINGLE_NUMBER_DIVIDE;
+			}else if(discountIndex.trim().length() == 2){//有两位数字
+				discount = StringUtil.getDouble(discountIndex)/ATT.DOUBLE_NUMBER_DIVIDE;
+			}else if(discountIndex.length() == 3){
+				discount = StringUtil.getDouble(discountIndex)/ATT.TRIPLE_NUMBER_DIVIDE;
+			}
+		}
+		return discount;
+	}
 	/**
 	 * @description:0.22返回22
 	 * @param channelDiscount

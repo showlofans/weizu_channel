@@ -2,6 +2,7 @@ package com.weizu.flowsys.web.channel.dao.impl;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,12 +12,18 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.core.util.Formatter;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
+import com.weizu.flowsys.util.StringUtil2;
+import com.weizu.flowsys.web.activity.pojo.ScopeDiscount;
 import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
+import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
+import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
+import com.weizu.flowsys.web.channel.pojo.ChannelForwardPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 
 @Repository(value = "channelChannelDao")
@@ -24,6 +31,9 @@ public class ChannelChannelDaoImpl extends DaoImpl<ChannelChannelPo, Long> imple
 		ChannelChannelDao {
 	@Resource
 	private SqlSessionTemplate sqlSessionTemplate;
+	
+	@Resource
+	private ChannelDiscountDao channelDiscountDao;
 	
 	/**
 	 * @description: 通过通道ID找到所属平台
@@ -86,7 +96,54 @@ public class ChannelChannelDaoImpl extends DaoImpl<ChannelChannelPo, Long> imple
 	 */
 	@Override
 	public List<ChannelChannelPo> listChannel(Map<String, Object> paramsMap) {
-		return sqlSessionTemplate.selectList("list_channel", paramsMap);
+		return sqlSessionTemplate.selectList("list_channel_channel", paramsMap);
+	}
+	/**
+	 * @description: 添加通道
+	 * @param channelPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月5日 上午9:55:28
+	 */
+	@Override
+	public int channel_addList(ChannelChannelPo channelPo) {
+		List<ChannelDiscountPo> disList = new LinkedList<ChannelDiscountPo>();
+		int channelRes = add(channelPo);
+		Long channelId = nextId()-1;
+		int operatorType = channelPo.getOperatorType();
+		for(ChannelDiscountPo cdp: channelPo.getDiscountList())
+		{
+			long nextId = channelDiscountDao.nextId();
+			double channelDiscount = StringUtil2.getDiscount(cdp.getChannelDiscount());
+			ChannelDiscountPo cdp1 = new ChannelDiscountPo(channelId, cdp.getScopeCityCode(), channelDiscount, channelPo.getChannelName(),operatorType);
+			cdp1.setId(nextId);
+			disList.add(cdp1);
+		}
+		int discountRes = channelDiscountDao.discount_addList(disList);
+		return channelRes;
+	}
+	/**
+	 * @description: 查询通道个数
+	 * @param paramsMap
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月5日 上午10:50:17
+	 */
+	@Override
+	public int count_channel(Map<String, Object> paramsMap) {
+		return sqlSessionTemplate.selectOne("count_channel_channel",paramsMap);
+	}
+	/**
+	 * @description:查询简易通道信息
+	 * @param channelPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月5日 下午3:54:28
+	 */
+	@Override
+	public List<ChannelChannelPo> listSimpleChannel(ChannelChannelPo channelPo) {
+		
+		return sqlSessionTemplate.selectList("listSimpleChannel",channelPo);
 	}
 
 	

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weizu.flowsys.web.activity.dao.RateDiscountDao" >
+  <sql id="t_rateD">rate_discount</sql>
+  
+  <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.activity.pojo.RateDiscountPo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="operator_type" property="operatorType" jdbcType="INTEGER" />
+    <result column="scope_city_code" property="scopeCityCode" jdbcType="VARCHAR" />
+    <result column="active_discount" property="activeDiscount" jdbcType="DOUBLE" />
+    <result column="active_channel_id" property="activeChannelId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, operator_type, scope_city_code, active_discount, active_channel_id
+  </sql>
+  <!-- 批量添加费率折扣 -->
+   <insert id="rate_addList" useGeneratedKeys="true" parameterType="java.util.List">
+  	insert into <include refid="t_rateD"></include>
+  	(operator_type, scope_city_code, active_discount, active_channel_id)
+  	values
+  	<foreach collection="list" separator="," item="rateD" index="index">
+  		(#{rateD.operatorType},#{rateD.scopeCityCode},#{rateD.activeDiscount},
+  		#{rateD.activeChannelId})
+  	</foreach>
+  </insert>
+ <!--  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from rate_discount
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from rate_discount
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="weizu.flowsys.entity.RateDiscountPo" >
+    insert into rate_discount (id, operator_type, scope_city_code, 
+      active_discount, active_channel_id)
+    values (#{id,jdbcType=BIGINT}, #{operatorType,jdbcType=INTEGER}, #{scopeCityCode,jdbcType=VARCHAR}, 
+      #{activeDiscount,jdbcType=DOUBLE}, #{activeChannelId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="weizu.flowsys.entity.RateDiscountPo" >
+    insert into rate_discount
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="operatorType != null" >
+        operator_type,
+      </if>
+      <if test="scopeCityCode != null" >
+        scope_city_code,
+      </if>
+      <if test="activeDiscount != null" >
+        active_discount,
+      </if>
+      <if test="activeChannelId != null" >
+        active_channel_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="operatorType != null" >
+        #{operatorType,jdbcType=INTEGER},
+      </if>
+      <if test="scopeCityCode != null" >
+        #{scopeCityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="activeDiscount != null" >
+        #{activeDiscount,jdbcType=DOUBLE},
+      </if>
+      <if test="activeChannelId != null" >
+        #{activeChannelId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="weizu.flowsys.entity.RateDiscountPo" >
+    update rate_discount
+    <set >
+      <if test="operatorType != null" >
+        operator_type = #{operatorType,jdbcType=INTEGER},
+      </if>
+      <if test="scopeCityCode != null" >
+        scope_city_code = #{scopeCityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="activeDiscount != null" >
+        active_discount = #{activeDiscount,jdbcType=DOUBLE},
+      </if>
+      <if test="activeChannelId != null" >
+        active_channel_id = #{activeChannelId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="weizu.flowsys.entity.RateDiscountPo" >
+    update rate_discount
+    set operator_type = #{operatorType,jdbcType=INTEGER},
+      scope_city_code = #{scopeCityCode,jdbcType=VARCHAR},
+      active_discount = #{activeDiscount,jdbcType=DOUBLE},
+      active_channel_id = #{activeChannelId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update> -->
+</mapper>

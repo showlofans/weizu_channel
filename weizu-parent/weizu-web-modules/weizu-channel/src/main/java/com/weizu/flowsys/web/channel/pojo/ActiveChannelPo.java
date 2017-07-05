@@ -17,7 +17,7 @@ import com.weizu.flowsys.web.activity.pojo.ScopeDiscount;
  * @createTime:2017年7月4日 下午3:22:51
  * @version 1.0
  */
-@TableName(name="agency_activeChannel")
+@TableName(name="agency_active_channel")
 public class ActiveChannelPo extends Po implements Cloneable {
 	
     private Integer id;					//通道id

@@ -65,17 +65,17 @@ public class ChannelForwardAOImpl implements ChannelForwardAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月4日 下午5:04:26
 	 */
-	@Transactional(isolation = Isolation.SERIALIZABLE)
-	@Override
-	public int channel_addList(ChannelForwardPo channelPo){
-		//初始化通道状态和使用状态
-		channelPo.setChannelUseState(0);
-		channelPo.setChannelState(0);
-		
-		//获得城市编码
-		String scopeCityCode = scopeDiscount.getScopeCityName();
-		return channelForwardDao.channel_addList(channelPo);
-	}
+//	@Transactional(isolation = Isolation.SERIALIZABLE)
+//	@Override
+//	public int channel_addList(ChannelForwardPo channelPo){
+//		//初始化通道状态和使用状态
+//		channelPo.setChannelUseState(0);
+//		channelPo.setChannelState(0);
+//		
+//		//获得城市编码
+//		String scopeCityCode = scopeDiscount.getScopeCityName();
+//		return channelForwardDao.channel_addList(channelPo);
+//	}
 	/**
 	 * @description:通道如果是多个，将实体变为多个通道
 	 * @param channelForwardPo

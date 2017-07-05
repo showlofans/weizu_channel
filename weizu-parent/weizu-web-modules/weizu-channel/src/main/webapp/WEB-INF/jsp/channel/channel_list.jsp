@@ -65,12 +65,17 @@
 					<th width="80">交易单数</th>
 					<th width="80">交易总额</th>
 					<!-- <th width="120">支持城市</th> -->
-					<th width="60">运营商类型</th>
-					<th width="60">包体类型</th>
-					<th width="60">通道折扣</th>
+					<!-- <th width="60">运营商类型</th> -->
+					<!-- <th width="60">包体类型</th> -->
+					<th width="60">移动</th>
+					<th width="60">联通</th>
+					<th width="60">电信</th>
+					<th width="75">通道利润</th>
 					<th width="75">通道余额</th>
 					<th width="60">通道状态</th>
 					<th width="60">通道使用状态</th>
+					<th width="60">通道类型</th>
+					<!-- <th width="60">修改时间</th> -->
 					<th width="60">通道规格</th>
 					
 					<th width="120">操作</th>
@@ -83,8 +88,13 @@
 						<td>${channel.channelName }</td>
 						<td>${channel.channelTotalUse }</td>
 						<td>${channel.channelTotalAmount }</td>
+						<td>${channel.discount0 }</td>
+						<td>${channel.discount1 }</td>
+						<td>${channel.discount2 }</td>
+						<td>${channel.channelTotalProfit }</td>
+						<td>${channel.channelBalance }</td> 
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
-						<td>
+						<%-- <td>
 							<c:forEach items="${resultMap.operatorTypeEnums }" var="operatorType" varStatus="vs1">
 							<c:if test="${channel.operatorType == operatorType.value }"> ${operatorType.desc }</c:if>
 							</c:forEach>
@@ -94,8 +104,8 @@
 								<c:if test="${channel.serviceType == serviceTypeEnum.value }"> ${serviceTypeEnum.desc }</c:if>
 							</c:forEach>
 						</td>
-						<td>"${channel.scopeCityName }" : "${channel.channelDiscount}"</td> 
-						<td>${channel.channelBalance }</td> 
+						<td>"${channel.scopeCityName }" : "${channel.channelDiscount}"</td>  --%>
+						
 						
 						<td class="td-status">
 							<c:forEach items="${resultMap.channelStateEnums }" var="cState" varStatus="vs1">
@@ -109,6 +119,7 @@
 								<c:if test="${channel.channelUseState == cUseState.value  && channel.channelUseState==1}"> <span class="label radius">${cUseState.desc }</span></c:if>
 							</c:forEach>
 						</td>
+						<td>${channel.billType }</td>
 						<td>${channel.pgSize }</td>
 					<!-- 	<td class="td-status"><span class="label label-success radius">已发布</span></td> -->
 						<td class="f-14 td-manage">

@@ -34,7 +34,7 @@ public interface ChannelForwardAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月4日 下午5:04:26
 	 */
-	int channel_addList(ChannelForwardPo channelPo);
+//	int channel_addList(ChannelForwardPo channelPo);
 	
 	/**
 	 * @description:通道如果是多个，将实体变为多个通道

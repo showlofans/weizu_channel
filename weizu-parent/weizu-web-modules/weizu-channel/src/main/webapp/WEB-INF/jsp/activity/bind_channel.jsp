@@ -117,27 +117,16 @@
 </head>
 <body>
 <article class="page-container">
-	<h3>${resultMap.pageTitle }</h3>
-	<form action="" method="" class="form form-horizontal" id="rate" >
+	<form action="/flowsys/rate/rate_add.do" method="post" class="form form-horizontal" id="form-member-add" onsubmit="return changeName()">
 		<!-- 代理商id，方便自动绑定费率 -->
 		<%-- <input type="hidden" value="${resultMap.agencyId }"placeholder=""name="id"> --%>
-		<input type="hidden" value="${resultMap.ratePo.id }"placeholder=""name="rateId">
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">代理商名称：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<%-- <input type="text" class="input-text" value="${resultMap.agencyPo.userName }"placeholder="${resultMap.agencyPo.rateName }" id="rateName" name="rateName"> --%>
-				<%-- <c:choose>
-					<c:when test="${empty resultMap.ratePo.rateName } ">
-						<input type="text" class="input-text" value="${resultMap.ratePo.userName }" onkeyup="checkName()" placeholder="${resultMap.agencyPo.userName }" id="rateName" name="rateName">
-					</c:when>
-					<c:otherwise> --%>
-						<input type="text" class="input-text  ac_input" autocomplete="off" value="${resultMap.discountList[0].rateName }" onkeyup="checkName()" placeholder="${resultMap.discountList[0].rateName }" id="rateName" name="rateName">
-					<%-- </c:otherwise>
-				</c:choose> --%>
-				
-				<span class="emptyName" style="color:red;display:none;"></span>
+				<input type="text" readonly="readonly" class="input-text  ac_input" autocomplete="off" value="${resultMap.agencyName }" onkeyup="checkName()" placeholder="${resultMap.agencyName }" id="agencyName" name="">
 			</div>
 		</div>
+		
 		<%-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>运营商类型：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
@@ -178,7 +167,6 @@
 				</div>
 			</div>
 		</c:forEach>  --%>
-		
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">费率：</label>
 			<div role="tabpanel" class="tab formControls col-xs-8 col-sm-9 skin-minimal">
@@ -195,6 +183,18 @@
 					</ul>
 					<%-- <span id="operatorTypesE"> ${resultMap.operatorTypes }</span> --%>
 					<!-- Tab panes -->
+					<%-- <div class="row cl">
+						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流量类型：</label>
+						<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+							<c:forEach items="${resultMap.serviceTypes }" var="serviceEnum" varStatus="vs">
+								<div class="radio-box">
+									<input name="serviceType" class="radioItem" type="radio" id="serviceType-${vs.index }" value="${serviceEnum.value }" <c:if test="${vs.index==0 }">checked</c:if>>
+									${serviceEnum.desc }
+									<label for="operatorType-${vs.index }"></label>
+								</div>
+							</c:forEach>
+						</div>
+					</div> --%>
 					<div class="tab-content tabs">
 						<c:forEach items="${resultMap.operatorTypes }" var="operatorTypeEnum" varStatus="vst">
 							<c:choose>
@@ -226,7 +226,7 @@
 											<c:if test="${vs.index % 4==0 }"><tr></c:if>
 												<td> 
 													<div class="radio-box">
-														<input class="cbox${vst.index }" onClick="checkBoxes(this)" type="checkbox" id="scopeCityName-${vs.index }" value="${scopeCityName.desc }">
+														<input class="cbox${vst.index }" onClick="checkBoxes(this)" type="checkbox" id="scopeCityName-${vs.index }" value="${scopeCityName.value }">
 														${scopeCityName.desc }
 														<%-- <label for="operatorType-${vs.index }"></label> --%>
 														<!-- 输入两位折扣数字 -->
@@ -244,6 +244,16 @@
 						</c:forEach>
 					</div>
 				</div>
+				</div>
+				<div class="row cl">  通道名称：
+					 <span class="select-box inline">
+						<select name="channelId" class="select">
+							<option value="">通道</option>
+							<c:forEach items="${channelList }" var="channel" varStatus="vs1">
+								<option value="${channel.id }" >${channel.channelName }</option>
+							</c:forEach>
+						</select>
+					</span> 
 				</div>
 			<%-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">费率：</label>
@@ -383,107 +393,12 @@
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
 <script src="/view/tab/js/bootstrap.min.js"></script>
 <script type="text/javascript">
-/* function Tab(num)
-{
-    var i;
-    for(i=1;i<=4;i++)
-    {
-        if(i==num)
-           document.getElementById("d"+i).style.display="block";
-         else
-           document.getElementById("d"+i).style.display="none";
-    }
-} */
+
 $(document).ready(function(){
-	 $("#rate").validate({
-	    	submitHandler : function(form) {
-	    		$.ajax({
-	                type:"post",
-	                url:"/flowsys/rate/rate_join_channel.do",
-	                data: $('form').serialize(),//表单数据
-	                async : false,
-	                success:function(d){
-	                    if(d=="success"){
-	                        layer.msg('保存成功！');//保存成功提示
-	                        var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
-	                       /*  if($("h3").html().trim() != ""){//列表打开
-	                    		parent.layer.close(index); // 执行关闭
-	                        }else{
-	                        	window.location.pathname = "/flowsys/platform/platform_list.do";
-	                        } */
-	                    }
-	                    /* if(d=="error"){
-	                        layer.msg('保存异常!');
-	                    }
-	                    if(d=="errorEp"){
-	                        alert('保存异常,已经添加过该平台了!');
-	                        
-	                    } */
-	                }
-	            });
-	    	}
-	    });
-	//Tab(1);
-	/* if($("input[type='checkbox']").is(':checked')){
-		$("input[type='checkbox']").next().hide();
-	} */
-	/*  $(".cbox").each(function(){
-	    	//alert($(this).prop("checked"));
-	    	 // alert($(this).attr("checked"));
-	    	 $(this).next().hide();
-	})  */
-	//alert("checked");
-	/*  $("[type='checkbox']").each(function(){
-	     
-		   
-	     if($(this).attr("checked"))
-	   {
-	    alert("checked");
-	   } */
+
 })
 
-/* function checkName(){
-	if($("#rateName").val().trim() != ''){
-		$(".emptyName").hide();
-	}
-} */
-/*
- *如果不为空，就去掉提交表单显示出来的错误信息 
- **/
-function checkName(evt) {
-	var rateName = $("#rateName").val().replace(/(^\s+)|(\s+$)/g, "");//去除空格
-	/**监听回车键和空格键*/
-	if(rateName.length != 0){
-		$.ajax( {    
-	        "type": "get",     
-	        "contentType": "application/x-www-form-urlencoded; charset=utf-8",    
-	        "url": "/flowsys/rate/check_rate_name.do?rateName="+rateName,     
-	        "success": function(resp) {  
-	        	if(resp > 0){
-	        		$(".emptyName").html("该费率名称已经存在，请 使用其他名称 ");
-	        		$(".emptyName").show();
-	        	}else{
-	        		$(".emptyName").hide();
-	        	}
-	        },
-	        "error":function(msg){
-	        	alert(msg);
-	        }
-	    });
-	}else{
-		//alert(rateName);
-	}
-}	
-
-/**表单提交前的初始化数据
- * 初始化表单提交数据
- */
 function changeName(){
-	if($("#rateName").val().trim()=='' ){
-		$(".emptyName").html("费率名称不能为空！！");
-		$(".emptyName").show();
-		return false;
-	}
 	var j = 0;//统计总共有多少家运营商有折扣配置
 	var m = 0;	//cbox下标
 	$(".operator").each(function(){
@@ -493,14 +408,14 @@ function changeName(){
 			//alert($(this));
 	    	if($(this).is(':checked')){ 
 	    		$('<input />', {
-	    	        name: 'operatorDiscount['+j+'].list['+ i +'].channelDiscount',
+	    	        name: 'discountList['+ i +'].channelDiscount',
 	    	        id: 'channelDiscount-'+ i,
 	    	        type: 'hidden',
 	    	        value: $(this).next().val()
 	    	        
 	    	      }).appendTo($('#ajaxBestChannel'));
 	    		$('<input />', {
-	    	        name: 'operatorDiscount['+j+'].list['+ i +'].scopeCityName',
+	    	        name: 'discountList['+ i +'].scopeCityCode',
 	    	        type: 'hidden',
 	    	        value: $(this).val()
 	    	      }).appendTo($('#ajaxBestChannel'));
@@ -510,7 +425,7 @@ function changeName(){
 		
 		if(i > 0){//在存在折扣的情况下，开始增加运营商
 			$('<input />', {
-		        name: 'operatorDiscount['+ j +'].operatorType',
+		        name: 'discountList['+ j +'].operatorType',
 		        type: 'hidden',
 		        value: $(this).next().html().trim()
 		      }).appendTo($('#ajaxBestChannel'));
@@ -546,14 +461,15 @@ function checkBoxes(vart){
 	var $price = $(vart).next().next();		//最优通道显示区
 	if($(vart).next().is(':hidden')){
 		var operatorType = $("li.active").children('span').eq(0).html().trim();
-		var scopeCityName = $(vart).val().trim();
+		var scopeCityCode = $(vart).val().trim();
 		 $.ajax( {    
 	        "type": "get",     
 	        "contentType": "application/x-www-form-urlencoded; charset=utf-8",    
-	        "url": "/flowsys/rate/get_best_channel.do?operatorType="+operatorType+"&scopeCityName="+scopeCityName,     
+	        "url": "/flowsys/rate/get_best_channel.do?operatorType="+operatorType+"&scopeCityCode="+scopeCityCode,     
 	        "dataType": "json",    
 	        "success": function(resp) { 
-	        	if(typeof(resp[0]) == "undefined"){
+	        	
+	        	/* if(typeof(resp[0]) == "undefined"){
 	        		$price.html(resp.discount);
 	        	}else{
 	        		var msgt = resp[0].trim();
@@ -561,17 +477,18 @@ function checkBoxes(vart){
 		        		$price.html("没有通道信息");
 		        	}
 	        	}
-	        	$price.show();
+	        	$price.show(); */
+	        	alert("success");
 	        },
 	        "error":function(msg){
 	        	alert(msg);
 	        }
 	    }); 
 	
-		$(vart).next().show();
+		//$(vart).next().show();
 	}else{
-		$(vart).next().hide();
-		$price.hide();
+		//$(vart).next().hide();
+		//$price.hide();
 	}
 } 
 

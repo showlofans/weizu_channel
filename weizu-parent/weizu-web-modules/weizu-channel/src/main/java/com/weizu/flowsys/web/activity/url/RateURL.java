@@ -44,14 +44,14 @@ public class RateURL extends BaseURL {
 	/**
 	 * 通道配置费率列表
 	 */
-	public static final String RATE_JOIN_CHANNEL_LIST = "/rate_join_channel_list" + DYNAMIC_WEB_SUFFIX;
+	public static final String BIND_CHANNEL_LIST = "/bind_channel_list" + DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 通道配置费率页面
 	 */
-	public static final String RATE_JOIN_CHANNEL_PAGE = "/rate_join_channel_page" + DYNAMIC_WEB_SUFFIX;
+	public static final String BIND_CHANNEL_PAGE = "/bind_channel_page" + DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 通道配置费率
 	 */
-	public static final String RATE_JOIN_CHANNEL = "/rate_join_channel" + DYNAMIC_WEB_SUFFIX;
+	public static final String BIND_CHANNEL = "/bind_channel" + DYNAMIC_WEB_SUFFIX;
 
 }

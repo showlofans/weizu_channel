@@ -64,8 +64,8 @@
 					<th width="75">地址</th>
 					<th width="60">余额</th>
 					<th width="60">信用</th>
-					<th width="60">费率</th>
-					<th width="60">带票费率</th>
+					<!-- <th width="60">费率</th>
+					<th width="60">带票费率</th> -->
 					<th width="120">操作</th>
 					<th width="120">创建时间</th>
 				</tr>
@@ -110,12 +110,13 @@
 						</td>
 						<td>${agency.accountCredit }</td>
 						<!-- title="/flowsys/rate/rate_add_page.do"  -->
-						<td><a data-toggle="tooltip" data-placement="top" title="点击编辑费率" data-href="/flowsys/rate/rate_edit_page.do?rateId=${agency.rateId }" data-title="费率编辑" style="text-decoration:none" onclick="Hui_admin_tab(this)">${agency.rateName }</a></td>
-						<td><a data-toggle="tooltip" data-placement="top" title="点击编辑带票费率" data-href="/flowsys/rate/rate_edit_page.do?rateId=${agency.billRateId }" data-title="费率编辑" style="text-decoration:none" onclick="Hui_admin_tab(this)">${agency.billRateName }</a></td>
+						<%-- <td><a data-toggle="tooltip" data-placement="top" title="点击编辑费率" data-href="/flowsys/rate/rate_edit_page.do?rateId=${agency.rateId }" data-title="费率编辑" style="text-decoration:none" onclick="Hui_admin_tab(this)">${agency.rateName }</a></td>
+						<td><a data-toggle="tooltip" data-placement="top" title="点击编辑带票费率" data-href="/flowsys/rate/rate_edit_page.do?rateId=${agency.billRateId }" data-title="费率编辑" style="text-decoration:none" onclick="Hui_admin_tab(this)">${agency.billRateName }</a></td> --%>
 						<td class="td-manage">
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="editRate(this)" href="javascript:;" title="编辑代理商"><i class="Hui-iconfont">&#xe6de;</i></a>
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" onClick="account_charge('账户充值','${agency.userName }',${agency.id })" href="javascript:;" title="账户充值"><i class="Hui-iconfont">&#xe6df;</i></a> 
-							<a title="/flowsys/rate/rate_add_page.do?rateId=${agency.rateId }&agencyId=${agency.id}" data-href="/flowsys/rate/rate_add_page.do?rateId=${agency.rateId }&agencyId=${agency.id}" data-title="费率添加" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe6df;</i></a>
+							<%-- <a title="/flowsys/rate/rate_add_page.do?rateId=${agency.rateId }&agencyId=${agency.id}" data-href="/flowsys/rate/rate_add_page.do?rateId=${agency.rateId }&agencyId=${agency.id}" data-title="费率添加" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe6df;</i></a> --%>
+							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none"  title="配置通道" data-href="/flowsys/rate/bind_channel_list.do?childAgencyId=${agency.id }&childAgencyName=${agency.userName}" data-title="配置通道" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe6df;</i></a>
 						</td>
 						<td>${agency.createTimeStr }</td>
 						<%-- <td class="td-status"><c:forEach items="${resultMap.pgInEnums }" var="pgIn" varStatus="vs1">

@@ -18,6 +18,16 @@ import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
  */
 public interface ChannelChannelDao extends Dao<ChannelChannelPo, Long> {
 	
+	
+	/**
+	 * @description: 添加通道
+	 * @param channelPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月5日 上午9:55:06
+	 */
+	int channel_addList(ChannelChannelPo channelPo);
+	
 	/**
 	 * @description:查询通道列表
 	 * @param pageParam
@@ -27,6 +37,15 @@ public interface ChannelChannelDao extends Dao<ChannelChannelPo, Long> {
 	 * @createTime:2017年5月16日 下午3:17:18
 	 */
 	List<ChannelChannelPo> listChannel(Map<String, Object> paramsMap);
+	
+	/**
+	 * @description: 查询简易通道信息
+	 * @param channelPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月5日 下午3:53:23
+	 */
+	List<ChannelChannelPo> listSimpleChannel(ChannelChannelPo channelPo);
 	
 	/**
 	 * @description:通过通道ID找到所属平台
@@ -55,5 +74,14 @@ public interface ChannelChannelDao extends Dao<ChannelChannelPo, Long> {
 	 * @createTime:2017年6月27日 上午11:50:57
 	 */
 	int updateChannelState(Long channelId, int channelState);
+	
+	/**
+	 * @description: 查询通道个数
+	 * @param paramsMap
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月5日 上午10:21:40
+	 */
+	int count_channel(Map<String, Object> paramsMap);
 
 }

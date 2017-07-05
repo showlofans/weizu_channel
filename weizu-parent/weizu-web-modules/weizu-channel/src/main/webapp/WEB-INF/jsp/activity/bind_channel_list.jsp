@@ -51,18 +51,22 @@
 			<sapn>通道名称：微族科技</sapn>
 			<sapn>是否带票：不带票</sapn>
 			<sapn>通道折扣：云南85</sapn>
-			<a style="text-decoration:none" class="btn btn-success" onClick="rate_add('费率添加','/flowsys/rate/rate_join_channel_page.do')" href="javascript:;" title="绑定代理商">绑定代理商</a>
+			<a style="text-decoration:none" class="btn btn-success" onclick="Hui_admin_tab(this)" href="/flowsys/rate/bind_channel_page.do" title="绑定代理商">绑定代理商</a>
 		<table class="table table-border table-bordered table-bg table-hover table-sort">
 			<thead>
 				<tr class="text-c">
-					<th>代理商名称</th>
-					<th>费率折扣</th>
+					<th>代理商名称</th><!-- 默认通道 -->
+					<th>移动折率</th>
+					<th>联通折率</th>
+					<th>电信折率</th>
 					<th>添加时间</th>
 					<th>操作</th>
 				</tr>
 			</thead>
 			<tbody>
 				<td>456</td> 
+				<td>86</td> 
+				<td>86</td> 
 				<td>86</td> 
 				<td>2017-07-01 01:16:34</td> 
 				<td><a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a> 

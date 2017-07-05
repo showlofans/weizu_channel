@@ -16,7 +16,7 @@ public class ChannelDiscountPo extends Po {
 	
     private Long id;
 
-    private Integer channelId;
+    private Long channelId;
 
     private String scopeCityCode;			//地区编码
 
@@ -31,7 +31,7 @@ public class ChannelDiscountPo extends Po {
 		super();
 	}
 
-	public ChannelDiscountPo(Integer channelId, String scopeCityCode,
+	public ChannelDiscountPo(Long channelId, String scopeCityCode,
 			Double channelDiscount, String channelName, Integer operatorType) {
 		super();
 		this.channelId = channelId;
@@ -65,11 +65,11 @@ public class ChannelDiscountPo extends Po {
         this.id = id;
     }
 
-    public Integer getChannelId() {
+    public Long getChannelId() {
         return channelId;
     }
 
-    public void setChannelId(Integer channelId) {
+    public void setChannelId(Long channelId) {
         this.channelId = channelId;
     }
 

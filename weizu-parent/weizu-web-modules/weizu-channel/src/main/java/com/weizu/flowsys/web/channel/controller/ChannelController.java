@@ -30,10 +30,12 @@ import com.weizu.flowsys.web.activity.ao.ServiceScopeAO;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
+import com.weizu.flowsys.web.channel.ao.ChannelChannelAO;
 import com.weizu.flowsys.web.channel.ao.ChannelForwardAO;
 import com.weizu.flowsys.web.channel.ao.ExchangePlatformAO;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 import com.weizu.flowsys.web.channel.dao.impl.ExchangePlatformDao;
+import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelForwardPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.url.ChannelURL;
@@ -59,8 +61,10 @@ public class ChannelController {
 	@Resource
 	private ServiceScopeAO serviceScopeAO;
 	
+//	@Resource
+//	private ChannelForwardAO channelForwardAO;
 	@Resource
-	private ChannelForwardAO channelForwardAO;
+	private ChannelChannelAO channelChannelAO;
 	
 	@Resource
 	private OperatorPgAO operatorPgAO;
@@ -82,7 +86,7 @@ public class ChannelController {
 //		List serviceTypes = serviceScopeAO.listServiceType();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("operatorTypes", OperatorTypeEnum.toList());
-		resultMap.put("scopeCityNames", ScopeCityEnum.toList());
+		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 		resultMap.put("serviceTypes", ServiceTypeEnum.toList());
 		
 		//查看代理商有没有对公的账户
@@ -106,23 +110,23 @@ public class ChannelController {
 	}
 	
 	/**
-	 * @description:通道添加业务
+	 * @description: 通道添加业务
 	 * @param request
 	 * @param channelForwardPo
 	 * @return
 	 * @author:POP产品研发部 宁强
-	 * @createTime:2017年5月10日 下午4:14:47
+	 * @createTime:2017年7月5日 上午10:06:10
 	 */
 	@RequestMapping(value= ChannelURL.CHANNEL_ADD)
-	public ModelAndView addChannel(HttpServletRequest request, ChannelForwardPo channelForwardPo){
+	public ModelAndView addChannel(HttpServletRequest request, ChannelChannelPo channelChannelPo){
 //		System.out.println(channelForwardPo);
 //		
 		//添加代理商账户Id
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		channelForwardPo.setAgencyId(agencyVO.getId());
+		channelChannelPo.setBelongAgencyId(agencyVO.getId());
 		
 //		List<ChannelForwardPo> list = channelForwardAO.initAddListByPo(channelForwardPo);	//初始化list
-		int result = channelForwardAO.channel_addList(channelForwardPo);
+		int result = channelChannelAO.channel_addList(channelChannelPo);
 		//System.out.println(result);
 		
 //		System.out.println(channelForwardPo.getScopeCityName());
@@ -133,11 +137,45 @@ public class ChannelController {
 			return list_channel(null, request, null);
 		}else{
 			Map<String, Object> resultMap = new HashMap<String, Object>();
-			resultMap.put("pgSizeStr", channelForwardPo.getPgSize());
-			resultMap.put("channelName", channelForwardPo.getChannelName());
+			resultMap.put("pgSizeStr", channelChannelPo.getPgSize());
+			resultMap.put("channelName", channelChannelPo.getChannelName());
 			return new ModelAndView("/channel/channel_add_page","resultMap",resultMap);
 		}
 	}
+	
+	/**
+	 * @description:通道添加业务
+	 * @param request
+	 * @param channelForwardPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年5月10日 下午4:14:47
+	 */
+//	@RequestMapping(value= ChannelURL.CHANNEL_ADD)
+//	public ModelAndView addChannel(HttpServletRequest request, ChannelForwardPo channelForwardPo){
+////		System.out.println(channelForwardPo);
+////		
+//		//添加代理商账户Id
+//		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//		channelForwardPo.setAgencyId(agencyVO.getId());
+//		
+////		List<ChannelForwardPo> list = channelForwardAO.initAddListByPo(channelForwardPo);	//初始化list
+//		int result = channelForwardAO.channel_addList(channelForwardPo);
+//		//System.out.println(result);
+//		
+////		System.out.println(channelForwardPo.getScopeCityName());
+//		
+//		if(result > 0){
+////			ChannelForwardPo channelForwardPoParam = new ChannelForwardPo();
+////			channelForwardPoParam.setAgencyId(agencyVO.getId());
+//			return list_channel(null, request, null);
+//		}else{
+//			Map<String, Object> resultMap = new HashMap<String, Object>();
+//			resultMap.put("pgSizeStr", channelForwardPo.getPgSize());
+//			resultMap.put("channelName", channelForwardPo.getChannelName());
+//			return new ModelAndView("/channel/channel_add_page","resultMap",resultMap);
+//		}
+//	}
 	
 	/**
 	 * @description:通道列表
@@ -149,26 +187,26 @@ public class ChannelController {
 	 */
 	@RequestMapping(value= ChannelURL.CHANNEL_LIST)
 	public ModelAndView list_channel(@RequestParam(value = "pageNo", required = false) String pageNo,
-			HttpServletRequest request, ChannelForwardPo channelForwardPo){
+			HttpServletRequest request, ChannelChannelPo channelChannelPo){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO == null){
 			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 		}
-		if(channelForwardPo == null){
-			channelForwardPo = new ChannelForwardPo();
+		if(channelChannelPo == null){
+			channelChannelPo = new ChannelChannelPo();
 		}
-		channelForwardPo.setAgencyId(agencyVO.getId());
+		channelChannelPo.setBelongAgencyId(agencyVO.getId());
 		PageParam pageParam = null;
 		if(StringHelper.isNotEmpty(pageNo)){
 			pageParam = new PageParam(Integer.parseInt(pageNo), 10) ;
 		}else{
 			pageParam = new PageParam(1, 10);
 		}
-		Pagination<ChannelForwardPo> pagination = channelForwardAO.listChannel(pageParam, channelForwardPo);
+		Pagination<ChannelChannelPo> pagination = channelChannelAO.listChannel(pageParam, channelChannelPo);
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("pagination", pagination);
-		resultMap.put("searchParam", channelForwardPo);
+		resultMap.put("searchParam", channelChannelPo);
 		resultMap.put("channelStateEnums", ChannelStateEnum.toList());
 		resultMap.put("channelUseStateEnums", ChannelUseStateEnum.toList());
 		resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
@@ -240,7 +278,7 @@ public class ChannelController {
 	 */
 	@RequestMapping(value=ChannelURL.CHANNEL_USE_STATE_UPDATE)
 	public void updateUseState(String id, String channelUseState, HttpServletResponse response){
-		int updateRes = channelForwardAO.updateChannelUseState(id, channelUseState);
+		int updateRes = channelChannelAO.updateChannelUseState(id, channelUseState);
 		response.setContentType("text/html;charset=utf-8");
 		try {
 			if(updateRes > 0)
@@ -262,7 +300,7 @@ public class ChannelController {
 	 */
 	@RequestMapping(value=ChannelURL.CHANNEL_STATE_UPDATE)
 	public void updateState(String id, String channelState, HttpServletResponse response){
-		int updateRes = channelForwardAO.updateChannelState(id, channelState);
+		int updateRes = channelChannelAO.updateChannelState(id, channelState);
 		response.setContentType("text/html;charset=utf-8");
 		try {
 			if(updateRes > 0)
@@ -288,7 +326,7 @@ public class ChannelController {
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
 		resultMap.put("serviceTypeEnums",  ServiceTypeEnum.toList());//包体类型
-		return new ModelAndView("/channel/activity_channel_list","resultMap",resultMap);
+		return new ModelAndView("/activity/activity_channel_list","resultMap",resultMap);
 	}
 	/**
 	 * @description: 下架删除通道
@@ -301,7 +339,7 @@ public class ChannelController {
 	@ResponseBody
 	public void deleteChannel(String channelId,HttpServletResponse response){
 		try {
-			int delResult = channelForwardAO.deleteChannel(channelId);
+			int delResult = channelChannelAO.deleteChannel(channelId);
 			if(delResult > 0){
 				response.getWriter().print("success");
 			}else{
