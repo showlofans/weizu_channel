@@ -17,7 +17,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     active.id, agency_id, channel_id, agency_name, channel_name, active_time,
-    rate.id,operator_type,scope_city_code,active_discount,active_channel_id
+    rate.id,operator_type,scope_city_code,active_discount,active_id
   </sql>
   
    <select id="listActive" parameterType="map" resultMap="BaseResultMap">

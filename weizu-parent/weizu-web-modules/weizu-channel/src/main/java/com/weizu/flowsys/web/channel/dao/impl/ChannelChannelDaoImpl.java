@@ -17,6 +17,7 @@ import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.core.util.Formatter;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
+import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.web.activity.pojo.ScopeDiscount;
 import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
@@ -111,11 +112,18 @@ public class ChannelChannelDaoImpl extends DaoImpl<ChannelChannelPo, Long> imple
 		int channelRes = add(channelPo);
 		Long channelId = nextId()-1;
 		int operatorType = channelPo.getOperatorType();
+		int serviceType = channelPo.getServiceType();
+		
+		//设置通道名称
+		String serviceTypeStr = ServiceTypeEnum.getEnum(serviceType).getDesc();
+		channelPo.setChannelName(serviceTypeStr +"-"+channelPo.getChannelName());
+		String channelName = channelPo.getChannelName();
+		
 		for(ChannelDiscountPo cdp: channelPo.getDiscountList())
 		{
 			long nextId = channelDiscountDao.nextId();
 			double channelDiscount = StringUtil2.getDiscount(cdp.getChannelDiscount());
-			ChannelDiscountPo cdp1 = new ChannelDiscountPo(channelId, cdp.getScopeCityCode(), channelDiscount, channelPo.getChannelName(),operatorType);
+			ChannelDiscountPo cdp1 = new ChannelDiscountPo(channelId, cdp.getScopeCityCode(), channelDiscount, channelName, operatorType, serviceType);
 			cdp1.setId(nextId);
 			disList.add(cdp1);
 		}
@@ -141,9 +149,9 @@ public class ChannelChannelDaoImpl extends DaoImpl<ChannelChannelPo, Long> imple
 	 * @createTime:2017年7月5日 下午3:54:28
 	 */
 	@Override
-	public List<ChannelChannelPo> listSimpleChannel(ChannelChannelPo channelPo) {
+	public List<ChannelChannelPo> listSimpleChannel(Map<String,Object> paramsMap) {
 		
-		return sqlSessionTemplate.selectList("listSimpleChannel",channelPo);
+		return sqlSessionTemplate.selectList("listSimpleChannel",paramsMap);
 	}
 
 	

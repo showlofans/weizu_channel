@@ -1,10 +1,12 @@
 package com.weizu.flowsys.web.channel.pojo;
 
 import java.util.List;
+import java.util.Map;
 
 import com.weizu.flowsys.core.annotation.po.TableName;
 import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
+import com.weizu.flowsys.web.activity.pojo.DiscountPo;
 
 /**
  * @description: 通道实体
@@ -17,9 +19,9 @@ import com.weizu.flowsys.core.beans.Po;
 @TableName(name="channel_channel")
 public class ChannelChannelPo extends Po {
     
-	private Long id;
-	
-	private Integer belongAgencyId;
+	private Long id;							
+		
+	private Integer belongAgencyId;						//通道所属代理商id（数据库字段）
 
     private String channelName;
 
@@ -44,24 +46,48 @@ public class ChannelChannelPo extends Po {
     private Long lastAccess;
     
     @TempField
-    private Integer operatorType;								//运营商类型
+    private Integer operatorType;								//运营商类型（查询参数）
     @TempField
-    private Integer serviceType;								//流量类型
+    private Integer serviceType;								//流量类型（查询参数）
     
     @TempField
-    private List<ChannelDiscountPo> discountList;				//通道折扣
+    private List<ChannelDiscountPo> discountList;				//通道折扣（添加和页面参数）
+    
+    @TempField
+    private Map<String,Object> scopeCityCodes;				//查询参数
    
+    /*@TempField
+    private String discount0;					//移动折扣（页面参数）
     @TempField
-    private String discount0;					//移动折扣
+    private String discount1;					//联通折扣（页面参数）
     @TempField
-    private String discount1;					//联通折扣
+    private String discount2;					//电信折扣（页面参数）
+*/    
     @TempField
-    private String discount2;					//电信折扣
+    private DiscountPo discountPo;				//折扣实体（包括移动,联通,电信）
     
     @TempField
-    private String scopeCityName;				//省份名称
+    private String scopeCityName;				//省份名称（查询参数）
+    @TempField
+    private String scopeCityCode;				//省份编码（查询参数）
     
-    public String getScopeCityName() {
+    public Map<String, Object> getScopeCityCodes() {
+		return scopeCityCodes;
+	}
+
+	public void setScopeCityCodes(Map<String, Object> scopeCityCodes) {
+		this.scopeCityCodes = scopeCityCodes;
+	}
+
+	public String getScopeCityCode() {
+		return scopeCityCode;
+	}
+
+	public void setScopeCityCode(String scopeCityCode) {
+		this.scopeCityCode = scopeCityCode;
+	}
+
+	public String getScopeCityName() {
 		return scopeCityName;
 	}
 
@@ -77,28 +103,12 @@ public class ChannelChannelPo extends Po {
 		this.serviceType = serviceType;
 	}
 
-	public String getDiscount0() {
-		return discount0;
+	public DiscountPo getDiscountPo() {
+		return discountPo;
 	}
 
-	public void setDiscount0(String discount0) {
-		this.discount0 = discount0;
-	}
-
-	public String getDiscount1() {
-		return discount1;
-	}
-
-	public void setDiscount1(String discount1) {
-		this.discount1 = discount1;
-	}
-
-	public String getDiscount2() {
-		return discount2;
-	}
-
-	public void setDiscount2(String discount2) {
-		this.discount2 = discount2;
+	public void setDiscountPo(DiscountPo discountPo) {
+		this.discountPo = discountPo;
 	}
 
 	public Integer getOperatorType() {

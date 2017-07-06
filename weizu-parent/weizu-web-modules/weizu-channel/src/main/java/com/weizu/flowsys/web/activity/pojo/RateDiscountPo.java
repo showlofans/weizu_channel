@@ -3,19 +3,37 @@ package com.weizu.flowsys.web.activity.pojo;
 import com.weizu.flowsys.core.annotation.po.TableName;
 import com.weizu.flowsys.core.beans.Po;
 
+/**
+ * @description: 费率折扣
+ * @projectName:weizu-channel
+ * @className:RateDiscountPo.java
+ * @author:POP产品研发部 宁强
+ * @createTime:2017年7月6日 下午6:12:52
+ * @version 1.0
+ */
 @TableName(name="rate_discount")
 public class RateDiscountPo extends Po {
     private Long id;
-
+    
+    private Integer serviceType;
+    
     private Integer operatorType;
 
     private String scopeCityCode;
 
     private Double activeDiscount;
 
-    private Long activeChannelId;
+    private Long activeId;
 
-    public Long getId() {
+    public Integer getServiceType() {
+		return serviceType;
+	}
+
+	public void setServiceType(Integer serviceType) {
+		this.serviceType = serviceType;
+	}
+
+	public Long getId() {
         return id;
     }
 
@@ -47,11 +65,11 @@ public class RateDiscountPo extends Po {
         this.activeDiscount = activeDiscount;
     }
 
-    public Long getActiveChannelId() {
-        return activeChannelId;
-    }
+	public Long getActiveId() {
+		return activeId;
+	}
 
-    public void setActiveChannelId(Long activeChannelId) {
-        this.activeChannelId = activeChannelId;
-    }
+	public void setActiveId(Long activeId) {
+		this.activeId = activeId;
+	}
 }

@@ -10,6 +10,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.aiyi.base.pojo.PageParam;
+import com.alibaba.fastjson.JSON;
+import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.ao.ChannelChannelAO;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
@@ -38,5 +40,26 @@ public class ChannelChannelAOTest {
 //			System.out.println("电信:"+channelPo.getDiscount2());
 //			
 //		}
+//	}
+//	@Test
+//	public void listSimpleChannel()
+//	{
+////		ChannelChannelPo channelPo = new ChannelChannelPo();
+////		channelPo.setBelongAgencyId(4);
+//		List<ChannelChannelPo> records = channelChannelAO.listChannel(4, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+//		if(records != null){
+//			for(ChannelChannelPo channelPo1 : records)
+//			{
+//				System.out.println("通道名称:"+channelPo1.getChannelName());
+//				System.out.println("通道Id:"+channelPo1.getId());
+//				System.out.println("地区:"+channelPo1.getScopeCityCode());
+//				
+//			}
+//		}else
+//		{
+//			System.out.println("为空");
+//		}
+//		System.out.println(JSON.toJSONString(records)); 
+//		
 //	}
 }

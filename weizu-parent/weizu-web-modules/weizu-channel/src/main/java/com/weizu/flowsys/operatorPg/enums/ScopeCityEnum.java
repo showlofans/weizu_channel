@@ -66,25 +66,20 @@ public enum ScopeCityEnum {
 		this.desc = desc;
 		this.value = value;
 	}
-
-	public String getValue()
-	{
-		return value;
-	}
-
-	public void setValue(String value)
-	{
-		this.value = value;
-	}
-
-	public String getDesc()
-	{
-		return desc;
-	}
-
-	public void setDesc(String desc)
-	{
-		this.desc = desc;
+	
+	/**
+	 * @description: 获得值数组
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月6日 下午3:49:25
+	 */
+	public static String[] getValues(){
+		ScopeCityEnum[] enumAry = ScopeCityEnum.values();
+		String [] valueArray = new String[enumAry.length];
+		for (int i = 0; i < enumAry.length; i++) {
+			valueArray[i] = enumAry[i].getValue();
+		}
+		return valueArray;
 	}
 
 	public static ScopeCityEnum getEnum(String value)
@@ -139,5 +134,24 @@ public enum ScopeCityEnum {
 		return list;
 	}
 
+	public String getValue()
+	{
+		return value;
+	}
+
+	public void setValue(String value)
+	{
+		this.value = value;
+	}
+
+	public String getDesc()
+	{
+		return desc;
+	}
+
+	public void setDesc(String desc)
+	{
+		this.desc = desc;
+	}
 
 }

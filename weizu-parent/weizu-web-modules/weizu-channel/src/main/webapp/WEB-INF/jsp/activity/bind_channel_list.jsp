@@ -47,15 +47,32 @@
 		</form>
 	</div> --%>
 	<!-- <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加资讯" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加资讯</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div> -->
-	<div class="mt-20">
-			<sapn>通道名称：微族科技</sapn>
+		<div class="mt-20">
+			<!-- <sapn>通道名称：微族科技</sapn>
 			<sapn>是否带票：不带票</sapn>
-			<sapn>通道折扣：云南85</sapn>
-			<a style="text-decoration:none" class="btn btn-success" onclick="Hui_admin_tab(this)" href="/flowsys/rate/bind_channel_page.do" title="绑定代理商">绑定代理商</a>
+			<sapn>通道折扣：云南85</sapn> -->
+			<sapn>代理商名称：${childAgencyName }</sapn><br>
+			高级通道开通状态：<sapn>
+			<c:choose>
+				<c:when test="${isOpen == 1 }">开通</c:when>
+				<c:otherwise>
+					未开
+				</c:otherwise>
+			</c:choose></sapn><br>
+			<!-- <sapn>通道折扣：云南85</sapn> -->
+			<a style="text-decoration:none" class="btn btn-success" onclick="Hui_admin_tab(this)" data-href="/flowsys/rate/bind_channel_page.do" title="" data-title="绑定通道">绑定通道</a>
 		<table class="table table-border table-bordered table-bg table-hover table-sort">
 			<thead>
+				<!-- <tr class="text-c">
+					<th>代理商名称</th>默认通道
+					<th>移动折率</th>
+					<th>联通折率</th>
+					<th>电信折率</th>
+					<th>添加时间</th>
+					<th>操作</th>
+				</tr> -->
 				<tr class="text-c">
-					<th>代理商名称</th><!-- 默认通道 -->
+					<th>通道名称</th><!-- 默认通道 -->
 					<th>移动折率</th>
 					<th>联通折率</th>
 					<th>电信折率</th>
@@ -64,40 +81,42 @@
 				</tr>
 			</thead>
 			<tbody>
-				<td>456</td> 
-				<td>86</td> 
-				<td>86</td> 
-				<td>86</td> 
-				<td>2017-07-01 01:16:34</td> 
-				<td><a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a> 
-				<!-- <a style="text-decoration:none" class="ml-5" onClick="article_edit('资讯编辑','article-add.html','10001')" href="javascript:;" title="参与代理商"><i class="Hui-iconfont">&#xe6df;</i></a> --> 
-				</td> 
-				<%-- <c:forEach items="${resultMap.pagination.records }" var="rate" varStatus="vs">
+				<c:forEach items="${resultMap.pagination.records }" var="activePo" varStatus="vs">
 					<tr class="text-c">
-						<td>${rate.id }</td>
-						<td>${rate.rateName }</td>
+						<td>${activePo.channelName }</td>
+						<%-- <td>${rate.rateName }</td>
 						 <td>
 						 	<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
 							<c:if test="${rate.billType == billTypeEnum.value }"> ${billTypeEnum.desc }</c:if>
 							</c:forEach>
-						</td> 
-						<td  class="text-l">${rate.ratePrice0 }</td>
-						 <td class="text-l">${rate.ratePrice1 }</td>
-						<td class="text-l">${rate.ratePrice2 }</td>
+						</td>  --%>
+						<td  class="text-l">${activePo.discountPo.discount0 }</td>
+						 <td class="text-l">${activePo.discountPo.discount0 }</td>
+						<td class="text-l">${activePo.discountPo.discount0 }</td>
+						<td>${activePo.activeTimeStr }</td>
 						
 						<td class="td-manage"><a style="text-decoration:none" onClick="article_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
 						<a style="text-decoration:none" class="ml-5" onClick="article_edit('账户充值',${agency.userName },${agency.id })" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> 
 						<a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
-						 <td class="td-status"><c:forEach items="${resultMap.rateStateEnums }" var="stateEnum" varStatus="vs1">
+						<%--  <td class="td-status"><c:forEach items="${resultMap.rateStateEnums }" var="stateEnum" varStatus="vs1">
 						<c:if test="${rate.rateState == stateEnum.value }"> ${stateEnum.desc }</c:if>
-						</c:forEach></td> 
+						</c:forEach></td>  --%>
 					<!-- 	<td class="td-status"><span class="label label-success radius">已发布</span></td> -->
 						
 					</tr>
-				</c:forEach> --%>
+				</c:forEach>
+				<!-- <td></td> 
+				<td>86</td> 
+				<td>86</td> 
+				<td>86</td> 
+				<td>2017-07-01 01:16:34</td> 
+				<td><a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a> --> 
+				<!-- <a style="text-decoration:none" class="ml-5" onClick="article_edit('资讯编辑','article-add.html','10001')" href="javascript:;" title="参与代理商"><i class="Hui-iconfont">&#xe6df;</i></a>  
+				</td> -->
+				
 			</tbody>
 		</table>
-		<%-- <mytag:Pagination pagination="${resultMap.pagination}" queryForm="dataListForm" divId="rateId" /> --%>  
+		<mytag:Pagination pagination="${resultMap.pagination}" queryForm="" divId="rateId" />
 	</div>
 </div>
 <!--_footer 作为公共模版分离出去-->

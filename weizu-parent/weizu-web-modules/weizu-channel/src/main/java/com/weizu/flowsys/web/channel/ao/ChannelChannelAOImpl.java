@@ -18,6 +18,7 @@ import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.web.activity.pojo.DiscountPo;
 import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
@@ -86,8 +87,6 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 		//初始化通道状态和使用状态
 		channelPo.setChannelUseState(0);
 		channelPo.setChannelState(0);
-		String serviceType = ServiceTypeEnum.getEnum(channelPo.getServiceType()).getDesc();
-		channelPo.setChannelName(serviceType +"-"+channelPo.getChannelName());
 		return channelChannelDao.channel_addList(channelPo);
 	}
 
@@ -132,7 +131,7 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 	}
 
 	/**
-	 * @description: 初始化页面运营商的折扣
+	 * @description: 初始化通道列表页面运营商的折扣
 	 * @param records
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月5日 下午12:49:30
@@ -167,9 +166,7 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 //			channelChannelPo.setDiscount0(dis0);
 			String dis2Str = discount2.append("}").toString();
 //			String dis2 = dis2Str.substring(0,dis2Str.lastIndexOf(","));
-			channelChannelPo.setDiscount0(dis0Str);
-			channelChannelPo.setDiscount1(dis1Str);
-			channelChannelPo.setDiscount2(dis2Str);
+			channelChannelPo.setDiscountPo(new DiscountPo(dis0Str, dis1Str, dis2Str));
 		}
 	}
 
@@ -227,9 +224,33 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 	 * @createTime:2017年7月5日 下午3:47:32
 	 */
 	@Override
-	public List<ChannelChannelPo> listChannel(ChannelChannelPo channelForwardPo) {
+	public List<ChannelChannelPo> listChannel(Integer agencyId,Integer billType) {
+		Map<String,Object> paramsMap = new HashMap<String, Object>(3);
+		String[] scopeCityCodes = ScopeCityEnum.getValues();
+		//billtype在controller已经确认不为空
 		
-		return channelChannelDao.listSimpleChannel(channelForwardPo);
+		paramsMap.put("belongAgencyId", agencyId);
+		paramsMap.put("billType", billType);
+		paramsMap.put("scopeCityCodes", scopeCityCodes);
+		
+		return channelChannelDao.listSimpleChannel(paramsMap);
+	}
+	/**
+	 * @description: 获得简易通道列表( agencyId,  billType)(id,name)
+	 * @param channelPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月6日 下午5:45:35
+	 */
+	@Override
+	public List<ChannelChannelPo> listChannel(ChannelChannelPo channelPo) {
+		Map<String,Object> paramsMap = new HashMap<String, Object>(5);
+		paramsMap.put("belongAgencyId", channelPo.getBelongAgencyId());
+		paramsMap.put("billType", channelPo.getBillType());
+		paramsMap.put("operatorType", channelPo.getOperatorType());
+		paramsMap.put("serviceType", channelPo.getServiceType());
+		paramsMap.put("scopeCityCode", channelPo.getScopeCityCode());
+		return channelChannelDao.listSimpleChannel(paramsMap);
 	}
 
 }

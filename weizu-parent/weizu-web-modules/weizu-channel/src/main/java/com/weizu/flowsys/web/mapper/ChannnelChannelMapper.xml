@@ -4,6 +4,7 @@
   <sql id="t_channel">channel_channel</sql>
  	<sql id="t_scope">service_scope</sql>
  	<sql id="t_discount">channel_discount</sql>
+ 	<!-- <sql id="t">rate_discount</sql> -->
  	<sql id="t_ep">exchange_platform</sql>
   
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.ChannelChannelPo" >
@@ -25,19 +26,22 @@
   <sql id="Base_Column_List" >
     channel.id, channel.channel_name, pg_size, ep_id, channel_total_use, channel_total_amount, channel_total_profit, 
     channel_balance, channel_state, channel_use_state, bill_type, last_access,belong_agency_id,
-    discount.id,channel_id,scope_city_code,channel_discount,operator_type
+    discount.id,channel_id,scope_city_code,channel_discount,operator_type,service_type
   </sql>
   
   <resultMap id="SimpleChannelMap" type="com.weizu.flowsys.web.channel.pojo.ChannelChannelPo" >
   	<id column="id" property="id" jdbcType="BIGINT" />
     <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <!-- <result column="operator_type" property="operatorType" jdbcType="VARCHAR" />
+    <result column="scope_city_code" property="scopeCityCode" jdbcType="VARCHAR" /> -->
   </resultMap>
    <!-- 简易通道信息 -->
    <sql id="Simple_Column_List" >
-    id, channel_name
+    channel.id, channel.channel_name
+    <!-- ,discount.operator_type,discount.scope_city_code -->
   </sql>
   <!-- 查询简易通道信息 -->
-  <select id="listSimpleChannel" parameterType="com.weizu.flowsys.web.channel.pojo.ChannelChannelPo" resultMap="SimpleChannelMap">
+  <select id="listSimpleChannel" resultMap="SimpleChannelMap">
   	select <include refid="Simple_Column_List"></include>
   	from <include refid="t_channel"></include> channel
   	inner join <include refid="t_discount"></include> discount
@@ -134,9 +138,21 @@
   	<if test="operatorType != null">
   		AND discount.operator_type = #{operatorType}
   	</if>
+  	<if test="serviceType != null">
+  		AND discount.service_type = #{serviceType}
+  	</if>
   	<if test="scopeCityCode != null">
   		AND discount.scope_city_code = #{scopeCityCode}
   	</if>
+  	<if test="scopeCityCodes != null">
+  		AND scope_city_code in
+                  <foreach item="item" index="index" collection="scopeCityCodes" 
+                         open="(" separator="," close=")">
+                        #{item}
+                </foreach>
+  	</if>
+  	
+  	
   </sql>
   
   

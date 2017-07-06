@@ -16,6 +16,7 @@ import com.weizu.flowsys.core.beans.Po;
  */
 @TableName(name="agency_active_channel")
 public class AgencyActiveChannelPo extends Po {
+	
     private Long id;
 
     private Integer agencyId;
@@ -28,6 +29,12 @@ public class AgencyActiveChannelPo extends Po {
 
     private Long activeTime;
     
+    @TempField
+    private String activeTimeStr;				//（页面参数）
+    
+    @TempField
+    private DiscountPo discountPo;				//折扣实体
+    
     @TempField//插入的时候不添加进去
     private List<RateDiscountPo> rateList;
 
@@ -37,6 +44,22 @@ public class AgencyActiveChannelPo extends Po {
 
 	public void setRateList(List<RateDiscountPo> rateList) {
 		this.rateList = rateList;
+	}
+	
+	public String getActiveTimeStr() {
+		return activeTimeStr;
+	}
+
+	public void setActiveTimeStr(String activeTimeStr) {
+		this.activeTimeStr = activeTimeStr;
+	}
+
+	public DiscountPo getDiscountPo() {
+		return discountPo;
+	}
+
+	public void setDiscountPo(DiscountPo discountPo) {
+		this.discountPo = discountPo;
 	}
 
 	public Long getId() {

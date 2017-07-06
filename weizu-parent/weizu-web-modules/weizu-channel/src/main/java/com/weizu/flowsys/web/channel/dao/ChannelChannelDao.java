@@ -45,7 +45,7 @@ public interface ChannelChannelDao extends Dao<ChannelChannelPo, Long> {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月5日 下午3:53:23
 	 */
-	List<ChannelChannelPo> listSimpleChannel(ChannelChannelPo channelPo);
+	List<ChannelChannelPo> listSimpleChannel(Map<String,Object> paramsMap);
 	
 	/**
 	 * @description:通过通道ID找到所属平台

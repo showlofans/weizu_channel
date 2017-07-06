@@ -123,7 +123,19 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">代理商名称：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" readonly="readonly" class="input-text  ac_input" autocomplete="off" value="${resultMap.agencyName }" onkeyup="checkName()" placeholder="${resultMap.agencyName }" id="agencyName" name="">
+				<input type="text" readonly="readonly" class="input-text  ac_input" autocomplete="off" value="${childAgencyName }" id="childAgencyName" name="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流量类型：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceEnum" varStatus="vs">
+					<div class="radio-box">
+						<input class="serviceType" name="serviceType" class="radioItem" type="radio" id="serviceType-${vs.index }" value="${serviceEnum.value }" ><!-- <c:if test="${vs.index==0 }">checked</c:if> -->
+						${serviceEnum.desc }
+						<%-- <label for="operatorType-${vs.index }"></label> --%>
+					</div>
+				</c:forEach>
 			</div>
 		</div>
 		
@@ -201,12 +213,12 @@
 								<c:when test="${vst.index==0 }">
 									<div role="tabpanel" class="tab-pane fade in active" id="Section${vst.index+1}">
 										<table>
-											<c:forEach items="${resultMap.scopeCityNames }" var="scopeCityName" varStatus="vs">
+											<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum" varStatus="vs">
 											<c:if test="${vs.index % 4==0 }"><tr></c:if>
 												<td> 
 													<div class="radio-box">
-														<input class="cbox0" onClick="checkBoxes(this)" type="checkbox" id="scopeCityName-${vs.index }" value="${scopeCityName.desc }">
-														${scopeCityName.desc }
+														<input class="cbox0" name="cityCode" onClick="checkBoxes(this)" type="radio" id="scopeCityName-${vs.index }" value="${scopeCityEnum.value }">
+														${scopeCityEnum.desc }
 														<%-- <label for="operatorType-${vs.index }"></label> --%>
 														<!-- 输入两位折扣数字 -->
 														<input class="disscount" style="display: none; " type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
@@ -222,12 +234,12 @@
 								<c:otherwise>
 									<div role="tabpanel" class="tab-pane fade" id="Section${vst.index+1}">
 										<table>
-											<c:forEach items="${resultMap.scopeCityNames }" var="scopeCityName" varStatus="vs">
+											<c:forEach items="${resultMap.scopeCityEnums}" var="scopeCityEnum" varStatus="vs">
 											<c:if test="${vs.index % 4==0 }"><tr></c:if>
 												<td> 
 													<div class="radio-box">
-														<input class="cbox${vst.index }" onClick="checkBoxes(this)" type="checkbox" id="scopeCityName-${vs.index }" value="${scopeCityName.value }">
-														${scopeCityName.desc }
+														<input class="cbox${vst.index }" name="cityCode"  onClick="checkBoxes(this)" type="radio" id="scopeCityName-${vs.index }" value="${scopeCityEnum.value }">
+														${scopeCityEnum.desc }
 														<%-- <label for="operatorType-${vs.index }"></label> --%>
 														<!-- 输入两位折扣数字 -->
 														<input class="disscount" style="display: none; " type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
@@ -247,11 +259,11 @@
 				</div>
 				<div class="row cl">  通道名称：
 					 <span class="select-box inline">
-						<select name="channelId" class="select">
+						<select id="selectC" name="channelId" class="select">
 							<option value="">通道</option>
-							<c:forEach items="${channelList }" var="channel" varStatus="vs1">
+							<%-- <c:forEach items="${resultMap.channelList }" var="channel" varStatus="vs1">
 								<option value="${channel.id }" >${channel.channelName }</option>
-							</c:forEach>
+							</c:forEach> --%>
 						</select>
 					</span> 
 				</div>
@@ -372,6 +384,7 @@
 				<p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
 			</div>
 		</div> -->
+		<input type="text" id="channelListStr" value="${resultMap.channelListStr }">
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
 				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
@@ -396,7 +409,7 @@
 
 $(document).ready(function(){
 
-})
+});
 
 function changeName(){
 	var j = 0;//统计总共有多少家运营商有折扣配置
@@ -458,37 +471,76 @@ function changeName(){
 }
 /**checkBox的点击事件*/
 function checkBoxes(vart){
+	/* var channelListStr = $("#channelListStr").val();
+	alert(items);
+	var items = new Array();
+	$.ajax( {    
+        "type": "get",     
+        "contentType": "application/x-www-form-urlencoded; charset=utf-8",    
+        "url": "/flowsys/rate/get_best_channel.do?operatorType="+,     
+        "dataType": "json",    
+        "success": function(resp) { 
+        	 $.each(data.comments, function(i, item) {
+	              $("#selectC").append("<option value="+item.channelId+">" + item.channelName + "</option>")
+             });
+        	/* if(typeof(resp[0]) == "undefined"){
+        		$price.html(resp.discount);
+        	}else{
+        		var msgt = resp[0].trim();
+        		if(msgt == "error"){
+	        		$price.html("没有通道信息");
+	        	}
+        	} 
+        	$price.show(); 
+        	//alert("success");
+        },
+        "error":function(msg){
+        	alert(msg);
+        }
+    }); */
+	/* for(var i=0; i < items.length; i++){
+		$('<input />', {
+	        name: 'discountList['+ j +'].operatorType',
+	        type: 'hidden',
+	        value: items[i].channelName
+	      }).appendTo($('#selectC'));
+	}
+	alert(channelListStr[0].scopeCityCode); */
+	//$price.hide();
+	var serviceType = $('.serviceType:checked').val();
+	//alert(serviceType);
+	//$(".serviceType").each(callback, args)
+	
 	var $price = $(vart).next().next();		//最优通道显示区
 	if($(vart).next().is(':hidden')){
 		var operatorType = $("li.active").children('span').eq(0).html().trim();
 		var scopeCityCode = $(vart).val().trim();
+		//alert(scopeCityCode);
 		 $.ajax( {    
 	        "type": "get",     
 	        "contentType": "application/x-www-form-urlencoded; charset=utf-8",    
-	        "url": "/flowsys/rate/get_best_channel.do?operatorType="+operatorType+"&scopeCityCode="+scopeCityCode,     
+	        "url": "/flowsys/rate/get_best_channel.do?operatorType="+operatorType+"&scopeCityCode="+scopeCityCode+"&serviceType="+serviceType,     
 	        "dataType": "json",    
 	        "success": function(resp) { 
-	        	
-	        	/* if(typeof(resp[0]) == "undefined"){
-	        		$price.html(resp.discount);
-	        	}else{
-	        		var msgt = resp[0].trim();
-	        		if(msgt == "error"){
-		        		$price.html("没有通道信息");
-		        	}
-	        	}
-	        	$price.show(); */
-	        	alert("success");
+	        	//alert(resp);
+	        	 $.each(resp, function(i, item) {
+	        		 $("#selectC").empty();
+		              $("#selectC").append("<option value="+item.channelId+">" + item.channelName + "</option>");
+	             });
+	        	$price.show();
+	        	//alert("success");
 	        },
 	        "error":function(msg){
 	        	alert(msg);
 	        }
-	    }); 
-	
-		//$(vart).next().show();
+	    });  
+		$(".disscount").hide();//其他折扣编辑框隐藏
+		$(vart).next().show();
+		$(vart).attr("checked",true);
 	}else{
-		//$(vart).next().hide();
-		//$price.hide();
+		$(vart).next().hide();
+		$price.hide();
+		$(vart).attr("checked",false);
 	}
 } 
 

@@ -6,21 +6,22 @@
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.activity.pojo.RateDiscountPo" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="operator_type" property="operatorType" jdbcType="INTEGER" />
+    <result column="service_type" property="serviceType" jdbcType="INTEGER" />
     <result column="scope_city_code" property="scopeCityCode" jdbcType="VARCHAR" />
     <result column="active_discount" property="activeDiscount" jdbcType="DOUBLE" />
-    <result column="active_channel_id" property="activeChannelId" jdbcType="BIGINT" />
+    <result column="active_id" property="activeId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, operator_type, scope_city_code, active_discount, active_channel_id
+    id, operator_type, scope_city_code, active_discount, active_id
   </sql>
   <!-- 批量添加费率折扣 -->
    <insert id="rate_addList" useGeneratedKeys="true" parameterType="java.util.List">
   	insert into <include refid="t_rateD"></include>
-  	(operator_type, scope_city_code, active_discount, active_channel_id)
+  	(operator_type,service_type, scope_city_code, active_discount, active_id)
   	values
   	<foreach collection="list" separator="," item="rateD" index="index">
-  		(#{rateD.operatorType},#{rateD.scopeCityCode},#{rateD.activeDiscount},
-  		#{rateD.activeChannelId})
+  		(#{rateD.operatorType},#{rateD.serviceType},#{rateD.scopeCityCode},#{rateD.activeDiscount},
+  		#{rateD.activeId})
   	</foreach>
   </insert>
  <!--  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
