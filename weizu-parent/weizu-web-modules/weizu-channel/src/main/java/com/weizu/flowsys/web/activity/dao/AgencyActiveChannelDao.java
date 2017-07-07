@@ -18,6 +18,16 @@ public interface AgencyActiveChannelDao extends Dao<AgencyActiveChannelPo, Long>
 	 */
 	List<AgencyActiveChannelPo> listActive(Map<String, Object> paramsMap);
 	
+	
+	/**
+	 * @description: 查询代理商参与的活动通道(不分页)
+	 * @param paramsMap
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月7日 下午7:08:32
+	 */
+	List<AgencyActiveChannelPo> listActiveDiscount(Map<String, Object> paramsMap);
+	
 	/**
 	 * @description: 根据参数获得总记录数
 	 * @param activePo
@@ -26,4 +36,5 @@ public interface AgencyActiveChannelDao extends Dao<AgencyActiveChannelPo, Long>
 	 * @createTime:2017年7月5日 下午6:11:41
 	 */
 	int countActive(AgencyActiveChannelPo activePo);
+	
 }

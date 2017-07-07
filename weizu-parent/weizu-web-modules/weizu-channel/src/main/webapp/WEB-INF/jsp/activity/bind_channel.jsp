@@ -28,88 +28,6 @@
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
 <!--/meta 作为公共模版分离出去-->
-<style type="text/css">
-	.demo{padding: 1em 0;}
-	a:hover,a:focus{
-		outline: none;
-		text-decoration: none;
-	}
-	.tab .nav-tabs{
-		border: 1px solid #1fc1dd;
-	}
-	.tab .nav-tabs li{
-		margin: 0;
-	}
-	.tab .nav-tabs li a{
-		font-size: 14px;
-		color: #999898;
-		background: #fff;
-		margin: 0;
-		padding: 20px 25px;
-		border-radius: 0;
-		border: none;
-		border-right: 1px solid #ddd;
-		text-transform: uppercase;
-		position: relative;
-	}
-	.tab .nav-tabs li a:hover{
-		border-top: none;
-		border-bottom: none;
-		border-right-color: #ddd;
-	}
-	.tab .nav-tabs li.active a,
-	.tab .nav-tabs li.active a:hover{
-		color: #fff;
-		border: none;
-		background: #1fc1dd;
-		border-right: 1px solid #ddd;
-	}
-	.tab .nav-tabs li.active a:before{
-		content: "";
-		width: 58%;
-		height: 4px;
-		background: #fff;
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		margin: 0 auto;
-	}
-	.tab .nav-tabs li.active a:after{
-		content: "";
-		border-top: 10px solid #1fc1dd;
-		border-left: 10px solid transparent;
-		border-right: 10px solid transparent;
-		position: absolute;
-		bottom: -10px;
-		left: 43%;
-	}
-	.tab .tab-content{
-		font-size: 13px;
-		color: #999898;
-		line-height: 25px;
-		background: #fff;
-		padding: 20px;
-		border: 1px solid #1fc1dd;
-		border-top: none;
-	}
-	.tab .tab-content h3{
-		font-size: 24px;
-		color: #999898;
-		margin-top: 0;
-	}
-	@media only screen and (max-width: 480px){
-		.tab .nav-tabs li{
-			width: 100%;
-			text-align: center;
-		}
-		.tab .nav-tabs li.active a,
-		.tab .nav-tabs li.active a:after,
-		.tab .nav-tabs li.active a:hover{
-			border: none;
-		}
-	}
-</style>
 
 <title>添加费率</title>
 <meta name="keywords" content="H-ui.admin 3.0,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
@@ -117,25 +35,13 @@
 </head>
 <body>
 <article class="page-container">
-	<form action="/flowsys/rate/rate_add.do" method="post" class="form form-horizontal" id="form-member-add" onsubmit="return changeName()">
+	<form action="/flowsys/rate/bind_channel.do" method="post" class="form form-horizontal" id="form-member-add" onsubmit="return changeName()">
 		<!-- 代理商id，方便自动绑定费率 -->
 		<%-- <input type="hidden" value="${resultMap.agencyId }"placeholder=""name="id"> --%>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">代理商名称：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" readonly="readonly" class="input-text  ac_input" autocomplete="off" value="${childAgencyName }" id="childAgencyName" name="">
-			</div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流量类型：</label>
-			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
-				<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceEnum" varStatus="vs">
-					<div class="radio-box">
-						<input class="serviceType" name="serviceType" class="radioItem" type="radio" id="serviceType-${vs.index }" value="${serviceEnum.value }" ><!-- <c:if test="${vs.index==0 }">checked</c:if> -->
-						${serviceEnum.desc }
-						<%-- <label for="operatorType-${vs.index }"></label> --%>
-					</div>
-				</c:forEach>
 			</div>
 		</div>
 		
@@ -180,6 +86,54 @@
 			</div>
 		</c:forEach>  --%>
 		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>运营商类型：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<c:forEach items="${resultMap.operatorTypes }" var="operatorEnum" varStatus="vs">
+					<div class="radio-box">
+						<input name="operatorType" class="radioItem" type="radio" id="operatorType-${vs.index }" value="${operatorEnum.value }" <c:if test="${vs.index==0 }">checked</c:if> >
+						${operatorEnum.desc }
+						<%-- <label for="operatorType-${vs.index }"></label> --%>
+					</div>
+				</c:forEach>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流量类型：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceEnum" varStatus="vs">
+					<div class="radio-box">
+						<input class="radioItem" name="serviceType"  <c:if test="${vs.index==0 }">checked</c:if> type="radio"  value="${serviceEnum.value }" ><!-- <c:if test="${vs.index==0 }">checked</c:if> -->
+						${serviceEnum.desc }
+						<%-- <label for="operatorType-${vs.index }"></label> --%>
+					</div>
+				</c:forEach>
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>费率：</label><br>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+			<table>
+				<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum" varStatus="vs">
+					<c:if test="${vs.index % 4==0 }"><tr></c:if>
+						<td> 
+							<div class="radio-box">
+								<input class="radioItem" type="radio" name="cityCode" id="scopeCityCode-${vs.index }" value="${scopeCityEnum.value }">
+								${scopeCityEnum.desc }
+								<%-- <label for="operatorType-${vs.index }"></label> --%>
+								<!-- 输入两位折扣数字 -->
+								<input class="disscount" style="display: none; width:50px;" type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
+							</div>
+						</td>
+					<c:if test="${(vs.index+1) % 4==0 }"></tr></c:if>
+					<!-- <div class="formControls col-xs-3 col-sm-3">
+						<input type="text" placeholder="1.00" name="channelDiscount" id="channelDiscount">
+					</div> -->
+				</c:forEach>
+			</table>
+			</div>
+		</div>
+		<%-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">费率：</label>
 			<div role="tabpanel" class="tab formControls col-xs-8 col-sm-9 skin-minimal">
 					<!-- Nav tabs -->
@@ -193,9 +147,9 @@
 							</li>
 						</c:forEach>
 					</ul>
-					<%-- <span id="operatorTypesE"> ${resultMap.operatorTypes }</span> --%>
+					<span id="operatorTypesE"> ${resultMap.operatorTypes }</span>
 					<!-- Tab panes -->
-					<%-- <div class="row cl">
+					<div class="row cl">
 						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流量类型：</label>
 						<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 							<c:forEach items="${resultMap.serviceTypes }" var="serviceEnum" varStatus="vs">
@@ -206,8 +160,8 @@
 								</div>
 							</c:forEach>
 						</div>
-					</div> --%>
-					<div class="tab-content tabs">
+					</div>
+					<div class="tab-content tabs discount">
 						<c:forEach items="${resultMap.operatorTypes }" var="operatorTypeEnum" varStatus="vst">
 							<c:choose>
 								<c:when test="${vst.index==0 }">
@@ -217,11 +171,12 @@
 											<c:if test="${vs.index % 4==0 }"><tr></c:if>
 												<td> 
 													<div class="radio-box">
-														<input class="cbox0" name="cityCode" onClick="checkBoxes(this)" type="radio" id="scopeCityName-${vs.index }" value="${scopeCityEnum.value }">
+														<input class="cbox0" name="cityCode${vst.index }" onClick="checkBoxes(this)" type="checkbox" id="scopeCityName-${vs.index }" value="${scopeCityEnum.value }">
 														${scopeCityEnum.desc }
-														<%-- <label for="operatorType-${vs.index }"></label> --%>
+														<label for="operatorType-${vs.index }"></label>
 														<!-- 输入两位折扣数字 -->
 														<input class="disscount" style="display: none; " type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
+														<input name="operatorType${vst.index }" value="${operatorTypeEnum.value }" id="operatorType${vst.index }" type="hidden" ><!-- 设置运营商类型 -->
 														<!-- 显示平台和通道折扣 -->
 														<span class="price" style="display: none; "></span>
 													</div>
@@ -238,11 +193,12 @@
 											<c:if test="${vs.index % 4==0 }"><tr></c:if>
 												<td> 
 													<div class="radio-box">
-														<input class="cbox${vst.index }" name="cityCode"  onClick="checkBoxes(this)" type="radio" id="scopeCityName-${vs.index }" value="${scopeCityEnum.value }">
+														<input class="cbox${vst.index }" name="cityCode${vst.index }"  onClick="checkBoxes(this)" type="checkbox" id="scopeCityName-${vs.index }" value="${scopeCityEnum.value }">
 														${scopeCityEnum.desc }
-														<%-- <label for="operatorType-${vs.index }"></label> --%>
+														<label for="operatorType-${vs.index }"></label>
 														<!-- 输入两位折扣数字 -->
 														<input class="disscount" style="display: none; " type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
+														<input name="operatorType${vst.index }" value="${operatorTypeEnum.value }" id="operatorType${vst.index }" type="hidden" ><!-- 设置运营商类型 -->
 														<!-- 显示平台和通道折扣 -->
 														<span class="price" style="display: none; "></span>
 													</div>
@@ -253,13 +209,15 @@
 									</div>
 								</c:otherwise>
 								</c:choose>
+								
 						</c:forEach>
-					</div>
+					</div> 
 				</div>
-				</div>
+				
+				</div>--%>
 				<div class="row cl">  通道名称：
 					 <span class="select-box inline">
-						<select id="selectC" name="channelId" class="select">
+						<select id="selectC" onchange="initChannelName()" name="channelId" class="select">
 							<option value="">通道</option>
 							<%-- <c:forEach items="${resultMap.channelList }" var="channel" varStatus="vs1">
 								<option value="${channel.id }" >${channel.channelName }</option>
@@ -267,115 +225,10 @@
 						</select>
 					</span> 
 				</div>
-			<%-- <div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">费率：</label>
-			<div role="tabpanel" class="tab formControls col-xs-8 col-sm-9 skin-minimal">
-					<!-- Nav tabs -->
-					<ul class="nav nav-tabs" role="tablist">
-						<c:forEach items="${resultMap.operatorTypes }" var="operatorTypeEnum" varStatus="vs">
-							<li role="presentation" class="<c:if test='${vs.index==0 }'>active</c:if>">
-								<a class="operator" href="#Section${vs.index+1}" aria-controls="home" role="tab" data-toggle="tab">
-									${operatorTypeEnum.desc}
-								</a>
-								<span style="display:none">${operatorTypeEnum.value}</span>
-							</li>
-						</c:forEach>
-					</ul>
-					<span id="operatorTypesE"> ${resultMap.operatorTypes }</span>
-					<!-- Tab panes -->
-					<div class="tab-content tabs">
-						<c:forEach items="${resultMap.operatorTypes }" var="operatorTypeEnum" varStatus="vst">
-							<c:choose>
-								<c:when test="${vst.index==0 }">
-									<div role="tabpanel" class="tab-pane fade in active" id="Section${vst.index+1}">
-										<table>
-											<c:forEach items="${resultMap.scopeCityNames }" var="scopeCityName" varStatus="vs">
-											<c:if test="${vs.index % 4==0 }"><tr></c:if>
-												<td> 
-													<div class="radio-box">
-													<c:forEach items="${resultMap.discountList }" var="opdiscount"  varStatus="vsddd">
-														<!-- 比较字符串是否存在 -->
-														<c:choose>
-															<c:when test="${scopeCityName==opdiscount.scopeName &&  operatorTypeEnum.value==opdiscount.operatorType}">
-																<input class="cbox0" checked="checked" onClick="checkBoxes(this)" type="checkbox" id="scopeCityName-${vs.index }" value="${scopeCityName.desc }">
-																${scopeCityName.desc }
-																<label for="operatorType-${vs.index }"></label>
-																<!-- 输入两位折扣数字 -->
-																<input class="disscount" value="${opdiscount.discount }" type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
-																<!-- 显示平台和通道折扣 -->
-																<span class="price" style="display: none; "></span>
-															</c:when>
-															<c:otherwise>
-																<input class="cbox0" onClick="checkBoxes(this)" type="checkbox" id="scopeCityName-${vs.index }" value="${scopeCityName.desc }">
-																${scopeCityName.desc }
-																<label for="operatorType-${vs.index }"></label>
-																<!-- 输入两位折扣数字 -->
-																<input class="disscount" style="display: none; " type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
-																<!-- 显示平台和通道折扣 -->
-																<span class="price" style="display: none; "></span>
-															</c:otherwise>
-														</c:choose>
-														<c:if test="${operatorTypeEnum.value + scopeCityName == opdiscount.operatorScope}">
-															
-														</c:if>
-													</c:forEach>
-														
-														
-													</div>
-												</td>
-											<c:if test="${vs.index+1 % 4==0 }"></tr></c:if>
-											</c:forEach>
-										</table>
-									</div>
-								</c:when>
-								<c:otherwise>
-									<div role="tabpanel" class="tab-pane fade" id="Section${vst.index+1}">
-										<table>
-											<c:forEach items="${resultMap.scopeCityNames }" var="scopeCityName" varStatus="vs">
-											<c:if test="${vs.index % 4==0 }"><tr></c:if>
-												<td> 
-													<div class="radio-box">
-														<c:forEach items="${resultMap.discountList }" var="opdiscount" varStatus="vssssss">
-														<!-- 比较字符串是否存在 -->
-														<c:choose>
-															<c:when test="${scopeCityName==opdiscount.scopeName &&  operatorTypeEnum.value==opdiscount.operatorType}">
-																<input class="cbox${vst.index }" checked onClick="checkBoxes(this)" type="checkbox" id="scopeCityName-${vs.index }" value="${scopeCityName.desc }">
-																${scopeCityName.desc }<span style="display: none; "></span>
-																<label for="operatorType-${vs.index }"></label>
-																<!-- 输入两位折扣数字 -->
-																<input class="disscount" value="${opdiscount.discount }" type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
-																<!-- 显示平台和通道折扣 -->
-																<span class="price" style="display: none; "></span>
-															</c:when>
-															<c:otherwise>
-																<input class="cbox${vst.index }" onClick="checkBoxes(this)" type="checkbox" id="scopeCityName-${vs.index }" value="${scopeCityName.desc }">
-																${scopeCityName.desc }<span style="display: none; "></span>
-																<label for="operatorType-${vs.index }"></label>
-																<!-- 输入两位折扣数字 -->
-																<input class="disscount" style="display: none; " value="${opdiscount.discount }" type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
-																<!-- 显示平台和通道折扣 -->
-																<span class="price" style="display: none; "></span>
-															</c:otherwise>
-														</c:choose>
-														<c:if test="${operatorTypeEnum.value + scopeCityName == opdiscount.operatorScope}">
-															
-														</c:if>
-													</c:forEach>
-													
-														
-													</div>
-												</td>
-											<c:if test="${vs.index+1 % 4==0 }"></tr></c:if>
-											</c:forEach>
-										</table>
-									</div>
-								</c:otherwise>
-								</c:choose>
-						</c:forEach>
-					</div>
-				</div>
-				</div> --%>
-		<span id="ajaxBestChannel"></span>
+			
+		<span id="setDiscountList"></span>
+		<!-- channelName:通过js代码填充隐藏域的值 -->
+		<input type="hidden" id="channelName" name="channelName" value="" >
 				
 		<!-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">备注：</label>
@@ -384,7 +237,7 @@
 				<p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
 			</div>
 		</div> -->
-		<input type="text" id="channelListStr" value="${resultMap.channelListStr }">
+		<%-- <input type="text" id="channelListStr" value="${resultMap.channelListStr }"> --%>
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
 				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
@@ -410,10 +263,51 @@
 $(document).ready(function(){
 
 });
-
+/**通道选择onchange事件 */
+function initChannelName(){
+	var channelName = $("#selectC").find("option:selected").text();
+	alert(channelName);
+	$("#channelName").val(channelName);
+}
 function changeName(){
+	var i = 0;
+	$(".disscount").each(function(){
+    	if($(this).is(':visible')){ 
+    		$('<input />', {
+    	        name: 'activeDiscount',
+    	        id: 'activeDiscount',
+    	        type: 'hidden',
+    	        value: $(this).val()
+    	      }).appendTo($('#setDiscountList'));
+    		$('<input />', {
+    	        name: 'scopeCityCode',
+    	        type: 'hidden',
+    	        value: $(this).prev().val()
+    	      }).appendTo($('#setDiscountList'));
+    		if($(this).val() != ""){
+	    		i++;
+    		}
+    		/* if($(this).next().val() != null && $(this).next().val() != "")
+			{
+    			alert($(this).next().val());
+	    		i++;
+			} */
+    		//alert('discountList['+ i +'].scopeCityName');
+    	}
+	})
+	if(i > 0){
+		//alert(i);
+		return true;
+	}else{
+		alert("没有配置地区折扣")	;
+		return false;
+	}
+}
+
+/**费率型*/
+/* function changeName(){
 	var j = 0;//统计总共有多少家运营商有折扣配置
-	var m = 0;	//cbox下标
+	var m = 0;	//cbox下标(运营商下标)
 	$(".operator").each(function(){
 		var i = 0;//统计某个运营商有多少个折扣
 		//alert($(".cbox"+m).attr('class'));
@@ -421,29 +315,32 @@ function changeName(){
 			//alert($(this));
 	    	if($(this).is(':checked')){ 
 	    		$('<input />', {
-	    	        name: 'discountList['+ i +'].channelDiscount',
-	    	        id: 'channelDiscount-'+ i,
+	    	        name: 'rateList'+m+'['+ i +'].activeDiscount',
+	    	        id: 'activeDiscount-'+ i,
 	    	        type: 'hidden',
 	    	        value: $(this).next().val()
-	    	        
-	    	      }).appendTo($('#ajaxBestChannel'));
+	    	      }).appendTo($('#setDiscountList'));
 	    		$('<input />', {
-	    	        name: 'discountList['+ i +'].scopeCityCode',
+	    	        name: 'rateList'+m+'['+ i +'].scopeCityCode',
 	    	        type: 'hidden',
 	    	        value: $(this).val()
-	    	      }).appendTo($('#ajaxBestChannel'));
-	    		i++;
+	    	      }).appendTo($('#setDiscountList'));
+	    		if($(this).next().val() != null && $(this).next().val() != "")
+    			{
+	    			alert($(this).next().val());
+		    		i++;
+    			}
 	    	}
 		})
 		
 		if(i > 0){//在存在折扣的情况下，开始增加运营商
-			$('<input />', {
-		        name: 'discountList['+ j +'].operatorType',
+			/* $('<input />', {
+		        name: 'rateList['+ j +'].operatorType',
 		        type: 'hidden',
 		        value: $(this).next().html().trim()
-		      }).appendTo($('#ajaxBestChannel'));
-			j++;
-		}
+		      }).appendTo($('#setDiscountList')); */
+		      /* j++;
+		} 
 		m++;
 		//alert("i="+i + "j=" + j);
 	})
@@ -462,87 +359,59 @@ function changeName(){
 			
 		}
 	}) */
-	
+	/* 
 	
 	if(j>0){
 		return true;
 	}
 	return false;
-}
+} */
 /**checkBox的点击事件*/
-function checkBoxes(vart){
-	/* var channelListStr = $("#channelListStr").val();
-	alert(items);
-	var items = new Array();
-	$.ajax( {    
-        "type": "get",     
-        "contentType": "application/x-www-form-urlencoded; charset=utf-8",    
-        "url": "/flowsys/rate/get_best_channel.do?operatorType="+,     
-        "dataType": "json",    
-        "success": function(resp) { 
-        	 $.each(data.comments, function(i, item) {
-	              $("#selectC").append("<option value="+item.channelId+">" + item.channelName + "</option>")
-             });
-        	/* if(typeof(resp[0]) == "undefined"){
-        		$price.html(resp.discount);
-        	}else{
-        		var msgt = resp[0].trim();
-        		if(msgt == "error"){
-	        		$price.html("没有通道信息");
-	        	}
-        	} 
-        	$price.show(); 
-        	//alert("success");
-        },
-        "error":function(msg){
-        	alert(msg);
-        }
-    }); */
-	/* for(var i=0; i < items.length; i++){
-		$('<input />', {
-	        name: 'discountList['+ j +'].operatorType',
-	        type: 'hidden',
-	        value: items[i].channelName
-	      }).appendTo($('#selectC'));
-	}
-	alert(channelListStr[0].scopeCityCode); */
-	//$price.hide();
-	var serviceType = $('.serviceType:checked').val();
-	//alert(serviceType);
-	//$(".serviceType").each(callback, args)
-	
-	var $price = $(vart).next().next();		//最优通道显示区
-	if($(vart).next().is(':hidden')){
-		var operatorType = $("li.active").children('span').eq(0).html().trim();
-		var scopeCityCode = $(vart).val().trim();
-		//alert(scopeCityCode);
-		 $.ajax( {    
-	        "type": "get",     
-	        "contentType": "application/x-www-form-urlencoded; charset=utf-8",    
-	        "url": "/flowsys/rate/get_best_channel.do?operatorType="+operatorType+"&scopeCityCode="+scopeCityCode+"&serviceType="+serviceType,     
-	        "dataType": "json",    
-	        "success": function(resp) { 
-	        	//alert(resp);
-	        	 $.each(resp, function(i, item) {
-	        		 $("#selectC").empty();
-		              $("#selectC").append("<option value="+item.channelId+">" + item.channelName + "</option>");
-	             });
-	        	$price.show();
-	        	//alert("success");
-	        },
-	        "error":function(msg){
-	        	alert(msg);
-	        }
-	    });  
-		$(".disscount").hide();//其他折扣编辑框隐藏
-		$(vart).next().show();
-		$(vart).attr("checked",true);
-	}else{
-		$(vart).next().hide();
-		$price.hide();
-		$(vart).attr("checked",false);
-	}
-} 
+$(".radioItem").change( 
+	function(){	
+		 var operatorType = $("input[name='operatorType']:checked").val();
+		 var serviceType = $("input[name='serviceType']:checked").val();
+		//alert(serviceType);
+		var $price = $("input[name='cityCode']:checked").next().next();		//最优通道显示区
+		//alert(operatorType);
+		if($("input[name='cityCode']:checked").next().is(':hidden')){
+			var cityCode = $("input[name='cityCode']:checked").val().trim();
+			//alert(cityCode);
+			 $.ajax( {    
+		        "type": "get",     
+		        "contentType": "application/x-www-form-urlencoded; charset=utf-8",    
+		        "url": "/flowsys/rate/get_best_channel.do?operatorType="+operatorType+"&scopeCityCode="+cityCode+"&serviceType="+serviceType,     
+		        "dataType": "json",  
+		        "async": false,  
+		        "success": function(resp) { 
+		        	//alert(resp);
+		        	 $.each(resp, function(i, item) {
+		        		 if(item != null)
+	        			 {
+	        				//alert(item.channelName);
+	        				$("#channelName").val(item.channelName);
+	        			 }
+		        		 $("#selectC").empty();
+			              $("#selectC").append("<option class='rate' value='"+item.id+"'>" + item.channelName + "</option>");//"+ operatorType +"
+		             });
+		        	$price.show();
+		        	//alert("success");
+		        },
+		        "error":function(msg){
+		        	alert(msg);
+		        }
+		    });  
+			$(".disscount").hide();
+			$("input[name='cityCode']:checked").next().show();	
+		}else{
+			$("input[name='cityCode']:checked").next().hide();
+			$price.hide();
+			$("input[name='cityCode']:checked").attr("checked",false);
+			$("#selectC").empty();
+			$("#selectC").append("<option value=''>通道</option>");
+		}
+	});
+
 
 
 </script>

@@ -91,8 +91,8 @@
 							</c:forEach>
 						</td>  --%>
 						<td  class="text-l">${activePo.discountPo.discount0 }</td>
-						 <td class="text-l">${activePo.discountPo.discount0 }</td>
-						<td class="text-l">${activePo.discountPo.discount0 }</td>
+						 <td class="text-l">${activePo.discountPo.discount1 }</td>
+						<td class="text-l">${activePo.discountPo.discount2 }</td>
 						<td>${activePo.activeTimeStr }</td>
 						
 						<td class="td-manage"><a style="text-decoration:none" onClick="article_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
@@ -116,7 +116,7 @@
 				
 			</tbody>
 		</table>
-		<mytag:Pagination pagination="${resultMap.pagination}" queryForm="" divId="rateId" />
+		<mytag:Pagination pagination="${resultMap.pagination}" queryForm="queryForm" divId="rateId" />
 	</div>
 </div>
 <!--_footer 作为公共模版分离出去-->

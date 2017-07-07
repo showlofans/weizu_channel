@@ -45,6 +45,20 @@ public class AgencyActiveChannelDaoImpl extends DaoImpl<AgencyActiveChannelPo, L
 	public int countActive(AgencyActiveChannelPo activePo) {
 		return sqlSessionTemplate.selectOne("countActive", activePo);
 	}
+
+	/**
+	 * @description: 查询代理商参与的活动通道(不分页)
+	 * @param paramsMap
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月7日 下午7:09:00
+	 */
+	@Override
+	public List<AgencyActiveChannelPo> listActiveDiscount(
+			Map<String, Object> paramsMap) {
+		
+		return sqlSessionTemplate.selectList("listActiveDiscount",paramsMap);
+	}
 	
 	
 }

@@ -87,6 +87,8 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 		//初始化通道状态和使用状态
 		channelPo.setChannelUseState(0);
 		channelPo.setChannelState(0);
+		String serviceType = ServiceTypeEnum.getEnum(channelPo.getServiceType()).getDesc();
+		channelPo.setChannelName(serviceType +"-"+channelPo.getChannelName());
 		return channelChannelDao.channel_addList(channelPo);
 	}
 

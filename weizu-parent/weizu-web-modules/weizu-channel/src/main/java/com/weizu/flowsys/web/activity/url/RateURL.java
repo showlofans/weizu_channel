@@ -50,7 +50,8 @@ public class RateURL extends BaseURL {
 	 */
 	public static final String BIND_CHANNEL_PAGE = "/bind_channel_page" + DYNAMIC_WEB_SUFFIX;
 	/**
-	 * 通道配置费率
+	 * 通道配置费率<br>
+	 * /flowsys/rate/bind_channel.do
 	 */
 	public static final String BIND_CHANNEL = "/bind_channel" + DYNAMIC_WEB_SUFFIX;
 

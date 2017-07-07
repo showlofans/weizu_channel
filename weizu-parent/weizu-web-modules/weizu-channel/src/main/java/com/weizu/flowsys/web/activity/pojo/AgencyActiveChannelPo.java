@@ -33,17 +33,83 @@ public class AgencyActiveChannelPo extends Po {
     private String activeTimeStr;				//（页面参数）
     
     @TempField
-    private DiscountPo discountPo;				//折扣实体
+    private DiscountPo discountPo;				//页面折扣实体（移动，联通，电信）
     
     @TempField//插入的时候不添加进去
-    private List<RateDiscountPo> rateList;
+    private List<RateDiscountPo> rateList0;		//批量添加折扣的数据（移动）
+    
+    @TempField//插入的时候不添加进去
+    private List<RateDiscountPo> rateList1;		//批量添加折扣的数据（联通）
+    
+    @TempField//插入的时候不添加进去
+    private List<RateDiscountPo> rateList2;		//批量添加折扣的数据（电信）
+    
+    @TempField
+    private List<RateDiscountPo> rateList;		//数据库查询返回的参数(通道包涵的所有折扣)-页面参数
+    
+//    @TempField
+//    private RateDiscountPo rateDiscountPo;		//新增一个地区的折扣-页面参数
+    
+    @TempField
+    private Integer operatorType;				//运营商类型（页面参数）
+    
+    @TempField
+    private Integer serviceType;				//业务类型
+    
+//	public RateDiscountPo getRateDiscountPo() {
+//		return rateDiscountPo;
+//	}
+//
+//	public void setRateDiscountPo(RateDiscountPo rateDiscountPo) {
+//		this.rateDiscountPo = rateDiscountPo;
+//	}
 
-    public List<RateDiscountPo> getRateList() {
+	public List<RateDiscountPo> getRateList() {
 		return rateList;
 	}
 
 	public void setRateList(List<RateDiscountPo> rateList) {
 		this.rateList = rateList;
+	}
+
+	public List<RateDiscountPo> getRateList0() {
+		return rateList0;
+	}
+
+	public void setRateList0(List<RateDiscountPo> rateList0) {
+		this.rateList0 = rateList0;
+	}
+
+	public List<RateDiscountPo> getRateList1() {
+		return rateList1;
+	}
+
+	public void setRateList1(List<RateDiscountPo> rateList1) {
+		this.rateList1 = rateList1;
+	}
+
+	public List<RateDiscountPo> getRateList2() {
+		return rateList2;
+	}
+
+	public void setRateList2(List<RateDiscountPo> rateList2) {
+		this.rateList2 = rateList2;
+	}
+
+	public Integer getServiceType() {
+		return serviceType;
+	}
+
+	public void setServiceType(Integer serviceType) {
+		this.serviceType = serviceType;
+	}
+
+	public Integer getOperatorType() {
+		return operatorType;
+	}
+
+	public void setOperatorType(Integer operatorType) {
+		this.operatorType = operatorType;
 	}
 	
 	public String getActiveTimeStr() {

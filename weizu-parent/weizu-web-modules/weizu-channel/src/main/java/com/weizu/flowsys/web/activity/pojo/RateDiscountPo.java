@@ -24,8 +24,22 @@ public class RateDiscountPo extends Po {
     private Double activeDiscount;
 
     private Long activeId;
+    
+    public RateDiscountPo() {
+		super();
+	}
 
-    public Integer getServiceType() {
+	public RateDiscountPo(Integer serviceType, Integer operatorType,
+			String scopeCityCode, Double activeDiscount, Long activeId) {
+		super();
+		this.serviceType = serviceType;
+		this.operatorType = operatorType;
+		this.scopeCityCode = scopeCityCode;
+		this.activeDiscount = activeDiscount;
+		this.activeId = activeId;
+	}
+
+	public Integer getServiceType() {
 		return serviceType;
 	}
 

@@ -128,7 +128,7 @@
 		<dd>
 			<ul>
 				<!-- <li><a data-href="/flowsys/account/open_company_account_page.do" data-title="认证信息" href="javascript:void(0)">认证信息</a></li> -->
-				<c:if test="${chargeAccount1 == null }">
+				<c:if test="${chargeAccount1 == null && companyAccount == 'yes' }">
 					<li><a data-href="/flowsys/account/open_company_account_page.do" data-title="开通对公账号" href="javascript:void(0)">开通对公账号</a></li>
 				</c:if>
 				<li><a data-href="/flowsys/account/consume_list.do" data-title="消费记录" href="javascript:void(0)">消费记录</a></li>
@@ -249,9 +249,9 @@ function myselfinfo(){
         maxmin: false,
         closeBtn: 1,
         content: '/flowsys/agency/agency_info.do',
-        /* end: function () {
+        end: function () {
             location.reload();
-        } */
+        }
     });
 }
 

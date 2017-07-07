@@ -33,6 +33,7 @@ import com.weizu.flowsys.web.activity.pojo.AgencyActiveChannelPo;
 import com.weizu.flowsys.web.activity.pojo.OperatorDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateBackwardPo;
 import com.weizu.flowsys.web.activity.pojo.RateBackwardVo;
+import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateJoinChannelPo;
 import com.weizu.flowsys.web.activity.url.RateURL;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
@@ -421,17 +422,22 @@ public class RateController {
 	}
 	/**
 	 * @description: 代理商绑定通道
-	 * @param rjcp
+	 * @param aacp
 	 * @param response
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月1日 下午12:36:01
 	 */
 	@RequestMapping(value=RateURL.BIND_CHANNEL)
 	@ResponseBody
-	public void rateJoinChannel(RateJoinChannelPo rjcp,HttpServletResponse response, HttpServletRequest request)
+	public void rateJoinChannel(AgencyActiveChannelPo aacp,RateDiscountPo rateDiscountPo,HttpServletResponse response, HttpServletRequest request)
 	{
 		String agencyId = request.getSession().getAttribute("childAgencyId").toString();
 		String agencyName = request.getSession().getAttribute("childAgencyName").toString();
+		
+		aacp.setAgencyId(Integer.parseInt(agencyId));
+		aacp.setAgencyName(agencyName);
+		int bindRes = agencyActiveChannelAO.bindChannel(aacp,rateDiscountPo);
+		
 		try {
 			response.getWriter().print("success");
 		} catch (IOException e) {
