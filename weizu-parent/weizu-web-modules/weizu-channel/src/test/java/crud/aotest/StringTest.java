@@ -2,6 +2,8 @@ package crud.aotest;
 
 import java.util.Random;
 
+import com.weizu.flowsys.util.StringUtil2;
+
 public class StringTest {
 
 //	//使用到Algerian字体，系统里没有的话需要安装字体，字体只显示大写，去掉了1,0,i,o几个容易混淆的字符
@@ -60,7 +62,9 @@ public class StringTest {
 //    	return str.length();
 //    }
 //
-//	public static void main(String[] args) {
+	public static void main(String[] args) {
+		
+//		System.out.println(StringUtil2.getDiscount(21d));
 ////		Random r = new Random(1+5);
 ////		System.out.println(r.nextInt());
 ////		System.out.println(generateVerifyCode(4));
@@ -80,5 +84,5 @@ public class StringTest {
 //		
 ////		Calendar todayStart = Calendar.getInstance();
 ////		System.out.println(DateUtil.formatAll(todayStart.getTime()));
-//	}
+	}
 }

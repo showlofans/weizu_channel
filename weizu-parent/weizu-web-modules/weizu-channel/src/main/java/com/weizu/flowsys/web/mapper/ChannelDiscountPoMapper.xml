@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weizu.flowsys.web.channel.dao.ChannelDiscountDao" >
+  <sql id="t_cDiscount">channel_discount</sql>
+  
+  <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo" >
+    <result column="id" property="id" jdbcType="BIGINT" />
+    <result column="channel_id" property="channelId" jdbcType="BIGINT" />
+    <result column="scope_city_code" property="scopeCityCode" jdbcType="VARCHAR" />
+    <result column="channel_discount" property="channelDiscount" jdbcType="DOUBLE" />
+    <result column="channel_name" property="channelName" jdbcType="DOUBLE" />
+    <result column="operator_type" property="operatorType" jdbcType="INTEGER" />
+  </resultMap>
+  <!-- 通道折扣批量添加 -->
+  <insert id="discount_addList" useGeneratedKeys="true" parameterType="java.util.List">
+  	insert into <include refid="t_cDiscount"></include>
+  	(channel_id, scope_city_code, channel_discount,channel_name,operator_type)
+  	values
+  	<foreach collection="list" separator="," item="cDiscount" index="index">
+  		(#{cDiscount.channelId},#{cDiscount.scopeCityCode},#{cDiscount.channelDiscount},
+  		#{cDiscount.channelName},#{cDiscount.operatorType})
+  	</foreach>
+  </insert>
+  
+  <!-- <insert id="insert" parameterType="weizu.flowsys.entity.ChannelDiscountPo" >
+    insert into channel_discount (id, channel_id, scope_city_code, 
+      channel_discount)
+    values (#{id,jdbcType=BIGINT}, #{channelId,jdbcType=INTEGER}, #{scopeCityCode,jdbcType=VARCHAR}, 
+      #{channelDiscount,jdbcType=DOUBLE})
+  </insert>
+  <insert id="insertSelective" parameterType="weizu.flowsys.entity.ChannelDiscountPo" >
+    insert into channel_discount
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="channelId != null" >
+        channel_id,
+      </if>
+      <if test="scopeCityCode != null" >
+        scope_city_code,
+      </if>
+      <if test="channelDiscount != null" >
+        channel_discount,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="channelId != null" >
+        #{channelId,jdbcType=INTEGER},
+      </if>
+      <if test="scopeCityCode != null" >
+        #{scopeCityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelDiscount != null" >
+        #{channelDiscount,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert> -->
+</mapper>

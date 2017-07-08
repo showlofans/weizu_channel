@@ -60,20 +60,25 @@
 			<thead>
 				<tr class="text-c">
 					<!-- <th width="80">流量包Id</th> -->
-					<th width="80">ID</th>
-					<th width="80">通道名称</th>
-					<th width="80">交易单数</th>
-					<th width="80">交易总额</th>
+					<th >ID</th>
+					<th >通道名称</th>
+					<th >交易单数</th>
+					<th >交易总额</th>
 					<!-- <th width="120">支持城市</th> -->
-					<th width="60">运营商类型</th>
-					<th width="60">包体类型</th>
-					<th width="60">通道折扣</th>
-					<th width="75">通道余额</th>
-					<th width="60">通道状态</th>
-					<th width="60">通道使用状态</th>
-					<th width="60">通道规格</th>
+					<!-- <th width="60">运营商类型</th> -->
+					<!-- <th width="60">包体类型</th> -->
+					<th>移动</th>
+					<th>联通</th>
+					<th>电信</th>
+					<th>通道余额</th>
+					<th>通道利润</th>
+					<th>通道状态</th>
+					<th>通道使用状态</th>
+					<th>通道类型</th>
+					<!-- <th>修改时间</th> -->
+					<th>通道规格</th>
 					
-					<th width="120">操作</th>
+					<th>操作</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -83,8 +88,13 @@
 						<td>${channel.channelName }</td>
 						<td>${channel.channelTotalUse }</td>
 						<td>${channel.channelTotalAmount }</td>
+						<td>${channel.discountPo.discount0 }</td>
+						<td>${channel.discountPo.discount1 }</td>
+						<td>${channel.discountPo.discount2 }</td>
+						<td>${channel.channelTotalProfit }</td>
+						<td>${channel.channelBalance }</td> 
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
-						<td>
+						<%-- <td>
 							<c:forEach items="${resultMap.operatorTypeEnums }" var="operatorType" varStatus="vs1">
 							<c:if test="${channel.operatorType == operatorType.value }"> ${operatorType.desc }</c:if>
 							</c:forEach>
@@ -94,8 +104,8 @@
 								<c:if test="${channel.serviceType == serviceTypeEnum.value }"> ${serviceTypeEnum.desc }</c:if>
 							</c:forEach>
 						</td>
-						<td>"${channel.scopeCityName }" : "${channel.channelDiscount}"</td> 
-						<td>${channel.channelBalance }</td> 
+						<td>"${channel.scopeCityName }" : "${channel.channelDiscount}"</td>  --%>
+						
 						
 						<td class="td-status">
 							<c:forEach items="${resultMap.channelStateEnums }" var="cState" varStatus="vs1">
@@ -109,6 +119,7 @@
 								<c:if test="${channel.channelUseState == cUseState.value  && channel.channelUseState==1}"> <span class="label radius">${cUseState.desc }</span></c:if>
 							</c:forEach>
 						</td>
+						<td>${channel.billType }</td>
 						<td>${channel.pgSize }</td>
 					<!-- 	<td class="td-status"><span class="label label-success radius">已发布</span></td> -->
 						<td class="f-14 td-manage">
@@ -137,6 +148,8 @@
 							</a> 
 						</c:if>
 						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="channel_stop('/flowsys/channel/channel_delete.do',${channel.id})" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
+						<!-- <a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5"  href="javascript:;" title="折扣编辑"><i class="Hui-iconfont">&#xe6df;</i></a> --> 
+						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="/flowsys/rate/bind_channel_list.do?bindTag=bAgency&channelId=${channel.id }" onclick="Hui_admin_tab(this)" title="绑定代理商"><i class="Hui-iconfont">&#xe6df;</i></a>
 						<!-- <a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a> -->
 						</td>
 					</tr>

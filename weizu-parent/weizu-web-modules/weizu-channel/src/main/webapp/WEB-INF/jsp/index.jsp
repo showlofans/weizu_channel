@@ -87,7 +87,7 @@
 				<ul>
 					<li><a data-href="/flowsys/channel/channel_add_page.do" data-title="通道添加" href="javascript:void(0)">通道添加</a></li>
 					<li><a data-href="/flowsys/channel/channel_list.do" data-title="通道列表" href="javascript:void(0)">通道列表</a></li>
-					<li><a data-href="/flowsys/channel/activity_channel_list.do" data-title="活动通道" href="javascript:void(0)">活动通道</a></li>
+					<li><a data-href="/flowsys/rate/bind_channel_list.do?bindTag=bAgency" data-title="活动通道" href="javascript:void(0)">活动通道</a></li>
 					<c:if test="${power== 'no'}">
 						<li><a data-href="/flowsys/platform/platform_list.do" data-title="对接平台管理" href="javascript:void(0)">对接平台管理</a></li>
 						<li><a data-href="/flowsys/productCode/product_code_list.do" data-title="产品编码" href="javascript:void(0)">产品编码</a></li>
@@ -102,7 +102,7 @@
 					<li><a data-href="/flowsys/rate/rate_add_page.do" data-title="费率添加" href="javascript:void(0)">费率添加</a></li>
 					<li><a data-href="/flowsys/rate/rate_list.do" data-title="费率列表" href="javascript:void(0)">费率列表</a></li>
 					<li><a data-href="/flowsys/agency/child_agency_list.do" data-title="代理商列表" href="javascript:void(0)">代理商列表</a></li>
-					<li><a data-href="/flowsys/agency/get_tel_location.do" data-title="号码归属地查询" href="javascript:void(0)">号码归属地查询</a></li>
+					<!-- <li><a data-href="/flowsys/agency/get_tel_location.do" data-title="号码归属地查询" href="javascript:void(0)">号码归属地查询</a></li> -->
 			</ul>
 		</dd>
 	</dl>
@@ -128,7 +128,7 @@
 		<dd>
 			<ul>
 				<!-- <li><a data-href="/flowsys/account/open_company_account_page.do" data-title="认证信息" href="javascript:void(0)">认证信息</a></li> -->
-				<c:if test="${chargeAccount1 == null }">
+				<c:if test="${chargeAccount1 == null && companyAccount == 'yes' }">
 					<li><a data-href="/flowsys/account/open_company_account_page.do" data-title="开通对公账号" href="javascript:void(0)">开通对公账号</a></li>
 				</c:if>
 				<li><a data-href="/flowsys/account/consume_list.do" data-title="消费记录" href="javascript:void(0)">消费记录</a></li>
@@ -249,9 +249,9 @@ function myselfinfo(){
         maxmin: false,
         closeBtn: 1,
         content: '/flowsys/agency/agency_info.do',
-        /* end: function () {
+        end: function () {
             location.reload();
-        } */
+        }
     });
 }
 

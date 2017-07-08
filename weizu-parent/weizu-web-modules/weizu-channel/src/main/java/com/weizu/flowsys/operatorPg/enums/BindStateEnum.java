@@ -6,22 +6,22 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @description:费率使用状态枚举
+ * @description:通道代理商绑定状态枚举
  * @projectName:crud
  * @className:PgInServiceEnum.java
  * @author:POP产品研发部 宁强
  * @createTime:2017年4月26日 下午2:33:19
  * @version 1.0
  */
-public enum RateStateEnum {
+public enum BindStateEnum {
 	/**
-	 * 正常状态
+	 * 绑定状态
 	 */
-	OPEN("正常",0),
+	BIND("已绑定",0),
 	/**
-	 * 暂停状态
+	 * 解绑状态
 	 */
-	CLOSE("暂停",1);
+	UNBIND("已解绑",1);
 	/**
 	 * 枚举名称
 	 */
@@ -31,23 +31,23 @@ public enum RateStateEnum {
 	 */
 	private Integer value;
 	
-	private RateStateEnum(String desc, Integer value) {
+	private BindStateEnum(String desc, Integer value) {
 		this.desc = desc;
 		this.value = value;
 	}
-	public static RateStateEnum getEnum(Integer value)
+	public static BindStateEnum getEnum(Integer value)
 	{
 		if (value == null)
 		{
 			return null;
 		}
 
-		RateStateEnum resultEnum = null;
+		BindStateEnum resultEnum = null;
 
 		// 获取附件类型枚举数组
-		RateStateEnum[] enumArray = RateStateEnum.values();
+		BindStateEnum[] enumArray = BindStateEnum.values();
 
-		for (RateStateEnum pgInServiceEnum : enumArray)
+		for (BindStateEnum pgInServiceEnum : enumArray)
 		{
 			if(value.equals(pgInServiceEnum.getValue()))
 			{
@@ -68,12 +68,12 @@ public enum RateStateEnum {
 	public static Map<String, Map<String, Object>> toMap()
 	{
 		// 获取附件类型枚举数组
-		RateStateEnum[] enumArray = RateStateEnum.values();
+		BindStateEnum[] enumArray = BindStateEnum.values();
 
 		// 定义枚举MAP
 		Map<String, Map<String, Object>> enumMap = new HashMap<String, Map<String, Object>>(enumArray.length);
 
-		for (RateStateEnum pgInServiceEnum : enumArray)
+		for (BindStateEnum pgInServiceEnum : enumArray)
 		{
 			String key = String.valueOf(getEnum(pgInServiceEnum.getValue()));
 
@@ -96,12 +96,12 @@ public enum RateStateEnum {
 	public static List<Map<String, Object>> toList()
 	{
 		// 获取附件类型枚举数组
-		RateStateEnum[] enumArray = RateStateEnum.values();
+		BindStateEnum[] enumArray = BindStateEnum.values();
 
 		// 定义枚举list
 		List<Map<String, Object>> attachmentTypeMapList = new ArrayList<Map<String, Object>>(enumArray.length);
 
-		for (RateStateEnum pgInServiceEnum : enumArray)
+		for (BindStateEnum pgInServiceEnum : enumArray)
 		{
 			Map<String, Object> pgInServiceMap = new HashMap<String, Object>(2);
 			pgInServiceMap.put("desc", pgInServiceEnum.getDesc());

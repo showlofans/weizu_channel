@@ -13,7 +13,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form action="/flowsys/agency/agency_edit.do" method="post" class="form form-horizontal" id="form-article-add">
+	<form action="" method="" class="form form-horizontal" id="form-article-add">
 		<input type="hidden" value="${loginContext.id }" name="id">
 		<!-- 不能修改要原样保留的数据 -->
 		<input type="hidden" value="${loginContext.rootAgencyId }" name="rootAgencyId">
@@ -61,19 +61,27 @@
 				</div>
 				<!-- 直接获取 -->
 				<input type="text" style="width:200px" class="input-text" onkeyup="checkVerify()"  value="${loginContext.verifyCode }" placeholder="" id="verifyCode" name="verifyCode">
-					
+				 <button id="copy-button" class="btn btn-primary" data-clipboard-text="Copy Me!" title="Click to copy me." data-clipboard-target="verifyCode">复制</button>
 			</div>
 		</div>
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
-				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+				<button class="btn btn-primary radius" type="submit" onclick="save()"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
 			</div>
 		</div>
 	</form>
 </body>
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
 <script type="text/javascript" src="/view/lib/layer/2.4/layer.js"></script>  
+<script type="text/javascript" src="/view/clipboard/ZeroClipboard.js"></script>  
 <script type="text/javascript">
+var client = new ZeroClipboard(document.getElementById("copy-button"));
+
+client.on("ready", function(readyEvent) {
+	client.on("aftercopy", function(event) {
+		alert("已复制到剪贴板 " + event.data["text/plain"]);
+	});
+});
 ////看邀请码码是否改变
 function checkVerify(evt) {
 	var isVer = confirm("需要重新生成验证码？");
@@ -106,14 +114,16 @@ function getVerifyCode(){
 ///更新信息
 function save(){
 	var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+	//alert(index);
+	
 	$.ajax({
-        type:"post",
-        url:"flowsys/agency/agency_edit.do",
+        type: "post",
         data: $('form').serialize(),//表单数据
-        async : true,
+        url:"/flowsys/agency/agency_edit.do",
+        async : false,
         success:function(d){
-        	alert(d);
-            if(d>0){
+        	//alert(d);
+            if(d == 'success'){
                 layer.msg('保存成功！');//保存成功提示
             }else{
                 layer.msg('保存异常!');

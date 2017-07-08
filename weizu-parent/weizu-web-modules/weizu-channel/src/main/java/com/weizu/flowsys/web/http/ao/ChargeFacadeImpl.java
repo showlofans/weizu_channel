@@ -145,6 +145,37 @@ public class ChargeFacadeImpl implements ChargeFacade {
 		else//开始有订单，也会返回订单
 		{//充值并返回最新的订单（状态）
 			
+			String scopeName = resMap.get("scopeName").toString();
+			String chargeTelCity = resMap.get("chargeTelCity").toString();
+			String chargeTelDetail = resMap.get("chargeTelDetail").toString();
+			
+			OperatorDiscountPo operatorDiscountPo = new OperatorDiscountPo();
+			operatorDiscountPo.setScopeName(scopeName);
+			operatorDiscountPo.setOperatorType(otype);
+			if(billType == BillTypeEnum.CORPORATE_BUSINESS.getValue())
+			{//通过接口传参，传错billType
+				if(backPo.getBillRateId() == null){
+					chargeEnum = ChargeStatusEnum.INVALID_BILL_TYPE;
+					chargeDTO = new ChargeDTO(chargeEnum.getValue(),chargeTelDetail+chargeEnum.getDesc()+":没有开通对公业务", null);
+					return chargeDTO;
+				}else
+				{
+					operatorDiscountPo.setRateId(backPo.getBillRateId());
+				}
+			}else
+			{
+				if(backPo.getRateId() == null)
+				{
+					chargeEnum = ChargeStatusEnum.INVALID_BILL_TYPE;
+					chargeDTO = new ChargeDTO(chargeEnum.getValue(),chargeTelDetail+chargeEnum.getDesc()+":没有开通对私业务", null);
+					return chargeDTO;
+				}else
+				{
+					operatorDiscountPo.setRateId(backPo.getRateId());
+				}
+			}
+			OperatorDiscountPo discountPo = operatorDiscountDao.selectOneDiscountByPo(operatorDiscountPo);
+			
 			PurchasePo purchasePo = new PurchasePo();
 			purchasePo.setOrderArriveTime(System.currentTimeMillis());
 			/**订单号信息添加*/
@@ -154,16 +185,8 @@ public class ChargeFacadeImpl implements ChargeFacade {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			String scopeName = resMap.get("scopeName").toString();
-			String chargeTelCity = resMap.get("chargeTelCity").toString();
-			String chargeTelDetail = resMap.get("chargeTelDetail").toString();
-			purchasePo.setChargeTel(chargeTel);
 			
-			OperatorDiscountPo operatorDiscountPo = new OperatorDiscountPo();
-			operatorDiscountPo.setScopeName(scopeName);
-			operatorDiscountPo.setOperatorType(otype);
-			operatorDiscountPo.setRateId(backPo.getRateId());
-			OperatorDiscountPo discountPo = operatorDiscountDao.selectOneDiscountByPo(operatorDiscountPo);
+			purchasePo.setChargeTel(chargeTel);
 			
 			//没有找到相关地区折扣
 			if(discountPo == null)

@@ -20,6 +20,7 @@ import org.weizu.web.foundation.VerifyCodeUtils;
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.OperatorDiscountAO;
 import com.weizu.flowsys.web.activity.ao.RateBackwardAO;
@@ -124,8 +125,17 @@ public class AgencyController {
 			session.setAttribute("loginContext", agencyVO);// 保存登陆实体到session中
 			
 			if(agencyAO.checkSecondAgency(agencyVO.getId()) == 1){
-				//设置访问权限为限制
+				//设置访问权限为限制(三级代理商)
 				session.setAttribute("power", "limited");
+				ChargeAccountPo parentChargeAccount = chargeAccountAO
+						.getAccountByAgencyId(resultPo.getRootAgencyId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
+				if(parentChargeAccount != null){//父亲代理商有对公账户
+					session.setAttribute("companyAccount", "yes");
+				}else{
+					session.setAttribute("companyAccount", "no");//设置代理商不能开通对公账户
+				}
+				
+				
 			}
 			else{
 				session.setAttribute("power", "no");
@@ -154,6 +164,28 @@ public class AgencyController {
 			request.getSession().setAttribute("rootAgencyId", rootAgencyId);
 		}
 		return new ModelAndView("/agency/register_page");
+	}
+	
+	/**
+	 * @description: 首页展示信息
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月7日 下午6:45:53
+	 */
+	@RequestMapping(value = AgencyURL.WELCOME)
+	public ModelAndView welcomePage(HttpServletRequest request){
+		
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		String power = request.getSession().getAttribute("power").toString();
+		if("limited".equals(power))
+		{//三级代理商
+			
+		}
+//		chargeAccountAO.
+		Map<String,Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("OperatorTypeEnums", OperatorTypeEnum.toList());
+		
+		return new ModelAndView("/agency/welcome_page","resultMap",resultMap);
 	}
 	
 	/**
@@ -340,7 +372,8 @@ public class AgencyController {
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 		AgencyBackwardPo po = new AgencyBackwardPo();
-		po.setUserName(new String(userName.getBytes("iso-8859-1"), "utf-8"));
+//		po.setUserName(new String(userName.getBytes("iso-8859-1"), "utf-8"));
+		po.setUserName(userName);
 		Map<String, Object> map = agencyAO.login(po);
 		String msg = map.get("msg").toString();
 		if (! "该用户名不存在！".equals(msg)) {
@@ -393,9 +426,12 @@ public class AgencyController {
 //		ChargeAccountPo chargeAccountPo = (ChargeAccountPo) request.getSession().getAttribute("chargeAccount");//对私
 //		ChargeAccountPo chargeAccountPo1 = (ChargeAccountPo) request.getSession().getAttribute("chargeAccount1");//对公
 		int result = agencyAO.updateAgency(vo);
-//		if(result > 0){
-//			request.getSession().setAttribute("loginContext", vo);
-//		}
-		response.getWriter().print(result);
+		
+		if(result > 0){
+			request.getSession().setAttribute("loginContext", vo);
+			response.getWriter().print("success");
+		}else{
+			response.getWriter().print("error");
+		}
 	}
 }

@@ -34,12 +34,12 @@
   </resultMap>
   
   <!--  通过通道ID找到所属平台 -->
-  <select id="getEpByChannelId" parameterType="java.lang.Integer" resultMap="com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface.BaseResultMap">
+  <!-- <select id="getEpByChannelId" parameterType="java.lang.Integer" resultMap="com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface.BaseResultMap">
   	SELECT ep.* 
   	FROM <include refid="t_ep"></include> ep 
   	WHERE ep.id = (SELECT ep_id from <include refid="t_channel"></include>
   	channel where channel.id = #{_parameter})
-  </select>
+  </select> -->
   
   <!-- 连表查询字段 -->
   <sql id="Base_Column_List" >
@@ -60,14 +60,14 @@
   	</foreach>
   </insert>
   
-  <select id="count_channel" resultType="java.lang.Integer">
+<!--   <select id="count_channel" resultType="java.lang.Integer">
   	select count(*) from <include refid="t_channel"></include> channel
   	inner join <include refid="t_scope"></include> scope
   	on channel.service_id = scope.id
   	<where>
   		<include refid="condition_sql"></include>
   	</where>
-  </select>
+  </select> -->
    <!-- 获取最优通道 -->
   <sql id="best_channel_list">
   	channel.channel_discount discount,channel.id channeld,ep.id epd,ep.ep_name,channel.bill_type 
@@ -89,7 +89,7 @@
   </select>
   
   <!-- 通过参数查询通道列表表连接 -->
-  <select id="list_channel" parameterType="com.weizu.flowsys.web.channel.pojo.ChannelForwardPo" resultMap="BaseResultMap">
+  <!-- <select id="list_channel" parameterType="com.weizu.flowsys.web.channel.pojo.ChannelForwardPo" resultMap="BaseResultMap">
   	select <include refid="Base_Column_List"></include> 
   	from <include refid="t_channel"></include> channel
   	inner join <include refid="t_scope"></include> scope
@@ -107,7 +107,7 @@
 	 <if test="start == null &amp; end == null">
 	 	limit 0,10
 	 </if> 
-  </select>
+  </select> -->
   
   <!-- 查询通道列表参数 -->
   <sql id="condition_sql">
@@ -129,26 +129,32 @@
   </sql>
   
   <!-- 更新通道使用状态 -->
-  <update id="updateChannelUseState" parameterType="map">
+ <!--  <update id="updateChannelUseState" parameterType="map">
   	update <include refid="t_channel"></include>
   	<set>
   		channel_use_state = #{channelUseState}
+  		<if test="lastAccess != null">
+  			,last_access = #{lastAccess}
+  		</if>
   	</set>
   	<where>
   		id = #{id}
   	</where>
-  </update>
+  </update> -->
   
   <!-- 更新通道状态 -->
-  <update id="updateChannelState" parameterType="map">
+  <!-- <update id="updateChannelState" parameterType="map">
   	update <include refid="t_channel"></include>
   	<set>
   		channel_state = #{channelState}
+  		<if test="lastAccess != null">
+  			,last_access = #{lastAccess}
+  		</if>
   	</set>
   	<where>
   		id = #{id}
   	</where>
-  </update>
+  </update> -->
   
   
 </mapper>

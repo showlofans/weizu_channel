@@ -47,7 +47,7 @@
 		</span>
 		
 		通道省份：<input type="text" value="${resultMap.searchParam.scopeCityName }" name="scopeCityName" id="" placeholder=" 通道省份" style="width:250px" class="input-text">
-		代理商名称：<input type="text" value="${resultMap.searchParam.agencyName }" name="agencyName" id="" placeholder=" 通道省份" style="width:250px" class="input-text">
+		代理商名称：<input type="text" value="${resultMap.searchParam.agencyName }" name="agencyName" id="" placeholder=" 代理商名称" style="width:250px" class="input-text">
 		
 		<button type="reset"class="btn btn-success" value="重置">重置</button>
 		<input value="查询" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
@@ -63,7 +63,7 @@
 					<!-- <th width="80">流量包Id</th> -->
 					<!-- <th width="80">ID</th> -->
 					<th width="80">通道名称</th>
-					<th width="80">票务</th>
+					<th width="80">通道类型</th>
 					<th width="80">活动时间</th>
 					<!-- <th width="80">交易单数</th>
 					<th width="80">交易总额</th> -->
@@ -87,7 +87,16 @@
 				<td>全国</td> 
 				<td>{"北京","0.65"}</td> 
 				<td>100& 500&</td> 
-				<td><a style="text-decoration:none" class="ml-5" onClick="article_edit('资讯编辑','article-add.html','10001')" href="javascript:;" title="绑定代理商"><i class="Hui-iconfont">&#xe6df;</i></a> 
+				<td>
+				<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeCState(this,'0')" href="javascript:;" title="暂停">
+					<input type="hidden" value="${channel.id }" >
+					<i class="Hui-iconfont">&#xe6e5;</i>
+				</a> <!-- 暂停 -->
+				<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeUseState(this,'0')" href="javascript:;" title="停用">
+					<input type="hidden" value="${channel.id }" >
+					<i class="Hui-iconfont">&#xe631;</i>
+				</a> <!-- 暂停 -->
+				<a style="text-decoration:none" class="ml-5" onClick="" href="javascript:;" title="绑定代理商"><i class="Hui-iconfont">&#xe6df;</i></a> 
 				<!-- <a style="text-decoration:none" class="ml-5" onClick="article_edit('资讯编辑','article-add.html','10001')" href="javascript:;" title="参与代理商"><i class="Hui-iconfont">&#xe6df;</i></a> --> 
 				<a style="text-decoration:none" class="ml-5" href="/flowsys/rate/rate_join_channel_list.do" title="参与代理商"><i class="Hui-iconfont">&#xe6de;;</i></a> 
 				</td> 

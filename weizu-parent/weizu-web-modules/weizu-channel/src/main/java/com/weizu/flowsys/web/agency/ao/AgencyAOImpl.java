@@ -106,12 +106,12 @@ public class AgencyAOImpl implements AgencyAO {
 	public int updateAgency(AgencyBackwardVO agencyBackwardVO) {
 		//主要取信用值和代理商id
 		ChargeAccountPo chargeAccountPo =  chargeAccountAO.getAccountByAgencyId(agencyBackwardVO.getId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-		ChargeAccountPo chargeAccountPo1 =  chargeAccountAO.getAccountByAgencyId(agencyBackwardVO.getId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
+//		ChargeAccountPo chargeAccountPo1 =  chargeAccountAO.getAccountByAgencyId(agencyBackwardVO.getId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
 		chargeAccountPo.setAccountCredit(agencyBackwardVO.getAccountCredit());
-		chargeAccountPo1.setAccountCredit(agencyBackwardVO.getAccountCredit());
+//		chargeAccountPo1.setAccountCredit(agencyBackwardVO.getAccountCredit());
 		
 		chargeAccountDao.updateByAgencyId(chargeAccountPo);//更新信用值信息
-		chargeAccountDao.updateByAgencyId(chargeAccountPo1);//更新信用值信息
+//		chargeAccountDao.updateByAgencyId(chargeAccountPo1);//更新信用值信息
 		//取代理商的其他信息
 		int upresult = agencyVODao.updateByAgencyPO(getPoByVo(agencyBackwardVO));
 		return upresult;

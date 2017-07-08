@@ -80,9 +80,9 @@ public class OuterAPIController {
 		try {
 			if(billType == null){//默认对私
 				int bType = BillTypeEnum.BUSINESS_INDIVIDUAL.getValue();
-				chargeDTO = chargeFacade.charge(new ChargeParams(scope, userName, number, pgSize, sign, bType));
+				chargeDTO = chargeFacade.charge(new ChargeParams( userName, number, pgSize,scope, sign, bType));
 			}else{
-				chargeDTO = chargeFacade.charge(new ChargeParams(scope, userName, number, pgSize, sign, billType));
+				chargeDTO = chargeFacade.charge(new ChargeParams(userName, number, pgSize, scope, sign, billType));
 			}
 			String jsonResult = JSON.toJSON(chargeDTO).toString();
 			response.setCharacterEncoding("UTF-8");

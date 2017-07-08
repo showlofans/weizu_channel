@@ -63,5 +63,9 @@ public class AgencyURL extends BaseURL {
 	 * 修改子代理商（费率，信用）信息页面
 	 */
 	public static final String CHILD_AGENCY_EDIT = "/child_agency_edit" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 首页展示信息
+	 */
+	public static final String WELCOME = "/welcome" + DYNAMIC_WEB_SUFFIX;
 	
 }
