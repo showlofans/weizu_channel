@@ -19,7 +19,7 @@ public class AgencyActiveChannelPo extends Po {
 	
     private Long id;
 
-    private Integer agencyId;
+    private Integer agencyId;					//子代理商id
 
     private Integer channelId;
 
@@ -29,8 +29,15 @@ public class AgencyActiveChannelPo extends Po {
 
     private Long activeTime;
     
+    private Integer bindState;					//绑定状态：0-已绑定，1-未绑定
+    
+    private Integer bindAgencyId;				//绑定人 
+    
     @TempField
     private String activeTimeStr;				//（页面参数）
+    
+    @TempField
+    private Double channelDiscount;				//通道折扣
     
     @TempField
     private DiscountPo discountPo;				//页面折扣实体（移动，联通，电信）
@@ -56,6 +63,9 @@ public class AgencyActiveChannelPo extends Po {
     @TempField
     private Integer serviceType;				//业务类型
     
+    @TempField
+    private String ScopeCityCode;
+    
 //	public RateDiscountPo getRateDiscountPo() {
 //		return rateDiscountPo;
 //	}
@@ -63,9 +73,41 @@ public class AgencyActiveChannelPo extends Po {
 //	public void setRateDiscountPo(RateDiscountPo rateDiscountPo) {
 //		this.rateDiscountPo = rateDiscountPo;
 //	}
-
+    
 	public List<RateDiscountPo> getRateList() {
 		return rateList;
+	}
+
+	public String getScopeCityCode() {
+		return ScopeCityCode;
+	}
+
+	public void setScopeCityCode(String scopeCityCode) {
+		ScopeCityCode = scopeCityCode;
+	}
+
+	public Double getChannelDiscount() {
+		return channelDiscount;
+	}
+
+	public void setChannelDiscount(Double channelDiscount) {
+		this.channelDiscount = channelDiscount;
+	}
+
+	public Integer getBindState() {
+		return bindState;
+	}
+
+	public void setBindState(Integer bindState) {
+		this.bindState = bindState;
+	}
+
+	public Integer getBindAgencyId() {
+		return bindAgencyId;
+	}
+
+	public void setBindAgencyId(Integer bindAgencyId) {
+		this.bindAgencyId = bindAgencyId;
 	}
 
 	public void setRateList(List<RateDiscountPo> rateList) {

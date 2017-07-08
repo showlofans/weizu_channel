@@ -34,33 +34,34 @@
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 下游管理 <span class="c-gray en">&gt;</span> 费率列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
-	<%-- <div class="text-c">
+	 <div class="text-c">
 		<form action="/flowsys/rate/rate_list.do" method="post" id="formD" name="dataListForm">
 				<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
-				费率名称:<input type="text" value="${resultMap.params.rateName }" name="rateName" id="" placeholder=" 费率名称" style="width:150px" class="input-text">
-				移动省份:<input type="text" value="${resultMap.params.ratePrice0 }" name="ratePrice0" id="" placeholder=" 移动省份" style="width:150px" class="input-text">
+				代理商名称:<input type="text" value="${resultMap.params.rateName }" name="rateName" id="" placeholder=" 代理商名称" style="width:150px" class="input-text">
+				通道类型:<input type="text" value="${resultMap.params.billType }" name="billType" id="" placeholder=" 通道类型" style="width:150px" class="input-text">
+				<%-- 移动省份:<input type="text" value="${resultMap.params.ratePrice0 }" name="ratePrice0" id="" placeholder=" 移动省份" style="width:150px" class="input-text">
 				联通省份:<input type="text" value="${resultMap.params.ratePrice1 }" name="ratePrice1" id="" placeholder=" 联通省份" style="width:150px" class="input-text">
-				电信省份:<input type="text" value="${resultMap.params.ratePrice2 }" name="ratePrice2" id="" placeholder=" 电信省份" style="width:150px" class="input-text">
+				电信省份:<input type="text" value="${resultMap.params.ratePrice2 }" name="ratePrice2" id="" placeholder=" 电信省份" style="width:150px" class="input-text"> --%>
 				<button type="reset"class="btn btn-success" value="重置">重置</button>
 				<button name="" id="" class="btn btn-success"  type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 				<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 		</form>
-	</div> --%>
+	</div> 
 	<!-- <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加资讯" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加资讯</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div> -->
 		<div class="mt-20">
 			<!-- <sapn>通道名称：微族科技</sapn>
 			<sapn>是否带票：不带票</sapn>
 			<sapn>通道折扣：云南85</sapn> -->
-			<sapn>代理商名称：${childAgencyName }</sapn><br>
+			<%-- <sapn>代理商名称：${childAgencyName }</sapn><br>
 			高级通道开通状态：<sapn>
 			<c:choose>
 				<c:when test="${isOpen == 1 }">开通</c:when>
 				<c:otherwise>
 					未开
 				</c:otherwise>
-			</c:choose></sapn><br>
+			</c:choose></sapn><br> --%>
 			<!-- <sapn>通道折扣：云南85</sapn> -->
-			<a style="text-decoration:none" class="btn btn-success" onclick="Hui_admin_tab(this)" data-href="/flowsys/rate/bind_channel_page.do" title="" data-title="绑定通道">绑定通道</a>
+			<!-- <a style="text-decoration:none" class="btn btn-success" onclick="Hui_admin_tab(this)" data-href="/flowsys/rate/bind_channel_page.do" title="" data-title="绑定通道">绑定通道</a> -->
 		<table class="table table-border table-bordered table-bg table-hover table-sort">
 			<thead>
 				<!-- <tr class="text-c">
@@ -72,13 +73,13 @@
 					<th>操作</th>
 				</tr> -->
 				<tr class="text-c">
-					<th>通道名称</th>
+					<th>通道名称</th><!-- 默认通道 -->
 					<th>通道折扣</th>
 					<th>移动折率</th>
 					<th>联通折率</th>
 					<th>电信折率</th>
-					<th>绑定状态</th>
 					<th>添加时间</th>
+					<th>绑定状态</th>
 					<th>操作</th>
 				</tr>
 			</thead>
@@ -93,21 +94,38 @@
 							<c:if test="${rate.billType == billTypeEnum.value }"> ${billTypeEnum.desc }</c:if>
 							</c:forEach>
 						</td>  --%>
+						<%-- <td><c:forEach items="${resultMap.bindStateEnums }" var="bindStateEnum" varStatus="vs1">
+							<c:if test="${activePo.bindState == bindStateEnum.value }"> ${bindStateEnum.desc }</c:if>
+							</c:forEach>
+						</td> --%>
 						<td  class="text-l">${activePo.discountPo.discount0 }</td>
 						 <td class="text-l">${activePo.discountPo.discount1 }</td>
 						<td class="text-l">${activePo.discountPo.discount2 }</td>
 						
-						<td><c:forEach items="${resultMap.bindStateEnums }" var="bindStateEnum" varStatus="vs1">
-							<c:if test="${activePo.bindState == bindStateEnum.value }"> ${bindStateEnum.desc }</c:if>
-							</c:forEach>
-							
-						</td>
 						<td>${activePo.activeTimeStr }</td>
+						<td class="bindStateC"><c:forEach items="${resultMap.bindStateEnums }" var="bindStateE" varStatus="vs1">
+						<c:if test="${activePo.bindState == bindStateE.value }"> ${bindStateE.desc }</c:if>
+						</c:forEach></td>
 						
-						<td class="td-manage"><a style="text-decoration:none" onClick="article_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
-						<a style="text-decoration:none" class="ml-5" onClick="article_edit('账户充值',${agency.userName },${agency.id })" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> 
-						<a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
-						<%--  <td class="td-status"><c:forEach items="${resultMap.rateStateEnums }" var="stateEnum" varStatus="vs1">
+						<td class="td-manage">
+						<c:if test="${activePo.bindState == 1 }"><!-- 已暂停 -->
+							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeBindState(this,'1')" href="javascript:;" title="绑定">
+								<input type="hidden" value="${activePo.id }" >
+								<i class="Hui-iconfont">&#xe615;</i>
+							</a> 
+						</c:if>
+						<c:if test="${activePo.bindState == 0 }"><!-- 已启用 -->
+							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeBindState(this,'0')" href="javascript:;" title="解除">
+								<input type="hidden" value="${activePo.id }" >
+								<i class="Hui-iconfont">&#xe631;</i>
+							</a> 
+						</c:if>
+						<%-- <a style="text-decoration:none" onClick="article_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>  --%>
+						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="discount_edit('折扣编辑',${activePo.bindState },${activePo.agencyId },${activePo.discountPo.discount0 },${activePo.discountPo.discount1 },${activePo.discountPo.discount2 })" href="javascript:;" title="折扣编辑"><i class="Hui-iconfont">&#xe6df;</i></a> 
+						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="article_edit('账户充值',${agency.userName },${agency.id })" href="javascript:;" title="绑定代理商"><i class="Hui-iconfont">&#xe6df;</i></a> 
+						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+						</td>
+						<%--  <td class="td-status"><c:forEach items="${resultMap.bindStateEnums }" var="stateEnum" varStatus="vs1">
 						<c:if test="${rate.rateState == stateEnum.value }"> ${stateEnum.desc }</c:if>
 						</c:forEach></td>  --%>
 					<!-- 	<td class="td-status"><span class="label label-success radius">已发布</span></td> -->
@@ -146,20 +164,64 @@
 <script src="/view/lib/bootstrap-datetimepicker.min.js"></script>
 <script src="/view/lib/bootstrap-datetimepicker.zh-CN.js"></script> -->
 <script type="text/javascript">
-/*包体-添加*/
-function rate_add(title,url){
-	//alert("sd");
-	layer.open({
-        type: 2,
-        title: false,
-        area: ['650px', '560px'],
-        maxmin: false,
-        closeBtn: 1,
-        content: url+'?pageTitle=' + title,
-         end: function () {
-            location.reload();
-        }
-    });
+
+function discount_edit(title,bindState,agencyId)
+
+/*通道使用状态-修改*/
+function changeBindState(obj,bindState){
+	var activeId = $(obj).children().eq(0).val();
+	//alert(id);
+	if(bindState == "1"){
+		bindState = 0;
+		layer.confirm('确认要绑定吗？',function(index){
+			$.ajax({
+				type: 'POST',
+				async: false,
+				url: '/flowsys/rate/update_bind_state.do',
+				//dataType: 'json',
+				data: {activeId:activeId, bindState:bindState},
+				success: function(data){
+					if(data=="success")
+					{
+						layer.msg('绑定成功!',{icon:1,time:1000});
+						location.reload();
+					}else{
+						layer.msg('绑定失败!',{icon:1,time:1000});
+					}
+				},
+				error:function(data) {
+					console.log(data.msg);
+				},
+			});	
+			layer.close(index);
+			location.reload();
+		});
+	}else{
+		bindState = 1;
+		layer.confirm('确认要解除绑定吗？',function(index){
+			$.ajax({
+				type: 'POST',
+				async: false,
+				url: '/flowsys/rate/update_bind_state.do',
+				//dataType: 'json',
+				data: {activeId:activeId, bindState:bindState},
+				success: function(data){
+					if(data=="success")
+					{
+						layer.msg('解除绑定成功!',{icon:1,time:1000});
+						location.reload();
+					}else{
+						layer.msg('解除绑定失败!',{icon:1,time:1000});
+					}
+				},
+				error:function(data) {
+					console.log(data.msg);
+				},
+			});	
+			layer.close(index);
+			location.reload();
+		});
+	}
 }
 
 /* $(document).ready(function() {

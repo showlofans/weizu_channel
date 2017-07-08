@@ -83,16 +83,16 @@ public interface ChannelChannelAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月5日 下午3:45:32
 	 */
-	List<ChannelChannelPo> listChannel(Integer agencyId,Integer billType);
+//	List<ChannelChannelPo> listChannel(Integer agencyId,Integer billType);
 	
 	/**
-	 * @description: 获得简易通道列表( agencyId,  billType)(id,name)
+	 * @description: 获得开通的简易通道列表( agencyId,  billType)(id,name)
 	 * @param channelChannelPo
 	 * @return
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月6日 下午5:40:36
 	 */
-	List<ChannelChannelPo> listChannel(ChannelChannelPo channelChannelPo);
+	List<ChannelChannelPo> listOpenChannel(ChannelChannelPo channelChannelPo);
 	
 	
 	/**

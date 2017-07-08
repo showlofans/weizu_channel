@@ -13,6 +13,7 @@ import org.weizu.web.foundation.StringUtil;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
+import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.util.Pagination;
@@ -136,13 +137,21 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 	@Override
 	public Map<String, Object> getMapByEntity(AgencyActiveChannelPo activePo) {
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
-		if(activePo.getChannelId() == null)
+		if(activePo.getChannelId() != null)
 		{
 			paramsMap.put("channelId", activePo.getChannelId());
 		}
-		if(activePo.getAgencyId() == null)
+		if(activePo.getChannelName() != null)
+		{
+			paramsMap.put("channelName", activePo.getChannelName());
+		}
+		if(activePo.getAgencyId() != null)
 		{
 			paramsMap.put("agencyId", activePo.getAgencyId());
+		}
+		if(activePo.getBindAgencyId() != null)
+		{
+			paramsMap.put("bindAgencyId", activePo.getBindAgencyId());
 		}
 		return paramsMap;
 	}
@@ -161,6 +170,7 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 		
 		Long nextActiveId = agencyActiveChannelDao.nextId();
 		aacp.setActiveTime(System.currentTimeMillis());
+		aacp.setBindState(BindStateEnum.BIND.getValue());
 		int bindRes = agencyActiveChannelDao.add(aacp);
 		
 		//只有一个地区
@@ -194,6 +204,36 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 //		}
 		
 		return bindRes;
+	}
+
+	/**
+	 * @description: 更新绑定状态
+	 * @param activeId
+	 * @param bindState
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月8日 下午12:01:14
+	 */
+	@Override
+	public int updateBindState(String activeId, String bindState) {
+		long id = Long.parseLong(activeId);
+		int bindStateInt = Integer.parseInt(bindState);
+		return agencyActiveChannelDao.updateBindState(id, bindStateInt);
+	}
+
+	/**
+	 * @description: 更新绑定的折扣
+	 * @param activeId
+	 * @param activeDiscount
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月8日 下午4:17:00
+	 */
+	@Override
+	public int updateRateDiscount(String activeId, String activeDiscount) {
+		long id = Long.parseLong(activeId);
+		double activeDiscountD = StringUtil2.getDiscount(activeDiscount);
+		return rateDiscountDao.updateRateDiscount(id, activeDiscountD);
 	}
 
 

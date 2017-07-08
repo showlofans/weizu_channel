@@ -49,4 +49,24 @@ public interface AgencyActiveChannelAO {
 	 */
 	int bindChannel(AgencyActiveChannelPo aacp,RateDiscountPo rateDiscountPo);
 	
+	/**
+	 * @description: 更新绑定状态
+	 * @param activeId
+	 * @param bindState
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月8日 上午11:58:34
+	 */
+	int updateBindState(String activeId,String bindState);
+	
+	/**
+	 * @description: 更新绑定的折扣
+	 * @param activeId
+	 * @param activeDiscount
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月8日 下午4:16:06
+	 */
+	int updateRateDiscount(String activeId,String activeDiscount);
+	
 }

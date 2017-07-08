@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.activity.dao.impl;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -59,6 +60,21 @@ public class AgencyActiveChannelDaoImpl extends DaoImpl<AgencyActiveChannelPo, L
 		
 		return sqlSessionTemplate.selectList("listActiveDiscount",paramsMap);
 	}
-	
-	
+
+	/**
+	 * @description: 更新绑定状态
+	 * @param activeId
+	 * @param bindState
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月8日 下午12:00:59
+	 */
+	@Override
+	public int updateBindState(long activeId, int bindState) {
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("id", activeId);
+		paramsMap.put("bindState", bindState);
+		return sqlSessionTemplate.update("updateBindState", paramsMap);
+	}
+
 }

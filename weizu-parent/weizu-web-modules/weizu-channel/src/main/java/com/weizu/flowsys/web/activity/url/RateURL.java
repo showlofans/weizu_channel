@@ -42,9 +42,19 @@ public class RateURL extends BaseURL {
 	 */
 	public static final String GET_BEST_CHANNEL = "/get_best_channel" + DYNAMIC_WEB_SUFFIX;
 	/**
-	 * 通道配置费率列表
+	 * 获得可配置的简易通道信息
+	 */
+	public static final String GET_SIMPLE_CHANNEL = "/get_simple_channel" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 费率配置通道列表<br>
+	 * /flowsys/rate/bind_channel_list.do
 	 */
 	public static final String BIND_CHANNEL_LIST = "/bind_channel_list" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 通道配置费率列表<br>
+	 * /flowsys/rate/bind_agency_list.do
+	 */
+	public static final String BIND_AGENCY_LIST = "/bind_agency_list" + DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 通道配置费率页面
 	 */
@@ -54,5 +64,15 @@ public class RateURL extends BaseURL {
 	 * /flowsys/rate/bind_channel.do
 	 */
 	public static final String BIND_CHANNEL = "/bind_channel" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 更新绑定状态<br>
+	 * /flowsys/rate/update_bind_state.do
+	 */
+	public static final String UPDATE_BIND_STATE = "/update_bind_state" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 更新绑定的折扣<br>
+	 * /flowsys/rate/update_rate_discount.do
+	 */
+	public static final String UPDATE_RATE_DISCOUNT = "/update_rate_discount" + DYNAMIC_WEB_SUFFIX;
 
 }

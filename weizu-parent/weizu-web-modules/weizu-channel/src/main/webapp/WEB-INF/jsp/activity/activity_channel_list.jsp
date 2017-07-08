@@ -96,7 +96,7 @@
 					<input type="hidden" value="${channel.id }" >
 					<i class="Hui-iconfont">&#xe631;</i>
 				</a> <!-- 暂停 -->
-				<a style="text-decoration:none" class="ml-5" onClick="article_edit('资讯编辑','article-add.html','10001')" href="javascript:;" title="绑定代理商"><i class="Hui-iconfont">&#xe6df;</i></a> 
+				<a style="text-decoration:none" class="ml-5" onClick="" href="javascript:;" title="绑定代理商"><i class="Hui-iconfont">&#xe6df;</i></a> 
 				<!-- <a style="text-decoration:none" class="ml-5" onClick="article_edit('资讯编辑','article-add.html','10001')" href="javascript:;" title="参与代理商"><i class="Hui-iconfont">&#xe6df;</i></a> --> 
 				<a style="text-decoration:none" class="ml-5" href="/flowsys/rate/rate_join_channel_list.do" title="参与代理商"><i class="Hui-iconfont">&#xe6de;;</i></a> 
 				</td> 

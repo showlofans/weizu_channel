@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.activity.dao.impl;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +42,22 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 	@Override
 	public int rate_addList(List<RateDiscountPo> list) {
 		return sqlSessionTemplate.insert("rate_addList", list);
+	}
+
+	/**
+	 * @description: 更新绑定的折扣
+	 * @param activeId
+	 * @param activeDiscount
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月8日 下午4:19:19
+	 */
+	@Override
+	public int updateRateDiscount(long activeId, double activeDiscount) {
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("id", activeId);
+		paramsMap.put("activeDiscount", activeDiscount);
+		return sqlSessionTemplate.update("updateRateDiscount", paramsMap);
 	}
 
 	

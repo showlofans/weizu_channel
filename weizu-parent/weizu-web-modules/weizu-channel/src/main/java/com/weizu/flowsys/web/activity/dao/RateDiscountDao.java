@@ -15,4 +15,14 @@ public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	 * @createTime:2017年7月5日 下午5:41:27
 	 */
 	public int rate_addList(List<RateDiscountPo> list);
+	
+	/**
+	 * @description: 更新绑定的折扣
+	 * @param activeId
+	 * @param activeDiscount
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月8日 下午4:18:59
+	 */
+	int updateRateDiscount(long activeId,double activeDiscount);
 }

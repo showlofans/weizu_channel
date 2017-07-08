@@ -24,6 +24,14 @@
   		#{rateD.activeId})
   	</foreach>
   </insert>
+  
+  <update id="updateRateDiscount" parameterType="map">
+  	update <include refid="t_rateD"></include>
+  	set active_discount = #{activeDiscount}
+  	<where>
+  		id = #{id}
+  	</where>
+  </update>
  <!--  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />

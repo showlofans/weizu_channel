@@ -37,4 +37,16 @@ public interface AgencyActiveChannelDao extends Dao<AgencyActiveChannelPo, Long>
 	 */
 	int countActive(AgencyActiveChannelPo activePo);
 	
+	/**
+	 * @description: 更新绑定状态
+	 * @param activeId
+	 * @param bindState
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月8日 上午11:58:34
+	 */
+	int updateBindState(long activeId,int bindState);
+	
+	
+	
 }

@@ -34,10 +34,10 @@
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 下游管理 <span class="c-gray en">&gt;</span> 费率列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
-	<%-- <div class="text-c">
+	<div class="text-c">
 		<form action="/flowsys/rate/rate_list.do" method="post" id="formD" name="dataListForm">
 				<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
-				费率名称:<input type="text" value="${resultMap.params.rateName }" name="rateName" id="" placeholder=" 费率名称" style="width:150px" class="input-text">
+				代理商名称:<input type="text" value="${resultMap.params.rateName }" name="rateName" id="" placeholder=" 代理商名称" style="width:150px" class="input-text">
 				移动省份:<input type="text" value="${resultMap.params.ratePrice0 }" name="ratePrice0" id="" placeholder=" 移动省份" style="width:150px" class="input-text">
 				联通省份:<input type="text" value="${resultMap.params.ratePrice1 }" name="ratePrice1" id="" placeholder=" 联通省份" style="width:150px" class="input-text">
 				电信省份:<input type="text" value="${resultMap.params.ratePrice2 }" name="ratePrice2" id="" placeholder=" 电信省份" style="width:150px" class="input-text">
@@ -45,18 +45,18 @@
 				<button name="" id="" class="btn btn-success"  type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 				<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 		</form>
-	</div> --%>
+	</div> 
 	<!-- <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加资讯" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加资讯</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div> -->
 		<div class="mt-20">
 			<!-- <sapn>通道名称：微族科技</sapn>
 			<sapn>是否带票：不带票</sapn>
 			<sapn>通道折扣：云南85</sapn> -->
-			<sapn>代理商名称：${childAgencyName }</sapn><br>
-			高级通道开通状态：<sapn>
+			<sapn>通道名称：${channelName }</sapn><br>
+			是否是高级通道：<sapn>
 			<c:choose>
-				<c:when test="${isOpen == 1 }">开通</c:when>
+				<c:when test="${isOpen == 1 }">是</c:when>
 				<c:otherwise>
-					未开
+					否
 				</c:otherwise>
 			</c:choose></sapn><br>
 			<!-- <sapn>通道折扣：云南85</sapn> -->
@@ -72,10 +72,8 @@
 					<th>操作</th>
 				</tr> -->
 				<tr class="text-c">
-					<th>通道名称</th>
+					<th>代理商名称</th>
 					<th>通道折扣</th>
-					<th>移动折率</th>
-					<th>联通折率</th>
 					<th>电信折率</th>
 					<th>绑定状态</th>
 					<th>添加时间</th>

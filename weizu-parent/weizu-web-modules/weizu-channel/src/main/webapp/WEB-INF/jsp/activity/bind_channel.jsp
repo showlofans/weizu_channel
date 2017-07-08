@@ -86,7 +86,7 @@
 			</div>
 		</c:forEach>  --%>
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>运营商类型：</label>
+			<label class="form-label col-xs-4 col-sm-3">运营商类型：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 				<c:forEach items="${resultMap.operatorTypes }" var="operatorEnum" varStatus="vs">
 					<div class="radio-box">
@@ -98,7 +98,7 @@
 			</div>
 		</div>
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流量类型：</label>
+			<label class="form-label col-xs-4 col-sm-3">流量类型：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 				<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceEnum" varStatus="vs">
 					<div class="radio-box">
@@ -111,7 +111,7 @@
 		</div>
 		
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>费率：</label><br>
+			<label class="form-label col-xs-4 col-sm-3">费率：</label><br>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 			<table>
 				<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum" varStatus="vs">
@@ -131,6 +131,19 @@
 					</div> -->
 				</c:forEach>
 			</table>
+			</div>
+		</div>
+		<div class="row cl"> 
+			<label class="form-label col-xs-4 col-sm-3">通道名称：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal"> 
+				 <span class="select-box inline">
+					<select id="selectC" onchange="initChannelName()" name="channelId" class="select">
+						<option value="0">没有通道</option>
+						<%-- <c:forEach items="${resultMap.channelList }" var="channel" varStatus="vs1">
+							<option value="${channel.id }" >${channel.channelName }</option>
+						</c:forEach> --%>
+					</select><span id="channelCount" class="c-red" ></span><!-- style="color:red; fontSize:15px" -->
+				</span> 
 			</div>
 		</div>
 		<%-- <div class="row cl">
@@ -215,16 +228,6 @@
 				</div>
 				
 				</div>--%>
-				<div class="row cl">  通道名称：
-					 <span class="select-box inline">
-						<select id="selectC" onchange="initChannelName()" name="channelId" class="select">
-							<option value="">通道</option>
-							<%-- <c:forEach items="${resultMap.channelList }" var="channel" varStatus="vs1">
-								<option value="${channel.id }" >${channel.channelName }</option>
-							</c:forEach> --%>
-						</select>
-					</span> 
-				</div>
 			
 		<span id="setDiscountList"></span>
 		<!-- channelName:通过js代码填充隐藏域的值 -->
@@ -266,10 +269,15 @@ $(document).ready(function(){
 /**通道选择onchange事件 */
 function initChannelName(){
 	var channelName = $("#selectC").find("option:selected").text();
-	alert(channelName);
+	//alert(channelName);//通道id已经被选中了，只需得到通道名称即可
 	$("#channelName").val(channelName);
 }
 function changeName(){
+	//alert($("#selectC").val());
+	if($("#selectC").val() == "0"){
+		alert("添加失败");
+		return false;
+	}
 	var i = 0;
 	$(".disscount").each(function(){
     	if($(this).is(':visible')){ 
@@ -380,19 +388,28 @@ $(".radioItem").change(
 			 $.ajax( {    
 		        "type": "get",     
 		        "contentType": "application/x-www-form-urlencoded; charset=utf-8",    
-		        "url": "/flowsys/rate/get_best_channel.do?operatorType="+operatorType+"&scopeCityCode="+cityCode+"&serviceType="+serviceType,     
+		        "url": "/flowsys/rate/get_simple_channel.do?operatorType="+operatorType+"&scopeCityCode="+cityCode+"&serviceType="+serviceType,     
 		        "dataType": "json",  
 		        "async": false,  
 		        "success": function(resp) { 
 		        	//alert(resp);
+		        	//alert(resp.length);
+	        		$("#selectC").empty();
+	        		 if(resp.length == 0){ //如果没有通道信息，就设置折扣为不可编辑
+	        			 $("#selectC").append("<option value=''>没有通道</option>");
+	        			 $("input[name='cityCode']:checked").next().val("没有通道，不可设置");
+	        			 $("input[name='cityCode']:checked").next().attr("readonly","readonly");
+	        			 $("#channelCount").html(0);
+	        		 }
+	        		 //如果resp没有值，下面函数也不会执行
 		        	 $.each(resp, function(i, item) {
-		        		 if(item != null)
-	        			 {
+        				$("#channelName").val(item.channelName);
+		             	 $("#selectC").append("<option class='rate' value='"+item.id+"'>" + item.channelName + "</option>");//"+ operatorType +"
+		             	 $("#channelCount").html(resp.length)
+		        		 //alert(i);//从0开始
 	        				//alert(item.channelName);
-	        				$("#channelName").val(item.channelName);
-	        			 }
-		        		 $("#selectC").empty();
-			              $("#selectC").append("<option class='rate' value='"+item.id+"'>" + item.channelName + "</option>");//"+ operatorType +"
+		        		 ///不管有没有通道
+		        		 
 		             });
 		        	$price.show();
 		        	//alert("success");
@@ -408,7 +425,8 @@ $(".radioItem").change(
 			$price.hide();
 			$("input[name='cityCode']:checked").attr("checked",false);
 			$("#selectC").empty();
-			$("#selectC").append("<option value=''>通道</option>");
+			$("#selectC").append("<option value=''>没有通道</option>");
+			 $("#channelCount").html(0);
 		}
 	});
 

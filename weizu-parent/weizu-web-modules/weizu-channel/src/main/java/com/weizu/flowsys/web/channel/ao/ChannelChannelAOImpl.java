@@ -225,30 +225,31 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月5日 下午3:47:32
 	 */
-	@Override
-	public List<ChannelChannelPo> listChannel(Integer agencyId,Integer billType) {
-		Map<String,Object> paramsMap = new HashMap<String, Object>(3);
-		String[] scopeCityCodes = ScopeCityEnum.getValues();
-		//billtype在controller已经确认不为空
-		
-		paramsMap.put("belongAgencyId", agencyId);
-		paramsMap.put("billType", billType);
-		paramsMap.put("scopeCityCodes", scopeCityCodes);
-		
-		return channelChannelDao.listSimpleChannel(paramsMap);
-	}
+//	@Override
+//	public List<ChannelChannelPo> listChannel(Integer agencyId,Integer billType) {
+//		Map<String,Object> paramsMap = new HashMap<String, Object>(3);
+//		String[] scopeCityCodes = ScopeCityEnum.getValues();
+//		//billtype在controller已经确认不为空
+//		
+//		paramsMap.put("belongAgencyId", agencyId);
+//		paramsMap.put("billType", billType);
+//		paramsMap.put("scopeCityCodes", scopeCityCodes);
+//		
+//		return channelChannelDao.listSimpleChannel(paramsMap);
+//	}
 	/**
-	 * @description: 获得简易通道列表( agencyId,  billType)(id,name)
+	 * @description: 获得开通的简易通道列表( agencyId,  billType)(id,name)
 	 * @param channelPo
 	 * @return
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月6日 下午5:45:35
 	 */
 	@Override
-	public List<ChannelChannelPo> listChannel(ChannelChannelPo channelPo) {
+	public List<ChannelChannelPo> listOpenChannel(ChannelChannelPo channelPo) {
 		Map<String,Object> paramsMap = new HashMap<String, Object>(5);
 		paramsMap.put("belongAgencyId", channelPo.getBelongAgencyId());
-		paramsMap.put("billType", channelPo.getBillType());
+//		paramsMap.put("billType", channelPo.getBillType());
+		paramsMap.put("channelState", ChannelStateEnum.OPEN.getValue());//查找开通的通道
 		paramsMap.put("operatorType", channelPo.getOperatorType());
 		paramsMap.put("serviceType", channelPo.getServiceType());
 		paramsMap.put("scopeCityCode", channelPo.getScopeCityCode());

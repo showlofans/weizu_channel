@@ -22,7 +22,7 @@ import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
-import com.weizu.flowsys.operatorPg.enums.RateStateEnum;
+import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
@@ -61,6 +61,7 @@ public class RateController {
 	@Resource
 	private ChannelChannelAO channelChannelAO;
 	@Resource
+	
 	private ChargeAccountAo chargeAccountAO;
 	@Resource
 	private AgencyActiveChannelAO agencyActiveChannelAO;
@@ -235,7 +236,7 @@ public class RateController {
 			Pagination<RateBackwardPo> pagination = rateBackwardAO.selectByPo(rateBackwardPo, pageParam);
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 			resultMap.put("params",rateBackwardPo);
-			resultMap.put("rateStateEnums", RateStateEnum.toList());
+			resultMap.put("rateStateEnums", BindStateEnum.toList());
 			resultMap.put("billTypeEnums", BillTypeEnum.toList());
 			
 			resultMap.put("pagination", pagination);
@@ -281,38 +282,44 @@ public class RateController {
 //			e.printStackTrace();
 //		}
 //	}
-	@RequestMapping(value= RateURL.GET_BEST_CHANNEL)
-	public void getBestChannel(HttpServletRequest request, HttpServletResponse response,ChannelChannelPo channelChannelPo)//设置运营商类型和地区筛选
+	/**
+	 * @description: 获得可配置的简易通道信息
+	 * @param request
+	 * @param response
+	 * @param channelChannelPo
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月8日 上午10:45:49
+	 */
+	@RequestMapping(value= RateURL.GET_SIMPLE_CHANNEL)
+	public void getSimpleChannel(HttpServletRequest request, HttpServletResponse response,ChannelChannelPo channelChannelPo)//设置运营商类型和地区筛选
 	{
 //		ChargeAccountPo chargeAccount1 = (ChargeAccountPo) request.getSession().getAttribute("chargeAccount1");
 //		ChargeAccountPo chargeAccount = (ChargeAccountPo) request.getSession().getAttribute("chargeAccount");
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 //		String agencyName = request.getSession().getAttribute("childAgencyName").toString();
-		String childAgencyIdStr = request.getSession().getAttribute("childAgencyId").toString();
 		if(agencyVO == null){//未登录用户
 			System.out.println("no login");
 //			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 		}
-		List<ChannelChannelPo> channelList = new ArrayList<ChannelChannelPo>();
-		if(StringHelper.isNotEmpty(childAgencyIdStr))
-		{
-			int childAgencyId = Integer.parseInt(childAgencyIdStr);
-			ChargeAccountPo chargeAccountPo1 = chargeAccountAO
-					.getAccountByAgencyId(childAgencyId,BillTypeEnum.CORPORATE_BUSINESS.getValue());
-			ChargeAccountPo chargeAccountPo = chargeAccountAO
-					.getAccountByAgencyId(childAgencyId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-			if(chargeAccountPo1 != null && chargeAccountPo == null)
-			{
-				//简易通道列表(不含运营商和地区筛选)
-				channelChannelPo.setBelongAgencyId(agencyVO.getId());
-				channelChannelPo.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue()); 
-				channelList = channelChannelAO.listChannel(channelChannelPo);
-//				channelPo.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());
-			}else
-			{//
-				channelList = channelChannelAO.listChannel(channelChannelPo);
-			}
-		}
+		channelChannelPo.setBelongAgencyId(agencyVO.getId());//当前登录用户的通道的
+		
+		//设置票务筛选
+//		String childAgencyIdStr = request.getSession().getAttribute("childAgencyId").toString();
+//		if(StringHelper.isNotEmpty(childAgencyIdStr))
+//		{
+//			int childAgencyId = Integer.parseInt(childAgencyIdStr);
+//			ChargeAccountPo chargeAccountPo1 = chargeAccountAO
+//					.getAccountByAgencyId(childAgencyId,BillTypeEnum.CORPORATE_BUSINESS.getValue());
+//			ChargeAccountPo chargeAccountPo = chargeAccountAO
+//					.getAccountByAgencyId(childAgencyId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+//			if(chargeAccountPo1 != null && chargeAccountPo == null)
+//			{
+//				//简易通道列表(不含运营商和地区筛选)
+//				channelChannelPo.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue()); 
+////				channelPo.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());
+//			}
+//		}
+		 List<ChannelChannelPo> channelList = channelChannelAO.listOpenChannel(channelChannelPo);
 		
 		//简易通道列表
 		try {
@@ -347,6 +354,7 @@ public class RateController {
 		if(agencyVO == null){
 			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 		}
+		activePo.setBindAgencyId(agencyVO.getId());//设置当前登录用户的
 		PageParam pageParam = null;
 		if(StringHelper.isNotEmpty(pageNo)){
 			pageParam = new PageParam(Integer.parseInt(pageNo), 10) ;
@@ -358,8 +366,8 @@ public class RateController {
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("pagination", pagination);
+		resultMap.put("bindStateEnums", BindStateEnum.toList());
 		
-		request.getSession().setAttribute("childAgencyId", activePo.getAgencyId());
 		if(activePo.getAgencyId() != null)
 		{
 			ChargeAccountPo chargeAccountPo1 = chargeAccountAO
@@ -369,9 +377,27 @@ public class RateController {
 				request.getSession().setAttribute("isOpen", 1);
 			}
 		}
+		request.getSession().setAttribute("childAgencyId", activePo.getAgencyId());
 		request.getSession().setAttribute("childAgencyName", activePo.getAgencyName());
 		return new ModelAndView("/activity/bind_channel_list","resultMap",resultMap);
 	}
+	
+	/**
+	 * @description: 绑定代理商列表（一键配置代理商折扣功能）
+	 * @param pageNo
+	 * @param request
+	 * @param activePo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月8日 下午5:23:10
+	 */
+	@RequestMapping(value=RateURL.BIND_AGENCY_LIST)
+	public ModelAndView bindAgencyList(@RequestParam(value = "pageNo", required = false) String pageNo,
+			HttpServletRequest request,AgencyActiveChannelPo activePo){
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		return new ModelAndView("/activity/bind_agency_list","resultMap",resultMap);
+	}
+	
 	/**
 	 * @description: 绑定代理商
 	 * @return
@@ -431,9 +457,12 @@ public class RateController {
 	@ResponseBody
 	public void rateJoinChannel(AgencyActiveChannelPo aacp,RateDiscountPo rateDiscountPo,HttpServletResponse response, HttpServletRequest request)
 	{
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		
 		String agencyId = request.getSession().getAttribute("childAgencyId").toString();
 		String agencyName = request.getSession().getAttribute("childAgencyName").toString();
 		
+		aacp.setBindAgencyId(agencyVO.getId());
 		aacp.setAgencyId(Integer.parseInt(agencyId));
 		aacp.setAgencyName(agencyName);
 		int bindRes = agencyActiveChannelAO.bindChannel(aacp,rateDiscountPo);
@@ -444,6 +473,55 @@ public class RateController {
 			e.printStackTrace();
 		}
 		//return new ModelAndView("/rate/rate_join_channel_page","pageTitle","pageTitle");
+	}
+	
+	/**
+	 * @description: 更新绑定状态
+	 * @param bindState
+	 * @param activeId
+	 * @param response
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月8日 下午12:10:18
+	 */
+	@RequestMapping(value=RateURL.UPDATE_BIND_STATE)
+	@ResponseBody
+	public void updateBindState(String bindState, String activeId, HttpServletResponse response)
+	{
+		int updateRes = agencyActiveChannelAO.updateBindState(activeId, bindState);
+		try {
+			if(updateRes > 0)
+			{
+				response.getWriter().print("success");
+			}else{
+				response.getWriter().print("error");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * @description: 更新绑定的折扣
+	 * @param bindState
+	 * @param activeId
+	 * @param response
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月8日 下午4:15:06
+	 */
+	@RequestMapping(value=RateURL.UPDATE_RATE_DISCOUNT)
+	@ResponseBody
+	public void updateRateDiscount(String discount, String activeId, HttpServletResponse response)
+	{
+		int updateRes = agencyActiveChannelAO.updateRateDiscount(activeId, discount);
+		try {
+			if(updateRes > 0)
+			{
+				response.getWriter().print("success");
+			}else{
+				response.getWriter().print("error");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

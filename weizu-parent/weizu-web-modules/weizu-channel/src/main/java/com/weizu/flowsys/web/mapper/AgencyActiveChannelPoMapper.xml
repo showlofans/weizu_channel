@@ -4,26 +4,32 @@
 
 <sql id="t_active">agency_active_channel</sql>
 <sql id="t_rate">rate_discount</sql>
-
+<sql id="t_channel">channel_discount</sql>
 
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.activity.pojo.AgencyActiveChannelPo" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
+    <result column="bind_state" property="bindState" jdbcType="INTEGER" />
+    <result column="bind_agency_id" property="bindAgencyId" jdbcType="INTEGER" />
     <result column="channel_id" property="channelId" jdbcType="BIGINT" />
     <result column="agency_name" property="agencyName" jdbcType="VARCHAR" />
     <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
     <result column="active_time" property="activeTime" jdbcType="BIGINT" />
+    <result column="channel_discount" property="channelDiscount"/>
+    <!-- <result column="active_time" property="activeTime" jdbcType="BIGINT" /> -->
     <collection property="rateList" resultMap="com.weizu.flowsys.web.activity.dao.RateDiscountDao.BaseResultMap"></collection>
   </resultMap>
   <sql id="Base_Column_List" >
-    active.id, agency_id, channel_id, agency_name, channel_name, active_time,
-    rate.id,operator_type,scope_city_code,active_discount,active_id
+    active.id, agency_id, active.channel_id, agency_name, active.channel_name, active_time,
+    rate.id,rate.operator_type,rate.scope_city_code,active_discount,active_id,bind_agency_id,bind_state,channel_discount
   </sql>
   
   <!-- 查询给三级代理商的最新折扣 -->
   <select id="listActiveDiscount" parameterType="map" resultMap="BaseResultMap">
   	select <include refid="Base_Column_List"></include>
   	from <include refid="t_active"></include> active
+  	inner join <include refid="t_channel"></include> channel
+  	on active.channel_id = channel.id
   	inner join <include refid="t_rate"></include> rate
   	on active.id = rate.active_id
   	<where>
@@ -35,6 +41,8 @@
    <select id="listActive" parameterType="map" resultMap="BaseResultMap">
   	select <include refid="Base_Column_List"></include>
   	from <include refid="t_active"></include> active
+  	inner join <include refid="t_channel"></include> channel
+  	on active.channel_id = channel.id
   	inner join <include refid="t_rate"></include> rate
   	on active.id = rate.active_id
   	<where>
@@ -52,7 +60,7 @@
 	 </if> 
   </select>
   
-  <select id="countActive" parameterType="com.weizu.flowsys.web.activity.pojo.AgencyActiveChannelPo" resultType="int">
+  <select id="countActive" parameterType="map" resultType="int">
   	select count(*) from <include refid="t_active"></include> active
   	inner join <include refid="t_rate"></include> rate
   	on active.id = rate.active_id
@@ -68,7 +76,31 @@
   	<if test="agencyId != null">
   		AND active.agency_id = #{agencyId}
   	</if>
+  	<if test="bindAgencyId != null">
+  		AND active.bind_agency_id = #{bindAgencyId}
+  	</if>
+  	<if test="channelName != null"><!-- 江西的通道折扣 -->
+  		AND active.channel_name like concat('%', #{channelName}, '%') 
+  	</if>
+  	<if test="scopeCityCode != null"><!-- 江西的通道折扣 -->
+  		AND channel.scope_city_code = #{scopeCityCode}
+  	</if>
   </sql>
+  
+  <!-- 更新绑定状态 -->
+  <update id="updateBindState" parameterType="map">
+  	update <include refid="t_active"></include>
+  	<set>
+  		<if test="bindState != null">
+  			bind_state = #{bindState}
+  		</if>
+  	</set>
+  	<where>
+  		<if test="id != null">
+  			id = #{id}
+  		</if>
+  	</where>
+  </update>
   
   
   
