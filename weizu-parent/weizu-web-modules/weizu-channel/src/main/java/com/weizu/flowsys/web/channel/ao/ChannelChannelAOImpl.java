@@ -213,6 +213,10 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 			{
 				paramsMap.put("belongAgencyId", channelPo.getBelongAgencyId());
 			}
+			if(channelPo.getId() != null){
+				paramsMap.put("channelId", channelPo.getId());
+			}
+			
 		}
 		
 		return paramsMap;

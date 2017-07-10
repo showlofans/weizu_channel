@@ -15,6 +15,7 @@ import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.core.util.Formatter;
+import com.weizu.flowsys.operatorPg.enums.ChannelDiscountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
@@ -123,7 +124,7 @@ public class ChannelChannelDaoImpl extends DaoImpl<ChannelChannelPo, Long> imple
 		{
 			long nextId = channelDiscountDao.nextId();
 			double channelDiscount = StringUtil2.getDiscount(cdp.getChannelDiscount());
-			ChannelDiscountPo cdp1 = new ChannelDiscountPo(channelId, cdp.getScopeCityCode(), channelDiscount, channelName, operatorType, serviceType);
+			ChannelDiscountPo cdp1 = new ChannelDiscountPo(channelId, cdp.getScopeCityCode(), channelDiscount, channelName, operatorType, serviceType,ChannelDiscountTypeEnum.CHANNEL.getValue());
 			cdp1.setId(nextId);
 			disList.add(cdp1);
 		}

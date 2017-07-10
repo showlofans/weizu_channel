@@ -10,17 +10,56 @@
     <result column="channel_discount" property="channelDiscount" jdbcType="DOUBLE" />
     <result column="channel_name" property="channelName" jdbcType="DOUBLE" />
     <result column="operator_type" property="operatorType" jdbcType="INTEGER" />
+    <result column="discount_type" property="discountType" jdbcType="INTEGER" />
   </resultMap>
+  <sql id="base_list">
+  	channel_id, scope_city_code, channel_discount,channel_name,operator_type, discount_type
+  </sql>
   <!-- 通道折扣批量添加 -->
   <insert id="discount_addList" useGeneratedKeys="true" parameterType="java.util.List">
   	insert into <include refid="t_cDiscount"></include>
-  	(channel_id, scope_city_code, channel_discount,channel_name,operator_type)
+  	(<include refid="base_list"></include>)
   	values
   	<foreach collection="list" separator="," item="cDiscount" index="index">
   		(#{cDiscount.channelId},#{cDiscount.scopeCityCode},#{cDiscount.channelDiscount},
-  		#{cDiscount.channelName},#{cDiscount.operatorType})
+  		#{cDiscount.channelName},#{cDiscount.operatorType},#{cDiscount.discountType})
   	</foreach>
   </insert>
+  <!-- 查看折扣列表 -->
+  <select id="getDiscountList" parameterType="map" resultMap="BaseResultMap">
+  	select <include refid="base_list"></include>
+  	from <include refid="t_cDiscount"></include>
+  	<where>
+  		<include refid="condition_sql"></include>
+  	</where>
+  	order by id
+  	<!-- order by id -->
+  	<if test="start != null">
+	 	limit #{start}
+	 </if>
+	 <if test="end != null">
+	 	, #{end}
+	 </if>
+	 <if test="start == null &amp; end == null">
+	 	limit 0,10
+	 </if>
+  </select>
+  
+  <select id="countDiscount" parameterType="map" resultType="int">
+  	select count(*) from <include refid="t_cDiscount"></include>
+  	<where>
+  		<include refid="condition_sql"></include>
+  	</where>
+  </select>
+  
+  <sql id="condition_sql">
+  		<if test="channelId != null">
+  			channel_id = #{channelId}
+  		</if>
+  		<if test="discountType != null">
+  			discount_type = #{discountType}
+  		</if>
+  </sql>
   
   <!-- <insert id="insert" parameterType="weizu.flowsys.entity.ChannelDiscountPo" >
     insert into channel_discount (id, channel_id, scope_city_code, 

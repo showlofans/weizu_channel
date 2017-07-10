@@ -21,6 +21,7 @@ import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.ChannelDiscountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
@@ -40,7 +41,11 @@ import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.channel.ao.ChannelChannelAO;
+import com.weizu.flowsys.web.channel.ao.ChannelDiscountAO;
+import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
+import com.weizu.flowsys.web.channel.dao.impl.ChannelDiscountDaoImpl;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
+import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 
 /**
  * @description:费率管理
@@ -65,6 +70,11 @@ public class RateController {
 	private ChargeAccountAo chargeAccountAO;
 	@Resource
 	private AgencyActiveChannelAO agencyActiveChannelAO;
+//	@Resource
+//	private ChannelDiscountDao channelDiscountDao;
+	@Resource
+	private ChannelDiscountAO channelDiscountAO;
+	
 	
 	/**
 	 * @description:跳转到费率添加页面
@@ -522,6 +532,34 @@ public class RateController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * @description:查询统一配置的费率列表
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月10日 上午11:53:39
+	 */
+	@RequestMapping(value=RateURL.BIND_RATE_LIST)
+	public ModelAndView getRateByChannelId(@RequestParam(value = "pageNo", required = false) String pageNo,ChannelDiscountPo cdp){
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		PageParam pageParam = null;
+		if(StringHelper.isNotEmpty(pageNo)){
+			pageParam = new PageParam(Integer.parseInt(pageNo), 10) ;
+		}else{
+			pageParam = new PageParam(1, 10);
+		}
+		cdp.setDiscountType(ChannelDiscountTypeEnum.RATE.getValue());
+		Pagination<ChannelDiscountPo> pagination = channelDiscountAO.getDiscountList(cdp, pageParam);
+		resultMap.put("pagination", pagination);
+//		channelDis
+//		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
+//		resultMap.put("operatorTypes", OperatorTypeEnum.toList());
+//		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
+//		resultMap.put("channelListStr", channelListStr);
+//		resultMap.put("channelList", channelList);
+		return new ModelAndView("/activity/bind_rate_list","resultMap",resultMap);
 	}
 	
 }

@@ -34,5 +34,24 @@ public class ChannelDiscountDaoImpl extends DaoImpl<ChannelDiscountPo, Integer> 
 		return sqlSessionTemplate.insert("discount_addList", list);
 	}
 
+	@Override
+	public int countDiscount(Map<String, Object> paramsMap) {
+		
+		return sqlSessionTemplate.selectOne("countDiscount", paramsMap);
+	}
+
+	/**
+	 * @description: 查看折扣列表
+	 * @param paramsMap
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月10日 下午12:06:26
+	 */
+	@Override
+	public List<ChannelDiscountPo> getDiscountList(Map<String, Object> paramsMap) {
+		
+		return sqlSessionTemplate.selectList("getDiscountList", paramsMap);
+	}
+
 
 }

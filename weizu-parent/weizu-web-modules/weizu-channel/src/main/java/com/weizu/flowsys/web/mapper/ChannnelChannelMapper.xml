@@ -132,8 +132,14 @@
   	<if test="belongAgencyId != null">
   		AND belong_agency_id = #{belongAgencyId}
   	</if>
-  	<if test="billType != null">
-  		AND bill_type = #{billType}
+  	<if test="discountType != null">
+  		AND discount.discount_type = #{discountType}
+  	</if>
+  	<if test="channelId != null">
+  		AND channel.id = #{channelId}
+  	</if>
+  	<if test="operatorType != null">
+  		AND discount.operator_type = #{operatorType}
   	</if>
   	<if test="operatorType != null">
   		AND discount.operator_type = #{operatorType}

@@ -118,11 +118,11 @@
 					<c:if test="${vs.index % 4==0 }"><tr></c:if>
 						<td> 
 							<div class="radio-box">
-								<input class="radioItem" type="radio" name="cityCode" id="scopeCityCode-${vs.index }" value="${scopeCityEnum.value }">
+								<input class="radioItem" type="radio" name="scopeCityCode" id="scopeCityCode-${vs.index }" value="${scopeCityEnum.value }">
 								${scopeCityEnum.desc }
 								<%-- <label for="operatorType-${vs.index }"></label> --%>
 								<!-- 输入两位折扣数字 -->
-								<input class="disscount" style="display: none; width:50px;" type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
+								<input class="disscount" name="" style="display: none; width:50px;" type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
 							</div>
 						</td>
 					<c:if test="${(vs.index+1) % 4==0 }"></tr></c:if>
@@ -279,6 +279,9 @@ function changeName(){
 		return false;
 	}
 	var i = 0;
+	if($("input[name='scopeCityCode']:checked").next().val() != ""){//折扣不为空
+		i++;
+	}
 	$(".disscount").each(function(){
     	if($(this).is(':visible')){ 
     		$('<input />', {
@@ -287,11 +290,11 @@ function changeName(){
     	        type: 'hidden',
     	        value: $(this).val()
     	      }).appendTo($('#setDiscountList'));
-    		$('<input />', {
+    		/* $('<input />', {
     	        name: 'scopeCityCode',
     	        type: 'hidden',
     	        value: $(this).prev().val()
-    	      }).appendTo($('#setDiscountList'));
+    	      }).appendTo($('#setDiscountList')); */
     		if($(this).val() != ""){
 	    		i++;
     		}
@@ -302,7 +305,7 @@ function changeName(){
 			} */
     		//alert('discountList['+ i +'].scopeCityName');
     	}
-	})
+	}) 
 	if(i > 0){
 		//alert(i);
 		return true;
@@ -380,15 +383,15 @@ $(".radioItem").change(
 		 var operatorType = $("input[name='operatorType']:checked").val();
 		 var serviceType = $("input[name='serviceType']:checked").val();
 		//alert(serviceType);
-		var $price = $("input[name='cityCode']:checked").next().next();		//最优通道显示区
+		var $price = $("input[name='scopeCityCode']:checked").next().next();		//最优通道显示区
 		//alert(operatorType);
-		if($("input[name='cityCode']:checked").next().is(':hidden')){
-			var cityCode = $("input[name='cityCode']:checked").val().trim();
+		if($("input[name='scopeCityCode']:checked").next().is(':hidden')){
+			var scopeCityCode = $("input[name='scopeCityCode']:checked").val().trim();
 			//alert(cityCode);
 			 $.ajax( {    
 		        "type": "get",     
 		        "contentType": "application/x-www-form-urlencoded; charset=utf-8",    
-		        "url": "/flowsys/rate/get_simple_channel.do?operatorType="+operatorType+"&scopeCityCode="+cityCode+"&serviceType="+serviceType,     
+		        "url": "/flowsys/rate/get_simple_channel.do?operatorType="+operatorType+"&scopeCityCode="+scopeCityCode+"&serviceType="+serviceType,     
 		        "dataType": "json",  
 		        "async": false,  
 		        "success": function(resp) { 
@@ -397,8 +400,8 @@ $(".radioItem").change(
 	        		$("#selectC").empty();
 	        		 if(resp.length == 0){ //如果没有通道信息，就设置折扣为不可编辑
 	        			 $("#selectC").append("<option value=''>没有通道</option>");
-	        			 $("input[name='cityCode']:checked").next().val("没有通道，不可设置");
-	        			 $("input[name='cityCode']:checked").next().attr("readonly","readonly");
+	        			 $("input[name='scopeCityCode']:checked").next().val("没有通道，不可设置");
+	        			 $("input[name='scopeCityCode']:checked").next().attr("readonly","readonly");
 	        			 $("#channelCount").html(0);
 	        		 }
 	        		 //如果resp没有值，下面函数也不会执行
@@ -419,11 +422,11 @@ $(".radioItem").change(
 		        }
 		    });  
 			$(".disscount").hide();
-			$("input[name='cityCode']:checked").next().show();	
+			$("input[name='scopeCityCode']:checked").next().show();	
 		}else{
-			$("input[name='cityCode']:checked").next().hide();
+			$("input[name='scopeCityCode']:checked").next().hide();
 			$price.hide();
-			$("input[name='cityCode']:checked").attr("checked",false);
+			$("input[name='scopeCityCode']:checked").attr("checked",false);
 			$("#selectC").empty();
 			$("#selectC").append("<option value=''>没有通道</option>");
 			 $("#channelCount").html(0);

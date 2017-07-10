@@ -27,6 +27,8 @@ public class ChannelDiscountPo extends Po {
     private Integer operatorType;			//运营商类型
     
     private Integer serviceType;			//流量类型
+    
+    private Integer discountType;			//折扣类型（0-对上，1-对下）
 
     
     public ChannelDiscountPo() {
@@ -35,7 +37,7 @@ public class ChannelDiscountPo extends Po {
 
 	public ChannelDiscountPo(Long channelId, String scopeCityCode,
 			Double channelDiscount, String channelName, Integer operatorType,
-			Integer serviceType) {
+			Integer serviceType, Integer discountType) {
 		super();
 		this.channelId = channelId;
 		this.scopeCityCode = scopeCityCode;
@@ -43,9 +45,16 @@ public class ChannelDiscountPo extends Po {
 		this.channelName = channelName;
 		this.operatorType = operatorType;
 		this.serviceType = serviceType;
+		this.discountType = discountType;
 	}
 
+	public Integer getDiscountType() {
+		return discountType;
+	}
 
+	public void setDiscountType(Integer discountType) {
+		this.discountType = discountType;
+	}
 
 	public Integer getServiceType() {
 		return serviceType;

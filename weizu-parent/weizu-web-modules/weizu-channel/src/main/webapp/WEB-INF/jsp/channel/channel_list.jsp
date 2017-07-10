@@ -149,8 +149,8 @@
 						</c:if>
 						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="channel_stop('/flowsys/channel/channel_delete.do',${channel.id})" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
 						<!-- <a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5"  href="javascript:;" title="折扣编辑"><i class="Hui-iconfont">&#xe6df;</i></a> --> 
-						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="/flowsys/rate/bind_channel_list.do?bindTag=bAgency&channelId=${channel.id }" onclick="Hui_admin_tab(this)" title="绑定代理商"><i class="Hui-iconfont">&#xe6df;</i></a>
-						<!-- <a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a> -->
+						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="/flowsys/rate/bind_rate_list.do?channelId= ${channel.id }&channelState=${resultMap.searchParam.channelState}&channelName=${resultMap.searchParam.channelName}&scopeCityName=${resultMap.searchParam.scopeCityName}" onclick="Hui_admin_tab(this)" data-title="费率列表"><i class="Hui-iconfont">&#xe6df;</i></a>
+						<!-- <a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a> /flowsys/rate/bind_rate_list.do?channelId= ${channel.id }-->
 						</td>
 					</tr>
 				</c:forEach>

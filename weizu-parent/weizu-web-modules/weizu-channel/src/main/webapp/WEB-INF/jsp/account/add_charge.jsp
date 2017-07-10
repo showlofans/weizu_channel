@@ -49,6 +49,19 @@
 				</c:otherwise>
 			</c:choose>
 		</div> 
+		<c:if test="${not empty resultMap.chargeAccount1 }">
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>高配账户余额</label>
+				<c:choose>
+					<c:when test="${resultMap.chargeAccount1.accountBalance > 0 }">
+						<div class="formControls col-xs-8 col-sm-9"> ${resultMap.chargeAccount1.accountBalance } </div>
+					</c:when>
+					<c:otherwise>
+						<div class="formControls col-xs-8 col-sm-9 c-red"> ${resultMap.chargeAccount1.accountBalance } </div>
+					</c:otherwise>
+				</c:choose>
+			</div> 
+		</c:if>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>信用额度</label>
 			<c:choose>
@@ -64,7 +77,6 @@
 			<label class="form-label col-xs-4 col-sm-3">充值额：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" class="input-text" required="required" style="width:100px;" autocomplete="off" placeholder="请输入double值" name="rechargeAmount" id="rechargeAmount">元
-				<input type="hidden" name="accountId" value="${resultMap.chargeAccount.id }">
 				<input type="hidden" name="accountType" value="0"> <!-- 设置为充值 -->
 				<input type="hidden" name="agencyId" value="${resultMap.agencyId }"> <!-- 代理商id -->
 				<%-- ${resultMap.error_msg } --%>
@@ -75,13 +87,13 @@
 			<div class="formControls col-xs-8 col-sm-9">
 				<span class="select-box inline">
 						<select name="billType" class="select" style="width:80px;">
-						<c:forEach items="${resultMap.billTypeEnum }" var="billType" varStatus="vs">
+						<c:forEach items="${resultMap.billTypeEnum }" var="billTypeE" varStatus="vs">
 							<c:choose>
-								<c:when test=""${billType.value == resultMap.billType }">
-									<option value="${billType.value }" selected="selected">${billType.desc }</option>
+								<c:when test="${resultMap.billType == billTypeE.value }">
+									<option value="${billTypeE.value }" selected="selected">${billTypeE.desc }</option>
 								</c:when>
 								<c:otherwise>
-									<option value="${billType.value }">${billType.desc }</option>
+									<option value="${billTypeE.value }">${billTypeE.desc }</option>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>

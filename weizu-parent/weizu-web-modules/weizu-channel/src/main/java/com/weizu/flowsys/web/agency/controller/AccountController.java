@@ -65,7 +65,7 @@ public class AccountController {
 		resultMap.put("agencyUserName", userName); // 代理商名字
 		resultMap.put("agencyId", agencyId); // 代理商ID
 		resultMap.put("billTypeEnum", BillTypeEnum.toList());
-		resultMap.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL);//默认对私
+		resultMap.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());//默认对私
 		resultMap.put("chargeAccount",chargeAccountAO.getAccountByAgencyId(agencyId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));//通过代理商Id获得充值账户基本信息
 		resultMap.put("chargeAccount1",chargeAccountAO.getAccountByAgencyId(agencyId,BillTypeEnum.CORPORATE_BUSINESS.getValue()));//通过代理商Id获得充值账户基本信息
 		return new ModelAndView("account/add_charge", "resultMap", resultMap);
@@ -162,11 +162,21 @@ public class AccountController {
 	public void goCharge(ChargeRecordPo chargeRecordPo,
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
+		ChargeAccountPo accountPo = null;
+		if(chargeRecordPo.getBillType() == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()){
+			accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
+		}else{
+			accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
+		}
 		int result = chargeRecordAO.updateAccount(chargeRecordPo, accountPo);
 		
 		if(result > 0){
-			ChargeAccountPo agencyAccountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount"); 
+			ChargeAccountPo agencyAccountPo = null;
+			if(chargeRecordPo.getBillType() == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()){
+				agencyAccountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
+			}else{
+				agencyAccountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
+			}
 			agencyAccountPo.addBalance(chargeRecordPo.getRechargeAmount(),-1);//session中的引用变量
 			response.getWriter().print("success");
 		}else{
