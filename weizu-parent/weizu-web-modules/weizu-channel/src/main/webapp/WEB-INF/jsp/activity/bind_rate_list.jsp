@@ -125,6 +125,9 @@
 				
 			</tbody>
 		</table>
+		<c:if test="${empty pagination }">
+			
+		</c:if>
 		<mytag:Pagination pagination="${resultMap.pagination}" queryForm="queryForm" divId="rateId" />
 	</div>
 </div>

@@ -18,8 +18,10 @@ import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.util.StringUtil2;
+import com.weizu.flowsys.web.activity.dao.AacJoinRdDao;
 import com.weizu.flowsys.web.activity.dao.AgencyActiveChannelDao;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
+import com.weizu.flowsys.web.activity.pojo.AacJoinRdPo;
 import com.weizu.flowsys.web.activity.pojo.AgencyActiveChannelPo;
 import com.weizu.flowsys.web.activity.pojo.DiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
@@ -33,6 +35,9 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 	
 	@Resource
 	private RateDiscountDao rateDiscountDao;
+	
+	@Resource
+	private AacJoinRdDao aacJoinRdDao;
 	
 	/**
 	 * @description: 查询代理商参与的活动通道(不分页)
@@ -180,8 +185,10 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 		rateDiscountPo.setServiceType(serviceType);
 		rateDiscountPo.setActiveId(nextActiveId);
 		rateDiscountPo.setActiveDiscount(StringUtil2.getDiscount(rateDiscountPo.getActiveDiscount()));
+		Long nextDiscountId = rateDiscountDao.nextId();
 		rateDiscountDao.add(rateDiscountPo);
 		
+		bindRes = aacJoinRdDao.add(new AacJoinRdPo(nextDiscountId, nextActiveId));
 //		List<RateDiscountPo> rateList = aacp.getRateList();
 //		initRateList(rateList,aacp,nextActiveId);
 //		rateDiscountDao.rate_addList(rateList);

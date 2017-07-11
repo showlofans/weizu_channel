@@ -1,6 +1,9 @@
 package com.weizu.flowsys.web.channel.pojo;
 
+import javax.annotation.Resource;
+
 import com.weizu.flowsys.core.annotation.po.TableName;
+import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
 
 /**
@@ -29,6 +32,12 @@ public class ChannelDiscountPo extends Po {
     private Integer serviceType;			//流量类型
     
     private Integer discountType;			//折扣类型（0-对上，1-对下）
+    
+    @TempField
+    private String scopeCityName;			// 地区名字
+    
+    @TempField
+    private Integer channelState;			//通道状态
 
     
     public ChannelDiscountPo() {
@@ -46,6 +55,22 @@ public class ChannelDiscountPo extends Po {
 		this.operatorType = operatorType;
 		this.serviceType = serviceType;
 		this.discountType = discountType;
+	}
+	
+	public Integer getChannelState() {
+		return channelState;
+	}
+
+	public void setChannelState(Integer channelState) {
+		this.channelState = channelState;
+	}
+
+	public String getScopeCityName() {
+		return scopeCityName;
+	}
+
+	public void setScopeCityName(String scopeCityName) {
+		this.scopeCityName = scopeCityName;
 	}
 
 	public Integer getDiscountType() {

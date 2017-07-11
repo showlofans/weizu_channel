@@ -72,7 +72,7 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		
 		/****************修改子代理商账户********************************************/
 		
-		int accountId = chargeRecordPo.getAccountId();
+//		int accountId = chargeRecordPo.getAccountId();
 
 		/** 数据库取出来的的账户对象 */
 		ChargeAccountPo chargeAccountPo = chargeAccountDao.selectByAgencyId(chargeRecordPo.getAgencyId(),chargeRecordPo.getBillType());
@@ -83,7 +83,7 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		int resultMsg = chargeRecordDao.add(new ChargeRecordPo(System
 				.currentTimeMillis(), chargeAmount,
 				beforeBalance, NumberTool.add(beforeBalance, chargeAmount), 
-				chargeRecordPo.getBillType(),chargeRecordPo.getAccountType(), accountId, chargeRecordPo.getAgencyId(),1));
+				chargeRecordPo.getBillType(),chargeRecordPo.getAccountType(), chargeAccountPo.getId(), chargeRecordPo.getAgencyId(),1));
 
 		/** 更新账户表的余额值 */
 		chargeAccountPo.addBalance(chargeAmount,0);

@@ -67,5 +67,13 @@ public class AgencyURL extends BaseURL {
 	 * 首页展示信息
 	 */
 	public static final String WELCOME = "/welcome" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 重置密码页面
+	 */
+	public static final String RESET_PASS_PAGE = "/reset_pass_page" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 重置密码
+	 */
+	public static final String RESET_PASS = "/reset_pass" + DYNAMIC_WEB_SUFFIX;
 	
 }

@@ -112,4 +112,14 @@ public interface AgencyAO {
 	 */
 	int checkSecondAgency(int agencyId);
 	
+	/**
+	 * @description: 修改密码
+	 * @param agencyId
+	 * @param enterPass
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月11日 上午10:10:43
+	 */
+	int updatePass(int agencyId,String enterPass);
+	
 }

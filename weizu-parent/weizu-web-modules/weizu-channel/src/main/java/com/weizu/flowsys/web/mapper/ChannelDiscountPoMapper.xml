@@ -54,10 +54,10 @@
   
   <sql id="condition_sql">
   		<if test="channelId != null">
-  			channel_id = #{channelId}
+  			AND channel_id = #{channelId}
   		</if>
   		<if test="discountType != null">
-  			discount_type = #{discountType}
+  			AND discount_type = #{discountType}
   		</if>
   </sql>
   

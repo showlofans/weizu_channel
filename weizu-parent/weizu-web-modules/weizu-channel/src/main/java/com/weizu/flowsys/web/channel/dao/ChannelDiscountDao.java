@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.weizu.flowsys.core.dao.Dao;
+import com.weizu.flowsys.web.activity.pojo.OperatorDiscount;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 
 /**
@@ -34,4 +35,5 @@ public interface ChannelDiscountDao extends Dao<ChannelDiscountPo, Integer> {
 	 * @createTime:2017年7月10日 下午12:05:56
 	 */
 	List<ChannelDiscountPo> getDiscountList(Map<String,Object> paramsMap);
+	
 }

@@ -31,6 +31,7 @@ import com.weizu.flowsys.web.activity.ao.AgencyActiveChannelAO;
 import com.weizu.flowsys.web.activity.ao.OperatorDiscountAO;
 import com.weizu.flowsys.web.activity.ao.RateBackwardAO;
 import com.weizu.flowsys.web.activity.pojo.AgencyActiveChannelPo;
+import com.weizu.flowsys.web.activity.pojo.OperatorDiscount;
 import com.weizu.flowsys.web.activity.pojo.OperatorDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateBackwardPo;
 import com.weizu.flowsys.web.activity.pojo.RateBackwardVo;
@@ -541,7 +542,7 @@ public class RateController {
 	 * @createTime:2017年7月10日 上午11:53:39
 	 */
 	@RequestMapping(value=RateURL.BIND_RATE_LIST)
-	public ModelAndView getRateByChannelId(@RequestParam(value = "pageNo", required = false) String pageNo,ChannelDiscountPo cdp){
+	public ModelAndView getRateByChannelId(ChannelDiscountPo cdp, @RequestParam(value = "pageNo", required = false) String pageNo){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
 		PageParam pageParam = null;
@@ -552,7 +553,17 @@ public class RateController {
 		}
 		cdp.setDiscountType(ChannelDiscountTypeEnum.RATE.getValue());
 		Pagination<ChannelDiscountPo> pagination = channelDiscountAO.getDiscountList(cdp, pageParam);
+		//初始化开头字段
+		cdp.setDiscountType(ChannelDiscountTypeEnum.RATE.getValue());
+		
+//		List<ChannelDiscountPo> discountList = channelDiscountAO.getDiscountList(cdp);
+		
+		List<OperatorDiscount> prefixList = channelDiscountAO.getOperatorList(cdp);
+//		prefixList = channelDiscountAO
+		
+		
 		resultMap.put("pagination", pagination);
+		resultMap.put("prefixList", prefixList);	//通道折扣选项
 //		channelDis
 //		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 //		resultMap.put("operatorTypes", OperatorTypeEnum.toList());

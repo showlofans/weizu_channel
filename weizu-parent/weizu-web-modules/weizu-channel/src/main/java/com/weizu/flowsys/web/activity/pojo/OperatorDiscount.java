@@ -27,7 +27,6 @@ public class OperatorDiscount {
 	}
 	public OperatorDiscount() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	public String getOperatorType() {
 		return operatorType;

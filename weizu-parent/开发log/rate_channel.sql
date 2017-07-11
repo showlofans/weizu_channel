@@ -10,10 +10,30 @@ Target Server Type    : MYSQL
 Target Server Version : 50626
 File Encoding         : 65001
 
-Date: 2017-07-08 18:04:12
+Date: 2017-07-11 18:28:02
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+-- ----------------------------
+-- Table structure for `aac_join_rd`
+-- ----------------------------
+DROP TABLE IF EXISTS `aac_join_rd`;
+CREATE TABLE `aac_join_rd` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `rate_discount_id` bigint(20) DEFAULT NULL COMMENT '费率折扣id',
+  `active_id` bigint(20) DEFAULT NULL COMMENT '代理商通道连接id',
+  PRIMARY KEY (`id`),
+  KEY `join_aac_fk` (`active_id`),
+  KEY `join_rd_fk` (`rate_discount_id`),
+  CONSTRAINT `join_aac_fk` FOREIGN KEY (`active_id`) REFERENCES `agency_active_channel` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `join_rd_fk` FOREIGN KEY (`rate_discount_id`) REFERENCES `rate_discount` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of aac_join_rd
+-- ----------------------------
+INSERT INTO `aac_join_rd` VALUES ('1', '14', '17');
+
 -- ----------------------------
 -- Table structure for `agency_active_channel`
 -- ----------------------------
@@ -34,7 +54,7 @@ CREATE TABLE `agency_active_channel` (
   CONSTRAINT `agency_agency` FOREIGN KEY (`agency_id`) REFERENCES `agency_backward` (`id`),
   CONSTRAINT `bind_agency_fk` FOREIGN KEY (`bind_agency_id`) REFERENCES `agency_backward` (`id`),
   CONSTRAINT `channel_agency_fk` FOREIGN KEY (`channel_id`) REFERENCES `channel_channel` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of agency_active_channel
@@ -45,6 +65,14 @@ INSERT INTO `agency_active_channel` VALUES ('3', '21', '4', '12', '1', '456', '�
 INSERT INTO `agency_active_channel` VALUES ('4', '21', '4', '12', '1', '456', '省漫游-wz广东移动75', null);
 INSERT INTO `agency_active_channel` VALUES ('5', '21', '4', '12', '0', '456', '省漫游-wz广东移动75', '1499419864447');
 INSERT INTO `agency_active_channel` VALUES ('6', '23', '4', '10', '0', 'w', '省内-wz广东', '1499476171448');
+INSERT INTO `agency_active_channel` VALUES ('7', '21', '4', '12', '0', '456', '省漫游-wz广东移动75', '1499652418441');
+INSERT INTO `agency_active_channel` VALUES ('8', '21', '4', '12', '0', '456', '省漫游-wz广东移动75', '1499652439155');
+INSERT INTO `agency_active_channel` VALUES ('9', '21', '4', '12', '0', '456', '省漫游-wz广东移动75', '1499652492051');
+INSERT INTO `agency_active_channel` VALUES ('13', '21', '4', '12', '0', '456', '省漫游-wz广东移动75', '1499653581437');
+INSERT INTO `agency_active_channel` VALUES ('14', '24', '4', '12', '0', 'kkk', '省漫游-wz广东移动75', '1499653621056');
+INSERT INTO `agency_active_channel` VALUES ('15', '23', '4', '11', '0', 'w', '全国-wz广东移动95', '1499678717931');
+INSERT INTO `agency_active_channel` VALUES ('16', '21', '4', '12', '0', '456', '省漫游-wz广东移动75', '1499752473997');
+INSERT INTO `agency_active_channel` VALUES ('17', '21', '4', '12', '0', '456', '省漫游-wz广东移动75', '1499757929280');
 
 -- ----------------------------
 -- Table structure for `agency_backward`
@@ -71,7 +99,7 @@ CREATE TABLE `agency_backward` (
 -- Records of agency_backward
 -- ----------------------------
 INSERT INTO `agency_backward` VALUES ('1', '0', 'xiao', 'xiao', 'xiaoqiang', '', '', '', null, '1495689716779', 'FV', null, null);
-INSERT INTO `agency_backward` VALUES ('4', '1', '123', '123', '木头人', '15858343638', '22222', '22', '3', '1499423673667', 'GD9QS', null, null);
+INSERT INTO `agency_backward` VALUES ('4', '1', '123', '123', '木头人', '15858343638', '22222', '22', '3', '1499736896474', 'GD9QS', null, null);
 INSERT INTO `agency_backward` VALUES ('21', '4', '456', '123', '123', '123', '123@123.com', '1233', null, '1498617431513', 'H769', '402880ef5cd2b925015cd2b925b90000', '12');
 INSERT INTO `agency_backward` VALUES ('23', '4', 'w', 'w', 'w', 'w', 'w@d.com', 'f', null, '1498621008604', 'H65M', '402880ef5cd2b925015cd2bc11d70001', '13');
 INSERT INTO `agency_backward` VALUES ('24', '4', 'kkk', 'kkk', 'kkk', 'kkk', 'kkk@qq.com', 'kkk', '7', '1498617873998', '7L4T', '402880ef5cd2b925015cd2bc5d130002', null);
@@ -135,12 +163,12 @@ CREATE TABLE `channel_channel` (
 -- Records of channel_channel
 -- ----------------------------
 INSERT INTO `channel_channel` VALUES ('7', 'wz本地', '1000', '32', null, null, null, null, '0', '0', '0', '1499233574741', '4');
-INSERT INTO `channel_channel` VALUES ('8', '省内-wz江西省', '500& 500', '32', null, null, null, null, '1', '1', '0', '1499236841669', '4');
+INSERT INTO `channel_channel` VALUES ('8', '省内-wz江西省', '500& 500', '32', null, null, null, null, '1', '0', '0', '1499236841669', '4');
 INSERT INTO `channel_channel` VALUES ('9', '全国-wz福建', '100', null, null, null, null, null, '0', '0', '0', null, '4');
 INSERT INTO `channel_channel` VALUES ('10', '省内-wz广东', '200', '32', null, null, null, null, '0', '0', '0', null, '4');
 INSERT INTO `channel_channel` VALUES ('11', '全国-wz广东移动95', '6144& 3072& 500', '32', null, null, null, null, '0', '0', '0', null, '4');
 INSERT INTO `channel_channel` VALUES ('12', '省漫游-wz广东移动75', '500& 6144', '32', null, null, null, null, '0', '0', '0', null, '4');
-INSERT INTO `channel_channel` VALUES ('13', '省漫游-江西', '1000', '32', null, null, null, null, '0', '0', '0', null, '4');
+INSERT INTO `channel_channel` VALUES ('13', '省漫游-江西', '1000', '32', null, null, null, null, '1', '1', '0', '1499680372499', '4');
 
 -- ----------------------------
 -- Table structure for `channel_discount`
@@ -154,6 +182,7 @@ CREATE TABLE `channel_discount` (
   `channel_name` varchar(255) DEFAULT NULL COMMENT '通道名称',
   `operator_type` int(11) DEFAULT NULL COMMENT '运营商类型(0-移动，1-联通，2-电信）',
   `service_type` int(11) DEFAULT NULL COMMENT '流量类型',
+  `discount_type` int(11) DEFAULT NULL COMMENT '通道折扣类型（0-对上，1-对下）',
   PRIMARY KEY (`id`),
   KEY `channel_channel_discouont` (`channel_id`),
   CONSTRAINT `channel_channel_discouont` FOREIGN KEY (`channel_id`) REFERENCES `channel_channel` (`id`) ON DELETE CASCADE
@@ -162,16 +191,47 @@ CREATE TABLE `channel_discount` (
 -- ----------------------------
 -- Records of channel_discount
 -- ----------------------------
-INSERT INTO `channel_discount` VALUES ('3', null, '01', '0.8', 'wz江西', null, '0');
-INSERT INTO `channel_discount` VALUES ('4', null, '14', '0.6', 'wz江西', null, '0');
-INSERT INTO `channel_discount` VALUES ('7', '7', '09', '0.85', 'wz本地', '1', '0');
-INSERT INTO `channel_discount` VALUES ('8', '7', '14', '0.7', 'wz本地', '1', '0');
-INSERT INTO `channel_discount` VALUES ('9', '8', '13', '0.56', '省内-wz江西省', '0', '0');
-INSERT INTO `channel_discount` VALUES ('10', '9', '13', '0.9', '全国-wz福建', '1', '0');
-INSERT INTO `channel_discount` VALUES ('11', '10', '19', '0.85', '省内-wz广东', '1', '0');
-INSERT INTO `channel_discount` VALUES ('12', '11', '15', '0.95', '全国-wz广东移动95', '0', '0');
-INSERT INTO `channel_discount` VALUES ('13', '12', '19', '0.75', '省漫游-wz广东移动75', '0', '0');
-INSERT INTO `channel_discount` VALUES ('14', '13', '14', '0.65', '省漫游-省漫游-江西', '1', null);
+INSERT INTO `channel_discount` VALUES ('3', null, '01', '0.8', 'wz江西', null, '0', '0');
+INSERT INTO `channel_discount` VALUES ('4', null, '14', '0.6', 'wz江西', null, '0', '0');
+INSERT INTO `channel_discount` VALUES ('7', '7', '09', '0.85', 'wz本地', '1', '0', '0');
+INSERT INTO `channel_discount` VALUES ('8', '7', '14', '0.7', 'wz本地', '1', '0', '0');
+INSERT INTO `channel_discount` VALUES ('9', '8', '13', '0.56', '省内-wz江西省', '0', '0', '0');
+INSERT INTO `channel_discount` VALUES ('10', '9', '13', '0.9', '全国-wz福建', '1', '0', '0');
+INSERT INTO `channel_discount` VALUES ('11', '10', '19', '0.85', '省内-wz广东', '1', '0', '0');
+INSERT INTO `channel_discount` VALUES ('12', '11', '15', '0.95', '全国-wz广东移动95', '0', '0', '0');
+INSERT INTO `channel_discount` VALUES ('13', '12', '19', '0.75', '省漫游-wz广东移动75', '0', '0', '0');
+INSERT INTO `channel_discount` VALUES ('14', '13', '14', '0.65', '省漫游-省漫游-江西', '1', null, '0');
+
+-- ----------------------------
+-- Table structure for `channel_discount_bind`
+-- ----------------------------
+DROP TABLE IF EXISTS `channel_discount_bind`;
+CREATE TABLE `channel_discount_bind` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `channel_id` bigint(11) DEFAULT NULL,
+  `scope_city_code` varchar(255) DEFAULT NULL COMMENT '地区',
+  `channel_discount` double DEFAULT NULL COMMENT '通道折扣',
+  `channel_name` varchar(255) DEFAULT NULL COMMENT '通道名称',
+  `operator_type` int(11) DEFAULT NULL COMMENT '运营商类型(0-移动，1-联通，2-电信）',
+  `service_type` int(11) DEFAULT NULL COMMENT '流量类型',
+  PRIMARY KEY (`id`),
+  KEY `channel_channel_discouont` (`channel_id`),
+  CONSTRAINT `channel_discount_bind_ibfk_1` FOREIGN KEY (`channel_id`) REFERENCES `channel_channel` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of channel_discount_bind
+-- ----------------------------
+INSERT INTO `channel_discount_bind` VALUES ('3', null, '01', '0.8', 'wz江西', null, '0');
+INSERT INTO `channel_discount_bind` VALUES ('4', null, '14', '0.6', 'wz江西', null, '0');
+INSERT INTO `channel_discount_bind` VALUES ('7', '7', '09', '0.85', 'wz本地', '1', '0');
+INSERT INTO `channel_discount_bind` VALUES ('8', '7', '14', '0.7', 'wz本地', '1', '0');
+INSERT INTO `channel_discount_bind` VALUES ('9', '8', '13', '0.56', '省内-wz江西省', '0', '0');
+INSERT INTO `channel_discount_bind` VALUES ('10', '9', '13', '0.9', '全国-wz福建', '1', '0');
+INSERT INTO `channel_discount_bind` VALUES ('11', '10', '19', '0.85', '省内-wz广东', '1', '0');
+INSERT INTO `channel_discount_bind` VALUES ('12', '11', '15', '0.95', '全国-wz广东移动95', '0', '0');
+INSERT INTO `channel_discount_bind` VALUES ('13', '12', '19', '0.75', '省漫游-wz广东移动75', '0', '0');
+INSERT INTO `channel_discount_bind` VALUES ('14', '13', '14', '0.65', '省漫游-省漫游-江西', '1', null);
 
 -- ----------------------------
 -- Table structure for `channel_forward`
@@ -274,16 +334,16 @@ CREATE TABLE `charge_account` (
 -- Records of charge_account
 -- ----------------------------
 INSERT INTO `charge_account` VALUES ('1', '3981', null, null, '200', '1', '0', null);
-INSERT INTO `charge_account` VALUES ('2', '0', '工行', '123', '100', '4', '0', null);
+INSERT INTO `charge_account` VALUES ('2', '-456', '工行', '123', '100', '4', '0', null);
 INSERT INTO `charge_account` VALUES ('3', '0', null, null, '0', '16', '0', null);
 INSERT INTO `charge_account` VALUES ('4', '0', null, null, '0', '17', '0', null);
 INSERT INTO `charge_account` VALUES ('5', '0', null, null, '0', '18', '0', null);
 INSERT INTO `charge_account` VALUES ('6', '0', null, null, '0', '19', '0', null);
 INSERT INTO `charge_account` VALUES ('7', '0', null, null, '0', '20', '0', null);
-INSERT INTO `charge_account` VALUES ('8', '200', null, null, '2000', '21', '0', null);
+INSERT INTO `charge_account` VALUES ('8', '600', null, null, '2000', '21', '0', null);
 INSERT INTO `charge_account` VALUES ('9', '0', null, null, '0', '22', '0', null);
 INSERT INTO `charge_account` VALUES ('10', '1000', null, null, '0', '23', '0', null);
-INSERT INTO `charge_account` VALUES ('11', '300', null, null, '1212', '24', '0', null);
+INSERT INTO `charge_account` VALUES ('11', '356', null, null, '1212', '24', '0', null);
 INSERT INTO `charge_account` VALUES ('12', '500', null, null, '2000', '25', '0', null);
 INSERT INTO `charge_account` VALUES ('13', '123', null, null, '0', '26', '0', null);
 INSERT INTO `charge_account` VALUES ('15', '0', null, null, '0', '1', '1', '/download?fileName=149881406211919859915_980x1200_0.jpg');
@@ -308,7 +368,7 @@ CREATE TABLE `charge_record` (
   `agency_id` int(11) DEFAULT NULL COMMENT '代理商账户id',
   `charge_for` int(11) DEFAULT NULL COMMENT '发生原因',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of charge_record
@@ -390,6 +450,12 @@ INSERT INTO `charge_record` VALUES ('87', '1498711224189', '100', '7196.2', '709
 INSERT INTO `charge_record` VALUES ('88', '1498711397517', '100', '7096.2', '6996.2', '0', '1', '2', '4', '1');
 INSERT INTO `charge_record` VALUES ('89', '1498791831345', '25', '6996.2', '6971.2', '1', '1', '2', '4', '1');
 INSERT INTO `charge_record` VALUES ('90', '1498791831355', '25', '-25', '0', '1', '0', '8', '21', '1');
+INSERT INTO `charge_record` VALUES ('91', '1499676982137', '56', '0', '-56', '1', '1', '2', '4', '1');
+INSERT INTO `charge_record` VALUES ('92', '1499676982175', '56', '300', '356', '1', '0', '11', '24', '1');
+INSERT INTO `charge_record` VALUES ('94', '1499741844216', '200', '-56', '-256', '0', '1', '2', '4', '1');
+INSERT INTO `charge_record` VALUES ('95', '1499741844254', '200', '200', '400', '0', '0', '8', '21', '1');
+INSERT INTO `charge_record` VALUES ('96', '1499741905706', '200', '-256', '-456', '0', '1', '2', '4', '1');
+INSERT INTO `charge_record` VALUES ('97', '1499741914681', '200', '400', '600', '0', '0', '8', '21', '1');
 
 -- ----------------------------
 -- Table structure for `exchange_platform`
@@ -524,7 +590,7 @@ CREATE TABLE `product_code` (
   `ep_id` int(11) DEFAULT NULL COMMENT '平台ID',
   `product_code` varchar(255) DEFAULT NULL COMMENT '产品编码',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of product_code
@@ -554,6 +620,7 @@ INSERT INTO `product_code` VALUES ('22', '浙江省', '1', '11', null, '32', '61
 INSERT INTO `product_code` VALUES ('23', '浙江省', '8', '11', null, '32', '3072');
 INSERT INTO `product_code` VALUES ('24', '浙江省', '16', '11', null, '32', '500');
 INSERT INTO `product_code` VALUES ('25', '全国', '1', '32', null, '2', '');
+INSERT INTO `product_code` VALUES ('26', '四川省', '10', '22', null, '32', '123');
 
 -- ----------------------------
 -- Table structure for `purchase`
@@ -649,7 +716,7 @@ CREATE TABLE `rate_discount` (
   PRIMARY KEY (`id`),
   KEY `active_discount_fk` (`active_id`),
   CONSTRAINT `active_discount_fk` FOREIGN KEY (`active_id`) REFERENCES `agency_active_channel` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of rate_discount
@@ -660,6 +727,14 @@ INSERT INTO `rate_discount` VALUES ('3', '0', '0', '19', '85', '3');
 INSERT INTO `rate_discount` VALUES ('4', '0', '0', '19', '87', '4');
 INSERT INTO `rate_discount` VALUES ('5', '0', '0', '19', '0.14', '5');
 INSERT INTO `rate_discount` VALUES ('6', '1', '0', '19', '0.111', '6');
+INSERT INTO `rate_discount` VALUES ('7', '0', '0', '19', '0.56', '7');
+INSERT INTO `rate_discount` VALUES ('8', '0', '0', '19', '0.12', '8');
+INSERT INTO `rate_discount` VALUES ('9', '0', '0', '19', '0.13', '9');
+INSERT INTO `rate_discount` VALUES ('10', '0', '0', '19', '0.445', '13');
+INSERT INTO `rate_discount` VALUES ('11', '0', '0', '19', '0.56', '14');
+INSERT INTO `rate_discount` VALUES ('12', '0', '0', '15', '0.85', '15');
+INSERT INTO `rate_discount` VALUES ('13', '0', '0', '19', '0.65', '16');
+INSERT INTO `rate_discount` VALUES ('14', '0', '0', '19', '0.116', '17');
 
 -- ----------------------------
 -- Table structure for `rate_join_channel`
