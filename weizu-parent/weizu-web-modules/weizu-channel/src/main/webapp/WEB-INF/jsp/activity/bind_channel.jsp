@@ -403,9 +403,13 @@ $(".radioItem").change(
 	        			 $("input[name='scopeCityCode']:checked").next().val("没有通道，不可设置");
 	        			 $("input[name='scopeCityCode']:checked").next().attr("readonly","readonly");
 	        			 $("#channelCount").html(0);
+	        		 }else{
+	        			 $("input[name='scopeCityCode']:checked").next().val("");
+	        			 $("input[name='scopeCityCode']:checked").next().removeAttr("readonly");
 	        		 }
 	        		 //如果resp没有值，下面函数也不会执行
 		        	 $.each(resp, function(i, item) {
+		        		 
         				$("#channelName").val(item.channelName);
 		             	 $("#selectC").append("<option class='rate' value='"+item.id+"'>" + item.channelName + "</option>");//"+ operatorType +"
 		             	 $("#channelCount").html(resp.length)

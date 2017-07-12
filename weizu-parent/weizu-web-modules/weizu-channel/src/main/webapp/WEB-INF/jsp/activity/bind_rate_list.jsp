@@ -35,15 +35,108 @@
 <div class="page-container">
 	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
 	<div class="text-c">
-		<form action="/flowsys/rate/rate_list.do" method="post" id="formD" name="dataListForm">
+		<form action="" method="" id="formD" name="dataListForm">
+				业务类型：<span class="select-box inline">
+					<select name="serviceType" id="serviceType" class="select" onchange="getCity()">
+						<c:forEach items="${resultMap.stypeEnums }" var="stype" varStatus="vs1">
+							<c:if test="${ stype.value == resultMap.searchParams.serviceType }">
+								<option value="${stype.value }">${stype.desc }</option>	
+							</c:if>
+						</c:forEach>
+					</select>
+				</span>
+				运营商类型：<span class="select-box inline">
+						<select name="operatorType" id="operatorType" class="select" onchange="getCity()">
+						<!-- <option value="">请选择</option> -->
+						<c:forEach items="${resultMap.otypeEnums }" var="otype" varStatus="vs1">
+							<c:if test="${resultMap.prefixMap.mobile.operatorT == otype.value }">
+								<option value="${otype.value }" <c:if test="${otype.value == resultMap.searchParams.operatorType }"> selected</c:if>>${otype.desc }</option>
+							</c:if>	
+							<c:if test="${resultMap.prefixMap.link.operatorT == otype.value }">
+								<option value="${otype.value }" <c:if test="${otype.value == resultMap.searchParams.operatorType }"> selected</c:if>>${otype.desc }</option>
+							</c:if>	
+							<c:if test="${resultMap.prefixMap.telecome.operatorT == otype.value }">
+								<option value="${otype.value }" <c:if test="${otype.value == resultMap.searchParams.operatorType }"> selected</c:if>>${otype.desc }</option>
+							</c:if>	
+						</c:forEach>
+						<%-- <c:forEach items="${resultMap.channelStateEnums }" var="cstate" varStatus="vs1">
+							<option value="${cstate.value }" <c:if test="${cstate.value == resultMap.searchParams.channelState }"> selected</c:if>>${cstate.desc }</option>
+						</c:forEach> --%>
+					</select>
+				</span>
+				地区：<span class="select-box inline">
+						<select name="scopeCityCode" id="scopeCityCode" class="select" onchange="setDiscount(this)">
+						<!-- <option value="">请选择</option> -->
+						<!-- 一条通道只有一种运营商 -->
+						<c:choose>
+							<c:when test="${not empty resultMap.prefixMap.mobile }">
+								<c:forEach items="${resultMap.prefixMap.mobile.list }" var="scopeDiscount" varStatus="vst">
+									<option value="${scopeDiscount.scopeCityCode }" <c:if test="${scopeDiscount.scopeCityCode == resultMap.searchParams.scopeCityCode }"> selected</c:if>>${scopeDiscount.scopeCityName }</option>
+									<%-- <input type="hidden" value="${scopeDiscount.channelDiscount }" > --%>
+								</c:forEach>
+							</c:when>
+							<c:when test="${not empty resultMap.prefixMap.link }">
+								<c:forEach items="${resultMap.prefixMap.link.list }" var="scopeDiscount" varStatus="vst">
+									<option value="${scopeDiscount.scopeCityCode }" <c:if test="${scopeDiscount.scopeCityCode == resultMap.searchParams.scopeCityCode }"> selected</c:if>>${scopeDiscount.scopeCityName }</option>
+									<%-- <input type="hidden" value="${scopeDiscount.channelDiscount }" > --%>
+								</c:forEach>
+							</c:when>
+							<c:otherwise>
+								<c:forEach items="${resultMap.prefixMap.telecome.list }" var="scopeDiscount" varStatus="vst">
+									<option value="${scopeDiscount.scopeCityCode }" <c:if test="${scopeDiscount.scopeCityCode == resultMap.searchParams.scopeCityCode }"> selected</c:if>>${scopeDiscount.scopeCityName }</option>
+									<%-- <input type="hidden" value="${scopeDiscount.channelDiscount }" > --%>
+								</c:forEach>
+							</c:otherwise>
+						</c:choose>
+					</select>
+				</span>
+				折扣:
+				<span class="select-box inline">
+						<select name="rateDiscount" id="rateDiscount" class="select" onchange="dischange()">
+						<!-- <option value="">请选择</option> -->
+						<%-- <c:forEach items="${resultMap.otypeEnums }" var="otype" varStatus="vs1">
+							<c:if test="${resultMap.prefixMap.mobile.operatorT == otype.value }">
+								<option value="${otype.value }" <c:if test="${otype.value == resultMap.searchParams.operatorType }"> selected</c:if>>${otype.desc }</option>
+							</c:if>	
+							<c:if test="${resultMap.prefixMap.link.operatorT == otype.value }">
+								<option value="${otype.value }" <c:if test="${otype.value == resultMap.searchParams.operatorType }"> selected</c:if>>${otype.desc }</option>
+							</c:if>	
+							<c:if test="${resultMap.prefixMap.telecome.operatorT == otype.value }">
+								<option value="${otype.value }" <c:if test="${otype.value == resultMap.searchParams.operatorType }"> selected</c:if>>${otype.desc }</option>
+							</c:if>	
+						</c:forEach> --%>
+						<%-- <c:forEach items="${resultMap.channelStateEnums }" var="cstate" varStatus="vs1">
+							<option value="${cstate.value }" <c:if test="${cstate.value == resultMap.searchParams.channelState }"> selected</c:if>>${cstate.desc }</option>
+						</c:forEach> --%>
+					</select>
+				</span>
 				<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
-				代理商名称:<input type="text" value="${resultMap.params.rateName }" name="rateName" id="" placeholder=" 代理商名称" style="width:150px" class="input-text">
+				<%-- 代理商名称:<input type="text" value="${resultMap.params.rateName }" name="rateName" id="" placeholder=" 代理商名称" style="width:150px" class="input-text">
 				移动省份:<input type="text" value="${resultMap.params.ratePrice0 }" name="ratePrice0" id="" placeholder=" 移动省份" style="width:150px" class="input-text">
 				联通省份:<input type="text" value="${resultMap.params.ratePrice1 }" name="ratePrice1" id="" placeholder=" 联通省份" style="width:150px" class="input-text">
-				电信省份:<input type="text" value="${resultMap.params.ratePrice2 }" name="ratePrice2" id="" placeholder=" 电信省份" style="width:150px" class="input-text">
+				电信省份:<input type="text" value="${resultMap.params.ratePrice2 }" name="ratePrice2" id="" placeholder=" 电信省份" style="width:150px" class="input-text"> --%>
 				<button type="reset"class="btn btn-success" value="重置">重置</button>
 				<button name="" id="" class="btn btn-success"  type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+				<button name="" id="" class="btn btn-success"  type="button"> 添加折扣</button>
 				<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
+				
+    <select style="margin-left:10px;height:24px; width: 200">  
+        <option>非可编辑</option>  
+        <option>46456</option>  
+        <option>46456</option>  
+        <option>46456</option>  
+    </select>  
+    <span style="position:absolute;margin-left:100px;width:18px;border:1px solid #FFFFFF;">  
+        <select name="r00" style="margin-left:-100px;width:118px; background-color:#FFEEEE;" onChange="document.all.re_name.value=this.value;">   
+            <option value="11111111">11111111<option>   
+            <option value="222222">222222</option>   
+            <option value="333333">333333</option>   
+       </select>   
+    </span>   
+    <input type="text" name="re_name" id="re_name" value="可编辑select" onmousedown="document.getElementById('re_name').value=''" style="position:absolute;width:100px;height:21px;margin:1px;font-size:10pt;border-left:1px solid #7F9DB9;border-bottom:1px solid #7F9DB9;border-top:1px solid #7F9DB9;border-right:0px;"> 	  
+		</form>
+		<form action="" method="" id="rateForm" name="dataListForm">
+			<input value="" type="hidden" id="rateDiscountId">
 		</form>
 	</div> 
 	<!-- <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加资讯" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加资讯</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div> -->
@@ -60,7 +153,7 @@
 				</c:otherwise>
 			</c:choose></sapn><br>
 			<!-- <sapn>通道折扣：云南85</sapn> -->
-			<a style="text-decoration:none" class="btn btn-success" onclick="Hui_admin_tab(this)" data-href="/flowsys/rate/bind_channel_page.do" title="" data-title="绑定通道">绑定通道</a>
+			<a style="text-decoration:none" class="btn btn-success" onclick="Hui_admin_tab(this)" data-href="/flowsys/rate/bind_agency_page.do" title="" data-title="绑定代理商">绑定代理商</a>
 		<table class="table table-border table-bordered table-bg table-hover table-sort">
 			<thead>
 				<!-- <tr class="text-c">
@@ -72,27 +165,28 @@
 					<th>操作</th>
 				</tr> -->
 				<tr class="text-c">
+					<th width="25"><input type="checkbox" name="" value=""></th>
 					<th>代理商名称</th>
-					<th>通道折扣</th>
+					<!-- <th>通道折扣</th>
 					<th>移动折率</th>
 					<th>联通折率</th>
-					<th>电信折率</th>
+					<th>电信折率</th> -->
 					<th>绑定状态</th>
 					<th>添加时间</th>
 					<th>操作</th>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${resultMap.pagination.records }" var="activePo" varStatus="vs">
+				<%-- <c:forEach items="${resultMap.pagination.records }" var="activePo" varStatus="vs">
 					<tr class="text-c">
 						<td>${activePo.channelName }</td>
 						<td>${activePo.channelDiscount }</td>
-						<%-- <td>${rate.rateName }</td>
+						<td>${rate.rateName }</td>
 						 <td>
 						 	<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
 							<c:if test="${rate.billType == billTypeEnum.value }"> ${billTypeEnum.desc }</c:if>
 							</c:forEach>
-						</td>  --%>
+						</td> 
 						<td  class="text-l">${activePo.discountPo.discount0 }</td>
 						 <td class="text-l">${activePo.discountPo.discount1 }</td>
 						<td class="text-l">${activePo.discountPo.discount2 }</td>
@@ -107,13 +201,13 @@
 						<td class="td-manage"><a style="text-decoration:none" onClick="article_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
 						<a style="text-decoration:none" class="ml-5" onClick="article_edit('账户充值',${agency.userName },${agency.id })" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> 
 						<a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
-						<%--  <td class="td-status"><c:forEach items="${resultMap.rateStateEnums }" var="stateEnum" varStatus="vs1">
+						 <td class="td-status"><c:forEach items="${resultMap.rateStateEnums }" var="stateEnum" varStatus="vs1">
 						<c:if test="${rate.rateState == stateEnum.value }"> ${stateEnum.desc }</c:if>
-						</c:forEach></td>  --%>
+						</c:forEach></td> 
 					<!-- 	<td class="td-status"><span class="label label-success radius">已发布</span></td> -->
 						
 					</tr>
-				</c:forEach>
+				</c:forEach> --%>
 				<!-- <td></td> 
 				<td>86</td> 
 				<td>86</td> 
@@ -149,6 +243,40 @@
 <script src="/view/lib/bootstrap-datetimepicker.min.js"></script>
 <script src="/view/lib/bootstrap-datetimepicker.zh-CN.js"></script> -->
 <script type="text/javascript">
+//onchange获得选中的option
+function setDiscount(vart){
+	//var scopeCityCode = $('#selDiscount option:selected').val();
+	var scopeCityCode = $('#scopeCityCode').val();
+	var serviceType = $('#serviceType').val();
+	var operatorType = $('#operatorType').val();
+	//alert(scopeCityCode);
+	$.ajax({
+		type: 'POST',
+		url: '/flowsys/rate/get_discount.do?scopeCityCode='+scopeCityCode+'&serviceType='+serviceType+'&operatorType='+operatorType,
+		dataType: 'json',
+		success: function(resp){
+			//$(obj).parents("tr").remove();
+			$("#rateDiscount").empty();
+   		 if(resp.length == 0){ //如果没有通道信息，就设置折扣为不可编辑
+   			 $("#rateDiscount").append("<option value=''>没有添加折扣</option>");
+   		 }
+   		 //如果resp没有值，下面函数也不会执行
+       	 $.each(resp, function(i, item) {
+            	 $("#rateDiscount").append("<option class='rateDiscount' value='"+item.activeDiscount+"'>" + item.activeDiscount + "</option>");//"+ operatorType +"
+            	 $('#rateDiscountId').val(item.id);
+       		 //alert(i);//从0开始
+   				//alert(item.channelName);
+       		 ///不管有没有通道
+       		 
+            });
+			//layer.msg('添加成功!',{icon:1,time:1000});
+		},
+		error:function(data) {
+			console.log(data.msg);
+		},
+	});	
+}
+
 /*包体-添加*/
 function rate_add(title,url){
 	//alert("sd");

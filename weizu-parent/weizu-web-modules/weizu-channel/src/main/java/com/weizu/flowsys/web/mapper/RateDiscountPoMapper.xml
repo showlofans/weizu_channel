@@ -2,6 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.weizu.flowsys.web.activity.dao.RateDiscountDao" >
   <sql id="t_rateD">rate_discount</sql>
+  <sql id="t_aac_join">aac_join_rd</sql>
+  <sql id="t_active">agency_active_channel</sql>
+  <sql id="t_channel">channel_channel</sql>
   
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.activity.pojo.RateDiscountPo" >
     <id column="id" property="id" jdbcType="BIGINT" />
@@ -12,7 +15,7 @@
     <result column="active_id" property="activeId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, operator_type, scope_city_code, active_discount, active_id
+    rate.id, operator_type, scope_city_code, active_discount, rate.active_id
   </sql>
   <!-- 批量添加费率折扣 -->
    <insert id="rate_addList" useGeneratedKeys="true" parameterType="java.util.List">
@@ -24,6 +27,18 @@
   		#{rateD.activeId})
   	</foreach>
   </insert>
+  <!-- 获得折扣信息 -->
+  <select id="getRateDiscountList" resultMap="BaseResultMap" parameterType="com.weizu.flowsys.web.activity.pojo.RateDiscountPo">
+  	select <include refid="Base_Column_List"></include>
+  	from <include refid="t_rateD"></include> rate
+  	inner join <include refid="t_aac_join"></include> aac
+  	on rate.id = aac.rate_discount_id 
+  	inner join <include refid="t_active"></include> active
+  	on aac.active_id = active.id
+  	<where>
+  		<include refid="condition_sql"></include>
+  	</where>
+  </select>
   
   <update id="updateRateDiscount" parameterType="map">
   	update <include refid="t_rateD"></include>
@@ -32,6 +47,24 @@
   		id = #{id}
   	</where>
   </update>
+  
+  <sql id="condition_sql">
+  	<if test="operatorType != null">
+  		AND operator_type = #{operatorType}
+  	</if>
+  	<if test="scopeCityCode != null">
+  		AND scope_city_code = #{scopeCityCode}
+  	</if>
+  	<if test="serviceType != null">
+  		AND service_type = #{serviceType}
+  	</if>
+  	<if test="activeDiscount != null">
+  		AND active_discount = #{activeDiscount}
+  	</if>
+  	<if test="channelId != null">
+  		AND active.channel_id = #{channelId}
+  	</if>
+  </sql>
  <!--  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />

@@ -10,10 +10,11 @@
     <result column="channel_discount" property="channelDiscount" jdbcType="DOUBLE" />
     <result column="channel_name" property="channelName" jdbcType="DOUBLE" />
     <result column="operator_type" property="operatorType" jdbcType="INTEGER" />
+    <result column="service_type" property="serviceType" jdbcType="INTEGER" />
     <result column="discount_type" property="discountType" jdbcType="INTEGER" />
   </resultMap>
   <sql id="base_list">
-  	channel_id, scope_city_code, channel_discount,channel_name,operator_type, discount_type
+  	channel_id, service_type, scope_city_code, channel_discount,channel_name,operator_type, discount_type
   </sql>
   <!-- 通道折扣批量添加 -->
   <insert id="discount_addList" useGeneratedKeys="true" parameterType="java.util.List">
@@ -21,7 +22,7 @@
   	(<include refid="base_list"></include>)
   	values
   	<foreach collection="list" separator="," item="cDiscount" index="index">
-  		(#{cDiscount.channelId},#{cDiscount.scopeCityCode},#{cDiscount.channelDiscount},
+  		(#{cDiscount.channelId},#{cDiscount.serviceType},#{cDiscount.scopeCityCode},#{cDiscount.channelDiscount},
   		#{cDiscount.channelName},#{cDiscount.operatorType},#{cDiscount.discountType})
   	</foreach>
   </insert>

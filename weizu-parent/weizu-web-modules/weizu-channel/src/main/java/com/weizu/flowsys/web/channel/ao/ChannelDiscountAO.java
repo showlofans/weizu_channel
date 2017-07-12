@@ -53,7 +53,7 @@ public interface ChannelDiscountAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月11日 下午6:24:29
 	 */
-	List<OperatorDiscount> getOperatorList(ChannelDiscountPo cdp);
+	Map<String,Object> getOperatorList(ChannelDiscountPo cdp);
 	
 	Map<String,Object> getMapByEntity(ChannelDiscountPo cdp);
 }

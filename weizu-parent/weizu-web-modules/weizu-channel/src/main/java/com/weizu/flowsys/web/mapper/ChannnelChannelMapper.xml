@@ -141,9 +141,6 @@
   	<if test="operatorType != null">
   		AND discount.operator_type = #{operatorType}
   	</if>
-  	<if test="operatorType != null">
-  		AND discount.operator_type = #{operatorType}
-  	</if>
   	<if test="serviceType != null">
   		AND discount.service_type = #{serviceType}
   	</if>

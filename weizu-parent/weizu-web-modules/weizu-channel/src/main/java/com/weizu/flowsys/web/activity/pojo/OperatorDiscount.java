@@ -15,10 +15,14 @@ public class OperatorDiscount {
 	 * 运营商类型
 	 */
 	private String operatorType;
+	
+	private Integer operatorT;
 	/**
 	 * 地区折扣列表
 	 */
 	private List<ScopeDiscount> list;
+	
+	
 	
 	public OperatorDiscount(String operatorType, List<ScopeDiscount> list) {
 		super();
@@ -27,6 +31,18 @@ public class OperatorDiscount {
 	}
 	public OperatorDiscount() {
 		super();
+	}
+	
+	public OperatorDiscount(Integer operatorT, List<ScopeDiscount> list) {
+		super();
+		this.operatorT = operatorT;
+		this.list = list;
+	}
+	public Integer getOperatorT() {
+		return operatorT;
+	}
+	public void setOperatorT(Integer operatorT) {
+		this.operatorT = operatorT;
 	}
 	public String getOperatorType() {
 		return operatorType;

@@ -66,7 +66,7 @@ public class ChannelDiscountAOImpl implements ChannelDiscountAO {
 		}
 		if(StringHelper.isNotEmpty(cdp.getChannelName())){
 			//todo
-			paramsMap.put("discountType", cdp.getDiscountType());
+			paramsMap.put("channelName", cdp.getChannelName());
 		}
 		return paramsMap;
 	}
@@ -134,7 +134,7 @@ public class ChannelDiscountAOImpl implements ChannelDiscountAO {
 	 * @createTime:2017年7月11日 下午6:25:29
 	 */
 	@Override
-	public List<OperatorDiscount> getOperatorList(ChannelDiscountPo cdp) {
+	public Map<String,Object> getOperatorList(ChannelDiscountPo cdp) {
 		List<ScopeDiscount> list0 = new LinkedList<ScopeDiscount>();		//移动的折扣
 		List<ScopeDiscount> list1 = new LinkedList<ScopeDiscount>();		//联通的折扣
 		List<ScopeDiscount> list2 = new LinkedList<ScopeDiscount>();		//电信的折扣
@@ -153,17 +153,22 @@ public class ChannelDiscountAOImpl implements ChannelDiscountAO {
 				}
 			}
 		}
-		List<OperatorDiscount> odList = new ArrayList<OperatorDiscount>();
+//		List<OperatorDiscount> odList = new ArrayList<OperatorDiscount>();
+		Map<String,Object> resultMap = new HashMap<String, Object>();
 		if(list0.size() != 0){
-			odList.add(new OperatorDiscount(OperatorTypeEnum.MOBILE.getValue()+"", list0));
+			resultMap.put("mobile", new OperatorDiscount(OperatorTypeEnum.MOBILE.getValue(), list0));
+//			odList.add(new OperatorDiscount(OperatorTypeEnum.MOBILE.getValue()+"", list0));
 		}
 		if(list1.size() != 0){
-			odList.add(new OperatorDiscount(OperatorTypeEnum.LINK.getValue()+"", list1));
+			resultMap.put("link", new OperatorDiscount(OperatorTypeEnum.LINK.getValue(), list1));
+//			odList.add(new OperatorDiscount(OperatorTypeEnum.LINK.getValue()+"", list1));
 		}
 		if(list2.size() != 0){
-			odList.add(new OperatorDiscount(OperatorTypeEnum.TELECOME.getValue()+"", list2));
+			resultMap.put("telecome", new OperatorDiscount(OperatorTypeEnum.TELECOME.getValue(), list2));
+//			odList.add(new OperatorDiscount(OperatorTypeEnum.TELECOME.getValue()+"", list2));
 		}
-		return odList;
+//		return odList;
+		return resultMap;
 	}
 
 }

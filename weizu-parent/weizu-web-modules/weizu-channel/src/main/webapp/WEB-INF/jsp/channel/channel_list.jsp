@@ -45,10 +45,19 @@
 			</c:forEach>
 		</select>
 		</span>
+		业务类型：
+		<span class="select-box inline">
+			<select name="serviceType"  id="serviceType" class="select" onchange="getChannelList()">
+			<option value="">请选择</option>
+			<c:forEach items="${resultMap.serviceTypeEnums }" var="sTypeEnum" varStatus="vs1">
+				<option value="${sTypeEnum.value }" <c:if test="${sTypeEnum.value == resultMap.searchParam.serviceType }"> selected</c:if>>${sTypeEnum.desc }</option>
+			</c:forEach>
+		</select>
+		</span>
 		
 		通道省份：<input type="text" value="${resultMap.searchParam.scopeCityName }" name="scopeCityName" id="" placeholder=" 通道省份" style="width:250px" class="input-text">
 		
-		<input type="hidden" value="" name="channelId" id="channelId">
+		<!-- <input type="hidden" value="" name="channelId" id="channelId"> -->
 		
 		<button type="reset"class="btn btn-success" value="重置">重置</button>
 		<input value="查询" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
@@ -64,6 +73,7 @@
 					<!-- <th width="80">流量包Id</th> -->
 					<th >ID</th>
 					<th >通道名称</th>
+					<th >业务类型</th>
 					<th >交易单数</th>
 					<th >交易总额</th>
 					<!-- <th width="120">支持城市</th> -->
@@ -88,6 +98,13 @@
 					<tr class="text-c">
 						<td>${channel.id }</td> 
 						<td>${channel.channelName }</td>
+						<td><c:forEach items="${resultMap.serviceTypeEnums }" var="serTypeEnum" varStatus="vs1">
+								<c:if test="${channel.serviceType == serTypeEnum.value }">
+									<span>${serTypeEnum.desc }</span>
+								</c:if>
+							</c:forEach>
+						</td> 
+						<td style="display:none;">${channel.serviceType }</td>
 						<td>${channel.channelTotalUse }</td>
 						<td>${channel.channelTotalAmount }</td>
 						<td>${channel.discountPo.discount0 }</td>
@@ -176,9 +193,11 @@
 <script type="text/javascript">
 function channel_edit(url,objt){
 	var channelId = $(objt).parent().parent().children(":first").html();
+	var serviceType = $(objt).parent().parent().children(":eq(3)").html();
+	alert(serviceType);
 	//alert(channelId);
 	$("#channelId").val(channelId);
-	 $(objt).attr('data-href',url+'?'+$('form').serialize());
+	 $(objt).attr('data-href',url+'?'+'channelId='+Number(channelId)+'&serviceType='+ serviceType); //+$('form').serialize()
 		Hui_admin_tab(objt);
 	/* $.ajax({
 		type: 'POST',

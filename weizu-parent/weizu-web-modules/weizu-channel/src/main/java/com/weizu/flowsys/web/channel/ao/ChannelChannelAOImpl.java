@@ -144,6 +144,7 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 			StringBuffer discount0 = new StringBuffer("{");
 			StringBuffer discount1 = new StringBuffer("{");
 			StringBuffer discount2 = new StringBuffer("{");
+			channelChannelPo.setServiceType(list.get(0).getServiceType());//初始化业务类型
 			for (ChannelDiscountPo channelDiscountPo : list) {
 				String code = channelDiscountPo.getScopeCityCode();
 				String ScopeCityName = ScopeCityEnum.getEnum(code).getDesc();	//城市名
@@ -191,6 +192,9 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 			if(channelPo.getChannelState() != null)
 			{
 				paramsMap.put("channelState", channelPo.getChannelState());
+			}
+			if(channelPo.getServiceType() != null){
+				paramsMap.put("serviceType", channelPo.getServiceType());
 			}
 			if(StringHelper.isNotEmpty(channelPo.getScopeCityName()))
 			{

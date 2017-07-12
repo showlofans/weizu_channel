@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50626
 File Encoding         : 65001
 
-Date: 2017-07-11 18:28:02
+Date: 2017-07-12 18:30:51
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -27,12 +27,13 @@ CREATE TABLE `aac_join_rd` (
   KEY `join_rd_fk` (`rate_discount_id`),
   CONSTRAINT `join_aac_fk` FOREIGN KEY (`active_id`) REFERENCES `agency_active_channel` (`id`) ON DELETE CASCADE,
   CONSTRAINT `join_rd_fk` FOREIGN KEY (`rate_discount_id`) REFERENCES `rate_discount` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of aac_join_rd
 -- ----------------------------
 INSERT INTO `aac_join_rd` VALUES ('1', '14', '17');
+INSERT INTO `aac_join_rd` VALUES ('2', '15', '18');
 
 -- ----------------------------
 -- Table structure for `agency_active_channel`
@@ -54,7 +55,7 @@ CREATE TABLE `agency_active_channel` (
   CONSTRAINT `agency_agency` FOREIGN KEY (`agency_id`) REFERENCES `agency_backward` (`id`),
   CONSTRAINT `bind_agency_fk` FOREIGN KEY (`bind_agency_id`) REFERENCES `agency_backward` (`id`),
   CONSTRAINT `channel_agency_fk` FOREIGN KEY (`channel_id`) REFERENCES `channel_channel` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of agency_active_channel
@@ -73,6 +74,7 @@ INSERT INTO `agency_active_channel` VALUES ('14', '24', '4', '12', '0', 'kkk', '
 INSERT INTO `agency_active_channel` VALUES ('15', '23', '4', '11', '0', 'w', '全国-wz广东移动95', '1499678717931');
 INSERT INTO `agency_active_channel` VALUES ('16', '21', '4', '12', '0', '456', '省漫游-wz广东移动75', '1499752473997');
 INSERT INTO `agency_active_channel` VALUES ('17', '21', '4', '12', '0', '456', '省漫游-wz广东移动75', '1499757929280');
+INSERT INTO `agency_active_channel` VALUES ('18', '21', '4', '7', '0', '456', 'wz本地', '1499850122120');
 
 -- ----------------------------
 -- Table structure for `agency_backward`
@@ -716,7 +718,7 @@ CREATE TABLE `rate_discount` (
   PRIMARY KEY (`id`),
   KEY `active_discount_fk` (`active_id`),
   CONSTRAINT `active_discount_fk` FOREIGN KEY (`active_id`) REFERENCES `agency_active_channel` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of rate_discount
@@ -735,6 +737,7 @@ INSERT INTO `rate_discount` VALUES ('11', '0', '0', '19', '0.56', '14');
 INSERT INTO `rate_discount` VALUES ('12', '0', '0', '15', '0.85', '15');
 INSERT INTO `rate_discount` VALUES ('13', '0', '0', '19', '0.65', '16');
 INSERT INTO `rate_discount` VALUES ('14', '0', '0', '19', '0.116', '17');
+INSERT INTO `rate_discount` VALUES ('15', '1', '0', '09', '0.56', '18');
 
 -- ----------------------------
 -- Table structure for `rate_join_channel`

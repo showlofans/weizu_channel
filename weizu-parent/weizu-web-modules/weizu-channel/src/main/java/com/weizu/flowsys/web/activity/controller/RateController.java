@@ -30,6 +30,8 @@ import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.AgencyActiveChannelAO;
 import com.weizu.flowsys.web.activity.ao.OperatorDiscountAO;
 import com.weizu.flowsys.web.activity.ao.RateBackwardAO;
+import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
+import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.AgencyActiveChannelPo;
 import com.weizu.flowsys.web.activity.pojo.OperatorDiscount;
 import com.weizu.flowsys.web.activity.pojo.OperatorDiscountPo;
@@ -75,6 +77,10 @@ public class RateController {
 //	private ChannelDiscountDao channelDiscountDao;
 	@Resource
 	private ChannelDiscountAO channelDiscountAO;
+	@Resource
+	private RateDiscountDao rateDiscountDao;
+	@Resource
+	private RateDiscountAO rateDiscountAO;
 	
 	
 	/**
@@ -542,7 +548,7 @@ public class RateController {
 	 * @createTime:2017年7月10日 上午11:53:39
 	 */
 	@RequestMapping(value=RateURL.BIND_RATE_LIST)
-	public ModelAndView getRateByChannelId(ChannelDiscountPo cdp, @RequestParam(value = "pageNo", required = false) String pageNo){
+	public ModelAndView getRateByChannelId(RateDiscountPo ratePo, @RequestParam(value = "pageNo", required = false) String pageNo,HttpServletRequest request){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
 		PageParam pageParam = null;
@@ -551,19 +557,33 @@ public class RateController {
 		}else{
 			pageParam = new PageParam(1, 10);
 		}
-		cdp.setDiscountType(ChannelDiscountTypeEnum.RATE.getValue());
-		Pagination<ChannelDiscountPo> pagination = channelDiscountAO.getDiscountList(cdp, pageParam);
+//		cdp.setDiscountType(ChannelDiscountTypeEnum.RATE.getValue());
+		List<RateDiscountPo> rateList = rateDiscountDao.getRateDiscountList(ratePo);
+		
+		
 		//初始化开头字段
-		cdp.setDiscountType(ChannelDiscountTypeEnum.RATE.getValue());
 		
 //		List<ChannelDiscountPo> discountList = channelDiscountAO.getDiscountList(cdp);
 		
-		List<OperatorDiscount> prefixList = channelDiscountAO.getOperatorList(cdp);
+		ChannelDiscountPo cdp = new ChannelDiscountPo();
+		cdp.setDiscountType(ChannelDiscountTypeEnum.CHANNEL.getValue());
+		cdp.setChannelId(ratePo.getChannelId());
+		
+		Pagination<ChannelDiscountPo> pagination = channelDiscountAO.getDiscountList(cdp, pageParam);//
+		
+		Map<String,Object> prefixMap = channelDiscountAO.getOperatorList(cdp);//获得对上通道相关信息
 //		prefixList = channelDiscountAO
 		
-		
 		resultMap.put("pagination", pagination);
-		resultMap.put("prefixList", prefixList);	//通道折扣选项
+//		request.getSession().setAttribute("prefixMap", prefixMap);//通道折扣选项
+		resultMap.put("prefixMap", prefixMap);	//通道折扣选项
+		resultMap.put("rateList", rateList);	//通道折扣选项
+		
+		resultMap.put("otypeEnums", OperatorTypeEnum.toList());
+		resultMap.put("stypeEnums", ServiceTypeEnum.toList());
+		resultMap.put("searchParams", ratePo);
+		
+		
 //		channelDis
 //		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 //		resultMap.put("operatorTypes", OperatorTypeEnum.toList());
@@ -571,6 +591,25 @@ public class RateController {
 //		resultMap.put("channelListStr", channelListStr);
 //		resultMap.put("channelList", channelList);
 		return new ModelAndView("/activity/bind_rate_list","resultMap",resultMap);
+	}
+	/**
+	 * @description: js/json通过运营商类型获得城市列表
+	 * @param request
+	 * @param oType
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月12日 上午10:49:23
+	 */
+	@RequestMapping(value = RateURL.GET_DISCOUNT)
+	@ResponseBody
+	public void getDiscount(HttpServletRequest request,RateDiscountPo ratePo,HttpServletResponse response){
+//		Map<String,Object> resMap = (Map<String, Object>) request.getSession().getAttribute("prefixMap");
+		List<RateDiscountPo> list = rateDiscountDao.getRateDiscountList(ratePo);
+		String jsonStr = JSON.toJSONString(list);
+		try {
+			response.getWriter().print(jsonStr);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
