@@ -83,6 +83,62 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 		return new Pagination<AgencyActiveChannelPo>(records, toatalRecord, pageNo, pageSize);
 	}
 	
+	/**
+	 * @description: 查询分页费率列表
+	 * @param pageParam
+	 * @param activePo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月13日 上午11:01:18
+	 */
+	@Override
+	public Pagination<AgencyActiveChannelPo> listActiveRate(
+			PageParam pageParam, AgencyActiveChannelPo activePo) {
+		Map<String, Object> paramsMap = getMapByEntity(activePo);
+		long toatalRecord = agencyActiveChannelDao.countActiveRate(paramsMap);
+		int pageSize = 10;
+		int pageNo = 1;
+		if(pageParam != null){
+			pageSize = pageParam.getPageSize();
+			pageNo = pageParam.getPageNo();
+			paramsMap.put("start", (pageNo-1)*pageSize);
+			paramsMap.put("end", pageSize);
+		}
+		List<AgencyActiveChannelPo> records = agencyActiveChannelDao.listActiveRate(paramsMap);
+		return new Pagination<AgencyActiveChannelPo>(records, toatalRecord, pageNo, pageSize);
+	}
+	/**
+	 * @description: 查询分页费率列表
+	 * @param pageParam
+	 * @param activePo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月13日 上午11:01:18
+	 */
+	@Override
+	public Pagination<AgencyActiveChannelPo> listActiveRate(
+			PageParam pageParam, RateDiscountPo ratePo) {
+		Map<String, Object> paramsMap = getMapByEntity(ratePo);
+		long toatalRecord = agencyActiveChannelDao.countActiveRate(paramsMap);
+		int pageSize = 10;
+		int pageNo = 1;
+		if(pageParam != null){
+			pageSize = pageParam.getPageSize();
+			pageNo = pageParam.getPageNo();
+			paramsMap.put("start", (pageNo-1)*pageSize);
+			paramsMap.put("end", pageSize);
+		}
+		List<AgencyActiveChannelPo> records = agencyActiveChannelDao.listActiveRate(paramsMap);
+		for (AgencyActiveChannelPo activePo : records) {
+			//初始化时间
+			if(activePo.getActiveTime() != null){
+				String activeTimeStr = DateUtil.formatAll(activePo.getActiveTime());
+				activePo.setActiveTimeStr(activeTimeStr);
+			}
+		}
+		return new Pagination<AgencyActiveChannelPo>(records, toatalRecord, pageNo, pageSize);
+	}
+	
 	
 	/**
 	 * @description: 初始化代理商绑定通道列表页面运营商的折扣
@@ -157,6 +213,53 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 		if(activePo.getBindAgencyId() != null)
 		{
 			paramsMap.put("bindAgencyId", activePo.getBindAgencyId());
+		}
+		if(activePo.getScopeCityCode() != null)
+		{
+			paramsMap.put("scopeCityCode", activePo.getScopeCityCode());
+		}
+		if(activePo.getOperatorType() != null)
+		{
+			paramsMap.put("operatorType", activePo.getOperatorType());
+		}
+		if(activePo.getServiceType() != null){
+			paramsMap.put("serviceType", activePo.getServiceType());
+		}
+		if(activePo.getRateId() != null){
+			paramsMap.put("rateId", activePo.getRateId());
+		}
+		return paramsMap;
+	}
+	/**
+	 * @description: 通过实体封装参数
+	 * @param activePo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月5日 下午6:17:36
+	 */
+	@Override
+	public Map<String, Object> getMapByEntity(RateDiscountPo ratePo) {
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		if(ratePo.getId() != null){
+			paramsMap.put("rateId", ratePo.getId());
+		}
+		if(ratePo.getOperatorType() != null)
+		{
+			paramsMap.put("operatorType", ratePo.getOperatorType());
+		}
+		if(ratePo.getServiceType() != null){
+			paramsMap.put("serviceType", ratePo.getServiceType());
+		}
+		if(StringHelper.isNotEmpty(ratePo.getScopeCityCode()))
+		{
+			paramsMap.put("scopeCityCode", ratePo.getScopeCityCode());
+		}
+		if(ratePo.getAgencyId() != null)
+		{
+			paramsMap.put("agencyId", ratePo.getAgencyId());
+		}
+		if(ratePo.getChannelId() != null){
+			paramsMap.put("channelId", ratePo.getChannelId());
 		}
 		return paramsMap;
 	}
@@ -242,10 +345,6 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 		double activeDiscountD = StringUtil2.getDiscount(activeDiscount);
 		return rateDiscountDao.updateRateDiscount(id, activeDiscountD);
 	}
-
-
-	
-
 
 	/**
 	 * @description: 初始化费率折扣列表

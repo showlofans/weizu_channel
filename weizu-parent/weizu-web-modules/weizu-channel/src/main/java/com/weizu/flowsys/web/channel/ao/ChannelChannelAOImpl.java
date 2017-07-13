@@ -144,32 +144,35 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 			StringBuffer discount0 = new StringBuffer("{");
 			StringBuffer discount1 = new StringBuffer("{");
 			StringBuffer discount2 = new StringBuffer("{");
-			channelChannelPo.setServiceType(list.get(0).getServiceType());//初始化业务类型
-			for (ChannelDiscountPo channelDiscountPo : list) {
-				String code = channelDiscountPo.getScopeCityCode();
-				String ScopeCityName = ScopeCityEnum.getEnum(code).getDesc();	//城市名
-				int operatorType = channelDiscountPo.getOperatorType();
-				if(operatorType == OperatorTypeEnum.MOBILE.getValue())
-				{
-					discount0.append("\""+ScopeCityName+"\":\""+channelDiscountPo.getChannelDiscount()+"\",");
-				}else if(operatorType == OperatorTypeEnum.TELECOME.getValue())
-				{
-					discount2.append("\""+ScopeCityName+"\":\""+channelDiscountPo.getChannelDiscount()+"\",");
-				}else//联通
-				{
-					discount1.append("\""+ScopeCityName+"\":\""+channelDiscountPo.getChannelDiscount()+"\",");
+			if(list != null && list.size()>0){
+				channelChannelPo.setServiceType(list.get(0).getServiceType());//初始化业务类型
+				channelChannelPo.setOperatorType(list.get(0).getOperatorType());//初始化业务类型
+				for (ChannelDiscountPo channelDiscountPo : list) {
+					String code = channelDiscountPo.getScopeCityCode();
+					String ScopeCityName = ScopeCityEnum.getEnum(code).getDesc();	//城市名
+					int operatorType = channelDiscountPo.getOperatorType();
+					if(operatorType == OperatorTypeEnum.MOBILE.getValue())
+					{
+						discount0.append("\""+ScopeCityName+"\":\""+channelDiscountPo.getChannelDiscount()+"\",");
+					}else if(operatorType == OperatorTypeEnum.TELECOME.getValue())
+					{
+						discount2.append("\""+ScopeCityName+"\":\""+channelDiscountPo.getChannelDiscount()+"\",");
+					}else//联通
+					{
+						discount1.append("\""+ScopeCityName+"\":\""+channelDiscountPo.getChannelDiscount()+"\",");
+					}
 				}
+				
+				String dis0Str = discount0.append("}").toString();
+	//			String dis0 = dis0Str.substring(0,dis0Str.lastIndexOf(","));
+	//			channelChannelPo.setDiscount0(dis0);
+				String dis1Str = discount1.append("}").toString();
+	//			String dis1 = dis1Str.substring(0,dis1Str.lastIndexOf(","));
+	//			channelChannelPo.setDiscount0(dis0);
+				String dis2Str = discount2.append("}").toString();
+	//			String dis2 = dis2Str.substring(0,dis2Str.lastIndexOf(","));
+				channelChannelPo.setDiscountPo(new DiscountPo(dis0Str, dis1Str, dis2Str));
 			}
-			
-			String dis0Str = discount0.append("}").toString();
-//			String dis0 = dis0Str.substring(0,dis0Str.lastIndexOf(","));
-//			channelChannelPo.setDiscount0(dis0);
-			String dis1Str = discount1.append("}").toString();
-//			String dis1 = dis1Str.substring(0,dis1Str.lastIndexOf(","));
-//			channelChannelPo.setDiscount0(dis0);
-			String dis2Str = discount2.append("}").toString();
-//			String dis2 = dis2Str.substring(0,dis2Str.lastIndexOf(","));
-			channelChannelPo.setDiscountPo(new DiscountPo(dis0Str, dis1Str, dis2Str));
 		}
 	}
 

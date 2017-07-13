@@ -6,6 +6,7 @@ import java.util.Map;
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.pojo.OperatorDiscount;
+import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 
 

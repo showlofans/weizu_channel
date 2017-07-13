@@ -27,7 +27,7 @@
   		#{rateD.activeId})
   	</foreach>
   </insert>
-  <!-- 获得折扣信息 -->
+  <!-- 获得所有折扣信息 -->
   <select id="getRateDiscountList" resultMap="BaseResultMap" parameterType="com.weizu.flowsys.web.activity.pojo.RateDiscountPo">
   	select <include refid="Base_Column_List"></include>
   	from <include refid="t_rateD"></include> rate
@@ -38,7 +38,43 @@
   	<where>
   		<include refid="condition_sql"></include>
   	</where>
+  	order by rate.scope_city_code,active.active_time desc
   </select>
+  <!-- 获得所有地区信息 -->
+  <select id="getDistinctScope" resultType="list" parameterType="com.weizu.flowsys.web.activity.pojo.RateDiscountPo">
+  	select distinct(rate.scope_city_code)
+  	from <include refid="t_rateD"></include> rate
+  	inner join <include refid="t_aac_join"></include> aac
+  	on rate.id = aac.rate_discount_id 
+  	inner join <include refid="t_active"></include> active
+  	on aac.active_id = active.id
+  	<where>
+  		<include refid="condition_sql"></include>
+  	</where>
+  	order by rate.scope_city_code,active.active_time desc
+  </select>
+  <!-- 获得分页费率列表信息 -->
+ <!--  <select id="getDiscountList" resultMap="BaseResultMap" parameterType="map">
+  	select <include refid="Base_Column_List"></include>
+  	from <include refid="t_rateD"></include> rate
+  	inner join <include refid="t_aac_join"></include> aac
+  	on rate.id = aac.rate_discount_id 
+  	inner join <include refid="t_active"></include> active
+  	on aac.active_id = active.id
+  	<where>
+  		<include refid="condition_sql"></include>
+  	</where>
+  	order by active.id
+  	<if test="start != null">
+	 	limit #{start}
+	 </if>
+	 <if test="end != null">
+	 	, #{end}
+	 </if>
+	 <if test="start == null &amp; end == null">
+	 	limit 0,10
+	 </if>
+  </select> -->
   
   <update id="updateRateDiscount" parameterType="map">
   	update <include refid="t_rateD"></include>
@@ -63,6 +99,9 @@
   	</if>
   	<if test="channelId != null">
   		AND active.channel_id = #{channelId}
+  	</if>
+  	<if test="agencyId != null">
+  		AND active.agency_id = #{agencyId}
   	</if>
   </sql>
  <!--  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >

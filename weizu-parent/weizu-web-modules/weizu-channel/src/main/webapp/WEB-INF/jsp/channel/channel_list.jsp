@@ -105,6 +105,7 @@
 							</c:forEach>
 						</td> 
 						<td style="display:none;">${channel.serviceType }</td>
+						<td style="display:none;">${channel.operatorType }</td>
 						<td>${channel.channelTotalUse }</td>
 						<td>${channel.channelTotalAmount }</td>
 						<td>${channel.discountPo.discount0 }</td>
@@ -194,10 +195,11 @@
 function channel_edit(url,objt){
 	var channelId = $(objt).parent().parent().children(":first").html();
 	var serviceType = $(objt).parent().parent().children(":eq(3)").html();
-	alert(serviceType);
+	var operatorType = $(objt).parent().parent().children(":eq(4)").html();
+	//alert(serviceType);
 	//alert(channelId);
 	$("#channelId").val(channelId);
-	 $(objt).attr('data-href',url+'?'+'channelId='+Number(channelId)+'&serviceType='+ serviceType); //+$('form').serialize()
+	 $(objt).attr('data-href',url+'?'+'channelId='+Number(channelId)+'&serviceType='+ serviceType+'&operatorType='+ operatorType); //+$('form').serialize()
 		Hui_admin_tab(objt);
 	/* $.ajax({
 		type: 'POST',

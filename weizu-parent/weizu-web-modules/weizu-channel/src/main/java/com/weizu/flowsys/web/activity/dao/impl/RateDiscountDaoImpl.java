@@ -73,6 +73,45 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 		return sqlSessionTemplate.selectList("getRateDiscountList",rateDiscountPo);
 	}
 
+	/**
+	 * @description:  获得费率折扣列表
+	 * @param params
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月13日 上午10:34:01
+	 */
+	@Override
+	public List<RateDiscountPo> getDiscountList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/**
+	 * @description: 费率列表长度
+	 * @param params
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月13日 上午10:34:11
+	 */
+	@Override
+	public Long countDiscountList(Map<String, Object> params) {
+		
+		return null;
+	}
+
+	/**
+	 * @description:  获得所有费率的地区
+	 * @param rateDiscountPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月13日 下午1:30:48
+	 */
+	@Override
+	public List<String> getDistinctScope(RateDiscountPo rateDiscountPo) {
+		
+		return sqlSessionTemplate.selectList("getDistinctScope",rateDiscountPo);
+	}
+
 	
 
 }

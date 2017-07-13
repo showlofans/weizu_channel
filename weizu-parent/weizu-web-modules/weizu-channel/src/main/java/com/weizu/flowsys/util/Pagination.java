@@ -12,17 +12,58 @@ public class Pagination<T> {
 	// 以下4个属性必须指定
 	private List<T> records;	// 分页数据
 	private int totalRecord;	// 总记录数
+	private long totalRecordLong;	// 总记录数(大于3万条)
 	private int pageNo;			// 当前页码,第几页
 	private int pageSize;		// 每页显示的记录数,每页显示多少条数据
 	
 	private int totalPage;		// 总页数
 	
+	private long totalPageLong;	//总页数2
+	
 	private int startIndex;		// 开始索引
+	private long startIndexLong;		// 开始索引2
 	private int endIndex;		// 结束索引
+	private long endIndexLong;		// 结束索引2
 	
 	private int indexCount = 10;// 显示的索引数目,如:10的话， 则显示1-10， 2-11
 	
 	// public Pagination() {}
+	
+	public Pagination(List<T> records, long totalRecordLong, int pageNo,
+			int pageSize) {
+		super();
+		this.records = records;
+		this.totalRecordLong = totalRecordLong;
+		this.pageNo = pageNo;
+		this.pageSize = pageSize;
+// 根据总记录数和每页显示数计算总页数(totalRecordLong+pageSize->totalPage)
+		totalPageLong = this.totalRecordLong / this.pageSize;
+		//当总数小与pageSize的时候，将计算出来的0改为1
+		totalPageLong = (this.totalRecordLong % pageSize == 0) ? totalPageLong : (totalPageLong + 1);
+		// 根据索引数目，当前页，总页数计算开始索引和结束索引(indexCount+pageNo+totalPage->startIndex+endIndex)
+		startIndexLong = indexCount/2;
+		startIndexLong = pageNo - (indexCount%2 == 0 ? (startIndexLong - 1) : startIndexLong);
+		endIndexLong = pageNo + indexCount/2;
+		// 1 <= startIndex < pageNo < endIndex <= totalPage
+		// startIndex = pageNo - indexCount/2
+		// endIndex = pageNo + indexCount/2
+		if(startIndexLong < 1) {
+			startIndexLong = 1;
+			if(totalRecordLong >= indexCount) {
+				endIndexLong = indexCount;
+			}  else {
+				endIndexLong = totalPageLong;
+			}
+		}
+		if(endIndexLong > totalRecordLong) {
+			endIndexLong = totalRecordLong;
+			if(endIndexLong > indexCount) {
+				startIndexLong = endIndexLong - indexCount + 1;
+			} else {
+				startIndexLong = 1;
+			}
+		}
+	}
 	
 	public Pagination(List<T> records, int totalRecord, int pageNo, int pageSize) {
 		this.records = records;
@@ -58,7 +99,38 @@ public class Pagination<T> {
 		}
 	}
 	
-	
+	public long getTotalRecordLong() {
+		return totalRecordLong;
+	}
+
+	public void setTotalRecordLong(long totalRecordLong) {
+		this.totalRecordLong = totalRecordLong;
+	}
+
+	public long getStartIndexLong() {
+		return startIndexLong;
+	}
+
+	public void setStartIndexLong(long startIndexLong) {
+		this.startIndexLong = startIndexLong;
+	}
+
+	public long getEndIndexLong() {
+		return endIndexLong;
+	}
+
+	public void setEndIndexLong(long endIndexLong) {
+		this.endIndexLong = endIndexLong;
+	}
+
+	public long getTotalPageLong() {
+		return totalPageLong;
+	}
+
+	public void setTotalPageLong(long totalPageLong) {
+		this.totalPageLong = totalPageLong;
+	}
+
 	/**
 	 * 获取分页数据
 	 * @return

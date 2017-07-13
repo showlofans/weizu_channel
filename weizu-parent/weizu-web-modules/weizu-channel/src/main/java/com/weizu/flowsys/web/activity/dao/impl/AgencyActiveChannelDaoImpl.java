@@ -77,4 +77,29 @@ public class AgencyActiveChannelDaoImpl extends DaoImpl<AgencyActiveChannelPo, L
 		return sqlSessionTemplate.update("updateBindState", paramsMap);
 	}
 
+	/**
+	 * @description: 查询分页费率列表
+	 * @param paramsMap
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月13日 上午10:57:23
+	 */
+	@Override
+	public List<AgencyActiveChannelPo> listActiveRate(
+			Map<String, Object> paramsMap) {
+		return sqlSessionTemplate.selectList("listActiveRate", paramsMap);
+	}
+
+	/**
+	 * @description: 查询费率记录数
+	 * @param paramsMap
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月13日 上午10:57:35
+	 */
+	@Override
+	public Long countActiveRate(Map<String, Object> paramsMap) {
+		return sqlSessionTemplate.selectOne("countActiveRate", paramsMap);
+	}
+
 }

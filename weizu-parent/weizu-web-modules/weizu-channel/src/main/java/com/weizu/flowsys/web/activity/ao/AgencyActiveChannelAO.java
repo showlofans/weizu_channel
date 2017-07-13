@@ -8,6 +8,8 @@ import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.pojo.AgencyActiveChannelPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 
+import crud.aotest.RateAOTest;
+
 public interface AgencyActiveChannelAO {
 	
 	/**
@@ -19,6 +21,26 @@ public interface AgencyActiveChannelAO {
 	 * @createTime:2017年7月5日 下午6:15:57
 	 */
 	Pagination<AgencyActiveChannelPo> listActive(PageParam pageParam,AgencyActiveChannelPo activePo);
+	
+	/**
+	 * @description: 查询分页费率列表
+	 * @param pageParam
+	 * @param activePo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月13日 上午11:00:30
+	 */
+	Pagination<AgencyActiveChannelPo> listActiveRate(PageParam pageParam,AgencyActiveChannelPo activePo);
+	
+	/**
+	 * @description:  查询分页费率列表
+	 * @param pageParam
+	 * @param ratePo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月13日 上午11:22:20
+	 */
+	Pagination<AgencyActiveChannelPo> listActiveRate(PageParam pageParam,RateDiscountPo ratePo);
 	
 	
 	/**
@@ -39,6 +61,15 @@ public interface AgencyActiveChannelAO {
 	 * @createTime:2017年7月5日 下午6:16:28
 	 */
 	Map<String,Object> getMapByEntity(AgencyActiveChannelPo activePo);
+	
+	/**
+	 * @description: 通过实体封装参数
+	 * @param ratePo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月13日 上午11:22:47
+	 */
+	Map<String,Object> getMapByEntity(RateDiscountPo ratePo);
 	
 	/**
 	 * @description:代理商绑定通道
