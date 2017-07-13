@@ -1,8 +1,10 @@
 package com.weizu.flowsys.web.channel.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.weizu.flowsys.core.dao.Dao;
+import com.weizu.flowsys.web.activity.pojo.OperatorDiscount;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 
 /**
@@ -21,5 +23,17 @@ public interface ChannelDiscountDao extends Dao<ChannelDiscountPo, Integer> {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月4日 下午4:23:18
 	 */
-	public int discount_addList(List<ChannelDiscountPo> list);
+	int discount_addList(List<ChannelDiscountPo> list);
+	
+	int countDiscount(Map<String,Object> paramsMap);
+	
+	/**
+	 * @description: 查看折扣列表
+	 * @param paramsMap
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月10日 下午12:05:56
+	 */
+	List<ChannelDiscountPo> getDiscountList(Map<String,Object> paramsMap);
+	
 }

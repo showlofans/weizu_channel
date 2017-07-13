@@ -71,4 +71,13 @@ public interface AgencyVODaoInterface {
 	 * @createTime:2017年7月3日 上午10:20:20
 	 */
 	int checkSecondAgency(int agencyId);
+	
+	/**
+	 * @description: 更新密码
+	 * @param paramMap
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月11日 上午10:19:04
+	 */
+//	int updateUserPass(Map<String,Object> paramMap);
 }

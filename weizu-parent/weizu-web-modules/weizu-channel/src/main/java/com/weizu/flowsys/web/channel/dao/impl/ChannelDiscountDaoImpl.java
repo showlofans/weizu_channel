@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.channel.dao.impl;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -9,9 +10,13 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
-import com.weizu.flowsys.core.util.Formatter;
+import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
+import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
+import com.weizu.flowsys.web.activity.pojo.OperatorDiscount;
+import com.weizu.flowsys.web.activity.pojo.OperatorDiscountPo;
+import com.weizu.flowsys.web.activity.pojo.ScopeDiscount;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 
@@ -34,5 +39,23 @@ public class ChannelDiscountDaoImpl extends DaoImpl<ChannelDiscountPo, Integer> 
 		return sqlSessionTemplate.insert("discount_addList", list);
 	}
 
+	@Override
+	public int countDiscount(Map<String, Object> paramsMap) {
+		
+		return sqlSessionTemplate.selectOne("countDiscount", paramsMap);
+	}
+
+	/**
+	 * @description: 查看折扣列表
+	 * @param paramsMap
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月10日 下午12:06:26
+	 */
+	@Override
+	public List<ChannelDiscountPo> getDiscountList(Map<String, Object> paramsMap) {
+		
+		return sqlSessionTemplate.selectList("getDiscountList", paramsMap);
+	}
 
 }

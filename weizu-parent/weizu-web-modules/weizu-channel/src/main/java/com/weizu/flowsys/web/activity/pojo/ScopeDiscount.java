@@ -14,11 +14,24 @@ public class ScopeDiscount {
 	
 	private String channelDiscount = "1.00";		//折扣
 	
-	public ScopeDiscount(String scopeCityName, String channelDiscount) {
+	private String scopeCityCode;				//城市编码
+	
+	public ScopeDiscount(String scopeCityName, String channelDiscount,
+			String scopeCityCode) {
 		super();
 		this.scopeCityName = scopeCityName;
 		this.channelDiscount = channelDiscount;
+		this.scopeCityCode = scopeCityCode;
 	}
+
+	public String getScopeCityCode() {
+		return scopeCityCode;
+	}
+
+	public void setScopeCityCode(String scopeCityCode) {
+		this.scopeCityCode = scopeCityCode;
+	}
+
 	public ScopeDiscount() {
 		super();
 	}

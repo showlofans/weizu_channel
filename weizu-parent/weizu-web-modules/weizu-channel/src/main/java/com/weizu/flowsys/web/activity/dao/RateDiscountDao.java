@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.activity.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
@@ -25,4 +26,41 @@ public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	 * @createTime:2017年7月8日 下午4:18:59
 	 */
 	int updateRateDiscount(long activeId,double activeDiscount);
+	
+	/**
+	 * @description: 获得所有的折扣
+	 * @param rateDiscountPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月12日 下午4:01:50
+	 */
+	List<RateDiscountPo> getRateDiscountList(RateDiscountPo rateDiscountPo);
+	
+	/**
+	 * @description: 获得费率折扣列表
+	 * @param params
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月13日 上午10:32:43
+	 */
+	List<RateDiscountPo> getDiscountList(Map<String, Object> params);
+	
+	/**
+	 * @description: 费率列表长度
+	 * @param params
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月13日 上午10:33:33
+	 */
+	Long countDiscountList(Map<String, Object> params);
+	
+	/**
+	 * @description: 获得所有费率的地区
+	 * @param rateDiscountPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月13日 下午1:30:03
+	 */
+	List<String> getDistinctScope(RateDiscountPo rateDiscountPo);
+	
 }

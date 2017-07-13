@@ -45,8 +45,19 @@
 			</c:forEach>
 		</select>
 		</span>
+		业务类型：
+		<span class="select-box inline">
+			<select name="serviceType"  id="serviceType" class="select" onchange="getChannelList()">
+			<option value="">请选择</option>
+			<c:forEach items="${resultMap.serviceTypeEnums }" var="sTypeEnum" varStatus="vs1">
+				<option value="${sTypeEnum.value }" <c:if test="${sTypeEnum.value == resultMap.searchParam.serviceType }"> selected</c:if>>${sTypeEnum.desc }</option>
+			</c:forEach>
+		</select>
+		</span>
 		
 		通道省份：<input type="text" value="${resultMap.searchParam.scopeCityName }" name="scopeCityName" id="" placeholder=" 通道省份" style="width:250px" class="input-text">
+		
+		<!-- <input type="hidden" value="" name="channelId" id="channelId"> -->
 		
 		<button type="reset"class="btn btn-success" value="重置">重置</button>
 		<input value="查询" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
@@ -62,6 +73,7 @@
 					<!-- <th width="80">流量包Id</th> -->
 					<th >ID</th>
 					<th >通道名称</th>
+					<th >业务类型</th>
 					<th >交易单数</th>
 					<th >交易总额</th>
 					<!-- <th width="120">支持城市</th> -->
@@ -86,6 +98,14 @@
 					<tr class="text-c">
 						<td>${channel.id }</td> 
 						<td>${channel.channelName }</td>
+						<td><c:forEach items="${resultMap.serviceTypeEnums }" var="serTypeEnum" varStatus="vs1">
+								<c:if test="${channel.serviceType == serTypeEnum.value }">
+									<span>${serTypeEnum.desc }</span>
+								</c:if>
+							</c:forEach>
+						</td> 
+						<td style="display:none;">${channel.serviceType }</td>
+						<td style="display:none;">${channel.operatorType }</td>
 						<td>${channel.channelTotalUse }</td>
 						<td>${channel.channelTotalAmount }</td>
 						<td>${channel.discountPo.discount0 }</td>
@@ -149,8 +169,8 @@
 						</c:if>
 						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="channel_stop('/flowsys/channel/channel_delete.do',${channel.id})" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
 						<!-- <a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5"  href="javascript:;" title="折扣编辑"><i class="Hui-iconfont">&#xe6df;</i></a> --> 
-						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="/flowsys/rate/bind_channel_list.do?bindTag=bAgency&channelId=${channel.id }" onclick="Hui_admin_tab(this)" title="绑定代理商"><i class="Hui-iconfont">&#xe6df;</i></a>
-						<!-- <a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a> -->
+						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="javascript:;" onclick="channel_edit('/flowsys/rate/bind_rate_list.do',this)" data-title="费率列表"><i class="Hui-iconfont">&#xe6df;</i></a>
+						<!-- <a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a> /flowsys/rate/bind_rate_list.do?channelId= ${channel.id }-->
 						</td>
 					</tr>
 				</c:forEach>
@@ -172,6 +192,46 @@
 <script type="text/javascript" charset="utf8" src="/view/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="/view/lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript">
+function channel_edit(url,objt){
+	var channelId = $(objt).parent().parent().children(":first").html();
+	var serviceType = $(objt).parent().parent().children(":eq(3)").html();
+	var operatorType = $(objt).parent().parent().children(":eq(4)").html();
+	//alert(serviceType);
+	//alert(channelId);
+	$("#channelId").val(channelId);
+	 $(objt).attr('data-href',url+'?'+'channelId='+Number(channelId)+'&serviceType='+ serviceType+'&operatorType='+ operatorType); //+$('form').serialize()
+		Hui_admin_tab(objt);
+	/* $.ajax({
+		type: 'POST',
+		url: url,
+		//dataType: 'json',
+		data: $('form').serialize(),//jQuery-serialize()
+		async: false,
+		success: function(data){
+			tag = data;
+			/* alert(data);
+			if(data=="success")
+			{
+				location.reload();
+			}else{
+				layer.msg('更新通道失败!',{icon:1,time:1000});
+			} 
+		},
+		error:function(data) {
+			console.log(data.msg);
+		},
+	});	 */
+	/* var index = layer.open({  
+        type: 2,  
+        content: url+'?'+$('form').serialize(),  
+        area: ['300px', '195px'],   
+        title: false,  
+        maxmin: true,   
+        closeBtn: 1 
+    });  */ 
+   
+	//layer.full(index);  
+}
 /* $(document).ready(function() {
 	$('.table-sort').dataTable({
         "bServerSide": true,//这个用来指明是通过服务端来取数据

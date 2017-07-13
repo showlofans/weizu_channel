@@ -92,5 +92,18 @@ public class AgencyVODao extends DaoImpl<AgencyBackwardVO, Integer> implements A
 	public int checkSecondAgency(int agencyId) {
 		return sqlSessionTemplateASS.selectOne("checkSecondAgency",agencyId);//asset-只有一个结果
 	}
+
+	/**
+	 * @description:  更新密码
+	 * @param paramMap
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月11日 上午10:20:17
+	 */
+//	@Override
+//	public int updateUserPass(Map<String, Object> paramMap) {
+//		
+//		return 0;
+//	}
 	
 }

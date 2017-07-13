@@ -37,7 +37,7 @@ public class AgencyActiveChannelPo extends Po {
     private String activeTimeStr;				//（页面参数）
     
     @TempField
-    private Double channelDiscount;				//通道折扣
+    private Double channelDiscount;				//通道折扣（active_discount）
     
     @TempField
     private DiscountPo discountPo;				//页面折扣实体（移动，联通，电信）
@@ -66,6 +66,9 @@ public class AgencyActiveChannelPo extends Po {
     @TempField
     private String ScopeCityCode;
     
+    @TempField
+    private Long rateId;						//查询参数：费率折扣id
+    
 //	public RateDiscountPo getRateDiscountPo() {
 //		return rateDiscountPo;
 //	}
@@ -76,6 +79,14 @@ public class AgencyActiveChannelPo extends Po {
     
 	public List<RateDiscountPo> getRateList() {
 		return rateList;
+	}
+
+	public Long getRateId() {
+		return rateId;
+	}
+
+	public void setRateId(Long rateId) {
+		this.rateId = rateId;
 	}
 
 	public String getScopeCityCode() {

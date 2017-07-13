@@ -36,9 +36,19 @@ public class AgencyAOTest {
 //		}
 //	 }
 	 
-	 @Test
-	 public void testCheckSecondAgency(){
-		 int res = agencyAO.checkSecondAgency(4);
+//	 @Test
+//	 public void testCheckSecondAgency(){
+//		 int res = agencyAO.checkSecondAgency(4);
+//		 System.out.println(res);
+//	 }
+	 /**
+	 * @description: 修改密码
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月11日 上午10:15:01
+	 */
+	@Test
+	 public void updateUserPass(){
+		 int res = agencyAO.updatePass(4, "123");
 		 System.out.println(res);
 	 }
 

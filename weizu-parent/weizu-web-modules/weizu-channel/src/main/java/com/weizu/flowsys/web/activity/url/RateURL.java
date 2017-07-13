@@ -74,5 +74,16 @@ public class RateURL extends BaseURL {
 	 * /flowsys/rate/update_rate_discount.do
 	 */
 	public static final String UPDATE_RATE_DISCOUNT = "/update_rate_discount" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 查询统一配置的费率列表<br>
+	 * /flowsys/rate/bind_rate_list.do
+	 */
+	public static final String BIND_RATE_LIST = "/bind_rate_list" + DYNAMIC_WEB_SUFFIX;
+	
+	/**
+	 * js/json通过运营商类型获得折扣
+	 * <br>/flowsys/rate/get_discount.do
+	 */
+	public static final String GET_DISCOUNT = "/get_discount" + DYNAMIC_WEB_SUFFIX;
 
 }

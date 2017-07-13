@@ -134,6 +134,9 @@
 	<if test="productName != null">
   		AND product_name = #{productName}
   	</if>
+	<if test="productCode != null">
+  		AND product_code = #{productCode}
+  	</if>
   </sql>
   
   <sql id="condition_sql">

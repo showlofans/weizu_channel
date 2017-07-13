@@ -76,6 +76,9 @@
   		<if test="userName != null">
   			user_name = #{userName},
   		</if>
+  		<if test="userPass != null">
+  			user_pass = #{userPass},
+  		</if>
   		<if test="userRealName != null">
   			user_real_name = #{userRealName},
   		</if>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weizu.flowsys.web.activity.dao.AacJoinRdDao" >
+  <sql id="t_aac">aac_join_rd</sql>
+  <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.activity.pojo.AacJoinRdPo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="rate_discount_id" property="rateDiscountId" jdbcType="BIGINT" />
+    <result column="active_id" property="activeId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, rate_discount_id, active_id
+  </sql>
+  <insert id="aac_addList" useGeneratedKeys="true" parameterType="java.util.List">
+  	insert into <include refid="t_aac"></include>
+  	(rate_discount_id, active_id)
+  	values
+  	<foreach collection="list" separator="," item="aac" index="index">
+  		(#{aac.rate_discount_id},#{aac.active_id})
+  	</foreach>
+  </insert>
+  <!-- <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from aac_join_rd
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from aac_join_rd
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="weizu.flowsys.entity.AacJoinRdPo" >
+    insert into aac_join_rd (id, rate_discount_id, active_id
+      )
+    values (#{id,jdbcType=BIGINT}, #{rateDiscountId,jdbcType=BIGINT}, #{activeId,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="weizu.flowsys.entity.AacJoinRdPo" >
+    insert into aac_join_rd
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="rateDiscountId != null" >
+        rate_discount_id,
+      </if>
+      <if test="activeId != null" >
+        active_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="rateDiscountId != null" >
+        #{rateDiscountId,jdbcType=BIGINT},
+      </if>
+      <if test="activeId != null" >
+        #{activeId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="weizu.flowsys.entity.AacJoinRdPo" >
+    update aac_join_rd
+    <set >
+      <if test="rateDiscountId != null" >
+        rate_discount_id = #{rateDiscountId,jdbcType=BIGINT},
+      </if>
+      <if test="activeId != null" >
+        active_id = #{activeId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="weizu.flowsys.entity.AacJoinRdPo" >
+    update aac_join_rd
+    set rate_discount_id = #{rateDiscountId,jdbcType=BIGINT},
+      active_id = #{activeId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update> -->
+</mapper>

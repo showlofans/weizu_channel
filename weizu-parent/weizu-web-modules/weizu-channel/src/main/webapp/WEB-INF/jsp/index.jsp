@@ -58,6 +58,7 @@
 							<li><a href="javascript:;" onClick="myselfinfo()">个人信息</a>
 							</li>
 							<li><a href="/flowsys/agency/logout.do">切换账户</a></li>
+							<li><a href="javascript:;" onClick="resetPass()">修改密码</a></li>
 							<li><a href="/flowsys/agency/logout.do">退出</a></li>
 					</ul>
 				</li>
@@ -87,7 +88,7 @@
 				<ul>
 					<li><a data-href="/flowsys/channel/channel_add_page.do" data-title="通道添加" href="javascript:void(0)">通道添加</a></li>
 					<li><a data-href="/flowsys/channel/channel_list.do" data-title="通道列表" href="javascript:void(0)">通道列表</a></li>
-					<li><a data-href="/flowsys/rate/bind_channel_list.do?bindTag=bAgency" data-title="活动通道" href="javascript:void(0)">活动通道</a></li>
+					<!-- <li><a data-href="/flowsys/rate/bind_channel_list.do?bindTag=bAgency" data-title="活动通道" href="javascript:void(0)">活动通道</a></li> -->
 					<c:if test="${power== 'no'}">
 						<li><a data-href="/flowsys/platform/platform_list.do" data-title="对接平台管理" href="javascript:void(0)">对接平台管理</a></li>
 						<li><a data-href="/flowsys/productCode/product_code_list.do" data-title="产品编码" href="javascript:void(0)">产品编码</a></li>
@@ -96,7 +97,7 @@
 		</dd>
 	</dl>
 		<dl id="menu-product">
-			<dt><i class="Hui-iconfont">&#xe674;</i> 下游管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dt><i class="Hui-iconfont">&#xe674;</i> 代理商管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
 					<li><a data-href="/flowsys/rate/rate_add_page.do" data-title="费率添加" href="javascript:void(0)">费率添加</a></li>
@@ -240,7 +241,7 @@ $(function(){
 		}
 	});
 });
-/*个人信息*/
+/**个人信息*/
 function myselfinfo(){
 	layer.open({
         type: 2,
@@ -249,6 +250,20 @@ function myselfinfo(){
         maxmin: false,
         closeBtn: 1,
         content: '/flowsys/agency/agency_info.do',
+        end: function () {
+            location.reload();
+        }
+    });
+}
+/**修改密码*/
+function resetPass(){
+	layer.open({
+        type: 2,
+        title: "重置密码",
+        area: ['1000px', '500px'],
+        maxmin: false,
+        closeBtn: 1,
+        content: '/flowsys/agency/reset_pass_page.do',
         end: function () {
             location.reload();
         }

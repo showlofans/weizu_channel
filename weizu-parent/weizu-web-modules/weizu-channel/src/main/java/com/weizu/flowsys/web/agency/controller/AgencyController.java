@@ -187,6 +187,38 @@ public class AgencyController {
 		
 		return new ModelAndView("/agency/welcome_page","resultMap",resultMap);
 	}
+	/**
+	 * @description: 修改密码页面
+	 * @param request
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月11日 上午9:44:18
+	 */
+	@RequestMapping(value = AgencyURL.RESET_PASS_PAGE)
+	public ModelAndView resetPassPage(HttpServletRequest request){
+		return new ModelAndView("/agency/reset_pass_page");
+	}
+	/**
+	 * @description: 重置密码
+	 * @param request
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月11日 上午10:08:24
+	 */
+	@RequestMapping(value = AgencyURL.RESET_PASS)
+	public void resetPass(HttpServletRequest request, String enterPass,HttpServletResponse response){
+		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		int res = agencyAO.updatePass(agencyVo.getId(), enterPass);
+		try {
+			if(res < 1){
+				response.getWriter().print("error");
+			}else{
+				response.getWriter().print("success");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	/**
 	 * @description:查询自己的邀请码信息
