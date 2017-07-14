@@ -18,6 +18,7 @@ import com.weizu.flowsys.web.activity.pojo.OperatorDiscount;
 import com.weizu.flowsys.web.activity.pojo.OperatorDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.ScopeDiscount;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
+import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 
 @Repository(value="channelDiscountDao")
@@ -56,6 +57,19 @@ public class ChannelDiscountDaoImpl extends DaoImpl<ChannelDiscountPo, Integer> 
 	public List<ChannelDiscountPo> getDiscountList(Map<String, Object> paramsMap) {
 		
 		return sqlSessionTemplate.selectList("getDiscountList", paramsMap);
+	}
+	
+	/**
+	 * @description:查询简易通道信息
+	 * @param channelPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月5日 下午3:54:28
+	 */
+	@Override
+	public List<ChannelDiscountPo> listSimpleChannel(Map<String,Object> paramsMap) {
+		
+		return sqlSessionTemplate.selectList("listSimpleChannel",paramsMap);
 	}
 
 }

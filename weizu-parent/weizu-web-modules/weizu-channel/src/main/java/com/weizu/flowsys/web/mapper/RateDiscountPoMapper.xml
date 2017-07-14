@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.weizu.flowsys.web.activity.dao.RateDiscountDao" >
   <sql id="t_rateD">rate_discount</sql>
+  <sql id="t_cDiscount">channel_discount</sql>
   <sql id="t_aac_join">aac_join_rd</sql>
-  <sql id="t_active">agency_active_channel</sql>
-  <sql id="t_channel">channel_channel</sql>
+  <sql id="t_active">agency_active_rate</sql>
   
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.activity.pojo.RateDiscountPo" >
     <id column="id" property="id" jdbcType="BIGINT" />
@@ -13,9 +13,10 @@
     <result column="scope_city_code" property="scopeCityCode" jdbcType="VARCHAR" />
     <result column="active_discount" property="activeDiscount" jdbcType="DOUBLE" />
     <result column="active_id" property="activeId" jdbcType="BIGINT" />
+    <result column="channel_discount_id" property="channelDiscountId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    rate.id, operator_type, scope_city_code, active_discount, rate.active_id
+    rate.id, cDiscount.operator_type, cDiscount.scope_city_code, active_discount, rate.active_id,channel_discount_id
   </sql>
   <!-- 批量添加费率折扣 -->
    <insert id="rate_addList" useGeneratedKeys="true" parameterType="java.util.List">
@@ -27,21 +28,38 @@
   		#{rateD.activeId})
   	</foreach>
   </insert>
+  
+  <!-- 通过通道折扣查询简易折扣列表 -->
+  <resultMap id="SimpleMap" type="com.weizu.flowsys.web.activity.pojo.RateDiscountPo">
+  	 <id column="id" property="id" jdbcType="BIGINT" />
+  	 <result column="active_discount" property="activeDiscount" jdbcType="DOUBLE" />
+  </resultMap>
+  
+  <sql id="simple_column_list">
+  	id, active_discount
+  </sql>
+  <select id="getListByCDiscountId" parameterType="long" resultMap="SimpleMap">
+  	select <include refid="simple_column_list"></include>
+  	from <include refid="t_rateD"></include>
+  	<where>
+  		channel_discount_id = #{_parameter}
+  	</where>
+  </select>
+  
+  
   <!-- 获得所有折扣信息 -->
   <select id="getRateDiscountList" resultMap="BaseResultMap" parameterType="com.weizu.flowsys.web.activity.pojo.RateDiscountPo">
   	select <include refid="Base_Column_List"></include>
   	from <include refid="t_rateD"></include> rate
-  	inner join <include refid="t_aac_join"></include> aac
-  	on rate.id = aac.rate_discount_id 
-  	inner join <include refid="t_active"></include> active
-  	on aac.active_id = active.id
+  	inner join <include refid="t_cDiscount"></include> cDiscount
+  	on rate.channel_discount_id = cDiscount.id
   	<where>
   		<include refid="condition_sql"></include>
   	</where>
-  	order by rate.scope_city_code,active.active_time desc
+  	order by cDiscount.scope_city_code desc
   </select>
   <!-- 获得所有地区信息 -->
-  <select id="getDistinctScope" resultType="list" parameterType="com.weizu.flowsys.web.activity.pojo.RateDiscountPo">
+  <!-- <select id="getDistinctScope" resultType="list" parameterType="com.weizu.flowsys.web.activity.pojo.RateDiscountPo">
   	select distinct(rate.scope_city_code)
   	from <include refid="t_rateD"></include> rate
   	inner join <include refid="t_aac_join"></include> aac
@@ -52,7 +70,7 @@
   		<include refid="condition_sql"></include>
   	</where>
   	order by rate.scope_city_code,active.active_time desc
-  </select>
+  </select> -->
   <!-- 获得分页费率列表信息 -->
  <!--  <select id="getDiscountList" resultMap="BaseResultMap" parameterType="map">
   	select <include refid="Base_Column_List"></include>
@@ -86,22 +104,25 @@
   
   <sql id="condition_sql">
   	<if test="operatorType != null">
-  		AND operator_type = #{operatorType}
+  		AND cDiscount.operator_type = #{operatorType}
   	</if>
   	<if test="scopeCityCode != null">
-  		AND scope_city_code = #{scopeCityCode}
+  		AND cDiscount.scope_city_code = #{scopeCityCode}
   	</if>
   	<if test="serviceType != null">
-  		AND service_type = #{serviceType}
+  		AND cDiscount.service_type = #{serviceType}
   	</if>
   	<if test="activeDiscount != null">
-  		AND active_discount = #{activeDiscount}
+  		AND rate.active_discount = #{activeDiscount}
   	</if>
   	<if test="channelId != null">
-  		AND active.channel_id = #{channelId}
+  		AND cDiscount.channel_id = #{channelId}
   	</if>
-  	<if test="agencyId != null">
+  	<!-- <if test="agencyId != null">
   		AND active.agency_id = #{agencyId}
+  	</if> -->
+  	<if test="channelDiscountId != null">
+  		AND cDiscount.channel_discount_id = #{channelDiscountId}
   	</if>
   </sql>
  <!--  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >

@@ -46,6 +46,13 @@
 				<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 		</form>
 	</div> --%>
+	<div class="text-c" style="display:none;">
+		<form action="/flowsys/rate/bind_channel_list.do" method="post" id="formD" name="dataListForm">
+			<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
+			<input type="hidden" name="agencyId" value="${childAgencyId }"> 
+			<input type="hidden" name="agencyName" value="${childAgencyName }"> 
+		</form>
+	</div>
 	<!-- <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加资讯" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加资讯</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div> -->
 		<div class="mt-20">
 			<!-- <sapn>通道名称：微族科技</sapn>
@@ -125,7 +132,7 @@
 				
 			</tbody>
 		</table>
-		<mytag:Pagination pagination="${resultMap.pagination}" queryForm="queryForm" divId="rateId" />
+		<mytag:Pagination pagination="${resultMap.pagination}" queryForm="formD" divId="rateId" />
 	</div>
 </div>
 <!--_footer 作为公共模版分离出去-->

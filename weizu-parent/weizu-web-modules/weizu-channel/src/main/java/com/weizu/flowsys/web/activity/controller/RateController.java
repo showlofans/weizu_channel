@@ -34,7 +34,7 @@ import com.weizu.flowsys.web.activity.ao.OperatorDiscountAO;
 import com.weizu.flowsys.web.activity.ao.RateBackwardAO;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
-import com.weizu.flowsys.web.activity.pojo.AgencyActiveChannelPo;
+import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
 import com.weizu.flowsys.web.activity.pojo.OperatorDiscount;
 import com.weizu.flowsys.web.activity.pojo.OperatorDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateBackwardPo;
@@ -96,140 +96,140 @@ public class RateController {
 	 * @throws UnsupportedEncodingException 
 	 * @createTime:2017年5月17日 下午12:19:11
 	 */
-	@RequestMapping(value= RateURL.RATE_ADD_PAGE)
-	public ModelAndView rateAddPage(HttpServletRequest request,@RequestParam(value="agencyId", required = false)String agencyId,@RequestParam(value="rateId", required = false)String rateId) throws UnsupportedEncodingException{
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		
-		
-		ChargeAccountPo chargeAccount = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
-		if(chargeAccount != null){
-			if(chargeAccount.getBillType() != null &&  chargeAccount.getBillType() == 1)
-			{
-				resultMap.put("billTypes", BillTypeEnum.toList());
-			}else{
-				resultMap.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-			}
-		}
-		
-		resultMap.put("operatorTypes", OperatorTypeEnum.toList());
-		resultMap.put("scopeCityNames", ScopeCityEnum.toList());
-		if (rateId != null) {
-//			AgencyBackwardPo agencyPo = agencyAO.getAgencyById();
-//			RateBackwardPo ratePo = rateBackwardAO.getByPoId(Long.parseLong(rateId));
-//			resultMap.put("ratePo", ratePo);
-			OperatorDiscountPo opo = new OperatorDiscountPo();
-			opo.setRateId(Long.parseLong(rateId));
-			List<OperatorDiscountPo> list = operatorDiscountAO.listDiscountByPo(opo);
-//			for (OperatorDiscountPo operatorDiscountPo : list) {//设置编码
-//				for (Map<String,Object> map : OperatorTypeEnum.toList()) {
-//					if(operatorDiscountPo.getOperatorType()==Integer.parseInt(map.get("value").toString())){
-//						String operatorName = map.get("desc").toString();
-//						operatorDiscountPo.setOperatorScope(operatorName + operatorDiscountPo.getScopeName());
-//					}
-//				}
+//	@RequestMapping(value= RateURL.RATE_ADD_PAGE)
+//	public ModelAndView rateAddPage(HttpServletRequest request,@RequestParam(value="agencyId", required = false)String agencyId,@RequestParam(value="rateId", required = false)String rateId) throws UnsupportedEncodingException{
+//		Map<String, Object> resultMap = new HashMap<String, Object>();
+//		
+//		
+//		ChargeAccountPo chargeAccount = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
+//		if(chargeAccount != null){
+//			if(chargeAccount.getBillType() != null &&  chargeAccount.getBillType() == 1)
+//			{
+//				resultMap.put("billTypes", BillTypeEnum.toList());
+//			}else{
+//				resultMap.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 //			}
-			resultMap.put("discountList", list);
-			resultMap.put("agencyId", agencyId);
-			
-//			OperatorScopeVO osv = new OperatorScopeVO();
-//			osv.set
-//			ServiceScopePo ssp = new ServiceScopePo(id, scopeCityCode, serviceType, operatorType, operatorName, scopeCityName)
-			
-		}
-		
-//		String rateName = agencyPo.getRateName();
-//		String userName = agencyPo.getUserName();
-//		rateName = new String(rateName.getBytes("iso-8859-1"), "utf-8");
-//		userName = new String(userName.getBytes("iso-8859-1"), "utf-8");
-//		agencyPo.setRateName(rateName);
-//		agencyPo.setUserName(userName);
-		//resultMap.put("serviceTypes", ServiceTypeEnum.toList());
-		
-		return new ModelAndView("/rate/rate_add_page", "resultMap", resultMap);
-	}
-	/**
-	 * @description:跳转到费率编辑页面
-	 * @param request
-	 * @return
-	 * @author:POP产品研发部 宁强
-	 * @throws UnsupportedEncodingException 
-	 * @createTime:2017年5月17日 下午12:19:11
-	 */
-	@RequestMapping(value= RateURL.RATE_EDIT_PAGE)
-	public ModelAndView rateEditPage(HttpServletRequest request,@RequestParam(value="rateId", required = false)String rateId) throws UnsupportedEncodingException{
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("operatorTypes", OperatorTypeEnum.toList());
-		resultMap.put("scopeCityNames", ScopeCityEnum.toList());
-		if (rateId != null) {
-			OperatorDiscountPo opo = new OperatorDiscountPo();
-			opo.setRateId(Long.parseLong(rateId));
-			List<OperatorDiscountPo> list = operatorDiscountAO.listDiscountByPo(opo);
-			
-			for (OperatorDiscountPo operatorDiscountPo : list) {//设置编码
-				operatorDiscountPo.setScopeCityNames( ScopeCityEnum.toList());
-//				for (Map<String,Object> map : OperatorTypeEnum.toList()) {
-//					if(operatorDiscountPo.getOperatorType()==Integer.parseInt(map.get("value").toString())){
-//						String operatorName = map.get("desc").toString();
-//						operatorDiscountPo.setOperatorScope(operatorName + operatorDiscountPo.getScopeName());
-//					}
-//				}
-			}
-			resultMap.put("discountList", list);
-			resultMap.put("rateId", rateId);
-		}
-		
-		return new ModelAndView("/rate/rate_edit_page", "resultMap", resultMap);
-	}
-	
-	/**
-	 * @description:添加费率
-	 * @param id 代理商id
-	 * @param request
-	 * @param rateBackwardPo
-	 * @param response
-	 * @return
-	 * @throws IOException
-	 * @author:POP产品研发部 宁强
-	 * @createTime:2017年5月27日 上午9:47:51
-	 */
-	@RequestMapping(value= RateURL.RATE_ADD)
-	@ResponseBody
-	public ModelAndView rateAdd(HttpServletRequest request, RateBackwardVo rateBackwardVo,HttpServletResponse response) throws IOException{
-		AgencyBackwardVO vo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		if(vo == null){
-			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
-		}
-		int result =  operatorDiscountAO.disccount_addList(rateBackwardVo, vo.getId());
-		
-		if(result > 0){
-//			response.getWriter().print("success");
-			return selectByPo(request, null, null);
-		}
-		return null;
-	}
-	/**
-	 * @description:异步验证费率名称是否存在
-	 * @param request
-	 * @param rateName
-	 * @param response
-	 * @throws IOException
-	 * @author:POP产品研发部 宁强
-	 * @createTime:2017年6月5日 上午10:50:53
-	 */
-	@RequestMapping(value = RateURL.CHECK_RATE_NAME)
-	@ResponseBody
-	public void checkRateName(HttpServletRequest request, String rateName,HttpServletResponse response) throws IOException{
-		AgencyBackwardVO vo  = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		rateName = new String(rateName.getBytes("iso-8859-1"), "utf-8");
-		
-		int result =  operatorDiscountAO.checkRateName(rateName, vo.getId());
-		
-//		if(result > 0){
-			response.getWriter().print(result);
-//		}else{
-//			response.getWriter().print("error");
 //		}
-	}
+//		
+//		resultMap.put("operatorTypes", OperatorTypeEnum.toList());
+//		resultMap.put("scopeCityNames", ScopeCityEnum.toList());
+//		if (rateId != null) {
+////			AgencyBackwardPo agencyPo = agencyAO.getAgencyById();
+////			RateBackwardPo ratePo = rateBackwardAO.getByPoId(Long.parseLong(rateId));
+////			resultMap.put("ratePo", ratePo);
+//			OperatorDiscountPo opo = new OperatorDiscountPo();
+//			opo.setRateId(Long.parseLong(rateId));
+//			List<OperatorDiscountPo> list = operatorDiscountAO.listDiscountByPo(opo);
+////			for (OperatorDiscountPo operatorDiscountPo : list) {//设置编码
+////				for (Map<String,Object> map : OperatorTypeEnum.toList()) {
+////					if(operatorDiscountPo.getOperatorType()==Integer.parseInt(map.get("value").toString())){
+////						String operatorName = map.get("desc").toString();
+////						operatorDiscountPo.setOperatorScope(operatorName + operatorDiscountPo.getScopeName());
+////					}
+////				}
+////			}
+//			resultMap.put("discountList", list);
+//			resultMap.put("agencyId", agencyId);
+//			
+////			OperatorScopeVO osv = new OperatorScopeVO();
+////			osv.set
+////			ServiceScopePo ssp = new ServiceScopePo(id, scopeCityCode, serviceType, operatorType, operatorName, scopeCityName)
+//			
+//		}
+//		
+////		String rateName = agencyPo.getRateName();
+////		String userName = agencyPo.getUserName();
+////		rateName = new String(rateName.getBytes("iso-8859-1"), "utf-8");
+////		userName = new String(userName.getBytes("iso-8859-1"), "utf-8");
+////		agencyPo.setRateName(rateName);
+////		agencyPo.setUserName(userName);
+//		//resultMap.put("serviceTypes", ServiceTypeEnum.toList());
+//		
+//		return new ModelAndView("/rate/rate_add_page", "resultMap", resultMap);
+//	}
+//	/**
+//	 * @description:跳转到费率编辑页面
+//	 * @param request
+//	 * @return
+//	 * @author:POP产品研发部 宁强
+//	 * @throws UnsupportedEncodingException 
+//	 * @createTime:2017年5月17日 下午12:19:11
+//	 */
+//	@RequestMapping(value= RateURL.RATE_EDIT_PAGE)
+//	public ModelAndView rateEditPage(HttpServletRequest request,@RequestParam(value="rateId", required = false)String rateId) throws UnsupportedEncodingException{
+//		Map<String, Object> resultMap = new HashMap<String, Object>();
+//		resultMap.put("operatorTypes", OperatorTypeEnum.toList());
+//		resultMap.put("scopeCityNames", ScopeCityEnum.toList());
+//		if (rateId != null) {
+//			OperatorDiscountPo opo = new OperatorDiscountPo();
+//			opo.setRateId(Long.parseLong(rateId));
+//			List<OperatorDiscountPo> list = operatorDiscountAO.listDiscountByPo(opo);
+//			
+//			for (OperatorDiscountPo operatorDiscountPo : list) {//设置编码
+//				operatorDiscountPo.setScopeCityNames( ScopeCityEnum.toList());
+////				for (Map<String,Object> map : OperatorTypeEnum.toList()) {
+////					if(operatorDiscountPo.getOperatorType()==Integer.parseInt(map.get("value").toString())){
+////						String operatorName = map.get("desc").toString();
+////						operatorDiscountPo.setOperatorScope(operatorName + operatorDiscountPo.getScopeName());
+////					}
+////				}
+//			}
+//			resultMap.put("discountList", list);
+//			resultMap.put("rateId", rateId);
+//		}
+//		
+//		return new ModelAndView("/rate/rate_edit_page", "resultMap", resultMap);
+//	}
+//	
+//	/**
+//	 * @description:添加费率
+//	 * @param id 代理商id
+//	 * @param request
+//	 * @param rateBackwardPo
+//	 * @param response
+//	 * @return
+//	 * @throws IOException
+//	 * @author:POP产品研发部 宁强
+//	 * @createTime:2017年5月27日 上午9:47:51
+//	 */
+//	@RequestMapping(value= RateURL.RATE_ADD)
+//	@ResponseBody
+//	public ModelAndView rateAdd(HttpServletRequest request, RateBackwardVo rateBackwardVo,HttpServletResponse response) throws IOException{
+//		AgencyBackwardVO vo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//		if(vo == null){
+//			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+//		}
+//		int result =  operatorDiscountAO.disccount_addList(rateBackwardVo, vo.getId());
+//		
+//		if(result > 0){
+////			response.getWriter().print("success");
+//			return selectByPo(request, null, null);
+//		}
+//		return null;
+//	}
+//	/**
+//	 * @description:异步验证费率名称是否存在
+//	 * @param request
+//	 * @param rateName
+//	 * @param response
+//	 * @throws IOException
+//	 * @author:POP产品研发部 宁强
+//	 * @createTime:2017年6月5日 上午10:50:53
+//	 */
+//	@RequestMapping(value = RateURL.CHECK_RATE_NAME)
+//	@ResponseBody
+//	public void checkRateName(HttpServletRequest request, String rateName,HttpServletResponse response) throws IOException{
+//		AgencyBackwardVO vo  = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//		rateName = new String(rateName.getBytes("iso-8859-1"), "utf-8");
+//		
+//		int result =  operatorDiscountAO.checkRateName(rateName, vo.getId());
+//		
+////		if(result > 0){
+//			response.getWriter().print(result);
+////		}else{
+////			response.getWriter().print("error");
+////		}
+//	}
 	
 	/**
 	 * @description:通过登录用户id查询费率列表 
@@ -313,7 +313,7 @@ public class RateController {
 	 * @createTime:2017年7月8日 上午10:45:49
 	 */
 	@RequestMapping(value= RateURL.GET_SIMPLE_CHANNEL)
-	public void getSimpleChannel(HttpServletRequest request, HttpServletResponse response,ChannelChannelPo channelChannelPo)//设置运营商类型和地区筛选
+	public void getSimpleChannel(HttpServletRequest request, HttpServletResponse response,ChannelDiscountPo discountPo)//设置运营商类型和地区筛选
 	{
 //		ChargeAccountPo chargeAccount1 = (ChargeAccountPo) request.getSession().getAttribute("chargeAccount1");
 //		ChargeAccountPo chargeAccount = (ChargeAccountPo) request.getSession().getAttribute("chargeAccount");
@@ -323,7 +323,7 @@ public class RateController {
 			System.out.println("no login");
 //			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 		}
-		channelChannelPo.setBelongAgencyId(agencyVO.getId());//当前登录用户的通道的
+		discountPo.setBelongAgencyId(agencyVO.getId());//当前登录用户的通道的
 		
 		//设置票务筛选
 //		String childAgencyIdStr = request.getSession().getAttribute("childAgencyId").toString();
@@ -341,7 +341,7 @@ public class RateController {
 ////				channelPo.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());
 //			}
 //		}
-		 List<ChannelChannelPo> channelList = channelChannelAO.listOpenChannel(channelChannelPo);
+		 List<ChannelDiscountPo> channelList = channelDiscountAO.listOpenChannel(discountPo);
 		
 		//简易通道列表
 		try {
@@ -370,7 +370,7 @@ public class RateController {
 	 */
 	@RequestMapping(value=RateURL.BIND_CHANNEL_LIST)
 	public ModelAndView bindChannelList(@RequestParam(value = "pageNo", required = false) String pageNo,
-			HttpServletRequest request,AgencyActiveChannelPo activePo)
+			HttpServletRequest request,AgencyActiveRatePo activePo)
 	{
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO == null){
@@ -384,7 +384,7 @@ public class RateController {
 			pageParam = new PageParam(1, 10);
 		}
 //		AgencyActiveChannelPo activePo = new 
-		Pagination<AgencyActiveChannelPo> pagination = agencyActiveChannelAO.listActive(pageParam, activePo);
+		Pagination<AgencyActiveRatePo> pagination = agencyActiveChannelAO.listActive(pageParam, activePo);
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("pagination", pagination);
@@ -415,7 +415,7 @@ public class RateController {
 	 */
 	@RequestMapping(value=RateURL.BIND_AGENCY_LIST)
 	public ModelAndView bindAgencyList(@RequestParam(value = "pageNo", required = false) String pageNo,
-			HttpServletRequest request,AgencyActiveChannelPo activePo){
+			HttpServletRequest request,AgencyActiveRatePo activePo){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		return new ModelAndView("/activity/bind_agency_list","resultMap",resultMap);
 	}
@@ -477,7 +477,7 @@ public class RateController {
 	 */
 	@RequestMapping(value=RateURL.BIND_CHANNEL)
 	@ResponseBody
-	public void rateJoinChannel(AgencyActiveChannelPo aacp,RateDiscountPo rateDiscountPo,HttpServletResponse response, HttpServletRequest request)
+	public void rateJoinChannel(AgencyActiveRatePo aacp,RateDiscountPo rateDiscountPo,HttpServletResponse response, HttpServletRequest request)
 	{
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		
@@ -571,9 +571,8 @@ public class RateController {
 		//得到地区和折扣列表
 //		List<RateDiscountPo> rateList = rateDiscountDao.getRateDiscountList(ratePo);
 		
-		Long channelId = ratePo.getChannelId();
 		ChannelDiscountPo cdp = new ChannelDiscountPo();
-		cdp.setChannelId(channelId);
+		cdp.setChannelId(ratePo.getChannelId());
 		List<ChannelDiscountPo> channelList = channelDiscountAO.getDiscountList(cdp);
 		
 		List<RateDiscountPo> scopeList = new LinkedList<RateDiscountPo>();
@@ -594,27 +593,48 @@ public class RateController {
 			}
 			resultMap.put("scopeList", scopeList);//取地区和地区编码
 			
+			
+			resultMap.put("channelName", channelList.get(0).getChannelName());//取地区和地区编码
+			
 			if(StringHelper.isEmpty(ratePo.getScopeCityCode())){//如果为空，就取第一个
 				String scopeCityCode = channelList.get(0).getScopeCityCode();//默认选第一个城市
 				ratePo.setScopeCityCode(scopeCityCode);
+				cdp.setScopeCityCode(scopeCityCode);//设置第一个城市
+			}else{
+				//再去找一遍折扣,通道折扣
+				cdp.setScopeCityCode(ratePo.getScopeCityCode());
 			}
-			List<RateDiscountPo> discountList = rateDiscountDao.getRateDiscountList(ratePo);//折扣列表
-			resultMap.put("discountList", discountList);//取折扣和折扣id
-			
-			
-			//根据第一个折扣id去找连接
-			RateDiscountPo ratePP = new RateDiscountPo();
-			if(discountList != null && discountList.size() > 0){
-				if(ratePo.getId()==null){
-					Long rateId = discountList.get(0).getId();//第一个折扣id
-					ratePP.setId(rateId);
-				}else
-				{
-					ratePP.setId(ratePo.getId());
+			cdp.setOperatorType(ratePo.getOperatorType());//不为空
+			cdp.setServiceType(ratePo.getServiceType());//不为空
+			List<ChannelDiscountPo> channelList1 = channelDiscountAO.getDiscountList(cdp);
+			if(channelList1 != null && channelList1.size()==1){//一般一个地区只有一个通道折扣
+				Double singleDiscount = channelList1.get(0).getChannelDiscount();
+				resultMap.put("channelDiscount", singleDiscount);//取地区和地区编码
+				Long channelDiscountId = channelList1.get(0).getId();
+				List<RateDiscountPo> discountList = rateDiscountDao.getListByCDiscountId(channelDiscountId);//折扣列表
+				resultMap.put("discountList", discountList);//取折扣和折扣id
+				//根据第一个折扣id去找连接
+				RateDiscountPo ratePP = new RateDiscountPo();
+				if(discountList != null && discountList.size() > 0){
+					if(ratePo.getId()==null){
+						Long rateId = discountList.get(0).getId();//第一个折扣id
+						ratePP.setId(rateId);
+					}else
+					{
+						ratePP.setId(ratePo.getId());
+					}
+					Pagination<AgencyActiveRatePo> pagination = agencyActiveChannelAO.listActiveRate(pageParam, ratePP);
+					resultMap.put("pagination", pagination);
+				}else{//显示没有记录
+					List<AgencyActiveRatePo> nullList = new ArrayList<AgencyActiveRatePo>();
+					Pagination<AgencyActiveRatePo> pagination = new Pagination<AgencyActiveRatePo>(nullList, 0, 1, 10);
+					resultMap.put("pagination", pagination);
 				}
+			}else{//显示没有记录
+				List<AgencyActiveRatePo> nullList = new ArrayList<AgencyActiveRatePo>();
+				Pagination<AgencyActiveRatePo> pagination = new Pagination<AgencyActiveRatePo>(nullList, 0, 1, 10);
+				resultMap.put("pagination", pagination);
 			}
-			Pagination<AgencyActiveChannelPo> pagination = agencyActiveChannelAO.listActiveRate(pageParam, ratePP);
-			resultMap.put("pagination", pagination);
 			
 //			List<Double> disList = new LinkedList<Double>(); 
 //			for (RateDiscountPo rateDiscountPo : discountList) {
@@ -656,6 +676,7 @@ public class RateController {
 		
 		resultMap.put("otypeEnums", OperatorTypeEnum.toList());
 		resultMap.put("stypeEnums", ServiceTypeEnum.toList());
+		resultMap.put("bindStateEnums", BindStateEnum.toList());
 		resultMap.put("searchParams", ratePo);
 		
 		
@@ -668,7 +689,7 @@ public class RateController {
 		return new ModelAndView("/activity/bind_rate_list","resultMap",resultMap);
 	}
 	/**
-	 * @description: js/json通过运营商类型获得城市列表
+	 * @description: js/json通过参数获得折扣列表
 	 * @param request
 	 * @param oType
 	 * @author:POP产品研发部 宁强
@@ -685,6 +706,34 @@ public class RateController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * @description: 绑定折扣添加页面
+	 * @param ratePo
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月14日 下午2:48:58
+	 */
+	@RequestMapping(value= RateURL.BIND_RATE_ADD_PAGE)
+	public ModelAndView addBindRatePage(RateDiscountPo ratePo){
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("ratePo",ratePo);
+		return new ModelAndView("/rate/bind_rate_add_page", "resultMap", resultMap);
+	}
+	/**
+	 * @description: 绑定折扣添加
+	 * @param ratePo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月14日 下午2:53:05
+	 */
+	@RequestMapping(value= RateURL.BIND_RATE_ADD)
+	@ResponseBody
+	public void addBindRate(RateDiscountPo ratePo,HttpServletResponse response){
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("ratePo",ratePo);
+		
 	}
 	
 }

@@ -37,6 +37,15 @@ public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	List<RateDiscountPo> getRateDiscountList(RateDiscountPo rateDiscountPo);
 	
 	/**
+	 * @description: 通过通道折扣查询简易折扣列表
+	 * @param channelDiscountId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月14日 下午5:54:50
+	 */
+	List<RateDiscountPo> getListByCDiscountId(Long channelDiscountId);
+	
+	/**
 	 * @description: 获得费率折扣列表
 	 * @param params
 	 * @return
@@ -61,6 +70,6 @@ public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月13日 下午1:30:03
 	 */
-	List<String> getDistinctScope(RateDiscountPo rateDiscountPo);
+//	List<String> getDistinctScope(RateDiscountPo rateDiscountPo);
 	
 }

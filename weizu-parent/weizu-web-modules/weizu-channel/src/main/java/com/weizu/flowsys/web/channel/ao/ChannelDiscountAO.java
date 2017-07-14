@@ -7,6 +7,7 @@ import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.pojo.OperatorDiscount;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
+import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 
 
@@ -57,4 +58,13 @@ public interface ChannelDiscountAO {
 	Map<String,Object> getOperatorList(ChannelDiscountPo cdp);
 	
 	Map<String,Object> getMapByEntity(ChannelDiscountPo cdp);
+	
+	/**
+	 * @description: 获得开通的简易通道列表( agencyId,  billType)(id,name)
+	 * @param channelChannelPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月6日 下午5:40:36
+	 */
+	List<ChannelDiscountPo> listOpenChannel(ChannelDiscountPo discountPo);
 }

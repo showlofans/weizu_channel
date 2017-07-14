@@ -106,10 +106,23 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月13日 下午1:30:48
 	 */
+//	@Override
+//	public List<String> getDistinctScope(RateDiscountPo rateDiscountPo) {
+//		
+//		return sqlSessionTemplate.selectList("getDistinctScope",rateDiscountPo);
+//	}
+
+	/**
+	 * @description:  通过通道折扣id
+	 * @param channelDiscountId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月14日 下午6:24:54
+	 */
 	@Override
-	public List<String> getDistinctScope(RateDiscountPo rateDiscountPo) {
+	public List<RateDiscountPo> getListByCDiscountId(Long channelDiscountId) {
 		
-		return sqlSessionTemplate.selectList("getDistinctScope",rateDiscountPo);
+		return sqlSessionTemplate.selectList("getListByCDiscountId",channelDiscountId);
 	}
 
 	

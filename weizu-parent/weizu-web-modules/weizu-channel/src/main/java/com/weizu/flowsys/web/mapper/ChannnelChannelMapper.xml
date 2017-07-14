@@ -29,18 +29,18 @@
     discount.id,channel_id,scope_city_code,channel_discount,operator_type,service_type
   </sql>
   
-  <resultMap id="SimpleChannelMap" type="com.weizu.flowsys.web.channel.pojo.ChannelChannelPo" >
+  <!-- <resultMap id="SimpleChannelMap" type="com.weizu.flowsys.web.channel.pojo.ChannelChannelPo" >
   	<id column="id" property="id" jdbcType="BIGINT" />
     <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
-    <!-- <result column="operator_type" property="operatorType" jdbcType="VARCHAR" />
-    <result column="scope_city_code" property="scopeCityCode" jdbcType="VARCHAR" /> -->
+    <result column="operator_type" property="operatorType" jdbcType="VARCHAR" />
+    <result column="scope_city_code" property="scopeCityCode" jdbcType="VARCHAR" />
   </resultMap>
-   <!-- 简易通道信息 -->
+   简易通道信息
    <sql id="Simple_Column_List" >
-    channel.id, channel.channel_name
-    <!-- ,discount.operator_type,discount.scope_city_code -->
+    discount.id, channel.channel_name,discount.channel_discount
+    ,discount.operator_type,discount.scope_city_code
   </sql>
-  <!-- 查询简易通道信息 -->
+  查询简易通道信息
   <select id="listSimpleChannel" resultMap="SimpleChannelMap">
   	select <include refid="Simple_Column_List"></include>
   	from <include refid="t_channel"></include> channel
@@ -50,7 +50,7 @@
   		<include refid="condition_sql"></include>
   	</where>
   	order by channel.id desc
-  </select>
+  </select> -->
   
   <select id="list_channel_channel" parameterType="com.weizu.flowsys.web.channel.pojo.ChannelChannelPo" resultMap="BaseResultMap">
   	select <include refid="Base_Column_List"></include>

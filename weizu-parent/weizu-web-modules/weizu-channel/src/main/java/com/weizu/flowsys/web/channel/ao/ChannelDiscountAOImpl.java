@@ -12,12 +12,14 @@ import org.springframework.stereotype.Service;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
+import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.pojo.OperatorDiscount;
 import com.weizu.flowsys.web.activity.pojo.ScopeDiscount;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
+import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 
 @Service(value="channelDiscountAO")
@@ -68,6 +70,19 @@ public class ChannelDiscountAOImpl implements ChannelDiscountAO {
 			//todo
 			paramsMap.put("channelName", cdp.getChannelName());
 		}
+		if(StringHelper.isNotEmpty(cdp.getScopeCityCode())){
+			//todo
+			paramsMap.put("scopeCityCode", cdp.getScopeCityCode());
+		}
+		if(cdp.getServiceType() != null)
+		{
+			paramsMap.put("serviceType", cdp.getServiceType());
+		}
+		if(cdp.getOperatorType() != null)
+		{
+			paramsMap.put("operatorType", cdp.getOperatorType());
+		}
+		
 		return paramsMap;
 	}
 
@@ -169,6 +184,25 @@ public class ChannelDiscountAOImpl implements ChannelDiscountAO {
 		}
 //		return odList;
 		return resultMap;
+	}
+	
+	/**
+	 * @description: 获得开通的简易通道列表( agencyId,  billType)(id,name)
+	 * @param channelPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月6日 下午5:45:35
+	 */
+	@Override
+	public List<ChannelDiscountPo> listOpenChannel(ChannelDiscountPo discountPo) {
+		Map<String,Object> paramsMap = new HashMap<String, Object>(5);
+		paramsMap.put("belongAgencyId", discountPo.getBelongAgencyId());
+//		paramsMap.put("billType", channelPo.getBillType());
+		paramsMap.put("channelState", ChannelStateEnum.OPEN.getValue());//查找开通的通道
+		paramsMap.put("operatorType", discountPo.getOperatorType());
+		paramsMap.put("serviceType", discountPo.getServiceType());
+		paramsMap.put("scopeCityCode", discountPo.getScopeCityCode());
+		return channelDiscountDao.listSimpleChannel(paramsMap);
 	}
 
 }

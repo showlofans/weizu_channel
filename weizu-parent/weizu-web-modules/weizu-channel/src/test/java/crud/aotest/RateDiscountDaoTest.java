@@ -15,7 +15,7 @@ import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.AgencyActiveChannelAO;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
-import com.weizu.flowsys.web.activity.pojo.AgencyActiveChannelPo;
+import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -32,27 +32,29 @@ public class RateDiscountDaoTest {
 	
 //	@Test
 //	public void testGetDiscountList(){
-//		RateDiscountPo ratePo = new RateDiscountPo(0, 0, null, null, null);
-//		ratePo.setChannelId(7l);
-//		List<RateDiscountPo> resList = rateDiscountDao.getRateDiscountList(ratePo);
+////		RateDiscountPo ratePo = new RateDiscountPo(0, 0,,null, null, null, null);
+//		List<RateDiscountPo> resList = rateDiscountDao.getListByCDiscountId(13l);
+////		RateDiscountPo ratePo = new RateDiscountPo();
+////		ratePo.setChannelId(12l);
+////		List<RateDiscountPo> resList = rateDiscountDao.getRateDiscountList(ratePo);
 //		System.out.println(resList.size());
 //	}
 	
-	@Test
-	public void testGetDisocuntRateList(){
-		RateDiscountPo ratePo = new RateDiscountPo(0, 0, null, null, null);
-		Map<String,Object> mapt = rateDiscountAO.getOperatorListRate(ratePo);
-//		Pagination<AgencyActiveChannelPo> pagination = agencyActiveChannelAO.listActiveRate(new PageParam(1, 10), ratePo);
-//		List<AgencyActiveChannelPo> records = pagination.getRecords();
-		
-		
-//		for(Map<String,Object> scope: ScopeCityEnum.toList()){
-//			Map<String,Object> map = mapt.get(scope.get("value"));
-//			if(map == null){
-//				
-//			}else{
-//				System.out.println(scope.get("value").toString());;//获得折扣
-//			}
-//		}
-	}
+//	@Test
+//	public void testGetDisocuntRateList(){
+//		RateDiscountPo ratePo = new RateDiscountPo(0, 0, null, null, null);
+//		Map<String,Object> mapt = rateDiscountAO.getOperatorListRate(ratePo);
+////		Pagination<AgencyActiveChannelPo> pagination = agencyActiveChannelAO.listActiveRate(new PageParam(1, 10), ratePo);
+////		List<AgencyActiveChannelPo> records = pagination.getRecords();
+//		
+//		
+////		for(Map<String,Object> scope: ScopeCityEnum.toList()){
+////			Map<String,Object> map = mapt.get(scope.get("value"));
+////			if(map == null){
+////				
+////			}else{
+////				System.out.println(scope.get("value").toString());;//获得折扣
+////			}
+////		}
+//	}
 }

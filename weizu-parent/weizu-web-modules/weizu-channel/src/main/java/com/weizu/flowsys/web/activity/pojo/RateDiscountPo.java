@@ -25,6 +25,8 @@ public class RateDiscountPo extends Po {
     private Double activeDiscount;
 
     private Long activeId;
+    
+    private Long channelDiscountId;
     @TempField
     private Long channelId;
     @TempField
@@ -35,17 +37,28 @@ public class RateDiscountPo extends Po {
     public RateDiscountPo() {
 		super();
 	}
-
-	public RateDiscountPo(Integer serviceType, Integer operatorType,
-			String scopeCityCode, Double activeDiscount, Long activeId) {
+	
+	public RateDiscountPo(Long id, Integer serviceType, Integer operatorType,
+			String scopeCityCode, Double activeDiscount, Long activeId,
+			Long channelDiscountId) {
 		super();
+		this.id = id;
 		this.serviceType = serviceType;
 		this.operatorType = operatorType;
 		this.scopeCityCode = scopeCityCode;
 		this.activeDiscount = activeDiscount;
 		this.activeId = activeId;
+		this.channelDiscountId = channelDiscountId;
 	}
-	
+
+	public Long getChannelDiscountId() {
+		return channelDiscountId;
+	}
+
+	public void setChannelDiscountId(Long channelDiscountId) {
+		this.channelDiscountId = channelDiscountId;
+	}
+
 	public String getScopeCityName() {
 		return scopeCityName;
 	}
