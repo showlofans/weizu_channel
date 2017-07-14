@@ -14,10 +14,10 @@ import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.core.util.Formatter;
 import com.weizu.flowsys.web.activity.dao.AgencyActiveChannelDao;
-import com.weizu.flowsys.web.activity.pojo.AgencyActiveChannelPo;
+import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
 
 @Repository(value="agencyActiveChannelDao")
-public class AgencyActiveChannelDaoImpl extends DaoImpl<AgencyActiveChannelPo, Long> implements
+public class AgencyActiveChannelDaoImpl extends DaoImpl<AgencyActiveRatePo, Long> implements
 		AgencyActiveChannelDao {
 
 	@Resource
@@ -31,7 +31,7 @@ public class AgencyActiveChannelDaoImpl extends DaoImpl<AgencyActiveChannelPo, L
 	 * @createTime:2017年7月5日 下午6:09:51
 	 */
 	@Override
-	public List<AgencyActiveChannelPo> listActive(Map<String, Object> paramsMap) {
+	public List<AgencyActiveRatePo> listActive(Map<String, Object> paramsMap) {
 		return sqlSessionTemplate.selectList("listActive",paramsMap);
 	}
 
@@ -43,7 +43,7 @@ public class AgencyActiveChannelDaoImpl extends DaoImpl<AgencyActiveChannelPo, L
 	 * @createTime:2017年7月5日 下午6:12:04
 	 */
 	@Override
-	public int countActive(AgencyActiveChannelPo activePo) {
+	public int countActive(AgencyActiveRatePo activePo) {
 		return sqlSessionTemplate.selectOne("countActive", activePo);
 	}
 
@@ -55,7 +55,7 @@ public class AgencyActiveChannelDaoImpl extends DaoImpl<AgencyActiveChannelPo, L
 	 * @createTime:2017年7月7日 下午7:09:00
 	 */
 	@Override
-	public List<AgencyActiveChannelPo> listActiveDiscount(
+	public List<AgencyActiveRatePo> listActiveDiscount(
 			Map<String, Object> paramsMap) {
 		
 		return sqlSessionTemplate.selectList("listActiveDiscount",paramsMap);
@@ -85,7 +85,7 @@ public class AgencyActiveChannelDaoImpl extends DaoImpl<AgencyActiveChannelPo, L
 	 * @createTime:2017年7月13日 上午10:57:23
 	 */
 	@Override
-	public List<AgencyActiveChannelPo> listActiveRate(
+	public List<AgencyActiveRatePo> listActiveRate(
 			Map<String, Object> paramsMap) {
 		return sqlSessionTemplate.selectList("listActiveRate", paramsMap);
 	}

@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.AgencyActiveChannelAO;
-import com.weizu.flowsys.web.activity.pojo.AgencyActiveChannelPo;
+import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -23,30 +23,33 @@ public class AgencyActiveChannelAOTest {
 	
 //	@Test
 //	public void testList(){
-//		AgencyActiveChannelPo activePo = new AgencyActiveChannelPo();
+//		AgencyActiveRatePo activePo = new AgencyActiveRatePo();
 //		activePo.setAgencyName("456");
 //		
-//		List<AgencyActiveChannelPo> list = agencyActiveChannelAO.listActive(new PageParam(1, 10), activePo).getRecords();
+//		List<AgencyActiveRatePo> list = agencyActiveChannelAO.listActive(new PageParam(1, 10), activePo).getRecords();
 //		System.out.println(list.size());
 //	}
 	/*@Test
 	public void testList(){
-		AgencyActiveChannelPo activePo = new AgencyActiveChannelPo();
+		AgencyActiveRatePo activePo = new AgencyActiveRatePo();
 		activePo.setAgencyName("456");
 		
-		List<AgencyActiveChannelPo> list = agencyActiveChannelAO.listActiveDiscount(new PageParam(1, 10), activePo);
+		List<AgencyActiveRatePo> list = agencyActiveChannelAO.listActiveDiscount(new PageParam(1, 10), activePo);
 		System.out.println(list.size());
 	}*/
-	@Test
-	public void testListActiveRate(){
-		RateDiscountPo rdp = new RateDiscountPo();
-		rdp.setChannelId(12l);
-		rdp.setOperatorType(0);
-		rdp.setServiceType(0);
-		
-		Pagination<AgencyActiveChannelPo> pagination = agencyActiveChannelAO.listActiveRate(new PageParam(1, 10), rdp);
-		List<AgencyActiveChannelPo> records = pagination.getRecords();
-//		List<AgencyActiveChannelPo> list = agencyActiveChannelAO.listActiveDiscount(new PageParam(1, 10), activePo);
-		System.out.println(records.size());
-	}
+//	@Test
+//	public void testListActiveRate(){
+//		RateDiscountPo rdp = new RateDiscountPo();
+////		rdp.setChannelId(12l);
+//		rdp.setOperatorType(0);
+//		rdp.setServiceType(0);
+//		
+//		Pagination<AgencyActiveRatePo> pagination = agencyActiveChannelAO.listActiveRate(new PageParam(1, 10), rdp);
+//		List<AgencyActiveRatePo> records = pagination.getRecords();
+////		List<AgencyActiveRatePo> list = agencyActiveChannelAO.listActiveDiscount(new PageParam(1, 10), activePo);
+//		System.out.println(records.size());
+//		for (AgencyActiveRatePo agencyActiveRatePo : records) {
+//			System.out.println(agencyActiveRatePo.getAgencyName());
+//		}
+//	}
 }

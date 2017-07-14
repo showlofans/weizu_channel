@@ -52,7 +52,7 @@
                		<input name="" type="checkbox" value=""><span>已阅读并同意<a href="#" target="_blank"><span class="lan">《XXXXX使用协议》</span></a></span>
                 </div> -->
               		 <input id="goRegist" class="btn_zhuce" type="submit" value="&nbsp;注册&nbsp;">
-              		 <a href="/flowsys/agency/login_page.do?userName=${resultMap.reg.userName}&userPass=${resultMap.reg.userPass}"><input id="goRegist" class="btn_login" type="button" value="&nbsp;登陆&nbsp;"></a>
+              		 <a href="/flowsys/agency/login_page.do"><input id="goRegist" class="btn_login" type="button" value="&nbsp;登陆&nbsp;"></a>
                 </form>
             </div>
         </div>

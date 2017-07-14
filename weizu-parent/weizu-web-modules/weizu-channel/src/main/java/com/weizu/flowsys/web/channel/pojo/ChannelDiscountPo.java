@@ -1,10 +1,11 @@
 package com.weizu.flowsys.web.channel.pojo;
 
-import javax.annotation.Resource;
+import java.util.List;
 
 import com.weizu.flowsys.core.annotation.po.TableName;
 import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
+import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 
 /**
  * @description: 通道折扣实体
@@ -38,7 +39,12 @@ public class ChannelDiscountPo extends Po {
     
     @TempField
     private Integer channelState;			//通道状态
-
+    
+    @TempField
+    private Integer belongAgencyId;			//数据库查询字段
+    
+    @TempField
+    private List<RateDiscountPo> rateList;		//数据库返回数据费率列表
     
     public ChannelDiscountPo() {
 		super();
@@ -57,6 +63,22 @@ public class ChannelDiscountPo extends Po {
 		this.discountType = discountType;
 	}
 	
+	public List<RateDiscountPo> getRateList() {
+		return rateList;
+	}
+
+	public void setRateList(List<RateDiscountPo> rateList) {
+		this.rateList = rateList;
+	}
+
+	public Integer getBelongAgencyId() {
+		return belongAgencyId;
+	}
+
+	public void setBelongAgencyId(Integer belongAgencyId) {
+		this.belongAgencyId = belongAgencyId;
+	}
+
 	public Integer getChannelState() {
 		return channelState;
 	}

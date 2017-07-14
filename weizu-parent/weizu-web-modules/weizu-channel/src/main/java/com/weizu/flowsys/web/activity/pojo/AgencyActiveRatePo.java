@@ -14,24 +14,25 @@ import com.weizu.flowsys.core.beans.Po;
  * @createTime:2017年7月5日 下午5:53:47
  * @version 1.0
  */
-@TableName(name="agency_active_channel")
-public class AgencyActiveChannelPo extends Po {
+@TableName(name="agency_active_rate")
+public class AgencyActiveRatePo extends Po {
 	
     private Long id;
 
     private Integer agencyId;					//子代理商id
 
-    private Integer channelId;
-
     private String agencyName;
 
-    private String channelName;
+    private Long rateDiscountId;
 
     private Long activeTime;
     
     private Integer bindState;					//绑定状态：0-已绑定，1-未绑定
     
     private Integer bindAgencyId;				//绑定人 
+    
+    @TempField
+    private String channelName;				//页面参数
     
     @TempField
     private String activeTimeStr;				//（页面参数）
@@ -77,8 +78,17 @@ public class AgencyActiveChannelPo extends Po {
 //		this.rateDiscountPo = rateDiscountPo;
 //	}
     
+    
 	public List<RateDiscountPo> getRateList() {
 		return rateList;
+	}
+
+	public String getChannelName() {
+		return channelName;
+	}
+
+	public void setChannelName(String channelName) {
+		this.channelName = channelName;
 	}
 
 	public Long getRateId() {
@@ -197,29 +207,22 @@ public class AgencyActiveChannelPo extends Po {
         this.agencyId = agencyId;
     }
 
-    public Integer getChannelId() {
-        return channelId;
-    }
+    public Long getRateDiscountId() {
+		return rateDiscountId;
+	}
 
-    public void setChannelId(Integer channelId) {
-        this.channelId = channelId;
-    }
+	public void setRateDiscountId(Long rateDiscountId) {
+		this.rateDiscountId = rateDiscountId;
+	}
 
-    public String getAgencyName() {
-        return agencyName;
-    }
+	public String getAgencyName() {
+		return agencyName;
+	}
 
-    public void setAgencyName(String agencyName) {
+	public void setAgencyName(String agencyName) {
         this.agencyName = agencyName == null ? null : agencyName.trim();
     }
 
-    public String getChannelName() {
-        return channelName;
-    }
-
-    public void setChannelName(String channelName) {
-        this.channelName = channelName == null ? null : channelName.trim();
-    }
 
     public Long getActiveTime() {
         return activeTime;

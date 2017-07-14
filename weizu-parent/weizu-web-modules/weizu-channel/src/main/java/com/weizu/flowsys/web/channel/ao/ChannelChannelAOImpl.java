@@ -255,16 +255,16 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月6日 下午5:45:35
 	 */
-	@Override
-	public List<ChannelChannelPo> listOpenChannel(ChannelChannelPo channelPo) {
-		Map<String,Object> paramsMap = new HashMap<String, Object>(5);
-		paramsMap.put("belongAgencyId", channelPo.getBelongAgencyId());
-//		paramsMap.put("billType", channelPo.getBillType());
-		paramsMap.put("channelState", ChannelStateEnum.OPEN.getValue());//查找开通的通道
-		paramsMap.put("operatorType", channelPo.getOperatorType());
-		paramsMap.put("serviceType", channelPo.getServiceType());
-		paramsMap.put("scopeCityCode", channelPo.getScopeCityCode());
-		return channelChannelDao.listSimpleChannel(paramsMap);
-	}
+//	@Override
+//	public List<ChannelChannelPo> listOpenChannel(ChannelChannelPo channelPo) {
+//		Map<String,Object> paramsMap = new HashMap<String, Object>(5);
+//		paramsMap.put("belongAgencyId", channelPo.getBelongAgencyId());
+////		paramsMap.put("billType", channelPo.getBillType());
+//		paramsMap.put("channelState", ChannelStateEnum.OPEN.getValue());//查找开通的通道
+//		paramsMap.put("operatorType", channelPo.getOperatorType());
+//		paramsMap.put("serviceType", channelPo.getServiceType());
+//		paramsMap.put("scopeCityCode", channelPo.getScopeCityCode());
+//		return channelChannelDao.listSimpleChannel(paramsMap);
+//	}
 
 }

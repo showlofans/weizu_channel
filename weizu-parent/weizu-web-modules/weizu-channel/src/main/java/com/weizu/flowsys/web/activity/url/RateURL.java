@@ -81,9 +81,20 @@ public class RateURL extends BaseURL {
 	public static final String BIND_RATE_LIST = "/bind_rate_list" + DYNAMIC_WEB_SUFFIX;
 	
 	/**
-	 * js/json通过运营商类型获得折扣
+	 * 绑定折扣添加页面
+	 * <br>/flowsys/rate/bind_rate_add_page.do
+	 */
+	public static final String BIND_RATE_ADD_PAGE = "/bind_rate_add_page" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 绑定折扣添加
+	 * <br>/flowsys/rate/bind_rate_add.do
+	 */
+	public static final String BIND_RATE_ADD = "/bind_rate_add" + DYNAMIC_WEB_SUFFIX;
+	
+	/**
+	 * js/json通过参数获得折扣列表
 	 * <br>/flowsys/rate/get_discount.do
 	 */
 	public static final String GET_DISCOUNT = "/get_discount" + DYNAMIC_WEB_SUFFIX;
-
+	
 }

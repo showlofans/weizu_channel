@@ -22,6 +22,7 @@
 <link rel="stylesheet" type="text/css" href="/view/lib/Hui-iconfont/1.0.8/iconfont.css" />
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/skin/default/skin.css" id="skin" />
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/style.css" />
+<link rel="stylesheet" type="text/css" href="/view/iCheck/icheck.css" />
 <link href="/view/tab/css/bootstrap.min.css" rel="stylesheet">
 <!--[if IE 6]>
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
@@ -91,20 +92,20 @@
 				<c:forEach items="${resultMap.operatorTypes }" var="operatorEnum" varStatus="vs">
 					<div class="radio-box">
 						<input name="operatorType" class="radioItem" type="radio" id="operatorType-${vs.index }" value="${operatorEnum.value }" <c:if test="${vs.index==0 }">checked</c:if> >
-						${operatorEnum.desc }
-						<%-- <label for="operatorType-${vs.index }"></label> --%>
+						<%-- ${operatorEnum.desc } --%>
+						<label for="operatorType-${vs.index }">${operatorEnum.desc }</label> 
 					</div>
 				</c:forEach>
 			</div>
 		</div>
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">流量类型：</label>
+			<span class="form-label col-xs-4 col-sm-3">流量类型：</span>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 				<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceEnum" varStatus="vs">
 					<div class="radio-box">
-						<input class="radioItem" name="serviceType"  <c:if test="${vs.index==0 }">checked</c:if> type="radio"  value="${serviceEnum.value }" ><!-- <c:if test="${vs.index==0 }">checked</c:if> -->
-						${serviceEnum.desc }
-						<%-- <label for="operatorType-${vs.index }"></label> --%>
+						<input class="radioItem" id="serviceType-${vs.index }" name="serviceType"  <c:if test="${vs.index==0 }">checked</c:if> type="radio"  value="${serviceEnum.value }" ><!-- <c:if test="${vs.index==0 }">checked</c:if> -->
+						<%-- ${serviceEnum.desc } --%>
+						<label for="serviceType-${vs.index }">${serviceEnum.desc }</label>
 					</div>
 				</c:forEach>
 			</div>
@@ -112,17 +113,18 @@
 		
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">费率：</label><br>
-			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+			<div class="formControls col-xs-8 col-sm-9">
 			<table>
 				<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum" varStatus="vs">
 					<c:if test="${vs.index % 4==0 }"><tr></c:if>
 						<td> 
 							<div class="radio-box">
 								<input class="radioItem" type="radio" name="scopeCityCode" id="scopeCityCode-${vs.index }" value="${scopeCityEnum.value }">
-								${scopeCityEnum.desc }
+								<%-- ${scopeCityEnum.desc } --%>
 								<%-- <label for="operatorType-${vs.index }"></label> --%>
 								<!-- 输入两位折扣数字 -->
 								<input class="disscount" name="" style="display: none; width:50px;" type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
+								<label for="scopeCityCode-${vs.index }">${scopeCityEnum.desc }</label>
 							</div>
 						</td>
 					<c:if test="${(vs.index+1) % 4==0 }"></tr></c:if>
@@ -137,7 +139,7 @@
 			<label class="form-label col-xs-4 col-sm-3">通道名称：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal"> 
 				 <span class="select-box inline">
-					<select id="selectC" onchange="initChannelName()" name="channelId" class="select">
+					<select id="selectC" onchange="initChannelName()" name="channelDiscountId" class="select">
 						<option value="0">没有通道</option>
 						<%-- <c:forEach items="${resultMap.channelList }" var="channel" varStatus="vs1">
 							<option value="${channel.id }" >${channel.channelName }</option>
@@ -146,6 +148,7 @@
 				</span> 
 			</div>
 		</div>
+		<!-- <span id="channelDiscount" value=""></span> -->
 		<%-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">费率：</label>
 			<div role="tabpanel" class="tab formControls col-xs-8 col-sm-9 skin-minimal">
@@ -261,8 +264,14 @@
 </body>
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
 <script src="/view/tab/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/view/iCheck/jquery.icheck.min.js"></script> 
 <script type="text/javascript">
-
+$(function(){
+	$('.skin-minimal input').iCheck({
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+})
 $(document).ready(function(){
 
 });
@@ -279,9 +288,9 @@ function changeName(){
 		return false;
 	}
 	var i = 0;
-	if($("input[name='scopeCityCode']:checked").next().val() != ""){//折扣不为空
+	/* if($("input[name='scopeCityCode']:checked").next().val() != ""){//折扣不为空
 		i++;
-	}
+	} */
 	$(".disscount").each(function(){
     	if($(this).is(':visible')){ 
     		$('<input />', {
@@ -295,7 +304,8 @@ function changeName(){
     	        type: 'hidden',
     	        value: $(this).prev().val()
     	      }).appendTo($('#setDiscountList')); */
-    		if($(this).val() != ""){
+    	     //alert($(this).val());
+    		if($(this).val() != "" && !isNaN($(this).val())){//不为空且为数字
 	    		i++;
     		}
     		/* if($(this).next().val() != null && $(this).next().val() != "")
@@ -306,11 +316,13 @@ function changeName(){
     		//alert('discountList['+ i +'].scopeCityName');
     	}
 	}) 
+	//alert(i);
 	if(i > 0){
 		//alert(i);
 		return true;
 	}else{
 		alert("没有配置地区折扣")	;
+		$("input[name='scopeCityCode']:checked").next().focus();
 		return false;
 	}
 }
@@ -383,7 +395,7 @@ $(".radioItem").change(
 		 var operatorType = $("input[name='operatorType']:checked").val();
 		 var serviceType = $("input[name='serviceType']:checked").val();
 		//alert(serviceType);
-		var $price = $("input[name='scopeCityCode']:checked").next().next();		//最优通道显示区
+		//var $price = $("input[name='scopeCityCode']:checked").next().next();		//最优通道显示区
 		//alert(operatorType);
 		if($("input[name='scopeCityCode']:checked").next().is(':hidden')){
 			var scopeCityCode = $("input[name='scopeCityCode']:checked").val().trim();
@@ -413,12 +425,13 @@ $(".radioItem").change(
         				$("#channelName").val(item.channelName);
 		             	 $("#selectC").append("<option class='rate' value='"+item.id+"'>" + item.channelName + "</option>");//"+ operatorType +"
 		             	 $("#channelCount").html(resp.length)
+		             	 $("input[name='scopeCityCode']:checked").next().attr("placeholder",item.channelDiscount);
 		        		 //alert(i);//从0开始
 	        				//alert(item.channelName);
 		        		 ///不管有没有通道
 		        		 
 		             });
-		        	$price.show();
+		        	//$price.show();
 		        	//alert("success");
 		        },
 		        "error":function(msg){
@@ -429,7 +442,7 @@ $(".radioItem").change(
 			$("input[name='scopeCityCode']:checked").next().show();	
 		}else{
 			$("input[name='scopeCityCode']:checked").next().hide();
-			$price.hide();
+			//$price.hide();
 			$("input[name='scopeCityCode']:checked").attr("checked",false);
 			$("#selectC").empty();
 			$("#selectC").append("<option value=''>没有通道</option>");

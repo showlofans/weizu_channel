@@ -22,7 +22,7 @@ import com.weizu.flowsys.web.activity.dao.AacJoinRdDao;
 import com.weizu.flowsys.web.activity.dao.AgencyActiveChannelDao;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.AacJoinRdPo;
-import com.weizu.flowsys.web.activity.pojo.AgencyActiveChannelPo;
+import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
 import com.weizu.flowsys.web.activity.pojo.DiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
@@ -48,10 +48,10 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 	 * @createTime:2017年7月7日 下午7:11:39
 	 */
 	@Override
-	public List<AgencyActiveChannelPo> listActiveDiscount(PageParam pageParam,
-			AgencyActiveChannelPo activePo) {
+	public List<AgencyActiveRatePo> listActiveDiscount(PageParam pageParam,
+			AgencyActiveRatePo activePo) {
 		Map<String, Object> paramsMap = getMapByEntity(activePo);
-		List<AgencyActiveChannelPo> records = agencyActiveChannelDao.listActiveDiscount(paramsMap);
+		List<AgencyActiveRatePo> records = agencyActiveChannelDao.listActiveDiscount(paramsMap);
 		initRateDiscountStr(records);
 		return records;
 	}
@@ -65,8 +65,8 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 	 * @createTime:2017年7月5日 下午6:17:27
 	 */
 	@Override
-	public Pagination<AgencyActiveChannelPo> listActive(PageParam pageParam,
-			AgencyActiveChannelPo activePo) {
+	public Pagination<AgencyActiveRatePo> listActive(PageParam pageParam,
+			AgencyActiveRatePo activePo) {
 		Map<String, Object> paramsMap = getMapByEntity(activePo);
 		
 		int toatalRecord = agencyActiveChannelDao.countActive(activePo);
@@ -78,9 +78,9 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 			paramsMap.put("start", (pageNo-1)*pageSize);
 			paramsMap.put("end", pageSize);
 		}
-		List<AgencyActiveChannelPo> records = agencyActiveChannelDao.listActive(paramsMap);
+		List<AgencyActiveRatePo> records = agencyActiveChannelDao.listActive(paramsMap);
 		initRateDiscountStr(records);
-		return new Pagination<AgencyActiveChannelPo>(records, toatalRecord, pageNo, pageSize);
+		return new Pagination<AgencyActiveRatePo>(records, toatalRecord, pageNo, pageSize);
 	}
 	
 	/**
@@ -92,8 +92,8 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 	 * @createTime:2017年7月13日 上午11:01:18
 	 */
 	@Override
-	public Pagination<AgencyActiveChannelPo> listActiveRate(
-			PageParam pageParam, AgencyActiveChannelPo activePo) {
+	public Pagination<AgencyActiveRatePo> listActiveRate(
+			PageParam pageParam, AgencyActiveRatePo activePo) {
 		Map<String, Object> paramsMap = getMapByEntity(activePo);
 		long toatalRecord = agencyActiveChannelDao.countActiveRate(paramsMap);
 		int pageSize = 10;
@@ -104,8 +104,8 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 			paramsMap.put("start", (pageNo-1)*pageSize);
 			paramsMap.put("end", pageSize);
 		}
-		List<AgencyActiveChannelPo> records = agencyActiveChannelDao.listActiveRate(paramsMap);
-		return new Pagination<AgencyActiveChannelPo>(records, toatalRecord, pageNo, pageSize);
+		List<AgencyActiveRatePo> records = agencyActiveChannelDao.listActiveRate(paramsMap);
+		return new Pagination<AgencyActiveRatePo>(records, toatalRecord, pageNo, pageSize);
 	}
 	/**
 	 * @description: 查询分页费率列表
@@ -116,7 +116,7 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 	 * @createTime:2017年7月13日 上午11:01:18
 	 */
 	@Override
-	public Pagination<AgencyActiveChannelPo> listActiveRate(
+	public Pagination<AgencyActiveRatePo> listActiveRate(
 			PageParam pageParam, RateDiscountPo ratePo) {
 		Map<String, Object> paramsMap = getMapByEntity(ratePo);
 		long toatalRecord = agencyActiveChannelDao.countActiveRate(paramsMap);
@@ -128,15 +128,15 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 			paramsMap.put("start", (pageNo-1)*pageSize);
 			paramsMap.put("end", pageSize);
 		}
-		List<AgencyActiveChannelPo> records = agencyActiveChannelDao.listActiveRate(paramsMap);
-		for (AgencyActiveChannelPo activePo : records) {
+		List<AgencyActiveRatePo> records = agencyActiveChannelDao.listActiveRate(paramsMap);
+		for (AgencyActiveRatePo activePo : records) {
 			//初始化时间
 			if(activePo.getActiveTime() != null){
 				String activeTimeStr = DateUtil.formatAll(activePo.getActiveTime());
 				activePo.setActiveTimeStr(activeTimeStr);
 			}
 		}
-		return new Pagination<AgencyActiveChannelPo>(records, toatalRecord, pageNo, pageSize);
+		return new Pagination<AgencyActiveRatePo>(records, toatalRecord, pageNo, pageSize);
 	}
 	
 	
@@ -146,8 +146,8 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月6日 上午10:16:36
 	 */
-	private void initRateDiscountStr(List<AgencyActiveChannelPo> records) {
-		for (AgencyActiveChannelPo activePo : records) {
+	private void initRateDiscountStr(List<AgencyActiveRatePo> records) {
+		for (AgencyActiveRatePo activePo : records) {
 			List<RateDiscountPo>  list = activePo.getRateList();
 			StringBuffer discount0 = new StringBuffer("{");
 			StringBuffer discount1 = new StringBuffer("{");
@@ -196,16 +196,13 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 	 * @createTime:2017年7月5日 下午6:17:36
 	 */
 	@Override
-	public Map<String, Object> getMapByEntity(AgencyActiveChannelPo activePo) {
+	public Map<String, Object> getMapByEntity(AgencyActiveRatePo activePo) {
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
-		if(activePo.getChannelId() != null)
+		if(activePo.getRateDiscountId() != null)
 		{
-			paramsMap.put("channelId", activePo.getChannelId());
+			paramsMap.put("rateDiscountId", activePo.getRateDiscountId());
 		}
-		if(activePo.getChannelName() != null)
-		{
-			paramsMap.put("channelName", activePo.getChannelName());
-		}
+		
 		if(activePo.getAgencyId() != null)
 		{
 			paramsMap.put("agencyId", activePo.getAgencyId());
@@ -258,9 +255,9 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 		{
 			paramsMap.put("agencyId", ratePo.getAgencyId());
 		}
-		if(ratePo.getChannelId() != null){
-			paramsMap.put("channelId", ratePo.getChannelId());
-		}
+//		if(ratePo.getChannelId() != null){
+//			paramsMap.put("channelId", ratePo.getChannelId());
+//		}
 		return paramsMap;
 	}
 
@@ -274,24 +271,27 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 	 */
 	@Transactional
 	@Override
-	public int bindChannel(AgencyActiveChannelPo aacp,RateDiscountPo rateDiscountPo) {
-		
-		Long nextActiveId = agencyActiveChannelDao.nextId();
-		aacp.setActiveTime(System.currentTimeMillis());
-		aacp.setBindState(BindStateEnum.BIND.getValue());
-		int bindRes = agencyActiveChannelDao.add(aacp);
-		
-		//只有一个地区
+	public int bindChannel(AgencyActiveRatePo aacp,RateDiscountPo rateDiscountPo) {
+		//只有一个地区,添加费率
 		int operatorType = aacp.getOperatorType();
 		int serviceType = aacp.getServiceType();
 		rateDiscountPo.setOperatorType(operatorType);
 		rateDiscountPo.setServiceType(serviceType);
-		rateDiscountPo.setActiveId(nextActiveId);
+//		rateDiscountPo.setActiveId(nextActiveId);
 		rateDiscountPo.setActiveDiscount(StringUtil2.getDiscount(rateDiscountPo.getActiveDiscount()));
 		Long nextDiscountId = rateDiscountDao.nextId();
 		rateDiscountDao.add(rateDiscountPo);
 		
-		bindRes = aacJoinRdDao.add(new AacJoinRdPo(nextDiscountId, nextActiveId));
+		
+//		Long nextActiveId = agencyActiveChannelDao.nextId();
+		aacp.setActiveTime(System.currentTimeMillis());
+		aacp.setBindState(BindStateEnum.BIND.getValue());
+		aacp.setRateDiscountId(nextDiscountId);
+		int bindRes = agencyActiveChannelDao.add(aacp);
+		
+		
+		
+//		bindRes = aacJoinRdDao.add(new AacJoinRdPo(nextDiscountId, nextActiveId));
 //		List<RateDiscountPo> rateList = aacp.getRateList();
 //		initRateList(rateList,aacp,nextActiveId);
 //		rateDiscountDao.rate_addList(rateList);

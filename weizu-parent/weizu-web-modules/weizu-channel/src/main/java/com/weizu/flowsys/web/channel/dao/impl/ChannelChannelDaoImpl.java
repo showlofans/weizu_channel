@@ -142,19 +142,5 @@ public class ChannelChannelDaoImpl extends DaoImpl<ChannelChannelPo, Long> imple
 	public int count_channel(Map<String, Object> paramsMap) {
 		return sqlSessionTemplate.selectOne("count_channel_channel",paramsMap);
 	}
-	/**
-	 * @description:查询简易通道信息
-	 * @param channelPo
-	 * @return
-	 * @author:POP产品研发部 宁强
-	 * @createTime:2017年7月5日 下午3:54:28
-	 */
-	@Override
-	public List<ChannelChannelPo> listSimpleChannel(Map<String,Object> paramsMap) {
-		
-		return sqlSessionTemplate.selectList("listSimpleChannel",paramsMap);
-	}
-
-	
 
 }

@@ -2,45 +2,46 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.weizu.flowsys.web.activity.dao.AgencyActiveChannelDao" >
 
-<sql id="t_active">agency_active_channel</sql>
+<sql id="t_active">agency_active_rate</sql>
 <sql id="t_rate">rate_discount</sql>
-<sql id="t_aac_join">aac_join_rd</sql>
+<!-- <sql id="t_aac_join">aac_join_rd</sql> -->
 <sql id="t_channel">channel_discount</sql>
 
-  <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.activity.pojo.AgencyActiveChannelPo" >
+  <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
     <result column="bind_state" property="bindState" jdbcType="INTEGER" />
     <result column="bind_agency_id" property="bindAgencyId" jdbcType="INTEGER" />
-    <result column="channel_id" property="channelId" jdbcType="BIGINT" />
     <result column="agency_name" property="agencyName" jdbcType="VARCHAR" />
     <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
     <result column="active_time" property="activeTime" jdbcType="BIGINT" />
+    <result column="rate_discount_id" property="rateDiscountId" jdbcType="BIGINT" />
     <result column="channel_discount" property="channelDiscount"/>
     <!-- <result column="active_time" property="activeTime" jdbcType="BIGINT" /> -->
     <collection property="rateList" resultMap="com.weizu.flowsys.web.activity.dao.RateDiscountDao.BaseResultMap"></collection>
   </resultMap>
   
   <!-- 费率结果集 -->
-  <resultMap id="OtherResultMap" type="com.weizu.flowsys.web.activity.pojo.AgencyActiveChannelPo" >
+  <resultMap id="OtherResultMap" type="com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
     <result column="bind_state" property="bindState" jdbcType="INTEGER" />
     <result column="bind_agency_id" property="bindAgencyId" jdbcType="INTEGER" />
-    <result column="channel_id" property="channelId" jdbcType="BIGINT" />
+    <!-- <result column="channel_id" property="channelId" jdbcType="BIGINT" /> -->
     <result column="agency_name" property="agencyName" jdbcType="VARCHAR" />
-    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <!-- <result column="channel_name" property="channelName" jdbcType="VARCHAR" /> -->
     <result column="active_time" property="activeTime" jdbcType="BIGINT" />
+    <result column="rate_discount_id" property="rateDiscountId" jdbcType="BIGINT" />
     <result column="rate.active_discount" property="channelDiscount"/>
   </resultMap>
   
   
   <sql id="Other_Column_List" >
-    active.id, active.agency_id, active.channel_id, active.agency_name, active.channel_name, active.active_time,
+    active.id, active.agency_id,  active.agency_name, active.active_time,
     rate.id,rate.operator_type,rate.scope_city_code,rate.active_discount,active.bind_agency_id,active.bind_state,rate.active_discount
   </sql>
   <sql id="Base_Column_List" >
-    active.id, agency_id, active.channel_id, agency_name, active.channel_name, active_time,
+    active.id, agency_id, agency_name, active_time,channel.channel_name,
     rate.id,rate.operator_type,rate.scope_city_code,active_discount,active_id,bind_agency_id,bind_state,channel_discount
   </sql>
   
@@ -61,11 +62,11 @@
   <!-- 查询分页费率列表 -->
    <select id="listActiveRate" parameterType="map" resultMap="OtherResultMap">
   	select <include refid="Other_Column_List"></include>
-  	from <include refid="t_rate"></include> rate 
-  	inner join <include refid="t_aac_join"></include> aac
-  	on rate.id=aac.rate_discount_id
-  	inner join <include refid="t_active"></include> active
-  	on aac.active_id=active.id
+  	from  <include refid="t_active"></include> active 
+  	inner join <include refid="t_rate"></include> rate
+  	on rate.id=active.rate_discount_id
+  	inner join <include refid="t_channel"></include> channel
+  	on channel.id = rate.channel_discount_id
   	<where>
   		<include refid="condition_rate_sql"></include>
   	</where>
@@ -82,11 +83,11 @@
 	 </select>
 	 <!-- 查询费率记录数 -->
 	 <select id="countActiveRate" parameterType="map" resultType="long">
-	  	select count(*) from <include refid="t_rate"></include> rate 
-	  	inner join <include refid="t_aac_join"></include> aac
-	  	on rate.id=aac.rate_discount_id
-	  	inner join <include refid="t_active"></include> active
-	  	on aac.active_id=active.id
+	  	select count(*) from <include refid="t_active"></include> active 
+	  	inner join <include refid="t_rate"></include> rate
+	  	on rate.id=active.rate_discount_id
+	  	inner join <include refid="t_channel"></include> channel
+	  	on channel.id = rate.channel_discount_id
 	  	<where>
 	  		<include refid="condition_rate_sql"></include>
 	  	</where>
@@ -96,11 +97,11 @@
   <!-- 查询分页列表 -->
    <select id="listActive" parameterType="map" resultMap="BaseResultMap">
   	select <include refid="Base_Column_List"></include>
-  	from <include refid="t_active"></include> active
-  	inner join <include refid="t_channel"></include> channel
-  	on active.channel_id = channel.id
+  	 from <include refid="t_active"></include> active 
   	inner join <include refid="t_rate"></include> rate
-  	on active.id = rate.active_id
+  	on rate.id=active.rate_discount_id
+  	inner join <include refid="t_channel"></include> channel
+  	on channel.id = rate.channel_discount_id
   	<where>
   		<include refid="condition_sql"></include>
   	</where>
@@ -127,9 +128,9 @@
   
   <!-- 费率查询条件 -->
   <sql id="condition_rate_sql">
-  	<if test="channelId != null">
+  	<!-- <if test="channelId != null">
   		AND active.channel_id = #{channelId}
-  	</if>
+  	</if> -->
   	<if test="agencyId != null">
   		AND active.agency_id = #{agencyId}
   	</if>
@@ -151,18 +152,18 @@
   </sql>
   
   <sql id="condition_sql">
-  	<if test="channelId != null">
+  	<!-- <if test="channelId != null">
   		AND active.channel_id = #{channelId}
-  	</if>
+  	</if> -->
   	<if test="agencyId != null">
   		AND active.agency_id = #{agencyId}
   	</if>
   	<if test="bindAgencyId != null">
   		AND active.bind_agency_id = #{bindAgencyId}
   	</if>
-  	<if test="channelName != null"><!-- 江西的通道折扣 -->
+  	<!-- <if test="channelName != null">江西的通道折扣
   		AND active.channel_name like concat('%', #{channelName}, '%') 
-  	</if>
+  	</if> -->
   	<if test="scopeCityCode != null"><!-- 江西的通道折扣 -->
   		AND channel.scope_city_code = #{scopeCityCode}
   	</if>

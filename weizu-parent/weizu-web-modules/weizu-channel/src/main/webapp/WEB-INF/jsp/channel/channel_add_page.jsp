@@ -22,6 +22,7 @@
 <link rel="stylesheet" type="text/css" href="/view/lib/Hui-iconfont/1.0.8/iconfont.css" />
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/skin/default/skin.css" id="skin" />
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/style.css" />
+<link rel="stylesheet" type="text/css" href="/view/iCheck/icheck.css" />
 <!--[if IE 6]>
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
@@ -130,7 +131,7 @@
 			</div>
 		</div>
 		<input type="hidden" id="billTypeId" value="${resultMap.billType }">
-		<div class="row cl">
+		<div class="row cl mt-20 skin-minimal">
 			<label class="form-label col-xs-4 col-sm-3">通道类型：</label>
 			<!-- billTypes -->
 			<div class="formControls col-xs-8 col-sm-9">
@@ -138,14 +139,14 @@
 					<c:choose>
 						<c:when test="${vs.index == 0 }">
 							<div class="radio-box">
-								<input name="billType" class="radioItem" type="radio" value="${billEnum.value }" checked>
-								${billEnum.desc }
+								<input name="billType" id="billType-${vs.index }" class="radioItem" type="radio" value="${billEnum.value }" checked>
+								<label for="billType-${vs.index }">${billEnum.desc }</label> 
 							</div>
 						</c:when>
 						<c:otherwise>
 							<div class="radio-box">
-								<input name="billType" class="radioItem" <c:if test="${chargeAccount1 == null }">disabled</c:if> type="radio" value="${billEnum.value }">
-								${billEnum.desc }
+								<input name="billType" id="billType-${vs.index }" class="radioItem" <c:if test="${chargeAccount1 == null }">disabled</c:if> type="radio" value="${billEnum.value }">
+								<label for="billType-${vs.index }">${billEnum.desc }</label> 
 							</div>
 						</c:otherwise>
 					</c:choose>
@@ -163,7 +164,7 @@
 				<c:forEach items="${resultMap.operatorTypes }" var="operatorEnum" varStatus="vs">
 					<div class="radio-box">
 						<input name="operatorType" class="radioItem" type="radio" id="operatorType-${vs.index }" value="${operatorEnum.value }" <c:if test="${vs.index==0 }">checked</c:if> >
-						${operatorEnum.desc }
+						<label for="operatorType-${vs.index }">${operatorEnum.desc }</label>
 						<%-- <label for="operatorType-${vs.index }"></label> --%>
 					</div>
 				</c:forEach>
@@ -175,7 +176,7 @@
 				<c:forEach items="${resultMap.serviceTypes }" var="serviceEnum" varStatus="vs">
 					<div class="radio-box">
 						<input name="serviceType" class="radioItem" type="radio" id="serviceType-${vs.index }" value="${serviceEnum.value }" <c:if test="${vs.index==0 }">checked</c:if>>
-						${serviceEnum.desc }
+						<label for="serviceType-${vs.index }">${serviceEnum.desc }</label>
 						<%-- <label for="operatorType-${vs.index }"></label> --%>
 					</div>
 				</c:forEach>
@@ -183,12 +184,12 @@
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>地区折扣：</label><br>
-			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+			<div class="formControls col-xs-8 col-sm-9">
 			<table>
 				<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum" varStatus="vs">
 					<c:if test="${vs.index % 4==0 }"><tr></c:if>
 						<td> 
-							<div class="radio-box">
+							<div class="check-box">
 								<input class="cbox" onClick="checkBoxes(this)" type="checkbox" id="scopeCityCode-${vs.index }" value="${scopeCityEnum.value }">
 								${scopeCityEnum.desc }
 								<%-- <label for="operatorType-${vs.index }"></label> --%>
@@ -275,7 +276,18 @@
 </article>
 </body>
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="/view/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="/view/static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="/view/static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="/view/iCheck/jquery.icheck.min.js"></script> 
 <script type="text/javascript">
+$(function(){
+	$('.skin-minimal input').iCheck({
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+})
 /* 设置
 function getMsg(){
 	var billType = $("#billTypeId").val();

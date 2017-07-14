@@ -36,6 +36,14 @@
 	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
 	<div class="text-c">
 		<form action="/flowsys/rate/bind_rate_list.do" method="post" id="formD" name="dataListForm">
+				<sapn>通道名称：${resultMap.channelName }</sapn>
+			是否是高级通道：<sapn>
+			<c:choose>
+				<c:when test="${isOpen == 1 }">是</c:when>
+				<c:otherwise>
+					否
+				</c:otherwise>
+			</c:choose></sapn>
 				业务类型：<span class="select-box inline">
 					<select name="serviceType" id="serviceType" class="select" onchange="getCity()">
 						<c:forEach items="${resultMap.stypeEnums }" var="stype" varStatus="vs1">
@@ -63,7 +71,7 @@
 							<option value="${cstate.value }" <c:if test="${cstate.value == resultMap.searchParams.channelState }"> selected</c:if>>${cstate.desc }</option>
 						</c:forEach> --%>
 					</select>
-				</span>
+				</span><br><br>
 				地区：<span class="select-box inline">
 						<select name="scopeCityCode" id="scopeCityCode" class="select" onchange="setDiscount(this)">
 						<!-- <option value="">请选择</option> -->
@@ -92,6 +100,12 @@
 							</c:otherwise>
 						</c:choose> --%>
 					</select>
+				</span>
+				通道折扣
+				<span class="select-box inline">
+						<select id="channelDisocunt" class="select" disabled="disabled">
+								<option>${resultMap.channelDiscount }</option>
+						</select>
 				</span>
 				折扣:
 				<span class="select-box inline">
@@ -156,14 +170,7 @@
 			<!-- <sapn>通道名称：微族科技</sapn>
 			<sapn>是否带票：不带票</sapn>
 			<sapn>通道折扣：云南85</sapn> -->
-			<sapn>通道名称：${channelName }</sapn><br>
-			是否是高级通道：<sapn>
-			<c:choose>
-				<c:when test="${isOpen == 1 }">是</c:when>
-				<c:otherwise>
-					否
-				</c:otherwise>
-			</c:choose></sapn><br>
+			 
 			<!-- <sapn>通道折扣：云南85</sapn> -->
 			<a style="text-decoration:none" class="btn btn-success" onclick="Hui_admin_tab(this)" data-href="/flowsys/rate/bind_agency_page.do" title="" data-title="绑定代理商">绑定代理商</a>
 		<table class="table table-border table-bordered table-bg table-hover table-sort">
@@ -208,13 +215,24 @@
 						<td><c:forEach items="${resultMap.bindStateEnums }" var="bindStateEnum" varStatus="vs1">
 							<c:if test="${activePo.bindState == bindStateEnum.value }"> ${bindStateEnum.desc }</c:if>
 							</c:forEach>
-							
 						</td>
 						<td>${activePo.activeTimeStr }</td>
 						
-						<td class="td-manage"><a style="text-decoration:none" onClick="article_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
+						<td class="td-manage">
+						<c:choose>
+							<c:when test="${activePo.bindState == 0 }">
+								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top"  onClick="changeBState('/flowsys/rate/update_bind_state.do',${activePo.id },1)" href="javascript:;" title="解绑"><i class="Hui-iconfont">&#xe605;</i></a> 
+							</c:when>
+							<c:otherwise>
+								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top"  onClick="changeBState('/flowsys/rate/update_bind_state.do',${activePo.id },0)" href="javascript:;" title="绑定"><i class="Hui-iconfont">&#xe60e;</i></a> 
+							</c:otherwise>
+						</c:choose>
+						
+						
+						<a style="text-decoration:none" onClick="article_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
 						<a style="text-decoration:none" class="ml-5" onClick="article_edit('账户充值',${agency.userName },${agency.id })" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> 
-						<a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+						<a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+						</td>
 						 <td class="td-status"><c:forEach items="${resultMap.rateStateEnums }" var="stateEnum" varStatus="vs1">
 						<c:if test="${rate.rateState == stateEnum.value }"> ${stateEnum.desc }</c:if>
 						</c:forEach></td> 
@@ -261,9 +279,31 @@
 function dischange(){
 	$('#formD').submit();
 }
+//更新绑定状态
+function changeBState(url,activeId,bindS){
+	$.ajax({
+		type: 'POST',
+		url: url,
+		//dataType: 'json',
+		data: {activeId:activeId, bindState:bindS},
+		async: false,
+		success: function(data){
+			//alert(data);
+			if(data=="success")
+			{
+				location.reload();
+			}else{
+				layer.msg('更新绑定状态!',{icon:1,time:1000});
+			} 
+		},
+		error:function(data) {
+			console.log(data.msg);
+		},
+	});	
+}
 
 
-//onchange获得选中的option
+//onchange获得选中的option,设置折扣列表
 function setDiscount(vart){
 	//var scopeCityCode = $('#selDiscount option:selected').val();
 	var scopeCityCode = $('#scopeCityCode').val();
