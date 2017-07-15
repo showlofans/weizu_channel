@@ -70,6 +70,11 @@ public class RateURL extends BaseURL {
 	 */
 	public static final String UPDATE_BIND_STATE = "/update_bind_state" + DYNAMIC_WEB_SUFFIX;
 	/**
+	 * 更新绑定状态提示页面<br>
+	 * /flowsys/rate/update_bind_state_confirm.do
+	 */
+	public static final String UPDATE_BIND_STATE_CONFIRM = "/update_bind_state_confirm" + DYNAMIC_WEB_SUFFIX;
+	/**
 	 * 更新绑定的折扣<br>
 	 * /flowsys/rate/update_rate_discount.do
 	 */
@@ -96,5 +101,16 @@ public class RateURL extends BaseURL {
 	 * <br>/flowsys/rate/get_discount.do
 	 */
 	public static final String GET_DISCOUNT = "/get_discount" + DYNAMIC_WEB_SUFFIX;
+	
+	/**
+	 * 通道绑定代理商页面
+	 * <br>/flowsys/rate/bind_agency_page
+	 */
+	public static final String BIND_AGENCY_PAGE = "/bind_agency_page" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 通道绑定代理商页面
+	 * <br>/flowsys/rate/bind_agency
+	 */
+	public static final String BIND_AGENCY = "/bind_agency" + DYNAMIC_WEB_SUFFIX;
 	
 }

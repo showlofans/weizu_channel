@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
+import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
@@ -47,6 +48,7 @@ import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.channel.ao.ChannelChannelAO;
 import com.weizu.flowsys.web.channel.ao.ChannelDiscountAO;
+import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 import com.weizu.flowsys.web.channel.dao.impl.ChannelDiscountDaoImpl;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
@@ -70,8 +72,10 @@ public class RateController {
 	private RateBackwardAO rateBackwardAO;
 	@Resource
 	private ChannelChannelAO channelChannelAO;
-	@Resource
 	
+	@Resource
+	private ChannelChannelDao channelChannelDao;
+	@Resource
 	private ChargeAccountAo chargeAccountAO;
 	@Resource
 	private AgencyActiveChannelAO agencyActiveChannelAO;
@@ -553,7 +557,7 @@ public class RateController {
 	 * @createTime:2017年7月10日 上午11:53:39
 	 */
 	@RequestMapping(value=RateURL.BIND_RATE_LIST)
-	public ModelAndView getRateByChannelId(RateDiscountPo ratePo, @RequestParam(value = "pageNo", required = false) String pageNo,HttpServletRequest request){
+	public ModelAndView getBindRate(AgencyActiveRatePo aarp,String channelId, @RequestParam(value = "pageNo", required = false) String pageNo,HttpServletRequest request){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
 		PageParam pageParam = null;
@@ -572,58 +576,71 @@ public class RateController {
 //		List<RateDiscountPo> rateList = rateDiscountDao.getRateDiscountList(ratePo);
 		
 		ChannelDiscountPo cdp = new ChannelDiscountPo();
-		cdp.setChannelId(ratePo.getChannelId());
+		cdp.setChannelId(Long.parseLong(channelId));
+		resultMap.put("channelId", channelId);
+		ChannelChannelPo channel = channelChannelDao.get(Long.parseLong(channelId));
+		resultMap.put("channelBillType", channel.getBillType());
 		List<ChannelDiscountPo> channelList = channelDiscountAO.getDiscountList(cdp);
 		
-		List<RateDiscountPo> scopeList = new LinkedList<RateDiscountPo>();
 		if(	channelList!= null && channelList.size() > 0){
 			String scopeCityCodeSim = "100";
-			RateDiscountPo rateDisPo = null;
+			List<String> scopeList = new LinkedList<String>();
 			//初始化地区列表
 			for (ChannelDiscountPo channelPo : channelList) {
 				//在排好序的情况下
-				if(!scopeCityCodeSim.equals(channelPo.getScopeCityCode())){//地区不相等（第一个一定）
-					rateDisPo = new RateDiscountPo();
-					rateDisPo.setScopeCityCode(channelPo.getScopeCityCode());
-					rateDisPo.setScopeCityName(ScopeCityEnum.getEnum(channelPo.getScopeCityCode()).getDesc());
-					scopeList.add(rateDisPo);
-					scopeCityCodeSim = channelPo.getScopeCityCode();//生成新的key
+				String scopeCityCode =channelPo.getScopeCityCode();
+				if(!scopeCityCodeSim.equals(scopeCityCode)){//地区不相等（第一个一定）
+//					rateDisPo = new RateDiscountPo();
+//					rateDisPo.setScopeCityCode(channelPo.getScopeCityCode());
+//					rateDisPo.setScopeCityName(ScopeCityEnum.getEnum(channelPo.getScopeCityCode()).getDesc());
+					scopeList.add(scopeCityCode);
+					scopeCityCodeSim = scopeCityCode;//生成新的key
 				}
 //				rateDiscountPo.setScopeCityName(ScopeCityEnum.getEnum(rateDiscountPo.getScopeCityCode()).getDesc());
 			}
 			resultMap.put("scopeList", scopeList);//取地区和地区编码
 			
+			resultMap.put("channelName", channelList.get(0).getChannelName());//设置通道名称
 			
-			resultMap.put("channelName", channelList.get(0).getChannelName());//取地区和地区编码
-			
-			if(StringHelper.isEmpty(ratePo.getScopeCityCode())){//如果为空，就取第一个
+			if(StringHelper.isEmpty(aarp.getScopeCityCode())){//如果为空，就取第一个
 				String scopeCityCode = channelList.get(0).getScopeCityCode();//默认选第一个城市
-				ratePo.setScopeCityCode(scopeCityCode);
+				aarp.setScopeCityCode(scopeCityCode);
 				cdp.setScopeCityCode(scopeCityCode);//设置第一个城市
 			}else{
 				//再去找一遍折扣,通道折扣
-				cdp.setScopeCityCode(ratePo.getScopeCityCode());
+				cdp.setScopeCityCode(aarp.getScopeCityCode());
 			}
-			cdp.setOperatorType(ratePo.getOperatorType());//不为空
-			cdp.setServiceType(ratePo.getServiceType());//不为空
+			cdp.setOperatorType(aarp.getOperatorType());//不为空
+			cdp.setServiceType(aarp.getServiceType());//不为空
 			List<ChannelDiscountPo> channelList1 = channelDiscountAO.getDiscountList(cdp);
 			if(channelList1 != null && channelList1.size()==1){//一般一个地区只有一个通道折扣
-				Double singleDiscount = channelList1.get(0).getChannelDiscount();
-				resultMap.put("channelDiscount", singleDiscount);//取地区和地区编码
-				Long channelDiscountId = channelList1.get(0).getId();
-				List<RateDiscountPo> discountList = rateDiscountDao.getListByCDiscountId(channelDiscountId);//折扣列表
+				ChannelDiscountPo cdp1 = channelList1.get(0);
+				Double singleDiscount = cdp1.getChannelDiscount();
+				resultMap.put("channelDiscount", singleDiscount);//设置第一个地区的通道折扣
+				Long channelDiscountId = cdp1.getId();
+				resultMap.put("channelDiscountId", channelDiscountId);//设置第一个地区的通道折扣
+				int billType = -1;
+				if(aarp.getBillTypeRate() != null){//有查询参数，就用查询参数
+					billType = aarp.getBillTypeRate();
+				}else{//没有查询参数，就用第一个通道折扣类型，作为费率折扣类型
+					billType = cdp1.getBillType();
+				}
+				List<RateDiscountPo> discountList = rateDiscountDao.getListByCDiscountId(channelDiscountId,billType);//折扣列表
+				
 				resultMap.put("discountList", discountList);//取折扣和折扣id
 				//根据第一个折扣id去找连接
-				RateDiscountPo ratePP = new RateDiscountPo();
+//				RateDiscountPo ratePP = new RateDiscountPo();
+				AgencyActiveRatePo aarp1 = new AgencyActiveRatePo();			//搜索参数
 				if(discountList != null && discountList.size() > 0){
-					if(ratePo.getId()==null){
+					if(aarp.getRateDiscountId()==null){
 						Long rateId = discountList.get(0).getId();//第一个折扣id
-						ratePP.setId(rateId);
+						aarp1.setRateDiscountId(rateId);
 					}else
 					{
-						ratePP.setId(ratePo.getId());
+						aarp1.setRateDiscountId(aarp.getRateDiscountId());
 					}
-					Pagination<AgencyActiveRatePo> pagination = agencyActiveChannelAO.listActiveRate(pageParam, ratePP);
+					aarp1.setAgencyName(aarp.getAgencyName());
+					Pagination<AgencyActiveRatePo> pagination = agencyActiveChannelAO.listActiveRate(pageParam, aarp1);
 					resultMap.put("pagination", pagination);
 				}else{//显示没有记录
 					List<AgencyActiveRatePo> nullList = new ArrayList<AgencyActiveRatePo>();
@@ -677,7 +694,9 @@ public class RateController {
 		resultMap.put("otypeEnums", OperatorTypeEnum.toList());
 		resultMap.put("stypeEnums", ServiceTypeEnum.toList());
 		resultMap.put("bindStateEnums", BindStateEnum.toList());
-		resultMap.put("searchParams", ratePo);
+		resultMap.put("billTypeEnums", BillTypeEnum.toList());
+		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
+		resultMap.put("searchParams", aarp);
 		
 		
 //		channelDis
@@ -715,10 +734,17 @@ public class RateController {
 	 * @createTime:2017年7月14日 下午2:48:58
 	 */
 	@RequestMapping(value= RateURL.BIND_RATE_ADD_PAGE)
-	public ModelAndView addBindRatePage(RateDiscountPo ratePo){
+	public ModelAndView addBindRatePage(String channelDiscountId,String billType){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("ratePo",ratePo);
-		return new ModelAndView("/rate/bind_rate_add_page", "resultMap", resultMap);
+		long cId = Long.parseLong(channelDiscountId.trim());
+		ChannelDiscountPo cDPo = channelDiscountDao.get(new WherePrams("id", "=", cId));
+		resultMap.put("cDPo",cDPo);
+		resultMap.put("otypeEnums", OperatorTypeEnum.toList());
+		resultMap.put("stypeEnums", ServiceTypeEnum.toList());
+		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
+		resultMap.put("billTypeEnums", BillTypeEnum.toList());
+		resultMap.put("billType", billType);
+		return new ModelAndView("/activity/bind_rate_add_page", "resultMap", resultMap);
 	}
 	/**
 	 * @description: 绑定折扣添加
@@ -731,8 +757,87 @@ public class RateController {
 	@ResponseBody
 	public void addBindRate(RateDiscountPo ratePo,HttpServletResponse response){
 		
+		int addRes = rateDiscountDao.add(ratePo);
+		try {
+			if(addRes > 0)
+			{
+				response.getWriter().print("success");
+			}
+			else
+			{
+				response.getWriter().print("error");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+//		Map<String, Object> resultMap = new HashMap<String, Object>();
+//		resultMap.put("ratePo",ratePo);
+		
+	}
+	
+	/**
+	 * @description: 通道绑定代理商页面 
+	 * @param channelDiscountId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月15日 上午11:44:58
+	 */
+	@RequestMapping(value= RateURL.BIND_AGENCY_PAGE)
+	public ModelAndView bindAgencyPage(String channelDiscountId,String activeDiscount, String rateDiscountId){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("ratePo",ratePo);
+		long cId = Long.parseLong(channelDiscountId.trim());
+		ChannelDiscountPo cDPo = channelDiscountDao.get(new WherePrams("id", "=", cId));
+		resultMap.put("cDPo",cDPo);//显示参数
+		resultMap.put("otypeEnums", OperatorTypeEnum.toList());//显示参数
+		resultMap.put("stypeEnums", ServiceTypeEnum.toList());//显示参数
+		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());//显示参数
+		resultMap.put("activeDiscount", activeDiscount);//折扣：显示参数
+		resultMap.put("rateDiscountId", rateDiscountId);//折扣id：hidden
+		return new ModelAndView("/activity/bind_agency_page", "resultMap", resultMap);
+	}
+	/**
+	 * @description: 更新绑定状态提示页面
+	 * @param channelDiscountId
+	 * @param activeDiscount
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月15日 下午3:04:47
+	 */
+	@RequestMapping(value= RateURL.UPDATE_BIND_STATE_CONFIRM)
+	public ModelAndView updateBindStateConfirm(String channelDiscountId,String activeDiscount, String agencyName,String bindState){
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		int bindStateInt = Integer.parseInt(bindState);
+		long cId = Long.parseLong(channelDiscountId.trim());
+		ChannelDiscountPo cDPo = channelDiscountDao.get(new WherePrams("id", "=", cId));
+		resultMap.put("cDPo",cDPo);//显示参数
+		resultMap.put("otypeEnums", OperatorTypeEnum.toList());//显示参数
+		resultMap.put("stypeEnums", ServiceTypeEnum.toList());//显示参数
+		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());//显示参数
+		resultMap.put("activeDiscount", activeDiscount);//折扣：显示参数
+		resultMap.put("agencyName", agencyName);//绑定代理商名字
+		resultMap.put("bindState", bindStateInt);//绑定状态
+		resultMap.put("bindStateEnums", BindStateEnum.toList());//绑定代理商名字
+		return new ModelAndView("/activity/update_bind_state_confirm", "resultMap", resultMap);
+	}
+	@RequestMapping(value= RateURL.BIND_AGENCY)
+	@ResponseBody
+	public void addBindRate(AgencyActiveRatePo aarp,HttpServletResponse response){
+//		agencyActiveChannelAO.
+//		int addRes = rateDiscountDao.add(ratePo);
+//		try {
+//			if(addRes > 0)
+//			{
+//				response.getWriter().print("success");
+//			}
+//			else
+//			{
+//				response.getWriter().print("error");
+//			}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		Map<String, Object> resultMap = new HashMap<String, Object>();
+//		resultMap.put("ratePo",ratePo);
 		
 	}
 	

@@ -68,7 +68,10 @@ public class AgencyActiveRatePo extends Po {
     private String ScopeCityCode;
     
     @TempField
-    private Long rateId;						//查询参数：费率折扣id
+    private Integer billTypeRate;				//费率折扣类型
+    
+//    @TempField
+//    private Long rateId;						//查询参数：费率折扣id
     
 //	public RateDiscountPo getRateDiscountPo() {
 //		return rateDiscountPo;
@@ -78,9 +81,16 @@ public class AgencyActiveRatePo extends Po {
 //		this.rateDiscountPo = rateDiscountPo;
 //	}
     
-    
 	public List<RateDiscountPo> getRateList() {
 		return rateList;
+	}
+
+	public Integer getBillTypeRate() {
+		return billTypeRate;
+	}
+
+	public void setBillTypeRate(Integer billTypeRate) {
+		this.billTypeRate = billTypeRate;
 	}
 
 	public String getChannelName() {
@@ -91,13 +101,13 @@ public class AgencyActiveRatePo extends Po {
 		this.channelName = channelName;
 	}
 
-	public Long getRateId() {
+	/*public Long getRateId() {
 		return rateId;
 	}
 
 	public void setRateId(Long rateId) {
 		this.rateId = rateId;
-	}
+	}*/
 
 	public String getScopeCityCode() {
 		return ScopeCityCode;

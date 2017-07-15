@@ -2,24 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.weizu.flowsys.web.activity.dao.RateDiscountDao" >
   <sql id="t_rateD">rate_discount</sql>
-  <sql id="t_cDiscount">channel_discount</sql>
-  <sql id="t_aac_join">aac_join_rd</sql>
-  <sql id="t_active">agency_active_rate</sql>
+<sql id="t_cDiscount">channel_discount</sql>
+   <!--  <sql id="t_aac_join">aac_join_rd</sql> 
+  <sql id="t_active">agency_active_rate</sql> -->
   
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.activity.pojo.RateDiscountPo" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="operator_type" property="operatorType" jdbcType="INTEGER" />
+   <result column="operator_type" property="operatorType" jdbcType="INTEGER" />
     <result column="service_type" property="serviceType" jdbcType="INTEGER" />
     <result column="scope_city_code" property="scopeCityCode" jdbcType="VARCHAR" />
+    <result column="bill_type" property="billType" jdbcType="INTEGER" />
     <result column="active_discount" property="activeDiscount" jdbcType="DOUBLE" />
     <result column="active_id" property="activeId" jdbcType="BIGINT" />
     <result column="channel_discount_id" property="channelDiscountId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    rate.id, cDiscount.operator_type, cDiscount.scope_city_code, active_discount, rate.active_id,channel_discount_id
+    rate.id, cDiscount.operator_type, cDiscount.scope_city_code, active_discount,channel_discount_id,rate.bill_type
   </sql>
   <!-- 批量添加费率折扣 -->
-   <insert id="rate_addList" useGeneratedKeys="true" parameterType="java.util.List">
+   <!-- <insert id="rate_addList" useGeneratedKeys="true" parameterType="java.util.List">
   	insert into <include refid="t_rateD"></include>
   	(operator_type,service_type, scope_city_code, active_discount, active_id)
   	values
@@ -27,22 +28,28 @@
   		(#{rateD.operatorType},#{rateD.serviceType},#{rateD.scopeCityCode},#{rateD.activeDiscount},
   		#{rateD.activeId})
   	</foreach>
-  </insert>
+  </insert> -->
   
   <!-- 通过通道折扣查询简易折扣列表 -->
   <resultMap id="SimpleMap" type="com.weizu.flowsys.web.activity.pojo.RateDiscountPo">
   	 <id column="id" property="id" jdbcType="BIGINT" />
   	 <result column="active_discount" property="activeDiscount" jdbcType="DOUBLE" />
+  	 <result column="bill_type" property="billType" jdbcType="INTEGER" />
   </resultMap>
   
   <sql id="simple_column_list">
-  	id, active_discount
+  	id, active_discount,bill_type
   </sql>
-  <select id="getListByCDiscountId" parameterType="long" resultMap="SimpleMap">
+  <select id="getListByCDiscountId" parameterType="map" resultMap="SimpleMap">
   	select <include refid="simple_column_list"></include>
   	from <include refid="t_rateD"></include>
   	<where>
-  		channel_discount_id = #{_parameter}
+  		<if test="channelDiscountId != null">
+	  		AND channel_discount_id = #{channelDiscountId}
+  		</if>
+  		<if test="billTypeRate != null">
+	  		AND bill_type = #{billTypeRate}
+  		</if>
   	</where>
   </select>
   
@@ -117,6 +124,9 @@
   	</if>
   	<if test="channelId != null">
   		AND cDiscount.channel_id = #{channelId}
+  	</if>
+  	<if test="billType != null">
+  		AND rate.bill_type = #{billType}
   	</if>
   	<!-- <if test="agencyId != null">
   		AND active.agency_id = #{agencyId}

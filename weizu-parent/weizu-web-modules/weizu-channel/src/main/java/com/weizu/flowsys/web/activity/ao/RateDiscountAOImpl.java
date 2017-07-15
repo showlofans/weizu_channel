@@ -81,6 +81,9 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 			if(ratePo.getServiceType() != null){
 				paramsMap.put("serviceType", ratePo.getServiceType());
 			}
+			if(ratePo.getBillType() != null){
+				paramsMap.put("billType", ratePo.getBillType());
+			}
 //			if(StringHelper.isNotEmpty(ratePo.getScopeCityName()))
 //			{
 //				String scopeCityCode = "";

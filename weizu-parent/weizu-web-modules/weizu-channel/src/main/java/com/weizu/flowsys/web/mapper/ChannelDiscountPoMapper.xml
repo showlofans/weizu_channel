@@ -12,6 +12,7 @@
     <result column="channel_name" property="channelName" jdbcType="DOUBLE" />
     <result column="operator_type" property="operatorType" jdbcType="INTEGER" />
     <result column="service_type" property="serviceType" jdbcType="INTEGER" />
+    <result column="bill_type" property="billType" jdbcType="INTEGER" />
     <result column="discount_type" property="discountType" jdbcType="INTEGER" />
   </resultMap>
   
@@ -41,12 +42,12 @@
   
   
   <sql id="base_list">
-  	channel_id, service_type, scope_city_code, channel_discount,channel_name,operator_type, discount_type
+  	discount.id,channel_id, service_type, scope_city_code, channel_discount,discount.channel_name,operator_type, discount_type,channel.bill_type
   </sql>
   <!-- 通道折扣批量添加 -->
   <insert id="discount_addList" useGeneratedKeys="true" parameterType="java.util.List">
   	insert into <include refid="t_cDiscount"></include>
-  	(<include refid="base_list"></include>)
+  	(channel_id, service_type, scope_city_code, channel_discount,discount.channel_name,operator_type, discount_type)
   	values
   	<foreach collection="list" separator="," item="cDiscount" index="index">
   		(#{cDiscount.channelId},#{cDiscount.serviceType},#{cDiscount.scopeCityCode},#{cDiscount.channelDiscount},
@@ -56,7 +57,9 @@
   <!-- 查看折扣列表 -->
   <select id="getDiscountList" parameterType="map" resultMap="BaseResultMap">
   	select <include refid="base_list"></include>
-  	from <include refid="t_cDiscount"></include>
+  	from <include refid="t_cDiscount"></include> discount
+  	inner join <include refid="t_channel"></include> channel
+  	on channel.id = discount.channel_id
   	<where>
   		<include refid="condition_sql"></include>
   	</where>

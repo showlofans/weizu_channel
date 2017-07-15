@@ -100,4 +100,13 @@ public interface AgencyActiveChannelAO {
 	 */
 	int updateRateDiscount(String activeId,String activeDiscount);
 	
+	/**
+	 * @description: 添加绑定
+	 * @param aacp
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月15日 上午11:52:53
+	 */
+	int add(AgencyActiveRatePo aacp);
+	
 }

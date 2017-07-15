@@ -120,9 +120,12 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 	 * @createTime:2017年7月14日 下午6:24:54
 	 */
 	@Override
-	public List<RateDiscountPo> getListByCDiscountId(Long channelDiscountId) {
+	public List<RateDiscountPo> getListByCDiscountId(Long channelDiscountId, Integer billTypeRate) {
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("channelDiscountId", channelDiscountId);
+		paramsMap.put("billTypeRate", billTypeRate);
 		
-		return sqlSessionTemplate.selectList("getListByCDiscountId",channelDiscountId);
+		return sqlSessionTemplate.selectList("getListByCDiscountId",paramsMap);
 	}
 
 	
