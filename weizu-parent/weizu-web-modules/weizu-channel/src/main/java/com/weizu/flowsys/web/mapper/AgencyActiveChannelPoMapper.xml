@@ -38,11 +38,11 @@
   
   <sql id="Other_Column_List" >
     active.id, active.agency_id,  active.agency_name, active.active_time,
-    rate.id,rate.operator_type,rate.scope_city_code,rate.active_discount,active.bind_agency_id,active.bind_state,rate.active_discount
+    rate.id,channel.operator_type,channel.scope_city_code,rate.active_discount,active.bind_agency_id,active.bind_state,rate.active_discount
   </sql>
   <sql id="Base_Column_List" >
     active.id, agency_id, agency_name, active_time,channel.channel_name,
-    rate.id,rate.operator_type,rate.scope_city_code,active_discount,active_id,bind_agency_id,bind_state,channel_discount
+    rate.id,channel.operator_type,channel.scope_city_code,active_discount,active_id,bind_agency_id,bind_state,channel_discount
   </sql>
   
   <!-- 查询给三级代理商的最新折扣 -->
@@ -68,6 +68,7 @@
   	inner join <include refid="t_channel"></include> channel
   	on channel.id = rate.channel_discount_id
   	<where>
+  		AND active.bind_state = 0
   		<include refid="condition_rate_sql"></include>
   	</where>
   	order by active.id desc
@@ -89,6 +90,7 @@
 	  	inner join <include refid="t_channel"></include> channel
 	  	on channel.id = rate.channel_discount_id
 	  	<where>
+	  		AND active.bind_state = 0
 	  		<include refid="condition_rate_sql"></include>
 	  	</where>
 	  </select>
@@ -120,7 +122,9 @@
   <select id="countActive" parameterType="map" resultType="int">
   	select count(*) from <include refid="t_active"></include> active
   	inner join <include refid="t_rate"></include> rate
-  	on active.id = rate.active_id
+  	on rate.id=active.rate_discount_id
+  	inner join <include refid="t_channel"></include> channel
+  	on channel.id = rate.channel_discount_id
   	<where>
   		<include refid="condition_sql"></include>
   	</where>
@@ -134,20 +138,23 @@
   	<if test="agencyId != null">
   		AND active.agency_id = #{agencyId}
   	</if>
+  	<if test="agencyName != null">
+  		AND active.agency_name like concat('%',#{agencyName},'%')
+  	</if>
   	<if test="bindAgencyId != null">
   		AND active.bind_agency_id = #{bindAgencyId}
   	</if>
   	<if test="operatorType != null">
-  		AND rate.operator_type = #{operatorType}
+  		AND channel.operator_type = #{operatorType}
   	</if>
   	<if test="scopeCityCode != null">
-  		AND rate.scope_city_code = #{scopeCityCode}
+  		AND channel.scope_city_code = #{scopeCityCode}
   	</if>
   	<if test="serviceType != null">
-  		AND rate.service_type = #{serviceType}
+  		AND channel.service_type = #{serviceType}
   	</if>
-  	<if test="rateId != null">
-  		AND rate.id = #{rateId}
+  	<if test="rateDiscountId != null">
+  		AND rate.id = #{rateDiscountId}
   	</if>
   </sql>
   
@@ -167,6 +174,9 @@
   	<if test="scopeCityCode != null"><!-- 江西的通道折扣 -->
   		AND channel.scope_city_code = #{scopeCityCode}
   	</if>
+  	<if test="rateDiscountId != null">
+  		AND rate.id = #{rateDiscountId}
+  	</if>
   </sql>
   
   <!-- 更新绑定状态 -->
@@ -179,102 +189,12 @@
   	</set>
   	<where>
   		<if test="id != null">
-  			id = #{id}
+  			AND id = #{id}
+  		</if>
+  		<if test="rateDiscountId != null">
+  			AND rate_discount_id = #{rateDiscountId}
   		</if>
   	</where>
   </update>
   
-  
-  
-  <!-- <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
-    <include refid="Base_Column_List" />
-    from agency_activechannel
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from agency_activechannel
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="weizu.flowsys.entity.AgencyActiveChannelPo" >
-    insert into agency_activechannel (id, agency_id, channel_id, 
-      agency_name, channel_name, active_time
-      )
-    values (#{id,jdbcType=BIGINT}, #{agencyId,jdbcType=INTEGER}, #{channelId,jdbcType=INTEGER}, 
-      #{agencyName,jdbcType=VARCHAR}, #{channelName,jdbcType=VARCHAR}, #{activeTime,jdbcType=BIGINT}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="weizu.flowsys.entity.AgencyActiveChannelPo" >
-    insert into agency_activechannel
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="agencyId != null" >
-        agency_id,
-      </if>
-      <if test="channelId != null" >
-        channel_id,
-      </if>
-      <if test="agencyName != null" >
-        agency_name,
-      </if>
-      <if test="channelName != null" >
-        channel_name,
-      </if>
-      <if test="activeTime != null" >
-        active_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="agencyId != null" >
-        #{agencyId,jdbcType=INTEGER},
-      </if>
-      <if test="channelId != null" >
-        #{channelId,jdbcType=INTEGER},
-      </if>
-      <if test="agencyName != null" >
-        #{agencyName,jdbcType=VARCHAR},
-      </if>
-      <if test="channelName != null" >
-        #{channelName,jdbcType=VARCHAR},
-      </if>
-      <if test="activeTime != null" >
-        #{activeTime,jdbcType=BIGINT},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="weizu.flowsys.entity.AgencyActiveChannelPo" >
-    update agency_activechannel
-    <set >
-      <if test="agencyId != null" >
-        agency_id = #{agencyId,jdbcType=INTEGER},
-      </if>
-      <if test="channelId != null" >
-        channel_id = #{channelId,jdbcType=INTEGER},
-      </if>
-      <if test="agencyName != null" >
-        agency_name = #{agencyName,jdbcType=VARCHAR},
-      </if>
-      <if test="channelName != null" >
-        channel_name = #{channelName,jdbcType=VARCHAR},
-      </if>
-      <if test="activeTime != null" >
-        active_time = #{activeTime,jdbcType=BIGINT},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="weizu.flowsys.entity.AgencyActiveChannelPo" >
-    update agency_activechannel
-    set agency_id = #{agencyId,jdbcType=INTEGER},
-      channel_id = #{channelId,jdbcType=INTEGER},
-      agency_name = #{agencyName,jdbcType=VARCHAR},
-      channel_name = #{channelName,jdbcType=VARCHAR},
-      active_time = #{activeTime,jdbcType=BIGINT}
-    where id = #{id,jdbcType=BIGINT}
-  </update> -->
 </mapper>

@@ -16,17 +16,21 @@ import com.weizu.flowsys.core.beans.Po;
 public class RateDiscountPo extends Po {
     private Long id;
     
-    private Integer serviceType;
-    
-    private Integer operatorType;
-
-    private String scopeCityCode;
-
     private Double activeDiscount;
 
     private Long activeId;
     
     private Long channelDiscountId;
+    
+    private Integer billType;				//是否带票（0-一般不带票，1-带票高级）
+    
+    @TempField
+    private Integer operatorType;			//运营商类型
+    @TempField
+    private Integer serviceType;			//流量类型
+    @TempField
+    private String scopeCityCode;			//地区编码
+    
     @TempField
     private Long channelId;
     @TempField
@@ -38,17 +42,45 @@ public class RateDiscountPo extends Po {
 		super();
 	}
 	
-	public RateDiscountPo(Long id, Integer serviceType, Integer operatorType,
-			String scopeCityCode, Double activeDiscount, Long activeId,
-			Long channelDiscountId) {
+	public RateDiscountPo(Double activeDiscount, Long activeId,
+			Long channelDiscountId, Integer billType) {
 		super();
-		this.id = id;
-		this.serviceType = serviceType;
-		this.operatorType = operatorType;
-		this.scopeCityCode = scopeCityCode;
 		this.activeDiscount = activeDiscount;
 		this.activeId = activeId;
 		this.channelDiscountId = channelDiscountId;
+		this.billType = billType;
+	}
+
+	public Integer getBillType() {
+		return billType;
+	}
+
+	public void setBillType(Integer billType) {
+		this.billType = billType;
+	}
+
+	public Integer getOperatorType() {
+		return operatorType;
+	}
+
+	public void setOperatorType(Integer operatorType) {
+		this.operatorType = operatorType;
+	}
+
+	public Integer getServiceType() {
+		return serviceType;
+	}
+
+	public void setServiceType(Integer serviceType) {
+		this.serviceType = serviceType;
+	}
+
+	public String getScopeCityCode() {
+		return scopeCityCode;
+	}
+
+	public void setScopeCityCode(String scopeCityCode) {
+		this.scopeCityCode = scopeCityCode;
 	}
 
 	public Long getChannelDiscountId() {
@@ -83,36 +115,12 @@ public class RateDiscountPo extends Po {
 		this.channelId = channelId;
 	}
 
-	public Integer getServiceType() {
-		return serviceType;
-	}
-
-	public void setServiceType(Integer serviceType) {
-		this.serviceType = serviceType;
-	}
-
 	public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Integer getOperatorType() {
-        return operatorType;
-    }
-
-    public void setOperatorType(Integer operatorType) {
-        this.operatorType = operatorType;
-    }
-
-    public String getScopeCityCode() {
-        return scopeCityCode;
-    }
-
-    public void setScopeCityCode(String scopeCityCode) {
-        this.scopeCityCode = scopeCityCode == null ? null : scopeCityCode.trim();
     }
 
     public Double getActiveDiscount() {

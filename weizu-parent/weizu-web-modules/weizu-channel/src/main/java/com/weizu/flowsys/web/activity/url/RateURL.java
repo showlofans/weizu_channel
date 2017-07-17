@@ -70,6 +70,17 @@ public class RateURL extends BaseURL {
 	 */
 	public static final String UPDATE_BIND_STATE = "/update_bind_state" + DYNAMIC_WEB_SUFFIX;
 	/**
+	 * 批量更新绑定状态（根据折扣id，批量解除绑定）
+	 * <br>/flowsys/rate/batch_update_bind_state.do
+	 */
+	public static final String BATCH_UPDATE_BIND_STATE = "/batch_update_bind_state" + DYNAMIC_WEB_SUFFIX;
+	
+	/**
+	 * 更新绑定状态提示页面<br>
+	 * /flowsys/rate/update_bind_state_confirm.do
+	 */
+	public static final String UPDATE_BIND_STATE_CONFIRM = "/update_bind_state_confirm" + DYNAMIC_WEB_SUFFIX;
+	/**
 	 * 更新绑定的折扣<br>
 	 * /flowsys/rate/update_rate_discount.do
 	 */
@@ -92,9 +103,31 @@ public class RateURL extends BaseURL {
 	public static final String BIND_RATE_ADD = "/bind_rate_add" + DYNAMIC_WEB_SUFFIX;
 	
 	/**
+	 * 绑定折扣编辑
+	 *  <br>/flowsys/rate/bind_rate_edit.do
+	 */
+	public static final String BIND_RATE_EDIT = "/bind_rate_edit" + DYNAMIC_WEB_SUFFIX;
+	
+	/**
 	 * js/json通过参数获得折扣列表
 	 * <br>/flowsys/rate/get_discount.do
 	 */
 	public static final String GET_DISCOUNT = "/get_discount" + DYNAMIC_WEB_SUFFIX;
+	
+	/**
+	 * 通道绑定代理商页面
+	 * <br>/flowsys/rate/bind_agency_page
+	 */
+	public static final String BIND_AGENCY_PAGE = "/bind_agency_page" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 通道批量绑定代理商页面
+	 * <br>/flowsys/rate/batch_bind_agency_page
+	 */
+	public static final String BATCH_BIND_AGENCY_PAGE = "/batch_bind_agency_page" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 通道批量绑定代理商页面
+	 * <br>/flowsys/rate/bind_agency
+	 */
+	public static final String BATCH_BIND_AGENCY = "/batch_bind_agency" + DYNAMIC_WEB_SUFFIX;
 	
 }

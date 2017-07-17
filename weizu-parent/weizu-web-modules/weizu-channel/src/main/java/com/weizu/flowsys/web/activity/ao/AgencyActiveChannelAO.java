@@ -91,6 +91,16 @@ public interface AgencyActiveChannelAO {
 	int updateBindState(String activeId,String bindState);
 	
 	/**
+	 * @description: 批量更新绑定状态（根据折扣id，批量解除绑定）
+	 * @param rateDiscountId
+	 * @param bindState
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月17日 上午10:08:57
+	 */
+	int batchUpdateBindState(String rateDiscountId, String bindState);
+	
+	/**
 	 * @description: 更新绑定的折扣
 	 * @param activeId
 	 * @param activeDiscount
@@ -99,5 +109,14 @@ public interface AgencyActiveChannelAO {
 	 * @createTime:2017年7月8日 下午4:16:06
 	 */
 	int updateRateDiscount(String activeId,String activeDiscount);
+	
+	/**
+	 * @description: 添加绑定
+	 * @param aacp
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月15日 上午11:52:53
+	 */
+	int add(AgencyActiveRatePo aacp);
 	
 }

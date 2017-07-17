@@ -122,4 +122,13 @@ public interface AgencyAO {
 	 */
 	int updatePass(int agencyId,String enterPass);
 	
+	/**
+	 * @description: 查询没有绑定的代理商
+	 * @param rootAgencyId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月17日 下午3:21:21
+	 */
+	Pagination<AgencyBackwardVO> getUnbindAgency(int rootAgencyId, String rateDiscountId, PageParam pageParam);
+	
 }

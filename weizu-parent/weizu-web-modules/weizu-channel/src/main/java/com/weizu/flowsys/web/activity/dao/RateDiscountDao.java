@@ -43,7 +43,7 @@ public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月14日 下午5:54:50
 	 */
-	List<RateDiscountPo> getListByCDiscountId(Long channelDiscountId);
+	List<RateDiscountPo> getListByCDiscountId(Long channelDiscountId, Integer billTypeRate);
 	
 	/**
 	 * @description: 获得费率折扣列表

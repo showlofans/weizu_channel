@@ -102,4 +102,20 @@ public class AgencyActiveChannelDaoImpl extends DaoImpl<AgencyActiveRatePo, Long
 		return sqlSessionTemplate.selectOne("countActiveRate", paramsMap);
 	}
 
+	/**
+	 * @description: 批量更新绑定状态（根据折扣id，批量解除绑定）
+	 * @param rateDiscountId
+	 * @param bindState
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月17日 上午10:12:07
+	 */
+	@Override
+	public int batchUpdateBindState(long rateDiscountId, int bindState) {
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("rateDiscountId", rateDiscountId);
+		paramsMap.put("bindState", bindState);
+		return sqlSessionTemplate.update("updateBindState", paramsMap);
+	}
+
 }

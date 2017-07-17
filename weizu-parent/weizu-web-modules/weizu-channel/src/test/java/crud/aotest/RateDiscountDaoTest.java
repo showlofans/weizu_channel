@@ -33,7 +33,7 @@ public class RateDiscountDaoTest {
 //	@Test
 //	public void testGetDiscountList(){
 ////		RateDiscountPo ratePo = new RateDiscountPo(0, 0,,null, null, null, null);
-//		List<RateDiscountPo> resList = rateDiscountDao.getListByCDiscountId(13l);
+//		List<RateDiscountPo> resList = rateDiscountDao.getListByCDiscountId(13l,1);
 ////		RateDiscountPo ratePo = new RateDiscountPo();
 ////		ratePo.setChannelId(12l);
 ////		List<RateDiscountPo> resList = rateDiscountDao.getRateDiscountList(ratePo);
@@ -56,5 +56,21 @@ public class RateDiscountDaoTest {
 ////				System.out.println(scope.get("value").toString());;//获得折扣
 ////			}
 ////		}
+//	}
+	
+//	@Test
+//	public void testGetListByCDiscountId(){
+//		List<RateDiscountPo> rateList = rateDiscountDao.getListByCDiscountId(l);
+//		System.out.println(rateList.size());
+//	}
+//	@Test
+//	public void testCountRateDisocunt(){
+//		RateDiscountPo ratePo = new RateDiscountPo();
+//		ratePo.setActiveDiscount(0.95);
+//		ratePo.setBillType(1);
+//		ratePo.setChannelDiscountId(12l);
+//		String t = rateDiscountAO.addRateDiscount(ratePo);//添加一定要有billType，通道折扣id和费率折扣
+//		System.out.println(t);
+//		
 //	}
 }

@@ -105,6 +105,13 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 			paramsMap.put("end", pageSize);
 		}
 		List<AgencyActiveRatePo> records = agencyActiveChannelDao.listActiveRate(paramsMap);
+		for (AgencyActiveRatePo activePo1 : records) {
+			//初始化时间
+			if(activePo1.getActiveTime() != null){
+				String activeTimeStr = DateUtil.formatAll(activePo1.getActiveTime());
+				activePo1.setActiveTimeStr(activeTimeStr);
+			}
+		}
 		return new Pagination<AgencyActiveRatePo>(records, toatalRecord, pageNo, pageSize);
 	}
 	/**
@@ -202,6 +209,10 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 		{
 			paramsMap.put("rateDiscountId", activePo.getRateDiscountId());
 		}
+		if(activePo.getAgencyName() != null)
+		{
+			paramsMap.put("agencyName", activePo.getAgencyName());
+		}
 		
 		if(activePo.getAgencyId() != null)
 		{
@@ -221,9 +232,6 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 		}
 		if(activePo.getServiceType() != null){
 			paramsMap.put("serviceType", activePo.getServiceType());
-		}
-		if(activePo.getRateId() != null){
-			paramsMap.put("rateId", activePo.getRateId());
 		}
 		return paramsMap;
 	}
@@ -324,11 +332,27 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月8日 下午12:01:14
 	 */
+	@Transactional
 	@Override
 	public int updateBindState(String activeId, String bindState) {
 		long id = Long.parseLong(activeId);
 		int bindStateInt = Integer.parseInt(bindState);
 		return agencyActiveChannelDao.updateBindState(id, bindStateInt);
+	}
+	/**
+	 * @description: 批量更新绑定状态（根据折扣id，批量解除绑定）
+	 * @param rateDiscountId
+	 * @param bindState
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月17日 上午10:15:00
+	 */
+	@Transactional
+	@Override
+	public int batchUpdateBindState(String rateDiscountId, String bindState) {
+		long rateId = Long.parseLong(rateDiscountId);
+		int bState = Integer.parseInt(bindState);
+		return agencyActiveChannelDao.batchUpdateBindState(rateId, bState);
 	}
 
 	/**
@@ -345,6 +369,21 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 		double activeDiscountD = StringUtil2.getDiscount(activeDiscount);
 		return rateDiscountDao.updateRateDiscount(id, activeDiscountD);
 	}
+
+	/**
+	 * @description: 添加绑定
+	 * @param aacp
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月15日 上午11:53:37
+	 */
+	@Override
+	public int add(AgencyActiveRatePo aacp) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	
 
 	/**
 	 * @description: 初始化费率折扣列表

@@ -19,12 +19,13 @@ import com.weizu.flowsys.web.activity.pojo.OperatorDiscount;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.ScopeDiscount;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
+import com.weizu.flowsys.web.http.weizu.GetBalanceParams;
 
 @Service(value="rateDiscountAO")
 public class RateDiscountAOImpl implements RateDiscountAO {
 
 	@Resource
-	private RateDiscountDao rateDisocuntDao;
+	private RateDiscountDao rateDiscountDao;
 	/**
 	 * @description: 获得费率列表
 	 * @param ratePo
@@ -61,7 +62,7 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	@Override
 	public List<RateDiscountPo> getOperatorList(RateDiscountPo ratePo) {
 //		Map<String, Object> paramsMap = getMapByEntity(ratePo);
-		List<RateDiscountPo> rateList = rateDisocuntDao.getRateDiscountList(ratePo);
+		List<RateDiscountPo> rateList = rateDiscountDao.getRateDiscountList(ratePo);
 		
 		return rateList;
 	}
@@ -80,6 +81,9 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 			}
 			if(ratePo.getServiceType() != null){
 				paramsMap.put("serviceType", ratePo.getServiceType());
+			}
+			if(ratePo.getBillType() != null){
+				paramsMap.put("billType", ratePo.getBillType());
 			}
 //			if(StringHelper.isNotEmpty(ratePo.getScopeCityName()))
 //			{
@@ -122,7 +126,7 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 //		List<ScopeDiscount> list1 = new LinkedList<ScopeDiscount>();		//联通的折扣
 //		List<ScopeDiscount> list2 = new LinkedList<ScopeDiscount>();		//电信的折扣
 //		Map<String, Object> paramsMap = getMapByEntity(ratePo);
-		List<RateDiscountPo> records = rateDisocuntDao.getRateDiscountList(ratePo);
+		List<RateDiscountPo> records = rateDiscountDao.getRateDiscountList(ratePo);
 		
 //		List<String> scopeList = rateDisocuntDao.getDistinctScope(ratePo);
 //		Map<String,Map<String,Object>> scopeMap = new HashMap<String, Map<String,Object>>();
@@ -185,6 +189,80 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 //		}
 //		return odList;
 		return resultMap;
+	}
+
+	/**
+	 * @description:  添加费率折扣
+	 * @param ratePo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月17日 上午11:24:36
+	 */
+	@Override
+	public String addRateDiscount(RateDiscountPo ratePo) {
+		Map<String,Object> params = getMapByRate(ratePo);
+		//看同样的折扣是否存在
+		long tag = rateDiscountDao.countDiscountList(params);
+		if(tag > 0){
+			return "exist";
+		}else{
+			int addRes = rateDiscountDao.add(ratePo);
+			if(addRes > 0)
+			{
+				return "success";
+			}else{
+				return "error";
+			}
+		}
+	}
+	/**
+	 * @description: 封装查询是否存在费率，单表查询参数
+	 * @param ratePo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月17日 上午11:35:49
+	 */
+	private Map<String,Object> getMapByRate(RateDiscountPo ratePo){
+		Map<String,Object> resultMap = new HashMap<String, Object>();
+		if(ratePo.getChannelDiscountId() != null)
+		{
+			resultMap.put("channelDiscountId", ratePo.getChannelDiscountId());
+		}
+		if(ratePo.getActiveDiscount() != null)
+		{
+			resultMap.put("activeDiscount", ratePo.getActiveDiscount());
+		}
+		if(ratePo.getBillType() != null)
+		{
+			resultMap.put("billTypeRate", ratePo.getBillType());
+		}
+		
+		return resultMap;
+	}
+
+	/**
+	 * @description: 修改费率折扣
+	 * @param ratePo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月17日 下午1:59:11
+	 */
+	@Override
+	public String editBindRate(RateDiscountPo ratePo) {
+		Map<String,Object> params = getMapByRate(ratePo);
+		//看同样的折扣是否存在
+		long tag = rateDiscountDao.countDiscountList(params);
+		if(tag > 0){
+			return "exist";
+		}else{
+			int updRes = rateDiscountDao.update(ratePo);
+			if(updRes > 0){
+				return "success";
+			}else{
+				return "error";
+			}
+		}
+		
 	}
 
 }

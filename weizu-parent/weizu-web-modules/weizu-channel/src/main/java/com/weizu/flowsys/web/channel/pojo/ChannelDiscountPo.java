@@ -42,6 +42,8 @@ public class ChannelDiscountPo extends Po {
     
     @TempField
     private Integer belongAgencyId;			//数据库查询字段
+    @TempField
+    private Integer billType;				//数据库返回字段
     
     @TempField
     private List<RateDiscountPo> rateList;		//数据库返回数据费率列表
@@ -63,6 +65,14 @@ public class ChannelDiscountPo extends Po {
 		this.discountType = discountType;
 	}
 	
+	public Integer getBillType() {
+		return billType;
+	}
+
+	public void setBillType(Integer billType) {
+		this.billType = billType;
+	}
+
 	public List<RateDiscountPo> getRateList() {
 		return rateList;
 	}

@@ -119,7 +119,7 @@
 					<c:if test="${vs.index % 4==0 }"><tr></c:if>
 						<td> 
 							<div class="radio-box">
-								<input class="radioItem" type="radio" name="scopeCityCode" id="scopeCityCode-${vs.index }" value="${scopeCityEnum.value }">
+								<input class="radioItem" onclick="changeDisplay(this)" type="radio" name="scopeCityCode" id="scopeCityCode-${vs.index }" value="${scopeCityEnum.value }">
 								<%-- ${scopeCityEnum.desc } --%>
 								<%-- <label for="operatorType-${vs.index }"></label> --%>
 								<!-- 输入两位折扣数字 -->
@@ -275,6 +275,26 @@ $(function(){
 $(document).ready(function(){
 
 });
+//改变显示
+function changeDisplay(vart){
+	if($(vart).next().is(':hidden')){
+		$(".disscount").hide();
+		$(vart).next().show();	
+	}else{
+		$("#selectC").empty();
+		$("#selectC").append("<option value=''>没有通道</option>");
+		 $("#channelCount").html(0);
+		$(vart).attr("checked",false);
+		$(vart).next().hide();
+	}
+	/* if($("input[name='scopeCityCode']:checked").next().is(':hidden')){
+		$(".disscount").hide();
+		$("input[name='scopeCityCode']:checked").next().show();	
+	}else{
+		$("input[name='scopeCityCode']:checked").attr("checked",false);
+		$("input[name='scopeCityCode']:checked").next().hide();
+	} */
+}
 /**通道选择onchange事件 */
 function initChannelName(){
 	var channelName = $("#selectC").find("option:selected").text();
@@ -284,7 +304,7 @@ function initChannelName(){
 function changeName(){
 	//alert($("#selectC").val());
 	if($("#selectC").val() == "0"){
-		alert("添加失败");
+		alert("添加失败,没有配置地区折扣");
 		return false;
 	}
 	var i = 0;
@@ -389,21 +409,31 @@ function changeName(){
 	}
 	return false;
 } */
+
 /**checkBox的点击事件*/
-$(".radioItem").change( 
+$(".radioItem").change( //都会发送ajax请求
 	function(){	
 		 var operatorType = $("input[name='operatorType']:checked").val();
 		 var serviceType = $("input[name='serviceType']:checked").val();
 		//alert(serviceType);
 		//var $price = $("input[name='scopeCityCode']:checked").next().next();		//最优通道显示区
 		//alert(operatorType);
-		if($("input[name='scopeCityCode']:checked").next().is(':hidden')){
-			var scopeCityCode = $("input[name='scopeCityCode']:checked").val().trim();
+		//if($("input[name='scopeCityCode']:checked").next().is(':hidden')){
+			var url = "";
+			if($("input[name='scopeCityCode']:checked").length < 1){
+				//alert('不存在');
+				var scopeCityCode = '';
+				url = "/flowsys/rate/get_simple_channel.do?operatorType="+operatorType+"&serviceType="+serviceType;
+				//alert($("input[name='scopeCityCode']:checked"));
+			}else{
+				var scopeCityCode = $("input[name='scopeCityCode']:checked").val();
+				url = "/flowsys/rate/get_simple_channel.do?operatorType="+operatorType+"&scopeCityCode="+scopeCityCode+"&serviceType="+serviceType;
+			}
 			//alert(cityCode);
 			 $.ajax( {    
 		        "type": "get",     
 		        "contentType": "application/x-www-form-urlencoded; charset=utf-8",    
-		        "url": "/flowsys/rate/get_simple_channel.do?operatorType="+operatorType+"&scopeCityCode="+scopeCityCode+"&serviceType="+serviceType,     
+		        "url": url,     
 		        "dataType": "json",  
 		        "async": false,  
 		        "success": function(resp) { 
@@ -438,7 +468,7 @@ $(".radioItem").change(
 		        	alert(msg);
 		        }
 		    });  
-			$(".disscount").hide();
+			 /* $(".disscount").hide();
 			$("input[name='scopeCityCode']:checked").next().show();	
 		}else{
 			$("input[name='scopeCityCode']:checked").next().hide();
@@ -447,7 +477,7 @@ $(".radioItem").change(
 			$("#selectC").empty();
 			$("#selectC").append("<option value=''>没有通道</option>");
 			 $("#channelCount").html(0);
-		}
+		} */
 	});
 
 
