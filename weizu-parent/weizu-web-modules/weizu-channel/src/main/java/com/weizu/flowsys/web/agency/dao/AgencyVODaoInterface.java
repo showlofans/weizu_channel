@@ -73,6 +73,24 @@ public interface AgencyVODaoInterface {
 	int checkSecondAgency(int agencyId);
 	
 	/**
+	 * @description:  查询没有绑定的代理商 
+	 * @param map
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月17日 下午2:52:44
+	 */
+	List<AgencyBackwardVO> getUnbindAgency(Map<String,Object> paramsMap);
+	
+	/**
+	 * @description:  查询没有绑定的代理商个数
+	 * @param rootAgencyId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月17日 下午3:22:12
+	 */
+	int countUnbindAgency(int rootAgencyId,long rateDiscountId);
+	
+	/**
 	 * @description: 更新密码
 	 * @param paramMap
 	 * @return

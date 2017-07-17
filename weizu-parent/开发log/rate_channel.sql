@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50626
 File Encoding         : 65001
 
-Date: 2017-07-15 18:13:27
+Date: 2017-07-17 18:34:01
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -33,9 +33,7 @@ CREATE TABLE `aac_join_rd` (
 -- Records of aac_join_rd
 -- ----------------------------
 INSERT INTO `aac_join_rd` VALUES ('1', '14', '17');
-INSERT INTO `aac_join_rd` VALUES ('2', '15', '18');
 INSERT INTO `aac_join_rd` VALUES ('3', '16', '19');
-INSERT INTO `aac_join_rd` VALUES ('4', '17', '20');
 INSERT INTO `aac_join_rd` VALUES ('5', '18', '21');
 INSERT INTO `aac_join_rd` VALUES ('6', '19', '22');
 
@@ -84,8 +82,8 @@ INSERT INTO `agency_active_rate` VALUES ('21', '23', '4', null, '0', 'w', '15000
 INSERT INTO `agency_active_rate` VALUES ('22', '23', '4', null, '0', 'w', '1500024876798');
 INSERT INTO `agency_active_rate` VALUES ('25', '24', '4', '22', '0', 'kkk', '1500025358726');
 INSERT INTO `agency_active_rate` VALUES ('26', '21', '4', '23', '0', '456', '1500081258422');
-INSERT INTO `agency_active_rate` VALUES ('27', '24', '4', '24', '0', 'kkk', '1500081299461');
-INSERT INTO `agency_active_rate` VALUES ('28', '27', '4', '32', '1', 'company', '1500092461795');
+INSERT INTO `agency_active_rate` VALUES ('27', '24', '4', '24', '1', 'kkk', '1500081299461');
+INSERT INTO `agency_active_rate` VALUES ('28', '27', '4', '32', '0', 'company', '1500092461795');
 INSERT INTO `agency_active_rate` VALUES ('29', '27', '4', '33', '0', 'company', '1500093565885');
 INSERT INTO `agency_active_rate` VALUES ('30', '27', '4', '34', '0', 'company', '1500093595298');
 INSERT INTO `agency_active_rate` VALUES ('31', '27', '4', '35', '0', 'company', '1500093683813');
@@ -757,7 +755,7 @@ CREATE TABLE `rate_discount` (
   KEY `active_discount_fk` (`active_id`),
   KEY `fk_channel_dis_rate` (`channel_discount_id`),
   CONSTRAINT `fk_channel_dis_rate` FOREIGN KEY (`channel_discount_id`) REFERENCES `channel_discount` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of rate_discount
@@ -768,7 +766,7 @@ INSERT INTO `rate_discount` VALUES ('3', '85', '3', '12', '1');
 INSERT INTO `rate_discount` VALUES ('4', '87', '4', '12', '1');
 INSERT INTO `rate_discount` VALUES ('5', '0.14', '5', '12', '1');
 INSERT INTO `rate_discount` VALUES ('6', '0.111', '6', '12', '1');
-INSERT INTO `rate_discount` VALUES ('7', '0.56', '7', '12', '1');
+INSERT INTO `rate_discount` VALUES ('7', '0.56', '7', '12', '0');
 INSERT INTO `rate_discount` VALUES ('8', '0.12', '8', '12', '1');
 INSERT INTO `rate_discount` VALUES ('9', '0.13', '9', '12', '1');
 INSERT INTO `rate_discount` VALUES ('10', '0.445', '13', '12', '1');
@@ -776,14 +774,12 @@ INSERT INTO `rate_discount` VALUES ('11', '0.56', '14', '12', '1');
 INSERT INTO `rate_discount` VALUES ('12', '0.85', '15', '12', '1');
 INSERT INTO `rate_discount` VALUES ('13', '0.65', '16', '12', '1');
 INSERT INTO `rate_discount` VALUES ('14', '0.116', '17', '12', '1');
-INSERT INTO `rate_discount` VALUES ('15', '0.56', '18', '12', '1');
 INSERT INTO `rate_discount` VALUES ('16', '0.11', '19', '12', '1');
-INSERT INTO `rate_discount` VALUES ('17', '0.95', '20', '12', '1');
 INSERT INTO `rate_discount` VALUES ('18', '0.85', null, null, '1');
 INSERT INTO `rate_discount` VALUES ('19', '0.99', null, '12', '1');
-INSERT INTO `rate_discount` VALUES ('22', '0.88', null, '13', '1');
+INSERT INTO `rate_discount` VALUES ('22', '0.83', null, '13', '1');
 INSERT INTO `rate_discount` VALUES ('23', '0.71', null, '8', '1');
-INSERT INTO `rate_discount` VALUES ('24', '0.86', null, '7', '1');
+INSERT INTO `rate_discount` VALUES ('24', '0.89', null, '7', '1');
 INSERT INTO `rate_discount` VALUES ('25', '0.88', null, null, '1');
 INSERT INTO `rate_discount` VALUES ('26', '0.72', null, '8', '1');
 INSERT INTO `rate_discount` VALUES ('27', '0.75', null, '8', '1');
@@ -791,9 +787,12 @@ INSERT INTO `rate_discount` VALUES ('28', '0.88', null, '7', '1');
 INSERT INTO `rate_discount` VALUES ('29', '89', null, '11', '1');
 INSERT INTO `rate_discount` VALUES ('30', '88', null, '11', '1');
 INSERT INTO `rate_discount` VALUES ('32', '0.6', null, '15', '1');
-INSERT INTO `rate_discount` VALUES ('33', '0.99', null, '12', '1');
+INSERT INTO `rate_discount` VALUES ('33', '0.99', null, '12', '0');
 INSERT INTO `rate_discount` VALUES ('34', '0.98', null, '12', '1');
 INSERT INTO `rate_discount` VALUES ('35', '0.78', null, '8', '1');
+INSERT INTO `rate_discount` VALUES ('36', '0.88', null, '13', '1');
+INSERT INTO `rate_discount` VALUES ('37', '0.87', null, '13', '1');
+INSERT INTO `rate_discount` VALUES ('38', '0.87', null, '7', '1');
 
 -- ----------------------------
 -- Table structure for `rate_join_channel`

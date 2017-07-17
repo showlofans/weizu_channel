@@ -31,7 +31,7 @@
 <title>费率列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 下游管理 <span class="c-gray en">&gt;</span> 费率列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 下游管理 <span class="c-gray en">&gt;</span> 费率列表<!--  <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> --></nav>
 <div class="page-container">
 	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
 	<div class="text-c">
@@ -159,6 +159,7 @@
 				联通省份:<input type="text" value="${resultMap.params.ratePrice1 }" name="ratePrice1" id="" placeholder=" 联通省份" style="width:150px" class="input-text">
 				电信省份:<input type="text" value="${resultMap.params.ratePrice2 }" name="ratePrice2" id="" placeholder=" 电信省份" style="width:150px" class="input-text"> --%>
 				<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="addRate('/flowsys/rate/bind_rate_add_page.do','折扣添加')" href="javascript:;" > 添加折扣</a>
+				<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="editRate('/flowsys/rate/bind_rate_add_page.do','折扣编辑')" href="javascript:;" > 修改折扣</a>
 				<br><br>
 				代理商名称： <input type="text" style="width:150px;" class="input-text ac_input" value="${searchParams.agencyName }" autocomplete="off" id="agencyName" name="agencyName">
 				
@@ -202,7 +203,8 @@
 			<sapn>通道折扣：云南85</sapn> -->
 			 
 			<!-- <sapn>通道折扣：云南85</sapn> -->
-			<a style="text-decoration:none" class="btn btn-success" onclick="Hui_admin_tab(this)" data-href="/flowsys/rate/bind_agency_page.do" title="" data-title="绑定代理商">绑定代理商</a>
+			 <a style="text-decoration:none" class="btn btn-success" onClick="batch_bind('绑定代理商',' /flowsys/rate/batch_bind_agency_page.do','10001')" href="javascript:;" title="绑定代理商"><i class="Hui-iconfont">&#xe6df;</i>绑定代理商</a>
+			<!-- <a style="text-decoration:none" class="btn btn-success" onclick="Hui_admin_tab(this)" data-href="/flowsys/rate/bind_agency_page.do" title="" data-title="绑定代理商">绑定代理商</a> -->
 		<table class="table table-border table-bordered table-bg table-hover table-sort">
 			<thead>
 				<!-- <tr class="text-c">
@@ -305,6 +307,23 @@
 <script src="/view/lib/bootstrap-datetimepicker.min.js"></script>
 <script src="/view/lib/bootstrap-datetimepicker.zh-CN.js"></script> -->
 <script type="text/javascript">
+/*批量绑定代理商页面 */
+function batch_bind(title,url,id,w,h){
+	var rateDiscountId = $("#rateDiscountId").val();
+	//alert(rateDiscountId);
+	if(rateDiscountId == ""){
+		alert("没有可选的折扣！");
+	}else{
+		url = url + "?rateDiscountId=" + rateDiscountId;
+		var index = layer.open({
+			type: 2,
+			title: title,
+			content: url
+		});
+		layer.full(index);
+	}
+}
+
 //onchange获得折扣
 function dischange(){
 	$('#formD').submit();
@@ -410,7 +429,7 @@ function setDiscount(){
 function addRate(url,title){
 	//alert("sd");
 	var cDId = $("#channelDiscountId").val();
-	var billType = $("#billTypeDesc").val();
+	var billType = $("#billTypeRate").val();
 	//layer_show(title,url+'?channelDiscountId=' + cDId,'','510');
 	//location.reload();
 	layer.open({
@@ -419,11 +438,65 @@ function addRate(url,title){
         area: ['530px', '510px'],
         maxmin: false,
         closeBtn: 1,
-        content: url+'?channelDiscountId=' + cDId + '&billType=' + billType,
+        content: url+'?channelDiscountId=' + cDId + '&billType=' + billType+ '&fromTag=add',
          end: function () {
             location.reload();
         }
     });
+}
+/*折扣-编辑页面 */
+function editRate(url,title){
+	//alert("sd");
+	var cDId = $("#channelDiscountId").val();
+	var rateDiscountId = $("#rateDiscountId").val();
+	var rateDiscount = $("#rateDiscountId option:selected").text();
+	//alert(rateDiscount);
+	var billType = $("#billTypeRate").val();
+	//layer_show(title,url+'?channelDiscountId=' + cDId,'','510');
+	//location.reload();
+	layer.confirm('要修改折扣必须先解除所有绑定了该折扣的代理商的绑定，\t确认要解除所有的绑定吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			async: false,
+			url: '/flowsys/rate/batch_update_bind_state.do',
+			//dataType: 'json',
+			data: {rateDiscountId:rateDiscountId, bindState:1},
+			success: function(data){
+				//tag = data;
+				//alert(data);
+				if(data=="success")
+				{
+					layer.close(index);
+					layer.msg('更新绑定成功', {icon:5,time:1000});
+					//alert(tag);
+					layer.open({
+				        type: 2,
+				        title: title,
+				        area: ['530px', '510px'],
+				        maxmin: false,
+				        closeBtn: 1,
+				        content: url+'?rateDiscountId=' + rateDiscountId+ '&channelDiscountId='+cDId+ '&billType='+billType + '&fromTag=edit',  
+				         end: function () {
+				          	  location.reload();
+				        }
+				    });
+					//location.reload();
+				}else if(data == "exist"){
+					layer.msg('该折扣已存在，所以更新绑定失败!',{icon:1,time:1000});
+				} else{
+					layer.msg('或许没有绑定代理商，所以更新绑定失败!',{icon:1,time:1000});
+				}
+			},
+			error:function(data) {
+				console.log(data.msg);
+			},
+		});	
+		/* if(tag == "success"){
+			
+		} */
+		//layer.close(index);
+		//location.reload();
+	});
 }
 
 /* $(document).ready(function() {

@@ -68,6 +68,7 @@
   	inner join <include refid="t_channel"></include> channel
   	on channel.id = rate.channel_discount_id
   	<where>
+  		AND active.bind_state = 0
   		<include refid="condition_rate_sql"></include>
   	</where>
   	order by active.id desc
@@ -89,6 +90,7 @@
 	  	inner join <include refid="t_channel"></include> channel
 	  	on channel.id = rate.channel_discount_id
 	  	<where>
+	  		AND active.bind_state = 0
 	  		<include refid="condition_rate_sql"></include>
 	  	</where>
 	  </select>
@@ -187,7 +189,10 @@
   	</set>
   	<where>
   		<if test="id != null">
-  			id = #{id}
+  			AND id = #{id}
+  		</if>
+  		<if test="rateDiscountId != null">
+  			AND rate_discount_id = #{rateDiscountId}
   		</if>
   	</where>
   </update>

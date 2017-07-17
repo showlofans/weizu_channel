@@ -1,5 +1,6 @@
 package com.weizu.flowsys.web.agency.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -91,6 +92,36 @@ public class AgencyVODao extends DaoImpl<AgencyBackwardVO, Integer> implements A
 	@Override
 	public int checkSecondAgency(int agencyId) {
 		return sqlSessionTemplateASS.selectOne("checkSecondAgency",agencyId);//asset-只有一个结果
+	}
+
+	/**
+	 * @description:  查询没有绑定的代理商 
+	 * @param map
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月17日 下午2:53:11
+	 */
+	@Override
+	public List<AgencyBackwardVO> getUnbindAgency(Map<String,Object> paramsMap) {
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		map.put("bindState", bindState);
+//		map.put("rootAgencyId", rootAgencyId);
+		return sqlSessionTemplateASS.selectList("getUnbindAgency", paramsMap);
+	}
+
+	/**
+	 * @description:  查询没有绑定的代理商 
+	 * @param rootAgencyId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月17日 下午3:22:38
+	 */
+	@Override
+	public int countUnbindAgency(int rootAgencyId, long rateDiscountId) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("rootAgencyId", rootAgencyId);
+		map.put("rateDiscountId", rateDiscountId);
+		return sqlSessionTemplateASS.selectOne("countUnbindAgency", map);
 	}
 
 	/**

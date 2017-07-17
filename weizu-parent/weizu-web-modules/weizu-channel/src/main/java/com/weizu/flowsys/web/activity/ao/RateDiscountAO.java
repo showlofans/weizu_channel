@@ -45,4 +45,22 @@ public interface RateDiscountAO {
 	Map<String,Object> getOperatorListRate(RateDiscountPo ratePo);
 	
 	Map<String,Object> getMapByEntity(RateDiscountPo ratePo);
+	
+	/**
+	 * @description: 添加费率折扣
+	 * @param ratePo
+	 * @return success,error
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月17日 上午11:24:03
+	 */
+	String addRateDiscount(RateDiscountPo ratePo);
+	
+	/**
+	 * @description: 修改费率折扣
+	 * @param ratePo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月17日 下午1:58:08
+	 */
+	String editBindRate(RateDiscountPo ratePo);
 }

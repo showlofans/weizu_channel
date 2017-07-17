@@ -64,7 +64,7 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">设置折扣：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" style="width:200px" required class="input-text"  value="" placeholder="按照上面格式填写" id="activeDiscount" name="activeDiscount">
+				<input type="text" style="width:200px" required class="input-text"  value="" placeholder='<c:if test='${empty resultMap.rateDiscount}'>按照上面格式填写</c:if>${resultMap.rateDiscount}' id="activeDiscount" name="activeDiscount">
 			</div>
 		</div>
 		<div class="row cl">
@@ -72,12 +72,19 @@
 			<div class="formControls col-xs-8 col-sm-9">
 				<c:forEach items="${resultMap.billTypeEnums }" var="billEnum" varStatus="vs">
 					<div class="radio-box">
-						<input name="billType" class="radioItem" type="radio" value="${billEnum.value }" <c:if test="${resultMap.billType==billEnum.value }">checked</c:if>>
+						<input name="billType" class="radioItem" <c:if test="${not empty rateDisocunt }">readonly</c:if> type="radio" value="${billEnum.value }" <c:if test="${resultMap.billType==billEnum.value }">checked</c:if>>
 						${billEnum.desc }
 					</div>
 				</c:forEach>
 			</div>
 		</div>
+		<!-- 费率折扣id -->
+		<c:if test="${not empty resultMap.rateDiscountId }">
+			<input name="id" type="hidden" value="${resultMap.rateDiscountId }" id="rateDiscountId">
+		</c:if>
+		<input type="hidden" value="${resultMap.fromTag }" id="fromTag">
+		
+		
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
 				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
@@ -95,15 +102,24 @@ $().ready(function() {
     $("#bindRateForm").validate({
     	submitHandler : function(form) {
     		var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+    		var url = "/flowsys/rate/bind_rate_add.do";
+    		var fromTag = $('#fromTag').val();
+    		//alert($('#activeDiscount').attr("placeholder"));
+    		alert(fromTag)
+    		if(fromTag == "edit"){
+    			url = "/flowsys/rate/bind_rate_edit.do";
+    		}
     		$.ajax({
     	        type: "post",
     	        data: $('form').serialize(),//表单数据
-    	        url:"/flowsys/rate/bind_rate_add.do",
+    	        url:url,
     	        async : false,
     	        success:function(d){
     	        	//alert(d);
     	            if(d == 'success'){
     	                layer.msg('保存成功！');//保存成功提示
+    	            }else if(d == "exist"){
+    	            	 layer.msg('该折扣已存在！');
     	            }else{
     	                layer.msg('保存异常!');
     	            }

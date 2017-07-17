@@ -63,4 +63,14 @@ public class RateDiscountDaoTest {
 //		List<RateDiscountPo> rateList = rateDiscountDao.getListByCDiscountId(l);
 //		System.out.println(rateList.size());
 //	}
+//	@Test
+//	public void testCountRateDisocunt(){
+//		RateDiscountPo ratePo = new RateDiscountPo();
+//		ratePo.setActiveDiscount(0.95);
+//		ratePo.setBillType(1);
+//		ratePo.setChannelDiscountId(12l);
+//		String t = rateDiscountAO.addRateDiscount(ratePo);//添加一定要有billType，通道折扣id和费率折扣
+//		System.out.println(t);
+//		
+//	}
 }

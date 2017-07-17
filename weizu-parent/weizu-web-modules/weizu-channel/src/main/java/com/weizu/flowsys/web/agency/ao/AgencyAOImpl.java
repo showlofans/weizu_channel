@@ -382,4 +382,38 @@ public class AgencyAOImpl implements AgencyAO {
 		return agencyVODao.updateByAgencyPO(agencyPo);
 	}
 
+	/**
+	 * @description: 查询没有绑定的代理商
+	 * @param rootAgencyId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月17日 下午3:20:44
+	 */
+	@Override
+	public Pagination<AgencyBackwardVO> getUnbindAgency(int rootAgencyId, String rateDiscountId, PageParam pageParam) {
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("rootAgencyId", rootAgencyId);
+		int totalRecord = 0;
+		if(StringHelper.isNotEmpty(rateDiscountId)){
+			Long rateId = Long.parseLong(rateDiscountId);
+			totalRecord = agencyVODao.countUnbindAgency(rootAgencyId, rateId);
+			paramsMap.put("rateDiscountId", rateId);
+		}
+		int pageSize = 10;
+		int pageNo = 1;
+		if(pageParam != null){
+			pageSize = pageParam.getPageSize();
+			pageNo = pageParam.getPageNo();
+			paramsMap.put("start", (pageNo-1)*pageSize);
+			paramsMap.put("end", pageSize);
+		}
+		List<AgencyBackwardVO> records = agencyVODao.getUnbindAgency(paramsMap);
+		for (AgencyBackwardVO agencyBackwardVO2 : records) {
+			if(agencyBackwardVO2.getCreateTime() != null){
+				agencyBackwardVO2.setCreateTimeStr(DateUtil.formatAll(agencyBackwardVO2.getCreateTime()));
+			}
+		}
+		return new Pagination<AgencyBackwardVO>(records, totalRecord, pageNo, pageSize);
+	}
+
 }

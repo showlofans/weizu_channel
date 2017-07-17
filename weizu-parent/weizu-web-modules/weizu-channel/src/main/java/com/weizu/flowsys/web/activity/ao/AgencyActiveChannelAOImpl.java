@@ -332,11 +332,27 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月8日 下午12:01:14
 	 */
+	@Transactional
 	@Override
 	public int updateBindState(String activeId, String bindState) {
 		long id = Long.parseLong(activeId);
 		int bindStateInt = Integer.parseInt(bindState);
 		return agencyActiveChannelDao.updateBindState(id, bindStateInt);
+	}
+	/**
+	 * @description: 批量更新绑定状态（根据折扣id，批量解除绑定）
+	 * @param rateDiscountId
+	 * @param bindState
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月17日 上午10:15:00
+	 */
+	@Transactional
+	@Override
+	public int batchUpdateBindState(String rateDiscountId, String bindState) {
+		long rateId = Long.parseLong(rateDiscountId);
+		int bState = Integer.parseInt(bindState);
+		return agencyActiveChannelDao.batchUpdateBindState(rateId, bState);
 	}
 
 	/**
@@ -366,6 +382,8 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	
 
 	/**
 	 * @description: 初始化费率折扣列表

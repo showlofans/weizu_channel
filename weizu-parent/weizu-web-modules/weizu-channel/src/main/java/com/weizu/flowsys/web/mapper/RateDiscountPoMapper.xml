@@ -53,6 +53,23 @@
   	</where>
   </select>
   
+  <!-- 查询是否存在该折扣 -->
+  <select id="countDiscountList" parameterType="map" resultType="long">
+  	select count(*)
+  	from <include refid="t_rateD"></include>
+  	<where>
+  		<if test="channelDiscountId != null">
+	  		AND channel_discount_id = #{channelDiscountId}
+  		</if>
+  		<if test="activeDiscount != null">
+	  		AND active_discount = #{activeDiscount}
+  		</if>
+  		<if test="billTypeRate != null">
+	  		AND bill_type = #{billTypeRate}
+  		</if>
+  	</where>
+  </select>
+  
   
   <!-- 获得所有折扣信息 -->
   <select id="getRateDiscountList" resultMap="BaseResultMap" parameterType="com.weizu.flowsys.web.activity.pojo.RateDiscountPo">

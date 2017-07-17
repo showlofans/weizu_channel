@@ -43,7 +43,9 @@ import com.weizu.flowsys.web.activity.pojo.RateBackwardVo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateJoinChannelPo;
 import com.weizu.flowsys.web.activity.url.RateURL;
+import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
+import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.channel.ao.ChannelChannelAO;
@@ -91,6 +93,12 @@ public class RateController {
 	private RateDiscountDao rateDiscountDao;
 	@Resource
 	private RateDiscountAO rateDiscountAO;
+	
+	@Resource
+	private AgencyVODaoInterface agencyVODao;
+	
+	@Resource
+	private AgencyAO agencyAO;
 	
 	/**
 	 * @description:跳转到费率添加页面
@@ -526,6 +534,30 @@ public class RateController {
 		}
 	}
 	/**
+	 * @description: 批量更新绑定状态（根据折扣id，批量解除绑定）
+	 * @param bindState
+	 * @param rateDiscountId
+	 * @param response
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月17日 上午10:18:20
+	 */
+	@RequestMapping(value=RateURL.BATCH_UPDATE_BIND_STATE)
+	@ResponseBody
+	public void batchUpdateBindState(String bindState, String rateDiscountId, HttpServletResponse response)
+	{
+		int updateRes = agencyActiveChannelAO.batchUpdateBindState(rateDiscountId, bindState);
+		try {
+			if(updateRes > 0)
+			{
+				response.getWriter().print("success");
+			}else{
+				response.getWriter().print("error");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	/**
 	 * @description: 更新绑定的折扣
 	 * @param bindState
 	 * @param activeId
@@ -734,8 +766,19 @@ public class RateController {
 	 * @createTime:2017年7月14日 下午2:48:58
 	 */
 	@RequestMapping(value= RateURL.BIND_RATE_ADD_PAGE)
-	public ModelAndView addBindRatePage(String channelDiscountId,String billType){
+	public ModelAndView addBindRatePage(@RequestParam(value="channelDiscountId",required=false)String channelDiscountId,@RequestParam(value="billType",required=false)String billType, 
+			String fromTag, @RequestParam(value="rateDiscountId",required=false)String rateDiscountId){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
+		if(fromTag.equals("edit") && rateDiscountId != null){
+			resultMap.put("rateDiscountId", rateDiscountId);
+			Double rateDiscount = rateDiscountDao.get(Long.parseLong(rateDiscountId)).getActiveDiscount();
+			resultMap.put("rateDiscount", rateDiscount);//费率折扣
+			
+		}
+		
+		resultMap.put("fromTag", fromTag);
+		resultMap.put("billType", billType);
+		
 		long cId = Long.parseLong(channelDiscountId.trim());
 		ChannelDiscountPo cDPo = channelDiscountDao.get(new WherePrams("id", "=", cId));
 		resultMap.put("cDPo",cDPo);
@@ -743,7 +786,6 @@ public class RateController {
 		resultMap.put("stypeEnums", ServiceTypeEnum.toList());
 		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
-		resultMap.put("billType", billType);
 		return new ModelAndView("/activity/bind_rate_add_page", "resultMap", resultMap);
 	}
 	/**
@@ -757,16 +799,31 @@ public class RateController {
 	@ResponseBody
 	public void addBindRate(RateDiscountPo ratePo,HttpServletResponse response){
 		
-		int addRes = rateDiscountDao.add(ratePo);
+		String addRes = rateDiscountAO.addRateDiscount(ratePo);
 		try {
-			if(addRes > 0)
-			{
-				response.getWriter().print("success");
-			}
-			else
-			{
-				response.getWriter().print("error");
-			}
+			response.getWriter().print(addRes);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+//		Map<String, Object> resultMap = new HashMap<String, Object>();
+//		resultMap.put("ratePo",ratePo);
+		
+	}
+	
+	/**
+	 * @description: 编辑折扣
+	 * @param ratePo
+	 * @param response
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月17日 上午9:53:08
+	 */
+	@RequestMapping(value= RateURL.BIND_RATE_EDIT)
+	@ResponseBody
+	public void editBindRate(RateDiscountPo ratePo,HttpServletResponse response){
+		//也需添加是否存在的判断
+		String res = rateDiscountAO.editBindRate(ratePo);
+		try {
+			response.getWriter().print(res);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -819,9 +876,30 @@ public class RateController {
 		resultMap.put("bindStateEnums", BindStateEnum.toList());//绑定代理商名字
 		return new ModelAndView("/activity/update_bind_state_confirm", "resultMap", resultMap);
 	}
-	@RequestMapping(value= RateURL.BIND_AGENCY)
+	/**
+	 * @description: 通道批量绑定代理商页面 /flowsys/rate/batch_bind_agency_page
+	 * @param pageNo
+	 * @param request
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月17日 下午3:46:08
+	 */
+	@RequestMapping(value= RateURL.BATCH_BIND_AGENCY_PAGE)
 	@ResponseBody
-	public void addBindRate(AgencyActiveRatePo aarp,HttpServletResponse response){
+	public ModelAndView batchBindAgencyPage(@RequestParam(value = "pageNo", required = false) String pageNo,String rateDiscountId, HttpServletRequest request){
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		int rootAgencyId = agencyVO.getId();
+		PageParam pageParam = null;
+		if(StringHelper.isNotEmpty(pageNo)){
+			pageParam = new PageParam(Integer.parseInt(pageNo), 10) ;
+		}else{
+			pageParam = new PageParam(1, 10);
+		}
+		Pagination<AgencyBackwardVO> pagination = agencyAO.getUnbindAgency(rootAgencyId,rateDiscountId, pageParam);
+		resultMap.put("pagination", pagination);
+		
+		return new ModelAndView("/activity/batch_bind_agency_page", "resultMap", resultMap);
 //		agencyActiveChannelAO.
 //		int addRes = rateDiscountDao.add(ratePo);
 //		try {

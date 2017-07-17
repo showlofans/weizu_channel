@@ -96,7 +96,7 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 	@Override
 	public Long countDiscountList(Map<String, Object> params) {
 		
-		return null;
+		return sqlSessionTemplate.selectOne("countDiscountList", params);
 	}
 
 	/**
