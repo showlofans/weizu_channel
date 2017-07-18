@@ -3,10 +3,11 @@ package com.weizu.flowsys.web.agency.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 
-public interface AgencyVODaoInterface {
+public interface AgencyVODaoInterface extends Dao<AgencyBackwardPo, Integer> {
 	/**
 	 * @description:查询代理商列表
 	 * @param paramsMap
@@ -73,7 +74,7 @@ public interface AgencyVODaoInterface {
 	int checkSecondAgency(int agencyId);
 	
 	/**
-	 * @description:  查询没有绑定的代理商 
+	 * @description:  查询解绑的代理商 
 	 * @param map
 	 * @return
 	 * @author:POP产品研发部 宁强
@@ -82,13 +83,40 @@ public interface AgencyVODaoInterface {
 	List<AgencyBackwardVO> getUnbindAgency(Map<String,Object> paramsMap);
 	
 	/**
-	 * @description:  查询没有绑定的代理商个数
+	 * @description: 查询没有绑定的代理商
+	 * @param paramsMap
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月18日 上午11:07:08
+	 */
+	List<AgencyBackwardVO> getNoBAgency(Map<String,Object> paramsMap);
+	
+	/**
+	 * @description:  查询解绑的代理商个数
 	 * @param rootAgencyId
 	 * @return
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月17日 下午3:22:12
 	 */
-	int countUnbindAgency(int rootAgencyId,long rateDiscountId);
+	int countUnbindAgency(Map<String, Object> paramsMap);
+	
+	/**
+	 * @description: 查询没有绑定的代理商个数
+	 * @param paramsMap
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月18日 上午11:07:22
+	 */
+	int countNoBAgency(Map<String, Object> paramsMap);
+	
+	/**
+	 * @description: 获得名字列表
+	 * @param params
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月18日 下午3:35:09
+	 */
+	List<AgencyBackwardPo> getBatchAgency(AgencyBackwardPo params);
 	
 	/**
 	 * @description: 更新密码

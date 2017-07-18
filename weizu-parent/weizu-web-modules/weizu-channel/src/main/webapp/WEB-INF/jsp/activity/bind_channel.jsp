@@ -148,6 +148,19 @@
 				</span> 
 			</div>
 		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">费率类型：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs">
+					<div class="radio-box">
+						<input name="billType" type="radio" id="billType-${vs.index }" value="${billTypeEnum.value }" <c:if test="${vs.index==0 }">checked</c:if> >
+						<%-- ${operatorEnum.desc } --%>
+						<label for="billType-${vs.index }">${billTypeEnum.desc }</label> 
+					</div>
+				</c:forEach>
+			</div>
+		</div>
+		
 		<!-- <span id="channelDiscount" value=""></span> -->
 		<%-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">费率：</label>

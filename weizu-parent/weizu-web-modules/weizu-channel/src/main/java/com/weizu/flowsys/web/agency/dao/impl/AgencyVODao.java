@@ -15,7 +15,7 @@ import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 
 @Repository("agencyVODao")
-public class AgencyVODao extends DaoImpl<AgencyBackwardVO, Integer> implements AgencyVODaoInterface {
+public class AgencyVODao extends DaoImpl<AgencyBackwardPo, Integer> implements AgencyVODaoInterface {
 	@Resource
 	private SqlSessionTemplate sqlSessionTemplateASS;
 
@@ -117,11 +117,47 @@ public class AgencyVODao extends DaoImpl<AgencyBackwardVO, Integer> implements A
 	 * @createTime:2017年7月17日 下午3:22:38
 	 */
 	@Override
-	public int countUnbindAgency(int rootAgencyId, long rateDiscountId) {
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("rootAgencyId", rootAgencyId);
-		map.put("rateDiscountId", rateDiscountId);
-		return sqlSessionTemplateASS.selectOne("countUnbindAgency", map);
+	public int countUnbindAgency(Map<String, Object> paramsMap) {
+//		Map<String,Object> map = new HashMap<String, Object>();
+//		map.put("rootAgencyId", rootAgencyId);
+//		map.put("rateDiscountId", rateDiscountId);
+		return sqlSessionTemplateASS.selectOne("countUnbindAgency", paramsMap);
+	}
+
+	/**
+	 * @description: 查询没有绑定的代理商
+	 * @param paramsMap
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月18日 上午11:38:00
+	 */
+	@Override
+	public List<AgencyBackwardVO> getNoBAgency(Map<String, Object> paramsMap) {
+		return sqlSessionTemplateASS.selectList("getNoBAgency", paramsMap);
+	}
+
+	/**
+	 * @description: 查询没有绑定的代理商个数
+	 * @param paramsMap
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月18日 上午11:38:12
+	 */
+	@Override
+	public int countNoBAgency(Map<String, Object> paramsMap) {
+		return sqlSessionTemplateASS.selectOne("countNoBAgency", paramsMap);
+	}
+
+	/**
+	 * @description: 获得名字列表
+	 * @param params
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月18日 下午3:35:43
+	 */
+	@Override
+	public List<AgencyBackwardPo> getBatchAgency(AgencyBackwardPo params) {
+		return sqlSessionTemplateASS.selectList("getBatchAgency", params);
 	}
 
 	/**

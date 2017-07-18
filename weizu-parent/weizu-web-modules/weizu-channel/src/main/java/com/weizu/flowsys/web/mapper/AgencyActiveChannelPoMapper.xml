@@ -38,11 +38,11 @@
   
   <sql id="Other_Column_List" >
     active.id, active.agency_id,  active.agency_name, active.active_time,
-    rate.id,channel.operator_type,channel.scope_city_code,rate.active_discount,active.bind_agency_id,active.bind_state,rate.active_discount
+    rate.id,channel.operator_type,channel.scope_city_code,rate.active_discount,active.bind_agency_id,active.bind_state
   </sql>
   <sql id="Base_Column_List" >
     active.id, agency_id, agency_name, active_time,channel.channel_name,
-    rate.id,channel.operator_type,channel.scope_city_code,active_discount,active_id,bind_agency_id,bind_state,channel_discount
+    rate.id,channel.operator_type,channel.scope_city_code,active_discount,active_id,bind_agency_id,bind_state,channel_discount,rate.bill_type
   </sql>
   
   <!-- 查询给三级代理商的最新折扣 -->
@@ -58,6 +58,21 @@
   	</where>
   </select>
   
+  <resultMap type="com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo" id="simpleList">
+  	 <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
+  	  <result column="agency_name" property="agencyName" jdbcType="VARCHAR" />
+  </resultMap>
+  <!-- 查询绑定了该折扣的代理商id列表 -->
+  <select id="listBindAgency" parameterType="long" resultMap="simpleList">
+  	select active.agency_id, active.agency_name
+  	from  <include refid="t_active"></include> active 
+  	inner join <include refid="t_rate"></include> rate
+  	on rate.id=active.rate_discount_id
+  	<where>
+  		active.bind_state = 0
+  		and rate.id=#{_parameter}
+  	</where>
+  	</select>
   
   <!-- 查询分页费率列表 -->
    <select id="listActiveRate" parameterType="map" resultMap="OtherResultMap">
@@ -105,6 +120,7 @@
   	inner join <include refid="t_channel"></include> channel
   	on channel.id = rate.channel_discount_id
   	<where>
+  		active.bind_state = 0
   		<include refid="condition_sql"></include>
   	</where>
   	order by active.id desc
@@ -126,6 +142,7 @@
   	inner join <include refid="t_channel"></include> channel
   	on channel.id = rate.channel_discount_id
   	<where>
+  		active.bind_state = 0
   		<include refid="condition_sql"></include>
   	</where>
   </select>
@@ -194,7 +211,21 @@
   		<if test="rateDiscountId != null">
   			AND rate_discount_id = #{rateDiscountId}
   		</if>
+  		<if test="agencyIds != null">
+  			AND agency_id in <foreach item="agencyId" index="index" collection="agencyIds" open="(" separator="," close=")">#{agencyId}</foreach>
+  		</if>
   	</where>
   </update>
+  
+  <!-- 批量绑定 -->
+  <insert id="batch_bindList" useGeneratedKeys="true" parameterType="java.util.List">
+  	insert into <include refid="t_active"></include>
+  	(agency_id, bind_agency_id, rate_discount_id, bind_state, agency_name, active_time)
+  	values
+  	<foreach collection="list" separator="," item="active" index="index">
+  		(#{active.agencyId},#{active.bindAgencyId},#{active.rateDiscountId},#{active.bindState},#{active.agencyName},#{active.activeTime})
+  	</foreach>
+  </insert>
+  
   
 </mapper>

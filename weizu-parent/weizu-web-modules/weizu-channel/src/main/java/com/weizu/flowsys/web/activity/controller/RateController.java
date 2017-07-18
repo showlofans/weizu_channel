@@ -35,6 +35,7 @@ import com.weizu.flowsys.web.activity.ao.OperatorDiscountAO;
 import com.weizu.flowsys.web.activity.ao.RateBackwardAO;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
+import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
 import com.weizu.flowsys.web.activity.pojo.OperatorDiscount;
 import com.weizu.flowsys.web.activity.pojo.OperatorDiscountPo;
@@ -476,6 +477,7 @@ public class RateController {
 		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 		resultMap.put("operatorTypes", OperatorTypeEnum.toList());
 		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
+		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 //		resultMap.put("channelListStr", channelListStr);
 //		resultMap.put("channelList", channelList);
 		return new ModelAndView("/activity/bind_channel","resultMap",resultMap);
@@ -543,9 +545,9 @@ public class RateController {
 	 */
 	@RequestMapping(value=RateURL.BATCH_UPDATE_BIND_STATE)
 	@ResponseBody
-	public void batchUpdateBindState(String bindState, String rateDiscountId, HttpServletResponse response)
+	public void batchUpdateBindState(AgencyActiveRateDTO aardto, HttpServletResponse response)
 	{
-		int updateRes = agencyActiveChannelAO.batchUpdateBindState(rateDiscountId, bindState);
+		int updateRes = agencyActiveChannelAO.batchUpdateBindState(aardto);
 		try {
 			if(updateRes > 0)
 			{
@@ -886,7 +888,7 @@ public class RateController {
 	 */
 	@RequestMapping(value= RateURL.BATCH_BIND_AGENCY_PAGE)
 	@ResponseBody
-	public ModelAndView batchBindAgencyPage(@RequestParam(value = "pageNo", required = false) String pageNo,String rateDiscountId, HttpServletRequest request){
+	public ModelAndView batchBindAgencyPage(@RequestParam(value = "pageNo", required = false) String pageNo,AgencyActiveRateDTO aardto, HttpServletRequest request){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		int rootAgencyId = agencyVO.getId();
@@ -896,8 +898,15 @@ public class RateController {
 		}else{
 			pageParam = new PageParam(1, 10);
 		}
-		Pagination<AgencyBackwardVO> pagination = agencyAO.getUnbindAgency(rootAgencyId,rateDiscountId, pageParam);
+		//初始化绑定状态
+		if(aardto.getBindState() == null){
+			aardto.setBindState(BindStateEnum.UNBIND.getValue());
+		}
+		
+		Pagination<AgencyBackwardVO> pagination = agencyAO.getUnbindAgency(rootAgencyId,aardto, pageParam);
+		resultMap.put("searchParams", aardto);
 		resultMap.put("pagination", pagination);
+		resultMap.put("bindStateEnums", BindStateEnum.toBindList());
 		
 		return new ModelAndView("/activity/batch_bind_agency_page", "resultMap", resultMap);
 //		agencyActiveChannelAO.
@@ -916,7 +925,30 @@ public class RateController {
 //		}
 //		Map<String, Object> resultMap = new HashMap<String, Object>();
 //		resultMap.put("ratePo",ratePo);
-		
+	}
+	/**
+	 * @description: 通道批量绑定代理商 
+	 * @param aardto
+	 * @param response
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月18日 下午3:37:56
+	 */
+	@ResponseBody
+	@RequestMapping(value=RateURL.BATCH_BIND_AGENCY)
+	public void batchBindAgency(AgencyActiveRateDTO aardto,HttpServletResponse response,HttpServletRequest request){
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		aardto.setBindAgencyId(agencyVO.getId());
+		int res = agencyActiveChannelAO.batchBindAgency(aardto);
+		try {
+			if(res>0){
+				response.getWriter().print("success"); 
+			}else{
+				response.getWriter().print("error"); 
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

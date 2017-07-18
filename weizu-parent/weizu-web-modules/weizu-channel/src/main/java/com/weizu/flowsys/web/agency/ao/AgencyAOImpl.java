@@ -15,9 +15,11 @@ import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.util.UUIDGenerator;
 import com.weizu.flowsys.web.activity.dao.impl.RateBackwardDaoImpl;
+import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.RateBackwardPo;
 import com.weizu.flowsys.web.agency.dao.impl.AgencyBackwardDao;
 import com.weizu.flowsys.web.agency.dao.impl.AgencyVODao;
@@ -120,7 +122,7 @@ public class AgencyAOImpl implements AgencyAO {
 	private AgencyBackwardPo getPoByVo(AgencyBackwardVO agencyBackward) {
 		return new AgencyBackwardPo(agencyBackward.getId(), 
 				agencyBackward.getRootAgencyId(), agencyBackward.getUserName(), 
-				agencyBackward.getUserPasss(), agencyBackward.getUserRealName(), 
+				agencyBackward.getUserPass(), agencyBackward.getUserRealName(), 
 				agencyBackward.getAgencyTel(), agencyBackward.getUserEmail(), 
 				agencyBackward.getAgencyIp(), agencyBackward.getRateId(), 
 				agencyBackward.getAccountCredit(), agencyBackward.getRateName(),
@@ -390,24 +392,33 @@ public class AgencyAOImpl implements AgencyAO {
 	 * @createTime:2017年7月17日 下午3:20:44
 	 */
 	@Override
-	public Pagination<AgencyBackwardVO> getUnbindAgency(int rootAgencyId, String rateDiscountId, PageParam pageParam) {
-		Map<String, Object> paramsMap = new HashMap<String, Object>();
+	public Pagination<AgencyBackwardVO> getUnbindAgency(int rootAgencyId, AgencyActiveRateDTO aardto, PageParam pageParam) {
+		Map<String, Object> paramsMap = getUnbindMapByEntity(aardto);
 		paramsMap.put("rootAgencyId", rootAgencyId);
+		List<AgencyBackwardVO> records = null;
 		int totalRecord = 0;
-		if(StringHelper.isNotEmpty(rateDiscountId)){
-			Long rateId = Long.parseLong(rateDiscountId);
-			totalRecord = agencyVODao.countUnbindAgency(rootAgencyId, rateId);
-			paramsMap.put("rateDiscountId", rateId);
-		}
 		int pageSize = 10;
 		int pageNo = 1;
-		if(pageParam != null){
-			pageSize = pageParam.getPageSize();
-			pageNo = pageParam.getPageNo();
+		if(aardto.getBindState() == BindStateEnum.NO.getValue()){
+			totalRecord = agencyVODao.countNoBAgency(paramsMap);
+			if(pageParam != null){
+				pageSize = pageParam.getPageSize();
+				pageNo = pageParam.getPageNo();
+			}
 			paramsMap.put("start", (pageNo-1)*pageSize);
 			paramsMap.put("end", pageSize);
+			records = agencyVODao.getNoBAgency(paramsMap);
+		}else{
+			totalRecord = agencyVODao.countUnbindAgency(paramsMap);
+			if(pageParam != null){
+				pageSize = pageParam.getPageSize();
+				pageNo = pageParam.getPageNo();
+			}
+			paramsMap.put("start", (pageNo-1)*pageSize);
+			paramsMap.put("end", pageSize);
+			records = agencyVODao.getUnbindAgency(paramsMap);
 		}
-		List<AgencyBackwardVO> records = agencyVODao.getUnbindAgency(paramsMap);
+		
 		for (AgencyBackwardVO agencyBackwardVO2 : records) {
 			if(agencyBackwardVO2.getCreateTime() != null){
 				agencyBackwardVO2.setCreateTimeStr(DateUtil.formatAll(agencyBackwardVO2.getCreateTime()));
@@ -416,4 +427,24 @@ public class AgencyAOImpl implements AgencyAO {
 		return new Pagination<AgencyBackwardVO>(records, totalRecord, pageNo, pageSize);
 	}
 
+	/**
+	 * @description: 封装查询参数
+	 * @param aardto
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月18日 上午11:01:45
+	 */
+	private Map<String, Object> getUnbindMapByEntity(AgencyActiveRateDTO aardto) {
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		if(aardto.getRateDiscountId() != null){
+			paramsMap.put("rateDiscountId", aardto.getRateDiscountId());
+		}
+//		if(aardto.getBindState() != null){
+//			paramsMap.put("bindState", aardto.getBindState());
+//		}
+		if(StringHelper.isNotEmpty(aardto.getAgencyName())){
+			paramsMap.put("userName", aardto.getAgencyName());
+		}
+		return paramsMap;
+	}
 }

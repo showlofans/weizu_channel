@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.activity.ao;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,9 +23,12 @@ import com.weizu.flowsys.web.activity.dao.AacJoinRdDao;
 import com.weizu.flowsys.web.activity.dao.AgencyActiveChannelDao;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.AacJoinRdPo;
+import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
 import com.weizu.flowsys.web.activity.pojo.DiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
+import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
+import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 @Service(value="agencyActiveChannelAO")
@@ -38,6 +42,8 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 	
 	@Resource
 	private AacJoinRdDao aacJoinRdDao;
+	@Resource
+	private AgencyVODaoInterface agencyVODao;
 	
 	/**
 	 * @description: 查询代理商参与的活动通道(不分页)
@@ -349,10 +355,19 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 	 */
 	@Transactional
 	@Override
-	public int batchUpdateBindState(String rateDiscountId, String bindState) {
-		long rateId = Long.parseLong(rateDiscountId);
-		int bState = Integer.parseInt(bindState);
-		return agencyActiveChannelDao.batchUpdateBindState(rateId, bState);
+	public int batchUpdateBindState(AgencyActiveRateDTO aardto) {
+//		long rateId = Long.parseLong(rateDiscountId);
+//		int bState = Integer.parseInt(bindState);
+		String agencyIdst = aardto.getAgencyIds();
+		if(StringHelper.isNotEmpty(agencyIdst)){
+			String [] agencyIdsi = agencyIdst.split(",");
+			int[] agencyIds = new int[agencyIdsi.length];
+			for (int i = 0; i < agencyIds.length; i++) {
+				agencyIds[i] = Integer.parseInt(agencyIdsi[i]);
+			}
+			return agencyActiveChannelDao.batchUpdateBindState(aardto.getRateDiscountId(), aardto.getBindState(), agencyIds);
+		}
+		return 0;
 	}
 
 	/**
@@ -380,6 +395,39 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 	@Override
 	public int add(AgencyActiveRatePo aacp) {
 		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	/**
+	 * @description: 通道批量绑定代理商 
+	 * @param aardto
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月18日 下午3:38:17
+	 */
+	@Override
+	public int batchBindAgency(AgencyActiveRateDTO aardto) {
+		String agencyIdst = aardto.getAgencyIds();
+		if(StringHelper.isNotEmpty(agencyIdst)){
+			String [] agencyIdsi = agencyIdst.split(",");
+			int[] agencyIds = new int[agencyIdsi.length];
+			String[]agencyNames = new String[agencyIdsi.length];
+			for (int i = 0; i < agencyIdsi.length; i++) {
+				agencyIds[i] = Integer.parseInt(agencyIdsi[i]);
+				agencyNames[i] = agencyVODao.get(agencyIds[i]).getUserName();
+			}
+			
+			List<AgencyActiveRateDTO> list = new LinkedList<AgencyActiveRateDTO>();
+			Long rateDiscountId = aardto.getRateDiscountId();
+			for (int i = 0; i < agencyNames.length; i++) {
+				AgencyActiveRateDTO aardtoq = new AgencyActiveRateDTO(agencyIds[i], agencyNames[i], rateDiscountId, System.currentTimeMillis(), 0, aardto.getBindAgencyId());
+				list.add(aardtoq);
+			}
+			return agencyActiveChannelDao.batch_bindList(list);
+//			AgencyBackwardPo agencyPo = new AgencyBackwardPo();
+//			agencyPo.setAgencyIds(agencyIds);
+//			List<AgencyBackwardPo> list = agencyVODao.getBatchAgency(agencyPo);
+		}
 		return 0;
 	}
 

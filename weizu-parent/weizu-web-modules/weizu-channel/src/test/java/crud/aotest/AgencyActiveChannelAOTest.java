@@ -1,6 +1,7 @@
 package crud.aotest;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -12,6 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.AgencyActiveChannelAO;
+import com.weizu.flowsys.web.activity.dao.AgencyActiveChannelDao;
 import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 
@@ -20,6 +22,8 @@ import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 public class AgencyActiveChannelAOTest {
 	@Resource
 	private AgencyActiveChannelAO agencyActiveChannelAO;
+	@Resource
+	private AgencyActiveChannelDao agencyActiveChannelDao;
 	
 //	@Test
 //	public void testList(){
@@ -52,4 +56,28 @@ public class AgencyActiveChannelAOTest {
 //			System.out.println(agencyActiveRatePo.getAgencyName());
 //		}
 //	}
+	
+	@Test
+	public void testListBindAgency(){
+		List<AgencyActiveRatePo> list = agencyActiveChannelDao.listBindAgency(12l);
+//		java.util.List.Iterator<Integer> it = list.iterator();
+//		while(it.hasNext()) {
+//		  System.out.println(it.next);
+//		}
+		System.out.println(list.size());
+		for (AgencyActiveRatePo agencyActiveRatePo : list) {
+			System.out.print(agencyActiveRatePo.getAgencyName());
+			System.out.println(agencyActiveRatePo.getAgencyId());
+		}
+		
+//		agencyActiveChannelDao
+		
+//		for (Integer m : list) {
+//			System.out.println(m);
+//		}
+//		System.out.println(list.size());
+		
+//		List<Integer> list1 = new Arr
+		
+	}
 }

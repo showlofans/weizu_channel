@@ -47,6 +47,8 @@ public class AgencyBackwardPo extends Po{
 	private String verifyCode;				//注册邀请码
 	
 	private String userApiKey;				//用户对接系统的apikey
+	@TempField
+	private int[] agencyIds;				//批量操作代理商
 	
 	public AgencyBackwardPo(Integer id, Integer rootAgencyId, String userName,
 			String userPass, String userRealName, String agencyTel,
@@ -68,7 +70,14 @@ public class AgencyBackwardPo extends Po{
 		this.createTime = createTime;
 		this.verifyCode = verifyCode;
 	}
-	
+	public int[] getAgencyIds() {
+		return agencyIds;
+	}
+
+	public void setAgencyIds(int[] agencyIds) {
+		this.agencyIds = agencyIds;
+	}
+
 	public Long getBillRateId() {
 		return billRateId;
 	}
