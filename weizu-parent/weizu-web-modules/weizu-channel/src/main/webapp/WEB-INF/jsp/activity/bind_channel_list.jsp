@@ -31,7 +31,7 @@
 <title>费率列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 下游管理 <span class="c-gray en">&gt;</span> 费率列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 下游管理 <span class="c-gray en">&gt;</span> 费率列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:onSub();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
 	<%-- <div class="text-c">
@@ -67,7 +67,7 @@
 				</c:otherwise>
 			</c:choose></sapn><br>
 			<!-- <sapn>通道折扣：云南85</sapn> -->
-			<a style="text-decoration:none" class="btn btn-success" onclick="Hui_admin_tab(this)" data-href="/flowsys/rate/bind_channel_page.do" title="" data-title="绑定通道">绑定通道</a>
+			<a style="text-decoration:none" class="btn btn-success" onclick="Hui_admin_tab(this)" data-href="/flowsys/rate/bind_channel_page.do" title="" data-title="添加费率">添加费率</a>
 		<table class="table table-border table-bordered table-bg table-hover table-sort">
 			<thead>
 				<!-- <tr class="text-c">
@@ -111,9 +111,11 @@
 						</td>
 						<td>${activePo.activeTimeStr }</td>
 						
-						<td class="td-manage"><a style="text-decoration:none" onClick="article_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
+						<td class="td-manage">
+						<%-- <a style="text-decoration:none" onClick="article_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
 						<a style="text-decoration:none" class="ml-5" onClick="article_edit('账户充值',${agency.userName },${agency.id })" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> 
-						<a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
+						<a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a> --%>
+						</td>
 						<%--  <td class="td-status"><c:forEach items="${resultMap.rateStateEnums }" var="stateEnum" varStatus="vs1">
 						<c:if test="${rate.rateState == stateEnum.value }"> ${stateEnum.desc }</c:if>
 						</c:forEach></td>  --%>
@@ -153,6 +155,9 @@
 <script src="/view/lib/bootstrap-datetimepicker.min.js"></script>
 <script src="/view/lib/bootstrap-datetimepicker.zh-CN.js"></script> -->
 <script type="text/javascript">
+function onSub(){
+	location.reload();
+}
 /*包体-添加*/
 function rate_add(title,url){
 	//alert("sd");

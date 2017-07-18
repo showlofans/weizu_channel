@@ -14,6 +14,7 @@ import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.core.util.Formatter;
 import com.weizu.flowsys.web.activity.dao.AgencyActiveChannelDao;
+import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
 
 @Repository(value="agencyActiveChannelDao")
@@ -111,11 +112,36 @@ public class AgencyActiveChannelDaoImpl extends DaoImpl<AgencyActiveRatePo, Long
 	 * @createTime:2017年7月17日 上午10:12:07
 	 */
 	@Override
-	public int batchUpdateBindState(long rateDiscountId, int bindState) {
+	public int batchUpdateBindState(long rateDiscountId, int bindState, int[] agencyIds) {
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("rateDiscountId", rateDiscountId);
 		paramsMap.put("bindState", bindState);
+		paramsMap.put("agencyIds", agencyIds);
 		return sqlSessionTemplate.update("updateBindState", paramsMap);
+	}
+
+	/**
+	 * @description: 获得所有的绑定了该折扣的代理商
+	 * @param rateDiscountId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月18日 上午9:40:27
+	 */
+	@Override
+	public List<AgencyActiveRatePo>  listBindAgency(long rateDiscountId) {
+		return sqlSessionTemplate.selectList("listBindAgency",rateDiscountId);
+	}
+
+	/**
+	 * @description: 批量绑定
+	 * @param list
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月18日 下午3:53:02
+	 */
+	@Override
+	public int batch_bindList(List<AgencyActiveRateDTO> list) {
+		return sqlSessionTemplate.insert("batch_bindList", list);
 	}
 
 }

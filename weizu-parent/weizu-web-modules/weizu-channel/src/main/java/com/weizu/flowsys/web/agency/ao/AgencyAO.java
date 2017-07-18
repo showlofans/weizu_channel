@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 
@@ -129,6 +130,6 @@ public interface AgencyAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月17日 下午3:21:21
 	 */
-	Pagination<AgencyBackwardVO> getUnbindAgency(int rootAgencyId, String rateDiscountId, PageParam pageParam);
+	Pagination<AgencyBackwardVO> getUnbindAgency(int rootAgencyId, AgencyActiveRateDTO aardto, PageParam pageParam);
 	
 }

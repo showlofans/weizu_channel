@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * @description:通道代理商绑定状态枚举
  * @projectName:crud
- * @className:PgInServiceEnum.java
+ * @className:bindStateEnum.java
  * @author:POP产品研发部 宁强
  * @createTime:2017年4月26日 下午2:33:19
  * @version 1.0
@@ -21,7 +21,11 @@ public enum BindStateEnum {
 	/**
 	 * 解绑状态
 	 */
-	UNBIND("已解绑",1);
+	UNBIND("已解绑",1),
+	/**
+	 * 未绑定
+	 */
+	NO("未绑定",2);
 	/**
 	 * 枚举名称
 	 */
@@ -47,11 +51,11 @@ public enum BindStateEnum {
 		// 获取附件类型枚举数组
 		BindStateEnum[] enumArray = BindStateEnum.values();
 
-		for (BindStateEnum pgInServiceEnum : enumArray)
+		for (BindStateEnum bindStateEnum : enumArray)
 		{
-			if(value.equals(pgInServiceEnum.getValue()))
+			if(value.equals(bindStateEnum.getValue()))
 			{
-				resultEnum = pgInServiceEnum;
+				resultEnum = bindStateEnum;
 				break;
 			}
 		}
@@ -73,15 +77,15 @@ public enum BindStateEnum {
 		// 定义枚举MAP
 		Map<String, Map<String, Object>> enumMap = new HashMap<String, Map<String, Object>>(enumArray.length);
 
-		for (BindStateEnum pgInServiceEnum : enumArray)
+		for (BindStateEnum bindStateEnum : enumArray)
 		{
-			String key = String.valueOf(getEnum(pgInServiceEnum.getValue()));
+			String key = String.valueOf(getEnum(bindStateEnum.getValue()));
 
-			Map<String, Object> pgInServiceMap = new HashMap<String, Object>(2);
-			pgInServiceMap.put("desc", pgInServiceEnum.getDesc());
-			pgInServiceMap.put("value", pgInServiceEnum.getValue());
+			Map<String, Object> bindStateMap = new HashMap<String, Object>(2);
+			bindStateMap.put("desc", bindStateEnum.getDesc());
+			bindStateMap.put("value", bindStateEnum.getValue());
 
-			enumMap.put(key, pgInServiceMap);
+			enumMap.put(key, bindStateMap);
 		}
 
 		return enumMap;
@@ -101,15 +105,41 @@ public enum BindStateEnum {
 		// 定义枚举list
 		List<Map<String, Object>> attachmentTypeMapList = new ArrayList<Map<String, Object>>(enumArray.length);
 
-		for (BindStateEnum pgInServiceEnum : enumArray)
+		for (BindStateEnum bindStateEnum : enumArray)
 		{
-			Map<String, Object> pgInServiceMap = new HashMap<String, Object>(2);
-			pgInServiceMap.put("desc", pgInServiceEnum.getDesc());
-			pgInServiceMap.put("value", pgInServiceEnum.getValue());
+			Map<String, Object> bindStateMap = new HashMap<String, Object>(2);
+			bindStateMap.put("desc", bindStateEnum.getDesc());
+			bindStateMap.put("value", bindStateEnum.getValue());
 
-			attachmentTypeMapList.add(pgInServiceMap);
+			attachmentTypeMapList.add(bindStateMap);
 		}
 
+		return attachmentTypeMapList;
+	}
+	/**
+	 * @description:将枚举转换成list，其中每个值为一个Map，包含desc和value两个key，值分别为枚举的desc和value值
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年4月26日 下午12:36:27
+	 */
+	public static List<Map<String, Object>> toBindList()
+	{
+		// 获取附件类型枚举数组
+		BindStateEnum[] enumArray = BindStateEnum.values();
+		
+		// 定义枚举list
+		List<Map<String, Object>> attachmentTypeMapList = new ArrayList<Map<String, Object>>(enumArray.length);
+		
+		for (BindStateEnum bindStateEnum : enumArray)
+		{
+			if(bindStateEnum!=BIND){
+				Map<String, Object> bindStateMap = new HashMap<String, Object>(2);
+				bindStateMap.put("desc", bindStateEnum.getDesc());
+				bindStateMap.put("value", bindStateEnum.getValue());
+				attachmentTypeMapList.add(bindStateMap);
+			}
+		}
+		
 		return attachmentTypeMapList;
 	}
 	

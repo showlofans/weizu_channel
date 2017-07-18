@@ -23,7 +23,7 @@ public class AgencyBackwardVO extends Po {
 
 	private String userRealName;
 	
-	private String userPasss;
+	private String userPass;
 
 	private String agencyTel;
 
@@ -31,8 +31,9 @@ public class AgencyBackwardVO extends Po {
 
 	private String agencyIp;
 
+	@TempField
 	private Double accountBalance; // 账户余额
-
+	@TempField
 	private Double accountCredit; // 透支额
 
 	private Long rateId;
@@ -53,7 +54,7 @@ public class AgencyBackwardVO extends Po {
 	
 	/**生成VO实体*/
 	public AgencyBackwardVO(Integer id, Integer rootAgencyId, String userName,
-			String userRealname, String userPasss, String agencyTel,
+			String userRealname, String userPass, String agencyTel,
 			String userEmail, String agencyIp, Double accountBalance,
 			Double accountCredit, Long createTime,
 			String verifyCode) {
@@ -62,7 +63,7 @@ public class AgencyBackwardVO extends Po {
 		this.rootAgencyId = rootAgencyId;
 		this.userName = userName;
 		this.userRealName = userRealname;
-		this.userPasss = userPasss;
+		this.userPass = userPass;
 		this.agencyTel = agencyTel;
 		this.userEmail = userEmail;
 		this.agencyIp = agencyIp;
@@ -123,12 +124,12 @@ public class AgencyBackwardVO extends Po {
 		super();
 	}
 
-	public String getUserPasss() {
-		return userPasss;
+	public String getUserPass() {
+		return userPass;
 	}
 
-	public void setUserPasss(String userPasss) {
-		this.userPasss = userPasss;
+	public void setUserPasss(String userPass) {
+		this.userPass = userPass;
 	}
 
 	public String getVerifyCode() {

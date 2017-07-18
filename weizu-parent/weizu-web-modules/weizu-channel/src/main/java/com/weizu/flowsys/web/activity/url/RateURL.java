@@ -116,17 +116,17 @@ public class RateURL extends BaseURL {
 	
 	/**
 	 * 通道绑定代理商页面
-	 * <br>/flowsys/rate/bind_agency_page
+	 * <br>/flowsys/rate/bind_agency_page.do
 	 */
 	public static final String BIND_AGENCY_PAGE = "/bind_agency_page" + DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 通道批量绑定代理商页面
-	 * <br>/flowsys/rate/batch_bind_agency_page
+	 * <br>/flowsys/rate/batch_bind_agency_page.do
 	 */
 	public static final String BATCH_BIND_AGENCY_PAGE = "/batch_bind_agency_page" + DYNAMIC_WEB_SUFFIX;
 	/**
-	 * 通道批量绑定代理商页面
-	 * <br>/flowsys/rate/bind_agency
+	 * 通道批量绑定代理商
+	 * <br>/flowsys/rate/batch_bind_agency.do
 	 */
 	public static final String BATCH_BIND_AGENCY = "/batch_bind_agency" + DYNAMIC_WEB_SUFFIX;
 	

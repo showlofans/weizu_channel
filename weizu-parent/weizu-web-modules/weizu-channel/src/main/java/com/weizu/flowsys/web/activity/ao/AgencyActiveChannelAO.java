@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 
@@ -98,7 +99,7 @@ public interface AgencyActiveChannelAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月17日 上午10:08:57
 	 */
-	int batchUpdateBindState(String rateDiscountId, String bindState);
+	int batchUpdateBindState(AgencyActiveRateDTO aardto);
 	
 	/**
 	 * @description: 更新绑定的折扣
@@ -118,5 +119,14 @@ public interface AgencyActiveChannelAO {
 	 * @createTime:2017年7月15日 上午11:52:53
 	 */
 	int add(AgencyActiveRatePo aacp);
+	
+	/**
+	 * @description: 通道批量绑定代理商 
+	 * @param aardto
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月18日 下午3:37:46
+	 */
+	int batchBindAgency(AgencyActiveRateDTO aardto);
 	
 }

@@ -27,7 +27,7 @@ public class AgencyActiveRatePo extends Po {
 
     private Long activeTime;
     
-    private Integer bindState;					//绑定状态：0-已绑定，1-未绑定
+    private Integer bindState;					//绑定状态：0-已绑定，1-已解绑，2-未绑定
     
     private Integer bindAgencyId;				//绑定人 
     

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.weizu.flowsys.core.dao.Dao;
+import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
 
 public interface AgencyActiveChannelDao extends Dao<AgencyActiveRatePo, Long> {
@@ -73,8 +74,24 @@ public interface AgencyActiveChannelDao extends Dao<AgencyActiveRatePo, Long> {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月17日 上午10:08:57
 	 */
-	int batchUpdateBindState(long rateDiscountId, int bindState);
+	int batchUpdateBindState(long rateDiscountId, int bindState, int[] agencyIds);
 	
+	/**
+	 * @description: 获得所有的绑定了该折扣的代理商
+	 * @param rateDiscountId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月18日 上午9:39:35
+	 */
+	List<AgencyActiveRatePo> listBindAgency(long rateDiscountId);
 	
+	/**
+	 * @description: 批量绑定
+	 * @param list
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月18日 下午3:52:30
+	 */
+	int batch_bindList(List<AgencyActiveRateDTO> list);
 	
 }

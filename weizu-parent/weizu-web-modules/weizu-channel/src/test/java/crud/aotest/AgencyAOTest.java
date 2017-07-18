@@ -12,7 +12,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
 import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
@@ -54,12 +56,25 @@ public class AgencyAOTest {
 //		 int res = agencyAO.updatePass(4, "123");
 //		 System.out.println(res);
 //	 }
+	/**
+	 * @description: 测试查询未绑定和已解绑的代理商列表
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月18日 上午11:51:52
+	 */
+	@Test
+	public void testGetUnbindAgency(){
+//		List<AgencyBackwardVO> list = agencyVODao.getUnbindAgency( 1);
+		AgencyActiveRateDTO aardto = new AgencyActiveRateDTO();
+//		aardto.setAgencyName("w");
+		aardto.setBindState(BindStateEnum.UNBIND.getValue());
+		aardto.setRateDiscountId(22l);
+		Pagination<AgencyBackwardVO> pagination = agencyAO.getUnbindAgency(4, aardto, null);
+		System.out.println(pagination.getRecords().size());
+		System.out.println(pagination.getTotalRecord());
+	}
 //	@Test
-//	public void testGetUnbindAgency(){
-////		List<AgencyBackwardVO> list = agencyVODao.getUnbindAgency( 1);
-//		Pagination<AgencyBackwardVO> pagination = agencyAO.getUnbindAgency(4, "22", null);
-//		System.out.println(pagination.getRecords().size());
-//		System.out.println(pagination.getTotalRecord());
+//	public void testBindStateEnum(){
+//		System.out.println(BindStateEnum.toBindList().size());
 //	}
 
 
