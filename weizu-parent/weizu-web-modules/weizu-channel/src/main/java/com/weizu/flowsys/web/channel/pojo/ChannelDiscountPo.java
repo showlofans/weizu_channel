@@ -42,7 +42,7 @@ public class ChannelDiscountPo extends Po {
     
     @TempField
     private Integer belongAgencyId;			//数据库查询字段
-    @TempField
+    
     private Integer billType;				//数据库返回字段
     
     @TempField

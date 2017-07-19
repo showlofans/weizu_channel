@@ -16,6 +16,8 @@
     <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
     <result column="active_time" property="activeTime" jdbcType="BIGINT" />
     <result column="rate_discount_id" property="rateDiscountId" jdbcType="BIGINT" />
+    <result column="rBill" property="billTypeRate"/>
+    <result column="cBill" property="billTypeChannel"/>
     <result column="channel_discount" property="channelDiscount"/>
     <!-- <result column="active_time" property="activeTime" jdbcType="BIGINT" /> -->
     <collection property="rateList" resultMap="com.weizu.flowsys.web.activity.dao.RateDiscountDao.BaseResultMap"></collection>
@@ -41,8 +43,8 @@
     rate.id,channel.operator_type,channel.scope_city_code,rate.active_discount,active.bind_agency_id,active.bind_state
   </sql>
   <sql id="Base_Column_List" >
-    active.id, agency_id, agency_name, active_time,channel.channel_name,
-    rate.id,channel.operator_type,channel.scope_city_code,active_discount,active_id,bind_agency_id,bind_state,channel_discount,rate.bill_type
+    active.id, agency_id, agency_name, active_time,channel.channel_name,channel.bill_type cBill,
+    rate.id,channel.operator_type,channel.scope_city_code,active_discount,active_id,bind_agency_id,bind_state,channel_discount,rate.bill_type rBill
   </sql>
   
   <!-- 查询给三级代理商的最新折扣 -->

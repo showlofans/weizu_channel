@@ -6,6 +6,7 @@ import java.util.Map;
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
+import com.weizu.flowsys.web.activity.pojo.RateDiscountShowDTO;
 
 public interface RateDiscountAO {
 	/**
@@ -63,4 +64,13 @@ public interface RateDiscountAO {
 	 * @createTime:2017年7月17日 下午1:58:08
 	 */
 	String editBindRate(RateDiscountPo ratePo);
+	
+	/**
+	 * @description: 获得首页折扣信息
+	 * @param params
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月19日 下午12:05:15
+	 */
+	Map<String,Object> getShowRate (Integer agencyId);
 }

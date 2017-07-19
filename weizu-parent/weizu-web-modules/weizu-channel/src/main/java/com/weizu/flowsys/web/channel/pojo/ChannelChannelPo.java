@@ -41,9 +41,10 @@ public class ChannelChannelPo extends Po {
 
     private Integer channelUseState;
 
-    private Integer billType;
-
     private Long lastAccess;
+    
+    @TempField
+    private Integer billType;
     
     @TempField
     private Integer operatorType;								//运营商类型（查询参数）
@@ -71,7 +72,15 @@ public class ChannelChannelPo extends Po {
     @TempField
     private String scopeCityCode;				//省份编码（查询参数）
     
-    public Map<String, Object> getScopeCityCodes() {
+    public Integer getBillType() {
+		return billType;
+	}
+
+	public void setBillType(Integer billType) {
+		this.billType = billType;
+	}
+
+	public Map<String, Object> getScopeCityCodes() {
 		return scopeCityCodes;
 	}
 
@@ -213,14 +222,6 @@ public class ChannelChannelPo extends Po {
 
     public void setChannelUseState(Integer channelUseState) {
         this.channelUseState = channelUseState;
-    }
-
-    public Integer getBillType() {
-        return billType;
-    }
-
-    public void setBillType(Integer billType) {
-        this.billType = billType;
     }
 
     public Long getLastAccess() {

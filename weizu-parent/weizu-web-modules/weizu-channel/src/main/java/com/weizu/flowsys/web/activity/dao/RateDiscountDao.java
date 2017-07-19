@@ -64,6 +64,15 @@ public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	Long countDiscountList(Map<String, Object> params);
 	
 	/**
+	 * @description: 获得首页折扣信息
+	 * @param params
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月19日 下午12:05:15
+	 */
+	List<RateDiscountPo> getShowRate (Map<String, Object> params);
+	
+	/**
 	 * @description: 获得所有费率的地区
 	 * @param rateDiscountPo
 	 * @return

@@ -172,6 +172,7 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 				String dis2Str = discount2.append("}").toString();
 	//			String dis2 = dis2Str.substring(0,dis2Str.lastIndexOf(","));
 				channelChannelPo.setDiscountPo(new DiscountPo(dis0Str, dis1Str, dis2Str));
+				channelChannelPo.setBillType(list.get(0).getBillType());
 			}
 		}
 	}

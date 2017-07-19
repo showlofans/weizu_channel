@@ -402,6 +402,7 @@ public class RateController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("pagination", pagination);
 		resultMap.put("bindStateEnums", BindStateEnum.toList());
+		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		
 		if(activePo.getAgencyId() != null)
 		{
@@ -547,15 +548,10 @@ public class RateController {
 	@ResponseBody
 	public void batchUpdateBindState(AgencyActiveRateDTO aardto, HttpServletResponse response)
 	{
-		int updateRes = agencyActiveChannelAO.batchUpdateBindState(aardto);
 		try {
-			if(updateRes > 0)
-			{
-				response.getWriter().print("success");
-			}else{
-				response.getWriter().print("error");
-			}
-		} catch (IOException e) {
+			agencyActiveChannelAO.batchUpdateBindState(aardto);
+			response.getWriter().print("success");
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -612,11 +608,10 @@ public class RateController {
 		ChannelDiscountPo cdp = new ChannelDiscountPo();
 		cdp.setChannelId(Long.parseLong(channelId));
 		resultMap.put("channelId", channelId);
-		ChannelChannelPo channel = channelChannelDao.get(Long.parseLong(channelId));
-		resultMap.put("channelBillType", channel.getBillType());
 		List<ChannelDiscountPo> channelList = channelDiscountAO.getDiscountList(cdp);
 		
 		if(	channelList!= null && channelList.size() > 0){
+			resultMap.put("channelBillType", channelList.get(0).getBillType());
 			String scopeCityCodeSim = "100";
 			List<String> scopeList = new LinkedList<String>();
 			//初始化地区列表
@@ -949,6 +944,22 @@ public class RateController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * @description: 欢迎界面 /flowsys/rate/welcome.do
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月19日 下午2:24:34
+	 */
+	@RequestMapping(value=RateURL.WELCOME)
+	public ModelAndView welcome(HttpServletRequest request){
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		Map<String,Object> map = rateDiscountAO.getShowRate(agencyVO.getId());
+		resultMap.put("map", map);
+		resultMap.put("billTypeEnums", BillTypeEnum.toList());
+		return new ModelAndView("/welcome", "resultMap", resultMap);
 	}
 	
 }

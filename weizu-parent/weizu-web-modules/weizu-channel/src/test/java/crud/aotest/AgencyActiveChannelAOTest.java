@@ -31,6 +31,10 @@ public class AgencyActiveChannelAOTest {
 //		activePo.setAgencyName("456");
 //		
 //		List<AgencyActiveRatePo> list = agencyActiveChannelAO.listActive(new PageParam(1, 10), activePo).getRecords();
+//		for (AgencyActiveRatePo agencyActiveRatePo : list) {
+//			System.out.println(agencyActiveRatePo.getBillTypeRate());
+//			System.out.println(agencyActiveRatePo.getBillTypeChannel());
+//		}
 //		System.out.println(list.size());
 //	}
 	/*@Test
@@ -57,27 +61,31 @@ public class AgencyActiveChannelAOTest {
 //		}
 //	}
 	
-	@Test
-	public void testListBindAgency(){
-		List<AgencyActiveRatePo> list = agencyActiveChannelDao.listBindAgency(12l);
-//		java.util.List.Iterator<Integer> it = list.iterator();
-//		while(it.hasNext()) {
-//		  System.out.println(it.next);
-//		}
-		System.out.println(list.size());
-		for (AgencyActiveRatePo agencyActiveRatePo : list) {
-			System.out.print(agencyActiveRatePo.getAgencyName());
-			System.out.println(agencyActiveRatePo.getAgencyId());
-		}
-		
-//		agencyActiveChannelDao
-		
-//		for (Integer m : list) {
-//			System.out.println(m);
-//		}
+//	@Test
+//	public void testListBindAgency(){
+//		List<AgencyActiveRatePo> list = agencyActiveChannelDao.listBindAgency(12l);
+////		java.util.List.Iterator<Integer> it = list.iterator();
+////		while(it.hasNext()) {
+////		  System.out.println(it.next);
+////		}
 //		System.out.println(list.size());
-		
-//		List<Integer> list1 = new Arr
-		
-	}
+//		for (AgencyActiveRatePo agencyActiveRatePo : list) {
+//			System.out.print(agencyActiveRatePo.getAgencyName());
+//			System.out.println(agencyActiveRatePo.getAgencyId());
+//		}
+//		
+////		agencyActiveChannelDao
+//		
+////		for (Integer m : list) {
+////			System.out.println(m);
+////		}
+////		System.out.println(list.size());
+//		
+////		List<Integer> list1 = new Arr
+//		
+//	}
+	
+//	public void batchUpdateBindState(){
+//		agencyActiveChannelDao.batchUpdateBindState(41l, 1, agencyIds);
+//	}
 }

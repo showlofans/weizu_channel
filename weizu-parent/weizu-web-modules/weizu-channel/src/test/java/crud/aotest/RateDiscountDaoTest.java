@@ -10,13 +10,10 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.aiyi.base.pojo.PageParam;
-import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.AgencyActiveChannelAO;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
-import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
-import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
+import com.weizu.flowsys.web.activity.pojo.RateDiscountShowDTO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -72,5 +69,20 @@ public class RateDiscountDaoTest {
 //		String t = rateDiscountAO.addRateDiscount(ratePo);//添加一定要有billType，通道折扣id和费率折扣
 //		System.out.println(t);
 //		
+//	}
+	
+//	@Test
+//	public void testGetShowRate(){
+//		Map<String,Object>  dtoMap = rateDiscountAO.getShowRate(27);
+//		RateDiscountShowDTO dto = (RateDiscountShowDTO) dtoMap.get("billDTO");
+//		RateDiscountShowDTO dto1 = (RateDiscountShowDTO) dtoMap.get("noDTO");
+//		System.out.println(dto.getBillType());;
+//		System.out.println(dto.getDiscountPo().getDiscount0());;
+//		System.out.println(dto.getDiscountPo().getDiscount1());;
+//		System.out.println(dto.getDiscountPo().getDiscount2());;
+//		System.out.println(dto1.getBillType());;
+//		System.out.println(dto1.getDiscountPo().getDiscount0());;
+//		System.out.println(dto1.getDiscountPo().getDiscount1());;
+//		System.out.println(dto1.getDiscountPo().getDiscount2());;
 //	}
 }

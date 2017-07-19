@@ -42,16 +42,16 @@
   
   
   <sql id="base_list">
-  	discount.id,channel_id, service_type, scope_city_code, channel_discount,discount.channel_name,operator_type, discount_type,channel.bill_type
+  	discount.id,channel_id, service_type, scope_city_code, channel_discount,discount.channel_name,operator_type, discount_type,discount.bill_type
   </sql>
   <!-- 通道折扣批量添加 -->
   <insert id="discount_addList" useGeneratedKeys="true" parameterType="java.util.List">
   	insert into <include refid="t_cDiscount"></include>
-  	(channel_id, service_type, scope_city_code, channel_discount,discount.channel_name,operator_type, discount_type)
+  	(channel_id, service_type, scope_city_code, channel_discount,channel_name,operator_type, discount_type,bill_type)
   	values
   	<foreach collection="list" separator="," item="cDiscount" index="index">
   		(#{cDiscount.channelId},#{cDiscount.serviceType},#{cDiscount.scopeCityCode},#{cDiscount.channelDiscount},
-  		#{cDiscount.channelName},#{cDiscount.operatorType},#{cDiscount.discountType})
+  		#{cDiscount.channelName},#{cDiscount.operatorType},#{cDiscount.discountType},#{cDiscount.billType})
   	</foreach>
   </insert>
   <!-- 查看折扣列表 -->

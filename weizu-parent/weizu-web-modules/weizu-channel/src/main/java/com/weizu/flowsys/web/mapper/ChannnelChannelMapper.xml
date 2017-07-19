@@ -18,15 +18,14 @@
     <result column="channel_balance" property="channelBalance" jdbcType="DOUBLE" />
     <result column="channel_state" property="channelState" jdbcType="INTEGER" />
     <result column="channel_use_state" property="channelUseState" jdbcType="INTEGER" />
-    <result column="bill_type" property="billType" jdbcType="INTEGER" />
     <result column="last_access" property="lastAccess" jdbcType="BIGINT" />
     <result column="belong_agency_id" property="belongAgencyId" jdbcType="INTEGER" />
     <collection property="discountList" resultMap="com.weizu.flowsys.web.channel.dao.ChannelDiscountDao.BaseResultMap"></collection>
   </resultMap>
   <sql id="Base_Column_List" >
     channel.id, channel.channel_name, pg_size, ep_id, channel_total_use, channel_total_amount, channel_total_profit, 
-    channel_balance, channel_state, channel_use_state, bill_type, last_access,belong_agency_id,
-    discount.id,channel_id,scope_city_code,channel_discount,operator_type,service_type
+    channel_balance, channel_state, channel_use_state, last_access,belong_agency_id,
+    discount.id,channel_id,scope_city_code,channel_discount,operator_type,service_type,discount.bill_type
   </sql>
   
   <!-- <resultMap id="SimpleChannelMap" type="com.weizu.flowsys.web.channel.pojo.ChannelChannelPo" >
