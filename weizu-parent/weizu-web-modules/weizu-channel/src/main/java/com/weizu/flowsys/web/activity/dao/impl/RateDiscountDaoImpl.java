@@ -128,6 +128,18 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 		return sqlSessionTemplate.selectList("getListByCDiscountId",paramsMap);
 	}
 
+	/**
+	 * @description: 获得首页折扣信息
+	 * @param params
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月19日 下午12:05:52
+	 */
+	@Override
+	public List<RateDiscountPo> getShowRate(Map<String, Object> params) {
+		return sqlSessionTemplate.selectList("getShowRate", params);
+	}
+
 	
 
 }

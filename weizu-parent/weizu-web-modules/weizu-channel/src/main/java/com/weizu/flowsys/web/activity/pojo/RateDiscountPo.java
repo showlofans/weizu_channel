@@ -30,6 +30,8 @@ public class RateDiscountPo extends Po {
     private Integer serviceType;			//流量类型
     @TempField
     private String scopeCityCode;			//地区编码
+    @TempField
+    private DiscountPo discountPo;			//折扣
     
     @TempField
     private Long channelId;
@@ -49,6 +51,14 @@ public class RateDiscountPo extends Po {
 		this.activeId = activeId;
 		this.channelDiscountId = channelDiscountId;
 		this.billType = billType;
+	}
+
+	public DiscountPo getDiscountPo() {
+		return discountPo;
+	}
+
+	public void setDiscountPo(DiscountPo discountPo) {
+		this.discountPo = discountPo;
 	}
 
 	public Integer getBillType() {

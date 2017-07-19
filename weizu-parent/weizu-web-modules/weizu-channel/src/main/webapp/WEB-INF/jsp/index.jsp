@@ -62,7 +62,7 @@
 							<li><a href="/flowsys/agency/logout.do">退出</a></li>
 					</ul>
 				</li>
-					<!-- <li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger">2</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> </li> -->
+					<li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger">2</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> </li>
 					<li id="Hui-skin" class="dropDown right dropDown_hover"> <a href="javascript:;" class="dropDown_A" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
 							<li><a href="javascript:;" data-val="default" title="默认（黑色）">默认（黑色）</a></li>
@@ -90,7 +90,7 @@
 					<li><a data-href="/flowsys/channel/channel_list.do" data-title="通道列表" href="javascript:void(0)">通道列表</a></li>
 					<!-- <li><a data-href="/flowsys/rate/bind_channel_list.do?bindTag=bAgency" data-title="活动通道" href="javascript:void(0)">活动通道</a></li> -->
 					<c:if test="${power== 'no'}">
-						<li><a data-href="/flowsys/platform/platform_list.do" data-title="对接平台管理" href="javascript:void(0)">对接平台管理</a></li>
+						<li><a data-href="/flowsys/platform/platform_list.do" data-title="平台管理" href="javascript:void(0)">平台管理</a></li>
 						<li><a data-href="/flowsys/productCode/product_code_list.do" data-title="产品编码" href="javascript:void(0)">产品编码</a></li>
 					</c:if>
 			</ul>
@@ -100,9 +100,10 @@
 			<dt><i class="Hui-iconfont">&#xe674;</i> 代理商管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
-					<li><a data-href="/flowsys/rate/rate_add_page.do" data-title="费率添加" href="javascript:void(0)">费率添加</a></li>
-					<li><a data-href="/flowsys/rate/rate_list.do" data-title="费率列表" href="javascript:void(0)">费率列表</a></li>
-					<li><a data-href="/flowsys/agency/child_agency_list.do" data-title="代理商列表" href="javascript:void(0)">代理商列表</a></li>
+					<!-- <li><a data-href="/flowsys/rate/rate_add_page.do" data-title="费率添加" href="javascript:void(0)">费率添加</a></li>
+					<li><a data-href="/flowsys/rate/rate_list.do" data-title="费率列表" href="javascript:void(0)">费率列表</a></li> -->
+					<li><a data-href="/flowsys/agency/child_agency_list.do" data-title="认证用户" href="javascript:void(0)">认证用户</a></li>
+					<li><a data-href="/flowsys/agency/child_agency_list.do" data-title="代理商" href="javascript:void(0)">代理商</a></li>
 					<!-- <li><a data-href="/flowsys/agency/get_tel_location.do" data-title="号码归属地查询" href="javascript:void(0)">号码归属地查询</a></li> -->
 			</ul>
 		</dd>
@@ -112,6 +113,13 @@
 			<dd>
 				<ul>
 					<li><a data-href="/flowsys/chargePg/purchase_list.do" data-title="订单列表" href="javascript:void(0)">订单列表</a></li>
+			</ul>
+		</dd>
+	</dl>
+		<dl id="menu-comments">
+			<dt><i class="Hui-iconfont">&#xe687;</i> 在线充值<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
 					<li><a data-href="/flowsys/chargePg/pg_charge_page.do" title="/flowsys/chargePg/pg_charge_page.do" data-title="流量充值" href="javascript:;">流量充值</a></li>
 			</ul>
 		</dd>
@@ -129,7 +137,7 @@
 		<dd>
 			<ul>
 				<!-- <li><a data-href="/flowsys/account/open_company_account_page.do" data-title="认证信息" href="javascript:void(0)">认证信息</a></li> -->
-				<c:if test="${chargeAccount1 == null && companyAccount == 'yes' }">
+				<c:if test="${chargeAccount1 == null && (companyAccount == 'yes' || power == 'no' ) }">
 					<li><a data-href="/flowsys/account/open_company_account_page.do" data-title="开通对公账号" href="javascript:void(0)">开通对公账号</a></li>
 				</c:if>
 				<li><a data-href="/flowsys/account/consume_list.do" data-title="消费记录" href="javascript:void(0)">消费记录</a></li>
@@ -196,7 +204,7 @@
 		<div class="Hui-tabNav-wp">
 			<ul id="min_title_list" class="acrossTab cl">
 				<li class="active">
-					<span title="我的桌面" data-href="/view/welcome.html">我的桌面</span>
+					<span title="我的桌面" data-href="/flowsys/rate/welcome.do">我的桌面</span>
 					<em></em></li>
 		</ul>
 	</div>
@@ -205,7 +213,7 @@
 	<div id="iframe_box" class="Hui-article">
 		<div class="show_iframe">
 			<div style="display:none" class="loading"></div>
-			<iframe scrolling="yes" frameborder="0" src="/view/welcome.html"></iframe>
+			<iframe scrolling="yes" frameborder="0" src="/flowsys/rate/welcome.do"></iframe>
 	</div>
 </div>
 </section>

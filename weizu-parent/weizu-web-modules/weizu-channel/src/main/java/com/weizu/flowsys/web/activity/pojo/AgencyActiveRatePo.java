@@ -69,6 +69,8 @@ public class AgencyActiveRatePo extends Po {
     
     @TempField
     private Integer billTypeRate;				//费率折扣类型
+    @TempField
+    private Integer billTypeChannel;				//通道折扣类型
     
 //    @TempField
 //    private Long rateId;						//查询参数：费率折扣id
@@ -83,6 +85,14 @@ public class AgencyActiveRatePo extends Po {
     
 	public List<RateDiscountPo> getRateList() {
 		return rateList;
+	}
+
+	public Integer getBillTypeChannel() {
+		return billTypeChannel;
+	}
+
+	public void setBillTypeChannel(Integer billTypeChannel) {
+		this.billTypeChannel = billTypeChannel;
 	}
 
 	public Integer getBillTypeRate() {

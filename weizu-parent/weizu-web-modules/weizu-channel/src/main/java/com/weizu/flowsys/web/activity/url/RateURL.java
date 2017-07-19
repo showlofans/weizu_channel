@@ -129,5 +129,10 @@ public class RateURL extends BaseURL {
 	 * <br>/flowsys/rate/batch_bind_agency.do
 	 */
 	public static final String BATCH_BIND_AGENCY = "/batch_bind_agency" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 欢迎界面
+	 * <br>/flowsys/rate/welcome.do
+	 */
+	public static final String WELCOME = "/welcome" + DYNAMIC_WEB_SUFFIX;
 	
 }

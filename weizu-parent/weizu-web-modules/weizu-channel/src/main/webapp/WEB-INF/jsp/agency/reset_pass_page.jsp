@@ -15,7 +15,7 @@
 <body>
 	<form action="" method="" class="form form-horizontal" id="form-article-add">
 		<!-- 不能修改要原样保留的数据 -->
-		<input type="hidden" value="${loginContext.userPasss }" id="userPass">
+		<input type="hidden" value="${loginContext.userPass }" id="userPass">
 		<%-- <input type="hidden" value="${resultMap.agencyPo.rootAgencyId }" name="rootAgencyId"> --%>
 		
 		<div class="row cl">

@@ -261,13 +261,13 @@
 						</c:choose>
 						
 						
-						<a style="text-decoration:none" onClick="article_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
+						<%-- <a style="text-decoration:none" onClick="article_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
 						<a style="text-decoration:none" class="ml-5" onClick="article_edit('账户充值',${agency.userName },${agency.id })" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> 
-						<a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+						<a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a> --%>
 						</td>
-						 <td class="td-status"><c:forEach items="${resultMap.rateStateEnums }" var="stateEnum" varStatus="vs1">
+						 <%-- <td class="td-status"><c:forEach items="${resultMap.rateStateEnums }" var="stateEnum" varStatus="vs1">
 						<c:if test="${rate.rateState == stateEnum.value }"> ${stateEnum.desc }</c:if>
-						</c:forEach></td> 
+						</c:forEach></td> --%> 
 					<!-- 	<td class="td-status"><span class="label label-success radius">已发布</span></td> -->
 						
 					</tr>
@@ -487,11 +487,12 @@ function editRate(url,title){
 					        }
 					    });
 						//location.reload();
-					}else if(data == "exist"){
+					}
+					/* else if(data == "exist"){
 						layer.msg('该折扣已存在，所以更新绑定失败!',{icon:1,time:1000});
 					} else{
 						layer.msg('或许没有绑定代理商，所以更新绑定失败!',{icon:1,time:1000});
-					}
+					} */
 				},
 				error:function(data) {
 					console.log(data.msg);

@@ -67,7 +67,7 @@
 				</c:otherwise>
 			</c:choose></sapn><br>
 			<!-- <sapn>通道折扣：云南85</sapn> -->
-			<a style="text-decoration:none" class="btn btn-success" onclick="Hui_admin_tab(this)" data-href="/flowsys/rate/bind_channel_page.do" title="" data-title="添加费率">添加费率</a>
+			<a style="text-decoration:none" class="btn btn-success" onclick="Hui_admin_tab(this)" data-href="/flowsys/rate/bind_channel_page.do" title="" data-title="添加通道">添加通道</a>
 		<table class="table table-border table-bordered table-bg table-hover table-sort">
 			<thead>
 				<!-- <tr class="text-c">
@@ -84,6 +84,7 @@
 					<th>移动折率</th>
 					<th>联通折率</th>
 					<th>电信折率</th>
+					<th>费率/通道类型</th>
 					<th>绑定状态</th>
 					<th>添加时间</th>
 					<th>操作</th>
@@ -103,11 +104,27 @@
 						<td  class="text-l">${activePo.discountPo.discount0 }</td>
 						 <td class="text-l">${activePo.discountPo.discount1 }</td>
 						<td class="text-l">${activePo.discountPo.discount2 }</td>
+						<td class="text-l">
+							<c:choose>
+								<c:when test="${activePo.billTypeRate == activePo.billTypeChannel}">
+									<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+										<c:if test="${activePo.billTypeRate == billTypeEnum.value }"> ${billTypeEnum.desc }</c:if>
+									</c:forEach>
+								</c:when>
+								<c:otherwise>
+									<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+										<c:if test="${activePo.billTypeRate == billTypeEnum.value }"> ${billTypeEnum.desc }</c:if>
+									</c:forEach>/
+									<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+										<c:if test="${activePo.billTypeChannel == billTypeEnum.value }"> ${billTypeEnum.desc }</c:if>
+									</c:forEach>
+								</c:otherwise>
+							</c:choose>
+						</td>
 						
 						<td><c:forEach items="${resultMap.bindStateEnums }" var="bindStateEnum" varStatus="vs1">
 							<c:if test="${activePo.bindState == bindStateEnum.value }"> ${bindStateEnum.desc }</c:if>
 							</c:forEach>
-							
 						</td>
 						<td>${activePo.activeTimeStr }</td>
 						

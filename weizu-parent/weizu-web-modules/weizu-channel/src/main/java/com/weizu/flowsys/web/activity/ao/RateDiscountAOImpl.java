@@ -1,5 +1,6 @@
 package com.weizu.flowsys.web.activity.ao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,13 +12,17 @@ import org.springframework.stereotype.Service;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
+import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
+import com.weizu.flowsys.web.activity.pojo.DiscountPo;
 import com.weizu.flowsys.web.activity.pojo.OperatorDiscount;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
+import com.weizu.flowsys.web.activity.pojo.RateDiscountShowDTO;
 import com.weizu.flowsys.web.activity.pojo.ScopeDiscount;
+import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.http.weizu.GetBalanceParams;
 
@@ -264,5 +269,85 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		}
 		
 	}
+
+	/**
+	 * @description: 获得首页折扣信息
+	 * @param agencyId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月19日 下午12:08:07
+	 */
+	@Override
+	public Map<String,Object> getShowRate(Integer agencyId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("agencyId", agencyId);
+		List<RateDiscountPo> rateList = rateDiscountDao.getShowRate(params);
+		return initRateList(rateList);
+	}
+
+	private Map<String,Object> initRateList(List<RateDiscountPo> rateList) {
+//		List<RateDiscountShowDTO> dtoList = new ArrayList<RateDiscountShowDTO>();
+		Map<String,Object> dtoMap = new HashMap<String, Object>();
+		if(rateList != null && rateList.size()>0){
+//			DiscountPo dpo = null;
+			StringBuffer discount0 = new StringBuffer("{");
+			StringBuffer discount1 = new StringBuffer("{");
+			StringBuffer discount2 = new StringBuffer("{");
+			StringBuffer discount10 = new StringBuffer("{");//不带票
+			StringBuffer discount11 = new StringBuffer("{");
+			StringBuffer discount12 = new StringBuffer("{");
+			int tagBill = 0;		//有带票的折扣
+			int tag = 0;			//不带票的折扣标志
+			for (RateDiscountPo rateDiscountPo : rateList) {
+				String code = rateDiscountPo.getScopeCityCode();
+				String ScopeCityName = ScopeCityEnum.getEnum(code).getDesc();	//城市名
+				int operatorType = rateDiscountPo.getOperatorType();
+				int billTypeRate = rateDiscountPo.getBillType();
+				if(billTypeRate == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()){
+					if(operatorType == OperatorTypeEnum.MOBILE.getValue())
+					{
+						discount10.append("\""+ScopeCityName+"\":\""+rateDiscountPo.getActiveDiscount()+"\",");
+					}else if(operatorType == OperatorTypeEnum.TELECOME.getValue())
+					{
+						discount12.append("\""+ScopeCityName+"\":\""+rateDiscountPo.getActiveDiscount()+"\",");
+					}else//联通
+					{
+						discount11.append("\""+ScopeCityName+"\":\""+rateDiscountPo.getActiveDiscount()+"\",");
+					}
+					tag = 1;
+				}else{
+					if(operatorType == OperatorTypeEnum.MOBILE.getValue())
+					{
+						discount0.append("\""+ScopeCityName+"\":\""+rateDiscountPo.getActiveDiscount()+"\",");
+					}else if(operatorType == OperatorTypeEnum.TELECOME.getValue())
+					{
+						discount2.append("\""+ScopeCityName+"\":\""+rateDiscountPo.getActiveDiscount()+"\",");
+					}else//联通
+					{
+						discount1.append("\""+ScopeCityName+"\":\""+rateDiscountPo.getActiveDiscount()+"\",");
+					}
+					tagBill = 1;
+				}
+			}
+			String dis0Str = discount0.append("}").toString();
+			String dis1Str = discount1.append("}").toString();
+			String dis2Str = discount2.append("}").toString();
+			String dis10Str = discount10.append("}").toString();
+			String dis11Str = discount11.append("}").toString();
+			String dis12Str = discount12.append("}").toString();
+			DiscountPo dpo = new DiscountPo(dis0Str, dis1Str, dis2Str);
+			DiscountPo dpo1 = new DiscountPo(dis10Str, dis11Str, dis12Str);
+			if(tagBill == 1){
+				dtoMap.put("billDTO", new RateDiscountShowDTO(dpo, 0));
+			}
+			if(tag == 1){
+				dtoMap.put("noDTO", new RateDiscountShowDTO(dpo1, 1));
+			}
+			
+		}
+		return dtoMap;
+	}
+	
+	
 
 }
