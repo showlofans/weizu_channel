@@ -1,5 +1,6 @@
 package com.weizu.flowsys.web.agency.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,6 +23,7 @@ import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.web.activity.url.RateURL;
 import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.ao.ChargeRecordAO;
@@ -49,6 +52,11 @@ public class AccountController {
 	private ChargeAccountAo chargeAccountAO;
 	@Resource
 	private AgencyAO agencyAO;
+	
+	//属性值，单文件的情况，对应的是upload3.js中的name属性，name属性值为file，此时struts就可以获取到file的文件对象，不需要实例化，struts框架会自动注入对象值，打开调试窗口，看一下就明白了
+	private File file;
+	//单文件上传的文件名，spring上传特性，文件名格式为name属性+FileName
+	private String fileFileName;
 	
 	/**
 	 * @description:跳转到账户充值界面
@@ -252,6 +260,49 @@ public class AccountController {
 		return new ModelAndView("/account/open_company_account_page");
 	}
 	
+	@RequestMapping(value=AccountURL.UPLOAD_IMG_FILE)
+	//单文件上传后台代码
+	public void ajaxAttachUpload(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request, ModelMap model) {
+		String fileName = file.getOriginalFilename();   
+		String path =  "d:\\test\\"+fileName;
+	        try {
+	        	File targetFile = new File(path, fileName);  
+	            if(!targetFile.exists()){  
+	                targetFile.mkdirs();  
+	            }  
+	      
+	            //保存  
+	            try {  
+	                file.transferTo(targetFile);  
+	            } catch (Exception e) {  
+	                e.printStackTrace();  
+	            }  
+	            model.addAttribute("fileUrl", request.getContextPath()+"/upload/"+fileName);  
+	            //拿到文件对象
+//	            File file = this.getFile();
+	            //第一个参数是目标文件的完整路径
+	            //第二参数是webupload分片传过来的文件
+	            //FileUtil的这个方法是把目标文件的指针，移到文件末尾，然后把分片文件追加进去，实现文件合并。简单说。就是每次最新的分片合到一个文件里面去。
+//	            FileUpload.randomAccessFile(path, file);
+	            //如果文件小与5M的话，分片参数chunk的值是null
+	            //5M的这个阈值是在upload3.js中的chunkSize属性决定的，超过chunkSize设置的大小才会进行分片，否则就不分片，不分片的话，webupload传到后台的chunk参数值就是null
+//	            if(StringUtils.isEmpty(chunk)){
+//	                //不分片的情况
+//	                outJson("0", "success", "");
+//	            }else{
+//	            //分片的情况
+//	            //chunk 分片索引，下标从0开始
+//	            //chunks 总分片数
+//	                if (Integer.valueOf(chunk) == (Integer.valueOf(chunks) - 1)) {
+//	                    outJson("0", "上传成功", "");
+//	                } else {
+//	                    outJson("2", "上传中" + fileFileName + " chunk:" + chunk, "");
+//	                }
+//	            }
+	        } catch (Exception e) {
+//	            outJson("3", "上传失败", "");
+	        }
+	    }
 	/**
 	 * @description: 账户信息
 	 * @param request
@@ -311,5 +362,21 @@ public class AccountController {
 		
 //		return new ModelAndView("/account/account_info","resultMap",resultMap);
 	}
+
+//	public File getFile() {
+//		return file;
+//	}
+//
+//	public void setFile(File file) {
+//		this.file = file;
+//	}
+//
+//	public String getFileFileName() {
+//		return fileFileName;
+//	}
+//
+//	public void setFileFileName(String fileFileName) {
+//		this.fileFileName = fileFileName;
+//	}
 	
 }

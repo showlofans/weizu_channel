@@ -21,6 +21,7 @@
 <link rel="stylesheet" type="text/css" href="/view/lib/Hui-iconfont/1.0.8/iconfont.css" />
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/skin/default/skin.css" id="skin" />
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/style.css" />
+<link href="/view/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
 <!--[if IE 6]>
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
@@ -34,7 +35,15 @@
 <body>
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 账户管理 <span class="c-gray en">&gt;</span> 认证信息 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
-	<form action="" method="post" class="form form-horizontal" id="form-article-add">
+	<form action="" method="post" class="form form-horizontal" enctype=”multipart/form-data” id="form-article-add">
+		<div id="uploader" class="wu-example">
+		    <!--用来存放文件信息-->
+		    <div id="thelist" class="uploader-list"></div>
+		    <div class="btns">
+		        <div id="attach"></div>
+		        <input type="button" value="上传" id="upload"/> 
+		    </div>
+		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>公司名称：</label>
 			<div class="formControls col-xs-7 col-sm-9">
@@ -140,74 +149,6 @@
 				<input type="text" name="billRecipientsAddress" id="" placeholder="收件地址" value="" class="input-text">
 			</div>
 		</div>
-		<!-- <div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">价格计算单位：</label>
-			<div class="formControls col-xs-7 col-sm-9"> <span class="select-box">
-				<select class="select">
-					<option>请选择</option>
-					<option value="1">件</option>
-					<option value="2">斤</option>
-					<option value="3">KG</option>
-					<option value="4">吨</option>
-					<option value="5">套</option>
-				</select>
-				</span> </div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">产品重量：</label>
-			<div class="formControls col-xs-7 col-sm-9">
-				<input type="text" name="" id="" placeholder="" value="" class="input-text" style="width:90%">
-				kg</div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">产品展示价格：</label>
-			<div class="formControls col-xs-7 col-sm-9">
-				<input type="text" name="" id="" placeholder="" value="" class="input-text" style="width:90%">
-				元</div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">市场价格：</label>
-			<div class="formControls col-xs-7 col-sm-9">
-				<input type="text" name="" id="" placeholder="" value="" class="input-text" style="width:90%">
-				元</div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">成本价格：</label>
-			<div class="formControls col-xs-7 col-sm-9">
-				<input type="text" name="" id="" placeholder="" value="" class="input-text" style="width:90%">
-				元</div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">最低销售价格：</label>
-			<div class="formControls col-xs-7 col-sm-9">
-				<input type="text" name="" id="" placeholder="" value="" class="input-text" style="width:90%">
-				元</div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">销售开始时间：</label>
-			<div class="formControls col-xs-7 col-sm-9">
-				<input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin" class="input-text Wdate" style="width:180px;">
-			</div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">销售结束时间：</label>
-			<div class="formControls col-xs-7 col-sm-9">
-				<input type="text" onfocus="WdatePicker({ dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'datemin\')}' })" id="datemax" class="input-text Wdate" style="width:180px;">
-			</div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">产品关键字：</label>
-			<div class="formControls col-xs-7 col-sm-9">
-				<input type="text" name="" id="" placeholder="多个关键字用英文逗号隔开，限10个关键字" value="" class="input-text">
-			</div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">产品摘要：</label>
-			<div class="formControls col-xs-7 col-sm-9">
-				<textarea name="" cols="" rows="" class="textarea"  placeholder="说点什么...最少输入10个字符" datatype="*10-100" dragonfly="true" nullmsg="备注不能为空！" onKeyUp="$.Huitextarealength(this,200)"></textarea>
-				<p class="textarea-numberbar"><em class="textarea-length">0</em>/200</p>
-			</div>
-		</div> -->
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">营业执照：</label>
 			<div class="formControls col-xs-7 col-sm-9">
@@ -226,7 +167,7 @@
 				<div class="uploader-thum-container">
 					<span class="btn-upload form-group">
 					<input class="input-text upload-url" type="text" name="uploadfile-2" id="uploadfile-2" readonly style="width:200px">
-					<a href="javascript:void();" class="btn btn-primary upload-btn"><i class="Hui-iconfont">&#xe642;</i> 上传</a>
+					<a href="javascript:void();"  id="btn-star3" class="btn btn-primary upload-btn"><i class="Hui-iconfont">&#xe642;</i> 上传</a>
 					<input type="file" multiple name="depositBankPhoto" class="input-file">
 					</span> 
 				</div>
@@ -238,7 +179,7 @@
 				<div class="uploader-thum-container">
 					<span class="btn-upload form-group">
 					<input class="input-text upload-url" type="text" name="uploadfile-2" id="uploadfile-2" readonly style="width:200px">
-					<a href="javascript:void();" class="btn btn-primary upload-btn"><i class="Hui-iconfont">&#xe642;</i> 上传</a>
+					<a href="javascript:void();" id="btn-star2" class="btn btn-primary upload-btn"><i class="Hui-iconfont">&#xe642;</i> 上传</a>
 					<input type="file" multiple name="depositBankPhoto" class="input-file">
 					</span> 
 				</div>
@@ -250,8 +191,8 @@
 				<div class="uploader-thum-container">
 					<span class="btn-upload form-group">
 					<input class="input-text upload-url" type="text" name="uploadfile-2" id="uploadfile-2" readonly style="width:200px">
-					<a href="javascript:void();" class="btn btn-primary upload-btn"><i class="Hui-iconfont">&#xe642;</i> 上传</a>
 					<input type="file" multiple name="depositBankPhoto" class="input-file">
+					<a href="javascript:void();" id="btn-star1" class="btn btn-primary upload-btn" ><i class="Hui-iconfont">&#xe642;</i> 上传</a>
 					</span> 
 				</div>
 			</div>
@@ -336,104 +277,98 @@ $(function(){
 		increaseArea: '20%'
 	});
 	
-	$list = $("#fileList"),
-	$btn = $("#btn-star"),
-	state = "pending",
-	uploader;
+	var $list = $("#thelist");
+    var  uploader ;// 实例化   
+    uploader = WebUploader.create({ 
+           auto:false, //是否自动上传
+            pick: {
+                id: '#attach',
+                name:"file",  //这个地方 name 没什么用，虽然打开调试器，input的名字确实改过来了。但是提交到后台取不到文件。如果想自定义file的name属性，还是要和fileVal 配合使用。
+                label: '点击选择图片',
+                multiple:false            //默认为true，true表示可以多选文件，HTML5的属性
+            },
+            swf: '/view/lib/webuploader/0.1.5/Uploader.swf',  //在这里必需要引入swf文件，webuploader初始化要用
+            //fileVal:'multiFile',  //自定义file的name属性，我用的版本是0.1.5 ,打开客户端调试器发现生成的input 的name 没改过来。
+                                             //名字还是默认的file,但不是没用哦。虽然客户端名字没改变，但是提交到到后台，是要用multiFile 这个对象来取文件的，用file 是取不到文件的
+                                             // 建议作者有时间把这个地方改改啊，搞死人了。。
+            server: "/flowsys/account/upload_img_file.do",
+            duplicate:true,//是否可重复选择同一文件
+            resize: false,
+            formData: {
+                "status":"file",
+                "contentsDto.contentsId":"0000004730",
+                "uploadNum":"0000004730",
+                "existFlg":'false'
+            },  
+            compress: null,//图片不压缩
+            chunked: true,  //分片处理
+            chunkSize: 5 * 1024 * 1024, //每片5M
+            chunkRetry:false,//如果失败，则不重试
+            threads:1,//上传并发数。允许同时最大上传进程数。
+            // runtimeOrder: 'flash',  
+            // 禁掉全局的拖拽功能。这样不会出现图片拖进页面的时候，把图片打开。  
+            disableGlobalDnd: true
+        });  
 
-	var uploader = WebUploader.create({
-		auto: true,
-		swf: '/view/lib/webuploader/0.1.5/Uploader.swf',
-	
-		// 文件接收服务端。
-		server: '/view/lib/webuploader/0.1.5/server/fileupload.php',
-	
-		// 选择文件的按钮。可选。
-		// 内部根据当前运行是创建，可能是input元素，也可能是flash.
-		pick: '#filePicker',
-	
-		// 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
-		resize: false,
-		// 只允许选择图片文件。
-		accept: {
-			title: 'Images',
-			extensions: 'gif,jpg,jpeg,bmp,png',
-			mimeTypes: 'image/*'
-		}
-	});
-	uploader.on( 'fileQueued', function( file ) {
-		var $li = $(
-			'<div id="' + file.id + '" class="item">' +
-				'<div class="pic-box"><img></div>'+
-				'<div class="info">' + file.name + '</div>' +
-				'<p class="state">等待上传...</p>'+
-			'</div>'
-		),
-		$img = $li.find('img');
-		$list.append( $li );
-	
-		// 创建缩略图
-		// 如果为非图片文件，可以不用调用此方法。
-		// thumbnailWidth x thumbnailHeight 为 100 x 100
-		uploader.makeThumb( file, function( error, src ) {
-			if ( error ) {
-				$img.replaceWith('<span>不能预览</span>');
-				return;
-			}
-	
-			$img.attr( 'src', src );
-		}, thumbnailWidth, thumbnailHeight );
-	});
-	// 文件上传过程中创建进度条实时显示。
-	uploader.on( 'uploadProgress', function( file, percentage ) {
-		var $li = $( '#'+file.id ),
-			$percent = $li.find('.progress-box .sr-only');
-	
-		// 避免重复创建
-		if ( !$percent.length ) {
-			$percent = $('<div class="progress-box"><span class="progress-bar radius"><span class="sr-only" style="width:0%"></span></span></div>').appendTo( $li ).find('.sr-only');
-		}
-		$li.find(".state").text("上传中");
-		$percent.css( 'width', percentage * 100 + '%' );
-	});
-	
-	// 文件上传成功，给item添加成功class, 用样式标记上传成功。
-	uploader.on( 'uploadSuccess', function( file ) {
-		$( '#'+file.id ).addClass('upload-state-success').find(".state").text("已上传");
-	});
-	
-	// 文件上传失败，显示上传出错。
-	uploader.on( 'uploadError', function( file ) {
-		$( '#'+file.id ).addClass('upload-state-error').find(".state").text("上传出错");
-	});
-	
-	// 完成上传完了，成功或者失败，先删除进度条。
-	uploader.on( 'uploadComplete', function( file ) {
-		$( '#'+file.id ).find('.progress-box').fadeOut();
-	});
-	uploader.on('all', function (type) {
-        if (type === 'startUpload') {
-            state = 'uploading';
-        } else if (type === 'stopUpload') {
-            state = 'paused';
-        } else if (type === 'uploadFinished') {
-            state = 'done';
-        }
+        // 当有文件添加进来的时候
+       uploader.on( "fileQueued", function( file ) {
+           console.log("fileQueued:");
+           $list.append( "<div id='"+  file.id + "' class='item'>" +
+               "<h4 class='info'>" + file.name + "</h4>" +
+               "<p class='state'>等待上传...</p>" +
+           "</div>" );
+       });
 
-        if (state === 'uploading') {
-            $btn.text('暂停上传');
-        } else {
-            $btn.text('开始上传');
-        }
-    });
+       //当所有文件上传结束时触发
+       uploader.on("uploadFinished",function(){
+           console.log("uploadFinished:");
+       })
 
-    $btn.on('click', function () {
+        //当某个文件上传到服务端响应后，会派送此事件来询问服务端响应是否有效。
+        uploader.on("uploadAccept",function(object,ret){
+            //服务器响应了
+            //ret._raw  类似于 data
+            alert("上传成功");
+            /* var data =JSON.parse(ret._raw);
+            if(data.resultCode != "1" && data.resultCode != "3"){
+                if(data.resultCode == "9"){
+                    uploader.reset();
+                    alert("error");
+                    return false;
+                }
+            }else{
+                //E05017
+                uploader.reset();
+                alert("error");
+                return false;
+            } */
+           })
+
+       //当文件上传成功时触发。
+         uploader.on( "uploadSuccess", function( file ) {
+           $( "#"+file.id ).find("p.state").text("已上传");
+       });
+
+       uploader.on( "uploadError", function( file ) {
+           $( "#"+file.id ).find("p.state").text("上传出错");
+           uploader.cancelFile(file);
+           uploader.removeFile(file,true);
+           uploader.reset();
+       });
+
+
+       $("#upload").on("click", function() {
+           uploader.upload();
+       })
+
+    /* $btn.on('click', function () {
         if (state === 'uploading') {
             uploader.stop();
         } else {
+        	alert("1");
             uploader.upload();
         }
-    });
+    }); */
 
 });
 
@@ -590,7 +525,7 @@ $(function(){
             swf: '/view/lib/webuploader/0.1.5/Uploader.swf',
             chunked: false,
             chunkSize: 512 * 1024,
-            server: '/view/lib/webuploader/0.1.5/server/fileupload.php',
+            server: '/flowsys/account/open_company_account.do',
             // runtimeOrder: 'flash',
 
             // accept: {
@@ -700,7 +635,7 @@ $(function(){
                         img = $('<img src="'+src+'">');
                         $wrap.empty().append( img );
                     } else {
-                        $.ajax('/view/lib/webuploader/0.1.5/server/preview.php', {
+                        $.ajax('/flowsys/account/open_company_account.do', {
                             method: 'POST',
                             data: src,
                             dataType:'json'

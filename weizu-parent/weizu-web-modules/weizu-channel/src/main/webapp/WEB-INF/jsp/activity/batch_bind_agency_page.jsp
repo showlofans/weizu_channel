@@ -35,22 +35,45 @@
 <div class="page-container">
 	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
 	<div class="text-c">
+		<c:forEach items="${resultMap.scopeCityEnums }" var="scopeEnum" varStatus="vs">
+			<c:if test="${scopeEnum.value == resultMap.ratePo.scopeCityCode }">${scopeEnum.desc }</c:if>
+		</c:forEach>
+		<c:forEach items="${resultMap.stypeEnums }" var="stype" varStatus="vs1">
+			<c:if test="${ stype.value == resultMap.ratePo.serviceType }">
+				${stype.desc }
+			</c:if>
+		</c:forEach>
+		<c:forEach items="${resultMap.otypeEnums }" var="otype" varStatus="vs1">
+			 <c:if test="${resultMap.ratePo.operatorType == otype.value }">
+				${otype.desc }
+			</c:if>	
+		</c:forEach>
+		<c:forEach items="${resultMap.billTypeEnums }" var="billEnum" varStatus="vs">
+			<span id="billTypeDesc"  class="c-red">
+			<c:if test="${resultMap.ratePo.billType==billEnum.value }">${billEnum.desc }</c:if>
+			</span>
+		</c:forEach>
+		<span id="billTypeDesc"  class="c-red">
+			${resultMap.ratePo.activeDiscount }
+		</span>
+	</div>
+	<div class="text-c">
 		<form action="/flowsys/rate/batch_bind_agency_page.do" method="post" id="formD" name="dataListForm">
 				<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
 				绑定状态：<span class="select-box inline">
 						<select name="bindState" id="bindState" class="select" onchange="onSub()">
 						<!-- <option value="">请选择</option> -->
 						<c:forEach items="${resultMap.bindStateEnums }" var="bState" varStatus="vst">
-							<option value="${bState.value }" <c:if test="${bState.value == resultMap.searchParams.bindState }"> selected</c:if>>${bState.desc }</option>
+							<option value="${bState.value }" <c:if test="${bState.value == resultMap.aardto.bindState }"> selected</c:if>>${bState.desc }</option>
 						</c:forEach>
 					</select>
 				</span>
 				
-				代理商名称:<input type="text"  value="${resultMap.searchParams.agencyName }" name="agencyName" id="" placeholder=" 代理商名称" style="width:250px" class="input-text">
+				代理商名称:<input type="text"  value="${resultMap.aardto.agencyName }" name="agencyName" id="" placeholder=" 代理商名称" style="width:250px" class="input-text">
 				<!-- <button type="reset"class="btn btn-success" value="重置">重置</button> -->
 				<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 				<c:choose>
-					<c:when test="${resultMap.searchParams.bindState==1 }"><!-- 已解绑：批量绑定 -->
+					<c:when test="${resultMap.aardto.bindState==1 }"><!-- 已解绑：批量绑定 -->
 						<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBState('/flowsys/rate/batch_update_bind_state.do',0)" href="javascript:;" title="批量绑定"><i class="Hui-iconfont">&#xe60e;</i>批量绑定</a>
 					</c:when>
 					<c:otherwise><!-- 未绑定 -->
@@ -61,7 +84,7 @@
 					<c:if test="${bState.value == resultMap.searchParams.bindState }"> selected</c:if>
 				</c:forEach> --%>
 				<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
-				<input type="hidden" id="rateDiscountId" name="rateDiscountId" value="${resultMap.searchParams.rateDiscountId }"> 
+				<input type="hidden" id="rateDiscountId" name="rateDiscountId" value="${resultMap.aardto.rateDiscountId }"> 
 		</form>
 	</div>
 	<!-- <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加资讯" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加资讯</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div> -->

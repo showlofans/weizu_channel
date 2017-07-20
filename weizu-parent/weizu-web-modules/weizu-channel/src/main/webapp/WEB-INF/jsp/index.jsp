@@ -271,7 +271,7 @@ function resetPass(){
         area: ['1000px', '500px'],
         maxmin: false,
         closeBtn: 1,
-        content: '/flowsys/agency/reset_pass_page.do',
+        content: '/flowsys/agency/reset_pass_page.do?tag=1',
         end: function () {
             location.reload();
         }

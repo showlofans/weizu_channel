@@ -62,6 +62,10 @@ public class AgencyURL extends BaseURL {
 	/**
 	 * 修改子代理商（费率，信用）信息页面
 	 */
+	public static final String CHILD_AGENCY_EDIT_PAGE = "/child_agency_edit_page" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 修改子代理商（费率，信用）信息
+	 */
 	public static final String CHILD_AGENCY_EDIT = "/child_agency_edit" + DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 首页展示信息
@@ -75,5 +79,8 @@ public class AgencyURL extends BaseURL {
 	 * 重置密码
 	 */
 	public static final String RESET_PASS = "/reset_pass" + DYNAMIC_WEB_SUFFIX;
-	
+	/**
+	 * 重置下级代理商密码
+	 */
+	public static final String RESET_CHILD_PASS = "/reset_child_pass" + DYNAMIC_WEB_SUFFIX;
 }

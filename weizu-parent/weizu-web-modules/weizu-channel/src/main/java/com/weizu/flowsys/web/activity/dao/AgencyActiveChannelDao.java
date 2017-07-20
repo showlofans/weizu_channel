@@ -77,6 +77,16 @@ public interface AgencyActiveChannelDao extends Dao<AgencyActiveRatePo, Long> {
 	int batchUpdateBindState(long rateDiscountId, int bindState, int[] agencyIds);
 	
 	/**
+	 * @description:  批量更新绑定状态（根据折扣id，批量解除绑定）
+	 * @param rateDiscountId
+	 * @param bindState
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月20日 上午9:58:44
+	 */
+	int batchUpdateBindState(long rateDiscountId, int bindState);
+	
+	/**
 	 * @description: 获得所有的绑定了该折扣的代理商
 	 * @param rateDiscountId
 	 * @return

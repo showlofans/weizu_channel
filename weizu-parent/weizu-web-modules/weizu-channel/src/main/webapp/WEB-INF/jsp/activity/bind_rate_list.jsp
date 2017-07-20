@@ -170,7 +170,7 @@
 					</div>
 				</div> -->
 				
-				<button type="reset"class="btn btn-success" value="重置">重置</button>
+				<!-- <button class="btn btn-success" type="reset"  value="重置">重置</button> -->
 				<button name="" id="" class="btn btn-success"  type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 				<%-- <input type="hidden" id="rateId" name="id" value="${resultMap.discountList[0].id }">  --%>
 				<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
@@ -307,14 +307,20 @@
 <script src="/view/lib/bootstrap-datetimepicker.min.js"></script>
 <script src="/view/lib/bootstrap-datetimepicker.zh-CN.js"></script> -->
 <script type="text/javascript">
+
 /*批量绑定代理商页面 */
 function batch_bind(title,url,id,w,h){
 	var rateDiscountId = $("#rateDiscountId").val();
+	var activeDiscount = $("#rateDiscountId option:selected").text();
+	var scopeCityCode = $('#scopeCityCode').val();
+	var serviceType = $('#serviceType').val();
+	var operatorType = $('#operatorType').val();
+	var billType = $('#billTypeRate').val();
 	//alert(rateDiscountId);
 	if(rateDiscountId == ""){
 		alert("没有可选的折扣！");
 	}else{
-		url = url + "?rateDiscountId=" + rateDiscountId;
+		url = url + '?scopeCityCode='+scopeCityCode+'&serviceType='+serviceType+'&operatorType='+operatorType+'&billType='+billType + '&rateDiscountId=' + rateDiscountId + '&activeDiscount=' + activeDiscount; 
 		var index = layer.open({
 			type: 2,
 			title: title,

@@ -358,16 +358,21 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 	public int batchUpdateBindState(AgencyActiveRateDTO aardto) {
 //		long rateId = Long.parseLong(rateDiscountId);
 //		int bState = Integer.parseInt(bindState);
-		String agencyIdst = aardto.getAgencyIds();
-		if(StringHelper.isNotEmpty(agencyIdst)){
-			String [] agencyIdsi = agencyIdst.split(",");
-			int[] agencyIds = new int[agencyIdsi.length];
-			for (int i = 0; i < agencyIds.length; i++) {
-				agencyIds[i] = Integer.parseInt(agencyIdsi[i]);
+		if(aardto.getBindState() == BindStateEnum.BIND.getValue()){//绑定
+			String agencyIdst = aardto.getAgencyIds();
+			if(StringHelper.isNotEmpty(agencyIdst)){
+				String [] agencyIdsi = agencyIdst.split(",");
+				int[] agencyIds = new int[agencyIdsi.length];
+				for (int i = 0; i < agencyIds.length; i++) {
+					agencyIds[i] = Integer.parseInt(agencyIdsi[i]);
+				}
+				return agencyActiveChannelDao.batchUpdateBindState(aardto.getRateDiscountId(), aardto.getBindState(), agencyIds);
+			}else{
+				return 0;
 			}
-			return agencyActiveChannelDao.batchUpdateBindState(aardto.getRateDiscountId(), aardto.getBindState(), agencyIds);
+		}else{//解绑
+			return agencyActiveChannelDao.batchUpdateBindState(aardto.getRateDiscountId(), aardto.getBindState());
 		}
-		return 0;
 	}
 
 	/**

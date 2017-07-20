@@ -39,6 +39,7 @@ public class AccountURL extends BaseURL {
 	public static final String OPEN_COMPANY_ACCOUNT_PAGE = "/open_company_account_page" + DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 开通对公账户
+	 * <br>/flowsys/account/open_company_account.do
 	 */
 	public static final String OPEN_COMPANY_ACCOUNT = "/open_company_account" + DYNAMIC_WEB_SUFFIX;
 	
@@ -52,6 +53,11 @@ public class AccountURL extends BaseURL {
 	 * <br>/flowsys/account/account_info_edit.do
 	 */
 	public static final String ACCOUNT_INFO_EDIT = "/account_info_edit" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 *图片上传
+	 * <br>/flowsys/account/upload_img_file.do
+	 */
+	public static final String UPLOAD_IMG_FILE = "/upload_img_file" + DYNAMIC_WEB_SUFFIX;
 	
 	
 }

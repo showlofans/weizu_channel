@@ -15,15 +15,19 @@
 <body>
 	<form action="" method="" class="form form-horizontal" id="form-article-add">
 		<!-- 不能修改要原样保留的数据 -->
-		<input type="hidden" value="${loginContext.userPass }" id="userPass">
+		<input type="hidden" name="tag" value="${resultMap.tag }" id="tag">
+		<input type="hidden" name="agencyId" value="${resultMap.agencyId }" id="agencyId">
 		<%-- <input type="hidden" value="${resultMap.agencyPo.rootAgencyId }" name="rootAgencyId"> --%>
 		
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">原密码：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="password" class="input-text" style="width:350px;" required value="" placeholder="" id="lastPass" name="lastPass">
+		<c:if test="${resultMap.tag == '1' }"><!-- 给自己设置密码 -->
+			<input type="hidden" value="${loginContext.userPass }" id="userPass">
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3">原密码：</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="password" class="input-text" style="width:350px;" required value="" placeholder="" id="lastPass" name="lastPass">
+				</div>
 			</div>
-		</div>
+		</c:if>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">新密码：</label>
 			<div class="formControls col-xs-8 col-sm-9">
@@ -46,6 +50,10 @@ $().ready(function() {
 	//alert($('#userPass').val());
     $("form").validate({
     	rules:{
+    		enterPass:{
+    			required: true,
+	            minlength: 3
+    		},
 	    	lastPass: {
 		             required: true,
 		             minlength: 3,
@@ -54,14 +62,24 @@ $().ready(function() {
 	         }
     	},
     	 messages: {
+    		 enterPass:{
+     			required:  "请输入新密码",
+ 	            minlength: "密码不能小于3个字符"
+     		},
     		 lastPass: {
-	             required: "请输入确认密码",
+	             required: "请输入新密码",
 	             minlength: "密码不能小于3个字符",
-	             equalTo: "输入密码不一致" 
+	             equalTo: "原密码输入错误" 
 	            //自带判断当前文本框值与指定ID为password的文本框的值是否相同
          	}
     	 },
     	submitHandler : function(form) {
+    		/* alert($('#tag').val());
+   			alert($('#agencyId').val()); */
+    		/* var url = "";
+    		if($('#tag').val() == '1'){
+    			
+    		} */
     		if($('#userPass').val() != $("#enterPass").val()){
 	    		$.ajax({
 	                type:"post",
@@ -78,9 +96,9 @@ $().ready(function() {
 	                    if(d=="error"){
 	                        layer.msg('保存异常!');
 	                    }
-	                    if(d=="errorEp"){
+	                    /* if(d=="errorEp"){
 	                        alert('保存异常,已经添加过该平台了!');
-	                    }
+	                    } */
 	                }
 	            });
     		}else{

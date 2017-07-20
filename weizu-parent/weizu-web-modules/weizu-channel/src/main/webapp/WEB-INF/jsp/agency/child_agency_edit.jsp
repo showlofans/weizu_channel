@@ -67,7 +67,7 @@
 				<input type="text" style="width:200px" class="input-text"  value="${resultMap.agencyPo.accountCredit }" placeholder="" id="accountCredit" name="accountCredit">元
 			</div>
 		</div>
-		<div class="row cl">
+		<%-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>不带票费率：</label>
 			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
 				<select name="rateId" class="select">
@@ -88,7 +88,7 @@
 					</c:forEach>
 				</select>
 				</span> </div>
-		</div>
+		</div> --%>
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
 				<button class="btn btn-primary radius" type="submit" onclick="save()"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
@@ -104,7 +104,7 @@ function save(){
 	var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
 	$.ajax({
         type:"post",
-        url:"/flowsys/agency/agency_edit.do",
+        url:"/flowsys/agency/child_agency_edit.do",
         data: $('form').serialize(),//表单数据
         async : false,
         success:function(d){

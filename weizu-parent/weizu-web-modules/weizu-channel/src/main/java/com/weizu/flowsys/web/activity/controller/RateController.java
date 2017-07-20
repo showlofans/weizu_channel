@@ -883,7 +883,7 @@ public class RateController {
 	 */
 	@RequestMapping(value= RateURL.BATCH_BIND_AGENCY_PAGE)
 	@ResponseBody
-	public ModelAndView batchBindAgencyPage(@RequestParam(value = "pageNo", required = false) String pageNo,AgencyActiveRateDTO aardto, HttpServletRequest request){
+	public ModelAndView batchBindAgencyPage(@RequestParam(value = "pageNo", required = false) String pageNo,AgencyActiveRateDTO aardto,RateDiscountPo ratePo, HttpServletRequest request){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		int rootAgencyId = agencyVO.getId();
@@ -899,9 +899,14 @@ public class RateController {
 		}
 		
 		Pagination<AgencyBackwardVO> pagination = agencyAO.getUnbindAgency(rootAgencyId,aardto, pageParam);
-		resultMap.put("searchParams", aardto);
+		resultMap.put("ratePo", ratePo);
+		resultMap.put("aardto", aardto);
 		resultMap.put("pagination", pagination);
 		resultMap.put("bindStateEnums", BindStateEnum.toBindList());
+		resultMap.put("otypeEnums", OperatorTypeEnum.toList());
+		resultMap.put("stypeEnums", ServiceTypeEnum.toList());
+		resultMap.put("billTypeEnums", BillTypeEnum.toList());
+		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 		
 		return new ModelAndView("/activity/batch_bind_agency_page", "resultMap", resultMap);
 //		agencyActiveChannelAO.
