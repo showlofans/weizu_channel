@@ -40,7 +40,11 @@ public class WherePrams {
 			if ("like".equals(where)) {
 				this.pram = " where " + file + where + " '%" + value + "%'";
 			}else{
-				this.pram = " where " + file + where + " '" + value + "'";
+				if(value instanceof Integer){
+					this.pram = " where " + file + where + value;
+				}else{
+					this.pram = " where " + file + where + " '" + value + "'";
+				}
 			}
 		}
 		

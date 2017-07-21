@@ -19,7 +19,7 @@ public class CompanyCredentialsPo extends Po{
 
     private Integer confirmAgencyId;					//验证人Id(一般是rootAgencyId)
 
-    private Integer confirmState;						//验证状态（1-验证通过，0-待验证，2-验证失败）
+    private Integer confirmState;						//验证状态（1-验证通过，0-验证失败，2-待验证，3-待完善:草稿）
 
     private String businessExecutiveName;				//商务负责人姓名
 
@@ -63,7 +63,25 @@ public class CompanyCredentialsPo extends Po{
 
     private String corporateIdentityBack;				//法定人身份证(反面)
 
-    public Integer getId() {
+    
+    /** 上传图片必须加到数据库的参数
+     * @param agencyId
+     * @param confirmAgencyId
+     * @param confirmState
+     */
+    public CompanyCredentialsPo(Integer agencyId, Integer confirmAgencyId,
+			Integer confirmState) {
+		super();
+		this.agencyId = agencyId;
+		this.confirmAgencyId = confirmAgencyId;
+		this.confirmState = confirmState;
+	}
+
+	public CompanyCredentialsPo() {
+		super();
+	}
+
+	public Integer getId() {
         return id;
     }
 

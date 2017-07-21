@@ -22,15 +22,18 @@ import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.ConfirmStateEnum;
 import com.weizu.flowsys.util.Pagination;
-import com.weizu.flowsys.web.activity.url.RateURL;
 import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.ao.ChargeRecordAO;
+import com.weizu.flowsys.web.agency.ao.CompanyCredentialsAO;
+import com.weizu.flowsys.web.agency.dao.CompanyCredentialsDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
+import com.weizu.flowsys.web.agency.pojo.CompanyCredentialsPo;
 import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
 import com.weizu.flowsys.web.agency.url.AccountURL;
 import com.weizu.flowsys.web.agency.util.FileUpload;
@@ -52,6 +55,10 @@ public class AccountController {
 	private ChargeAccountAo chargeAccountAO;
 	@Resource
 	private AgencyAO agencyAO;
+	@Resource
+	private CompanyCredentialsAO companyCredentialsAO;
+	@Resource
+	private CompanyCredentialsDao companyCredentialsDao;
 	
 	//属性值，单文件的情况，对应的是upload3.js中的name属性，name属性值为file，此时struts就可以获取到file的文件对象，不需要实例化，struts框架会自动注入对象值，打开调试窗口，看一下就明白了
 	private File file;
@@ -222,9 +229,16 @@ public class AccountController {
 	 * @createTime:2017年6月30日 下午3:34:19
 	 */
 	@RequestMapping(value=AccountURL.OPEN_COMPANY_ACCOUNT_PAGE)
-	public ModelAndView openCompanyAccountPage(){
-		
-		
+	public ModelAndView openCompanyAccountPage(HttpServletRequest request){
+		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		if(agencyVo != null)
+		{
+			CompanyCredentialsPo ccpo = companyCredentialsDao.checkCraatedByAgencyId(agencyVo.getId());
+			resultMap.put("ccpo", ccpo);
+			resultMap.put("confirmStateEnums", ConfirmStateEnum.toList());
+			return new ModelAndView("/account/open_company_account_page","resultMap",resultMap);
+		}
 		return new ModelAndView("/account/open_company_account_page");
 	}
 	/**
@@ -260,24 +274,46 @@ public class AccountController {
 		return new ModelAndView("/account/open_company_account_page");
 	}
 	
+	/**
+	 * @description: 上传图片
+	 * @param file
+	 * @param request
+	 * @param model
+	 * @param response
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月21日 下午4:22:35
+	 */
 	@RequestMapping(value=AccountURL.UPLOAD_IMG_FILE)
 	//单文件上传后台代码
-	public void ajaxAttachUpload(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request, ModelMap model) {
-		String fileName = file.getOriginalFilename();   
-		String path =  "d:\\test\\"+fileName;
+	public void uploadPicture(@RequestParam(value = "file", required = false) MultipartFile file, HttpServletRequest request, ModelMap model, HttpServletResponse response) {
+		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//		String fileName = file.getOriginalFilename(); 
+		String filePath = request.getSession().getServletContext().getRealPath("/upload/credentials");
+		if(agencyVo != null){
+			String json = companyCredentialsAO.uploadImgFile(file, agencyVo, filePath);
 	        try {
-	        	File targetFile = new File(path, fileName);  
-	            if(!targetFile.exists()){  
-	                targetFile.mkdirs();  
-	            }  
-	      
-	            //保存  
-	            try {  
-	                file.transferTo(targetFile);  
-	            } catch (Exception e) {  
-	                e.printStackTrace();  
-	            }  
-	            model.addAttribute("fileUrl", request.getContextPath()+"/upload/"+fileName);  
+				response.getWriter().print(json);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+//	        model.addAttribute("fileUrl", request.getContextPath()+"/upload/credentials/"+agencyVo.getUserName()+"/"+fileName);
+		}
+		
+		//		String fileName = file.getOriginalFilename();   
+//		String path =  "d:\\test\\"+fileName;
+//	        try {
+//	        	File targetFile = new File(path, fileName);  
+//	            if(!targetFile.exists()){  
+//	                targetFile.mkdirs();  
+//	            }  
+//	      
+//	            //保存  
+//	            try {  
+//	                file.transferTo(targetFile);  
+//	            } catch (Exception e) {  
+//	                e.printStackTrace();  
+//	            }  
+//	            model.addAttribute("fileUrl", request.getContextPath()+"/upload/"+fileName);  
 	            //拿到文件对象
 //	            File file = this.getFile();
 	            //第一个参数是目标文件的完整路径
@@ -299,9 +335,9 @@ public class AccountController {
 //	                    outJson("2", "上传中" + fileFileName + " chunk:" + chunk, "");
 //	                }
 //	            }
-	        } catch (Exception e) {
-//	            outJson("3", "上传失败", "");
-	        }
+//	        } catch (Exception e) {
+////	            outJson("3", "上传失败", "");
+//	        }
 	    }
 	/**
 	 * @description: 账户信息

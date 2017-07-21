@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50626
 File Encoding         : 65001
 
-Date: 2017-07-19 20:35:03
+Date: 2017-07-21 18:27:46
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -83,7 +83,7 @@ INSERT INTO `agency_active_rate` VALUES ('22', '23', '4', null, '0', 'w', '15000
 INSERT INTO `agency_active_rate` VALUES ('25', '24', '4', '22', '0', 'kkk', '1500025358726');
 INSERT INTO `agency_active_rate` VALUES ('26', '21', '4', '23', '0', '456', '1500081258422');
 INSERT INTO `agency_active_rate` VALUES ('27', '24', '4', '24', '1', 'kkk', '1500081299461');
-INSERT INTO `agency_active_rate` VALUES ('28', '27', '4', '32', '0', 'company', '1500092461795');
+INSERT INTO `agency_active_rate` VALUES ('28', '27', '4', '32', '1', 'company', '1500092461795');
 INSERT INTO `agency_active_rate` VALUES ('29', '27', '4', '33', '0', 'company', '1500093565885');
 INSERT INTO `agency_active_rate` VALUES ('30', '27', '4', '34', '0', 'company', '1500093595298');
 INSERT INTO `agency_active_rate` VALUES ('31', '27', '4', '35', '0', 'company', '1500093683813');
@@ -129,8 +129,8 @@ CREATE TABLE `agency_backward` (
 -- ----------------------------
 INSERT INTO `agency_backward` VALUES ('1', '0', 'xiao', 'xiao', 'xiaoqiang', '', '', '', null, '1495689716779', 'FV', null, null);
 INSERT INTO `agency_backward` VALUES ('4', '1', '123', '123', '木头人', '15858343638', '22222', '22', '3', '1499736896474', 'GD9QS', null, null);
-INSERT INTO `agency_backward` VALUES ('21', '4', '456', '123', '123', '123', '123@123.com', '1233', null, '1498617431513', 'H769', '402880ef5cd2b925015cd2b925b90000', '12');
-INSERT INTO `agency_backward` VALUES ('23', '4', 'w', 'w', 'w', 'w', 'w@d.com', 'f', null, '1498621008604', 'H65M', '402880ef5cd2b925015cd2bc11d70001', '13');
+INSERT INTO `agency_backward` VALUES ('21', '4', '456', '123', '123', '123', '123@123.com', '1233', null, '1500523402299', 'H769', '402880ef5cd2b925015cd2b925b90000', '12');
+INSERT INTO `agency_backward` VALUES ('23', '4', 'w', 'w', 'w', 'w', 'w@d.com', 'f', null, '1500519015597', 'H65M', '402880ef5cd2b925015cd2bc11d70001', '13');
 INSERT INTO `agency_backward` VALUES ('24', '4', 'kkk', 'kkk', 'kkk', 'kkk', 'kkk@qq.com', 'kkk', '7', '1498617873998', '7L4T', '402880ef5cd2b925015cd2bc5d130002', null);
 INSERT INTO `agency_backward` VALUES ('25', '1', 'lexin', 'lexin', '乐信', '13699562589', '13699562589@qq.com', 'http://127.0.0.1:8080', null, '1496479483371', '', null, '9');
 INSERT INTO `agency_backward` VALUES ('26', '23', 'wt', 'wt', 'wt', 'wt', 'wt@qq', 'wt', null, '1497231635832', 'LG3G', '402880ef5cec6811015cec6811ed0000', null);
@@ -395,9 +395,9 @@ INSERT INTO `charge_account` VALUES ('4', '0', null, null, '0', '17', '0', null)
 INSERT INTO `charge_account` VALUES ('5', '0', null, null, '0', '18', '0', null);
 INSERT INTO `charge_account` VALUES ('6', '0', null, null, '0', '19', '0', null);
 INSERT INTO `charge_account` VALUES ('7', '0', null, null, '0', '20', '0', null);
-INSERT INTO `charge_account` VALUES ('8', '600', null, null, '2000', '21', '0', null);
+INSERT INTO `charge_account` VALUES ('8', '600', null, null, '2001', '21', '0', null);
 INSERT INTO `charge_account` VALUES ('9', '0', null, null, '0', '22', '0', null);
-INSERT INTO `charge_account` VALUES ('10', '1000', null, null, '0', '23', '0', null);
+INSERT INTO `charge_account` VALUES ('10', '1000', null, null, '1', '23', '0', null);
 INSERT INTO `charge_account` VALUES ('11', '356', null, null, '1212', '24', '0', null);
 INSERT INTO `charge_account` VALUES ('12', '500', null, null, '2000', '25', '0', null);
 INSERT INTO `charge_account` VALUES ('13', '123', null, null, '0', '26', '0', null);
@@ -520,7 +520,7 @@ CREATE TABLE `company_credentials` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '验证id',
   `agency_id` int(11) DEFAULT NULL COMMENT '待验证代理商id',
   `confirm_agency_id` int(11) DEFAULT NULL COMMENT '验证人Id(一般是rootAgencyId)',
-  `confirm_state` int(11) DEFAULT '0' COMMENT '验证状态（1-验证通过，0-待验证，2-验证失败）',
+  `confirm_state` int(11) DEFAULT '0' COMMENT '验证状态（1-验证通过，0-验证失败，2-待验证，3-待完善:草稿）',
   `business_executive_name` varchar(255) DEFAULT NULL COMMENT '商务负责人姓名',
   `be_tel` varchar(255) DEFAULT NULL COMMENT '商务联系电话',
   `emergency_contact` varchar(255) DEFAULT NULL COMMENT '紧急联系人姓名',
@@ -534,7 +534,7 @@ CREATE TABLE `company_credentials` (
   `bank_account` varchar(255) DEFAULT NULL COMMENT '银行账号',
   `tax_registration_certificate` varchar(255) DEFAULT NULL COMMENT '税务登记证号',
   `billing_content` varchar(255) DEFAULT NULL COMMENT '开票内容',
-  `info_service_fee` double DEFAULT NULL COMMENT '信息服务费',
+  `info_service_fee` double DEFAULT NULL,
   `bill_recipients_name` varchar(255) DEFAULT NULL COMMENT '发票收件人',
   `bill_recipients_tel` varchar(255) DEFAULT NULL COMMENT '收件人电话',
   `bill_recipients_address` varchar(255) DEFAULT NULL COMMENT '收件地址',
@@ -547,11 +547,14 @@ CREATE TABLE `company_credentials` (
   KEY `fk_credentials_raid` (`confirm_agency_id`),
   CONSTRAINT `fk_credentials_aid` FOREIGN KEY (`agency_id`) REFERENCES `agency_backward` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_credentials_raid` FOREIGN KEY (`confirm_agency_id`) REFERENCES `agency_backward` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of company_credentials
 -- ----------------------------
+INSERT INTO `company_credentials` VALUES ('1', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+INSERT INTO `company_credentials` VALUES ('2', '4', '1', '3', null, null, null, null, null, null, '微族科技', null, null, null, null, null, null, null, null, null, null, '/upload/credentials/123/license.jpg', '/upload/credentials/123/bank.jpg', '/upload/credentials/123/idFront.jpg', null);
+INSERT INTO `company_credentials` VALUES ('3', '21', '4', '3', null, null, null, null, null, null, '南昌微族科技', null, null, null, null, null, null, null, null, null, null, null, null, null, '/upload/credentials/123/idBack.jpg');
 
 -- ----------------------------
 -- Table structure for `exchange_platform`
@@ -844,7 +847,7 @@ INSERT INTO `rate_discount` VALUES ('27', '0.75', null, '8', '1');
 INSERT INTO `rate_discount` VALUES ('28', '0.88', null, '7', '1');
 INSERT INTO `rate_discount` VALUES ('29', '89', null, '11', '1');
 INSERT INTO `rate_discount` VALUES ('30', '88', null, '11', '1');
-INSERT INTO `rate_discount` VALUES ('32', '0.6', null, '15', '1');
+INSERT INTO `rate_discount` VALUES ('32', '0.62', null, '15', '1');
 INSERT INTO `rate_discount` VALUES ('33', '0.99', null, '12', '0');
 INSERT INTO `rate_discount` VALUES ('34', '0.98', null, '12', '1');
 INSERT INTO `rate_discount` VALUES ('35', '0.78', null, '8', '1');
