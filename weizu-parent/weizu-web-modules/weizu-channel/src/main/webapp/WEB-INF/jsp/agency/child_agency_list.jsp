@@ -31,7 +31,7 @@
 <title>资讯列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 下游管理 <span class="c-gray en">&gt;</span> 代理商列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 下游管理 <span class="c-gray en">&gt;</span> 代理商列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
 	<div class="text-c">
@@ -42,8 +42,8 @@
 	                  	<em class="inputto">至</em>
 	            <input style="width:150px" type="text" class="input-text" name="end_datetime"   value="2017-05-26 23:59:59"  onClick="WdatePicker({startDate:'%y-%M-%d 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/> -->
 				
-				<button type="reset"class="btn btn-success" value="重置">重置</button>
-				<button name="" id="" class="btn btn-success" onClick="search1()" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+				<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button> 
+				<button name="" id="" class="btn btn-success"  type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 				<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 				<!--  <div class="form-group pt5">提交时间：<div class="input-group" style="width:150px"><span class="input-group-addon"><i class="fa fa-calendar ft13em"></i></span> <input type="text" placeholder="开始时间" data-date-format="YYYY-MM-DD HH:mm:ss" name="created_start" id="created_start"></div>--
 				<div class="input-group" style="width:150px"><span class="input-group-addon"><i class="fa fa-calendar ft13em"></i></span> <input type="text" placeholder="结束时间" data-date-format="YYYY-MM-DD HH:mm:ss" name="created_end" id="created_end"></div>
@@ -113,10 +113,11 @@
 						<%-- <td><a data-toggle="tooltip" data-placement="top" title="点击编辑费率" data-href="/flowsys/rate/rate_edit_page.do?rateId=${agency.rateId }" data-title="费率编辑" style="text-decoration:none" onclick="Hui_admin_tab(this)">${agency.rateName }</a></td>
 						<td><a data-toggle="tooltip" data-placement="top" title="点击编辑带票费率" data-href="/flowsys/rate/rate_edit_page.do?rateId=${agency.billRateId }" data-title="费率编辑" style="text-decoration:none" onclick="Hui_admin_tab(this)">${agency.billRateName }</a></td> --%>
 						<td class="td-manage">
-							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="editRate(this)" href="javascript:;" title="编辑代理商"><i class="Hui-iconfont">&#xe6de;</i></a>
-							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" onClick="account_charge('账户充值','${agency.userName }',${agency.id })" href="javascript:;" title="账户充值"><i class="Hui-iconfont">&#xe6df;</i></a> 
+							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="editRate(this)" href="javascript:;" title="编辑代理商"><i class="Hui-iconfont">&#xe60c;</i></a>
+							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="resetPass('${agency.id}')" href="javascript:;" title="重置密码"><i class="Hui-iconfont">&#xe63f;</i></a>
+							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" onClick="account_charge('账户充值','${agency.userName }',${agency.id })" href="javascript:;" title="账户充值"><i class="Hui-iconfont">&#xe726;</i></a> 
 							<%-- <a title="/flowsys/rate/rate_add_page.do?rateId=${agency.rateId }&agencyId=${agency.id}" data-href="/flowsys/rate/rate_add_page.do?rateId=${agency.rateId }&agencyId=${agency.id}" data-title="费率添加" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe6df;</i></a> --%>
-							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none"  title="配置通道" data-href="/flowsys/rate/bind_channel_list.do?agencyId=${agency.id }&agencyName=${agency.userName}" data-title="配置通道" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe6df;</i></a>
+							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none"  title="配置通道" data-href="/flowsys/rate/bind_channel_list.do?agencyId=${agency.id }&agencyName=${agency.userName}" data-title="配置通道" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe604;</i></a>
 						</td>
 						<td>${agency.createTimeStr }</td>
 						<%-- <td class="td-status"><c:forEach items="${resultMap.pgInEnums }" var="pgIn" varStatus="vs1">
@@ -163,6 +164,26 @@
         "fnServerData": retrieveData // 获取数据的处理函数
 	});
 }); */
+/**重置密码*/
+function resetPass(agencyId){
+	
+	layer.open({
+        type: 2,
+        title: "重置密码",
+        area: ['1000px', '500px'],
+        maxmin: false,
+        closeBtn: 1,
+        content: '/flowsys/agency/reset_pass_page.do?tag=0&agencyId='+agencyId,
+        end: function () {
+            location.reload();
+        }
+    });
+}
+
+/* function formSub(){
+	$('form').reset();
+	$('form').submit();
+} */
 
 //3个参数的名字可以随便命名,但必须是3个参数,少一个都不行
 function retrieveData( sSource111,aoData, fnCallback111) {
@@ -280,7 +301,7 @@ function editRate(obj){
         area: ['800px', '500px'],
         maxmin: false,
         closeBtn: 1,
-        content: '/flowsys/agency/child_agency_edit.do?id=' + $id.html(),
+        content: '/flowsys/agency/child_agency_edit_page.do?id=' + $id.html(),
         end: function () {
             location.reload();
         }

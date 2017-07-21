@@ -1,0 +1,3 @@
+<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
+：type='button'一定要加上，重置提交表单的功能,适用于不需要隐藏域的数据的表单提交
+区别：location.reload()；

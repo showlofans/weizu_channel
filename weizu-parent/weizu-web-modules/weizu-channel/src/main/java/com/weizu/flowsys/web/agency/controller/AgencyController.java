@@ -195,8 +195,11 @@ public class AgencyController {
 	 * @createTime:2017年7月11日 上午9:44:18
 	 */
 	@RequestMapping(value = AgencyURL.RESET_PASS_PAGE)
-	public ModelAndView resetPassPage(HttpServletRequest request){
-		return new ModelAndView("/agency/reset_pass_page");
+	public ModelAndView resetPassPage(HttpServletRequest request, @RequestParam(value="agencyId",required = false)String agencyId, String tag){
+		Map<String,Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("tag", tag);
+		resultMap.put("agencyId", agencyId);
+		return new ModelAndView("/agency/reset_pass_page","resultMap",resultMap);
 	}
 	/**
 	 * @description: 重置密码
@@ -206,9 +209,15 @@ public class AgencyController {
 	 * @createTime:2017年7月11日 上午10:08:24
 	 */
 	@RequestMapping(value = AgencyURL.RESET_PASS)
-	public void resetPass(HttpServletRequest request, String enterPass,HttpServletResponse response){
-		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		int res = agencyAO.updatePass(agencyVo.getId(), enterPass);
+	public void resetPass(HttpServletRequest request, String enterPass,String tag, @RequestParam(value="agencyId",required = false)String agencyId, HttpServletResponse response){
+		int aid = 0;
+		if(tag != "1" && StringHelper.isNotEmpty(agencyId)){//修改下级代理商
+			aid = Integer.parseInt(agencyId);
+		}else{
+ 			AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+			aid = agencyVo.getId();
+		}
+		int res = agencyAO.updatePass(aid, enterPass);
 		try {
 			if(res < 1){
 				response.getWriter().print("error");
@@ -366,8 +375,7 @@ public class AgencyController {
 			@RequestParam(value = "pageNo", required = false) String pageNo,
 			AgencyBackwardVO searchAgencyVO, HttpServletRequest request) {
 		
-		HttpSession session = request.getSession();
-		AgencyBackwardVO agencyBackwardPo = (AgencyBackwardVO) session
+		AgencyBackwardVO agencyBackwardPo = (AgencyBackwardVO) request.getSession()
 				.getAttribute("loginContext");
 
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -434,7 +442,7 @@ public class AgencyController {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月22日 上午10:14:54
 	 */
-	@RequestMapping(value= AgencyURL.CHILD_AGENCY_EDIT)
+	@RequestMapping(value= AgencyURL.CHILD_AGENCY_EDIT_PAGE)
 	public ModelAndView editAgencyPage(HttpServletRequest request,String id){
 		Map<String, Object> resultMap = agencyAO.prepareParam(id);
 		
@@ -458,9 +466,22 @@ public class AgencyController {
 //		ChargeAccountPo chargeAccountPo = (ChargeAccountPo) request.getSession().getAttribute("chargeAccount");//对私
 //		ChargeAccountPo chargeAccountPo1 = (ChargeAccountPo) request.getSession().getAttribute("chargeAccount1");//对公
 		int result = agencyAO.updateAgency(vo);
-		
 		if(result > 0){
 			request.getSession().setAttribute("loginContext", vo);
+			response.getWriter().print("success");
+		}else{
+			response.getWriter().print("error");
+		}
+	}
+	@RequestMapping(value = AgencyURL.CHILD_AGENCY_EDIT)
+	@ResponseBody
+	public void editChildAgency(AgencyBackwardVO vo,
+			HttpServletRequest request, HttpServletResponse response)
+					throws IOException {
+//		ChargeAccountPo chargeAccountPo = (ChargeAccountPo) request.getSession().getAttribute("chargeAccount");//对私
+//		ChargeAccountPo chargeAccountPo1 = (ChargeAccountPo) request.getSession().getAttribute("chargeAccount1");//对公
+		int result = agencyAO.updateAgency(vo);
+		if(result > 0){
 			response.getWriter().print("success");
 		}else{
 			response.getWriter().print("error");

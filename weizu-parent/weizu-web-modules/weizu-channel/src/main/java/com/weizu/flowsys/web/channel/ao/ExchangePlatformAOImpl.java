@@ -108,6 +108,7 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 //		Map<String, Object> paramsMap = getMapByEntity(channelForwardPo);
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("agencyId", agencyId);
+		paramsMap.put("epName", ep.getEpName());
 		int toatalRecord = exchangePlatformDao.countEp(paramsMap);
 		int pageSize = 10;
 		int pageNo = 1;

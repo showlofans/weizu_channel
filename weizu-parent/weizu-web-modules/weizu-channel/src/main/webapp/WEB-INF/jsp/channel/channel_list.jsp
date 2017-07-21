@@ -59,7 +59,7 @@
 		
 		<!-- <input type="hidden" value="" name="channelId" id="channelId"> -->
 		
-		<button type="reset"class="btn btn-success" value="重置">重置</button>
+		<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 		<input value="查询" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
 		
 		<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
