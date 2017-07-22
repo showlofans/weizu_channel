@@ -91,7 +91,7 @@ public class CompanyCredentialsAOImpl implements CompanyCredentialsAO {
         	//保存  
         	try {  
         		file.transferTo(targetFile); 
-        		String dataPath = "/upload/credentials/" +agencyVo.getUserName()+"/" +fileName;
+        		String dataPath = "/upload/" +agencyVo.getUserName()+"/" +fileName;
         		switch (tag) {
 				case 1:
 					comCredentialsPo.setBusinessLicense(dataPath);  //设置为营业执照图片

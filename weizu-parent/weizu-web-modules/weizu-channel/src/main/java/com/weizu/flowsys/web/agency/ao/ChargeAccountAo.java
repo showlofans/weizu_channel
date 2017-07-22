@@ -1,10 +1,11 @@
 package com.weizu.flowsys.web.agency.ao;
 
-import java.io.IOException;
+import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
+import com.weizu.flowsys.web.agency.pojo.CompanyCredentialsPo;
 
 /**
  * @description:账户管理业务
@@ -24,6 +25,16 @@ public interface ChargeAccountAo {
 	 * @createTime:2017年5月6日 上午10:43:09
 	 */
 	int createAccount(ChargeAccountPo chargeAccountPo);
+	
+	/**
+	 * @description: 获得所有下级没审核的账户
+	 * @param rootAgencyId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月22日 下午4:56:05
+	 */
+	List<CompanyCredentialsPo> getUnconfirmedAccount(int rootAgencyId);
+	
 	
 	/**
 	 * @description: 创建一个对公账户

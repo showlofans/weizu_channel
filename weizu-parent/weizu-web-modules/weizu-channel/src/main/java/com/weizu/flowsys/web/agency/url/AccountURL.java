@@ -38,6 +38,11 @@ public class AccountURL extends BaseURL {
 	 */
 	public static final String OPEN_COMPANY_ACCOUNT_PAGE = "/open_company_account_page" + DYNAMIC_WEB_SUFFIX;
 	/**
+	 * 审核对公账户页面
+	 * <br>/flowsys/account/confirm_company_account_page.do
+	 */
+	public static final String CONFIRM_COMPANY_ACCOUNT_PAGE = "/confirm_company_account_page" + DYNAMIC_WEB_SUFFIX;
+	/**
 	 * 开通对公账户
 	 * <br>/flowsys/account/open_company_account.do
 	 */

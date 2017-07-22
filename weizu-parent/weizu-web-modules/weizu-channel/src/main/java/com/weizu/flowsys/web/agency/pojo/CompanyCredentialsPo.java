@@ -76,6 +76,13 @@ public class CompanyCredentialsPo extends Po{
 		this.confirmAgencyId = confirmAgencyId;
 		this.confirmState = confirmState;
 	}
+    
+    public void initBase(Integer agencyId, Integer confirmAgencyId,
+			Integer confirmState){
+    	this.agencyId = agencyId;
+		this.confirmAgencyId = confirmAgencyId;
+		this.confirmState = confirmState;
+    }
 
 	public CompanyCredentialsPo() {
 		super();

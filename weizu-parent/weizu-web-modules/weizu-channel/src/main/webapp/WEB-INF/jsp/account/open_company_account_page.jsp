@@ -31,11 +31,26 @@
 <title> - H-ui.admin 3.0</title>
 <meta name="keywords" content="H-ui.admin 3.0,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
 <meta name="description" content="H-ui.admin 3.0，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
+<style>
+        .first {
+            width: 50%;
+            float:left;
+            height: 100px;
+            border: 1px solid #3B6273;
+        }
+        .second {
+            width: 50%;
+            float:left;
+            height: 100px;
+            border: 1px solid #3B6273;
+        }
+    </style>
 </head>
+
 <body>
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 账户管理 <span class="c-gray en">&gt;</span> 认证信息 <!-- <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> --></nav>
 <div class="page-container">
-	<form action="" method="post" class="form form-horizontal" enctype=”multipart/form-data” id="form-article-add">
+	<form action="/flowsys/account/open_company_account.do" id="openCompanyAccount" method="post" class="form form-horizontal" enctype=”multipart/form-data” id="form-article-add">
 		<!-- <div id="uploader" class="wu-example">
 		    用来存放文件信息
 		    <div class="btns">
@@ -66,7 +81,8 @@
 			<label class="form-label col-xs-4 col-sm-3">是否具备增值税一般纳税人资格：</label>
 			<div class="formControls col-xs-7 col-sm-9 skin-minimal">
 				<div class="check-box">
-					<input name="taxpayerIsQualification" type="checkbox" id="checkbox-1">
+					
+					<input name="taxpayerIsQualification" <c:if test="${resultMap.ccpo.taxpayerIsQualification ==1 }">checked</c:if> value="1" type="checkbox" id="checkbox-1">
 					<label for="checkbox-1">&nbsp;</label>
 				</div>
 			</div>
@@ -98,7 +114,7 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>开票内容：</label>
 			<div class="formControls col-xs-7 col-sm-9">
-				<input type="text" class="input-text" readonly="readonly" value="信息服务费" placeholder="信息服务费" id="" name="infoServiceFee">
+				<input type="text" class="input-text" readonly="readonly" value="信息服务费" placeholder="信息服务费" id="" name="billingContent">
 			</div>
 		</div>
 		
@@ -149,6 +165,37 @@
 				<input type="text" name="billRecipientsAddress" id="" placeholder="收件地址" value="${resultMap.ccpo.billRecipientsAddress }" class="input-text">
 			</div>
 		</div>
+		<div class="row cl">
+			<div class="col-xs-7 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+				<c:choose>
+					<c:when test="${resultMap.ccpo.confirmState == 1 || resultMap.ccpo.confirmState == 2 }"><!-- 待审核和审核成功 -->
+						<button onClick="article_save_submit();" class="btn btn-primary radius" disabled="disabled" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存并提交审核</button>
+						<button onClick="article_save();" class="btn btn-secondary radius"  disabled="disabled" type="button"><i class="Hui-iconfont">&#xe632;</i> 保存草稿</button>
+					</c:when>
+					<c:otherwise>
+						<button onClick="article_save_submit();" class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存并提交审核</button>
+						<button onClick="article_save();" class="btn btn-secondary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 保存草稿</button>
+					</c:otherwise>
+				</c:choose>
+				
+				<!-- <button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button> -->
+			</div>
+		</div>
+		<input type="hidden" id="confirmState" name="confirmState" value="${resultMap.ccpo.confirmState }">
+		<c:choose>
+			<c:when test="${empty resultMap.ccpo }">
+				<span class="c-red">待完善</span>
+			</c:when>
+			<c:otherwise>
+				<c:forEach items="${resultMap.confirmStateEnums }" var="confirmStateE" varStatus="vst">
+					<c:if test="${resultMap.ccpo.confirmState == confirmStateE.value }">
+						<span class="c-green">${confirmStateE.desc }</span>
+					</c:if>
+				</c:forEach>
+			</c:otherwise>
+		</c:choose>
+	</form>
+		<form action="" method="" class="form form-horizontal">
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">营业执照：</label>
 			<div class="formControls col-xs-7 col-sm-9">
@@ -257,6 +304,7 @@
 				</div>
 			</div>
 		</div>
+	</form>
 		<!-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">法定人身份证(反面)：</label>
 			<div class="formControls col-xs-7 col-sm-9">
@@ -278,7 +326,7 @@
 				</div>
 			</div>
 		</div> -->
-		
+	<form action="/flowsys/account/open_company_account.do" class="form form-horizontal" method="post" id="business">
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>商务负责人姓名：</label>
 			<div class="formControls col-xs-7 col-sm-9">
@@ -305,12 +353,13 @@
 		</div>
 		<div class="row cl">
 			<div class="col-xs-7 col-sm-9 col-xs-offset-4 col-sm-offset-2">
-				<button onClick="article_save_submit();" class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存并提交审核</button>
-				<button onClick="article_save();" class="btn btn-secondary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 保存草稿</button>
+				<button onClick="" class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+				<!-- <button onClick="article_save();" class="btn btn-secondary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 保存草稿</button> -->
 				<!-- <button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button> -->
 			</div>
 		</div>
-		<c:choose>
+		<input type="hidden" id="confirmState" name="confirmState" value="${resultMap.ccpo.confirmState }">
+		<%-- <c:choose>
 			<c:when test="${empty ccpo }">
 				<span class="c-red">待完善</span>
 			</c:when>
@@ -321,7 +370,7 @@
 					</c:if>
 				</c:forEach>
 			</c:otherwise>
-		</c:choose>
+		</c:choose> --%>
 	</form>
 </div>
 
@@ -342,6 +391,15 @@
 <script type="text/javascript" src="/view/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
 <script type="text/javascript" src="/view/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
 <script type="text/javascript">
+
+function article_save(){
+	$('#confirmState').val(3);//待完善，草稿
+	//$('form').submit();
+}
+function article_save_submit(){
+	$('#confirmState').val(2);//待审核
+	$('#openCompanyAccount').submit();
+}
 $(function(){
 	$('.skin-minimal input').iCheck({
 		checkboxClass: 'icheckbox-blue',
