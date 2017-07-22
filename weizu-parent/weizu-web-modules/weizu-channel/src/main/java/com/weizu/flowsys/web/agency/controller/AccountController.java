@@ -3,6 +3,7 @@ package com.weizu.flowsys.web.agency.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -242,34 +243,58 @@ public class AccountController {
 		return new ModelAndView("/account/open_company_account_page");
 	}
 	/**
+	 * @description:审核对公账户页面
+	 * @param request
+	 * @param agencyId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月22日 下午5:13:20
+	 */
+	@RequestMapping(value=AccountURL.CONFIRM_COMPANY_ACCOUNT_PAGE)
+	public ModelAndView confirmCompanyAccountPage(HttpServletRequest request){
+		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		if(agencyVo != null)
+		{
+			List<CompanyCredentialsPo> list = chargeAccountAO.getUnconfirmedAccount(agencyVo.getId());
+//			CompanyCredentialsPo ccpo = companyCredentialsDao.checkCraatedByAgencyId(agencyVo.getId());
+			resultMap.put("unconfirmList", list);
+			resultMap.put("confirmStateEnums", ConfirmStateEnum.toList());
+			return new ModelAndView("/account/unconfirm_account_list","resultMap",resultMap);
+		}
+		return new ModelAndView("/account/unconfirm_account_list");
+	}
+	/**
 	 * @description: 开通对公账户
 	 * @return
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月30日 下午4:03:56
 	 */
 	@RequestMapping(value=AccountURL.OPEN_COMPANY_ACCOUNT)
-	public ModelAndView openCompanyAccount(@RequestParam("certification_img") MultipartFile file, ChargeAccountPo chargeAccountPo,HttpServletRequest request){
+	public ModelAndView openCompanyAccount(CompanyCredentialsPo ccpo, HttpServletRequest request){
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVo != null)
 		{
-			chargeAccountPo.setAgencyId(agencyVo.getId());
+			ccpo.initBase(agencyVo.getId(), agencyVo.getRootAgencyId(), ccpo.getConfirmState());
+			String res = companyCredentialsAO.addCompanyCredential(ccpo);
+//			chargeAccountPo.setAgencyId(agencyVo.getId());
 //			String realPath=request.getSession().getServletContext().getRealPath("/");
 			
-			String realPath = "";
-			try {
-				realPath = FileUpload.uploadFile(file, request);
-				System.out.println(realPath);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			chargeAccountPo.setCertificationImg(realPath);
-			int createRes = chargeAccountAO.createCompanyAccount(realPath, chargeAccountPo,file);
-			if(createRes > 0){
-				ChargeAccountPo chargeAccount =  (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
-				chargeAccount.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());
-				request.getSession().setAttribute("chargeAccount", chargeAccount);
-			}
-			return new ModelAndView("/account/open_company_account_page");
+//			String realPath = "";
+//			try {
+//				realPath = FileUpload.uploadFile(file, request);
+//				System.out.println(realPath);
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//			chargeAccountPo.setCertificationImg(realPath);
+//			int createRes = chargeAccountAO.createCompanyAccount(realPath, chargeAccountPo,file);
+//			if(createRes > 0){
+//				ChargeAccountPo chargeAccount =  (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
+//				chargeAccount.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());
+//				request.getSession().setAttribute("chargeAccount", chargeAccount);
+//			}
+			return openCompanyAccountPage(request);
 		}
 		return new ModelAndView("/account/open_company_account_page");
 	}

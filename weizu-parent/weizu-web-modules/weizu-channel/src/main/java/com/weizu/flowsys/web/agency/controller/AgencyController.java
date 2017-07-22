@@ -2,6 +2,7 @@ package com.weizu.flowsys.web.agency.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -32,6 +33,7 @@ import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
+import com.weizu.flowsys.web.agency.pojo.CompanyCredentialsPo;
 import com.weizu.flowsys.web.agency.url.AgencyURL;
 
 @Controller
@@ -134,14 +136,20 @@ public class AgencyController {
 				}else{
 					session.setAttribute("companyAccount", "no");//设置代理商不能开通对公账户
 				}
-				
-				
 			}
 			else{
 				session.setAttribute("power", "no");
 			}
 			session.setAttribute("loginContext", agencyVO);// 保存登陆实体到session中
-			
+			/**设置消息*/
+			int msgNum = 0;
+			List<CompanyCredentialsPo> list = chargeAccountAO.getUnconfirmedAccount(resultPo.getId());
+			if(list != null && list.size() > 0){
+				session.setAttribute("unconfirm", list.get(0));
+				session.setAttribute("unconfirmSize", list.size());
+				msgNum += list.size();
+			}
+			session.setAttribute("msgNum", msgNum);
 			
 			return new ModelAndView("/index");// 返回登录人主要账户信息（余额，透支额）
 		} else {

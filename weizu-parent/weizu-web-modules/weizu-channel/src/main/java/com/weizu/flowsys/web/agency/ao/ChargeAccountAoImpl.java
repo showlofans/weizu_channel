@@ -2,6 +2,7 @@ package com.weizu.flowsys.web.agency.ao;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -13,8 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.web.agency.dao.CompanyCredentialsDao;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
+import com.weizu.flowsys.web.agency.pojo.CompanyCredentialsPo;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 
 @Service("chargeAccountAO")
@@ -23,11 +26,27 @@ public class ChargeAccountAoImpl implements ChargeAccountAo {
 	@Resource
 	private ChargeAccountDao chargeAccountDao;
 	
+	@Resource
+	private CompanyCredentialsDao companyCredentialsDao;
+	
 	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
 	public int createAccount(ChargeAccountPo chargeAccountPo) {
 		chargeAccountPo.setBillType(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 		return chargeAccountDao.add(chargeAccountPo);
+	}
+	
+	/**
+	 * @description: 获得所有下级没审核的账户
+	 * @param rootAgencyId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月22日 下午4:57:14
+	 */
+	@Override
+	public List<CompanyCredentialsPo> getUnconfirmedAccount(int rootAgencyId) {
+		List<CompanyCredentialsPo> list = companyCredentialsDao.list(new WherePrams("confirm_agency_id", "=", rootAgencyId).and("confirm_state", "=", 2));
+		return list;
 	}
 
 	@Transactional(isolation = Isolation.SERIALIZABLE)
@@ -140,6 +159,8 @@ public class ChargeAccountAoImpl implements ChargeAccountAo {
 		ChargeAccountPo accountPo = chargeAccountDao.get(new WherePrams("agency_id", "=", agencyId).and("bill_type", "=", billType));
 		return accountPo;
 	}
+
+	
 
 
 }

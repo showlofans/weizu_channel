@@ -22,7 +22,7 @@ public enum ConfirmStateEnum {
 	/**
 	 * 待验证
 	 */
-	ON_CONFIRM("待验证",02),
+	ON_CONFIRM("待验证",2),
 	/**
 	 * 认证信息待完善:草稿）
 	 */
