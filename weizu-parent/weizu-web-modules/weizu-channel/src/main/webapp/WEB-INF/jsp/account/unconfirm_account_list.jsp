@@ -63,6 +63,8 @@
 					<th width="80">商务联系电话</th>
 					<th width="80">紧急联系人</th>
 					<th width="80">紧急联系人电话</th>
+					<th width="80">提交时间</th>
+					<th width="80">审核时间</th>
 					<th width="80">审核状态</th>
 					<th width="80">操作</th>
 				</tr>
@@ -82,10 +84,23 @@
 						 <td>${unconfirm.beTel }</td>
 						 <td>${unconfirm.emergencyContact }</td>
 						 <td>${unconfirm.ecTel }</td>
+						 <td>${unconfirm.commitTimeStr }</td>
+						 <td>${unconfirm.confirmTimeStr }</td>
 						<td><c:forEach items="${resultMap.confirmStateEnums }" var="confirmStateE" varStatus="vs1">
-						<c:if test="${unconfirm.confirmState == confirmStateE.value }"> ${confirmStateE.desc }</c:if>
+						<c:if test="${unconfirm.confirmState == confirmStateE.value }"> <span class="label label-defaunt radius">${confirmStateE.desc }</span></c:if>
 						</c:forEach></td>
-						<td></td>
+						<td>
+							<c:choose>
+								<c:when test="${unconfirm.confirmState != 1}">
+									<%-- ${unconfirm.confirmState} --%>
+									<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="confirmState(${unconfirm.id },1)" href="javascript:;" title="审核通过"><i class="Hui-iconfont">&#xe6e1;</i></a>
+									<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="confirmState(${unconfirm.id },0)" href="javascript:;" title="审核不通过"><i class="Hui-iconfont">&#xe6e0;</i></a>
+								</c:when>
+								<c:otherwise>
+									
+								</c:otherwise>
+							</c:choose>
+						</td>
 						<!-- 备注 -->
 						<%-- <td><c:forEach items="${resultMap.accountTypeEnum }" var="accountType" varStatus="vs1">
 						<c:if test="${unconfirm.accountType == accountType.value }"> ${accountType.desc }</c:if>
@@ -117,6 +132,31 @@
 <script type="text/javascript" charset="utf8" src="/view/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="/view/lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript">
+function confirmState(id,state){
+	var tips = '确认通过认证吗？';
+	//alert(state);
+	if(state=='0'){
+		tips = '确认否定认证吗？';
+	}
+	layer.confirm(tips,function(index){
+		$.ajax({
+			type: 'POST',
+			url: '/flowsys/account/verify_credentials.do?id='+id +'&confirmState='+state,
+			//dataType: 'json',
+			success: function(data){
+				//$(obj).parents("tr").remove();
+				//alert(data);
+				if(data == 'success'){
+					layer.msg('已验证!',{icon:1,time:1000});
+					location.reload();
+				}
+			},
+			error:function(data) {
+				console.log(data.msg);
+			},
+		});		
+	});
+}
 /* function search1(){
 	alert($("#startTime").val());
 	alert($("#endTime").val());

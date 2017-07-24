@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.agency.pojo;
 
 import com.weizu.flowsys.core.annotation.po.TableName;
+import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
 
 /**
@@ -62,6 +63,14 @@ public class CompanyCredentialsPo extends Po{
     private String corporateIdentityFront;				//法定人身份证(正面)
 
     private String corporateIdentityBack;				//法定人身份证(反面)
+    
+    private Long commitTime;							//提交时间
+    @TempField
+    private String commitTimeStr;						//提交时间str
+    @TempField
+    private String confirmTimeStr;						//审核时间str
+    
+    private Long confirmTime;							//审核时间
 
     
     /** 上传图片必须加到数据库的参数
@@ -83,6 +92,38 @@ public class CompanyCredentialsPo extends Po{
 		this.confirmAgencyId = confirmAgencyId;
 		this.confirmState = confirmState;
     }
+    
+	public String getCommitTimeStr() {
+		return commitTimeStr;
+	}
+
+	public void setCommitTimeStr(String commitTimeStr) {
+		this.commitTimeStr = commitTimeStr;
+	}
+
+	public String getConfirmTimeStr() {
+		return confirmTimeStr;
+	}
+
+	public void setConfirmTimeStr(String confirmTimeStr) {
+		this.confirmTimeStr = confirmTimeStr;
+	}
+
+	public Long getCommitTime() {
+		return commitTime;
+	}
+
+	public void setCommitTime(Long commitTime) {
+		this.commitTime = commitTime;
+	}
+
+	public Long getConfirmTime() {
+		return confirmTime;
+	}
+
+	public void setConfirmTime(Long confirmTime) {
+		this.confirmTime = confirmTime;
+	}
 
 	public CompanyCredentialsPo() {
 		super();

@@ -44,6 +44,7 @@ public class CompanyCredentialsAOImpl implements CompanyCredentialsAO {
 		if(ccpoC != null){//已经创建了账户认证
 			res = companyCredentialsDao.updateLocal(ccpo, new WherePrams("agency_id", "=", agencyId));//更新这个代理商的认证信息
 		}else{
+			ccpo.setCommitTime(System.currentTimeMillis());
 			res = companyCredentialsDao.add(ccpo);
 		}
 		if(res > 0){
@@ -122,6 +123,23 @@ public class CompanyCredentialsAOImpl implements CompanyCredentialsAO {
         	json = "{\"3\":\"上传失败\"}";
         }
 		return json;
+	}
+
+	/**
+	 * @description:  更新账户信息
+	 * @param ccpo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月24日 下午3:12:58
+	 */
+	@Transactional
+	@Override
+	public String updateCompanyCredential(CompanyCredentialsPo ccpo) {
+		int res = companyCredentialsDao.updateLocal(ccpo, new WherePrams("id", "=", ccpo.getId()));//更新这个代理商的认证信息
+		if(res > 0){
+			return "success";
+		}
+		return null;
 	}
 
 }

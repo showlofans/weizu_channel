@@ -35,6 +35,16 @@ public interface ChargeAccountAo {
 	 */
 	List<CompanyCredentialsPo> getUnconfirmedAccount(int rootAgencyId);
 	
+	/**
+	 * @description: 获得所有下级没审核的账户
+	 * @param rootAgencyId
+	 * @param confirmState
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月24日 下午3:49:54
+	 */
+	List<CompanyCredentialsPo> getUnconfirmedAccount(int rootAgencyId, int confirmState);
+	
 	
 	/**
 	 * @description: 创建一个对公账户

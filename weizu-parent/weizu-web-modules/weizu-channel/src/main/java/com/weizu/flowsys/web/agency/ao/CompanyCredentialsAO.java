@@ -24,6 +24,15 @@ public interface CompanyCredentialsAO {
 	String addCompanyCredential(CompanyCredentialsPo ccpo);
 	
 	/**
+	 * @description: 更新账户信息
+	 * @param ccpo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月24日 下午3:11:18
+	 */
+	String updateCompanyCredential(CompanyCredentialsPo ccpo);
+	
+	/**
 	 * @description: 上传认证图片
 	 * @param file
 	 * @param agencyVo

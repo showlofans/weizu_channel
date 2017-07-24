@@ -288,8 +288,8 @@
 							<div id="corporateIdentityBack">选择图片</div>
 						</c:when>
 						<c:otherwise><!-- ${resultMap.ccpo.corporateIdentityBack } -->
-							<div id="corporateIdentityBack">选择图片</div>
 							<input value="idBack" class="input-text upload-url" style="width:300px" type="text" readonly >
+							<div id="corporateIdentityBack">选择图片</div>
 							<!-- <button id="btn-star1" disabled="disabled" class="btn btn-default btn-uploadstar radius ml-10">开始上传 </button>图片以：<span class="c-red">idBack</span>命名 -->
 						</c:otherwise>
 					</c:choose>

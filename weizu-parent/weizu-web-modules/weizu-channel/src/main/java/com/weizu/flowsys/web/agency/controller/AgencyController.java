@@ -21,6 +21,7 @@ import org.weizu.web.foundation.VerifyCodeUtils;
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.ConfirmStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.OperatorDiscountAO;
@@ -143,7 +144,7 @@ public class AgencyController {
 			session.setAttribute("loginContext", agencyVO);// 保存登陆实体到session中
 			/**设置消息*/
 			int msgNum = 0;
-			List<CompanyCredentialsPo> list = chargeAccountAO.getUnconfirmedAccount(resultPo.getId());
+			List<CompanyCredentialsPo> list = chargeAccountAO.getUnconfirmedAccount(resultPo.getId(),ConfirmStateEnum.ON_CONFIRM.getValue());
 			if(list != null && list.size() > 0){
 				session.setAttribute("unconfirm", list.get(0));
 				session.setAttribute("unconfirmSize", list.size());
