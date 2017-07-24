@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50626
 File Encoding         : 65001
 
-Date: 2017-07-21 18:27:46
+Date: 2017-07-24 18:11:35
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -217,10 +217,10 @@ INSERT INTO `channel_channel` VALUES ('8', '省内-wz江西省', '500& 500', '32
 INSERT INTO `channel_channel` VALUES ('9', '全国-wz福建', '100', null, null, null, null, null, '0', '0', null, '4');
 INSERT INTO `channel_channel` VALUES ('10', '省内-wz广东', '200', '32', null, null, null, null, '0', '0', null, '4');
 INSERT INTO `channel_channel` VALUES ('11', '全国-wz广东移动95', '6144& 3072& 500', '32', null, null, null, null, '0', '0', null, '4');
-INSERT INTO `channel_channel` VALUES ('12', '省漫游-wz广东移动75', '500& 6144', '32', null, null, null, null, '0', '0', null, '4');
-INSERT INTO `channel_channel` VALUES ('13', '省漫游-江西', '1000', '32', null, null, null, null, '1', '1', '1499680372499', '4');
-INSERT INTO `channel_channel` VALUES ('14', '全国-', '6144& 3072& 500', '32', null, null, null, null, '0', '0', null, '4');
-INSERT INTO `channel_channel` VALUES ('15', '全国-1w', '100', '32', null, null, null, null, '0', '0', null, '4');
+INSERT INTO `channel_channel` VALUES ('12', '省漫游-wz广东移动75', '500& 6144', '32', null, null, null, null, '0', '0', '1500862271919', '4');
+INSERT INTO `channel_channel` VALUES ('13', '省漫游-江西', '1000', '32', null, null, null, null, '0', '1', '1499680372499', '4');
+INSERT INTO `channel_channel` VALUES ('14', '全国-', '6144& 3072& 500', '32', null, null, null, null, '0', '0', '1500862266556', '4');
+INSERT INTO `channel_channel` VALUES ('15', '全国-1w', '100', '32', null, null, null, null, '0', '0', '1500862263126', '4');
 
 -- ----------------------------
 -- Table structure for `channel_discount`
@@ -542,6 +542,8 @@ CREATE TABLE `company_credentials` (
   `deposit_bank_photo` varchar(255) DEFAULT NULL COMMENT '银行开户信息',
   `corporate_identity_front` varchar(255) DEFAULT NULL COMMENT '法定人身份证(正面)',
   `corporate_identity_back` varchar(255) DEFAULT NULL COMMENT '法定人身份证(反面)',
+  `commit_time` bigint(20) DEFAULT NULL COMMENT '提交时间',
+  `confirm_time` bigint(20) DEFAULT NULL COMMENT '审核时间',
   PRIMARY KEY (`id`),
   KEY `fk_credentials_aid` (`agency_id`),
   KEY `fk_credentials_raid` (`confirm_agency_id`),
@@ -552,9 +554,9 @@ CREATE TABLE `company_credentials` (
 -- ----------------------------
 -- Records of company_credentials
 -- ----------------------------
-INSERT INTO `company_credentials` VALUES ('1', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-INSERT INTO `company_credentials` VALUES ('2', '4', '1', '3', null, null, null, null, null, null, '微族科技', null, null, null, null, null, null, null, null, null, null, '/upload/credentials/123/license.jpg', '/upload/credentials/123/bank.jpg', '/upload/credentials/123/idFront.jpg', null);
-INSERT INTO `company_credentials` VALUES ('3', '21', '4', '3', null, null, null, null, null, null, '南昌微族科技', null, null, null, null, null, null, null, null, null, null, null, null, null, '/upload/credentials/123/idBack.jpg');
+INSERT INTO `company_credentials` VALUES ('1', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, '1495689716779', '1495689716779');
+INSERT INTO `company_credentials` VALUES ('2', '4', '1', '1', '网吧', '456', '微博', '456', '减肥快圣诞节了附近可', '1', '微族科技', 'zhongyilu', '13699562589', '建行', '6217002020019622332', '456454654546545', '信息服务费', null, '发斯蒂芬', '564656411', '方式的减肥了可适当', '/upload/123/license.jpg', '', '', '/upload/123/idBack.jpg', '1500888168922', '1500890698879');
+INSERT INTO `company_credentials` VALUES ('3', '21', '4', '3', null, null, null, null, null, null, '南昌微族科技', null, null, null, null, null, null, null, null, null, null, null, null, null, '', '1495689716779', '1495689716779');
 
 -- ----------------------------
 -- Table structure for `exchange_platform`

@@ -25,12 +25,20 @@ public class CompanyCredentialsAOImplTest {
 	@Resource
 	private CompanyCredentialsAO companyCredentialsAO; 
 	
+//	@Test
+//	public void testAddCompanyCredential(){
+//		CompanyCredentialsPo ccpo = new CompanyCredentialsPo(21, 4, ConfirmStateEnum.INCOMPLETE_CONFIRM.getValue());
+//		ccpo.setCompanyName("南昌微族科技");
+//		ccpo.setCorporateIdentityBack("/upload/credentials/123/idBack.jpg");
+//		String res = companyCredentialsAO.addCompanyCredential(ccpo);
+//		System.out.println(res);
+//	}
 	@Test
-	public void testAddCompanyCredential(){
-		CompanyCredentialsPo ccpo = new CompanyCredentialsPo(21, 4, ConfirmStateEnum.INCOMPLETE_CONFIRM.getValue());
-		ccpo.setCompanyName("南昌微族科技");
-		ccpo.setCorporateIdentityBack("/upload/credentials/123/idBack.jpg");
-		String res = companyCredentialsAO.addCompanyCredential(ccpo);
-		System.out.println(res);
+	public void testUpdateCompanyCredential(){
+		CompanyCredentialsPo ccpo = new CompanyCredentialsPo();
+//		ccpo.setCommitTime(System.currentTimeMillis());
+		ccpo.setConfirmTime(System.currentTimeMillis());
+		ccpo.setId(2);
+		companyCredentialsAO.updateCompanyCredential(ccpo);
 	}
 }

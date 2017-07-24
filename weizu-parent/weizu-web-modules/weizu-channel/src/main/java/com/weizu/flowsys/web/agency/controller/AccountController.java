@@ -260,6 +260,15 @@ public class AccountController {
 //			CompanyCredentialsPo ccpo = companyCredentialsDao.checkCraatedByAgencyId(agencyVo.getId());
 			resultMap.put("unconfirmList", list);
 			resultMap.put("confirmStateEnums", ConfirmStateEnum.toList());
+			//处理消息
+			int unconfirmSize = (int) request.getSession().getAttribute("unconfirmSize");
+			unconfirmSize -= 1;
+			request.getSession().setAttribute("unconfirmSize", unconfirmSize);
+			if(unconfirmSize == 0){
+				int msgNum = (int)request.getSession().getAttribute("msgNum");
+				//request.getSession().setAttribute("unconfirm", null);//设置消息为不显示
+				request.getSession().setAttribute("msgNum", msgNum-1);//设置总消息数
+			}
 			return new ModelAndView("/account/unconfirm_account_list","resultMap",resultMap);
 		}
 		return new ModelAndView("/account/unconfirm_account_list");
@@ -422,6 +431,31 @@ public class AccountController {
 		}
 		
 //		return new ModelAndView("/account/account_info","resultMap",resultMap);
+	}
+	
+	/**
+	 * @description: 审核认证信息
+	 * @param ccId
+	 * @param confirmState
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月24日 下午3:08:52
+	 */
+	@ResponseBody
+	@RequestMapping(value=AccountURL.VERIFY_CREDENTIALS)
+	public void verifyCredentials(String id, String confirmState, HttpServletResponse response, HttpServletRequest request){
+		CompanyCredentialsPo ccpo = new CompanyCredentialsPo();
+		String res = "error";
+		if(StringHelper.isNotEmpty(confirmState) && StringHelper.isNotEmpty(id)){
+			ccpo.setId(Integer.parseInt(id));
+			ccpo.setConfirmState(Integer.parseInt(confirmState));
+			ccpo.setConfirmTime(System.currentTimeMillis());
+			res = companyCredentialsAO.updateCompanyCredential(ccpo);
+		}
+		try {
+			response.getWriter().print(res);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 //	public File getFile() {

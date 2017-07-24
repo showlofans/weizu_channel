@@ -65,7 +65,7 @@
 					<li id="Hui-msg" class="dropDown right dropDown_hover"> <a href="#" class="dropDown_A" title="消息"><span class="badge badge-danger">${msgNum }</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> 
 						<ul class="dropDown-menu menu radius box-shadow">
 							<c:if test="${unconfirm != null }">
-								<li><a href="/flowsys/account/confirm_company_account_page.do" data-title="" title="" onclick="Hui_admin_tab(this)">认证审核 &nbsp;&nbsp;&nbsp;&nbsp;  ${unconfirmSize }</a></li>
+								<li><a data-href="/flowsys/account/confirm_company_account_page.do" data-title="认证审核" title="认证审核" onclick="Hui_admin_tab(this)">认证审核 &nbsp;&nbsp;&nbsp;&nbsp;  ${unconfirmSize }</a></li>
 							</c:if>
 							<%-- <c:forEach items="${unconfirmList }" var="unconfirm" varStatus="vst" >
 								<li><a href="javascript:;" title="">${unconfirm.companyName }</a></li>

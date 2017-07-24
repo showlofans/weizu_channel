@@ -63,6 +63,11 @@ public class AccountURL extends BaseURL {
 	 * <br>/flowsys/account/upload_img_file.do
 	 */
 	public static final String UPLOAD_IMG_FILE = "/upload_img_file" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 审核认证
+	 * <br>/flowsys/account/verify_credentials.do
+	 */
+	public static final String VERIFY_CREDENTIALS = "/verify_credentials" + DYNAMIC_WEB_SUFFIX;
 	
 	
 }

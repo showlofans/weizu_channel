@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.weizu.web.foundation.DateUtil;
 
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
@@ -45,7 +46,32 @@ public class ChargeAccountAoImpl implements ChargeAccountAo {
 	 */
 	@Override
 	public List<CompanyCredentialsPo> getUnconfirmedAccount(int rootAgencyId) {
-		List<CompanyCredentialsPo> list = companyCredentialsDao.list(new WherePrams("confirm_agency_id", "=", rootAgencyId).and("confirm_state", "=", 2));
+		List<CompanyCredentialsPo> list = companyCredentialsDao.list(new WherePrams("confirm_agency_id", "=", rootAgencyId).orderBy("commit_time"));
+		for (CompanyCredentialsPo companyCredentialsPo : list) {
+			if(companyCredentialsPo.getCommitTime() != null){
+				String commitTimeStr = DateUtil.formatAll(companyCredentialsPo.getCommitTime());
+				companyCredentialsPo.setCommitTimeStr(commitTimeStr);
+			}
+			if(companyCredentialsPo.getConfirmTime() != null){
+				String confirmTimeStr = DateUtil.formatAll(companyCredentialsPo.getConfirmTime());
+				companyCredentialsPo.setConfirmTimeStr(confirmTimeStr);
+			}
+		}
+		return list;
+	}
+	
+	/**
+	 * @description: 获得所有下级没审核的账户
+	 * @param rootAgencyId
+	 * @param confirmState
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月24日 下午3:51:36
+	 */
+	@Override
+	public List<CompanyCredentialsPo> getUnconfirmedAccount(int rootAgencyId,
+			int confirmState) {
+		List<CompanyCredentialsPo> list = companyCredentialsDao.list(new WherePrams("confirm_agency_id", "=", rootAgencyId).and("confirm_state", "=", confirmState));
 		return list;
 	}
 
@@ -159,8 +185,5 @@ public class ChargeAccountAoImpl implements ChargeAccountAo {
 		ChargeAccountPo accountPo = chargeAccountDao.get(new WherePrams("agency_id", "=", agencyId).and("bill_type", "=", billType));
 		return accountPo;
 	}
-
-	
-
 
 }

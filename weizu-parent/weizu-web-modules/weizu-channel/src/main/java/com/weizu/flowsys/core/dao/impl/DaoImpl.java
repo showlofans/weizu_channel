@@ -502,6 +502,7 @@ public class DaoImpl<T extends Po, PK extends Serializable> implements Dao<T, PK
 		
 		String sql = "update " + tableName + " set ";
 		List<Pram> prams = sqlUtil.getPramList(po);
+		int j = 0;//参数有值的个数
 		for (int i = 0; i < prams.size(); i++) {
 			if(null != prams.get(i).getValue()){
 				sql += prams.get(i).getFile() + "=";
@@ -510,20 +511,23 @@ public class DaoImpl<T extends Po, PK extends Serializable> implements Dao<T, PK
 					sql += "'" + new String((byte[]) value) + "'";
 				}else if(value instanceof Boolean){
 					sql += "'" + ((boolean)value == true ? 1 : 0) + "'";
-				}else if(value instanceof Integer){
+				}else if(value instanceof Integer || value instanceof Long){
 					sql += value;
 				}else{
 					sql += "'" + value + "'";
 				}
 //				sql += prams.get(i).getFile() + "='" + prams.get(i).getValue() + "'";
 				//System.out.println(prams.size());
-				if (i < prams.size() -1) {
+//				if (i < prams.size() -1) {
 					sql += ",";
 //					System.out.println(1);
-				}
+//				}
+					j++;
 			}
 		}
-		sql = sql.substring(0,sql.lastIndexOf(",")); 
+		if(sql.lastIndexOf(",") >= 0){
+			sql = sql.substring(0,sql.lastIndexOf(","));
+		} 
 		sql += where.getWherePrams() +";";
 		
 		return sqlSessionTemplateASS.update("updateLocalByPram", sql);
