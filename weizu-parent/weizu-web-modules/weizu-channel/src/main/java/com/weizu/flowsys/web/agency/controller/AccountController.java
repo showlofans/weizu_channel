@@ -74,12 +74,13 @@ public class AccountController {
 	 */
 	@RequestMapping(value = AccountURL.ADD_CHARGE_PAGE)
 	public ModelAndView addCharge(HttpServletRequest request, String userName,
-			int agencyId) {
+			int agencyId, int accountId) {
 
 		// String agencyId = request.getParameter("agencyId").trim().toString();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("agencyUserName", userName); // 代理商名字
 		resultMap.put("agencyId", agencyId); // 代理商ID
+		resultMap.put("accountId", accountId); // 代理商ID
 		resultMap.put("billTypeEnum", BillTypeEnum.toList());
 		resultMap.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());//默认对私
 		resultMap.put("chargeAccount",chargeAccountAO.getAccountByAgencyId(agencyId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));//通过代理商Id获得充值账户基本信息

@@ -111,8 +111,8 @@
 				<ul>
 					<!-- <li><a data-href="/flowsys/rate/rate_add_page.do" data-title="费率添加" href="javascript:void(0)">费率添加</a></li>
 					<li><a data-href="/flowsys/rate/rate_list.do" data-title="费率列表" href="javascript:void(0)">费率列表</a></li> -->
-					<li><a data-href="/flowsys/agency/child_agency_list.do" data-title="认证用户" href="javascript:void(0)">认证用户</a></li>
-					<li><a data-href="/flowsys/agency/child_agency_list.do" data-title="代理商" href="javascript:void(0)">代理商</a></li>
+					<li><a data-href="/flowsys/agency/child_agency_list.do?agencyTag=1" data-title="认证用户" href="javascript:void(0)">认证用户</a></li>
+					<li><a data-href="/flowsys/agency/child_agency_list.do?agencyTag=0" data-title="代理商" href="javascript:void(0)">代理商</a></li>
 					<!-- <li><a data-href="/flowsys/agency/get_tel_location.do" data-title="号码归属地查询" href="javascript:void(0)">号码归属地查询</a></li> -->
 			</ul>
 		</dd>

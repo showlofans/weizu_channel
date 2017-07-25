@@ -203,6 +203,7 @@
 			<sapn>通道折扣：云南85</sapn> -->
 			 
 			<!-- <sapn>通道折扣：云南85</sapn> -->
+			 <a style="text-decoration:none" class="btn btn-success" onClick="batch_bind('绑定代理商',' /flowsys/rate/batch_bind_agency_page.do','10001')" href="javascript:;" title="绑定代理商"><i class="Hui-iconfont">&#xe6df;</i>一键删除绑定</a>
 			 <a style="text-decoration:none" class="btn btn-success" onClick="batch_bind('绑定代理商',' /flowsys/rate/batch_bind_agency_page.do','10001')" href="javascript:;" title="绑定代理商"><i class="Hui-iconfont">&#xe6df;</i>绑定代理商</a>
 			<!-- <a style="text-decoration:none" class="btn btn-success" onclick="Hui_admin_tab(this)" data-href="/flowsys/rate/bind_agency_page.do" title="" data-title="绑定代理商">绑定代理商</a> -->
 		<table class="table table-border table-bordered table-bg table-hover table-sort">

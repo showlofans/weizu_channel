@@ -23,6 +23,9 @@ public class AgencyActiveRateDTO extends Po {
     @TempField
     private String agencyIds;					//代理商id
     
+    @TempField
+    private Integer agencyTag;					//代理商类型（0-平台用户，1,-接口用户）
+    
 	public AgencyActiveRateDTO(Integer agencyId, String agencyName,
 			Long rateDiscountId, Long activeTime, Integer bindState,
 			Integer bindAgencyId) {
@@ -33,6 +36,14 @@ public class AgencyActiveRateDTO extends Po {
 		this.activeTime = activeTime;
 		this.bindState = bindState;
 		this.bindAgencyId = bindAgencyId;
+	}
+	
+	public Integer getAgencyTag() {
+		return agencyTag;
+	}
+
+	public void setAgencyTag(Integer agencyTag) {
+		this.agencyTag = agencyTag;
 	}
 
 	public AgencyActiveRateDTO() {

@@ -23,6 +23,7 @@ import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
+import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelDiscountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
@@ -897,12 +898,17 @@ public class RateController {
 		if(aardto.getBindState() == null){
 			aardto.setBindState(BindStateEnum.UNBIND.getValue());
 		}
+		//初始化代理商类型
+		if(aardto.getAgencyTag() == null){
+			aardto.setAgencyTag(AgencyTagEnum.PLATFORM_USER.getValue());
+		}
 		
 		Pagination<AgencyBackwardVO> pagination = agencyAO.getUnbindAgency(rootAgencyId,aardto, pageParam);
 		resultMap.put("ratePo", ratePo);
 		resultMap.put("aardto", aardto);
 		resultMap.put("pagination", pagination);
 		resultMap.put("bindStateEnums", BindStateEnum.toBindList());
+		resultMap.put("agencyTagEnums", AgencyTagEnum.toList());
 		resultMap.put("otypeEnums", OperatorTypeEnum.toList());
 		resultMap.put("stypeEnums", ServiceTypeEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());

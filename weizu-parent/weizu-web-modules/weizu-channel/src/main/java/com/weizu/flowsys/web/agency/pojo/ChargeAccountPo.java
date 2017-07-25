@@ -28,7 +28,9 @@ public class ChargeAccountPo extends Po {
     
     private Integer billType;				//票务类型
     
-    private String certificationImg;		//认证图片		
+    private String certificationImg;		//认证图片	
+    
+    private Long createTime;				//账户创建时间
 
     
     public ChargeAccountPo(Integer agencyId, Double accountBalance,
@@ -62,8 +64,15 @@ public class ChargeAccountPo extends Po {
     	return this.accountBalance;
     }
     
-    
-    public Integer getBillType() {
+    public Long getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Long createTime) {
+		this.createTime = createTime;
+	}
+
+	public Integer getBillType() {
 		return billType;
 	}
 

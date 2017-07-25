@@ -16,6 +16,8 @@ public class PurchaseVO {
     private Long orderId;						//订单号
     
     private String orderIdApi;					//其他系统返回的订单id
+    
+    private String orderIdFrom;					//下级代理商传过来的订单号
 
     private String agencyName;					//代理商名称
 
@@ -60,7 +62,15 @@ public class PurchaseVO {
     
     private ExchangePlatformPo ep;				//平台信息
     
-    public Integer getChannelId() {
+    public String getOrderIdFrom() {
+		return orderIdFrom;
+	}
+
+	public void setOrderIdFrom(String orderIdFrom) {
+		this.orderIdFrom = orderIdFrom;
+	}
+
+	public Integer getChannelId() {
 		return channelId;
 	}
 

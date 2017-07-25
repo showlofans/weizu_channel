@@ -41,10 +41,20 @@
 				<!-- <input type="text" style="width:150px" class="input-text" name="start_datetime"  value="2017-05-26 00:00:00"  onClick="WdatePicker({startDate:'%y-%M-%d 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
 	                  	<em class="inputto">至</em>
 	            <input style="width:150px" type="text" class="input-text" name="end_datetime"   value="2017-05-26 23:59:59"  onClick="WdatePicker({startDate:'%y-%M-%d 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/> -->
-				
+				<c:if test="${resultMap.params.agencyTag == 1 }"><!-- 认证用户页面 -->
+				费率类型：<span class="select-box inline">
+							<select name="billType"  id="billType" class="select" onchange="formSub()">
+								<option value="">请选择</option>
+								<c:forEach items="${resultMap.billTypeEnums }" var="billEnum" varStatus="vs1">
+									<option value="${billEnum.value }" <c:if test="${billEnum.value == resultMap.params.billType }"> selected</c:if>>${billEnum.desc }</option>
+								</c:forEach>
+							</select>
+						</span>
+				</c:if>
 				<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button> 
 				<button name="" id="" class="btn btn-success"  type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 				<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
+				<input type="hidden" name="agencyTag" value="${resultMap.params.agencyTag }"> 
 				<!--  <div class="form-group pt5">提交时间：<div class="input-group" style="width:150px"><span class="input-group-addon"><i class="fa fa-calendar ft13em"></i></span> <input type="text" placeholder="开始时间" data-date-format="YYYY-MM-DD HH:mm:ss" name="created_start" id="created_start"></div>--
 				<div class="input-group" style="width:150px"><span class="input-group-addon"><i class="fa fa-calendar ft13em"></i></span> <input type="text" placeholder="结束时间" data-date-format="YYYY-MM-DD HH:mm:ss" name="created_end" id="created_end"></div>
 				</div>  -->
@@ -64,8 +74,10 @@
 					<th width="75">地址</th>
 					<th width="60">余额</th>
 					<th width="60">信用</th>
+					<th width="60">费率类型</th>
 					<!-- <th width="60">费率</th>
 					<th width="60">带票费率</th> -->
+					
 					<th width="120">操作</th>
 					<th width="120">创建时间</th>
 				</tr>
@@ -99,28 +111,32 @@
 						<td>
 						<c:choose>
 							<c:when test="${agency.accountBalance <=0  }">
-								<a class="c-error" data-href="/flowsys/account/charge_list.do?agencyId=${agency.id }" data-toggle="tooltip" data-placement="top" title="点击查看记录" data-title="充值扣款记录" style="text-decoration:none"  onclick="Hui_admin_tab(this)">
+								<a class="c-error" data-href="/flowsys/account/charge_list.do?accountId=${agency.accountId }" data-toggle="tooltip" data-placement="top" title="点击查看记录" data-title="充值扣款记录" style="text-decoration:none"  onclick="Hui_admin_tab(this)">
 							${agency.accountBalance }</a>
 							</c:when>
 							<c:otherwise>
-								<a data-href="/flowsys/account/charge_list.do?agencyId=${agency.id }" data-toggle="tooltip" data-placement="top" title="点击查看记录" data-title="充值扣款记录" style="text-decoration:none"  onclick="Hui_admin_tab(this)">
+								<a data-href="/flowsys/account/charge_list.do?accountId=${agency.accountId }" data-toggle="tooltip" data-placement="top" title="点击查看记录" data-title="充值扣款记录" style="text-decoration:none"  onclick="Hui_admin_tab(this)">
 							${agency.accountBalance }</a>
 							</c:otherwise>
 						</c:choose>
 						</td>
 						<td>${agency.accountCredit }</td>
+						
+						<td class="td-status"><c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+						<c:if test="${agency.billType == billTypeEnum.value }"> ${billTypeEnum.desc }</c:if>
+						</c:forEach></td>
 						<!-- title="/flowsys/rate/rate_add_page.do"  -->
 						<%-- <td><a data-toggle="tooltip" data-placement="top" title="点击编辑费率" data-href="/flowsys/rate/rate_edit_page.do?rateId=${agency.rateId }" data-title="费率编辑" style="text-decoration:none" onclick="Hui_admin_tab(this)">${agency.rateName }</a></td>
 						<td><a data-toggle="tooltip" data-placement="top" title="点击编辑带票费率" data-href="/flowsys/rate/rate_edit_page.do?rateId=${agency.billRateId }" data-title="费率编辑" style="text-decoration:none" onclick="Hui_admin_tab(this)">${agency.billRateName }</a></td> --%>
 						<td class="td-manage">
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="editRate(this)" href="javascript:;" title="编辑代理商"><i class="Hui-iconfont">&#xe60c;</i></a>
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="resetPass('${agency.id}')" href="javascript:;" title="重置密码"><i class="Hui-iconfont">&#xe63f;</i></a>
-							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" onClick="account_charge('账户充值','${agency.userName }',${agency.id })" href="javascript:;" title="账户充值"><i class="Hui-iconfont">&#xe726;</i></a> 
+							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" onClick="account_charge('账户充值','${agency.userName }',${agency.id },${agency.accountId })" href="javascript:;" title="账户充值"><i class="Hui-iconfont">&#xe726;</i></a> 
 							<%-- <a title="/flowsys/rate/rate_add_page.do?rateId=${agency.rateId }&agencyId=${agency.id}" data-href="/flowsys/rate/rate_add_page.do?rateId=${agency.rateId }&agencyId=${agency.id}" data-title="费率添加" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe6df;</i></a> --%>
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none"  title="配置通道" data-href="/flowsys/rate/bind_channel_list.do?agencyId=${agency.id }&agencyName=${agency.userName}" data-title="配置通道" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe604;</i></a>
 						</td>
 						<td>${agency.createTimeStr }</td>
-						<%-- <td class="td-status"><c:forEach items="${resultMap.pgInEnums }" var="pgIn" varStatus="vs1">
+						<%-- <td class="td-status"><c:forEach items="${resultMap.agencyTagEnums }" var="pgIn" varStatus="vs1">
 						
 						<c:if test="${pg.pgInService == pgIn.value }"> ${pgIn.desc }</c:if>
 						</c:forEach></td> --%>
@@ -164,6 +180,12 @@
         "fnServerData": retrieveData // 获取数据的处理函数
 	});
 }); */
+
+/*onchange通道状态*/
+function formSub(){
+	//alert($(vart).val());
+	$('form').submit();
+}
 /**重置密码*/
 function resetPass(agencyId){
 	
@@ -214,7 +236,7 @@ function article_add(title,url,w,h){
 	layer.full(index);
 }
 /**账户-充值 */
-function account_charge(title,agencyUserName,id){
+function account_charge(title,agencyUserName,id,accoutId){
 	/* layer.open({
 		area: [w+'px', h +'px'],
 		type: 1,
@@ -228,7 +250,7 @@ function account_charge(title,agencyUserName,id){
         area: ['430px', '500px'],
         maxmin: false,
         closeBtn: 1,
-        content: '/flowsys/account/add_charge_page.do?agencyId=' + id + '&userName=' + agencyUserName,
+        content: '/flowsys/account/add_charge_page.do?agencyId=' + id + '&userName=' + agencyUserName+ '&accountId=' + accountId,
         end: function () {
             location.reload();
         }

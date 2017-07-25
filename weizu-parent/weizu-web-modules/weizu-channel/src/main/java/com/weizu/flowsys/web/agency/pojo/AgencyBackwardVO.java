@@ -39,7 +39,9 @@ public class AgencyBackwardVO extends Po {
 	private Long rateId;
 	private String rateName;
 	
-	private Long billRateId;
+//	private Long billRateId;
+	private Integer agencyTag;			//代理商类型（0-平台用户，1,-接口用户）
+	
 	private String billRateName;
 
 	private Long createTime;		//注册时间
@@ -51,6 +53,11 @@ public class AgencyBackwardVO extends Po {
 	private String verifyCode;				//注册邀请码
 	
 	private String userApiKey;				//用户对接系统的apikey
+	
+	@TempField
+	private Integer billType;				//费率类型
+	@TempField
+	private Integer accountId;				//账户id
 	
 	/**生成VO实体*/
 	public AgencyBackwardVO(Integer id, Integer rootAgencyId, String userName,
@@ -73,13 +80,35 @@ public class AgencyBackwardVO extends Po {
 		this.verifyCode = verifyCode;
 	}
 	
-	public Long getBillRateId() {
-		return billRateId;
+	public Integer getAccountId() {
+		return accountId;
 	}
 
-	public void setBillRateId(Long billRateId) {
-		this.billRateId = billRateId;
+	public void setAccountId(Integer accountId) {
+		this.accountId = accountId;
 	}
+
+	public Integer getBillType() {
+		return billType;
+	}
+
+	public void setBillType(Integer billType) {
+		this.billType = billType;
+	}
+
+	public void setUserPass(String userPass) {
+		this.userPass = userPass;
+	}
+
+	public Integer getAgencyTag() {
+		return agencyTag;
+	}
+
+	public void setAgencyTag(Integer agencyTag) {
+		this.agencyTag = agencyTag;
+	}
+
+
 
 	public String getBillRateName() {
 		return billRateName;

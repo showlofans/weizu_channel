@@ -65,6 +65,7 @@ public class AgencyAOImpl implements AgencyAO {
 			ChargeAccountPo chargePo = new ChargeAccountPo();
 			chargePo.setBillType(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());//默认开通对私账户
 			chargePo.setAgencyId(agencyId);
+			chargePo.setCreateTime(agencyBackward.getCreateTime());
 			int addCharge = chargeAccountDao.add(chargePo);
 			
 			int result = addAgency + addCharge;//要求一定要大于2
@@ -190,6 +191,12 @@ public class AgencyAOImpl implements AgencyAO {
 			if(StringHelper.isNotEmpty(agencyBackward.getUserName())){
 				resultMap.put("userName", agencyBackward.getUserName());
 			}
+			if(agencyBackward.getAgencyTag() != null){
+				resultMap.put("agencyTag", agencyBackward.getAgencyTag());
+			}
+			if(agencyBackward.getBillType() != null){
+				resultMap.put("billType", agencyBackward.getBillType());
+			}
 		}
 		return resultMap;
 	}
@@ -226,23 +233,23 @@ public class AgencyAOImpl implements AgencyAO {
 		searchMap.put("end", pageSize);
 		searchMap.put("rootAgencyId", rootAgencyId);
 		List<AgencyBackwardVO> records = agencyVODao.selectByAgencyVO(searchMap);
-		List<RateBackwardPo> rateList = rateBackwardDao.selectByRootId(rootAgencyId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());//查一遍rate列表
-		List<RateBackwardPo> billRateList = rateBackwardDao.selectByRootId(rootAgencyId,BillTypeEnum.CORPORATE_BUSINESS.getValue());//查一遍rate列表
+//		List<RateBackwardPo> rateList = rateBackwardDao.selectByRootId(rootAgencyId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());//查一遍rate列表
+//		List<RateBackwardPo> billRateList = rateBackwardDao.selectByRootId(rootAgencyId,BillTypeEnum.CORPORATE_BUSINESS.getValue());//查一遍rate列表
 		//根据引用直接修改值，不需要重新放到一个新的list当中
 		for (AgencyBackwardVO agencyBackwardVO2 : records) {
 			if(agencyBackwardVO2.getCreateTime() != null){
 				agencyBackwardVO2.setCreateTimeStr(DateUtil.formatAll(agencyBackwardVO2.getCreateTime()));
 			}
-			for (RateBackwardPo rateBackwardPo : rateList) {//在内存中初始化
-				if(rateBackwardPo.getId() == agencyBackwardVO2.getRateId()){
-					agencyBackwardVO2.setRateName(rateBackwardPo.getRateName());
-				}
-			}
-			for (RateBackwardPo rateBackwardPo : billRateList) {//在内存中初始化
-				if(rateBackwardPo.getId() == agencyBackwardVO2.getBillRateId()){
-					agencyBackwardVO2.setBillRateName(rateBackwardPo.getRateName());
-				}
-			}
+//			for (RateBackwardPo rateBackwardPo : rateList) {//在内存中初始化
+//				if(rateBackwardPo.getId() == agencyBackwardVO2.getRateId()){
+//					agencyBackwardVO2.setRateName(rateBackwardPo.getRateName());
+//				}
+//			}
+//			for (RateBackwardPo rateBackwardPo : billRateList) {//在内存中初始化
+//				if(rateBackwardPo.getId() == agencyBackwardVO2.getBillRateId()){
+//					agencyBackwardVO2.setBillRateName(rateBackwardPo.getRateName());
+//				}
+//			}
 		}
 //		List<AgencyBackwardPo> records = agencyBackwardDao.list(whereParams);
 		
@@ -399,6 +406,8 @@ public class AgencyAOImpl implements AgencyAO {
 		int totalRecord = 0;
 		int pageSize = 10;
 		int pageNo = 1;
+		
+		
 		if(aardto.getBindState() == BindStateEnum.NO.getValue()){
 			totalRecord = agencyVODao.countNoBAgency(paramsMap);
 			if(pageParam != null){
@@ -438,6 +447,9 @@ public class AgencyAOImpl implements AgencyAO {
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
 		if(aardto.getRateDiscountId() != null){
 			paramsMap.put("rateDiscountId", aardto.getRateDiscountId());
+		}
+		if(aardto.getAgencyTag() != null){
+			paramsMap.put("agencyTag", aardto.getAgencyTag());
 		}
 //		if(aardto.getBindState() != null){
 //			paramsMap.put("bindState", aardto.getBindState());

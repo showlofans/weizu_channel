@@ -18,7 +18,9 @@ public class PurchasePo extends Po {
     private Long orderId;						//订单号
     
     private String orderIdApi;					//其他系统返回的订单id
-
+    
+    private String orderIdFrom;					//下级代理商传过来的订单号
+    
     private Integer agencyId;					//代理id（外键）
    
     private Integer rootAgencyId;				//当前登陆id（外键）
@@ -102,6 +104,8 @@ public class PurchasePo extends Po {
 		this.billType = billType;
 	}
 
+	
+	
 //	public PurchasePo(Long orderId, String orderIdApi, Integer agencyId,
 //		Integer rootAgencyId, String chargeTel, Integer pgId,
 //		Long orderArriveTime, Long orderBackTime, String chargeTelDetail,
@@ -127,6 +131,14 @@ public class PurchasePo extends Po {
 //		this.recordId = recordId;
 //	}
 	
+	public String getOrderIdFrom() {
+		return orderIdFrom;
+	}
+
+	public void setOrderIdFrom(String orderIdFrom) {
+		this.orderIdFrom = orderIdFrom;
+	}
+
 	public Integer getBillType() {
 		return billType;
 	}

@@ -20,6 +20,7 @@ import org.weizu.web.foundation.VerifyCodeUtils;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
+import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ConfirmStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
@@ -395,6 +396,7 @@ public class AgencyController {
 		} else {
 			pageParam = new PageParam(1, 10);
 		}
+		
 		// agencyAO.ListAgencyByRoot(agencyBackwardPo.getId());
 		if(agencyBackwardPo == null){
 			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
@@ -403,6 +405,7 @@ public class AgencyController {
 				agencyBackwardPo.getId(), searchAgencyVO, pageParam);
 
 		resultMap.put("params", searchAgencyVO);
+		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		resultMap.put("pagination", pagination);
 		return new ModelAndView("/agency/child_agency_list", "resultMap", resultMap);
 	}
