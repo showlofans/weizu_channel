@@ -38,16 +38,19 @@
     <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
     <result column="agency_ip" jdbcType="VARCHAR" property="agencyIp" />
     <result column="rate_id" jdbcType="BIGINT" property="rateId" />
-    <result column="bill_rate_id" jdbcType="BIGINT" property="billRateId" />
+    <!-- <result column="bill_rate_id" jdbcType="BIGINT" property="billRateId" /> -->
     <result column="account_credit" jdbcType="DOUBLE" property="accountCredit" />
+    <result column="agency_tag" jdbcType="INTEGER" property="agencyTag" />
     <result column="account_balance" jdbcType="DOUBLE" property="accountBalance" />
     <result column="create_time" property="createTime" />
      <result column="user_api_key" property="userApiKey" />
     <result column="verify_code" property="verifyCode" />
+    <result column="bill_type" property="billType" />
+    <result column="cac.id" property="accountId" />
   </resultMap>
   <sql id="other_Column_List">
-    agb.id,agb.bill_rate_id, root_agency_id, user_name, user_real_name, agency_tel, user_email, 
-    agency_ip, rate_id, account_credit, account_balance, create_time
+    agb.id,agb.agency_tag, root_agency_id, user_name, user_real_name, agency_tel, user_email, 
+    agency_ip, rate_id, account_credit, account_balance, cac.create_time, cac.bill_type,cac.id
   </sql>
   <!-- 查询没有绑定的代理商 -->
   <resultMap id="UnbindMap" type="com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO">
@@ -60,7 +63,7 @@
     <result column="create_time" property="createTime" />
   </resultMap>
   <sql id="Unbind_Column_List">
-   a2.id,a2.user_name,a2.user_email,a2.user_real_name,a2.create_time
+   a2.id,a2.user_name,a2.user_email,a2.user_real_name,cac.create_time
   </sql>
   
   
@@ -78,10 +81,13 @@
  				 AND active.rate_discount_id= #{rateDiscountId}
  			</if>
   	 	</where>)
-  	 	
  		<if test="userName != null">
  			AND a2.user_name like concat('%',#{userName},'%') 
  		</if>
+ 		<if test="agencyTag != null">
+ 			AND a2.agency_tag = #{agencyTag}
+ 		</if>
+  	 	
   	 	<if test="start != null">
 		 	limit #{start}
 		 </if>
@@ -108,6 +114,9 @@
  		<if test="userName != null">
  			AND a2.user_name like concat('%',#{userName},'%') 
  		</if>
+ 		<if test="agencyTag != null">
+ 			AND a2.agency_tag = #{agencyTag}
+ 		</if>
   	 </where>
   </select>
   
@@ -127,6 +136,9 @@
    		<if test="userName != null">
    			AND a2.user_name like concat('%',#{userName},'%')
    		</if>
+   		<if test="agencyTag != null">
+ 			AND a2.agency_tag = #{agencyTag}
+ 		</if>
    			AND active1.bind_state = 1
    		<!-- <if test="bindState != null">
    		</if> -->
@@ -147,6 +159,9 @@
    		<if test="userName != null">
    			AND a2.user_name like concat('%',#{userName},'%')
    		</if>
+   		<if test="agencyTag != null">
+ 			AND a2.agency_tag = #{agencyTag}
+ 		</if>
    			AND active1.bind_state = 1
    		<!-- <if test="bindState != null">
    		</if> -->
@@ -203,9 +218,6 @@ WHERE a2.root_agency_id=4 and active1.rate_discount_id=22 and active1.bind_state
   		<if test="rateId != null">
   			rate_id = #{rateId},
   		</if>
-  		<if test="createTime != null">
-  			create_time = #{createTime},
-  		</if>
   	</set>
   </sql>
   <!-- 查询代理商列表 -->
@@ -219,6 +231,7 @@ WHERE a2.root_agency_id=4 and active1.rate_discount_id=22 and active1.bind_state
     <where>
    		 <include refid="condition_sql"></include>
    	</where>
+     order by cac.create_time DESC, agb.user_name
 	 <if test="start != null">
 	 	limit #{start}
 	 </if>
@@ -272,9 +285,12 @@ WHERE a2.root_agency_id=4 and active1.rate_discount_id=22 and active1.bind_state
 		<if test="rootAgencyId != null">
 			AND root_agency_id = #{rootAgencyId}
 		</if>
-		<!-- <if test="billType != null">
-			AND bill_type = #{billType}
-		</if> -->
+		<if test="agencyTag != null">
+			AND agb.agency_tag = #{agencyTag}
+		</if>
+		<if test="billType != null">
+			AND cac.bill_type = #{billType}
+		</if>
 		<if test="id != null">
 			AND id = #{id}
 		</if>

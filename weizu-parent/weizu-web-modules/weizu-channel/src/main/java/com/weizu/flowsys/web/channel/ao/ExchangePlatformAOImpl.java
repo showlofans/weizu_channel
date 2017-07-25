@@ -119,6 +119,9 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 			paramsMap.put("end", pageSize);
 		}
 		List<ExchangePlatformPo> records = exchangePlatformDao.getEp(paramsMap);
+		for (ExchangePlatformPo exchangePlatformPo : records) {//动态设置平台余额
+//			exchangePlatformPo.setEpBalance(epBalance);
+		}
 		return new Pagination<ExchangePlatformPo>(records, toatalRecord, pageNo, pageSize);
 	}
 	/**

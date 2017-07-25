@@ -33,8 +33,7 @@ public class AgencyBackwardPo extends Po{
 
     private Long rateId;					//不带票费率id
     
-    private Long billRateId;				//带票费率id
-    
+    private Integer agencyTag;				//代理商类型（0-平台用户，1,-接口用户）
     
     @TempField
     private Double accountCredit;
@@ -42,7 +41,7 @@ public class AgencyBackwardPo extends Po{
     private String rateName;
     
     
-	private Long createTime;
+	private Long createTime;				//账户创建时间
 	
 	private String verifyCode;				//注册邀请码
 	
@@ -78,14 +77,12 @@ public class AgencyBackwardPo extends Po{
 		this.agencyIds = agencyIds;
 	}
 
-	public Long getBillRateId() {
-		return billRateId;
+	public Integer getAgencyTag() {
+		return agencyTag;
 	}
-
-	public void setBillRateId(Long billRateId) {
-		this.billRateId = billRateId;
+	public void setAgencyTag(Integer agencyTag) {
+		this.agencyTag = agencyTag;
 	}
-
 	public String getUserApiKey() {
 		return userApiKey;
 	}

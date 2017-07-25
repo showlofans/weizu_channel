@@ -104,6 +104,9 @@
 		<if test="accountType != null">
 			AND account_type = #{accountType}
 		</if>
+		<if test="accountId != null">
+			AND record.account_id = #{accountId}
+		</if>
 		<if test="agencyId != null">
 			AND agency_id = #{agencyId}
 		</if>

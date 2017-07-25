@@ -96,19 +96,26 @@ function checkVerify(evt) {
 //生成按钮，发送获得邀请码的ajax请求
 function getVerifyCode(){
 	var verifySize = $("#verifySize").val();
-	$.ajax({
-        type:"get",
-        url:"/flowsys/agency/get_verify_code.do?verifySize=" + verifySize,
-        async : false,
-        success:function(d){
-	        	//alert(d);
-	        	 $("#verifyCode").show();
-	        	$("#verifyCode").val(d);//将邀请码填进编辑框
-	        	var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
-	        	parent.layer.close(index); ////执行关闭
-	        	//$(".verifyDiv").hide(); 
-        }
-    });
+	if(verifySize <= 3){
+		alert("邀请码不能低于四位");
+	}else{
+		$.ajax({
+	        type:"get",
+	        url:"/flowsys/agency/get_verify_code.do?verifySize=" + verifySize,
+	        async : false,
+	        success:function(d){
+		        	//alert(d);
+		        	if(d != '初始化邀请码失败！'){
+			        	 $("#verifyCode").show();
+			        	$("#verifyCode").val(d);//将邀请码填进编辑框
+			        	layer.msg("修改成功！");
+		        	}
+		        	//var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+		        	//parent.layer.close(index); ////执行关闭
+		        	//$(".verifyDiv").hide(); 
+	        }
+	    });
+	}
 }
 
 ///更新信息

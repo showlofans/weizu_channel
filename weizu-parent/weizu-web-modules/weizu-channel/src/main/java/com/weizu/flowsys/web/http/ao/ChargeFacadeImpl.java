@@ -153,15 +153,15 @@ public class ChargeFacadeImpl implements ChargeFacade {
 			operatorDiscountPo.setScopeName(scopeName);
 			operatorDiscountPo.setOperatorType(otype);
 			if(billType == BillTypeEnum.CORPORATE_BUSINESS.getValue())
-			{//通过接口传参，传错billType
-				if(backPo.getBillRateId() == null){
-					chargeEnum = ChargeStatusEnum.INVALID_BILL_TYPE;
-					chargeDTO = new ChargeDTO(chargeEnum.getValue(),chargeTelDetail+chargeEnum.getDesc()+":没有开通对公业务", null);
-					return chargeDTO;
-				}else
-				{
-					operatorDiscountPo.setRateId(backPo.getBillRateId());
-				}
+			{//通过接口传参，传错billType(区分用户)
+//				if(backPo.getBillRateId() == null){
+//					chargeEnum = ChargeStatusEnum.INVALID_BILL_TYPE;
+//					chargeDTO = new ChargeDTO(chargeEnum.getValue(),chargeTelDetail+chargeEnum.getDesc()+":没有开通对公业务", null);
+//					return chargeDTO;
+//				}else
+//				{
+//					operatorDiscountPo.setRateId(backPo.getBillRateId());
+//				}
 			}else
 			{
 				if(backPo.getRateId() == null)

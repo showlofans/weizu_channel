@@ -74,16 +74,16 @@
 					<th >ID</th>
 					<th >通道名称</th>
 					<th >业务类型</th>
-					<th >交易单数</th>
-					<th >交易总额</th>
+					<!-- <th >交易单数</th>
+					<th >交易总额</th> -->
 					<!-- <th width="120">支持城市</th> -->
 					<!-- <th width="60">运营商类型</th> -->
 					<!-- <th width="60">包体类型</th> -->
 					<th>移动</th>
 					<th>联通</th>
 					<th>电信</th>
-					<th>通道余额</th>
-					<th>通道利润</th>
+					<!-- <th>通道余额</th>
+					<th>通道利润</th> -->
 					<th>通道状态</th>
 					<th>通道使用状态</th>
 					<th>通道类型</th>
@@ -106,13 +106,14 @@
 						</td> 
 						<td style="display:none;">${channel.serviceType }</td>
 						<td style="display:none;">${channel.operatorType }</td>
-						<td>${channel.channelTotalUse }</td>
-						<td>${channel.channelTotalAmount }</td>
+						<%-- <td>${channel.channelTotalUse }</td>
+						<td>${channel.channelTotalAmount }</td> --%>
 						<td>${channel.discountPo.discount0 }</td>
 						<td>${channel.discountPo.discount1 }</td>
 						<td>${channel.discountPo.discount2 }</td>
-						<td>${channel.channelTotalProfit }</td>
-						<td>${channel.channelBalance }</td> 
+						<%-- <td>${channel.channelTotalProfit }</td>
+						<td>${channel.channelBalance }</td>  --%>
+						
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
 						<%-- <td>
 							<c:forEach items="${resultMap.operatorTypeEnums }" var="operatorType" varStatus="vs1">

@@ -104,14 +104,15 @@
 				</span>
 			</div>
 		</div>
-		<div class="row cl">
+		<input type="hidden" value="${resultMap.accountId }" name="accountId"><!-- 充值账户id -->
+		<!-- <div class="row cl">
 			充值凭证：<br>
 			<span class="btn-upload form-group">
 				<input class="input-text upload-url" type="text" name="uploadfile-2" id="uploadfile-2" readonly style="width:200px">
 				<a href="javascript:void();" class="btn btn-primary upload-btn"><i class="Hui-iconfont">&#xe642;</i> 上传logo</a>
 				<input type="file" multiple name="file-2" class="input-file">
 			</span>
-		</div>
+		</div> -->
 		
 		<!-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">附件：</label>

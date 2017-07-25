@@ -60,6 +60,19 @@
 	<div class="text-c">
 		<form action="/flowsys/rate/batch_bind_agency_page.do" method="post" id="formD" name="dataListForm">
 				<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
+				<input type="hidden" name="scopeCityCode" value="${resultMap.ratePo.scopeCityCode }" >
+				<input type="hidden" name="serviceType" value="${resultMap.ratePo.serviceType }" >
+				<input type="hidden" name="operatorType" value="${resultMap.ratePo.operatorType }" >
+				<input type="hidden" name="billType" value="${resultMap.ratePo.billType }" >
+				<input type="hidden" name="activeDiscount" value="${resultMap.ratePo.activeDiscount }" >
+				代理类型：<span class="select-box inline">
+						<select name="agencyTag" id="agencyTag" class="select" onchange="onSub()">
+						<!-- <option value="">请选择</option> -->
+						<c:forEach items="${resultMap.agencyTagEnums }" var="agencyTagEnum" varStatus="vst">
+							<option value="${agencyTagEnum.value }" <c:if test="${agencyTagEnum.value == resultMap.aardto.agencyTag }"> selected</c:if>>${agencyTagEnum.desc }</option>
+						</c:forEach>
+					</select>
+				</span>
 				绑定状态：<span class="select-box inline">
 						<select name="bindState" id="bindState" class="select" onchange="onSub()">
 						<!-- <option value="">请选择</option> -->
