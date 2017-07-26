@@ -241,4 +241,15 @@ public class ChargePgController {
 		resultMap.put("orderStateEnums", OrderStateEnum.toList());
 		return new ModelAndView("/trade/purchase_list", "resultMap", resultMap);
 	}
+	/**
+	 * @description: 批量充值页面
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月26日 下午4:58:54
+	 */
+	@RequestMapping(value=ChargePgURL.PG_BATCH_CHARGE_PAGE)
+	public ModelAndView pgBatchPurchasePage(){
+		return new ModelAndView("/trade/pg_batch_charge_page");
+	}
+	
 }

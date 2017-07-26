@@ -14,6 +14,7 @@ import org.weizu.web.foundation.DateUtil;
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
+import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.util.Pagination;
@@ -59,6 +60,7 @@ public class AgencyAOImpl implements AgencyAO {
 			agencyBackward.setRootAgencyId(code);
 			agencyBackward.setVerifyCode("");//置空邀请码
 			agencyBackward.setCreateTime(System.currentTimeMillis());
+			agencyBackward.setAgencyTag(0);
 			int addAgency = agencyBackwardDao.add(agencyBackward);
 			//利用nextId函数获得当前注册代理商id,同时注册一个账户
 			int agencyId = (int) (agencyBackwardDao.nextId()-1);//适用于自动增长
@@ -94,6 +96,8 @@ public class AgencyAOImpl implements AgencyAO {
 				agencyBackward.getAgencyTel(), agencyBackward.getUserEmail(), 
 				agencyBackward.getAgencyIp(), 0.0d, 0.0d, agencyBackward.getCreateTime(), 
 				agencyBackward.getVerifyCode());
+		String qq = agencyVODao.get(agencyBackward.getRootAgencyId()).getOtherContact();//富代理商的qq
+		agencyVO.setOtherContact(qq);
 		return agencyVO;
 	}
 
@@ -306,7 +310,7 @@ public class AgencyAOImpl implements AgencyAO {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		if(StringHelper.isNotEmpty(id)){
 			AgencyBackwardPo agBackwardPo = agencyBackwardDao.get(Integer.parseInt(id));
-			if(StringHelper.isEmpty(agBackwardPo.getUserApiKey()))
+			if(StringHelper.isEmpty(agBackwardPo.getUserApiKey()) && agBackwardPo.getAgencyTag() == AgencyTagEnum.DATA_USER.getValue())
 			{
 				UUIDGenerator generator = new UUIDGenerator();
 				String uuid = generator.generate().toString();

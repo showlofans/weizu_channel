@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.dao.impl.AgencyEpDAOImpl;
 import com.weizu.flowsys.web.channel.dao.impl.ExchangePlatformDao;
@@ -134,6 +135,38 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 	@Override
 	public ExchangePlatformPo getEpById(Integer id) {
 		return exchangePlatformDao.get(id);
+	}
+	/**
+	 * @description: 更新平台信息
+	 * @param epPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月26日 上午10:25:05
+	 */
+	@Transactional
+	@Override
+	public String updateEp(ExchangePlatformPo epPo) {
+		if(exchangePlatformDao.update(epPo) > 0){
+			return "success";
+		}
+		return "error";
+	}
+	/**
+	 * @description: 清除平台信息
+	 * @param epId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月26日 上午10:55:24
+	 */
+	@Transactional
+	@Override
+	public String delEp(String epId) {
+		if(StringHelper.isNotEmpty(epId)){
+			if(exchangePlatformDao.del(Integer.parseInt(epId)) > 0){
+				return "success";
+			}
+		}
+		return "error";
 	}
 
 }

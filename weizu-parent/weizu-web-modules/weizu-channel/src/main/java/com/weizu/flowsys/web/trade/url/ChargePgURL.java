@@ -46,6 +46,20 @@ public class ChargePgURL extends BaseURL {
 	 * 流量包购买页面
 	 */
 	public static final String PG_CHARGE_PAGE = "/pg_charge_page" + DYNAMIC_WEB_SUFFIX;
+	
+	/**
+	 * 流量包批量购买页面
+	 */
+	public static final String PG_BATCH_CHARGE_PAGE = "/pg_batch_charge_page" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 电话号码通过文本批量导入
+	 */
+	public static final String TEL_BATCH_IMPORT_TXT = "/tel_batch_import_txt" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 流量包批量购买
+	 */
+	public static final String PG_BATCH_CHARGE = "/pg_batch_charge" + DYNAMIC_WEB_SUFFIX;
+	
 	/**
 	 * 查询订单列表
 	 */

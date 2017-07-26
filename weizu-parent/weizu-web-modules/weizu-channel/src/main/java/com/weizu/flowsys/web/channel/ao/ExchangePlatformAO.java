@@ -59,4 +59,22 @@ public interface ExchangePlatformAO {
 	 * @createTime:2017年6月8日 下午6:20:40
 	 */
 	String addEp(ExchangePlatformPo exchangePlatformPo,int agencyId,String agencyName);
+	
+	/**
+	 * @description: 更新平台信息
+	 * @param epPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月26日 上午10:24:44
+	 */
+	String updateEp(ExchangePlatformPo epPo);
+	
+	/**
+	 * @description:清除平台信息
+	 * @param epId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月26日 上午10:54:57
+	 */
+	String delEp(String epId);
 }

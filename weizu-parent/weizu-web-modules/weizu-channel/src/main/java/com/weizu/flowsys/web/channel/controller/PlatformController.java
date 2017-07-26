@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.aiyi.base.pojo.PageParam;
@@ -55,8 +56,57 @@ public class PlatformController {
 				e.printStackTrace();
 			}
 		}
-		
 	}
+	
+	/**
+	 * @description: 平台编辑页面
+	 * @param epId
+	 * @param resonse
+	 * @param request
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月26日 上午10:38:37
+	 */
+	@RequestMapping(value=PlatformURL.PLATFORM_EDIT_PAGE)
+	public ModelAndView editPlatformPage(String epId,HttpServletResponse resonse,HttpServletRequest request){
+		if(StringHelper.isNotEmpty(epId)){
+			int id = Integer.parseInt(epId);
+			ExchangePlatformPo epPo = exchangePlatformAO.getEpById(id);
+			return new ModelAndView("/channel/platform_edit_page","exchangePlatformPo",epPo);
+		}
+		return new ModelAndView("/channel/platform_edit_page");
+	}
+	
+	/**
+	 * @description: 修改平台信息
+	 * @param exchangePlatformPo
+	 * @param resonse
+	 * @param request
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月26日 上午10:23:50
+	 */
+	@ResponseBody
+	@RequestMapping(value=PlatformURL.PLATFORM_EDIT)
+	public void editPlatform(ExchangePlatformPo exchangePlatformPo,HttpServletResponse resonse,HttpServletRequest request){
+		String res = exchangePlatformAO.updateEp(exchangePlatformPo);
+		try {
+			resonse.getWriter().print(res);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	@ResponseBody
+	@RequestMapping(value=PlatformURL.PLATFORM_DEL)
+	public void delEp(String epId,HttpServletResponse resonse){
+		String res = exchangePlatformAO.delEp(epId);
+		try {
+			resonse.getWriter().print(res);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	/**
 	 * @description: 平台列表
 	 * @param exchangePlatformPo

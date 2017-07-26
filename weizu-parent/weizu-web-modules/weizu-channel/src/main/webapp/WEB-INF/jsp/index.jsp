@@ -35,6 +35,7 @@
 		<div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" href="/aboutHui.shtml">微族通道系统</a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="/aboutHui.shtml">H-ui</a> 
 			<span class="logo navbar-slogan f-l mr-10 hidden-xs">1.0</span> 
 			<a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:;">&#xe667;</a>
+			<c:if test="${loginContext.rootAgencyId == 0 }">
 			<nav class="nav navbar-nav">
 				<ul class="cl">
 					<li class="dropDown dropDown_hover"><a href="javascript:;" class="dropDown_A"><i class="Hui-iconfont">&#xe600;</i> 新增 <i class="Hui-iconfont">&#xe6d5;</i></a>
@@ -43,10 +44,11 @@
 							<li><a href="javascript:;" onclick="Hui_admin_tab(this)"  data-title="费率添加" data-href="/flowsys/rate/rate_add_page.do" ><i class="Hui-iconfont">&#xe613;</i> 费率</a></li>
 							<li><a href="javascript:;" onclick="Hui_admin_tab(this)"  data-title="流量包添加" data-href="/flowsys/operatorPg/pg_add_page.do" ><i class="Hui-iconfont">&#xe620;</i> 标准包</a></li>
 							<li><a href="javascript:;" onclick="Hui_admin_tab(this)"  data-title="平台添加" data-href="/flowsys/platform/platform_add_page.do" ><i class="Hui-iconfont">&#xe60d;</i> 平台添加</a></li>
-					</ul>
-				</li>
-			</ul>
-		</nav>
+						</ul>
+					</li>
+				</ul>
+			</nav>
+			</c:if>
 			<nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
 				<ul class="cl">
 					<!-- <li>超级管理员</li> -->
@@ -91,20 +93,22 @@
 </header>
 <aside class="Hui-aside">
 	<div class="menu_dropdown bk_2">
-		<dl id="menu-picture"><!-- menu_dropdown-arrow -->
-			<dt><i class="Hui-iconfont">&#xe679;</i> 通道管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-			<dd>
-				<ul>
-					<li><a data-href="/flowsys/channel/channel_add_page.do" data-title="通道添加" href="javascript:void(0)">通道添加</a></li>
-					<li><a data-href="/flowsys/channel/channel_list.do" data-title="通道列表" href="javascript:void(0)">通道列表</a></li>
-					<!-- <li><a data-href="/flowsys/rate/bind_channel_list.do?bindTag=bAgency" data-title="活动通道" href="javascript:void(0)">活动通道</a></li> -->
-					<c:if test="${power== 'no'}">
-						<li><a data-href="/flowsys/platform/platform_list.do" data-title="平台管理" href="javascript:void(0)">平台管理</a></li>
-						<li><a data-href="/flowsys/productCode/product_code_list.do" data-title="产品编码" href="javascript:void(0)">产品编码</a></li>
-					</c:if>
-			</ul>
-		</dd>
-	</dl>
+		<c:if test="${loginContext.rootAgencyId == 0 }">
+			<dl id="menu-picture"><!-- menu_dropdown-arrow -->
+				<dt><i class="Hui-iconfont">&#xe679;</i> 通道管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+				<dd>
+					<ul>
+						<li><a data-href="/flowsys/channel/channel_add_page.do" data-title="通道添加" href="javascript:void(0)">通道添加</a></li>
+						<li><a data-href="/flowsys/channel/channel_list.do" data-title="通道列表" href="javascript:void(0)">通道列表</a></li>
+						<!-- <li><a data-href="/flowsys/rate/bind_channel_list.do?bindTag=bAgency" data-title="活动通道" href="javascript:void(0)">活动通道</a></li> -->
+						<c:if test="${power== 'no'}">
+							<li><a data-href="/flowsys/platform/platform_list.do" data-title="平台管理" href="javascript:void(0)">平台管理</a></li>
+							<li><a data-href="/flowsys/productCode/product_code_list.do" data-title="产品编码" href="javascript:void(0)">产品编码</a></li>
+						</c:if>
+					</ul>
+				</dd>
+			</dl>
+		</c:if>
 		<dl id="menu-product">
 			<dt><i class="Hui-iconfont">&#xe674;</i> 代理商管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
@@ -114,25 +118,31 @@
 					<li><a data-href="/flowsys/agency/child_agency_list.do?agencyTag=1" data-title="认证用户" href="javascript:void(0)">认证用户</a></li>
 					<li><a data-href="/flowsys/agency/child_agency_list.do?agencyTag=0" data-title="代理商" href="javascript:void(0)">代理商</a></li>
 					<!-- <li><a data-href="/flowsys/agency/get_tel_location.do" data-title="号码归属地查询" href="javascript:void(0)">号码归属地查询</a></li> -->
-			</ul>
-		</dd>
-	</dl>
+				</ul>
+			</dd>
+		</dl>
 		<dl id="menu-comments">
 			<dt><i class="Hui-iconfont">&#xe687;</i> 订单管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
 					<li><a data-href="/flowsys/chargePg/purchase_list.do" data-title="订单列表" href="javascript:void(0)">订单列表</a></li>
+					<li><a data-href="/flowsys/chargePg/purchase_list.do" data-title="充值进行" href="javascript:void(0)">充值进行</a></li>
+					<li><a data-href="/flowsys/chargePg/purchase_list.do" data-title="充值等待" href="javascript:void(0)">充值等待</a></li>
+					<li><a data-href="/flowsys/chargePg/purchase_list.do" data-title="充值成功" href="javascript:void(0)">充值成功</a></li>
+					<li><a data-href="/flowsys/chargePg/purchase_list.do" data-title="充值失败" href="javascript:void(0)">充值失败</a></li>
 			</ul>
 		</dd>
 	</dl>
-		<dl id="menu-comments">
-			<dt><i class="Hui-iconfont">&#xe687;</i> 在线充值<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-			<dd>
-				<ul>
-					<li><a data-href="/flowsys/chargePg/pg_charge_page.do" title="/flowsys/chargePg/pg_charge_page.do" data-title="流量充值" href="javascript:;">流量充值</a></li>
+	<dl id="menu-comments">
+		<dt><i class="Hui-iconfont">&#xe687;</i> 在线充值<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+		<dd>
+			<ul>
+				<li><a data-href="/flowsys/chargePg/pg_charge_page.do" title="/flowsys/chargePg/pg_charge_page.do" data-title="流量充值" href="javascript:;">流量充值</a></li>
+				<li><a data-href="/flowsys/chargePg/pg_batch_charge_page.do" title="批量充值" data-title="批量充值" href="javascript:;">批量充值</a></li>
 			</ul>
 		</dd>
 	</dl>
+	<c:if test="${loginContext.rootAgencyId == 0 }">
 	<dl id="menu-article">
 			<dt><i class="Hui-iconfont">&#xe6c6;</i> 流量包管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
@@ -141,6 +151,7 @@
 			</ul>
 		</dd>
 	</dl>
+	</c:if>
 	<dl id="menu-member">
 		<dt><i class="Hui-iconfont">&#xe6c6;</i> 账户管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 		<dd>

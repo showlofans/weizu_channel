@@ -35,6 +35,8 @@
 	<span class="c-gray en">&gt;</span>
 	账户信息
 	<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a>
+	<!-- <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=1575326411&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:1727661035:52" alt="点击这里给我发消息" title="点击这里给我发消息"/></a> -->
+	<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=${loginContext.otherContact }&site=qq&menu=yes"><img border="0" src="/view/button_111.gif" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
 </nav>
 <div class="page-container">
 	
@@ -45,7 +47,17 @@
 			</c:if>
 				<span>一般账户</span>
 			</div>
-			
+			<!-- <a href="tencent://message/?uin=1575326411&Site=qq&Menu=yes">
+			   <i class="Hui-iconfont">&#xe67b;</i> <img src="/view/logo.psd"/>
+			</a> -->
+			<!-- <div style="position:absolute; top:110px; right:220px; z-index:2;">
+	        <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2860144252&site=在线客服&menu=yes"><img src="images/qq_01.png" alt="点击这里给我发消息" title="点击这里给我发消息"></a>
+	            <a target='_blank' href='tencent://message/?uin=1439990843&amp;Site=在线客服&Menu=yes' title='在线即时交谈'><img src="images/qq_01.png"/></a>
+	        </div>
+	        <div style="position:absolute; top:230px; right:220px; z-index:2;">
+	            <a target='_blank' href='http://wpa.qq.com/msgrd?V=1&Uin=1575326411&Site=在线咨询&Menu=yes' title='在线即时交谈'><img src="images/qq_02.png"/></a>
+	        </div> -->
+	        <!-- <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=1575326411&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:1575326411:52" alt="点击这里给我发消息" title="点击这里给我发消息"/></a> -->
 			<c:if test="${chargeAccount1 != null }">
 			<form class="form form-horizontal" id="form-account1-edit">
 				<div class="tabCon">
