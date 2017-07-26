@@ -27,6 +27,8 @@ public class AgencyBackwardPo extends Po{
 
     private String agencyTel;				//带票费率id
 
+    private String otherContact;			//其他联系方式，qq
+
     private String userEmail;				//带票费率id
 
     private String agencyIp;				//代理商系统主页地址
@@ -69,6 +71,15 @@ public class AgencyBackwardPo extends Po{
 		this.createTime = createTime;
 		this.verifyCode = verifyCode;
 	}
+	
+	public String getOtherContact() {
+		return otherContact;
+	}
+
+	public void setOtherContact(String otherContact) {
+		this.otherContact = otherContact;
+	}
+
 	public int[] getAgencyIds() {
 		return agencyIds;
 	}

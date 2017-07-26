@@ -169,7 +169,7 @@
 			<div class="col-xs-7 col-sm-9 col-xs-offset-4 col-sm-offset-2">
 				<c:choose>
 					<c:when test="${resultMap.ccpo.confirmState == 1 || resultMap.ccpo.confirmState == 2 }"><!-- 待审核和审核成功 -->
-						<button onClick="article_save_submit();" class="btn btn-primary radius" disabled="disabled" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存并提交审核</button>
+						<button onClick="article_save_submit();" class="btn btn-primary radius" disabled="disabled" onClick="javascript:alert('已经审核成功');" type="button"><i class="Hui-iconfont">&#xe632;</i> 保存并提交审核</button>
 						<button onClick="article_save();" class="btn btn-secondary radius"  disabled="disabled" type="button"><i class="Hui-iconfont">&#xe632;</i> 保存草稿</button>
 					</c:when>
 					<c:otherwise>

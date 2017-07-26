@@ -157,7 +157,8 @@ public class ProductCodeController {
 			List<AgencyEpPo> epList = agencyEpAO.getAgencyEpByAgencyId(agencyVO.getId());
 			resultMap.put("epList", epList);
 			//提交表单，对接平台参数绝对不为空；为空说明第一次加载
-			if(epList != null){
+			Pagination<ProductCodePo> pagination = null;
+			if(epList.size() != 0){
 				if(productCodePo == null || productCodePo.getEpId() == null){
 					productCodePo = new ProductCodePo();
 					Object sessionEpId = request.getSession().getAttribute("epId");
@@ -170,19 +171,21 @@ public class ProductCodeController {
 	//					productCodePo.setOperatorType(0);//默认加载移动
 	//				}
 				}
+				PageParam pageParam = null;
+				if(StringHelper.isNotEmpty(pageNo)){
+					pageParam  = new PageParam(Integer.parseInt(pageNo), 10);
+				}else{
+					pageParam = new PageParam(1, 10);
+				}
+				pagination = productCodeAO.getProductCode(productCodePo, pageParam);
+				resultMap.put("pagination", pagination);
+			}else{
+				pagination = new Pagination<ProductCodePo>(null, 0, 1, 10);
+				resultMap.put("pagination", pagination);
 			}
 		}
-		
-		PageParam pageParam = null;
-		if(StringHelper.isNotEmpty(pageNo)){
-			pageParam  = new PageParam(Integer.parseInt(pageNo), 10);
-		}else{
-			pageParam = new PageParam(1, 10);
-		}
-		Pagination<ProductCodePo> pagination = productCodeAO.getProductCode(productCodePo, pageParam);
 		//List<ExchangePlatformPo> epList = 
 		
-		resultMap.put("pagination", pagination);
 		resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
 		resultMap.put("searchParam", productCodePo);
 		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());

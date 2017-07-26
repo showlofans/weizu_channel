@@ -54,6 +54,7 @@
 				${resultMap.agencyPo.agencyIp }
 			</div>
 		</div>
+		<c:if test="${not empty resultMap.agencyPo.userApiKey}">
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">对接apikey：</label>
 			<div class="formControls col-xs-8 col-sm-9">
@@ -61,6 +62,7 @@
 				${resultMap.agencyPo.userApiKey }
 			</div>
 		</div>
+		</c:if>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">用户信用：</label>
 			<div class="formControls col-xs-8 col-sm-9">

@@ -24,6 +24,22 @@ public class PlatformURL extends BaseURL{
 	 */
 	public static final String PLATFORM_ADD_PAGE = "/platform_add_page" + DYNAMIC_WEB_SUFFIX;
 	/**
+	 * 清除平台
+	 */
+	public static final String PLATFORM_DEL = "/platform_del" + DYNAMIC_WEB_SUFFIX;
+	
+	/**
+	 * 平台编辑
+	 */
+	public static final String PLATFORM_EDIT = "/platform_edit" + DYNAMIC_WEB_SUFFIX;
+	
+	/**
+	 * 平台编辑页面
+	 */
+	public static final String PLATFORM_EDIT_PAGE = "/platform_edit_page" + DYNAMIC_WEB_SUFFIX;
+	
+	
+	/**
 	 * 平台列表
 	 */
 	public static final String PLATFORM_LIST = "/platform_list" + DYNAMIC_WEB_SUFFIX;

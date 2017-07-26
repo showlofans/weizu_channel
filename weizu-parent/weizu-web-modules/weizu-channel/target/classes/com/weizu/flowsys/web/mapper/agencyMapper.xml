@@ -16,6 +16,7 @@
     <result column="user_pass" jdbcType="VARCHAR" property="userPass" />
     <result column="user_real_name" jdbcType="VARCHAR" property="userRealName" />
     <result column="agency_tel" jdbcType="VARCHAR" property="agencyTel" />
+    <result column="other_contact" jdbcType="VARCHAR" property="otherContact" />
     <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
     <result column="agency_ip" jdbcType="VARCHAR" property="agencyIp" />
     <result column="rate_id" jdbcType="BIGINT" property="rateId" />
@@ -25,7 +26,7 @@
     <result column="create_time" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    agency_id, root_agency_id, user_name, user_pass, user_real_name, agency_tel, user_email, 
+    agency_id, root_agency_id, user_name, user_pass, user_real_name, agency_tel, other_contact, user_email, 
     agency_ip, rate_id, account_id
   </sql>
   <resultMap id="OtherMap" type="com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO">
@@ -63,7 +64,7 @@
     <result column="create_time" property="createTime" />
   </resultMap>
   <sql id="Unbind_Column_List">
-   a2.id,a2.user_name,a2.user_email,a2.user_real_name,cac.create_time
+   a2.id,a2.user_name,a2.user_email,a2.user_real_name,a2.create_time
   </sql>
   
   
@@ -299,6 +300,6 @@ WHERE a2.root_agency_id=4 and active1.rate_discount_id=22 and active1.bind_state
 	<select id="checkSecondAgency" parameterType="java.lang.Integer" resultType="java.lang.Integer">
 		select count(*) from <include refid="agency_backward"></include>
 		where root_agency_id not IN (select id from agency_backward WHERE root_agency_id=0)
-		and id = #{_parameter}
+		AND root_agency_id !=0 and id = #{_parameter}
 	</select>
 </mapper>

@@ -41,6 +41,8 @@ public class AgencyBackwardVO extends Po {
 	
 //	private Long billRateId;
 	private Integer agencyTag;			//代理商类型（0-平台用户，1,-接口用户）
+
+	private String otherContact;				//其他qq联系方式
 	
 	private String billRateName;
 
@@ -80,6 +82,14 @@ public class AgencyBackwardVO extends Po {
 		this.verifyCode = verifyCode;
 	}
 	
+	public String getOtherContact() {
+		return otherContact;
+	}
+
+	public void setOtherContact(String otherContact) {
+		this.otherContact = otherContact;
+	}
+
 	public Integer getAccountId() {
 		return accountId;
 	}
