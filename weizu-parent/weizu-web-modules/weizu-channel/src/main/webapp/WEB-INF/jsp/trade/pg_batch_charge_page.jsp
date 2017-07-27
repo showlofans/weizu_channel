@@ -25,14 +25,14 @@
  </head>
  <body>
  <article class="page-container">
- <form class="form form-horizontal" action="/flowsys/chargePg/tel_batch_import_txt.do" method="post" id="form-import" enctype="multipart/form-data">
+ <form class="form form-horizontal" action="" method="" id="form-import" enctype="multipart/form-data">
 	<div class="row cl">
 		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>号码文本：</label>
 		<div class="formControls col-xs-8 col-sm-9">
 			<span class="btn-upload">
 			  <a href="javascript:void();" class="btn btn-primary radius"><i class="iconfont">&#xf0020;</i> 选择文件</a>
 			  <input value="" class="input-text upload-url" style="width:300px" type="text" readonly >
-			  <input type="file" multiple name="file_0" class="input-file">
+			  <input type="file" multiple name="uploadFile" class="input-file">
 			</span>
 			<button id="saveButton" class="btn btn-primary radius" onclick="saveTelList();"><i class="fa "></i> 导入文件</button>
 			<!-- <span class="error"></span> -->
@@ -47,7 +47,7 @@
  	<div class="row cl" id="pg">
 		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机号：</label>
 		<div class="formControls col-xs-8 col-sm-9">
-			<textarea name="telList" id="telList" cols="" readonly="readonly" rows="" class="textarea"  placeholder="手机号列表"></textarea>
+			<textarea name="telList" id="telList" class="textarea" ></textarea>
 		</div>
 	</div>
 	
@@ -157,8 +157,34 @@
  
  }) */
  function saveTelList(){
-	 $('#saveButton').set('disabled', 'false');
-	 $('#form-import').submit();
+	// $('#saveButton').set('disabled', 'false');
+	 //alert("1");
+	 $.ajax({
+         url : "/flowsys/chargePg/tel_batch_import_txt.do",
+         type : "POST",
+         cache: false, 
+         data : new FormData($('#form-import')[0]),
+         processData: false,
+         contentType : false,
+         success : function(data) {
+        	 alert(data);
+        	// alert($('#telList').html());
+        	// $('#telList').html(data);
+            //alert(data);  
+        	/* if (data.code == '0') {
+                 window.location.href = "/iswust2hand/index.jsp";
+                 alert("欢迎使用西科二手平台！");
+             }else{
+                 alert("密码错误，请确认后重新登录！");
+             }   */
+
+         },
+
+         error : function(data) {
+             alert("出错：" + data.code);
+         } 
+     });
+	// $('#form-import').submit();
  }
  
  $().ready(function() {

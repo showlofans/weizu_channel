@@ -1,6 +1,11 @@
 package com.weizu.flowsys.web.trade.controller;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +17,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.weizu.web.foundation.DateUtil;
 
@@ -251,5 +259,68 @@ public class ChargePgController {
 	public ModelAndView pgBatchPurchasePage(){
 		return new ModelAndView("/trade/pg_batch_charge_page");
 	}
-	
+	@RequestMapping(value = ChargePgURL.TEL_BATCH_IMPORT_TXT, method = RequestMethod.POST)
+	@ResponseBody
+	public void importTelBatch(HttpServletRequest request, MultipartFile uploadFile,HttpServletResponse response)
+	{
+//		BaseEmployeeLoginContext context = (BaseEmployeeLoginContext) request.getSession().getAttribute(BaseEmployeeLoginContext.LOGIN_CONTEXT_NAME);
+
+		try
+		{
+			if (uploadFile != null && !uploadFile.isEmpty())
+			{
+				long size = uploadFile.getSize();
+				System.out.println(size);
+//				byte[] data = new byte[(int) size];
+				InputStream input = uploadFile.getInputStream();
+				
+				InputStreamReader isr = new InputStreamReader(input);
+				BufferedReader br = new BufferedReader(isr);
+				 String line="";
+//			        String[] arrs=null;
+				 StringBuffer sb = new StringBuffer();
+		        while ((line=br.readLine())!=null) {
+		        	sb.append(line);
+		        	sb.append(" ");
+//			            arrs=line.split(",");
+//			            arrs=line;
+//			            System.out.println(arrs[0] + " : " + arrs[1] + " : " + arrs[2]);
+		        }
+			        br.close();
+			        isr.close();
+//			        fis.close();
+				
+//				input.read(data);
+//				File folder = new File(request.getSession().getServletContext().getRealPath("/") + "telTxt/");
+//				if (!folder.exists())
+//				{
+//					folder.mkdir();
+//				}
+				String uploadFileName = uploadFile.getOriginalFilename();
+				String ExName = uploadFileName.substring(uploadFileName.lastIndexOf("."), uploadFileName.length());
+//				File outFile = new File(request.getSession().getServletContext().getRealPath("/") + "telTxt/" + context.getLoginUID() + ExName);
+//				
+//				if (!outFile.exists())
+//				{
+//					outFile.createNewFile();
+//				}
+//				FileOutputStream outStream = new FileOutputStream(outFile);
+
+//				outStream.write(data);
+//				outStream.close();
+				input.close();
+				response.getWriter().print(sb.toString());
+//				returnMessage = invoiceAccountAO.importPreInvoiceAccount(outFile, context.getLoginName(), context.getLoginUID());
+			}
+		}
+		catch (IOException e)
+		{
+//			returnMessage = MgtConstants.MSG_PROGRAM_EXCEPTION_IMPORT_ERROR;
+			e.printStackTrace();
+		}
+//		Map<String, Object> returnMap = new HashMap<String, Object>(2);
+//		returnMap.put("message", returnMessage);
+//		returnMap.put("refererURL", InvoiceAccountURL.MODEL_NAME + InvoiceAccountURL.INVOICE_ACCOUNT_LIST);
+//		return new ModelAndView("success", "map", returnMap);
+	}
 }
