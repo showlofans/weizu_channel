@@ -1,7 +1,6 @@
 package crud.aotest;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -10,10 +9,12 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.AgencyActiveChannelAO;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
-import com.weizu.flowsys.web.activity.pojo.RateDiscountShowDTO;
+import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -85,4 +86,13 @@ public class RateDiscountDaoTest {
 //		System.out.println(dto1.getDiscountPo().getDiscount1());;
 //		System.out.println(dto1.getDiscountPo().getDiscount2());;
 //	}
+	@Test
+	public void testGetMyRateList(){
+		RateDiscountPo ratePo = new RateDiscountPo();
+		Pagination<RateDiscountPo>  pagination = rateDiscountAO.getMyRateList(ratePo, new PageParam(1, 10));
+		List<RateDiscountPo> records = pagination.getRecords();
+		for (RateDiscountPo rateDiscountPo : records) {
+			
+		}
+	}
 }

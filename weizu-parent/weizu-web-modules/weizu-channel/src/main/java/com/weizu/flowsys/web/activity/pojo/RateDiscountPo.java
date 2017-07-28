@@ -36,7 +36,7 @@ public class RateDiscountPo extends Po {
     @TempField
     private Long channelId;
     @TempField
-    private Long agencyId;
+    private Integer agencyId;
     @TempField
     private String scopeCityName;
     
@@ -109,11 +109,11 @@ public class RateDiscountPo extends Po {
 		this.scopeCityName = scopeCityName;
 	}
 
-	public Long getAgencyId() {
+	public Integer getAgencyId() {
 		return agencyId;
 	}
 
-	public void setAgencyId(Long agencyId) {
+	public void setAgencyId(Integer agencyId) {
 		this.agencyId = agencyId;
 	}
 

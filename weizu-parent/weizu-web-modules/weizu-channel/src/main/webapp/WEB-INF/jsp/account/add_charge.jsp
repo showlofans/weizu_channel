@@ -38,18 +38,35 @@
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>代理商名称</label>
 			<div class="formControls col-xs-8 col-sm-9 c-red"> ${resultMap.agencyUserName } </div>
 		</div> 
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>账户余额</label>
-			<c:choose>
-				<c:when test="${resultMap.chargeAccount.accountBalance > 0 }">
-					<div class="formControls col-xs-8 col-sm-9"> ${resultMap.chargeAccount.accountBalance } </div>
-				</c:when>
-				<c:otherwise>
-					<div class="formControls col-xs-8 col-sm-9 c-red"> ${resultMap.chargeAccount.accountBalance } </div>
-				</c:otherwise>
-			</c:choose>
-		</div> 
-		<c:if test="${not empty resultMap.chargeAccount1 }">
+		<c:choose>
+			<c:when test="${resultMap.billType == 0 }">
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>账户余额</label>
+					<c:choose>
+						<c:when test="${resultMap.chargeAccount.accountBalance > 0 }">
+							<div class="formControls col-xs-8 col-sm-9"> ${resultMap.chargeAccount.accountBalance } </div>
+						</c:when>
+						<c:otherwise>
+							<div class="formControls col-xs-8 col-sm-9 c-red"> ${resultMap.chargeAccount.accountBalance } </div>
+						</c:otherwise>
+					</c:choose>
+				</div> 
+			</c:when>
+			<c:otherwise>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>高配账户余额</label>
+					<c:choose>
+						<c:when test="${resultMap.chargeAccount1.accountBalance > 0 }">
+							<div class="formControls col-xs-8 col-sm-9"> ${resultMap.chargeAccount1.accountBalance } </div>
+						</c:when>
+						<c:otherwise>
+							<div class="formControls col-xs-8 col-sm-9 c-red"> ${resultMap.chargeAccount1.accountBalance } </div>
+						</c:otherwise>
+					</c:choose>
+				</div>
+			</c:otherwise>
+		</c:choose>
+		<%-- <c:if test="${not empty resultMap.chargeAccount1 }">
 			<div class="row cl">
 				<label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>高配账户余额</label>
 				<c:choose>
@@ -61,7 +78,7 @@
 					</c:otherwise>
 				</c:choose>
 			</div> 
-		</c:if>
+		</c:if> --%>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>信用额度</label>
 			<c:choose>
@@ -85,8 +102,15 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">账户类型：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<span class="select-box inline">
-						<select name="billType" class="select" style="width:80px;">
+				<c:forEach items="${resultMap.billTypeEnum }" var="billTypeE" varStatus="vs">
+					<c:if test="${resultMap.billType == billTypeE.value }">
+						<input type="text" class="input-text" readonly="readonly" value="${billTypeE.desc }" style="width:100px;"  id="billTypeDesc">
+						<input type="hidden" name="billType" value="${billTypeE.value }">
+					</c:if>
+				</c:forEach>
+			
+				<%-- <span class="select-box inline">
+						<select name="billType" class="select" style="width:80px;" readonly>
 						<c:forEach items="${resultMap.billTypeEnum }" var="billTypeE" varStatus="vs">
 							<c:choose>
 								<c:when test="${resultMap.billType == billTypeE.value }">
@@ -97,11 +121,11 @@
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
-							<%-- <c:forEach items="${resultMap.pgInEnums }" var="pgIn" varStatus="vs1">
+							<c:forEach items="${resultMap.pgInEnums }" var="pgIn" varStatus="vs1">
 								<option value="${pgIn.value }" <c:if test="${pgIn.value == resultMap.params.pgInService }"> selected</c:if>>${pgIn.desc }</option>
-							</c:forEach> --%>
+							</c:forEach>
 						</select>
-				</span>
+				</span> --%>
 			</div>
 		</div>
 		<input type="hidden" value="${resultMap.accountId }" name="accountId"><!-- 充值账户id -->

@@ -436,6 +436,40 @@ public class RateController {
 	}
 	
 	/**
+	 * @description: 费率配置列表
+	 * @param pageNo
+	 * @param request
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月28日 下午5:38:02
+	 */
+	@RequestMapping(value=RateURL.MY_RATE_LIST)
+	public ModelAndView myRateList(@RequestParam(value = "pageNo", required = false) String pageNo,
+			HttpServletRequest request,RateDiscountPo ratePo){
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		if(agencyVO == null){
+			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+		}
+//		activePo.setBindAgencyId(agencyVO.getId());//设置当前登录用户的
+		PageParam pageParam = null;
+		if(StringHelper.isNotEmpty(pageNo)){
+			pageParam = new PageParam(Integer.parseInt(pageNo), 10) ;
+		}else{
+			pageParam = new PageParam(1, 10);
+		}
+		ratePo.setAgencyId(agencyVO.getId());
+		Pagination<RateDiscountPo> pagination = rateDiscountAO.getMyRateList(ratePo, pageParam);
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("billTypeEnums", BillTypeEnum.toList());
+		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
+		resultMap.put("operatorTypes", OperatorTypeEnum.toList());
+		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
+		resultMap.put("pagination", pagination);
+		resultMap.put("searchParam", ratePo);
+		return new ModelAndView("/activity/my_rate_list","resultMap",resultMap);
+	}
+	
+	/**
 	 * @description: 绑定代理商
 	 * @return
 	 * @author:POP产品研发部 宁强

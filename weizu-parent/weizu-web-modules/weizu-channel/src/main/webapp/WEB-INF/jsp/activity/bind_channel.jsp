@@ -442,6 +442,9 @@ $(".radioItem").change( //都会发送ajax请求
 				var scopeCityCode = $("input[name='scopeCityCode']:checked").val();
 				url = "/flowsys/rate/get_simple_channel.do?operatorType="+operatorType+"&scopeCityCode="+scopeCityCode+"&serviceType="+serviceType;
 			}
+			
+			
+			
 			//alert(cityCode);
 			 $.ajax( {    
 		        "type": "get",     
