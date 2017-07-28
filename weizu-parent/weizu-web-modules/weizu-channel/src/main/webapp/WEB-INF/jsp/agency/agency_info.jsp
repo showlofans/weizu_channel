@@ -49,6 +49,12 @@
 				<input type="text" style="width:200px" class="input-text"  value="${loginContext.agencyIp }" placeholder="" id="agencyIp" name="agencyIp">
 			</div>
 		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">用户其他联系方式：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" style="width:200px" class="input-text"  value="${loginContext.otherContact }" placeholder="" id="otherContact" name="otherContact">
+			</div>
+		</div>
 		
 		<div class="row cl">
 			<span class="verifyCodeHidden" style="display:none">${loginContext.verifyCode }</span>

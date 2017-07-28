@@ -19,6 +19,18 @@ public interface RateDiscountAO {
 	Pagination<RateDiscountPo> getRateList(RateDiscountPo ratePo,PageParam pageParam);
 	
 	/**
+	 * @description:获得我的费率列表
+	 * @param ratePo
+	 * @param pageParam
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月28日 下午5:53:00
+	 */
+	Pagination<RateDiscountPo> getMyRateList(RateDiscountPo ratePo,PageParam pageParam);
+	
+	
+	
+	/**
 	 * @description: 获得费率总数
 	 * @param ratePo
 	 * @return

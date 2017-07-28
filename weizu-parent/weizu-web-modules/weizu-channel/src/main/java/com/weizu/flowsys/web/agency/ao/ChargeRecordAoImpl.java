@@ -48,26 +48,28 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 	 */
 	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
-	public int updateAccount(ChargeRecordPo chargeRecordPo,ChargeAccountPo accountPo) {
+	public int updateAccount(ChargeRecordPo chargeRecordPo,ChargeAccountPo loginAccountPo) {
 		
-		if(chargeRecordPo.getBillType() == BillTypeEnum.CORPORATE_BUSINESS.getValue()){
-			
-		}
+//		if(chargeRecordPo.getBillType() == BillTypeEnum.CORPORATE_BUSINESS.getValue()){
+//			
+//		}
 		
+//		int accountId = chargeRecordPo.getAccountId();
+//		ChargeAccountPo accountPo = chargeAccountDao.get(accountId);
 		/****************修改登陆账户********************/
 		/**充值前余额*/
-		double agencyBeforeBalance = accountPo.getAccountBalance();
+		double agencyBeforeBalance = loginAccountPo.getAccountBalance();
 		/**充值额（两个修改是共用的）*/
 		double chargeAmount = chargeRecordPo.getRechargeAmount();
 		/** 向消费记录表插入登陆用户数据 */
 		chargeRecordDao.add(new ChargeRecordPo(System
 				.currentTimeMillis(), chargeAmount,
 				agencyBeforeBalance, NumberTool.sub(agencyBeforeBalance, chargeAmount), 
-				chargeRecordPo.getBillType(),AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), accountPo.getAgencyId(),1));
+				chargeRecordPo.getBillType(),AccountTypeEnum.DECREASE.getValue(), loginAccountPo.getId(), loginAccountPo.getAgencyId(),1));
 		
 		/** 更新登录用户账户信息**/
-		accountPo.addBalance(chargeAmount,-1);
-		chargeAccountAO.updateAccount(accountPo);
+		loginAccountPo.addBalance(chargeAmount,-1);
+		chargeAccountAO.updateAccount(loginAccountPo);
 		
 		
 		/****************修改子代理商账户********************************************/
@@ -75,7 +77,8 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 //		int accountId = chargeRecordPo.getAccountId();
 
 		/** 数据库取出来的的账户对象 */
-		ChargeAccountPo chargeAccountPo = chargeAccountDao.selectByAgencyId(chargeRecordPo.getAgencyId(),chargeRecordPo.getBillType());
+//		ChargeAccountPo chargeAccountPo = chargeAccountDao.selectByAgencyId(chargeRecordPo.getAgencyId(),chargeRecordPo.getBillType());
+		ChargeAccountPo chargeAccountPo = chargeAccountDao.get(chargeRecordPo.getAccountId());
 		/**充值前余额*/
 		double beforeBalance = chargeAccountPo.getAccountBalance();
 		

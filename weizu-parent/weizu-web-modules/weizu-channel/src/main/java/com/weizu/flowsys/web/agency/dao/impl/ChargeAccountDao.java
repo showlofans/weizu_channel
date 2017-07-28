@@ -13,7 +13,7 @@ import com.weizu.flowsys.web.agency.dao.ChargeAccountDaoInterface;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 
 @Repository("chargeAccountDao")
-public class ChargeAccountDao extends DaoImpl<ChargeAccountPo, Long> implements ChargeAccountDaoInterface {
+public class ChargeAccountDao extends DaoImpl<ChargeAccountPo, Integer> implements ChargeAccountDaoInterface {
 
 	@Resource
 	private SqlSessionTemplate sqlSessionTemplate;

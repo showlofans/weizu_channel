@@ -28,18 +28,26 @@ public class AgencyAOTest {
 	@Resource
 	private AgencyVODaoInterface agencyVODao;
 	
-//	 @Test
-//	 public void testListAgencyByRoot(){
-//		 Map<String, Object> params = new HashMap<String, Object>();
-////		 params.put("userName", "xiao");
-//		 PageParam pageParam = new PageParam(1, 10);
-//		 Pagination<AgencyBackwardVO> pagination = agencyAO.ListAgencyByRoot(1, new AgencyBackwardVO(), pageParam);
+	 @Test
+	 public void testListAgencyByRoot(){
+		 Map<String, Object> params = new HashMap<String, Object>();
+//		 params.put("userName", "xiao");
+		 PageParam pageParam = new PageParam(1, 10);
+		 Pagination<AgencyBackwardVO> pagination = agencyAO.ListAgencyByRoot(4, new AgencyBackwardVO(), pageParam);
+		 List<AgencyBackwardVO> list = pagination.getRecords();	
+		 System.out.println(list.size());
+		 for (AgencyBackwardVO agencyBackwardVO : list) {
+			System.out.println("username:"+agencyBackwardVO.getUserName());
+			System.out.println("accountId:"+agencyBackwardVO.getAccountId());
+		}
+	 }
+	
+//	public void testListAgencyByRoot(){
+//		PageParam pageParam = new PageParam(1, 10);
+//		 Pagination<AgencyBackwardVO> pagination = agencyAO.ListAgencyByRoot(4, new AgencyBackwardVO(), pageParam);
 //		 List<AgencyBackwardVO> list = pagination.getRecords();	
 //		 System.out.println(list.size());
-//		 for (AgencyBackwardVO agencyBackwardVO : list) {
-//			System.out.println("username:"+agencyBackwardVO.getUserName());
-//		}
-//	 }
+//	}
 	 
 //	 @Test
 //	 public void testCheckSecondAgency(){

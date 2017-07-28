@@ -21,7 +21,7 @@
   </sql>
   
   <sql id="Show_Rate_List">
-  	rate.id,rate.active_discount,rate.bill_type,cd.operator_type,cd.service_type,scope_city_code 
+  	rate.id,channel_discount_id,rate.active_discount,rate.bill_type,cd.operator_type,cd.service_type,scope_city_code 
   </sql>
   <!-- 获得首页折扣信息 -->
   <select id="getShowRate" parameterType="map" resultMap="BaseResultMap">
@@ -37,6 +37,43 @@
  		</if>
  	</where>
  	order by rate.bill_type
+  </select>
+  <!-- 费率配置列表 -->
+  <select id="getMyRate" parameterType="map" resultMap="BaseResultMap">
+  	select <include refid="Show_Rate_List"></include>
+  	from <include refid="t_active"></include> active
+  	inner join <include refid="t_rateD"></include> rate
+  	ON active.rate_discount_id=rate.id
+  	INNER JOIN <include refid="t_cDiscount"></include> cd
+ 	on rate.channel_discount_id=cd.id
+ 	<where>
+ 		<if test="agencyId != null">
+ 			AND active.agency_id = #{agencyId}
+ 		</if>
+ 	</where>
+ 	order by rate.bill_type
+ 	<if test="start != null">
+	 	limit #{start}
+	 </if>
+	 <if test="end != null">
+	 	, #{end}
+	 </if>
+	 <if test="start == null &amp; end == null">
+	 	limit 0,10
+	 </if>
+  </select>
+  <select id="countMyRate" parameterType="map" resultType="int">
+  	select count(*)
+  	from <include refid="t_active"></include> active
+  	inner join <include refid="t_rateD"></include> rate
+  	ON active.rate_discount_id=rate.id
+  	INNER JOIN <include refid="t_cDiscount"></include> cd
+ 	on rate.channel_discount_id=cd.id
+ 	<where>
+ 		<if test="agencyId != null">
+ 			AND active.agency_id = #{agencyId}
+ 		</if>
+ 	</where>
   </select>
   <!-- 批量添加费率折扣 -->
    <!-- <insert id="rate_addList" useGeneratedKeys="true" parameterType="java.util.List">

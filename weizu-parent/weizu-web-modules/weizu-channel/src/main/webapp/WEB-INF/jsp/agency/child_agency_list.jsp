@@ -131,11 +131,17 @@
 						<td class="td-manage">
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="editRate(this)" href="javascript:;" title="编辑代理商"><i class="Hui-iconfont">&#xe60c;</i></a>
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="resetPass('${agency.id}')" href="javascript:;" title="重置密码"><i class="Hui-iconfont">&#xe63f;</i></a>
-							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" onClick="account_charge('账户充值','${agency.userName }',${agency.id },${agency.accountId })" href="javascript:;" title="账户充值"><i class="Hui-iconfont">&#xe726;</i></a> 
+							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" onClick="account_charge('账户充值','${agency.userName }',${agency.id },${agency.accountId },${agency.billType })" href="javascript:;" title="账户充值"><i class="Hui-iconfont">&#xe726;</i></a> 
 							<%-- <a title="/flowsys/rate/rate_add_page.do?rateId=${agency.rateId }&agencyId=${agency.id}" data-href="/flowsys/rate/rate_add_page.do?rateId=${agency.rateId }&agencyId=${agency.id}" data-title="费率添加" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe6df;</i></a> --%>
-								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none"  title="配置通道" data-href="/flowsys/rate/bind_channel_list.do?agencyId=${agency.id }&agencyName=${agency.userName}" data-title="配置通道" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe604;</i></a>
-							<%-- <c:if test="${loginContext.rootAgencyId == 0 }">
-							</c:if> --%>
+							<c:choose>
+								<c:when test="${loginContext.rootAgencyId == 0 }">
+									<a data-toggle="tooltip" data-placement="top" style="text-decoration:none"  title="配置通道" data-href="/flowsys/rate/bind_channel_list.do?agencyId=${agency.id }&agencyName=${agency.userName}" data-title="配置通道" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe604;</i></a>
+								</c:when>
+								<c:otherwise>
+									<a data-toggle="tooltip" data-placement="top" style="text-decoration:none"  title="配置费率" data-href="/flowsys/rate/my_rate_list.do?agencyId=${agency.id }" data-title="配置费率" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe604;</i></a>
+								</c:otherwise>
+							</c:choose>
+							
 						</td>
 						<td>${agency.createTimeStr }</td>
 						<%-- <td class="td-status"><c:forEach items="${resultMap.agencyTagEnums }" var="pgIn" varStatus="vs1">
@@ -238,7 +244,7 @@ function article_add(title,url,w,h){
 	layer.full(index);
 }
 /**账户-充值 */
-function account_charge(title,agencyUserName,id,accoutId){
+function account_charge(title,agencyUserName,id,accountId,billType){
 	/* layer.open({
 		area: [w+'px', h +'px'],
 		type: 1,
@@ -252,7 +258,7 @@ function account_charge(title,agencyUserName,id,accoutId){
         area: ['430px', '500px'],
         maxmin: false,
         closeBtn: 1,
-        content: '/flowsys/account/add_charge_page.do?agencyId=' + id + '&userName=' + agencyUserName+ '&accountId=' + accountId,
+        content: '/flowsys/account/add_charge_page.do?agencyId=' + id + '&userName=' + agencyUserName+ '&accountId=' + accountId+ '&billType=' + billType,
         end: function () {
             location.reload();
         }

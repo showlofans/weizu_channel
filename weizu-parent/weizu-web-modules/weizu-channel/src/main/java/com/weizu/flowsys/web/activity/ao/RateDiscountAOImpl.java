@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.weizu.web.foundation.DateUtil;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
@@ -17,6 +18,7 @@ import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
+import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
 import com.weizu.flowsys.web.activity.pojo.DiscountPo;
 import com.weizu.flowsys.web.activity.pojo.OperatorDiscount;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
@@ -42,6 +44,28 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	public Pagination<RateDiscountPo> getRateList(RateDiscountPo ratePo,PageParam pageParam) {
 		
 		return null;
+	}
+	@Override
+	public Pagination<RateDiscountPo> getMyRateList(RateDiscountPo ratePo,PageParam pageParam) {
+		Map<String, Object> paramsMap = getMapByRate(ratePo);
+		long toatalRecord = rateDiscountDao.countMyRate(paramsMap);
+		int pageSize = 10;
+		int pageNo = 1;
+		if(pageParam != null){
+			pageSize = pageParam.getPageSize();
+			pageNo = pageParam.getPageNo();
+			paramsMap.put("start", (pageNo-1)*pageSize);
+			paramsMap.put("end", pageSize);
+		}
+		List<RateDiscountPo> records = rateDiscountDao.getMyRate(paramsMap);
+//		for (RateDiscountPo activePo1 : records) {
+			//初始化时间
+//			if(activePo1.getActiveTime() != null){
+//				String activeTimeStr = DateUtil.formatAll(activePo1.getActiveTime());
+//				activePo1.setActiveTimeStr(activeTimeStr);
+//			}
+//		}
+		return new Pagination<RateDiscountPo>(records, toatalRecord, pageNo, pageSize);
 	}
 
 	/**
@@ -241,6 +265,11 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		{
 			resultMap.put("billTypeRate", ratePo.getBillType());
 		}
+		if(ratePo.getAgencyId() != null)
+		{
+			resultMap.put("agencyId", ratePo.getAgencyId());
+		}
+		
 		
 		return resultMap;
 	}

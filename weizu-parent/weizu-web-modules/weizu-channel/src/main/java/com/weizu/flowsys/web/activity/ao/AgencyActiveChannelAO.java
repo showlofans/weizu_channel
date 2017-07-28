@@ -23,6 +23,8 @@ public interface AgencyActiveChannelAO {
 	 */
 	Pagination<AgencyActiveRatePo> listActive(PageParam pageParam,AgencyActiveRatePo activePo);
 	
+	
+	
 	/**
 	 * @description: 查询分页费率列表
 	 * @param pageParam

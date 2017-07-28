@@ -74,7 +74,7 @@ public class AccountController {
 	 */
 	@RequestMapping(value = AccountURL.ADD_CHARGE_PAGE)
 	public ModelAndView addCharge(HttpServletRequest request, String userName,
-			int agencyId, int accountId) {
+			int agencyId, int accountId,int billType) {
 
 		// String agencyId = request.getParameter("agencyId").trim().toString();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -82,9 +82,12 @@ public class AccountController {
 		resultMap.put("agencyId", agencyId); // 代理商ID
 		resultMap.put("accountId", accountId); // 代理商ID
 		resultMap.put("billTypeEnum", BillTypeEnum.toList());
-		resultMap.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());//默认对私
-		resultMap.put("chargeAccount",chargeAccountAO.getAccountByAgencyId(agencyId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));//通过代理商Id获得充值账户基本信息
-		resultMap.put("chargeAccount1",chargeAccountAO.getAccountByAgencyId(agencyId,BillTypeEnum.CORPORATE_BUSINESS.getValue()));//通过代理商Id获得充值账户基本信息
+		resultMap.put("billType", billType);//默认对私
+		if(billType == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()){
+			resultMap.put("chargeAccount",chargeAccountAO.getAccountByAgencyId(agencyId,billType));//通过代理商Id获得充值账户基本信息
+		}else{
+			resultMap.put("chargeAccount1",chargeAccountAO.getAccountByAgencyId(agencyId,billType));//通过代理商Id获得充值账户基本信息
+		}
 		return new ModelAndView("account/add_charge", "resultMap", resultMap);
 	}
 
@@ -185,7 +188,7 @@ public class AccountController {
 		}else{
 			accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
 		}
-		int result = chargeRecordAO.updateAccount(chargeRecordPo, accountPo);
+		int result = chargeRecordAO.updateAccount(chargeRecordPo,accountPo);
 		
 		if(result > 0){
 			ChargeAccountPo agencyAccountPo = null;
