@@ -93,13 +93,13 @@
 		</tbody>
 	</table>
 	<%-- <c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vst"></c:forEach> --%>
-	<h3>高级费率：</h3>
+	<h3>带费率：</h3>
 	<c:if test="${not empty resultMap.map.billDTO }">
 		移动：${resultMap.map.billDTO.discountPo.discount0 } <br>
 		联通：${resultMap.map.billDTO.discountPo.discount1 }<br>
 		电信：${resultMap.map.billDTO.discountPo.discount2 }<br>
 	</c:if>
-	<h3>一般费率：</h3>
+	<h3>不带费率：</h3>
 	<c:if test="${not empty resultMap.map.noDTO }">
 		移动：${resultMap.map.noDTO.discountPo.discount0 } <br>
 		联通：${resultMap.map.noDTO.discountPo.discount1 }<br>

@@ -485,13 +485,13 @@ public class DaoImpl<T extends Po, PK extends Serializable> implements Dao<T, PK
 					sql += ",";
 				}
 			}else{
-				sql += prams.get(i).getFile() + "=null";
-				if (i < prams.size() -1) {
-					sql += ",";
-				}
+//				sql += prams.get(i).getFile() + "=null";
+//				if (i < prams.size() -1) {
+//					sql += ",";
+//				}
 			}
 		}
-		sql += " where id='" + id +"';";
+		sql += " where id=" + id +";";
 		
 		return sqlSessionTemplateASS.update("update", sql);
 	}
@@ -511,7 +511,7 @@ public class DaoImpl<T extends Po, PK extends Serializable> implements Dao<T, PK
 					sql += "'" + new String((byte[]) value) + "'";
 				}else if(value instanceof Boolean){
 					sql += "'" + ((boolean)value == true ? 1 : 0) + "'";
-				}else if(value instanceof Integer || value instanceof Long){
+				}else if(value instanceof Integer || value instanceof Long || value instanceof Double){
 					sql += value;
 				}else{
 					sql += "'" + value + "'";

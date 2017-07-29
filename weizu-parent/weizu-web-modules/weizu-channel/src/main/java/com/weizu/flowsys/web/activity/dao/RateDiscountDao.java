@@ -36,6 +36,8 @@ public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	 */
 	List<RateDiscountPo> getRateDiscountList(RateDiscountPo rateDiscountPo);
 	
+	
+	
 	/**
 	 * @description: 通过通道折扣查询简易折扣列表
 	 * @param channelDiscountId
@@ -89,6 +91,15 @@ public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	 * @createTime:2017年7月28日 下午5:48:13
 	 */
 	int countMyRate(Map<String, Object> params);
+	
+	/**
+	 * @description: 获得子费率列表
+	 * @param params
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月29日 下午6:23:23
+	 */
+	List<RateDiscountPo>getMyChildRate(Map<String, Object> params);
 	
 	/**
 	 * @description: 获得所有费率的地区
