@@ -87,12 +87,30 @@ public class RateDiscountDaoTest {
 //		System.out.println(dto1.getDiscountPo().getDiscount2());;
 //	}
 	@Test
-	public void testGetMyRateList(){
+	public void testAddMyRate(){
 		RateDiscountPo ratePo = new RateDiscountPo();
-		Pagination<RateDiscountPo>  pagination = rateDiscountAO.getMyRateList(ratePo, new PageParam(1, 10));
-		List<RateDiscountPo> records = pagination.getRecords();
-		for (RateDiscountPo rateDiscountPo : records) {
-			
-		}
+		ratePo.setId(46L);
+//		ratePo.setActiveDiscount(0.99);
+		ratePo.setBillType(0);
+		String res = rateDiscountAO.updateRateDiscount(ratePo);
+		System.out.println(res);
 	}
+//	@Test
+//	public void testUpdateMyRate(){
+//		RateDiscountPo ratePo = new RateDiscountPo();
+//		ratePo.setId(46L);
+////		ratePo.setActiveDiscount(0.99);
+//		ratePo.setBillType(0);
+//		String res = rateDiscountAO.updateRateDiscount(ratePo);
+//		System.out.println(res);
+//	}
+//	@Test
+//	public void testGetMyRateList(){
+//		RateDiscountPo ratePo = new RateDiscountPo();
+//		Pagination<RateDiscountPo>  pagination = rateDiscountAO.getMyRateList(ratePo, new PageParam(1, 10));
+//		List<RateDiscountPo> records = pagination.getRecords();
+//		for (RateDiscountPo rateDiscountPo : records) {
+//			
+//		}
+//	}
 }

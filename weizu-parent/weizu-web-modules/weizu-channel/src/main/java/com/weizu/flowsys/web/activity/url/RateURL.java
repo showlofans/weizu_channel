@@ -140,4 +140,9 @@ public class RateURL extends BaseURL {
 	 */
 	public static final String MY_RATE_LIST = "/my_rate_list" + DYNAMIC_WEB_SUFFIX;
 	
+	/**
+	 * 在费率下添加一个费率
+	 */
+	public static final String ADD_MY_RATE = "/add_my_rate" + DYNAMIC_WEB_SUFFIX;
+	
 }

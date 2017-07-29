@@ -43,7 +43,7 @@
 				<c:if test="${resultMap.channelBillType==billEnum.value }">${billEnum.desc }</c:if>
 				</span>
 			</c:forEach>
-				
+			通道折扣：<span id=""  class="c-red">${resultMap.channelDiscount }</span>
 			</sapn>
 				业务类型：<span class="select-box inline">
 					<select name="serviceType" id="serviceType" class="select" onchange="getCity()">
@@ -106,6 +106,7 @@
 						</c:choose> --%>
 					</select>
 				</span>
+			
 				<br><br>
 				折扣类型
 				<span class="select-box inline">

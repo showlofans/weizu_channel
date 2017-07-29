@@ -16,6 +16,13 @@
     <result column="active_id" property="activeId" jdbcType="BIGINT" />
     <result column="channel_discount_id" property="channelDiscountId" jdbcType="BIGINT" />
   </resultMap>
+  <resultMap id="MyRateResultMap" type="com.weizu.flowsys.web.activity.pojo.RateDiscountPo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="bill_type" property="billType" jdbcType="INTEGER" />
+    <result column="active_discount" property="activeDiscount" jdbcType="DOUBLE" />
+    <result column="active_id" property="activeId" jdbcType="BIGINT" />
+    <result column="channel_discount_id" property="channelDiscountId" jdbcType="BIGINT" />
+  </resultMap>
   <sql id="Base_Column_List" >
     rate.id, cDiscount.operator_type, cDiscount.scope_city_code, active_discount,channel_discount_id,rate.bill_type
   </sql>
@@ -23,6 +30,26 @@
   <sql id="Show_Rate_List">
   	rate.id,channel_discount_id,rate.active_discount,rate.bill_type,cd.operator_type,cd.service_type,scope_city_code 
   </sql>
+  <sql id="My_Rate_List">
+  	rate.id, rate.active_id, active_discount,channel_discount_id,rate.bill_type 
+  </sql>
+  <!-- 获得子费率列表 -->
+   <select id="getMyChildRate" parameterType="map" resultMap="MyRateResultMap">
+  	select <include refid="My_Rate_List"></include>
+  	from <include refid="t_active"></include> active
+  	inner join <include refid="t_rateD"></include> rate
+  	ON active.rate_discount_id=rate.id
+ 	<where>
+ 		<if test="agencyId != null">
+ 			AND active.agency_id = #{agencyId}
+ 		</if>
+ 		<if test="activeId != null">
+ 			AND  rate.active_id = #{activeId}
+ 		</if>
+ 	</where>
+  </select>
+  
+  
   <!-- 获得首页折扣信息 -->
   <select id="getShowRate" parameterType="map" resultMap="BaseResultMap">
   	select <include refid="Show_Rate_List"></include>
@@ -94,17 +121,22 @@
   </resultMap>
   
   <sql id="simple_column_list">
-  	id, active_discount,bill_type
+  	rate.id, active_discount,bill_type
   </sql>
   <select id="getListByCDiscountId" parameterType="map" resultMap="SimpleMap">
   	select <include refid="simple_column_list"></include>
-  	from <include refid="t_rateD"></include>
+  	from <include refid="t_rateD"></include> rate
+  	inner join <include refid="t_active"></include> active
+  	on rate.id = active.rate_discount_id
   	<where>
   		<if test="channelDiscountId != null">
 	  		AND channel_discount_id = #{channelDiscountId}
   		</if>
   		<if test="billTypeRate != null">
 	  		AND bill_type = #{billTypeRate}
+  		</if>
+  		<if test="bindAgencyId != null">
+	  		AND active.bind_agency_id = #{bindAgencyId}
   		</if>
   	</where>
   </select>
@@ -116,6 +148,9 @@
   	<where>
   		<if test="channelDiscountId != null">
 	  		AND channel_discount_id = #{channelDiscountId}
+  		</if>
+  		<if test="id != null">
+	  		AND id = #{id}
   		</if>
   		<if test="activeDiscount != null">
 	  		AND active_discount = #{activeDiscount}

@@ -1,6 +1,5 @@
 package com.weizu.flowsys.web.activity.ao;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,30 +8,32 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
-import org.weizu.web.foundation.DateUtil;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.web.activity.dao.AgencyActiveRateDTODao;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
-import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
+import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.DiscountPo;
-import com.weizu.flowsys.web.activity.pojo.OperatorDiscount;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountShowDTO;
-import com.weizu.flowsys.web.activity.pojo.ScopeDiscount;
-import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
-import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
-import com.weizu.flowsys.web.http.weizu.GetBalanceParams;
 
 @Service(value="rateDiscountAO")
 public class RateDiscountAOImpl implements RateDiscountAO {
 
 	@Resource
 	private RateDiscountDao rateDiscountDao;
+	
+	@Resource
+	private AgencyActiveRateDTODao agencyActiveRateDTODao;
+	
 	/**
 	 * @description: 获得费率列表
 	 * @param ratePo
@@ -46,7 +47,7 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		return null;
 	}
 	@Override
-	public Pagination<RateDiscountPo> getMyRateList(RateDiscountPo ratePo,PageParam pageParam) {
+	public Pagination<RateDiscountPo> getMyRateList(RateDiscountPo ratePo,Integer childAgencyId,PageParam pageParam) {
 		Map<String, Object> paramsMap = getMapByRate(ratePo);
 		long toatalRecord = rateDiscountDao.countMyRate(paramsMap);
 		int pageSize = 10;
@@ -58,13 +59,17 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 			paramsMap.put("end", pageSize);
 		}
 		List<RateDiscountPo> records = rateDiscountDao.getMyRate(paramsMap);
-//		for (RateDiscountPo activePo1 : records) {
-			//初始化时间
-//			if(activePo1.getActiveTime() != null){
-//				String activeTimeStr = DateUtil.formatAll(activePo1.getActiveTime());
-//				activePo1.setActiveTimeStr(activeTimeStr);
-//			}
-//		}
+		for (RateDiscountPo ratePo1 : records) {
+			//初始化子费率
+			Map<String,Object> pMap = new HashMap<String, Object>();
+			pMap.put("activeId", ratePo1.getId());
+			pMap.put("agencyId", childAgencyId);
+			List<RateDiscountPo> list = rateDiscountDao.getMyChildRate(pMap);
+			for (RateDiscountPo rateDiscountPo : list) {
+				rateDiscountPo.setBillTypeDesc(BillTypeEnum.getEnum(rateDiscountPo.getBillType()).getDesc());
+			}
+			ratePo1.setDiscountList(list);
+		}
 		return new Pagination<RateDiscountPo>(records, toatalRecord, pageNo, pageSize);
 	}
 
@@ -245,6 +250,44 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		}
 	}
 	/**
+	 * @description: 在折扣上添加费率折扣
+	 * @param ratePo
+	 * @param agencyName
+	 * @param bindAgencyId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月29日 下午3:19:56
+	 */
+	@Transactional
+	@Override
+	public String addRateDiscount(RateDiscountPo ratePo, String agencyName,
+			Integer bindAgencyId) {
+		long rateDiscountId = rateDiscountDao.nextId();
+		int addRes = rateDiscountDao.add(ratePo);
+		AgencyActiveRateDTO aardto = new AgencyActiveRateDTO(ratePo.getAgencyId(), agencyName, rateDiscountId, System.currentTimeMillis(), BindStateEnum.BIND.getValue(), bindAgencyId);
+		int addaardtoRes = agencyActiveRateDTODao.add(aardto);
+		if(addRes + addaardtoRes > 1){
+			return "success";
+		}
+		return "error";
+	}
+	/**
+	 * @description: 更新下级费率折扣
+	 * @param ratePo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月29日 下午3:32:34
+	 */
+	@Transactional
+	@Override
+	public String updateRateDiscount(RateDiscountPo ratePo) {
+		int res = rateDiscountDao.updateLocal(ratePo, new WherePrams("id", "=", ratePo.getId()));
+		if(res > 0){
+			return "success";
+		}
+		return "error";
+	}
+	/**
 	 * @description: 封装查询是否存在费率，单表查询参数
 	 * @param ratePo
 	 * @return
@@ -268,6 +311,10 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		if(ratePo.getAgencyId() != null)
 		{
 			resultMap.put("agencyId", ratePo.getAgencyId());
+		}
+		if(ratePo.getId() != null)
+		{
+			resultMap.put("id", ratePo.getId());
 		}
 		
 		
@@ -376,6 +423,8 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		}
 		return dtoMap;
 	}
+	
+	
 	
 	
 

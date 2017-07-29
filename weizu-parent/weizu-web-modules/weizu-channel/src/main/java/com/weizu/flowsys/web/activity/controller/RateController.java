@@ -445,7 +445,7 @@ public class RateController {
 	 */
 	@RequestMapping(value=RateURL.MY_RATE_LIST)
 	public ModelAndView myRateList(@RequestParam(value = "pageNo", required = false) String pageNo,
-			HttpServletRequest request,RateDiscountPo ratePo){
+			HttpServletRequest request,RateDiscountPo ratePo,String agencyName){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO == null){
 			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
@@ -457,8 +457,10 @@ public class RateController {
 		}else{
 			pageParam = new PageParam(1, 10);
 		}
+		int childAgencyId = ratePo.getAgencyId();
+		request.getSession().setAttribute("childAgencyId", ratePo.getAgencyId());
 		ratePo.setAgencyId(agencyVO.getId());
-		Pagination<RateDiscountPo> pagination = rateDiscountAO.getMyRateList(ratePo, pageParam);
+		Pagination<RateDiscountPo> pagination = rateDiscountAO.getMyRateList(ratePo,childAgencyId, pageParam);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
@@ -466,7 +468,39 @@ public class RateController {
 		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 		resultMap.put("pagination", pagination);
 		resultMap.put("searchParam", ratePo);
+		request.getSession().setAttribute("childAgencyName", agencyName);
+		
 		return new ModelAndView("/activity/my_rate_list","resultMap",resultMap);
+	}
+	/**
+	 * @description: 更新下级代理商折扣
+	 * @param request
+	 * @param ratePo
+	 * @param response
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月29日 下午3:37:51
+	 */
+	@ResponseBody
+	@RequestMapping(value=RateURL.ADD_MY_RATE)
+	public void addMyRate(HttpServletRequest request,RateDiscountPo ratePo,HttpServletResponse response){
+		String resAddDis = "error";
+		if(ratePo.getId() != null){//更新
+			resAddDis = rateDiscountAO.updateRateDiscount(ratePo);
+		}else{
+			AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+			if(agencyVO != null){
+				String agencyName = request.getSession().getAttribute("childAgencyName").toString();
+				String agencyIdStr = request.getSession().getAttribute("childAgencyId").toString();
+				int bindAgencyId = agencyVO.getId();
+				ratePo.setAgencyId(Integer.parseInt(agencyIdStr));
+				resAddDis = rateDiscountAO.addRateDiscount(ratePo, agencyName, bindAgencyId);
+			}
+		}
+		try {
+			response.getWriter().print(resAddDis);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -624,7 +658,7 @@ public class RateController {
 	@RequestMapping(value=RateURL.BIND_RATE_LIST)
 	public ModelAndView getBindRate(AgencyActiveRatePo aarp,String channelId, @RequestParam(value = "pageNo", required = false) String pageNo,HttpServletRequest request){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		PageParam pageParam = null;
 		if(StringHelper.isNotEmpty(pageNo)){
 			pageParam = new PageParam(Integer.parseInt(pageNo), 10) ;
@@ -689,7 +723,7 @@ public class RateController {
 				}else{//没有查询参数，就用第一个通道折扣类型，作为费率折扣类型
 					billType = cdp1.getBillType();
 				}
-				List<RateDiscountPo> discountList = rateDiscountDao.getListByCDiscountId(channelDiscountId,billType);//折扣列表
+				List<RateDiscountPo> discountList = rateDiscountDao.getListByCDiscountId(channelDiscountId,agencyVO.getId(),billType);//折扣列表
 				
 				resultMap.put("discountList", discountList);//取折扣和折扣id
 				//根据第一个折扣id去找连接

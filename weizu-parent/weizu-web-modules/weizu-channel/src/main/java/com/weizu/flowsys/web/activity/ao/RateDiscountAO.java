@@ -26,7 +26,7 @@ public interface RateDiscountAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月28日 下午5:53:00
 	 */
-	Pagination<RateDiscountPo> getMyRateList(RateDiscountPo ratePo,PageParam pageParam);
+	Pagination<RateDiscountPo> getMyRateList(RateDiscountPo ratePo,Integer childAgencyId,PageParam pageParam);
 	
 	
 	
@@ -69,6 +69,17 @@ public interface RateDiscountAO {
 	String addRateDiscount(RateDiscountPo ratePo);
 	
 	/**
+	 * @description: 添加费率折扣
+	 * @param ratePo
+	 * @param agencyName
+	 * @param bindAgencyId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月29日 下午3:19:33
+	 */
+	String addRateDiscount(RateDiscountPo ratePo,String agencyName,Integer bindAgencyId);
+	
+	/**
 	 * @description: 修改费率折扣
 	 * @param ratePo
 	 * @return
@@ -76,6 +87,15 @@ public interface RateDiscountAO {
 	 * @createTime:2017年7月17日 下午1:58:08
 	 */
 	String editBindRate(RateDiscountPo ratePo);
+	
+	/**
+	 * @description:更新下级费率折扣
+	 * @param ratePo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月29日 下午3:32:12
+	 */
+	String updateRateDiscount(RateDiscountPo ratePo);
 	
 	/**
 	 * @description: 获得首页折扣信息

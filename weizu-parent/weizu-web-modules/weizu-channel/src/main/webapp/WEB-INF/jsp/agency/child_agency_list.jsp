@@ -138,7 +138,7 @@
 									<a data-toggle="tooltip" data-placement="top" style="text-decoration:none"  title="配置通道" data-href="/flowsys/rate/bind_channel_list.do?agencyId=${agency.id }&agencyName=${agency.userName}" data-title="配置通道" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe604;</i></a>
 								</c:when>
 								<c:otherwise>
-									<a data-toggle="tooltip" data-placement="top" style="text-decoration:none"  title="配置费率" data-href="/flowsys/rate/my_rate_list.do?agencyId=${agency.id }" data-title="配置费率" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe604;</i></a>
+									<a data-toggle="tooltip" data-placement="top" style="text-decoration:none"  title="配置费率" data-href="/flowsys/rate/my_rate_list.do?agencyId=${agency.id }&agencyName=${agency.userName}" data-title="配置费率" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe604;</i></a>
 								</c:otherwise>
 							</c:choose>
 							

@@ -1,5 +1,7 @@
 package com.weizu.flowsys.web.activity.pojo;
 
+import java.util.List;
+
 import com.weizu.flowsys.core.annotation.po.TableName;
 import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
@@ -18,7 +20,7 @@ public class RateDiscountPo extends Po {
     
     private Double activeDiscount;
 
-    private Long activeId;
+    private Long activeId;					//父级折扣Id
     
     private Long channelDiscountId;
     
@@ -39,11 +41,24 @@ public class RateDiscountPo extends Po {
     private Integer agencyId;
     @TempField
     private String scopeCityName;
+    @TempField
+    private String billTypeDesc;			//费率描述
+    @TempField
+    private List<RateDiscountPo> discountList;			//活动折扣列表
+    
     
     public RateDiscountPo() {
 		super();
 	}
-	
+    
+	public List<RateDiscountPo> getDiscountList() {
+		return discountList;
+	}
+
+	public void setDiscountList(List<RateDiscountPo> discountList) {
+		this.discountList = discountList;
+	}
+
 	public RateDiscountPo(Double activeDiscount, Long activeId,
 			Long channelDiscountId, Integer billType) {
 		super();
@@ -51,6 +66,14 @@ public class RateDiscountPo extends Po {
 		this.activeId = activeId;
 		this.channelDiscountId = channelDiscountId;
 		this.billType = billType;
+	}
+	
+	public String getBillTypeDesc() {
+		return billTypeDesc;
+	}
+
+	public void setBillTypeDesc(String billTypeDesc) {
+		this.billTypeDesc = billTypeDesc;
 	}
 
 	public DiscountPo getDiscountPo() {
