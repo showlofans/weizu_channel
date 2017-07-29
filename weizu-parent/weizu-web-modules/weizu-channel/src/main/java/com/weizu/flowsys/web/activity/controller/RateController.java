@@ -658,7 +658,7 @@ public class RateController {
 	@RequestMapping(value=RateURL.BIND_RATE_LIST)
 	public ModelAndView getBindRate(AgencyActiveRatePo aarp,String channelId, @RequestParam(value = "pageNo", required = false) String pageNo,HttpServletRequest request){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		PageParam pageParam = null;
 		if(StringHelper.isNotEmpty(pageNo)){
 			pageParam = new PageParam(Integer.parseInt(pageNo), 10) ;
@@ -723,7 +723,7 @@ public class RateController {
 				}else{//没有查询参数，就用第一个通道折扣类型，作为费率折扣类型
 					billType = cdp1.getBillType();
 				}
-				List<RateDiscountPo> discountList = rateDiscountDao.getListByCDiscountId(channelDiscountId,billType);//折扣列表
+				List<RateDiscountPo> discountList = rateDiscountDao.getListByCDiscountId(channelDiscountId,agencyVO.getId(),billType);//折扣列表
 				
 				resultMap.put("discountList", discountList);//取折扣和折扣id
 				//根据第一个折扣id去找连接

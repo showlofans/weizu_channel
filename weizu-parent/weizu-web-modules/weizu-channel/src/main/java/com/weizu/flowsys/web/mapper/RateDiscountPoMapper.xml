@@ -121,17 +121,22 @@
   </resultMap>
   
   <sql id="simple_column_list">
-  	id, active_discount,bill_type
+  	rate.id, active_discount,bill_type
   </sql>
   <select id="getListByCDiscountId" parameterType="map" resultMap="SimpleMap">
   	select <include refid="simple_column_list"></include>
-  	from <include refid="t_rateD"></include>
+  	from <include refid="t_rateD"></include> rate
+  	inner join <include refid="t_active"></include> active
+  	on rate.id = active.rate_discount_id
   	<where>
   		<if test="channelDiscountId != null">
 	  		AND channel_discount_id = #{channelDiscountId}
   		</if>
   		<if test="billTypeRate != null">
 	  		AND bill_type = #{billTypeRate}
+  		</if>
+  		<if test="bindAgencyId != null">
+	  		AND active.bind_agency_id = #{bindAgencyId}
   		</if>
   	</where>
   </select>
