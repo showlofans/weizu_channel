@@ -35,8 +35,7 @@ public class RateDiscountPo extends Po {
     @TempField
     private DiscountPo discountPo;			//折扣
     
-    @TempField
-    private Long channelId;
+    private Long channelId;					//通道id
     @TempField
     private Integer agencyId;
     @TempField

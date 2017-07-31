@@ -54,6 +54,7 @@
 			</div>
 		</div>
 		<input type="hidden" name="channelDiscountId" value="${resultMap.cDPo.id }">
+		<input type="hidden" name="channelId" value="${resultMap.cDPo.channelId }">
 		
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">通道折扣：</label>
@@ -118,12 +119,12 @@ $().ready(function() {
     	        	//alert(d);
     	            if(d == 'success'){
     	                layer.msg('保存成功！');//保存成功提示
+	    	            parent.layer.close(index); ////执行关闭
     	            }else if(d == "exist"){
     	            	 layer.msg('该折扣已存在！');
     	            }else{
     	                layer.msg('保存异常!');
     	            }
-    	            parent.layer.close(index); ////执行关闭
     	        }
     	    });
     	}

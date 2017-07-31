@@ -304,6 +304,10 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		{
 			resultMap.put("activeDiscount", ratePo.getActiveDiscount());
 		}
+		if(ratePo.getActiveId() != null)
+		{
+			resultMap.put("activeId", ratePo.getActiveId());
+		}
 		if(ratePo.getBillType() != null)
 		{
 			resultMap.put("billTypeRate", ratePo.getBillType());
