@@ -723,7 +723,7 @@ public class RateController {
 				}else{//没有查询参数，就用第一个通道折扣类型，作为费率折扣类型
 					billType = cdp1.getBillType();
 				}
-				List<RateDiscountPo> discountList = rateDiscountDao.getListByCDiscountId(channelDiscountId,agencyVO.getId(),billType);//折扣列表
+				List<RateDiscountPo> discountList = rateDiscountDao.getListByCDiscountId(channelDiscountId,billType);//折扣列表
 				
 				resultMap.put("discountList", discountList);//取折扣和折扣id
 				//根据第一个折扣id去找连接
@@ -832,7 +832,7 @@ public class RateController {
 	 * @createTime:2017年7月14日 下午2:48:58
 	 */
 	@RequestMapping(value= RateURL.BIND_RATE_ADD_PAGE)
-	public ModelAndView addBindRatePage(@RequestParam(value="channelDiscountId",required=false)String channelDiscountId,@RequestParam(value="billType",required=false)String billType, 
+	public ModelAndView addBindRatePage(String channelDiscountId,String billType,
 			String fromTag, @RequestParam(value="rateDiscountId",required=false)String rateDiscountId){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		if(fromTag.equals("edit") && rateDiscountId != null){

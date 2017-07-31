@@ -175,7 +175,7 @@
 				<button name="" id="" class="btn btn-success"  type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 				<%-- <input type="hidden" id="rateId" name="id" value="${resultMap.discountList[0].id }">  --%>
 				<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
-				<input type="hidden" name="channelId" value="${resultMap.channelId }"> 
+				<input type="hidden" id="channelId" name="channelId" value="${resultMap.channelId }"> 
 				<input type="hidden" name="" value="${resultMap.channelDiscountId }" id="channelDiscountId"> 
 				
     <!-- <select style="margin-left:10px;height:24px; width: 200">  
@@ -441,6 +441,7 @@ function addRate(url,title){
 	//alert("sd");
 	var cDId = $("#channelDiscountId").val();
 	var billType = $("#billTypeRate").val();
+	//var cId = $('channelId').val();
 	//layer_show(title,url+'?channelDiscountId=' + cDId,'','510');
 	//location.reload();
 	layer.open({

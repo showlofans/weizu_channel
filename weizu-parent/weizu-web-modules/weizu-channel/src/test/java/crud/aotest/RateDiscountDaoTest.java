@@ -58,18 +58,18 @@ public class RateDiscountDaoTest {
 	
 //	@Test
 //	public void testGetListByCDiscountId(){
-//		List<RateDiscountPo> rateList = rateDiscountDao.getListByCDiscountId(l);
+//		List<RateDiscountPo> rateList = rateDiscountDao.getListByCDiscountId(13l,0);
 //		System.out.println(rateList.size());
 //	}
 //	@Test
 //	public void testCountRateDisocunt(){
 //		RateDiscountPo ratePo = new RateDiscountPo();
-//		ratePo.setActiveDiscount(0.95);
-//		ratePo.setBillType(1);
-//		ratePo.setChannelDiscountId(12l);
+////		ratePo.setActiveDiscount(0.9);
+//		ratePo.setBillType(0);
+//		ratePo.setActiveId(46l);
+//		ratePo.setChannelDiscountId(13l);
 //		String t = rateDiscountAO.addRateDiscount(ratePo);//添加一定要有billType，通道折扣id和费率折扣
 //		System.out.println(t);
-//		
 //	}
 	
 //	@Test
@@ -86,15 +86,15 @@ public class RateDiscountDaoTest {
 //		System.out.println(dto1.getDiscountPo().getDiscount1());;
 //		System.out.println(dto1.getDiscountPo().getDiscount2());;
 //	}
-	@Test
-	public void testAddMyRate(){
-		RateDiscountPo ratePo = new RateDiscountPo();
-		ratePo.setId(46L);
-//		ratePo.setActiveDiscount(0.99);
-		ratePo.setBillType(0);
-		String res = rateDiscountAO.updateRateDiscount(ratePo);
-		System.out.println(res);
-	}
+//	@Test
+//	public void testAddMyRate(){
+//		RateDiscountPo ratePo = new RateDiscountPo();
+//		ratePo.setId(46L);
+////		ratePo.setActiveDiscount(0.99);
+//		ratePo.setBillType(0);
+//		String res = rateDiscountAO.updateRateDiscount(ratePo);
+//		System.out.println(res);
+//	}
 //	@Test
 //	public void testUpdateMyRate(){
 //		RateDiscountPo ratePo = new RateDiscountPo();

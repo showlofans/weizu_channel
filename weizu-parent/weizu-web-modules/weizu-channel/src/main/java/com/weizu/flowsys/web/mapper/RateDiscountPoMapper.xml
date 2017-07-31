@@ -15,6 +15,7 @@
     <result column="active_discount" property="activeDiscount" jdbcType="DOUBLE" />
     <result column="active_id" property="activeId" jdbcType="BIGINT" />
     <result column="channel_discount_id" property="channelDiscountId" jdbcType="BIGINT" />
+    <result column="channel_id" property="channelId" jdbcType="BIGINT" />
   </resultMap>
   <resultMap id="MyRateResultMap" type="com.weizu.flowsys.web.activity.pojo.RateDiscountPo" >
     <id column="id" property="id" jdbcType="BIGINT" />
@@ -24,7 +25,7 @@
     <result column="channel_discount_id" property="channelDiscountId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    rate.id, cDiscount.operator_type, cDiscount.scope_city_code, active_discount,channel_discount_id,rate.bill_type
+    rate.id, cDiscount.operator_type, cDiscount.scope_city_code, active_discount,channel_discount_id,rate.bill_type,rate.channel_id
   </sql>
   
   <sql id="Show_Rate_List">
@@ -121,13 +122,11 @@
   </resultMap>
   
   <sql id="simple_column_list">
-  	rate.id, active_discount,bill_type
+  	id, active_discount,bill_type
   </sql>
   <select id="getListByCDiscountId" parameterType="map" resultMap="SimpleMap">
   	select <include refid="simple_column_list"></include>
-  	from <include refid="t_rateD"></include> rate
-  	inner join <include refid="t_active"></include> active
-  	on rate.id = active.rate_discount_id
+  	from <include refid="t_rateD"></include> 
   	<where>
   		<if test="channelDiscountId != null">
 	  		AND channel_discount_id = #{channelDiscountId}
@@ -135,8 +134,12 @@
   		<if test="billTypeRate != null">
 	  		AND bill_type = #{billTypeRate}
   		</if>
-  		<if test="bindAgencyId != null">
-	  		AND active.bind_agency_id = #{bindAgencyId}
+  			<!-- 直接绑定通道折扣id的费率折扣 -->
+  		<if test="activeId != null">
+	  		AND active_id = #{activeId}
+  		</if>
+  		<if test="activeId == null">
+	  		AND active_id is null
   		</if>
   	</where>
   </select>
@@ -151,6 +154,12 @@
   		</if>
   		<if test="id != null">
 	  		AND id = #{id}
+  		</if>
+  		<if test="activeId != null">
+	  		AND active_id = #{activeId}
+  		</if>
+  		<if test="activeId == null">
+	  		AND active_id is null
   		</if>
   		<if test="activeDiscount != null">
 	  		AND active_discount = #{activeDiscount}
