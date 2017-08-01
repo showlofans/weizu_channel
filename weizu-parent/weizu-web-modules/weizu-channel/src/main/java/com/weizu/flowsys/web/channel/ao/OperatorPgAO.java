@@ -121,5 +121,7 @@ public interface OperatorPgAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月26日 下午5:44:29
 	 */
-	List<OperatorPgDataPo> pgList_forPurchase(OperatorPgDataPo operatorPgPo);
+	List<OperatorPgDataPo> pgList_forPurchase(OperatorPgDataPo operatorPgPo,Integer agencyId);
+	
+//	boolean checkScopeIsAccept(Integer loginAgencyId, String scopeCityName);
 }

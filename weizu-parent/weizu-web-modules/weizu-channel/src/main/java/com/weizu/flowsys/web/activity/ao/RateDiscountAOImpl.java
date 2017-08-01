@@ -364,6 +364,38 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		List<RateDiscountPo> rateList = rateDiscountDao.getShowRate(params);
 		return initRateList(rateList);
 	}
+	
+	/**
+	 * @description: 看传入的地区参数是否符合折扣信息
+	 * @param loginAgencyId
+	 * @param scopeCityName
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年8月1日 下午5:54:59
+	 */
+	@Override
+	public boolean checkScopeIsAccept(Integer loginAgencyId,
+			String scopeCityName) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("agencyId", loginAgencyId);
+		List<RateDiscountPo> rateList = rateDiscountDao.getShowRate(params);//参考地区
+		ScopeCityEnum[] enumAry = ScopeCityEnum.values();
+		//验证是否存在该地区的折扣
+		if(rateList == null || rateList.size()==0){
+			return false;
+		}
+		for (RateDiscountPo rateDiscountPo : rateList) {
+			for (ScopeCityEnum scopeCityEnum : enumAry) {
+				if(scopeCityEnum.getValue().equals(rateDiscountPo.getScopeCityCode()) ){//得到参考地区
+					if(scopeCityEnum.getDesc().contains(scopeCityName)){
+						return true;
+					}
+					break;
+				}
+			}
+		}
+		return false;
+	}
 
 	private Map<String,Object> initRateList(List<RateDiscountPo> rateList) {
 //		List<RateDiscountShowDTO> dtoList = new ArrayList<RateDiscountShowDTO>();
@@ -427,9 +459,4 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		}
 		return dtoMap;
 	}
-	
-	
-	
-	
-
 }

@@ -63,7 +63,8 @@ public class StringTest {
 //    }
 //
 	public static void main(String[] args) {
-		
+		String test = "内蒙古移动";
+		System.out.println(test.substring(0, test.length()-2));
 //		System.out.println(StringUtil2.getDiscount(21d));
 ////		Random r = new Random(1+5);
 ////		System.out.println(r.nextInt());

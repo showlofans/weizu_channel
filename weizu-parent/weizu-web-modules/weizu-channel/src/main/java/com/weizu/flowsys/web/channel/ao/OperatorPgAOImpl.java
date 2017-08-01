@@ -547,10 +547,10 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 	 */
 	@Override
 	public List<OperatorPgDataPo> pgList_forPurchase(
-			OperatorPgDataPo operatorPgPo) {
+			OperatorPgDataPo operatorPgPo,Integer agencyId) {
 		
 		if(operatorPgPo != null){
-			return operatorPgDao.pgList_forPurchase(operatorPgPo);
+			return operatorPgDao.pgList_forPurchase(operatorPgPo,agencyId);
 		}
 		return null;
 	}

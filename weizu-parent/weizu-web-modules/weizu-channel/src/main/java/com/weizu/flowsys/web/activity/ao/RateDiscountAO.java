@@ -105,4 +105,14 @@ public interface RateDiscountAO {
 	 * @createTime:2017年7月19日 下午12:05:15
 	 */
 	Map<String,Object> getShowRate (Integer agencyId);
+	
+	/**
+	 * @description: 看传入的地区参数是否符合折扣信息
+	 * @param loginAgencyId
+	 * @param scopeCityName
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年8月1日 下午5:54:00
+	 */
+	boolean checkScopeIsAccept(Integer loginAgencyId, String scopeCityName);
 }

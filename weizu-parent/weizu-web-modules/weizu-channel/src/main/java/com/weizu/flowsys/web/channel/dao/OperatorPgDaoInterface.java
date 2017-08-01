@@ -33,14 +33,16 @@ public interface OperatorPgDaoInterface {
 	 */
 	List<OperatorPgDataPo> pgList_forPurchase(int operatorType);
 	
+	
 	/**
-	 * @description:通过运营商类型查询购买包体list
-	 * @param operatorType
+	 * @description: 通过参数实体和登陆id查询购买包体list
+	 * @param operatorPgPo
+	 * @param agencyId
 	 * @return
 	 * @author:POP产品研发部 宁强
-	 * @createTime:2017年5月26日 下午5:44:29
+	 * @createTime:2017年8月1日 下午6:24:24
 	 */
-	List<OperatorPgDataPo> pgList_forPurchase(OperatorPgDataPo operatorPgPo);
+	List<OperatorPgDataPo> pgList_forPurchase(OperatorPgDataPo operatorPgPo,Integer agencyId);
 	
 	/**
 	 * @description:根据参数查询总记录数

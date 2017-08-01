@@ -1,5 +1,7 @@
 package crud.aotest;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.junit.Test;
@@ -8,6 +10,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
+import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -73,6 +76,16 @@ public class OperatorPgAOImplTest {
 //		System.out.println(pagination.getRecords().get(1));
 //		
 //	}
+	@Test
+	public void testPgList_forPurchase(){
+		OperatorPgDataPo operatorPgPo = new OperatorPgDataPo();
+		operatorPgPo.setOperatorType(0);
+		operatorPgPo.setServiceType(0);
+//		operatorPgPo.set
+		List<OperatorPgDataPo> list = operatorPgAO.pgList_forPurchase(operatorPgPo, 4);
+		System.out.println(list == null ?"": list.size());
+	}
+	
 	/**
 	 * @description:查询通道规格列表
 	 * @author:POP产品研发部 宁强
