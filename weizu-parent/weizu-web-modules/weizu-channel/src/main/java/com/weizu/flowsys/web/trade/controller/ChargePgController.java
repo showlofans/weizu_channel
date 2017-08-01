@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,7 @@ import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.activity.pojo.OperatorScopeVO;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
@@ -69,6 +71,8 @@ public class ChargePgController {
 	private ProductCodeAO productCodeAO;
 	@Resource
 	private PurchaseAO purchaseAO;
+	@Resource
+	private RateDiscountAO rateDiscountAO;
 	
 	
 	/**
@@ -124,17 +128,32 @@ public class ChargePgController {
 	 * @createTime:2017年5月31日 下午12:04:22
 	 */
 	@RequestMapping(value=ChargePgURL.PGLIST_FORPURCHASE)
-	public void pgList_forPurchase(HttpServletResponse response,String operatorName,String serviceType) throws UnsupportedEncodingException{
+	public void pgList_forPurchase(HttpServletRequest request, HttpServletResponse response,String operatorName,String serviceType) throws UnsupportedEncodingException{
 		OperatorPgDataPo oppo = new OperatorPgDataPo();
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 //		for (OperatorTypeEnum typeEnum : OperatorTypeEnum.values()) {
 //			if(operatorType.contains(typeEnum.getDesc())){//中国移动包涵移动
 //				oppo.setOperatorType(typeEnum.getValue());
 //			}
 //		}
 //		operatorName = new String(operatorName.getBytes("iso-8859-1"), "utf-8");
-		oppo.setOperatorName(operatorName.trim());
-		oppo.setServiceType(Integer.parseInt(serviceType.trim()));
-		List<OperatorPgDataPo> list = operatorPgAO.pgList_forPurchase(oppo);
+		String carrier = operatorName.trim();//江西移动
+		int sLength = carrier.length();
+		List<OperatorPgDataPo> list = new ArrayList<OperatorPgDataPo>();
+		if(sLength>2){
+			String scopeCityName = carrier.substring(0,sLength-2);//地区参数
+			if(agencyVO != null){
+				boolean isAccept = rateDiscountAO.checkScopeIsAccept(agencyVO.getId(), scopeCityName);
+				if(isAccept){//如果包涵该地区，就加载包体列表
+					String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动
+					int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
+					oppo.setOperatorType(opType);
+					oppo.setOperatorName(carrier);
+					oppo.setServiceType(Integer.parseInt(serviceType.trim()));
+					list = operatorPgAO.pgList_forPurchase(oppo,agencyVO.getId());
+				}
+			}
+		}
 		try {
 			response.setContentType("text/html;charset=UTF-8");
 			response.getWriter().print(JSON.toJSONString(list));

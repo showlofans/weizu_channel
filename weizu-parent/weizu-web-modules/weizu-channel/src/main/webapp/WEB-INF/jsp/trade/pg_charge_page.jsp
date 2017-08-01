@@ -185,7 +185,9 @@
                var location = data.location;
                var  carrier = data.carrier,
                 province = data.province,
+               
                     num = data.telString; 
+               alert(province);
              $('#chargeTelDetail').val(carrier);  
               //$('#chargeTelDetail').val(location);  
                 

@@ -119,15 +119,45 @@
 <article class="page-container">
 	<form action="/flowsys/channel/channel_add.do" method="post" class="form form-horizontal" id="form-member-add" onsubmit="return changeName()">
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">通道名称：</label>
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>平台搜索：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="${resultMap.channelName }" placeholder="例如：wzkj江西移动省内" id="channelName" name="channelName">
+				<input type="text" class="input-text" onKeyUp="ajaxGet()" value="" required="required" placeholder="英文请用空格键结束" id="channel_search" name="epName">
+			</div>
+		</div>
+		<!-- 平台ID -->
+		<input type="hidden" class="input-text" value="" placeholder="" id="ep_id" name="epId">
+		<div class="row cl" style="display:none" id="ep_info">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>平台密码：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text"value=""  placeholder="" readonly id="ep_pass" name="ep_pass">
+			</div>
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>平台用户名：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" readonly placeholder="" id="ep_name" name="ep_name">
+			</div>
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>接口地址：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" readonly value="" placeholder="" id="epPurchaseIp" name="epPurchaseIp">
+			</div>
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>模板名称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" readonly value="" placeholder="" id="epName" name="epName">
+			</div>
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>apikey：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" readonly value="" placeholder="" id="epApikey" name="epApikey">
 			</div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">通道规格：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" class="input-text" value="${resultMap.pgSizeStr }" placeholder="${resultMap.pgSizeStr }" id="pgSize" name="pgSize">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">通道名称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="${resultMap.channelName }" placeholder="例如：wzkj江西移动省内" id="channelName" name="channelName">
 			</div>
 		</div>
 		<input type="hidden" id="billTypeId" value="${resultMap.billType }">
@@ -205,36 +235,7 @@
 			</table>
 			</div>
 		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>平台搜索：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" onKeyUp="ajaxGet()" value="" required="required" placeholder="英文请用空格键结束" id="channel_search" name="epName">
-			</div>
-		</div>
-		<!-- 平台ID -->
-		<input type="hidden" class="input-text" value="" placeholder="" id="ep_id" name="epId">
-		<div class="row cl" style="display:none" id="ep_info">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>平台密码：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text"value="" placeholder="" id="ep_pass" name="ep_pass">
-			</div>
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>平台用户名：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="ep_name" name="ep_name">
-			</div>
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>接口地址：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="epPurchaseIp" name="epPurchaseIp">
-			</div>
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>模板名称：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="epName" name="epName">
-			</div>
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>apikey：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="epApikey" name="epApikey">
-			</div>
-		</div>
+		
 		<!-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>邮箱：</label>
 			<div class="formControls col-xs-8 col-sm-9">

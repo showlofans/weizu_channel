@@ -113,4 +113,14 @@ public class RateDiscountDaoTest {
 //			
 //		}
 //	}
+//	@Test
+//	public void testCheckScopeIsAccept(){
+//		boolean isAccept = rateDiscountAO.checkScopeIsAccept(4, "江西");
+//		if (isAccept) {
+//			System.out.println("1");
+//		}else{
+//			System.out.println("0");
+//		}
+//		
+//	}
 }

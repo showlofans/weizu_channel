@@ -44,6 +44,27 @@ public enum OperatorTypeEnum {
 	}
 	
 	/**
+	 * @description: 通过描述获得值
+	 * @param desc
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年8月1日 下午5:48:55
+	 */
+	public static Integer getValueByDesc(String desc){
+		OperatorTypeEnum[] enumArray = OperatorTypeEnum.values();
+		Integer value = 0;
+		for (OperatorTypeEnum operatorTypeEnum : enumArray)
+		{
+			if(desc.contains(operatorTypeEnum.getDesc()))
+			{
+				value = operatorTypeEnum.getValue();
+				break;
+			}
+		}
+		return value;
+	}
+	
+	/**
 	 * @description:通过枚举值获取枚举
 	 * @param value
 	 * @return

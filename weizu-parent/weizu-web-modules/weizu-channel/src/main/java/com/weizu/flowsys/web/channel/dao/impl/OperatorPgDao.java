@@ -1,5 +1,6 @@
 package com.weizu.flowsys.web.channel.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
+import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.web.channel.dao.OperatorPgDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 
@@ -103,8 +105,27 @@ public class OperatorPgDao extends DaoImpl<OperatorPgDataPo, Integer> implements
 	 */
 	@Override
 	public List<OperatorPgDataPo> pgList_forPurchase(
-			OperatorPgDataPo operatorPgPo) {
-		return sqlSessionTemplateASS.selectList("pgList_forPurchase_po", operatorPgPo);
+			OperatorPgDataPo operatorPgPo,Integer agencyId) {
+		Map<String,Object> params = getParamsMap(operatorPgPo);
+		params.put("agencyId", agencyId);
+		return sqlSessionTemplateASS.selectList("pgList_forPurchase_po", params);
+	}
+	
+	private Map<String,Object> getParamsMap(OperatorPgDataPo operatorPgPo){
+		Map<String, Object> params = new HashMap<String, Object>();
+		if(StringHelper.isNotEmpty(operatorPgPo.getOperatorName()))
+		{
+			params.put("operatorName", operatorPgPo.getOperatorName());
+		}
+		if(operatorPgPo.getServiceType() != null)
+		{
+			params.put("serviceType", operatorPgPo.getServiceType());
+		}
+		if(operatorPgPo.getOperatorType() != null)
+		{
+			params.put("operatorType", operatorPgPo.getOperatorType());
+		}
+		return params;
 	}
 	
 

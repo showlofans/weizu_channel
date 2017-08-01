@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50626
 File Encoding         : 65001
 
-Date: 2017-07-25 20:52:16
+Date: 2017-08-01 18:51:44
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -27,15 +27,11 @@ CREATE TABLE `aac_join_rd` (
   KEY `join_rd_fk` (`rate_discount_id`),
   CONSTRAINT `join_aac_fk` FOREIGN KEY (`active_id`) REFERENCES `agency_active_rate` (`id`) ON DELETE CASCADE,
   CONSTRAINT `join_rd_fk` FOREIGN KEY (`rate_discount_id`) REFERENCES `rate_discount` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of aac_join_rd
 -- ----------------------------
-INSERT INTO `aac_join_rd` VALUES ('1', '14', '17');
-INSERT INTO `aac_join_rd` VALUES ('3', '16', '19');
-INSERT INTO `aac_join_rd` VALUES ('5', '18', '21');
-INSERT INTO `aac_join_rd` VALUES ('6', '19', '22');
 
 -- ----------------------------
 -- Table structure for `agency_active_rate`
@@ -55,53 +51,18 @@ CREATE TABLE `agency_active_rate` (
   KEY `channel_agency_fk` (`rate_discount_id`),
   CONSTRAINT `agency_agency` FOREIGN KEY (`agency_id`) REFERENCES `agency_backward` (`id`),
   CONSTRAINT `bind_agency_fk` FOREIGN KEY (`bind_agency_id`) REFERENCES `agency_backward` (`id`),
-  CONSTRAINT `channel_agency_fk` FOREIGN KEY (`rate_discount_id`) REFERENCES `rate_discount` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8;
+  CONSTRAINT `channel_agency_fk` FOREIGN KEY (`rate_discount_id`) REFERENCES `rate_discount` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of agency_active_rate
 -- ----------------------------
-INSERT INTO `agency_active_rate` VALUES ('1', '21', '4', '12', '1', '456', null);
-INSERT INTO `agency_active_rate` VALUES ('2', '21', '4', '10', '1', '456', null);
-INSERT INTO `agency_active_rate` VALUES ('3', '21', '4', '12', '1', '456', null);
-INSERT INTO `agency_active_rate` VALUES ('4', '21', '4', '12', '1', '456', null);
-INSERT INTO `agency_active_rate` VALUES ('5', '21', '4', '12', '0', '456', '1499419864447');
-INSERT INTO `agency_active_rate` VALUES ('6', '23', '4', '10', '0', 'w', '1499476171448');
-INSERT INTO `agency_active_rate` VALUES ('7', '21', '4', '12', '0', '456', '1499652418441');
-INSERT INTO `agency_active_rate` VALUES ('8', '21', '4', '12', '0', '456', '1499652439155');
-INSERT INTO `agency_active_rate` VALUES ('9', '21', '4', '12', '0', '456', '1499652492051');
-INSERT INTO `agency_active_rate` VALUES ('13', '21', '4', '12', '0', '456', '1499653581437');
-INSERT INTO `agency_active_rate` VALUES ('14', '24', '4', '12', '0', 'kkk', '1499653621056');
-INSERT INTO `agency_active_rate` VALUES ('15', '23', '4', '11', '0', 'w', '1499678717931');
-INSERT INTO `agency_active_rate` VALUES ('16', '21', '4', '12', '0', '456', '1499752473997');
-INSERT INTO `agency_active_rate` VALUES ('17', '21', '4', '12', '0', '456', '1499757929280');
-INSERT INTO `agency_active_rate` VALUES ('18', '21', '4', '7', '0', '456', '1499850122120');
-INSERT INTO `agency_active_rate` VALUES ('19', '23', '4', '12', '1', 'w', '1499909562779');
-INSERT INTO `agency_active_rate` VALUES ('20', '21', '4', '11', '1', '456', '1500008387698');
-INSERT INTO `agency_active_rate` VALUES ('21', '23', '4', null, '0', 'w', '1500024678964');
-INSERT INTO `agency_active_rate` VALUES ('22', '23', '4', null, '0', 'w', '1500024876798');
-INSERT INTO `agency_active_rate` VALUES ('25', '24', '4', '22', '0', 'kkk', '1500025358726');
-INSERT INTO `agency_active_rate` VALUES ('26', '21', '4', '23', '0', '456', '1500081258422');
-INSERT INTO `agency_active_rate` VALUES ('27', '24', '4', '24', '1', 'kkk', '1500081299461');
-INSERT INTO `agency_active_rate` VALUES ('28', '27', '4', '32', '1', 'company', '1500092461795');
-INSERT INTO `agency_active_rate` VALUES ('29', '27', '4', '33', '0', 'company', '1500093565885');
-INSERT INTO `agency_active_rate` VALUES ('30', '27', '4', '34', '0', 'company', '1500093595298');
-INSERT INTO `agency_active_rate` VALUES ('31', '27', '4', '35', '0', 'company', '1500093683813');
-INSERT INTO `agency_active_rate` VALUES ('32', '21', '4', '22', '0', '456', '1500366108191');
-INSERT INTO `agency_active_rate` VALUES ('33', '23', '4', '22', '0', 'w', '1500366390162');
-INSERT INTO `agency_active_rate` VALUES ('34', '27', '4', '22', '0', 'company', '1500366461720');
-INSERT INTO `agency_active_rate` VALUES ('35', '21', '4', '1', '0', '456', '1500367100815');
-INSERT INTO `agency_active_rate` VALUES ('36', '23', '4', '1', '0', 'w', '1500367102064');
-INSERT INTO `agency_active_rate` VALUES ('37', '21', '4', '33', '0', '456', '1500367340295');
-INSERT INTO `agency_active_rate` VALUES ('38', '23', '4', '33', '0', 'w', '1500367342016');
-INSERT INTO `agency_active_rate` VALUES ('39', '21', '4', '29', '0', '456', '1500370428018');
-INSERT INTO `agency_active_rate` VALUES ('40', '23', '4', '29', '0', 'w', '1500370428018');
-INSERT INTO `agency_active_rate` VALUES ('41', '21', '4', '40', '0', '456', '1500372028695');
-INSERT INTO `agency_active_rate` VALUES ('42', '21', '4', '41', '0', '456', '1500434813490');
-INSERT INTO `agency_active_rate` VALUES ('43', '23', '4', '41', '0', 'w', '1500457566090');
-INSERT INTO `agency_active_rate` VALUES ('44', '24', '4', '41', '0', 'kkk', '1500457566090');
-INSERT INTO `agency_active_rate` VALUES ('45', '27', '4', '41', '0', 'company', '1500457566090');
-INSERT INTO `agency_active_rate` VALUES ('46', '21', '4', '43', '0', '456', '1500459303753');
+INSERT INTO `agency_active_rate` VALUES ('48', '4', '1', '46', '0', '123', '1501237922699');
+INSERT INTO `agency_active_rate` VALUES ('51', '21', '4', '49', '0', '456', '1501320864402');
+INSERT INTO `agency_active_rate` VALUES ('53', '21', '4', '51', '0', '456', '1501324836354');
+INSERT INTO `agency_active_rate` VALUES ('54', '23', '4', '52', '0', 'w', '1501324861846');
+INSERT INTO `agency_active_rate` VALUES ('55', '24', '4', '53', '0', 'kkk', '1501324986265');
+INSERT INTO `agency_active_rate` VALUES ('56', '27', '4', '54', '0', 'company', '1501327522306');
 
 -- ----------------------------
 -- Table structure for `agency_backward`
@@ -114,6 +75,7 @@ CREATE TABLE `agency_backward` (
   `user_pass` varchar(255) DEFAULT NULL COMMENT 'ä»£ç†å•†å¯†ç ',
   `user_real_name` varchar(255) DEFAULT NULL COMMENT 'ä»£ç†å•†çœŸå®žåå­—',
   `agency_tel` varchar(255) DEFAULT NULL COMMENT 'è”ç³»ç”µè¯',
+  `other_contact` varchar(255) DEFAULT NULL COMMENT '其他联系方式（qq号）',
   `user_email` varchar(255) DEFAULT NULL COMMENT 'è”ç³»é‚®ç®±',
   `agency_ip` varchar(255) DEFAULT NULL COMMENT 'ä»£ç†å•†ç³»ç»Ÿè®¿é—®ipåœ°å€',
   `rate_id` bigint(11) DEFAULT NULL COMMENT '不带票费率id',
@@ -122,19 +84,20 @@ CREATE TABLE `agency_backward` (
   `user_api_key` varchar(32) DEFAULT NULL COMMENT '用户系统对接平台的apikey',
   `agency_tag` int(20) DEFAULT NULL COMMENT '代理商类型（0-平台用户，1,-接口用户）',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of agency_backward
 -- ----------------------------
-INSERT INTO `agency_backward` VALUES ('1', '0', 'xiao', 'xiao', 'xiaoqiang', '', '', '', null, '1495689716779', 'FV', null, '1');
-INSERT INTO `agency_backward` VALUES ('4', '1', '123', '123', '木头人', '15858343638', '22222', '22', '3', '1499736896474', 'VEPX', null, '1');
-INSERT INTO `agency_backward` VALUES ('21', '4', '456', '123', '123', '123', '123@123.com', '1233', null, '1500523402299', 'H769', '402880ef5cd2b925015cd2b925b90000', '1');
-INSERT INTO `agency_backward` VALUES ('23', '4', 'w', 'w', 'w', 'w', 'w@d.com', 'f', null, '1500519015597', 'H65M', '402880ef5cd2b925015cd2bc11d70001', '1');
-INSERT INTO `agency_backward` VALUES ('24', '4', 'kkk', 'kkk', 'kkk', 'kkk', 'kkk@qq.com', 'kkk', '7', '1498617873998', '7L4T', '402880ef5cd2b925015cd2bc5d130002', '1');
-INSERT INTO `agency_backward` VALUES ('25', '1', 'lexin', 'lexin', '乐信', '13699562589', '13699562589@qq.com', 'http://127.0.0.1:8080', null, '1496479483371', '', null, '1');
-INSERT INTO `agency_backward` VALUES ('26', '23', 'wt', 'wt', 'wt', 'wt', 'wt@qq', 'wt', null, '1497231635832', 'LG3G', '402880ef5cec6811015cec6811ed0000', '1');
-INSERT INTO `agency_backward` VALUES ('27', '4', 'company', '123', 'xiaozhu', '1', '16@163', '1', null, '1500458238239', 'T4P6', '402881e85d5a47ed015d5a47edfe0000', '1');
+INSERT INTO `agency_backward` VALUES ('1', '0', 'xiao', 'xiao', 'xiaoqiang', '', '1575326411', '', '', null, '1495689716779', 'FV', null, '0');
+INSERT INTO `agency_backward` VALUES ('4', '1', '123', '123', '木头人', '15858343638', '1727661035', '22222', '22', '3', '1499736896474', 'VEPX', null, '1');
+INSERT INTO `agency_backward` VALUES ('21', '4', '456', '123', '123', '123', '1575326411', '123@123.com', '1233', null, '1500523402299', 'H769', '402880ef5cd2b925015cd2b925b90000', '1');
+INSERT INTO `agency_backward` VALUES ('23', '4', 'w', 'w', 'w', 'w', '1575326411', 'w@d.com', 'f', null, '1500519015597', 'H65M', '402880ef5cd2b925015cd2bc11d70001', '1');
+INSERT INTO `agency_backward` VALUES ('24', '4', 'kkk', 'kkk', 'kkk', 'kkk', '1575326411', 'kkk@qq.com', 'kkk', '7', '1498617873998', '7L4T', '402880ef5cd2b925015cd2bc5d130002', '1');
+INSERT INTO `agency_backward` VALUES ('25', '1', 'lexin', 'lexin', '乐信', '13699562589', '1575326411', '13699562589@qq.com', 'http://127.0.0.1:8080', null, '1496479483371', '', '', '0');
+INSERT INTO `agency_backward` VALUES ('26', '23', 'wt', 'wt', 'wt', 'wt', '1575326411', 'wt@qq', 'wt', null, '1497231635832', 'LG3G', '402880ef5cec6811015cec6811ed0000', '1');
+INSERT INTO `agency_backward` VALUES ('27', '4', 'company', '123', 'xiaozhu', '1', '1575326411', '16@163', '1', null, '1500458238239', 'T4P6', '402881e85d5a47ed015d5a47edfe0000', '1');
+INSERT INTO `agency_backward` VALUES ('28', '21', '789', '123', '123', '123', '820267814  ', '123@dd', 'fd', null, '1501055624169', 'BU6D', null, null);
 
 -- ----------------------------
 -- Table structure for `agency_ep`
@@ -147,25 +110,23 @@ CREATE TABLE `agency_ep` (
   `ep_id` int(11) DEFAULT NULL,
   `ep_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `FK_agencyEp_agencyId` (`agency_id`),
   KEY `FK_agencyEp_epId` (`ep_id`),
-  CONSTRAINT `FK_agencyEp_agencyId` FOREIGN KEY (`agency_id`) REFERENCES `agency_backward` (`id`) ON DELETE NO ACTION,
-  CONSTRAINT `FK_agencyEp_epId` FOREIGN KEY (`ep_id`) REFERENCES `exchange_platform` (`id`) ON DELETE NO ACTION
+  KEY `FK_agencyEp_agencyId` (`agency_id`),
+  CONSTRAINT `FK_agencyEp_agencyId` FOREIGN KEY (`agency_id`) REFERENCES `agency_backward` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_agencyEp_epId` FOREIGN KEY (`ep_id`) REFERENCES `exchange_platform` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of agency_ep
 -- ----------------------------
-INSERT INTO `agency_ep` VALUES ('1', '4', '123', '2', '尚通');
-INSERT INTO `agency_ep` VALUES ('5', '4', '123', '13', '123');
-INSERT INTO `agency_ep` VALUES ('10', '4', '123', '18', '1');
-INSERT INTO `agency_ep` VALUES ('19', '4', '123', '27', '4');
-INSERT INTO `agency_ep` VALUES ('22', '4', '123', '30', '5');
-INSERT INTO `agency_ep` VALUES ('23', '4', '123', '31', '0');
-INSERT INTO `agency_ep` VALUES ('24', '4', '123', '32', 'wzkj');
+INSERT INTO `agency_ep` VALUES ('1', '1', 'xiao', '2', '尚通');
+INSERT INTO `agency_ep` VALUES ('5', '1', 'xiao', '13', '123');
+INSERT INTO `agency_ep` VALUES ('22', '1', 'xiao', '30', '5');
+INSERT INTO `agency_ep` VALUES ('23', '1', 'xiao', '31', '0');
+INSERT INTO `agency_ep` VALUES ('24', '1', 'xiao', '32', 'wzkj');
 INSERT INTO `agency_ep` VALUES ('26', '21', '456', '32', 'wzkj');
-INSERT INTO `agency_ep` VALUES ('28', '4', '123', '13', '123');
-INSERT INTO `agency_ep` VALUES ('30', '4', '123', '40', '456');
+INSERT INTO `agency_ep` VALUES ('28', '1', 'xiao', '13', '123');
+INSERT INTO `agency_ep` VALUES ('30', '1', 'xiao', '40', '456');
 
 -- ----------------------------
 -- Table structure for `agency_join_rate`
@@ -212,15 +173,15 @@ CREATE TABLE `channel_channel` (
 -- ----------------------------
 -- Records of channel_channel
 -- ----------------------------
-INSERT INTO `channel_channel` VALUES ('7', 'wz本地', '1000', '32', null, null, null, null, '0', '0', '1499233574741', '4');
-INSERT INTO `channel_channel` VALUES ('8', '省内-wz江西省', '500& 500', '32', null, null, null, null, '1', '0', '1499236841669', '4');
-INSERT INTO `channel_channel` VALUES ('9', '全国-wz福建', '100', null, null, null, null, null, '0', '0', null, '4');
-INSERT INTO `channel_channel` VALUES ('10', '省内-wz广东', '200', '32', null, null, null, null, '0', '0', null, '4');
-INSERT INTO `channel_channel` VALUES ('11', '全国-wz广东移动95', '6144& 3072& 500', '32', null, null, null, null, '0', '0', null, '4');
-INSERT INTO `channel_channel` VALUES ('12', '省漫游-wz广东移动75', '500& 6144', '32', null, null, null, null, '0', '0', '1500862271919', '4');
-INSERT INTO `channel_channel` VALUES ('13', '省漫游-江西', '1000', '32', null, null, null, null, '0', '1', '1499680372499', '4');
-INSERT INTO `channel_channel` VALUES ('14', '全国-', '6144& 3072& 500', '32', null, null, null, null, '0', '0', '1500862266556', '4');
-INSERT INTO `channel_channel` VALUES ('15', '全国-1w', '100', '32', null, null, null, null, '0', '0', '1500862263126', '4');
+INSERT INTO `channel_channel` VALUES ('7', 'wz本地', '1000', '32', null, null, null, null, '0', '0', '1499233574741', '1');
+INSERT INTO `channel_channel` VALUES ('8', '省内-wz江西省', '500& 500', '32', null, null, null, null, '1', '0', '1499236841669', '1');
+INSERT INTO `channel_channel` VALUES ('9', '全国-wz福建', '100', null, null, null, null, null, '0', '0', null, '1');
+INSERT INTO `channel_channel` VALUES ('10', '省内-wz广东', '200', '32', null, null, null, null, '0', '0', null, '1');
+INSERT INTO `channel_channel` VALUES ('11', '全国-wz广东移动95', '6144& 3072& 500', '32', null, null, null, null, '0', '0', null, '1');
+INSERT INTO `channel_channel` VALUES ('12', '省漫游-wz广东移动75', '500& 6144', '32', null, null, null, null, '0', '1', '1501328214312', '1');
+INSERT INTO `channel_channel` VALUES ('13', '省漫游-江西', '1000', '32', null, null, null, null, '0', '1', '1499680372499', '1');
+INSERT INTO `channel_channel` VALUES ('14', '全国-', '6144& 3072& 500', '32', null, null, null, null, '0', '0', '1500862266556', '1');
+INSERT INTO `channel_channel` VALUES ('15', '全国-1w', '100,500', '32', null, null, null, null, '0', '0', '1500862263126', '1');
 
 -- ----------------------------
 -- Table structure for `channel_discount`
@@ -386,23 +347,24 @@ CREATE TABLE `charge_account` (
   PRIMARY KEY (`id`),
   KEY `fk_cat_agency` (`agency_id`),
   CONSTRAINT `fk_cat_agency` FOREIGN KEY (`agency_id`) REFERENCES `agency_backward` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of charge_account
 -- ----------------------------
 INSERT INTO `charge_account` VALUES ('1', '3981', null, null, '200', '1', '0', null, '1495689716779');
-INSERT INTO `charge_account` VALUES ('2', '-456', '工行', '123', '0', '4', '0', null, '1499736896474');
-INSERT INTO `charge_account` VALUES ('8', '600', null, null, '2001', '21', '0', null, '1500523402299');
-INSERT INTO `charge_account` VALUES ('10', '1000', null, null, '1', '23', '0', null, '1500523402299');
+INSERT INTO `charge_account` VALUES ('2', '-2956', '工行', '123', '0', '4', '0', null, '1499736896474');
+INSERT INTO `charge_account` VALUES ('8', '1000', null, null, '2001', '21', '0', null, '1500523402299');
+INSERT INTO `charge_account` VALUES ('10', '2000', null, null, '1', '23', '0', null, '1500523402299');
 INSERT INTO `charge_account` VALUES ('11', '356', null, null, '1212', '24', '0', null, '1498617873998');
 INSERT INTO `charge_account` VALUES ('12', '500', null, null, '2000', '25', '0', null, '1496479483371');
 INSERT INTO `charge_account` VALUES ('13', '123', null, null, '0', '26', '0', null, '1497231635832');
 INSERT INTO `charge_account` VALUES ('17', '100', null, null, '0', '21', '1', '/download?fileName=149881550554119859915_980x1200_0.jpg', '1500519015597');
 INSERT INTO `charge_account` VALUES ('18', '0', null, null, '0', '24', '1', '/certification//download?fileName=149881581565019859915_980x1200_0.jpg', '1498617873998');
 INSERT INTO `charge_account` VALUES ('19', '0', null, null, '0', '26', '1', '/certification//download?fileName=149888733072419859915_980x1200_0.jpg', '1497231635832');
-INSERT INTO `charge_account` VALUES ('20', '0', null, null, '0', '27', '0', null, '1500458238239');
+INSERT INTO `charge_account` VALUES ('20', '100', null, null, '0', '27', '0', null, '1500458238239');
 INSERT INTO `charge_account` VALUES ('21', '1000', '建行', '6217002020019622232', '0', '1', '1', null, '1495689716779');
+INSERT INTO `charge_account` VALUES ('22', '0', null, null, '0', '28', '0', null, '1501055624169');
 
 -- ----------------------------
 -- Table structure for `charge_record`
@@ -420,7 +382,7 @@ CREATE TABLE `charge_record` (
   `agency_id` int(11) DEFAULT NULL COMMENT '代理商账户id',
   `charge_for` int(11) DEFAULT NULL COMMENT '发生原因',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=114 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of charge_record
@@ -508,6 +470,12 @@ INSERT INTO `charge_record` VALUES ('94', '1499741844216', '200', '-56', '-256',
 INSERT INTO `charge_record` VALUES ('95', '1499741844254', '200', '200', '400', '0', '0', '8', '21', '1');
 INSERT INTO `charge_record` VALUES ('96', '1499741905706', '200', '-256', '-456', '0', '1', '2', '4', '1');
 INSERT INTO `charge_record` VALUES ('97', '1499741914681', '200', '400', '600', '0', '0', '8', '21', '1');
+INSERT INTO `charge_record` VALUES ('108', '1501231518184', '1000', '-456', '-1456', '0', '1', '2', '4', '1');
+INSERT INTO `charge_record` VALUES ('109', '1501231518603', '1000', '1000', '2000', '0', '0', '10', '23', '1');
+INSERT INTO `charge_record` VALUES ('110', '1501231763745', '400', '-2456', '-2856', '0', '1', '2', '4', '1');
+INSERT INTO `charge_record` VALUES ('111', '1501231779234', '400', '600', '1000', '0', '0', '8', '21', '1');
+INSERT INTO `charge_record` VALUES ('112', '1501231919992', '100', '-2856', '-2956', '0', '1', '2', '4', '1');
+INSERT INTO `charge_record` VALUES ('113', '1501231924154', '100', '0', '100', '0', '0', '20', '27', '1');
 
 -- ----------------------------
 -- Table structure for `company_credentials`
@@ -552,7 +520,7 @@ CREATE TABLE `company_credentials` (
 -- Records of company_credentials
 -- ----------------------------
 INSERT INTO `company_credentials` VALUES ('1', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, '1495689716779', '1495689716779');
-INSERT INTO `company_credentials` VALUES ('2', '4', '1', '1', '网吧', '456', '微博', '456', '减肥快圣诞节了附近可', '1', '微族科技', 'zhongyilu', '13699562589', '建行', '6217002020019622332', '456454654546545', '信息服务费', null, '发斯蒂芬', '564656411', '方式的减肥了可适当', '/upload/123/license.jpg', '/upload/123/bank.jpg', '/upload/123/idFront.jpg', '/upload/123/idBack.jpg', '1500888168922', '1500980290627');
+INSERT INTO `company_credentials` VALUES ('2', '4', '1', '2', '网吧', '456', '微博', '456', '减肥快圣诞节了附近可', '1', '微族科技', 'zhongyilu', '13699562589', '建行', '6217002020019622332', '456454654546545', '信息服务费', null, '发斯蒂芬', '564656411', '方式的减肥了可适当', '/upload/123/license.jpg', '', '/upload/123/idFront.jpg', '/upload/123/idBack.jpg', '1500888168922', '1500980290627');
 INSERT INTO `company_credentials` VALUES ('3', '21', '4', '3', null, null, null, null, null, null, '南昌微族科技', null, null, null, null, null, null, null, null, null, null, null, null, null, '', '1495689716779', '1495689716779');
 
 -- ----------------------------
@@ -578,10 +546,8 @@ CREATE TABLE `exchange_platform` (
 -- Records of exchange_platform
 -- ----------------------------
 INSERT INTO `exchange_platform` VALUES ('1', '迈远', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'ncwz22', '333221', '2000', '48dee3af73174054b3a5f88c58d17d61', 'http://120.76.194.45');
-INSERT INTO `exchange_platform` VALUES ('2', '尚通', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'ncwz22', '333221', '3000', '48dee3af73174054b3a5f88c58d17d61', 'http://120.76.194.45');
+INSERT INTO `exchange_platform` VALUES ('2', '尚通', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'ncwz22', '11', '3000', '48dee3af73174054b3a5f88c58d17d61', 'http://120.76.194.45');
 INSERT INTO `exchange_platform` VALUES ('13', '123', '12', '3', '121', '2', '2', '2123', '12', '3', '2');
-INSERT INTO `exchange_platform` VALUES ('18', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1');
-INSERT INTO `exchange_platform` VALUES ('27', '4', '4', '4', '4', '4', '4', '4', '4', '4', '4');
 INSERT INTO `exchange_platform` VALUES ('30', '5', '5', '5', '5', '55', '5', '55', '5', '5', '5');
 INSERT INTO `exchange_platform` VALUES ('31', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0');
 INSERT INTO `exchange_platform` VALUES ('32', 'wzkj', 'http://139.224.70.161:32001/api/v1/sendOrder', 'http://139.224.70.161:32001/api/v1/sendOrder', 'http://139.224.70.161:32001/api/v1/orderState', 'http://139.224.70.161:32001/api/v1/getBalance', 'CS111111', '123456', null, '722c16de0a83e5bd2f988e3c7bc9fee8', 'http://139.224.70.161/');
@@ -812,54 +778,25 @@ CREATE TABLE `rate_discount` (
   `active_id` bigint(20) DEFAULT NULL COMMENT '活动通道连接id',
   `channel_discount_id` bigint(20) DEFAULT NULL,
   `bill_type` int(11) DEFAULT NULL COMMENT '是否带票（0-一般不带票，1-带票高级）',
+  `channel_id` bigint(20) DEFAULT NULL COMMENT '通道id',
   PRIMARY KEY (`id`),
   KEY `active_discount_fk` (`active_id`),
   KEY `fk_channel_dis_rate` (`channel_discount_id`),
   CONSTRAINT `fk_channel_dis_rate` FOREIGN KEY (`channel_discount_id`) REFERENCES `channel_discount` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of rate_discount
 -- ----------------------------
-INSERT INTO `rate_discount` VALUES ('1', '0.95', '1', '12', '1');
-INSERT INTO `rate_discount` VALUES ('2', null, '2', '12', '1');
-INSERT INTO `rate_discount` VALUES ('3', '85', '3', '12', '1');
-INSERT INTO `rate_discount` VALUES ('4', '87', '4', '12', '1');
-INSERT INTO `rate_discount` VALUES ('5', '0.14', '5', '12', '1');
-INSERT INTO `rate_discount` VALUES ('6', '0.111', '6', '12', '1');
-INSERT INTO `rate_discount` VALUES ('7', '0.56', '7', '12', '0');
-INSERT INTO `rate_discount` VALUES ('8', '0.12', '8', '12', '1');
-INSERT INTO `rate_discount` VALUES ('9', '0.13', '9', '12', '1');
-INSERT INTO `rate_discount` VALUES ('10', '0.445', '13', '12', '1');
-INSERT INTO `rate_discount` VALUES ('11', '0.56', '14', '12', '1');
-INSERT INTO `rate_discount` VALUES ('12', '0.85', '15', '12', '1');
-INSERT INTO `rate_discount` VALUES ('13', '0.65', '16', '12', '1');
-INSERT INTO `rate_discount` VALUES ('14', '0.116', '17', '12', '1');
-INSERT INTO `rate_discount` VALUES ('16', '0.11', '19', '12', '1');
-INSERT INTO `rate_discount` VALUES ('18', '0.85', null, null, '1');
-INSERT INTO `rate_discount` VALUES ('19', '0.99', null, '12', '1');
-INSERT INTO `rate_discount` VALUES ('22', '0.83', null, '13', '1');
-INSERT INTO `rate_discount` VALUES ('23', '0.71', null, '8', '1');
-INSERT INTO `rate_discount` VALUES ('24', '0.89', null, '7', '1');
-INSERT INTO `rate_discount` VALUES ('25', '0.88', null, null, '1');
-INSERT INTO `rate_discount` VALUES ('26', '0.72', null, '8', '1');
-INSERT INTO `rate_discount` VALUES ('27', '0.75', null, '8', '1');
-INSERT INTO `rate_discount` VALUES ('28', '0.88', null, '7', '1');
-INSERT INTO `rate_discount` VALUES ('29', '89', null, '11', '1');
-INSERT INTO `rate_discount` VALUES ('30', '88', null, '11', '1');
-INSERT INTO `rate_discount` VALUES ('32', '0.62', null, '15', '1');
-INSERT INTO `rate_discount` VALUES ('33', '0.99', null, '12', '0');
-INSERT INTO `rate_discount` VALUES ('34', '0.98', null, '12', '1');
-INSERT INTO `rate_discount` VALUES ('35', '0.78', null, '8', '1');
-INSERT INTO `rate_discount` VALUES ('36', '0.88', null, '13', '1');
-INSERT INTO `rate_discount` VALUES ('37', '0.87', null, '13', '1');
-INSERT INTO `rate_discount` VALUES ('38', '0.87', null, '7', '1');
-INSERT INTO `rate_discount` VALUES ('39', '0.85', null, '13', '0');
-INSERT INTO `rate_discount` VALUES ('40', '0.59', null, '15', '1');
-INSERT INTO `rate_discount` VALUES ('41', '0.3', null, '16', '1');
-INSERT INTO `rate_discount` VALUES ('42', '0.95', null, '16', '1');
-INSERT INTO `rate_discount` VALUES ('43', '0.98', null, '12', '0');
-INSERT INTO `rate_discount` VALUES ('44', '78', null, '16', '1');
+INSERT INTO `rate_discount` VALUES ('46', '0.85', '46', '13', '0', '12');
+INSERT INTO `rate_discount` VALUES ('49', '0.9', '46', '13', '1', '12');
+INSERT INTO `rate_discount` VALUES ('51', '0.93', '46', '13', '0', '12');
+INSERT INTO `rate_discount` VALUES ('52', '0.9', '46', '13', '1', '12');
+INSERT INTO `rate_discount` VALUES ('53', '0.99', '46', '13', '1', '12');
+INSERT INTO `rate_discount` VALUES ('54', '0.9', '46', '13', '1', '12');
+INSERT INTO `rate_discount` VALUES ('55', '0.8', null, '13', '0', '12');
+INSERT INTO `rate_discount` VALUES ('56', '0.88', null, '13', '0', '12');
+INSERT INTO `rate_discount` VALUES ('57', '0.85', null, '13', '0', '12');
 
 -- ----------------------------
 -- Table structure for `rate_join_channel`
