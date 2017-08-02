@@ -21,7 +21,7 @@ public interface PurchaseAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月12日 下午5:34:23
 	 */
-	Integer purchase(PurchasePo purchasePo,ChargeAccountPo accountPo);
+	Integer purchase(PurchasePo purchasePo,String productCode);
 	
 	/**
 	 * @description:封装查询参数

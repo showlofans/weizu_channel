@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.channel.pojo;
 
 import com.weizu.flowsys.core.annotation.po.TableName;
+import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
 
 /**
@@ -29,6 +30,27 @@ public class OperatorPgDataPo extends Po {
     private Integer pgInService;		//开通状态（0-开通，1-关闭）
    
     private Integer serviceType;			//业务类型（0-全国，1-省内，2-省漫游，3-转赠,4-红包）
+    
+    @TempField
+    private Double pgDiscountPrice;		//流量包价格（折扣）
+    @TempField
+    private String productCode;				//产品编码
+
+	public String getProductCode() {
+		return productCode;
+	}
+
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
+	}
+
+	public Double getPgDiscountPrice() {
+		return pgDiscountPrice;
+	}
+
+	public void setPgDiscountPrice(Double pgDiscountPrice) {
+		this.pgDiscountPrice = pgDiscountPrice;
+	}
 
 	public Integer getServiceType() {
 		return serviceType;

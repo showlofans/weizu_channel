@@ -90,9 +90,13 @@ public class PurchaseAOImpl implements PurchaseAO {
 	 */
 	@Transactional
 	@Override
-	public Integer purchase(PurchasePo purchasePo,ChargeAccountPo accountPo) {
+	public Integer purchase(PurchasePo purchasePo,String productCode) {
+		/****************完成对所有上级代理商包括自己的订单与代理商的绑定********************/
 		
-		/****************修改登陆账户********************/
+		
+		
+		/****************修改登陆用户的对私账户********************/
+		ChargeAccountPo accountPo = chargeAccountAO.getAccountByAgencyId(purchasePo.getAgencyId(), BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 		/**充值前余额*/
 		double agencyBeforeBalance = accountPo.getAccountBalance();
 		/**充值额（）*/
@@ -116,11 +120,11 @@ public class PurchaseAOImpl implements PurchaseAO {
 		}
 		//获取通道所属平台信息
 		ExchangePlatformPo epPo = exchangePlatformAO.getEpById(channelPo.getEpId());
-		OperatorPgDataPo pgPo = operatorPgAO.getPgById(purchasePo.getPgId());//
-		//通过归属地和包体获得产品编码
-		Map<String, Object> scopeCityMap = PurchaseUtil.getScopeCityByCarrier(purchasePo.getChargeTelDetail());
-		String scopeCityCode = scopeCityMap.get("scopeCityCode").toString();//地区编码
-		ProductCodePo product =  productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, pgPo.getPgSize(), pgPo.getOperatorType(), pgPo.getServiceType(), channelPo.getEpId()));
+//		OperatorPgDataPo pgPo = operatorPgAO.getPgById(purchasePo.getPgId());//
+//		//通过归属地和包体获得产品编码
+//		Map<String, Object> scopeCityMap = PurchaseUtil.getScopeCityByCarrier(purchasePo.getChargeTelDetail());
+//		String scopeCityCode = scopeCityMap.get("scopeCityCode").toString();//地区编码
+//		ProductCodePo product =  productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, pgPo.getPgSize(), pgPo.getOperatorType(), pgPo.getServiceType(), channelPo.getEpId()));
 		
 		
 		
@@ -136,11 +140,11 @@ public class PurchaseAOImpl implements PurchaseAO {
 			e.printStackTrace();
 		}
 		purchasePo.setOrderPlatformPath(OrderPathEnum.WEB_PAGE.getValue());
-		if(recordRes + channelRes -1 >0 && product  != null){
+		if(recordRes + channelRes -1 >0 && productCode  != null){
 			
 			ChargeBase chargeBase = ChargeFactory.getChargeBase(epPo.getEpName());
 			//
-			ChargeResultPage chargeResultPage = chargeBase.charge(new ChargeParamsPage(epPo.getEpPurchaseIp(), epPo.getEpName(), epPo.getEpUserName(), epPo.getEpApikey(), purchasePo.getChargeTel(), product.getProductCode()));
+			ChargeResultPage chargeResultPage = chargeBase.charge(new ChargeParamsPage(epPo.getEpPurchaseIp(), epPo.getEpName(), epPo.getEpUserName(), epPo.getEpApikey(), purchasePo.getChargeTel(), productCode));
 			
 			//初始化订单结果
 			ChargePageOrder chargePageOrder = chargeResultPage.getChargePageOrder();

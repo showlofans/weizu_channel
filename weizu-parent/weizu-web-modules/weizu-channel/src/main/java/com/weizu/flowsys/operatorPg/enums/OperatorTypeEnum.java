@@ -63,7 +63,6 @@ public enum OperatorTypeEnum {
 		}
 		return value;
 	}
-	
 	/**
 	 * @description:通过枚举值获取枚举
 	 * @param value

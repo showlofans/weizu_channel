@@ -121,7 +121,16 @@ public interface OperatorPgAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月26日 下午5:44:29
 	 */
-	List<OperatorPgDataPo> pgList_forPurchase(OperatorPgDataPo operatorPgPo,Integer agencyId);
+	List<OperatorPgDataPo> pgList_forPurchase(OperatorPgDataPo operatorPgPo,String scopeCityCode,Integer agencyId);
+	
+	/**
+	 * @description: 得到添加编码的包体列表
+	 * @param operatorPgPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年8月2日 下午5:21:20
+	 */
+	List<OperatorPgDataPo> pgList_forPurchase(OperatorPgDataPo operatorPgPo);
 	
 //	boolean checkScopeIsAccept(Integer loginAgencyId, String scopeCityName);
 }

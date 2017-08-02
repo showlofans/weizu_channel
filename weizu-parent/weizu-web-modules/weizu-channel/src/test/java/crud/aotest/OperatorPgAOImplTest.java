@@ -76,15 +76,15 @@ public class OperatorPgAOImplTest {
 //		System.out.println(pagination.getRecords().get(1));
 //		
 //	}
-	@Test
-	public void testPgList_forPurchase(){
-		OperatorPgDataPo operatorPgPo = new OperatorPgDataPo();
-		operatorPgPo.setOperatorType(0);
-		operatorPgPo.setServiceType(0);
-//		operatorPgPo.set
-		List<OperatorPgDataPo> list = operatorPgAO.pgList_forPurchase(operatorPgPo, 4);
-		System.out.println(list == null ?"": list.size());
-	}
+//	@Test
+//	public void testPgList_forPurchase(){
+//		OperatorPgDataPo operatorPgPo = new OperatorPgDataPo();
+//		operatorPgPo.setOperatorType(0);
+//		operatorPgPo.setServiceType(0);
+////		operatorPgPo.set
+//		List<OperatorPgDataPo> list = operatorPgAO.pgList_forPurchase(operatorPgPo, 4);
+//		System.out.println(list == null ?"": list.size());
+//	}
 	
 	/**
 	 * @description:查询通道规格列表

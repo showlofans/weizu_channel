@@ -33,7 +33,7 @@
 	<div class="row cl">
 		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机号码：</label>
 		<div class="formControls col-xs-8 col-sm-9">
-			<input type="text" class="input-text" required="required" onblur="ajaxPhone()" style="width:400px" value="" placeholder="" id="chargeTel" name="chargeTel">
+			<input type="text" class="input-text" required="required" onchange="resetForm()" onblur="ajaxPhone()" style="width:400px" value="" placeholder="" id="chargeTel" name="chargeTel">
 			<span class="error"></span>
 		</div>
 	</div>
@@ -92,6 +92,7 @@
 		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>采购金额：</label>
 		<div class="formControls col-xs-8 col-sm-9">
 			<input id="orderAmount" name="orderAmount" type="text" readonly class="input-text" required  style="width:400px" value="" placeholder="">
+			<br>折扣：<span id="rateDiscount" class="c-red"></span>
 		</div>
 	</div>
 	<div class="row cl">
@@ -132,6 +133,15 @@
 			}
 	    });
 });
+ 
+ function resetForm(){
+	 $("#select-servce-type option:first").prop("selected", 'selected');
+	 if($("#pgInsert").is(":visible")){
+   		 $("#pgInsert").empty();
+   		 $("#pgInsert").hide();
+   	 }
+	// $('#form-charge')[0].reset();
+ }
  /* function submitPur(){
 	 var tel = $('input[name=chargeTel]').val();
 	 var chargeTelDetail = $('#chargeTelDetail').val();
@@ -170,7 +180,7 @@
  
  /**通过用户手机号获得基本信息*/
  	var tel;
- 	var operators;
+ 	var carrier;
     var ajax=function(){
         //淘宝接口    
         $.ajax({
@@ -180,14 +190,14 @@
              contentType: "application/x-www-form-urlencoded; charset=utf-8", 
              jsonp: "callback",
              success: function(data){
-                operators = data.catName;
                // $('.error').css('display','none');
+             	carrier = data.carrier;//广东移动
                var location = data.location;
-               var  carrier = data.carrier,
+               var  operators = data.catName,//中国移动
                 province = data.province,
                
                     num = data.telString; 
-               alert(province);
+               //alert(province);
              $('#chargeTelDetail').val(carrier);  
               //$('#chargeTelDetail').val(location);  
                 
@@ -251,6 +261,8 @@
    function changeRadio(vart){
 	   var pprice = $(vart).parent().next().val();
 	   var psize = $(vart).parent().next().next().val();//包大小
+	   var productCode = $(vart).parent().next().next().next().val();//包编码
+	   alert(productCode);
 	   
 	   $("#pgPrice").val(pprice);//改变价格
 	   //alert($(vart).prev().val());
@@ -272,9 +284,17 @@
         		    alert(key+":"+value);  
         		});  */
          	 //$("#orderAmount").val(data);
+        		//alert(data.msg);
+        	if(data.msg == 2){
+        		alert('账户余额不足');
+        	}else{
+	         	 $("#orderAmount").val(data.price);
+	         	 $("#channelId").val(data.channelId);
+	         	// alert(data.rateDiscount);
+        	}
+         	 $('#rateDiscount').html(data.rateDiscount);
+        		
          	 $("#billType").val(data.billType);
-         	 $("#orderAmount").val(data.price);
-         	 $("#channelId").val(data.channelId);
            }
        })
 	   
@@ -306,14 +326,15 @@
             	 if($("#pgInsert").is(":visible")){
                		 $("#pgInsert").empty();
                		 $("#pgInsert").hide();
-               	 }else{
-               		 alert("sorry");
                	 }
+            	 /* else{
+               		 alert("sorry");
+               	 } */
             	//查询流量包
             	 	//ajax2();
             	 	$.ajax({
                         type: "post",
-                        url: '/flowsys/chargePg/pgList_forPurchase.do?operatorName='+ operators + '&serviceType=' + serviceType,
+                        url: '/flowsys/chargePg/pgList_forPurchase.do?operatorName='+ carrier + '&serviceType=' + serviceType,
                         dataType: "json",
                         async: false,
                         contentType: "application/x-www-form-urlencoded; charset=utf-8", 
@@ -326,6 +347,7 @@
 	                        	   var price = data[i].pgPrice;
 	                        	   var name = data[i].pgName;
 	                        	   var pgSize = data[i].pgSize;
+	                        	   var productCode = data[i].productCode;
 	                       				/* if(i == 0){//默认设置第一个为选中 
 	            	           				appendData += "<div class='radio-box pgNameType'><input name='pgName' class='pgNameRadio' type='radio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)' checked><label for='pgName-"+(i+1)+"'>"+name+"</label></div>"
 	            	           				+ "<input type='hidden' name='pgPrice' value='"+price+"'></input>"
@@ -335,11 +357,11 @@
 	            	           				$("#pgId").val(data[0].id);
 	                       				}else{ */
 	                       					appendData += "<div class='radio-box pgNameType'><input type='hidden' value='"+data[i].id+"'></input><input name='pgName' class='pgNameRadio' type='radio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)'><label for='pgName-"+(i+1)+"'>"+name+"</label></div><input type='hidden' class='price' name='pgPrice' value='"+price+"'></input>"
-	                       					+"<input type='hidden' name='pgSize' value='"+pgSize+"'></input><br>";;
+	                       					+"<input type='hidden' name='pgSize' value='"+pgSize+"'></input><input type='hidden' name='productCode' value='"+productCode+"'></input><br>";;
 	                       				// }
 	                          }
                           }else{
-                        	  appendData += "没有数据！！";
+                        	  appendData += "没有配置该业务类型，或者号码不符合充值条件！！";
                         	  $("#pgPrice").val("");//重置参数
                         	  $("#orderAmount").val("");
                         	  

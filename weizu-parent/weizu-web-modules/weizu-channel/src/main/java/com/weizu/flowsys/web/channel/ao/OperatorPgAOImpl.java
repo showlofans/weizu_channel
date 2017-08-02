@@ -547,10 +547,30 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 	 */
 	@Override
 	public List<OperatorPgDataPo> pgList_forPurchase(
-			OperatorPgDataPo operatorPgPo,Integer agencyId) {
+			OperatorPgDataPo operatorPgPo,String scopeCityCode,Integer agencyId) {
 		
 		if(operatorPgPo != null){
-			return operatorPgDao.pgList_forPurchase(operatorPgPo,agencyId);
+			List<OperatorPgDataPo> list = operatorPgDao.pgList_forPurchase(operatorPgPo,scopeCityCode,agencyId);
+			
+			return list;
+		}
+		return null;
+	}
+	/**
+	 * @description: 得到添加编码的包体列表
+	 * @param operatorPgPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年8月2日 下午5:21:07
+	 */
+	@Override
+	public List<OperatorPgDataPo> pgList_forPurchase(
+			OperatorPgDataPo operatorPgPo) {
+		
+		if(operatorPgPo != null){
+			List<OperatorPgDataPo> list = operatorPgDao.pgList_forPurchase(operatorPgPo);
+			
+			return list;
 		}
 		return null;
 	}

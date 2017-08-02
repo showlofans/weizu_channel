@@ -24,6 +24,7 @@ import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.DiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountShowDTO;
+import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 
 @Service(value="rateDiscountAO")
 public class RateDiscountAOImpl implements RateDiscountAO {
@@ -386,11 +387,8 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		}
 		for (RateDiscountPo rateDiscountPo : rateList) {
 			for (ScopeCityEnum scopeCityEnum : enumAry) {
-				if(scopeCityEnum.getValue().equals(rateDiscountPo.getScopeCityCode()) ){//得到参考地区
-					if(scopeCityEnum.getDesc().contains(scopeCityName)){
-						return true;
-					}
-					break;
+				if(scopeCityEnum.getValue().equals(rateDiscountPo.getScopeCityCode()) && scopeCityEnum.getDesc().contains(scopeCityName) ){//得到参考地区
+					return true;
 				}
 			}
 		}
@@ -458,5 +456,31 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 			
 		}
 		return dtoMap;
+	}
+	/**
+	 * @description: 获得充值价格
+	 * @param dataPo
+	 * @param carrier
+	 * @param loginAgencyId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年8月2日 上午11:54:40
+	 */
+	@Override
+	public RateDiscountPo getRateForCharge(OperatorPgDataPo dataPo,
+			String carrier, int loginAgencyId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("billTypeRate", 0);//用不带票的账户去获得价格
+		params.put("agencyId", loginAgencyId);
+		int serviceType = dataPo.getServiceType();
+		params.put("serviceType", serviceType);
+		int sLength = carrier.length();
+		String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动
+		String scopeCityName = carrier.substring(0,sLength-2);
+		int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
+		params.put("operatorType", opType);
+		String scopeCityCode = ScopeCityEnum.getValueByDesc(scopeCityName);
+		params.put("scopeCityCode", scopeCityCode);
+		return rateDiscountDao.getRateForCharge(params);
 	}
 }
