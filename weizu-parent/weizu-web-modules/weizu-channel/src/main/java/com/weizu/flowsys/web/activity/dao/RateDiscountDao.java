@@ -102,6 +102,15 @@ public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	List<RateDiscountPo>getMyChildRate(Map<String, Object> params);
 	
 	/**
+	 * @description:  获得充值的折扣 
+	 * @param params
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年8月2日 上午11:33:52
+	 */
+	RateDiscountPo getRateForCharge(Map<String, Object> params);
+	
+	/**
 	 * @description: 获得所有费率的地区
 	 * @param rateDiscountPo
 	 * @return

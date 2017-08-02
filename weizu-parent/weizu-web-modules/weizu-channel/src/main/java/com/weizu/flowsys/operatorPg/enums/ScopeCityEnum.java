@@ -68,6 +68,23 @@ public enum ScopeCityEnum {
 	}
 	
 	/**
+	 * @description: 通过值，获得键
+	 * @param desc
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年8月2日 上午11:49:03
+	 */
+	public static String getValueByDesc(String desct){
+		ScopeCityEnum[] enumAry = ScopeCityEnum.values();
+		for (ScopeCityEnum scopeCityEnum : enumAry) {
+			if(scopeCityEnum.desc.contains(desct) ){
+				return scopeCityEnum.value;
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * @description: 获得值数组
 	 * @return
 	 * @author:POP产品研发部 宁强

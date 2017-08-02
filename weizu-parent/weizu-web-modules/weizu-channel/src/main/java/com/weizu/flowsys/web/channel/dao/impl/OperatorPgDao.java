@@ -105,18 +105,32 @@ public class OperatorPgDao extends DaoImpl<OperatorPgDataPo, Integer> implements
 	 */
 	@Override
 	public List<OperatorPgDataPo> pgList_forPurchase(
-			OperatorPgDataPo operatorPgPo,Integer agencyId) {
+			OperatorPgDataPo operatorPgPo,String scopeCityCode,Integer agencyId) {
 		Map<String,Object> params = getParamsMap(operatorPgPo);
 		params.put("agencyId", agencyId);
+		params.put("scopeCityCode", scopeCityCode);
+		return sqlSessionTemplateASS.selectList("pgList_forPurchase_po", params);
+	}
+	/**
+	 * @description: 得到添加编码的包体列表
+	 * @param operatorPgPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年8月2日 下午5:20:57
+	 */
+	@Override
+	public List<OperatorPgDataPo> pgList_forPurchase(
+			OperatorPgDataPo operatorPgPo) {
+		Map<String,Object> params = getParamsMap(operatorPgPo);
 		return sqlSessionTemplateASS.selectList("pgList_forPurchase_po", params);
 	}
 	
 	private Map<String,Object> getParamsMap(OperatorPgDataPo operatorPgPo){
 		Map<String, Object> params = new HashMap<String, Object>();
-		if(StringHelper.isNotEmpty(operatorPgPo.getOperatorName()))
-		{
-			params.put("operatorName", operatorPgPo.getOperatorName());
-		}
+//		if(StringHelper.isNotEmpty(operatorPgPo.getOperatorName()))
+//		{
+//			params.put("operatorName", operatorPgPo.getOperatorName());
+//		}
 		if(operatorPgPo.getServiceType() != null)
 		{
 			params.put("serviceType", operatorPgPo.getServiceType());

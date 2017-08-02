@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50626
 File Encoding         : 65001
 
-Date: 2017-08-01 18:51:44
+Date: 2017-08-02 18:08:22
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -148,6 +148,33 @@ CREATE TABLE `agency_join_rate` (
 
 -- ----------------------------
 -- Records of agency_join_rate
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `agency_purchase`
+-- ----------------------------
+DROP TABLE IF EXISTS `agency_purchase`;
+CREATE TABLE `agency_purchase` (
+  `id` bigint(20) NOT NULL DEFAULT '0',
+  `agency_id` int(11) DEFAULT NULL,
+  `purchase_id` bigint(20) DEFAULT NULL,
+  `rate_discount_id` bigint(20) DEFAULT NULL,
+  `order_amount` double DEFAULT NULL COMMENT '充值金额(扣款）',
+  `bill_type` int(11) DEFAULT NULL COMMENT '票务类型（0-无票，1-带票）',
+  `record_id` bigint(20) DEFAULT NULL COMMENT '消费记录id',
+  PRIMARY KEY (`id`),
+  KEY `fk_ap_agency` (`agency_id`),
+  KEY `fk_ap_purchase` (`purchase_id`),
+  KEY `fk_ap_rateDiscount` (`rate_discount_id`),
+  KEY `fk_ap_chargerecord` (`record_id`),
+  CONSTRAINT `fk_ap_agency` FOREIGN KEY (`agency_id`) REFERENCES `agency_backward` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_ap_chargerecord` FOREIGN KEY (`record_id`) REFERENCES `charge_record` (`id`),
+  CONSTRAINT `fk_ap_purchase` FOREIGN KEY (`purchase_id`) REFERENCES `purchase` (`order_id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_ap_rateDiscount` FOREIGN KEY (`rate_discount_id`) REFERENCES `rate_discount` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of agency_purchase
 -- ----------------------------
 
 -- ----------------------------
@@ -695,8 +722,7 @@ CREATE TABLE `purchase` (
   `order_id` bigint(20) NOT NULL COMMENT 'è®¢å•å·',
   `order_id_api` varchar(255) DEFAULT NULL COMMENT '其他系统返回的订单id',
   `order_id_from` varchar(255) DEFAULT NULL COMMENT '下级代理商传过来的订单号',
-  `root_agency_id` int(11) DEFAULT NULL COMMENT '订单所属代理商',
-  `agency_id` int(11) DEFAULT NULL COMMENT 'ä»£ç†idï¼ˆå¤–é”®ï¼‰',
+  `agency_id` int(11) DEFAULT NULL COMMENT '生成订单的代理商',
   `charge_tel` varchar(255) DEFAULT NULL COMMENT 'æ‰‹æœºå·',
   `pg_id` int(11) DEFAULT NULL COMMENT 'æµé‡åŒ…idï¼ˆå¤–é”®ï¼‰',
   `order_arrive_time` bigint(20) DEFAULT NULL COMMENT 'æäº¤æ—¶é—´ï¼ˆæœ¬å¹³å°èŽ·å¾—è¯¥æ•°æ®è¯·æ±‚çš„æ—¶é—´ï¼‰',
@@ -707,28 +733,23 @@ CREATE TABLE `purchase` (
   `order_result` int(11) DEFAULT NULL COMMENT 'ç»“æžœï¼ˆenum:ï¼‰',
   `channel_id` int(11) DEFAULT NULL COMMENT 'é€šé“idï¼ˆå¤–é”®ï¼‰',
   `order_result_detail` varchar(255) DEFAULT NULL COMMENT 'ç»“æžœæè¿°',
-  `order_amount` double DEFAULT NULL COMMENT '充值金额(扣款）',
-  `record_id` bigint(20) DEFAULT NULL COMMENT '消费记录id',
-  `bill_type` int(11) DEFAULT NULL COMMENT '票务类型（0-无票，1-带票）',
-  PRIMARY KEY (`order_id`),
-  KEY `record_join_purchase` (`record_id`),
-  CONSTRAINT `record_join_purchase` FOREIGN KEY (`record_id`) REFERENCES `charge_record` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  PRIMARY KEY (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of purchase
 -- ----------------------------
-INSERT INTO `purchase` VALUES ('703710166008205312', '20170622122808967868', null, '4', '4', '15858343638', '1', '1498105686877', '1498105689000', '浙江移动', '嘉兴', '0', '4', '35', '未充', '90', '46', '0');
-INSERT INTO `purchase` VALUES ('703717823528046592', '20170622125834883058', null, '4', '4', '15858343638', '1', '1498107512532', '1498107514000', '浙江移动', '嘉兴', '0', '4', '35', '未充', '90', null, '0');
-INSERT INTO `purchase` VALUES ('704535206018686976', '20170624190623128150', null, null, '21', '15858343638', '1', null, '1498302381513', '浙江移动', '嘉兴', '1', '1', '38', '欠费等待', '93.6', null, '0');
-INSERT INTO `purchase` VALUES ('704544611741212672', '20170624194216502396', null, null, '21', '15858343638', '1', '1498304515178', '1498304537000', '浙江移动', '嘉兴', '1', '0', '39', '失败', '93.6', null, '0');
-INSERT INTO `purchase` VALUES ('705126212669808640', '20170626101458398987', null, '4', '21', '15858343638', '1', '1498443287474', '1498443298000', '浙江移动', '嘉兴', '1', '4', '39', '未充', '93.6', null, '0');
-INSERT INTO `purchase` VALUES ('705127733130170368', '20170626102101696623', null, '21', '21', '15858343638', '1', '1498443661235', '1498443661000', '浙江移动', '嘉兴', '0', '0', '39', '失败', '90', null, '0');
-INSERT INTO `purchase` VALUES ('705129750095470592', '20170626102901656910', null, '4', '21', '15858343638', '1', '1498444085497', '1498444142000', '浙江移动', '嘉兴', '1', '4', '39', '未充', '93.6', null, '0');
-INSERT INTO `purchase` VALUES ('705133259956166656', '20170626104258028713', null, '4', '21', '15858343638', '1', '1498444954103', '1498444979000', '浙江移动', '嘉兴', '1', '4', '39', '未充', '93.6', null, '0');
-INSERT INTO `purchase` VALUES ('705162055119802368', '20170626123724333015', null, '4', '4', '15858343638', '1', '1498451844217', '1498451844000', '浙江移动', '嘉兴', '0', '4', '35', '未充', '90', null, '0');
-INSERT INTO `purchase` VALUES ('705172103195791360', '20170626131720748968', null, '21', '21', '15858343638', '1', '1498454239867', '1498454240000', '浙江移动', '嘉兴', '0', '0', '39', '失败', '90', null, '0');
-INSERT INTO `purchase` VALUES ('705499613372620800', null, null, null, null, '15858343638', '1', '1498532288078', null, '浙江移动', '嘉兴', null, null, null, null, '93.6', null, '0');
+INSERT INTO `purchase` VALUES ('703710166008205312', '20170622122808967868', null, '4', '15858343638', '1', '1498105686877', '1498105689000', '浙江移动', '嘉兴', '0', '4', '35', '未充');
+INSERT INTO `purchase` VALUES ('703717823528046592', '20170622125834883058', null, '4', '15858343638', '1', '1498107512532', '1498107514000', '浙江移动', '嘉兴', '0', '4', '35', '未充');
+INSERT INTO `purchase` VALUES ('704535206018686976', '20170624190623128150', null, '21', '15858343638', '1', null, '1498302381513', '浙江移动', '嘉兴', '1', '1', '38', '欠费等待');
+INSERT INTO `purchase` VALUES ('704544611741212672', '20170624194216502396', null, '21', '15858343638', '1', '1498304515178', '1498304537000', '浙江移动', '嘉兴', '1', '0', '39', '失败');
+INSERT INTO `purchase` VALUES ('705126212669808640', '20170626101458398987', null, '21', '15858343638', '1', '1498443287474', '1498443298000', '浙江移动', '嘉兴', '1', '4', '39', '未充');
+INSERT INTO `purchase` VALUES ('705127733130170368', '20170626102101696623', null, '21', '15858343638', '1', '1498443661235', '1498443661000', '浙江移动', '嘉兴', '0', '0', '39', '失败');
+INSERT INTO `purchase` VALUES ('705129750095470592', '20170626102901656910', null, '21', '15858343638', '1', '1498444085497', '1498444142000', '浙江移动', '嘉兴', '1', '4', '39', '未充');
+INSERT INTO `purchase` VALUES ('705133259956166656', '20170626104258028713', null, '21', '15858343638', '1', '1498444954103', '1498444979000', '浙江移动', '嘉兴', '1', '4', '39', '未充');
+INSERT INTO `purchase` VALUES ('705162055119802368', '20170626123724333015', null, '4', '15858343638', '1', '1498451844217', '1498451844000', '浙江移动', '嘉兴', '0', '4', '35', '未充');
+INSERT INTO `purchase` VALUES ('705172103195791360', '20170626131720748968', null, '21', '15858343638', '1', '1498454239867', '1498454240000', '浙江移动', '嘉兴', '0', '0', '39', '失败');
+INSERT INTO `purchase` VALUES ('705499613372620800', null, null, null, '15858343638', '1', '1498532288078', null, '浙江移动', '嘉兴', null, null, null, null);
 
 -- ----------------------------
 -- Table structure for `rate_backward`

@@ -7,6 +7,7 @@ import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountShowDTO;
+import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 
 public interface RateDiscountAO {
 	/**
@@ -115,4 +116,15 @@ public interface RateDiscountAO {
 	 * @createTime:2017年8月1日 下午5:54:00
 	 */
 	boolean checkScopeIsAccept(Integer loginAgencyId, String scopeCityName);
+	
+	/**
+	 * @description: 获得充值价格
+	 * @param dataPo
+	 * @param carrier
+	 * @param loginAgencyId
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年8月2日 上午11:54:07
+	 */
+	RateDiscountPo getRateForCharge(OperatorPgDataPo dataPo,String carrier, int loginAgencyId);
 }

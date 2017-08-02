@@ -22,7 +22,7 @@ public class PurchasePo extends Po {
     private String orderIdFrom;					//下级代理商传过来的订单号
     
     private Integer agencyId;					//代理id（外键）
-   
+    @TempField
     private Integer rootAgencyId;				//当前登陆id（外键）
 
     private String chargeTel;					//手机号
@@ -44,11 +44,11 @@ public class PurchasePo extends Po {
     private Integer channelId;					//通道id（外键）
 
     private String orderResultDetail;			//结果描述(失败原因)
-    
+    @TempField
     private Double orderAmount;					//扣款
-    
+    @TempField
     private Long recordId;						//消费记录id-外键
-    
+    @TempField
     private Integer billType;					//票务类型
     
 //	public PurchasePo(Long orderId, String orderIdApi,Integer agencyId,Integer rootAgencyId, String chargeTel,

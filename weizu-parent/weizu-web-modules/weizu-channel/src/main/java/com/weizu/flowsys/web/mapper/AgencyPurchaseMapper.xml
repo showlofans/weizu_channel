@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weizu.flowsys.web.trade.dao.AgencyPurchaseDao">
+	<sql id="t_ap">agency_purchase</sql>
+  <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.trade.pojo.AgencyPurchasePo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
+    <result column="purchase_id" property="purchaseId" jdbcType="BIGINT" />
+    <result column="rate_discount_id" property="rateDiscountId" jdbcType="BIGINT" />
+    <result column="order_amount" property="orderAmount" jdbcType="DOUBLE" />
+    <result column="bill_type" property="billType" jdbcType="INTEGER" />
+    <result column="record_id" property="recordId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, agency_id, purchase_id, rate_discount_id, order_amount, bill_type, record_id
+  </sql>
+  <!-- 批量添加 -->
+   <insert id="ap_addList" useGeneratedKeys="true" parameterType="java.util.List">
+  	insert into <include refid="t_ap"></include>
+  	(<include refid="Base_Column_List"></include>)
+  	values
+  	<foreach collection="list" item="ap" index="index" separator=",">
+  		(#{ap.agencyId},#{ap.purchaseId},#{ap.rateDiscountId},#{ap.orderAmount},#{ap.billType},#{ap.recordId})
+  	</foreach>
+  </insert>
+</mapper>

@@ -42,7 +42,15 @@ public interface OperatorPgDaoInterface {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年8月1日 下午6:24:24
 	 */
-	List<OperatorPgDataPo> pgList_forPurchase(OperatorPgDataPo operatorPgPo,Integer agencyId);
+	List<OperatorPgDataPo> pgList_forPurchase(OperatorPgDataPo operatorPgPo,String scopeCityCode,Integer agencyId);
+	/**
+	 * @description: 得到添加编码的包体列表
+	 * @param operatorPgPo
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年8月2日 下午5:20:32
+	 */
+	List<OperatorPgDataPo> pgList_forPurchase(OperatorPgDataPo operatorPgPo);
 	
 	/**
 	 * @description:根据参数查询总记录数

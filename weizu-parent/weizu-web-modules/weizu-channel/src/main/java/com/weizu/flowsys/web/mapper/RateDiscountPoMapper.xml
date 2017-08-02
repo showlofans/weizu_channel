@@ -66,6 +66,34 @@
  	</where>
  	order by rate.bill_type
   </select>
+  
+  <!-- 获得充值的折扣 -->
+  <select id="getRateForCharge" parameterType="map" resultMap="BaseResultMap">
+  	select <include refid="Show_Rate_List"></include>
+  	from <include refid="t_active"></include> active
+  	inner join <include refid="t_rateD"></include> rate
+  	ON active.rate_discount_id=rate.id
+  	INNER JOIN <include refid="t_cDiscount"></include> cd
+ 	on rate.channel_discount_id=cd.id
+ 	<where>
+ 		<if test="agencyId != null">
+ 			AND active.agency_id = #{agencyId}
+ 		</if>
+ 		<if test="billTypeRate != null"><!-- 费率类型 -->
+	  		AND rate.bill_type = #{billTypeRate}
+  		</if>
+ 		<if test="operatorType != null">
+	  		AND cd.operator_type = #{operatorType}
+	  	</if>
+	  	<if test="scopeCityCode != null">
+	  		AND cd.scope_city_code = #{scopeCityCode}
+	  	</if>
+	  	<if test="serviceType != null">
+	  		AND cd.service_type = #{serviceType}
+	  	</if>
+ 	</where>
+ 	order by rate.active_discount desc
+  </select>
   <!-- 费率配置列表 -->
   <select id="getMyRate" parameterType="map" resultMap="BaseResultMap">
   	select <include refid="Show_Rate_List"></include>

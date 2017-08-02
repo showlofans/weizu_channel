@@ -9,6 +9,7 @@
 	<sql id="t_aar">agency_active_rate</sql>
 	<sql id="t_rte">rate_discount</sql>
 	<sql id="t_cnel">channel_channel</sql>
+	<sql id="t_cd">channel_discount</sql>
 	<!-- <sql id="t_scope">service_scope</sql> -->
 	
 	
@@ -35,12 +36,13 @@
 	    <result column="pg_size" property="pgSize" />
 	    <!-- <result column="scope_city_name" jdbcType="VARCHAR" property="scopeCityName" /> -->
 	    <result column="service_type" property="serviceType" />
+	    <result column="product_code" property="productCode" />
 	 </resultMap>
   <sql id="Base_Column_List">
     id,operator_type,operator_name,pg_in_service,pg_name,pg_price,pg_size,service_type
   </sql>
   <sql id="myPg_Column_List">
-    pg.id,pg.operator_type,pg.operator_name,pg.pg_in_service,pg.pg_name,pg.pg_price,pg.pg_size,pg.service_type
+    pg.id,pg.operator_type,pg.operator_name,pg.pg_in_service,pg.pg_name,pg.pg_price,pg.pg_size,pg.service_type,pc.product_code
   </sql>
     <!-- 重载Add -->
 	<insert id="operatorPg_addList" useGeneratedKeys="true" parameterType="java.util.List" >
@@ -87,15 +89,28 @@
 		FROM <include refid="t_pg"></include> pg
 		INNER JOIN <include refid="t_pc"></include> pc
 		on pc.pg_id=pg.id
-		<where>pc.ep_id =
+		<where>
+		AND pc.ep_id =
 		 (SELECT cnel.ep_id FROM <include refid="t_aar"></include> aar
 		INNER JOIN <include refid="t_rte"></include> rte
 		on aar.rate_discount_id=rte.id
+		INNER JOIN <include refid="t_cd"></include> cd
+		on rte.channel_discount_id=cd.id
 		INNER JOIN <include refid="t_cnel"></include> cnel
 		on rte.channel_id=cnel.id
 		<where>
+			AND rte.bill_type=0<!-- 默认用对私账户进行页面充值 -->
 			<if test="agencyId != null">
-				aar.agency_id= #{agencyId}
+				AND aar.agency_id= #{agencyId}
+			</if>
+			<if test="operatorType != null">
+				AND cd.operator_type = #{operatorType}
+			</if>
+			<if test="serviceType != null">
+				AND cd.service_type = #{serviceType}
+			</if>
+			<if test="scopeCityCode != null">
+				AND cd.scope_city_code = #{scopeCityCode}
 			</if>
 		</where>)
 		<include refid="pg_for_purchase_po"></include>
@@ -109,10 +124,10 @@
 	</select>
 	<!-- 通过流量包参数查询 -->
 	<sql id="pg_for_purchase_po">
-		pg_in_service = 1
-		<if test="operatorName != null">
+		AND pg_in_service = 1
+		<!-- <if test="operatorName != null">
 			AND pg.operator_name = #{operatorName}
-		</if>
+		</if> -->
 		<if test="operatorType != null">
 			AND pg.operator_type = #{operatorType}
 		</if>
