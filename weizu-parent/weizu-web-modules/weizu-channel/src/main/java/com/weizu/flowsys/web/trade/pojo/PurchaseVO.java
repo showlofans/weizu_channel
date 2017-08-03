@@ -54,7 +54,7 @@ public class PurchaseVO {
 
     private String channelName;					//通道名称
     
-    private Integer channelId;					//通道ID
+    private Long channelId;					//通道ID
 
     private String orderResultDetail;			//结果描述
     
@@ -62,7 +62,17 @@ public class PurchaseVO {
     
     private ExchangePlatformPo ep;				//平台信息
     
-    public String getOrderIdFrom() {
+    private Integer billType;					//票务
+    
+    public Integer getBillType() {
+		return billType;
+	}
+
+	public void setBillType(Integer billType) {
+		this.billType = billType;
+	}
+
+	public String getOrderIdFrom() {
 		return orderIdFrom;
 	}
 
@@ -70,11 +80,11 @@ public class PurchaseVO {
 		this.orderIdFrom = orderIdFrom;
 	}
 
-	public Integer getChannelId() {
+	public Long getChannelId() {
 		return channelId;
 	}
 
-	public void setChannelId(Integer channelId) {
+	public void setChannelId(Long channelId) {
 		this.channelId = channelId;
 	}
 

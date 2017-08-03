@@ -6,6 +6,7 @@
 <mapper namespace="com.weizu.flowsys.web.agency.dao.ChargeAccountDaoInterface">
 	
 	<sql id="t_account">charge_account</sql>
+	<sql id="t_agency">agency_backward</sql>
 	<resultMap id="BaseResultMap" type="com.weizu.flowsys.web.agency.pojo.ChargeAccountPo">
 	   <id column="id" jdbcType="INTEGER" property="id" />
 	    <result column="account_balance" jdbcType="DOUBLE" property="accountBalance" />
@@ -28,6 +29,9 @@
 	 </resultMap>
 	 <sql id="Balance_Account_List">
     	id, account_balance, account_credit,agency_id
+ 	 </sql>
+	 <sql id="Root_Account_List">
+    	charge.id, charge.account_balance, charge.account_credit,charge.agency_id
  	 </sql>
 	 
 	 <!-- 通过代理商id更新代理商账户信息 -->
@@ -71,5 +75,22 @@
     where agency_id = #{agencyId,jdbcType=INTEGER}
     and bill_type = #{billType}
   </select>
+  
+  <!-- 查询父级代理商的相关账户 -->
+  <select id="selectRootAccountByAgencyId" parameterType="map" resultMap="OtherMap">
+  	select <include refid="Root_Account_List"></include>
+  	FROM <include refid="t_account"></include> charge
+	INNER JOIN <include refid="t_agency"></include> agency
+	on agency.root_agency_id = charge.agency_id
+	<where>
+		<if test="billType != null">
+			AND charge.bill_type = #{billType}
+		</if>
+		<if test="agencyId != null">
+			AND agency.id = #{agencyId}
+		</if>
+	</where>
+  </select>
+  
 	
 </mapper>

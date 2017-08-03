@@ -297,13 +297,13 @@ public class ChargeFacadeImpl implements ChargeFacade {
 			ExchangePlatformPo epPo = exchangePlatformDao.get(bestChannel.getEpd());
 			ChargeBase chargeBase = ChargeFactory.getChargeBase(bestChannel.getEpName());
 			
-			purchasePo.setOrderPlatformPath(OrderPathEnum.CHARGE_SOCKET.getValue());
+//			purchasePo.setOrderPlatformPath(OrderPathEnum.CHARGE_SOCKET.getValue());
 			purchasePo.setAgencyId(backPo.getId());
-			purchasePo.setRootAgencyId(backPo.getRootAgencyId());
+//			purchasePo.setRootAgencyId(backPo.getRootAgencyId());
 			//添加待充订单
 			purchasePo.setOrderResult(OrderStateEnum.DAICHONG.getValue());
 //			purchasePo.setOrderRe
-			purchasePo.setChannelId(bestChannel.getChanneld());
+//			purchasePo.setChannelId(bestChannel.getChanneld());
 			int addPurResult = purchaseDAO.addPurchase(purchasePo);//数据库中有了待充订单，通过平台的查询页面可以查到，通过订单接口也可以查到
 			//充值：通过充值返回的订单查询订单详情，然后更新状态
 			ChargeResultPage chargeResultPage = chargeBase.charge(new ChargeParamsPage(epPo.getEpPurchaseIp(), epPo.getEpName(), epPo.getEpUserName(), epPo.getEpApikey(), chargeTel, product.getProductCode()));
@@ -332,7 +332,7 @@ public class ChargeFacadeImpl implements ChargeFacade {
 		int channelId = bestChannel.getChanneld();//
 		Double channelDiscount = bestChannel.getChannelDiscount();
 		Double channelAmount = NumberTool.mul(pgData.getPgPrice(), channelDiscount);//通道交易增加额
-		purchasePo.setChannelId(channelId);
+//		purchasePo.setChannelId(channelId);
 		ChannelForwardPo channelPo = channelForwardDao.get(channelId);
 		channelPo.setId(channelId);
 		channelPo.addTotalUse();

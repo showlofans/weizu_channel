@@ -7,6 +7,7 @@ import org.weizu.api.facet.orderState.PageOrder;
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
+import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.http.ParamsEntityWeiZu;
 import com.weizu.flowsys.web.http.weizu.OrderStateResult;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
@@ -21,7 +22,7 @@ public interface PurchaseAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月12日 下午5:34:23
 	 */
-	Integer purchase(PurchasePo purchasePo,String productCode);
+	Integer purchase(PurchasePo purchasePo,OperatorPgDataPo dataPo);
 	
 	/**
 	 * @description:封装查询参数

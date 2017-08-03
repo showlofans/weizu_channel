@@ -22,8 +22,6 @@ public class PurchasePo extends Po {
     private String orderIdFrom;					//下级代理商传过来的订单号
     
     private Integer agencyId;					//代理id（外键）
-    @TempField
-    private Integer rootAgencyId;				//当前登陆id（外键）
 
     private String chargeTel;					//手机号
 
@@ -37,99 +35,43 @@ public class PurchasePo extends Po {
 
     private String chargeTelCity;				//号码归属具体城市
 
-    private Integer orderPlatformPath;			//充值方式(0-接口，1-本平台)
-
     private Integer orderResult;				//结果（enum:）(0-失败，1-成功，3-待充，4-为充)
 
-    private Integer channelId;					//通道id（外键）
+    private Long channelId;					//通道id（外键）
 
     private String orderResultDetail;			//结果描述(失败原因)
     @TempField
-    private Double orderAmount;					//扣款
+    private Double orderAmount;					//扣款:用与判断订单价格是否高于余额
     @TempField
     private Long recordId;						//消费记录id-外键
     @TempField
     private Integer billType;					//票务类型
-    
-//	public PurchasePo(Long orderId, String orderIdApi,Integer agencyId,Integer rootAgencyId, String chargeTel,
-//			Integer pgId, Long orderArriveTime, Long orderBackTime,
-//			String chargeTelDetail, String chargeTelCity,
-//			Integer orderPlatformPath, Integer orderResult, Integer channelId,
-//			String orderResultDetail, Double orderAmount) {
-//		super();
-//		this.orderIdApi = orderIdApi;
-//		this.orderId = orderId;
-//		this.rootAgencyId = rootAgencyId;
-//		this.agencyId = agencyId;
-//		this.chargeTel = chargeTel;
-//		this.pgId = pgId;
-//		this.orderArriveTime = orderArriveTime;
-//		this.orderBackTime = orderBackTime;
-//		this.chargeTelDetail = chargeTelDetail;
-//		this.chargeTelCity = chargeTelCity;
-//		this.orderPlatformPath = orderPlatformPath;
-//		this.orderResult = orderResult;
-//		this.channelId = channelId;
-//		this.orderResultDetail = orderResultDetail;
-//		this.orderAmount = orderAmount;
-//	}
 	
 	public PurchasePo() {
 		super();
 	}
 	
-	public PurchasePo(Long orderId, String orderIdApi, Integer agencyId,
-			Integer rootAgencyId, String chargeTel, Integer pgId,
-			Long orderArriveTime, Long orderBackTime, String chargeTelDetail,
-			String chargeTelCity, Integer orderPlatformPath, Integer orderResult,
-			Integer channelId, String orderResultDetail, Double orderAmount,
-			Long recordId, Integer billType) {
-		super();
-		this.orderId = orderId;
-		this.orderIdApi = orderIdApi;
-		this.agencyId = agencyId;
-		this.rootAgencyId = rootAgencyId;
-		this.chargeTel = chargeTel;
-		this.pgId = pgId;
-		this.orderArriveTime = orderArriveTime;
-		this.orderBackTime = orderBackTime;
-		this.chargeTelDetail = chargeTelDetail;
-		this.chargeTelCity = chargeTelCity;
-		this.orderPlatformPath = orderPlatformPath;
-		this.orderResult = orderResult;
-		this.channelId = channelId;
-		this.orderResultDetail = orderResultDetail;
-		this.orderAmount = orderAmount;
-		this.recordId = recordId;
-		this.billType = billType;
-	}
+	
+	
+public PurchasePo(Long orderId, String orderIdApi, String orderIdFrom,
+		Integer agencyId, String chargeTel, Integer pgId, Long orderArriveTime,
+		Long orderBackTime, String chargeTelDetail, String chargeTelCity,
+		Long channelId, String orderResultDetail) {
+	super();
+	this.orderId = orderId;
+	this.orderIdApi = orderIdApi;
+	this.orderIdFrom = orderIdFrom;
+	this.agencyId = agencyId;
+	this.chargeTel = chargeTel;
+	this.pgId = pgId;
+	this.orderArriveTime = orderArriveTime;
+	this.orderBackTime = orderBackTime;
+	this.chargeTelDetail = chargeTelDetail;
+	this.chargeTelCity = chargeTelCity;
+	this.channelId = channelId;
+	this.orderResultDetail = orderResultDetail;
+}
 
-	
-	
-//	public PurchasePo(Long orderId, String orderIdApi, Integer agencyId,
-//		Integer rootAgencyId, String chargeTel, Integer pgId,
-//		Long orderArriveTime, Long orderBackTime, String chargeTelDetail,
-//		String chargeTelCity, Integer orderPlatformPath, Integer orderResult,
-//		Integer channelId, String orderResultDetail, Double orderAmount,
-//		Long recordId) {
-//		super();
-//		this.orderId = orderId;
-//		this.orderIdApi = orderIdApi;
-//		this.agencyId = agencyId;
-//		this.rootAgencyId = rootAgencyId;
-//		this.chargeTel = chargeTel;
-//		this.pgId = pgId;
-//		this.orderArriveTime = orderArriveTime;
-//		this.orderBackTime = orderBackTime;
-//		this.chargeTelDetail = chargeTelDetail;
-//		this.chargeTelCity = chargeTelCity;
-//		this.orderPlatformPath = orderPlatformPath;
-//		this.orderResult = orderResult;
-//		this.channelId = channelId;
-//		this.orderResultDetail = orderResultDetail;
-//		this.orderAmount = orderAmount;
-//		this.recordId = recordId;
-//	}
 	
 	public String getOrderIdFrom() {
 		return orderIdFrom;
@@ -163,12 +105,6 @@ public class PurchasePo extends Po {
 		this.orderIdApi = orderIdApi;
 	}
 
-	public Integer getRootAgencyId() {
-		return rootAgencyId;
-	}
-	public void setRootAgencyId(Integer rootAgencyId) {
-		this.rootAgencyId = rootAgencyId;
-	}
 	public Double getOrderAmount() {
 		return orderAmount;
 	}
@@ -241,14 +177,6 @@ public class PurchasePo extends Po {
         this.chargeTelCity = chargeTelCity == null ? null : chargeTelCity.trim();
     }
 
-    public Integer getOrderPlatformPath() {
-        return orderPlatformPath;
-    }
-
-    public void setOrderPlatformPath(Integer orderPlatformPath) {
-        this.orderPlatformPath = orderPlatformPath;
-    }
-
     public Integer getOrderResult() {
         return orderResult;
     }
@@ -257,15 +185,15 @@ public class PurchasePo extends Po {
         this.orderResult = orderResult;
     }
 
-    public Integer getChannelId() {
-        return channelId;
-    }
+    public void setChannelId(Long channelId) {
+		this.channelId = channelId;
+	}
 
-    public void setChannelId(Integer channelId) {
-        this.channelId = channelId;
-    }
+    public Long getChannelId() {
+		return channelId;
+	}
 
-    public String getOrderResultDetail() {
+	public String getOrderResultDetail() {
         return orderResultDetail;
     }
 

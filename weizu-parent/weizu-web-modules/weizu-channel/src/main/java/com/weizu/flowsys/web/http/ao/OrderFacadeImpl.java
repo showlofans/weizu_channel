@@ -86,35 +86,35 @@ public class OrderFacadeImpl implements OrderFacade {
 			orderDTO = new OrderDTO(oscEnum.getValue(), oscEnum.getDesc(), null);
 		}else{//通过api更新订单状态
 			//获取通道所属平台信息
-			ExchangePlatformPo epPo = channelForwardAO.getEpByChannelId(purchasePo.getChannelId());
-			//查看订单状态
-			OrderStateBase orderStatePage = OrderStateFactory.getOrderStateBase(epPo.getEpName());
-			OrderStateResultPage osrp = orderStatePage.getOrderState(new OrderStateParamsPage(epPo.getPgdataCheckIp(), purchasePo.getOrderIdApi(), epPo.getEpName(), epPo.getEpUserName(), epPo.getEpApikey()));
-			
-			PageOrder pageOrder = osrp.getPageOrder();
-			if(purchasePo.getOrderResult() != pageOrder.getStatus())
-			{
-				purchasePo.setOrderResult(pageOrder.getStatus());
-				if(StringHelper.isEmpty(pageOrder.getMsg())){
-					for (OrderStateEnum enumt : OrderStateEnum.values()) {
-						if(pageOrder.getStatus() == enumt.getValue())
-						{
-							purchasePo.setOrderResultDetail(enumt.getDesc());
-							break;
-						}
-					}
-				}else{
-					purchasePo.setOrderResultDetail(pageOrder.getMsg());
-				}
-				String created_at_api = pageOrder.getCreated_at();
-				purchasePo.setOrderBackTime(DateUtil.strToDate(created_at_api, null).getTime());
-				purchaseDAO.updatePurchaseState(new PurchaseStateParams(purchasePo.getOrderId(), DateUtil.strToDate(created_at_api, "").getTime() , purchasePo.getOrderResult(), purchasePo.getOrderResultDetail(),pageOrder.getTransaction_id()));
-			}
-			
-			int pgSize = operatorPgDao.get(purchasePo.getPgId()).getPgSize();
-			String createdAt = DateUtil.formatAll(purchasePo.getOrderArriveTime());
-			oscEnum = OrderStateCheckEnum.PARAMS_SUCCESS;
-			orderDTO = new OrderDTO(oscEnum.getValue(), oscEnum.getDesc(), new OrderIn(purchasePo.getOrderId()+"", orderParams.getNumber(), pgSize+"", purchasePo.getOrderAmount()+"", createdAt , osrp.getPageOrder().getStatus(), purchasePo.getOrderResultDetail()));
+//			ExchangePlatformPo epPo = channelForwardAO.getEpByChannelId(purchasePo.getChannelId());
+//			//查看订单状态
+//			OrderStateBase orderStatePage = OrderStateFactory.getOrderStateBase(epPo.getEpName());
+//			OrderStateResultPage osrp = orderStatePage.getOrderState(new OrderStateParamsPage(epPo.getPgdataCheckIp(), purchasePo.getOrderIdApi(), epPo.getEpName(), epPo.getEpUserName(), epPo.getEpApikey()));
+//			
+//			PageOrder pageOrder = osrp.getPageOrder();
+//			if(purchasePo.getOrderResult() != pageOrder.getStatus())
+//			{
+//				purchasePo.setOrderResult(pageOrder.getStatus());
+//				if(StringHelper.isEmpty(pageOrder.getMsg())){
+//					for (OrderStateEnum enumt : OrderStateEnum.values()) {
+//						if(pageOrder.getStatus() == enumt.getValue())
+//						{
+//							purchasePo.setOrderResultDetail(enumt.getDesc());
+//							break;
+//						}
+//					}
+//				}else{
+//					purchasePo.setOrderResultDetail(pageOrder.getMsg());
+//				}
+//				String created_at_api = pageOrder.getCreated_at();
+//				purchasePo.setOrderBackTime(DateUtil.strToDate(created_at_api, null).getTime());
+//				purchaseDAO.updatePurchaseState(new PurchaseStateParams(purchasePo.getOrderId(), DateUtil.strToDate(created_at_api, "").getTime() , purchasePo.getOrderResult(), purchasePo.getOrderResultDetail(),pageOrder.getTransaction_id()));
+//			}
+//			
+//			int pgSize = operatorPgDao.get(purchasePo.getPgId()).getPgSize();
+//			String createdAt = DateUtil.formatAll(purchasePo.getOrderArriveTime());
+//			oscEnum = OrderStateCheckEnum.PARAMS_SUCCESS;
+//			orderDTO = new OrderDTO(oscEnum.getValue(), oscEnum.getDesc(), new OrderIn(purchasePo.getOrderId()+"", orderParams.getNumber(), pgSize+"", purchasePo.getOrderAmount()+"", createdAt , osrp.getPageOrder().getStatus(), purchasePo.getOrderResultDetail()));
 		}
 		return orderDTO;
 	}

@@ -26,10 +26,14 @@ public class AgencyPurchasePo extends Po{
     private Integer billType;
 
     private Long recordId;
+    
+    private Integer orderResult;		//	订单状态
+    
+    private Integer orderPlatformPath;			//充值方式(0-网页，1-接口)
 
-    public AgencyPurchasePo(Integer agencyId, Long purchaseId,
+	public AgencyPurchasePo(Integer agencyId, Long purchaseId,
 			Long rateDiscountId, Double orderAmount, Integer billType,
-			Long recordId) {
+			Long recordId, Integer orderResult, Integer orderPlatformPath) {
 		super();
 		this.agencyId = agencyId;
 		this.purchaseId = purchaseId;
@@ -37,11 +41,32 @@ public class AgencyPurchasePo extends Po{
 		this.orderAmount = orderAmount;
 		this.billType = billType;
 		this.recordId = recordId;
+		this.orderResult = orderResult;
+		this.orderPlatformPath = orderPlatformPath;
 	}
 
 	public AgencyPurchasePo() {
 		super();
 	}
+
+	public Integer getOrderPlatformPath() {
+		return orderPlatformPath;
+	}
+
+
+	public void setOrderPlatformPath(Integer orderPlatformPath) {
+		this.orderPlatformPath = orderPlatformPath;
+	}
+
+
+	public Integer getOrderResult() {
+		return orderResult;
+	}
+
+	public void setOrderResult(Integer orderResult) {
+		this.orderResult = orderResult;
+	}
+
 
 	public Long getId() {
         return id;

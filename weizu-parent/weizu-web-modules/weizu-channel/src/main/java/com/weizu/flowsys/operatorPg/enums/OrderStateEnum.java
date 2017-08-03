@@ -18,7 +18,7 @@ public enum OrderStateEnum {
 	/**
 	 * 正在充值
 	 */
-//	CHARGING("正在充值",2),
+	CHARGING("正在充值",2),
 	/**
 	 * 充值成功
 	 */

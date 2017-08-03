@@ -29,6 +29,7 @@
  	<input type="hidden" name="channelId" id="channelId">
  	<input type="hidden" name="billType" id="billType">
  	<input type="hidden" name="pgId" id="pgId">
+ 	<input type="hidden" name="productCode" id="productCode">
 	
 	<div class="row cl">
 		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机号码：</label>
@@ -262,7 +263,8 @@
 	   var pprice = $(vart).parent().next().val();
 	   var psize = $(vart).parent().next().next().val();//包大小
 	   var productCode = $(vart).parent().next().next().next().val();//包编码
-	   alert(productCode);
+	   //alert(productCode);
+	   $("#productCode").val(productCode);
 	   
 	   $("#pgPrice").val(pprice);//改变价格
 	   //alert($(vart).prev().val());
@@ -356,8 +358,8 @@
 	            	           				$("#pgSize").val(data[0].pgSize);
 	            	           				$("#pgId").val(data[0].id);
 	                       				}else{ */
-	                       					appendData += "<div class='radio-box pgNameType'><input type='hidden' value='"+data[i].id+"'></input><input name='pgName' class='pgNameRadio' type='radio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)'><label for='pgName-"+(i+1)+"'>"+name+"</label></div><input type='hidden' class='price' name='pgPrice' value='"+price+"'></input>"
-	                       					+"<input type='hidden' name='pgSize' value='"+pgSize+"'></input><input type='hidden' name='productCode' value='"+productCode+"'></input><br>";;
+	                       					appendData += "<div class='radio-box pgNameType'><input type='hidden' value='"+data[i].id+"'></input><input class='pgNameRadio' type='radio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)'><label for='pgName-"+(i+1)+"'>"+name+"</label></div><input type='hidden' class='price' value='"+price+"'></input>"
+	                       					+"<input type='hidden' value='"+pgSize+"'></input><input type='hidden' value='"+productCode+"'></input><br>";;
 	                       				// }
 	                          }
                           }else{

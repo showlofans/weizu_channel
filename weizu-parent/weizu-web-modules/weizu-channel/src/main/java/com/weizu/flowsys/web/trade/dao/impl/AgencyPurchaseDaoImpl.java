@@ -4,6 +4,11 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.stereotype.Repository;
+
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.core.util.Formatter;
@@ -18,9 +23,12 @@ import com.weizu.flowsys.web.trade.pojo.AgencyPurchasePo;
  * @createTime:2017年8月2日 下午5:46:08
  * @version 1.0
  */
+@Repository(value="agencyPurchaseDao")
 public class AgencyPurchaseDaoImpl extends DaoImpl<AgencyPurchasePo, Long> implements
 		AgencyPurchaseDao {
 
+	@Resource
+	private SqlSessionTemplate sqlSessionTemplate;
 	/**
 	 * @description: 批量添加
 	 * @param list
@@ -31,7 +39,22 @@ public class AgencyPurchaseDaoImpl extends DaoImpl<AgencyPurchasePo, Long> imple
 	@Override
 	public int ap_addList(List<AgencyPurchasePo> list) {
 		
-		return 0;
+		return sqlSessionTemplate.insert("ap_addList", list);
+	}
+
+	/**
+	 * @description: 批量更新代理商订单状态（推送订单结果的时候）
+	 * @param purchaseId
+	 * @param orderResult
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年8月3日 上午10:47:25
+	 */
+	@Override
+	public int batchUpdateState(Long purchaseId, Integer orderResult) {
+		AgencyPurchasePo apPo = new AgencyPurchasePo();
+		apPo.setOrderResult(orderResult);
+		return updateLocal(apPo, new WherePrams("purchase_id", "=", purchaseId));
 	}
 
 }
