@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -85,11 +86,12 @@ public class ChargePgController {
 	 * @createTime:2017年5月26日 下午4:58:40
 	 */
 	@RequestMapping(value = ChargePgURL.PG_CHARGE)
-	public ModelAndView pgCharge(HttpServletRequest request,PurchasePo purchasePo,String productCode){
+	public ModelAndView pgCharge(HttpServletRequest request,PurchasePo purchasePo,OperatorPgDataPo dataPo){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
 		if(agencyVO != null){
 			purchasePo.setAgencyId(agencyVO.getId());
-			purchasePo.setOrderArriveTime(System.currentTimeMillis());
+//			purchasePo.setOrderArriveTime(System.currentTimeMillis());
 //			ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
 //			if(purchasePo.getBillType()==BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())
 //			{
@@ -98,12 +100,15 @@ public class ChargePgController {
 //			{
 //				accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
 //			}
-			Integer purResult = purchaseAO.purchase(purchasePo,productCode);
+			if(purchasePo.getOrderAmount() > accountPo.getAccountBalance()){//订单价格大于余额
+				return pg_charge_page("余额不足，充值失败");
+			}
+			Integer purResult = purchaseAO.purchase(purchasePo,dataPo);
 			if(purResult == OrderResultEnum.SUCCESS.getCode())
 			{
 				return purchaseList(request, new PurchaseVO(), "1");
 			}else{//重新选择通道充值
-				return pg_charge_page();
+				return pg_charge_page("系统错误，充值失败");
 			}
 		}
 		
@@ -174,7 +179,7 @@ public class ChargePgController {
 	 * @createTime:2017年5月31日 下午12:04:22
 	 */
 	@RequestMapping(value=ChargePgURL.PG_CHARGE_PAGE)
-	public ModelAndView pg_charge_page(){
+	public ModelAndView pg_charge_page(@RequestParam(value="msg",required=false)String msg){
 		Map<String,Object> resultMap = new HashMap<String,Object>();
 		resultMap.put("serviceTypeEnum", ServiceTypeEnum.toList());
 		

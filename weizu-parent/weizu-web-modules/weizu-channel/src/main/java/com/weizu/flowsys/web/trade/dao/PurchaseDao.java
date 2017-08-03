@@ -3,6 +3,7 @@ package com.weizu.flowsys.web.trade.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseStateParams;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
@@ -15,7 +16,7 @@ import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
  * @createTime:2017年6月13日 上午10:52:59
  * @version 1.0
  */
-public interface PurchaseDao {
+public interface PurchaseDao extends Dao<PurchasePo, Long> {
 	/**
 	 * @description: 更新订单状态
 	 * @param purchaseParams

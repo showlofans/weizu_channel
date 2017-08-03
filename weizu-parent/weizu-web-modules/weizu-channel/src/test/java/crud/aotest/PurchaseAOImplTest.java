@@ -1,21 +1,19 @@
 package crud.aotest;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.weizu.web.foundation.MD5;
-import org.weizu.web.foundation.http.HttpRequest;
 
-import com.alibaba.fastjson.JSON;
-import com.weizu.flowsys.web.http.ParamsEntityWeiZu;
-import com.weizu.flowsys.web.http.weizu.OrderStateParams;
-import com.weizu.flowsys.web.http.weizu.OrderStateResult;
+import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
-import com.weizu.flowsys.web.trade.pojo.PurchasePo;
+import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -51,22 +49,22 @@ public class PurchaseAOImplTest {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月16日 下午12:23:17
 	 */
-	@Test
-	public void testPurchase(){
-		//浙江移动的通道（号码）：15858343638
-		//apikey: 	722c16de0a83e5bd2f988e3c7bc9fee8
-		String username="CS111111";
-		String apikey = "722c16de0a83e5bd2f988e3c7bc9fee8";
-		String sign = MD5.getMd5("username="+username+"&apikey="+apikey);
-		System.out.println(sign);
-		String number = "15858343638";
-		
-		ParamsEntityWeiZu httpEntity = new ParamsEntityWeiZu(username, number, "500", sign);
-//		String resTel = HttpRequest.sendGet("http://tcc.taobao.com/cc/json/mobile_tel_segment.htm", "tel=" + number);
-		String resMsg = HttpRequest.sendGet("http://139.224.70.161:32001/api/v1/sendOrder", httpEntity.toString());
-		System.out.println(resMsg);
-//		System.out.println(resTel);
-	}
+//	@Test
+//	public void testPurchase(){
+//		//浙江移动的通道（号码）：15858343638
+//		//apikey: 	722c16de0a83e5bd2f988e3c7bc9fee8
+//		String username="CS111111";
+//		String apikey = "722c16de0a83e5bd2f988e3c7bc9fee8";
+//		String sign = MD5.getMd5("username="+username+"&apikey="+apikey);
+//		System.out.println(sign);
+//		String number = "15858343638";
+//		
+//		ParamsEntityWeiZu httpEntity = new ParamsEntityWeiZu(username, number, "500", sign);
+////		String resTel = HttpRequest.sendGet("http://tcc.taobao.com/cc/json/mobile_tel_segment.htm", "tel=" + number);
+//		String resMsg = HttpRequest.sendGet("http://139.224.70.161:32001/api/v1/sendOrder", httpEntity.toString());
+//		System.out.println(resMsg);
+////		System.out.println(resTel);
+//	}
 	
 	/**
 	 * @description: 测试余额接口

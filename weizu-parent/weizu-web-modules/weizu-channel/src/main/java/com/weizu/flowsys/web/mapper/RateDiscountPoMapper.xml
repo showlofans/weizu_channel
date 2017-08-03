@@ -29,7 +29,7 @@
   </sql>
   
   <sql id="Show_Rate_List">
-  	rate.id,channel_discount_id,rate.active_discount,rate.bill_type,cd.operator_type,cd.service_type,scope_city_code 
+  	rate.id, rate.active_id, channel_discount_id,rate.active_discount,rate.bill_type,cd.operator_type,cd.service_type,scope_city_code,rate.channel_id 
   </sql>
   <sql id="My_Rate_List">
   	rate.id, rate.active_id, active_discount,channel_discount_id,rate.bill_type 
