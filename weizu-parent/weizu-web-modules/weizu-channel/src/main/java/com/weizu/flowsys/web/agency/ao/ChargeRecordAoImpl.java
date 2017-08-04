@@ -133,7 +133,7 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 	 * @createTime:2017年7月3日 下午5:19:30
 	 */
 	@Override
-	public Map<String, Object> getMapByConsume(ConsumeRecordPo consumeRecordPo) {
+	public Map<String, Object> getMapByConsume(ConsumeRecordPo consumeRecordPo,Integer contextAgencyId) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		if(StringHelper.isNotEmpty(consumeRecordPo.getUserName())){
 			params.put("userName", consumeRecordPo.getUserName());
@@ -159,8 +159,10 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		
 		if(consumeRecordPo.getAgencyId() != null){
 			params.put("agencyId", consumeRecordPo.getAgencyId());
+		}else if(contextAgencyId != null){
+			params.put("contextAgencyId", contextAgencyId);
+			
 		}
-		
 		return params;
 	}
 
@@ -174,11 +176,9 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 	 * @createTime:2017年7月3日 下午5:18:50
 	 */
 	@Override
-	public Pagination<ConsumeRecordPo> listConsumeRecord(Integer contextAgencyId,
-			ConsumeRecordPo consumeRecordPo, PageParam pageParam) {
-		Map<String, Object> params = getMapByConsume(consumeRecordPo);
+	public Pagination<ConsumeRecordPo> listConsumeRecord(Integer contextAgencyId,ConsumeRecordPo consumeRecordPo, PageParam pageParam) {
+		Map<String, Object> params = getMapByConsume(consumeRecordPo,contextAgencyId);
 		
-		params.put("contextAgencyId", contextAgencyId);
 		int totalRecords = chargeRecordDao.countConsume(params);
 		
 		int pageSize = pageParam.getPageSize();

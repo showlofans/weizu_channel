@@ -1,8 +1,6 @@
 package com.weizu.flowsys.web.trade.controller;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -16,7 +14,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,19 +37,15 @@ import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
-import com.weizu.flowsys.web.activity.pojo.OperatorScopeVO;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.channel.ao.ChannelForwardAO;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
-import com.weizu.flowsys.web.channel.pojo.BestChannelPO;
-import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
-import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
-import com.weizu.flowsys.web.trade.pojo.PurchasePo;
+import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 import com.weizu.flowsys.web.trade.url.ChargePgURL;
 
@@ -86,11 +79,11 @@ public class ChargePgController {
 	 * @createTime:2017年5月26日 下午4:58:40
 	 */
 	@RequestMapping(value = ChargePgURL.PG_CHARGE)
-	public ModelAndView pgCharge(HttpServletRequest request,PurchasePo purchasePo,OperatorPgDataPo dataPo){
+	public ModelAndView pgCharge(HttpServletRequest request,PgChargeVO pcVO){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
 		if(agencyVO != null){
-			purchasePo.setAgencyId(agencyVO.getId());
+			pcVO.setAgencyId(agencyVO.getId());
 //			purchasePo.setOrderArriveTime(System.currentTimeMillis());
 //			ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
 //			if(purchasePo.getBillType()==BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())
@@ -100,13 +93,13 @@ public class ChargePgController {
 //			{
 //				accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
 //			}
-			if(purchasePo.getOrderAmount() > accountPo.getAccountBalance()){//订单价格大于余额
+			if(pcVO.getOrderAmount() > accountPo.getAccountBalance()){//订单价格大于余额
 				return pg_charge_page("余额不足，充值失败");
 			}
-			Integer purResult = purchaseAO.purchase(purchasePo,dataPo);
+			Integer purResult = purchaseAO.purchase(pcVO);
 			if(purResult == OrderResultEnum.SUCCESS.getCode())
 			{
-				return purchaseList(request, new PurchaseVO(), "1");
+				return purchaseList(request, new PurchaseVO(), "");
 			}else{//重新选择通道充值
 				return pg_charge_page("系统错误，充值失败");
 			}
@@ -252,7 +245,7 @@ public class ChargePgController {
 	 * @createTime:2017年8月2日 上午10:55:16
 	 */
 	@RequestMapping(value= ChargePgURL.AJAX_PURCHASE_PRICE)
-	public void ajaxPurchassPrice(HttpServletRequest request, OperatorPgDataPo dataPo,String carrier,HttpServletResponse response){
+	public void ajaxPurchassPrice(HttpServletRequest request, Double pgPrice, Integer serviceType,String carrier,HttpServletResponse response){
 		try {
 			AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 //			carrier = new String(carrier.getBytes("iso-8859-1"),"utf-8");
@@ -280,9 +273,9 @@ public class ChargePgController {
 //			}
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 			if(agencyVO != null){
-				RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(dataPo, carrier, agencyVO.getId());
-				if(dataPo.getPgPrice() != null && ratePo != null){//判断余额
-					Double purchasePrice = NumberTool.mul(dataPo.getPgPrice(), ratePo.getActiveDiscount());//利率后的价格
+				RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(serviceType, carrier, agencyVO.getId());
+				if(pgPrice != null && ratePo != null){//判断余额
+					Double purchasePrice = NumberTool.mul(pgPrice, ratePo.getActiveDiscount());//利率后的价格
 					ChargeAccountPo account1 = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
 					if(account1.getAccountBalance() >= purchasePrice){//可以扣款，提单，充值
 						resultMap.put("price", purchasePrice);
@@ -292,7 +285,7 @@ public class ChargePgController {
 //						resultMap.put("billType", bestChannel.getBillType());
 //						response.getWriter().print(JSON.toJSONString(resultMap));
 					}else{
-						resultMap.put("price", dataPo.getPgPrice());
+						resultMap.put("price", pgPrice);
 						resultMap.put("msg", ChargeStatusEnum.LACK_OF_BALANCE.getValue());//欠费等待
 					}
 					resultMap.put("channelId", ratePo.getChannelId());

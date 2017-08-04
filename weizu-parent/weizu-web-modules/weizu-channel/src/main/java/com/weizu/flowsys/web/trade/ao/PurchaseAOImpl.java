@@ -63,6 +63,7 @@ import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.dao.AgencyPurchaseDao;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.AgencyPurchasePo;
+import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseStateParams;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
@@ -103,6 +104,17 @@ public class PurchaseAOImpl implements PurchaseAO {
 //	private ChargeFacade chargeFacade;
 	
 	/**
+	 * @description: 根据页面订单参数初始化订单实体
+	 * @param pcVO
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年8月4日 下午3:16:02
+	 */
+	private PurchasePo initPurchase(PgChargeVO pcVO) {
+		return new PurchasePo(pcVO.getChargeTel(), pcVO.getPgId(), pcVO.getChargeTelDetail());
+	}
+	
+	/**
 	 * @description: 页面上充值
 	 * @param purchasePo
 	 * @return
@@ -111,16 +123,16 @@ public class PurchaseAOImpl implements PurchaseAO {
 	 */
 	@Transactional
 	@Override
-	public Integer purchase(PurchasePo purchasePo,OperatorPgDataPo dataPo) {
+	public Integer purchase(PgChargeVO pcVO) {
 		/****************完成对所有上级代理商包括自己的订单与代理商的绑定********************/
 		//已经当前登陆用户余额充足，开始充值流程
 		//在订单信息完全添加完之后，再调用接口进行充值
 		//先添加一个基本的，再批量添加父级代理商和订单的绑定
-		int agencyId = purchasePo.getAgencyId();		//订单产生方代理商
+		PurchasePo purchasePo = initPurchase(pcVO);
+		int agencyId = pcVO.getAgencyId();		//订单产生方代理商
 		int orderResult = OrderStateEnum.CHARGING.getValue();		//默认订单状态
 		int aapAddRes = 0;
-		OrderUril ou1 = new OrderUril(1);
-		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(dataPo, purchasePo.getChargeTelDetail(), agencyId);
+		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(pcVO.getServiceType(), pcVO.getChargeTelDetail(), agencyId);
 		int chargeRes = -1;			//充值状态
 		if(ratePo != null){
 			int billType = ratePo.getBillType();//票务全部使用费率配置的票务
@@ -129,7 +141,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 			/**充值前余额*/
 			double agencyBeforeBalance = accountPo.getAccountBalance();
 			/**充值额（）*/
-			Double pgPrice = dataPo.getPgPrice();
+			Double pgPrice = pcVO.getPgPrice();
 			Double orderAmount = NumberTool.mul(ratePo.getActiveDiscount(), pgPrice);
 			accountPo.addBalance(orderAmount,-1);
 			/** 更新登录用户账户信息**/
@@ -143,6 +155,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 						billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), agencyId,1));
 				Long rateDiscountId = ratePo.getId();			//折扣id
 				try {
+					OrderUril ou1 = new OrderUril(1);
 					Long orderId = ou1.nextId();
 					purchasePo.setOrderId(orderId);//设置订单号
 					purchasePo.setAgencyId(agencyId);
@@ -191,9 +204,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 					}
 					Long rateDiscountId = ratePo.getId();			//折扣id
 					
-					if(whileStop == 2){//可以向上提单，但是不扣上面的款
+					if(whileStop == 1){//可以向上提单，但是不扣上面的款
 						int orderPath = OrderPathEnum.CHARGE_SOCKET.getValue();
-						AgencyPurchasePo app = new AgencyPurchasePo(agencyId, purchasePo.getOrderId(), rateDiscountId, orderAmount, billType, null, orderResult,orderPath);
+						AgencyPurchasePo app = new AgencyPurchasePo(agencyId, purchasePo.getOrderId(), null, null, billType, null, orderResult,orderPath);
 						apPoList.add(app);
 						break;
 					}else{
@@ -216,9 +229,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 						}
 					}
 					//最后再循环一次，保证欠费等待的单子父级代理商能够看到，但是不能扣父级代理商的款和消费记录
-					if(whileStop > 0){//欠费等待
-						whileStop++ ;
-					}
+//					if(whileStop > 0){//欠费等待
+//						whileStop++ ;
+//					}
 				}
 				if(apPoList.size() > 0){
 					int batchAddApp = agencyPurchaseDao.ap_addList(apPoList);		//批量添加

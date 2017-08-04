@@ -52,7 +52,24 @@ public class PurchasePo extends Po {
 	}
 	
 	
-	
+/**  根据页面订单参数初始化订单实体用
+ * @param chargeTel
+ * @param pgId
+ * @param chargeTelDetail
+ * @param orderAmount
+ */
+public PurchasePo(String chargeTel, Integer pgId,
+			String chargeTelDetail) {
+		super();
+		this.chargeTel = chargeTel;
+		this.pgId = pgId;
+		this.chargeTelDetail = chargeTelDetail;
+	}
+
+
+
+
+
 public PurchasePo(Long orderId, String orderIdApi, String orderIdFrom,
 		Integer agencyId, String chargeTel, Integer pgId, Long orderArriveTime,
 		Long orderBackTime, String chargeTelDetail, String chargeTelCity,

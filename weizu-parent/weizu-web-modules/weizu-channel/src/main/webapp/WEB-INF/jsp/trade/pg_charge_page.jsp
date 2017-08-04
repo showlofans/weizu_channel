@@ -34,7 +34,7 @@
 	<div class="row cl">
 		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机号码：</label>
 		<div class="formControls col-xs-8 col-sm-9">
-			<input type="text" class="input-text" required="required" onchange="resetForm()" onblur="ajaxPhone()" style="width:400px" value="" placeholder="" id="chargeTel" name="chargeTel">
+			<input type="text" class="input-text" required="required" onchange="initForm()" onblur="ajaxPhone()" style="width:400px" value="" placeholder="" id="chargeTel" name="chargeTel">
 			<span class="error"></span>
 		</div>
 	</div>
@@ -76,7 +76,7 @@
 		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流量面值：</label>
 		<div class="formControls col-xs-8 col-sm-9">
 		<!--  onfocus="ajaxPg()" -->
-			<input type="text" id="pgPrice" readonly name="pgPrice" class="input-text" required style="width:400px" autocomplete="off"  placeholder="" >
+			<input type="text" id="pgPrice" readonly name="pgPrice" class="input-text" required style="width:400px" autocomplete="off"  placeholder="请选择购买包体" >
 			<!-- <div>
 				<span class="pgName"></span>
 				<span style="display:none;" class="pgName"></span>
@@ -92,7 +92,7 @@
 	<div class="row cl">
 		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>采购金额：</label>
 		<div class="formControls col-xs-8 col-sm-9">
-			<input id="orderAmount" name="orderAmount" type="text" readonly class="input-text" required  style="width:400px" value="" placeholder="">
+			<input id="orderAmount" name="orderAmount" type="text" readonly class="input-text" required  style="width:400px" value="" placeholder="请选择购买包体">
 			<br>折扣：<span id="rateDiscount" class="c-red"></span>
 		</div>
 	</div>
@@ -114,7 +114,7 @@
  $().ready(function() {
 	    $("#form-charge").validate({
 	    	submitHandler : function(form) {
-	    		$('form').submit();
+	    		form.submit();
 	    		/* $.ajax({
 			        type:"post",
 			        url:"/flowsys/chargePg/pg_charge.do",
@@ -135,7 +135,7 @@
 	    });
 });
  
- function resetForm(){
+ function initForm(){
 	 $("#select-servce-type option:first").prop("selected", 'selected');
 	 if($("#pgInsert").is(":visible")){
    		 $("#pgInsert").empty();
@@ -182,7 +182,7 @@
  /**通过用户手机号获得基本信息*/
  	var tel;
  	var carrier;
-    var ajax=function(){
+    var getChargeTel=function(){
         //淘宝接口    
         $.ajax({
              type: "get",
@@ -223,7 +223,7 @@
     	 tel=$('input[name=chargeTel]').val();
          if(tel){
              if(reg.test(tel)){
-                 ajax();
+            	 getChargeTel();
                  $('.error').hide();
              }else{
                  $('.error').html('手机号不合法 ').css('display','block');    
@@ -358,7 +358,7 @@
 	            	           				$("#pgSize").val(data[0].pgSize);
 	            	           				$("#pgId").val(data[0].id);
 	                       				}else{ */
-	                       					appendData += "<div class='radio-box pgNameType'><input type='hidden' value='"+data[i].id+"'></input><input class='pgNameRadio' type='radio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)'><label for='pgName-"+(i+1)+"'>"+name+"</label></div><input type='hidden' class='price' value='"+price+"'></input>"
+	                       					appendData += "<div class='radio-box pgNameType'><input type='hidden' value='"+data[i].id+"'></input><input class='pgNameRadio' type='radio' name='pgNameRadio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)'><label for='pgName-"+(i+1)+"'>"+name+"</label></div><input type='hidden' class='price' value='"+price+"'></input>"
 	                       					+"<input type='hidden' value='"+pgSize+"'></input><input type='hidden' value='"+productCode+"'></input><br>";;
 	                       				// }
 	                          }

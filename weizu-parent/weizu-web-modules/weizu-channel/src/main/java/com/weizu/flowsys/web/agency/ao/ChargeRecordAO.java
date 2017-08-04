@@ -49,7 +49,7 @@ public interface ChargeRecordAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月3日 下午5:17:57
 	 */
-	Map<String,Object> getMapByConsume(ConsumeRecordPo consumeRecordPo);
+	Map<String,Object> getMapByConsume(ConsumeRecordPo consumeRecordPo,Integer contextAgencyId);
 	
 	/**
 	 * @description: 加载分页消费记录列表
