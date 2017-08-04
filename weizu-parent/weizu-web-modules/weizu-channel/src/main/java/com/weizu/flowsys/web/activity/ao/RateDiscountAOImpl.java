@@ -467,12 +467,11 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	 * @createTime:2017年8月2日 上午11:54:40
 	 */
 	@Override
-	public RateDiscountPo getRateForCharge(OperatorPgDataPo dataPo,
+	public RateDiscountPo getRateForCharge(int serviceType,
 			String carrier, int loginAgencyId) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("billTypeRate", 0);//用不带票的账户去获得价格
 		params.put("agencyId", loginAgencyId);
-		int serviceType = dataPo.getServiceType();
 		params.put("serviceType", serviceType);
 		int sLength = carrier.length();
 		String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动

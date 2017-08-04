@@ -1,0 +1,26 @@
+pgChargeVO
+channelId long
+chargeTel String 1
+chargeTelDetail String 1
+orderAmount Double 
+pgId Integer 1
+pgPrice Double
+productCode String
+serviceType Integer
+一个提交表单的失误，
+jquery.validate设置有参数form时，直接用参数form提交
+有订单没有消费记录
+
+订单也有，消费记录也有
+
+代理商id  对应费率  上一级费率
+21		51    46
+上一级账户123 欠费缺钱
+待充，应该向上添加订单信息完成扣款，
+给自己添加订单信息，但是不扣款，也不向上提单
+
+应该没有扣款信息，通道信息，也没有消费记录
+
+
+
+

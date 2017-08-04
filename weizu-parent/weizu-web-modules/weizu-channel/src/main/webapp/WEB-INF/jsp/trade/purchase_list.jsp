@@ -31,7 +31,7 @@
 <title>充值列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 订单管理 <span class="c-gray en">&gt;</span> 订单列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 订单管理 <span class="c-gray en">&gt;</span> 订单列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
 		<form class="form form-horizontal" action="/flowsys/chargePg/purchase_list.do" method="post" id="formD" name="dataListForm">
@@ -66,11 +66,11 @@
 					
 					
 					 提交时间：
-					 <input type="text" style="width:150px" id="arriveStartTimeStr" class="input-text" name="arriveStartTimeStr"  value="${resultMap.searchParams.arriveStartTimeStr }"  onfocus="var arriveEndTimeStr=$dp.$('arriveEndTimeStr');WdatePicker({onpicked:function(){arriveEndTimeStr.focus();},startDate:'%y-%M-%d 00:00:00',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+					 <input type="text" style="width:150px" id="arriveStartTimeStr" class="input-text" name="arriveStartTimeStr"  value="${resultMap.searchParams.arriveStartTimeStr }"  onfocus="var arriveEndTimeStr=$dp.$('arriveEndTimeStr');WdatePicker({onpicked:function(){arriveEndTimeStr.focus();formSub();},startDate:'%y-%M-%d 00:00:00',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
 		                  	<em class="inputto">至</em>
-		            <input style="width:150px" type="text" class="input-text" id="arriveEndTimeStr" name="arriveEndTimeStr"   value="${resultMap.searchParams.arriveEndTimeStr }"  onfocus="WdatePicker({startDate:'%y-%M-%d 23:59:59',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'arriveStartTimeStr\')}'})"/>
+		            <input style="width:150px" type="text" class="input-text" id="arriveEndTimeStr" name="arriveEndTimeStr"   value="${resultMap.searchParams.arriveEndTimeStr }"  onfocus="WdatePicker({startDate:'%y-%M-%d 23:59:59',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'arriveStartTimeStr\')}',onpicked:function(){formSub();}})"/>
 					
-					<button type="reset"class="btn btn-success" value="重置">重置</button>
+					<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 					<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 				</div>
@@ -89,7 +89,7 @@
 					<th width="80px">所属代理商</th>
 					<th width="200px">订单号</th>
 					<th width="120px">手机号</th>
-					<th width="80px">流量</th>
+					<th width="80px">流量大小</th>
 					<th width="70px">面值</th>
 					<th width="100px">提交时间</th>
 					<th width="100px">充值时间</th>
@@ -98,7 +98,7 @@
 					<th width="60px">充值方式</th>
 					<th width="80px">结果</th>
 					<th width="60px">扣款</th>
-					<th width="120px">通道名称</th>
+					<!-- <th width="120px">通道名称</th> -->
 					<th width="120px">通道类型</th>
 				</tr>
 			</thead>
@@ -133,7 +133,7 @@
 						</td>
 						
 						<td>${purchase.orderAmount }</td>
-						<td>${purchase.channelName }</td>
+						<%-- <td>${purchase.channelName }</td> --%>
 						<td>
 							<c:forEach items="${resultMap.billTypeEnums }" var="bTypeEnum" varStatus="vs">
 								<c:if test="${purchase.billType == bTypeEnum.value }">
@@ -166,8 +166,15 @@
 <script src="/view/lib/bootstrap-datetimepicker.min.js"></script>
 <script src="/view/lib/bootstrap-datetimepicker.zh-CN.js"></script> -->
 <script type="text/javascript">
-/* $(document).ready(function() {
-	$('.table-sort').dataTable({
+function formSub(){
+	$('form').submit();
+}
+$(document).ready(function() {
+	$('.select').change(function(){
+		//$('form').submit();
+		formSub();
+	})
+	/* $('.table-sort').dataTable({
         "bServerSide": true,//这个用来指明是通过服务端来取数据
         "sAjaxSource": "testAoData",//这个是请求的地址
         'bPaginate':true, 
@@ -177,8 +184,8 @@
         "bAutoWidth": true,//自动宽度  
         
         "fnServerData": retrieveData // 获取数据的处理函数
-	});
-}); */
+	});*/
+}); 
 
 //3个参数的名字可以随便命名,但必须是3个参数,少一个都不行
 function retrieveData( sSource111,aoData, fnCallback111) {

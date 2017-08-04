@@ -25,7 +25,7 @@ public class PurchaseVO {
 
     private Integer pgSize;						//包体大小
     
-    private double pgPrice;						//包体原价
+    private Double pgPrice;						//包体原价
     
     private Integer operatorType;				//运营商名称
 

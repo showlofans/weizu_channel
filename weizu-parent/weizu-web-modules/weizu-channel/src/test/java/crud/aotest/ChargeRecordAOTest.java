@@ -1,12 +1,18 @@
 package crud.aotest;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.ao.ChargeRecordAO;
+import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -41,6 +47,26 @@ public class ChargeRecordAOTest {
 //		 
 //		 System.out.println(chargeRecordAO.addCharge(chargeRecordPo));
 //	 }
+	
+	/**
+	 * @description: 查询消费记录
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年8月4日 下午4:08:26
+	 */
+	@Test
+	public void testListConsumeRecord(){
+		ConsumeRecordPo crp = new ConsumeRecordPo();
+		crp.setAgencyId(4);
+		Pagination<ConsumeRecordPo> pagination = chargeRecordAO.listConsumeRecord(21, crp, new PageParam(1, 10));
+		List<ConsumeRecordPo> list = pagination.getRecords();	
+//		 System.out.println(list.size());
+		 System.out.println(list.get(0).getRemittanceTimeStr());
+		 System.out.println(list.get(0).getRemittanceTime());
+//		 for (ConsumeRecordPo po : list) {
+//			 System.out.println(po.getRemittanceTimeStr());
+////			System.out.println("username:"+chargeRecordPo.getUserName());
+//		}
+	}
 
 
 

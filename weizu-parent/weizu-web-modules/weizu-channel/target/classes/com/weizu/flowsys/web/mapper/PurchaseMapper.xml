@@ -162,7 +162,7 @@
   		AND ap.agency_id = #{agencyId}
   	</if>
   	<if test="billType != null">
-  		AND apBill_type = #{billType}
+  		AND ap.bill_type = #{billType}
   	</if>
   	<if test="agencyName != null">
   		AND agency.user_name LIKE concat("%",trim(#{agencyName}) ,"%") 

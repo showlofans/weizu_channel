@@ -7,7 +7,8 @@
 
 <sql id="t_agency">agency_backward</sql>
 <sql id="t_record">charge_record</sql>
-<sql id="t_pc">purchase</sql>
+<sql id="t_ap">agency_purchase</sql>
+<sql id="t_purchase">purchase</sql>
 
    <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.agency.pojo.ChargeRecordPo">
     <id column="id" jdbcType="BIGINT" property="id" />
@@ -62,7 +63,7 @@
     <result column="charge_tel" property="chargeTel" />
   </resultMap>
   <sql id="Consume_Column_List">
-    cr.*,pc.order_id,pc.charge_tel,agb.user_name
+    crt.*,pc.order_id,pc.charge_tel,agb.user_name
   </sql>
   
   
@@ -122,25 +123,32 @@
 		</if>
 	</sql>
 	<!-- 查询消费列表 -->
-  <select id="countConsume" parameterType="com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo" resultType="int">	
+  <select id="countConsume" parameterType="map" resultType="int">	
   	select count(*) 
-  	from <include refid="t_record"></include> cr
-  	inner join <include refid="t_pc"></include> pc
-  	on cr.id = pc.record_id
+  	from <include refid="t_record"></include> crt
+  	inner join <include refid="t_ap"></include> ap
+  	on crt.id = ap.record_id
+  	inner join <include refid="t_purchase"></include> pc
+  	on pc.order_id = ap.purchase_id
 	INNER join <include refid="t_agency"></include> agb
-	on cr.agency_id = agb.id
-  </select>
-  <select id="getConsume" parameterType="com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo" resultMap="ConsumeRecordMap">	
-  	select <include refid="Consume_Column_List"></include>
-  	from <include refid="t_record"></include> cr
-  	inner join <include refid="t_pc"></include> pc
-  	on cr.id = pc.record_id
-	INNER join <include refid="t_agency"></include> agb
-	on cr.agency_id = agb.id
+	on pc.agency_id = agb.id
 	<where>
 		<include refid="consume_condition_sql"></include>
 	</where>
-	order by remittance_time desc 
+  </select>
+  <select id="getConsume" parameterType="map" resultMap="ConsumeRecordMap">	
+  	select <include refid="Consume_Column_List"></include>
+  	from <include refid="t_record"></include> crt
+  	inner join <include refid="t_ap"></include> ap
+  	on crt.id = ap.record_id
+  	inner join <include refid="t_purchase"></include> pc
+  	on pc.order_id = ap.purchase_id
+	INNER join <include refid="t_agency"></include> agb
+	on pc.agency_id = agb.id
+	<where>
+		<include refid="consume_condition_sql"></include>
+	</where>
+	order by crt.remittance_time desc 
   	<!-- order by -->
 	<if test="start != null">
 		 	limit #{start}
@@ -153,27 +161,29 @@
 	 </if> 
   </select>
   <sql id="consume_condition_sql">
+		<choose>
+			<when test="agencyId != null">AND agb.id = #{agencyId}</when>
+			<when test="agencyId == null">
+				<if test="contextAgencyId != null"><!-- 获得当前登录用户的记录和登录用户的子代理商的记录 -->
+					AND (agb.id = #{contextAgencyId} OR agb.root_agency_id = #{contextAgencyId})
+				</if>
+			</when>
+		</choose>
 		<if test="userName != null">
 			AND user_name LIKE CONCAT('%', TRIM(#{userName}), '%')
 		</if>
 		<if test="accountType != null">
 			AND account_type = #{accountType}
 		</if>
-		<if test="agencyId != null">
-			AND agency_id = #{agencyId}
-		</if>
-		<if test="contextAgencyId != null">
-			AND (agb.id = #{contextAgencyId} OR agb.root_agency_id = #{contextAgencyId})
-		</if>
 		
 		<if test="startTime != null">
-			AND remittance_time &gt;= #{startTime}
+			AND crt.remittance_time &gt;= #{startTime}
 		</if>
 		<if test="endTime != null">
-			AND remittance_time &lt;= #{endTime}
+			AND crt.remittance_time &lt;= #{endTime}
 		</if>
 		<if test="chargeTel != null">
-			AND charge_tel LIKE CONCAT('%', TRIM(#{chargeTel}), '%')
+			AND pc.charge_tel LIKE CONCAT('%', TRIM(#{chargeTel}), '%')
 		</if>
 	</sql>
 </mapper>

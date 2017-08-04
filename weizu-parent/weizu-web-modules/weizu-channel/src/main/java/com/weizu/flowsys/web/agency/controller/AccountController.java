@@ -153,7 +153,7 @@ public class AccountController {
 		}
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVo != null){
-			Pagination<ConsumeRecordPo> pagination =  chargeRecordAO.listConsumeRecord(agencyVo.getId(), consumeRecordPo, pageParam);
+			Pagination<ConsumeRecordPo> pagination =  chargeRecordAO.listConsumeRecord(agencyVo.getId(),consumeRecordPo, pageParam);
 			resultMap.put("pagination", pagination);
 			resultMap.put("billTypeEnum", BillTypeEnum.toList());
 			resultMap.put("accountTypeEnum", AccountTypeEnum.toList());
