@@ -141,6 +141,24 @@ public class OperatorPgDao extends DaoImpl<OperatorPgDataPo, Integer> implements
 		}
 		return params;
 	}
+	/**
+	 * @description: 查询某个平台没有设置产品编码的包体
+	 * @param epId
+	 * @param serviceType
+	 * @param operatorType
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年8月5日 下午1:44:31
+	 */
+	@Override
+	public List<OperatorPgDataPo> listPgListNotInPcode(Integer epId,
+			Integer serviceType, Integer operatorType) {
+		Map<String, Object> params = new HashMap<String, Object>();
+			params.put("serviceType", serviceType);
+			params.put("operatorType", operatorType);
+			params.put("epId", epId);
+		return sqlSessionTemplateASS.selectList("listPgListNotInPcode", params);
+	}
 	
 
 }

@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
+import org.weizu.web.foundation.DateUtil;
 
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
@@ -51,9 +52,12 @@ public class AgencyPurchaseDaoImpl extends DaoImpl<AgencyPurchasePo, Long> imple
 	 * @createTime:2017年8月3日 上午10:47:25
 	 */
 	@Override
-	public int batchUpdateState(Long purchaseId, Integer orderResult) {
+	public int batchUpdateState(Long purchaseId, Integer orderResult, String orderResultDettail) {
 		AgencyPurchasePo apPo = new AgencyPurchasePo();
 		apPo.setOrderResult(orderResult);
+		apPo.setOrderResultDetail(orderResultDettail);
+		//apPo.setOrderBackTimeStr(DateUtil.formatAll(System.currentTimeMillis()));
+		apPo.setOrderBackTime(System.currentTimeMillis());
 		return updateLocal(apPo, new WherePrams("purchase_id", "=", purchaseId));
 	}
 

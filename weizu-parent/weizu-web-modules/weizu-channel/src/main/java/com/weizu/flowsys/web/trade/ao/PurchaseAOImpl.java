@@ -160,7 +160,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 					purchasePo.setOrderId(orderId);//设置订单号
 					purchasePo.setAgencyId(agencyId);
 					purchasePo.setOrderArriveTime(currentTime);
-					purchasePo.setOrderResult(orderResult);
+//					purchasePo.setOrderResult(orderResult);
 					purchasePo.setChannelId(ratePo.getChannelId());
 //					Map<String, Object> telMap = PurchaseUtil.getOperatorsByTel(purchasePo.getChargeTel());
 //					 String chargeTelCity = null;
@@ -173,7 +173,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 					
 					/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
 					int orderPath = OrderPathEnum.WEB_PAGE.getValue();
-					AgencyPurchasePo app = new AgencyPurchasePo(agencyId, orderId, rateDiscountId, orderAmount, billType, nextIdRecord, orderResult,orderPath);
+					AgencyPurchasePo app = new AgencyPurchasePo(agencyId, orderId, rateDiscountId, orderAmount, billType, nextIdRecord, orderResult,OrderStateEnum.CHARGING.getDesc(),orderPath);
 					aapAddRes = agencyPurchaseDao.add(app);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -206,7 +206,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 					
 					if(whileStop == 1){//可以向上提单，但是不扣上面的款
 						int orderPath = OrderPathEnum.CHARGE_SOCKET.getValue();
-						AgencyPurchasePo app = new AgencyPurchasePo(agencyId, purchasePo.getOrderId(), null, null, billType, null, orderResult,orderPath);
+						AgencyPurchasePo app = new AgencyPurchasePo(agencyId, purchasePo.getOrderId(), null, null, billType, null, orderResult,ChargeStatusEnum.LACK_OF_BALANCE.getDesc(),orderPath);
 						apPoList.add(app);
 						break;
 					}else{
@@ -224,7 +224,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 									billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), agencyId,1));
 							
 							int orderPath = OrderPathEnum.CHARGE_SOCKET.getValue();
-							AgencyPurchasePo app = new AgencyPurchasePo(agencyId, purchasePo.getOrderId(), rateDiscountId, orderAmount, billType, nextIdRecord, orderResult,orderPath);
+							AgencyPurchasePo app = new AgencyPurchasePo(agencyId, purchasePo.getOrderId(), rateDiscountId, orderAmount, billType, nextIdRecord, orderResult,OrderStateEnum.CHARGING.getDesc(),orderPath);
 							apPoList.add(app);
 						}
 					}
@@ -374,6 +374,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 			if(purchaseVO.getOrderId() != null){
 				paramsMap.put("orderId", purchaseVO.getOrderId());
 			}
+			if(purchaseVO.getOrderResult() != null){
+				paramsMap.put("orderResult", purchaseVO.getOrderResult());
+			}
 			if(StringHelper.isNotEmpty(purchaseVO.getChargeTelDetail())){
 				paramsMap.put("chargeTelDetail", purchaseVO.getChargeTelDetail());
 			}
@@ -427,10 +430,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 //					
 //					//更新查看订单状态
 //					checkOrderState(pageOrder, purchaseVO2);
-//					if(purchaseVO2.getOrderBackTime() != null)
-//					{
-//						purchaseVO2.setOrderBackTimeStr(DateUtil.formatAll(purchaseVO2.getOrderBackTime()));
-//					}
+					if(purchaseVO2.getOrderBackTime() != null)
+					{
+						purchaseVO2.setOrderBackTimeStr(DateUtil.formatAll(purchaseVO2.getOrderBackTime()));
+					}
 //					
 					if(purchaseVO2.getOrderArriveTime() != null){
 						purchaseVO2.setOrderArriveTimeStr(DateUtil.formatAll(purchaseVO2.getOrderArriveTime()));

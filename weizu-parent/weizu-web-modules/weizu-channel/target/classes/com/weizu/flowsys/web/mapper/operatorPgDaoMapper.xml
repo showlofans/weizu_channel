@@ -10,20 +10,18 @@
 	<sql id="t_rte">rate_discount</sql>
 	<sql id="t_cnel">channel_channel</sql>
 	<sql id="t_cd">channel_discount</sql>
+	<sql id="t_pCode">product_code</sql>
 	<!-- <sql id="t_scope">service_scope</sql> -->
 	
-	
 	<resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo">
-	    <id column="agency_id" jdbcType="INTEGER" property="agencyId" />
-	    <result column="root_agency_id" jdbcType="INTEGER" property="rootAgencyId" />
-	    <result column="user_name" jdbcType="VARCHAR" property="userName" />
-	    <result column="user_pass" jdbcType="VARCHAR" property="userPass" />
-	    <result column="user_real_name" jdbcType="VARCHAR" property="userRealName" />
-	    <result column="agency_tel" jdbcType="VARCHAR" property="agencyTel" />
-	    <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
-	    <result column="agency_ip" jdbcType="VARCHAR" property="agencyIp" />
-	    <result column="rate_id" jdbcType="INTEGER" property="rateId" />
-	    <result column="account_id" jdbcType="INTEGER" property="accountId" />
+	    <id column="id" jdbcType="INTEGER" property="id" />
+	    <result column="operator_type" jdbcType="INTEGER" property="operatorType" />
+	    <result column="operator_name" jdbcType="VARCHAR" property="operatorName" />
+	    <result column="pg_size" jdbcType="INTEGER" property="pgSize" />
+	    <result column="pg_price" jdbcType="DOUBLE" property="pgPrice" />
+	    <result column="pg_name" jdbcType="VARCHAR" property="pgName" />
+	    <result column="pg_service_id" jdbcType="VARCHAR" property="pgServiceId" />
+	    <result column="pg_in_service" jdbcType="INTEGER" property="pgInService" />
 	 </resultMap>
 	<resultMap id="OtherMap" type="com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo">
 	   <id column="id" jdbcType="INTEGER" property="id" />
@@ -185,5 +183,24 @@
 			AND pg_price = #{pgPrice}
 		</if>
 	</sql>
- 
+ <!-- 查询某个平台没有设置产品编码的包体 -->
+ <select id="listPgListNotInPcode" parameterType="map" resultMap="BaseResultMap">
+ 	select <include refid="Base_Column_List"></include> 
+ 	from <include refid="t_pg"></include> pg1
+ 	<where>
+ 		pg1.id not IN (SELECT pcode.pg_id from <include refid="t_pCode"></include> pcode 
+ 		INNER JOIN <include refid="t_pg"></include> pg2 ON pcode.pg_id = pg2.id 
+		<where>
+			<if test="epId != null">
+				pcode.ep_id = #{epId}
+			</if>
+		</where>)
+		<if test="operatorType != null">
+			AND operator_type = #{operatorType}
+		</if>
+		<if test="serviceType != null">
+			AND service_type = #{serviceType}
+		</if>
+ 	</where>
+ </select>
 </mapper>

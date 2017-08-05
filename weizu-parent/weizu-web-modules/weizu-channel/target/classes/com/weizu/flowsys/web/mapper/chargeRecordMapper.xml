@@ -131,7 +131,7 @@
   	inner join <include refid="t_purchase"></include> pc
   	on pc.order_id = ap.purchase_id
 	INNER join <include refid="t_agency"></include> agb
-	on pc.agency_id = agb.id
+	on crt.agency_id = agb.id
 	<where>
 		<include refid="consume_condition_sql"></include>
 	</where>
@@ -144,7 +144,7 @@
   	inner join <include refid="t_purchase"></include> pc
   	on pc.order_id = ap.purchase_id
 	INNER join <include refid="t_agency"></include> agb
-	on pc.agency_id = agb.id
+	on crt.agency_id = agb.id
 	<where>
 		<include refid="consume_condition_sql"></include>
 	</where>
@@ -161,12 +161,17 @@
 	 </if> 
   </select>
   <sql id="consume_condition_sql">
+		<!-- <if test="agencyId != null">
+			AND agb.id = #{agencyId}
+		</if>
+		<if test="agencyId == null &amp; contextAgencyId != null">
+			AND (agb.id = #{contextAgencyId} OR agb.root_agency_id = #{contextAgencyId})
+		</if> -->
 		<choose>
 			<when test="agencyId != null">AND agb.id = #{agencyId}</when>
-			<when test="agencyId == null">
-				<if test="contextAgencyId != null"><!-- 获得当前登录用户的记录和登录用户的子代理商的记录 -->
-					AND (agb.id = #{contextAgencyId} OR agb.root_agency_id = #{contextAgencyId})
-				</if>
+			<when test="agencyId == null &amp; contextAgencyId != null">
+				<!-- 获得当前登录用户的记录和登录用户的子代理商的记录 -->
+				AND (agb.id = #{contextAgencyId} OR agb.root_agency_id = #{contextAgencyId})
 			</when>
 		</choose>
 		<if test="userName != null">

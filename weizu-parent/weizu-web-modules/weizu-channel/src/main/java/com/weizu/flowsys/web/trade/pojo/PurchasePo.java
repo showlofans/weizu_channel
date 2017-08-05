@@ -28,17 +28,17 @@ public class PurchasePo extends Po {
     private Integer pgId;						//流量包id（外键）
 
     private Long orderArriveTime;				//提交时间（本平台获得该数据请求的时间）
-
+    @TempField
     private Long orderBackTime;					//充值时间（本平台获得返回结果，或者返回给下游平台结果的时间戳）
 
     private String chargeTelDetail;				//号码归属（：江西移动）
 
     private String chargeTelCity;				//号码归属具体城市
-
+    @TempField
     private Integer orderResult;				//结果（enum:）(0-失败，1-成功，3-待充，4-为充)
 
     private Long channelId;					//通道id（外键）
-
+    @TempField
     private String orderResultDetail;			//结果描述(失败原因)
     @TempField
     private Double orderAmount;					//扣款:用与判断订单价格是否高于余额

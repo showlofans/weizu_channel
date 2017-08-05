@@ -31,5 +31,5 @@ public interface AgencyPurchaseDao extends Dao<AgencyPurchasePo, Long> {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年8月3日 上午10:45:46
 	 */
-	int batchUpdateState(Long purchaseId, Integer orderResult);
+	int batchUpdateState(Long purchaseId, Integer orderResult, String orderResultDettail);
 }

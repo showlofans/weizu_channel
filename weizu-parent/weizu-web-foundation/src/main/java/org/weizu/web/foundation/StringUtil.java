@@ -1,6 +1,3 @@
-﻿/**
- * 
- */
 package org.weizu.web.foundation;
 
 import java.io.UnsupportedEncodingException;

@@ -69,4 +69,11 @@ public class ChargePgURL extends BaseURL {
 	 */
 	public static final String PURCHASE_SUCCESS_LIST = "/purchase_success_list" + DYNAMIC_WEB_SUFFIX;
 	
+	/**
+	 * 更新订单状态
+	 */
+	public static final String UPDATE_PURCHASE_STATE = "/update_purchase_state" + DYNAMIC_WEB_SUFFIX;
+	
+	
+	
 }

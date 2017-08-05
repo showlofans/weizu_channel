@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.trade.pojo;
 
 import com.weizu.flowsys.core.annotation.po.TableName;
+import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
 
 /**
@@ -29,11 +30,18 @@ public class AgencyPurchasePo extends Po{
     
     private Integer orderResult;		//	订单状态
     
+    private String orderResultDetail;	//状态描述
+    
     private Integer orderPlatformPath;			//充值方式(0-网页，1-接口)
+    
+    private Long orderBackTime;			//订单返回结果
+    @TempField
+    private String orderBackTimeStr;	//订单返回时间
 
 	public AgencyPurchasePo(Integer agencyId, Long purchaseId,
 			Long rateDiscountId, Double orderAmount, Integer billType,
-			Long recordId, Integer orderResult, Integer orderPlatformPath) {
+			Long recordId, Integer orderResult, String orderResultDetail,
+			Integer orderPlatformPath) {
 		super();
 		this.agencyId = agencyId;
 		this.purchaseId = purchaseId;
@@ -42,8 +50,39 @@ public class AgencyPurchasePo extends Po{
 		this.billType = billType;
 		this.recordId = recordId;
 		this.orderResult = orderResult;
+		this.orderResultDetail = orderResultDetail;
 		this.orderPlatformPath = orderPlatformPath;
 	}
+
+	public String getOrderBackTimeStr() {
+		return orderBackTimeStr;
+	}
+
+
+
+	public void setOrderBackTimeStr(String orderBackTimeStr) {
+		this.orderBackTimeStr = orderBackTimeStr;
+	}
+
+
+
+	public Long getOrderBackTime() {
+		return orderBackTime;
+	}
+
+	public void setOrderBackTime(Long orderBackTime) {
+		this.orderBackTime = orderBackTime;
+	}
+
+	public String getOrderResultDetail() {
+		return orderResultDetail;
+	}
+
+	public void setOrderResultDetail(String orderResultDetail) {
+		this.orderResultDetail = orderResultDetail;
+	}
+
+
 
 	public AgencyPurchasePo() {
 		super();

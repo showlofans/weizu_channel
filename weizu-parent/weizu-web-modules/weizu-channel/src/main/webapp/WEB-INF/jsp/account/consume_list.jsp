@@ -31,15 +31,15 @@
 <title>消费列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 代理商管理 <span class="c-gray en">&gt;</span>消费列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 代理商管理 <span class="c-gray en">&gt;</span>消费列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<form action="/flowsys/account/consume_list.do" method="post" id="formD" name="dataListForm">
 		<div class="text-c">
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
 			提交时间：
-			<input type="text" style="width:150px" class="input-text" name="startTimeStr"  value="${resultMap.searchParams.startTimeStr }"  onfocus="var endTimeStr=$dp.$('endTimeStr');WdatePicker({onpicked:function(){endTimeStr.focus();},autoPickDate:true,startDate:'%y-%M-%d 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss' })"/>
+			<input type="text" style="width:150px" class="input-text" name="startTimeStr"  value="${resultMap.searchParams.startTimeStr }"  onfocus="var endTimeStr=$dp.$('endTimeStr');WdatePicker({onpicked:function(){endTimeStr.focus();getConsume()},autoPickDate:true,startDate:'%y-%M-%d 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss' })"/>
 	            <em class="inputto">至</em>
-	        <input style="width:150px" type="text"  class="input-text" name="endTimeStr" id="endTimeStr"   value="${resultMap.searchParams.endTimeStr }"  onfocus="WdatePicker({autoPickDate:true,startDate:'%y-%M-%d 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+	        <input style="width:150px" type="text"  class="input-text" name="endTimeStr" id="endTimeStr"   value="${resultMap.searchParams.endTimeStr }"  onfocus="WdatePicker({onpicked:function(){getConsume()},autoPickDate:true,startDate:'%y-%M-%d 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
 			代理商名称:<input type="text" value="${resultMap.searchParams.userName }" name="userName" id="" placeholder=" 代理商名称" style="width:150px" class="input-text">
 			手机号:<input type="text" value="${resultMap.searchParams.chargeTel }" name="chargeTel" id="" placeholder=" 手机号" style="width:100px" class="input-text">
 			交易类型:
@@ -50,7 +50,7 @@
 				</c:forEach>
 			</select>
 			</span>
-			<button type="reset"class="btn btn-success" value="重置">重置</button>
+			<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 			<button class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
 			<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 		</div>
@@ -79,7 +79,7 @@
 					<tr class="text-c">
 						<%-- <td>${pg.pgId }</td> --%>
 						<td>${consumeRec.orderId }</td><!--订单号 -->
-						<td>${consumeRec.userName }</td><!-- 代理名称 -->
+						<td class="c-red">${consumeRec.userName }</td><!-- 代理名称 -->
 						<td>${consumeRec.chargeTel }</td><!--  -->
 						<td>${consumeRec.chargeBefore }</td>
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
