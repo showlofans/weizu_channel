@@ -9,8 +9,6 @@ import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 
-import crud.aotest.RateAOTest;
-
 public interface AgencyActiveChannelAO {
 	
 	/**

@@ -43,7 +43,7 @@ public interface ProductCodeAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月9日 上午10:11:56
 	 */
-	List<OperatorPgDataPo> initPgList(int operatorType, int serviceType);
+	List<OperatorPgDataPo> initPgList(Integer epId, int serviceType, int operatorType);
 	
 	/**
 	 * @description: 该编码是否在该通道已经创建

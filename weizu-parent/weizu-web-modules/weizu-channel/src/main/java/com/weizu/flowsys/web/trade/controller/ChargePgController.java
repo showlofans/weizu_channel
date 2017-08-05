@@ -45,6 +45,7 @@ import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
+import com.weizu.flowsys.web.trade.dao.AgencyPurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 import com.weizu.flowsys.web.trade.url.ChargePgURL;
@@ -70,6 +71,8 @@ public class ChargePgController {
 	private PurchaseAO purchaseAO;
 	@Resource
 	private RateDiscountAO rateDiscountAO;
+	@Resource
+	private AgencyPurchaseDao agencyPurchaseDao;
 	
 	
 	/**
@@ -352,7 +355,55 @@ public class ChargePgController {
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		resultMap.put("orderPathEnums", OrderPathEnum.toList());
 		resultMap.put("orderStateEnums", OrderStateEnum.toList());
-		return new ModelAndView("/trade/purchase_list", "resultMap", resultMap);
+		ModelAndView model = new ModelAndView("/trade/purchase_list", "resultMap", resultMap);
+		if(purchaseVO.getOrderResult() == null){
+			return model;
+		}else{
+			switch (purchaseVO.getOrderResult()) {
+			case 0://充值失败
+				model = new ModelAndView("/trade/charge_failure_list", "resultMap", resultMap);
+				break;
+			case 1://充值成功
+				model = new ModelAndView("/trade/charge_success_list", "resultMap", resultMap);
+				break;
+			case 2://充值进行
+				model = new ModelAndView("/trade/charging_list", "resultMap", resultMap);
+				break;
+			case 3://待充
+				model = new ModelAndView("/trade/charge_wait_list", "resultMap", resultMap);
+				break;
+			default:
+				break;
+			}
+		}
+		
+		return model;
+	}
+	
+	/**
+	 * @description: 推送订单状态
+	 * @param orderId
+	 * @param orderResult
+	 * @param orderResultDetail
+	 * @param response
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年8月5日 下午6:06:13
+	 */
+	@RequestMapping(value=ChargePgURL.UPDATE_PURCHASE_STATE)
+	@ResponseBody
+	public void updatePurchaseState(Long orderId,Integer orderResult, String orderResultDetail,HttpServletResponse response){
+		int updateRes = agencyPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
+		response.setContentType("text/html;charset=utf-8");
+		try {
+			if(updateRes > 0)
+			{
+				response.getWriter().print("success");
+			}else{
+				response.getWriter().print("error");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	/**
 	 * @description: 批量充值页面

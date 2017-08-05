@@ -70,5 +70,16 @@ public interface OperatorPgDaoInterface {
 	 */
 	List pgSizeList(Integer operatorType,Integer serviceType);
 	
+	/**
+	 * @description: 查询某个平台没有设置产品编码的包体
+	 * @param epId
+	 * @param serviceType
+	 * @param operatorType
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年8月5日 下午1:43:45
+	 */
+	List<OperatorPgDataPo> listPgListNotInPcode(Integer epId,Integer serviceType,Integer operatorType);
+	
 //	Pagination<OperatorPgDataPo> list();
 }

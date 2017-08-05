@@ -30,18 +30,22 @@ public class PurchaseVO {
     private Integer operatorType;				//运营商名称
 
     private Long orderArriveTime;				//提交时间（本平台获得该数据请求的时间）
-    @TempField
+    
     private String orderArriveTimeStr;  		// 提交时间字符串
     
-    @TempField
+    
     private String arriveEndTimeStr;			//提交开始时间字符串
-    @TempField
+    
     private String arriveStartTimeStr;			//提交结束时间字符串
+    
+    private String backEndTimeStr;			//充值开始时间字符串
+    
+    private String backStartTimeStr;			//充值结束时间字符串
     
     private Integer rootAgencyId;				//当前登陆id（外键）
 
     private Long orderBackTime;					//充值时间（本平台获得返回结果，或者返回给下游平台结果的时间戳）
-    @TempField
+    
     private String orderBackTimeStr;			//充值时间字符串
 
     private String chargeTelDetail;				//号码归属（：江西移动）
@@ -49,7 +53,7 @@ public class PurchaseVO {
     private String chargeTelCity;				//号码归属具体城市
 
     private Integer orderPlatformPath;			//充值方式(0-接口，1-本平台)
-
+    
     private Integer orderResult;				//结果（enum:）
 
     private String channelName;					//通道名称
@@ -64,7 +68,23 @@ public class PurchaseVO {
     
     private Integer billType;					//票务
     
-    public Integer getBillType() {
+    public String getBackEndTimeStr() {
+		return backEndTimeStr;
+	}
+
+	public void setBackEndTimeStr(String backEndTimeStr) {
+		this.backEndTimeStr = backEndTimeStr;
+	}
+
+	public String getBackStartTimeStr() {
+		return backStartTimeStr;
+	}
+
+	public void setBackStartTimeStr(String backStartTimeStr) {
+		this.backStartTimeStr = backStartTimeStr;
+	}
+
+	public Integer getBillType() {
 		return billType;
 	}
 

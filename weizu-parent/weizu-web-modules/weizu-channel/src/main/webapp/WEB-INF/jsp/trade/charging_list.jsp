@@ -31,7 +31,7 @@
 <title>充值列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 订单管理 <span class="c-gray en">&gt;</span> 订单列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 订单管理 <span class="c-gray en">&gt;</span> 订单列表-充值进行 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
 		<form class="form form-horizontal" action="/flowsys/chargePg/purchase_list.do" method="post" id="formD" name="dataListForm">
@@ -87,23 +87,24 @@
 				<tr class="text-c">
 					<!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
 					<!-- <th width="80">流量包Id</th> -->
-					<th width="80px">所属代理商</th>
-					<th width="200px">订单号</th>
-					<th width="120px">手机号</th>
-					<th width="80px">流量大小</th>
-					<th width="70px">面值</th>
-					<th width="100px">提交时间</th>
-					<th width="100px">充值时间</th>
-					<th width="100px">号码归属</th>
-					<th width="60px">城市</th>
-					<th width="60px">充值方式</th>
-					<th width="80px">结果</th>
-					<th width="80px">结果描述</th>
-					<th width="60px">扣款</th>
+					<th width="80">所属代理商</th>
+					<th width="200">订单号</th>
+					<th width="120">手机号</th>
+					<th width="80">流量大小</th>
+					<th width="70">面值</th>
+					<th width="100">提交时间</th>
+					<th width="100">充值时间</th>
+					<th width="100">号码归属</th>
+					<th width="60">城市</th>
+					<th width="60">充值方式</th>
+					<th>操作</th>
+					<th width="80">结果</th>
+					<th width="80">结果描述</th>
+					<th width="60">扣款</th>
 					<c:if test="${loginContext.rootAgencyId == 0 }">
-						<th width="120px">通道名称</th>
+						<th width="120">通道名称</th>
 					</c:if>
-					<th width="120px">通道类型</th>
+					<th width="120">通道类型</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -126,6 +127,16 @@
 								${orderPathEnum.desc }
 							</c:if>
 						</c:forEach>
+						</td>
+						<td class="f-14 td-manage">
+							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeState(this,'1')" href="javascript:;" title="成功">
+								<input type="hidden" value="${purchase.orderId }" >
+								<i class="Hui-iconfont">&#xe6e6;</i>
+							</a>
+							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeState(this,'0')" href="javascript:;" title="失败">
+								<input type="hidden" value="${purchase.orderId }" >
+								<i class="Hui-iconfont">&#xe6e5;</i>
+							</a> 
 						</td>
 						<!-- 结果 -->
 						<td>
@@ -172,6 +183,74 @@
 <script src="/view/lib/bootstrap-datetimepicker.min.js"></script>
 <script src="/view/lib/bootstrap-datetimepicker.zh-CN.js"></script> -->
 <script type="text/javascript">
+function changeState(vart,state){
+	var orderId = $(vart).children().eq(0).val();
+	var tag = "";
+	var msg='确认设置成功吗？';
+	var msgStr = '手动成功';
+	if(state==0){
+		var msgStr = '手动失败';
+		msg='确认设置失败吗？';
+	}
+	layer.confirm(msg,function(index){
+		$.ajax({
+			type: 'POST',
+			url: '/flowsys/chargePg/update_purchase_state.do',
+			//dataType: 'json',
+			data: {orderId:orderId, orderResult:state,orderResultDetail:msgStr},
+			async: false,
+			success: function(data){
+				//tag = data;
+				 alert(data);
+				if(data=="success")
+				{
+					location.reload();
+				}else{
+					layer.msg('手动修改成功',{icon:1,time:1000});
+				}
+			},
+			error:function(data) {
+				console.log(data.msg);
+			},
+		});		
+		/* if(tag == "success"){
+			layer.msg('删除成功', {icon:5,time:1000});
+		}
+		layer.close(index);
+		location.reload(); */
+	});
+	/* if(state == "1"){
+		
+	}else{
+		layer.confirm('确认要暂停该通道吗？',function(index){
+			$.ajax({
+				type: 'POST',
+				async: false,
+				url: '/flowsys/channel/channel_state_update.do',
+				dataType: 'json',
+				data: {id:id, channelState:state},
+				success: function(data){
+					tag = data;
+					alert(data);
+					if(data=="success")
+					{
+						location.reload();
+					}else{
+						layer.msg('更新通道失败!',{icon:1,time:1000});
+					}
+				},
+				error:function(data) {
+					console.log(data.msg);
+				},
+			});	
+			if(tag == "success"){
+				layer.msg('删除成功', {icon:5,time:1000});
+			}
+			layer.close(index);
+			location.reload();
+		});
+	} */
+}
 function formSub(){
 	$('form').submit();
 }

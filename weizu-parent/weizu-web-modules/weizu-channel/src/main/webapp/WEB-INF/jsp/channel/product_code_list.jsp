@@ -87,7 +87,7 @@
 					<th width="60">价格</th>
 					<th width="75">地区</th>
 					
-					<th width="120">操作</th>
+					<th width="60">操作</th>
 				</tr>
 			</thead>
 			<tbody>

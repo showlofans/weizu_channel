@@ -66,13 +66,13 @@
     
   </resultMap>
    <sql id="Base_Column_List" >
-    order_id,order_id_api, order_id_from, agency_id, charge_tel, pg_id, order_arrive_time, order_back_time, charge_tel_detail, 
-    charge_tel_city,  channel_id, order_result_detail
+    order_id,order_id_api, order_id_from, agency_id, charge_tel, pg_id, order_arrive_time,charge_tel_detail, 
+    charge_tel_city,  channel_id
   </sql>
   <sql id="VO_Column_List"><!-- 订单页面 -->
   	ep.*,agency.user_name, pur.order_id, pur.order_id_api, pur.order_id_from, pur.charge_tel, pg.pg_size, pg.operator_type, pg.pg_price, pur.order_arrive_time,
-  	pur.order_back_time, pur.charge_tel_detail, pur.charge_tel_city,ap.order_amount,ap.order_result,ap.order_platform_path,
-  	 pur.order_result_detail,channel.channel_name,pur.channel_id,ap.bill_type apBill_type
+  	ap.order_back_time, pur.charge_tel_detail, pur.charge_tel_city,ap.order_amount,ap.order_result,ap.order_platform_path,
+  	 ap.order_result_detail,channel.channel_name,pur.channel_id,ap.bill_type apBill_type
   </sql>
   
   <!-- 通过订单号查询订单 -->
@@ -119,12 +119,6 @@
   	<set>
   		<if test="orderBackTime != null">
   			order_back_time = #{orderBackTime},
-  		</if>
-  		<if test="orderResult != null">
-  			order_result = #{orderResult},
-  		</if>
-  		<if test="orderResultDetail != null">
-  			order_result_detail = #{orderResultDetail},
   		</if>
   		<if test="orderIdApi != null">
   			order_id_api = trim(#{orderIdApi})
@@ -185,13 +179,16 @@
 	<if test="endTime != null">
 		AND pur.order_arrive_time &lt;= #{endTime}
 	</if>
+	<if test="orderResult != null">
+		AND ap.order_result = #{orderResult}
+	</if>
   </sql>
   
   <insert id="addPurchase" parameterType="com.weizu.flowsys.web.trade.pojo.PurchasePo">
   	insert into <include refid="t_purchase"></include>
   	( <include refid="Base_Column_List"></include> )
-  	values (#{orderId},#{orderIdApi},#{orderIdFrom},#{agencyId},#{chargeTel},#{pgId},#{orderArriveTime},#{orderBackTime},
-  	#{chargeTelDetail},#{chargeTelCity},#{channelId},#{orderResultDetail})
+  	values (#{orderId},#{orderIdApi},#{orderIdFrom},#{agencyId},#{chargeTel},#{pgId},#{orderArriveTime},
+  	#{chargeTelDetail},#{chargeTelCity},#{channelId})
   </insert>
   
 </mapper>

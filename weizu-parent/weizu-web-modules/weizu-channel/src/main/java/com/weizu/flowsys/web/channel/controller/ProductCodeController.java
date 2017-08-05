@@ -56,7 +56,7 @@ public class ProductCodeController {
 	 * @createTime:2017年6月9日 上午9:49:00
 	 */
 	@RequestMapping(value = ProductCodeURL.PRODUCTCODE_ADD_PAGE)
-	public ModelAndView addProdouctCodePage(String pageTitle,ProductCodePo product_add, HttpServletRequest request){
+	public ModelAndView addProdouctCodePage(String pageTitle,Integer epId, HttpServletRequest request){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 			resultMap.put("pageTitle", pageTitle);
 		//查询所有平台名称
@@ -64,15 +64,19 @@ public class ProductCodeController {
 		if(agencyVO != null){
 			List<AgencyEpPo> epList = agencyEpAO.getAgencyEpByAgencyId(agencyVO.getId());
 			resultMap.put("epList", epList);
+			//判断前台是否穿了平台id过来，没有就默认取第一个
+			if(epId == null && epList != null && epList.size() > 0){
+				epId = epList.get(0).getEpId();
+			}
+			List<OperatorPgDataPo> pgList = productCodeAO.initPgList(epId,0, 0);//默认移动全国流量
+			resultMap.put("pgList", pgList);
 		}
-		List<OperatorPgDataPo> pgList = productCodeAO.initPgList(0, 0);//默认移动全国流量
 		resultMap.put("operatorType", 0);
 		resultMap.put("serviceType", 0);
-		resultMap.put("pgList", pgList);
 		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 		resultMap.put("pgTypeEnums", OperatorTypeEnum.toList());
 		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
-		resultMap.put("product_add", product_add);
+		resultMap.put("epId", epId);
 //		resultMap.put("epId", Integer.parseInt(epId));
 //		operatorPgAO.l
 		return new ModelAndView("/channel/productCode_add_page", "resultMap", resultMap);
@@ -105,13 +109,13 @@ public class ProductCodeController {
 	 * @createTime:2017年6月9日 上午10:51:09
 	 */
 	@RequestMapping(value = ProductCodeURL.AJAX_PG_LIST)
-	public void ajaxPgList(String operatorType, String serviceType, HttpServletResponse response){
+	public void ajaxPgList(String operatorType, String serviceType, Integer epId,HttpServletResponse response){
 		if(StringHelper.isNotEmpty(serviceType) && StringHelper.isNotEmpty(operatorType)){
 			 //这句话的意思，是让浏览器用utf8来解析返回的数据  
 			response.setHeader("Content-type", "text/html;charset=UTF-8");  
 			//这句话的意思，是告诉servlet用UTF-8转码，而不是用默认的ISO8859  
 			response.setCharacterEncoding("UTF-8");
-			List<OperatorPgDataPo> pgList = productCodeAO.initPgList(Integer.parseInt(serviceType), Integer.parseInt(operatorType));
+			List<OperatorPgDataPo> pgList = productCodeAO.initPgList(epId,Integer.parseInt(serviceType), Integer.parseInt(operatorType));
 			try {
 				response.getWriter().print(JSON.toJSONString(pgList));
 			} catch (IOException e) {

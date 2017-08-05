@@ -14,6 +14,7 @@ import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.dao.IProductCodeDAO;
+import com.weizu.flowsys.web.channel.dao.impl.OperatorPgDao;
 import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
@@ -31,8 +32,10 @@ public class ProductCodeAOImpl implements ProductCodeAO {
 
 	@Resource
 	private IProductCodeDAO productCodeDAO;
+//	@Resource
+//	private OperatorPgAO operatorPgAO;
 	@Resource
-	private OperatorPgAO operatorPgAO;
+	private OperatorPgDao operatorPgDao;
 	
 	/**
 	 * @description:获得产品编码列表
@@ -97,11 +100,11 @@ public class ProductCodeAOImpl implements ProductCodeAO {
 	 * @createTime:2017年6月9日 上午10:13:31
 	 */
 	@Override
-	public List<OperatorPgDataPo> initPgList(int operatorType, int serviceType) {
-		OperatorPgDataPo operatorPgPo = new OperatorPgDataPo();
-		operatorPgPo.setOperatorType(operatorType);
-		operatorPgPo.setServiceType(serviceType);
-		List<OperatorPgDataPo> pgList = operatorPgAO.pgList_forPurchase(operatorPgPo);
+	public List<OperatorPgDataPo> initPgList(Integer epId, int serviceType,int operatorType) {
+//		OperatorPgDataPo operatorPgPo = new OperatorPgDataPo();
+//		operatorPgPo.setOperatorType(operatorType);
+//		operatorPgPo.setServiceType(serviceType);
+		List<OperatorPgDataPo> pgList = operatorPgDao.listPgListNotInPcode(epId, serviceType, operatorType);
 		return pgList;
 	}
 

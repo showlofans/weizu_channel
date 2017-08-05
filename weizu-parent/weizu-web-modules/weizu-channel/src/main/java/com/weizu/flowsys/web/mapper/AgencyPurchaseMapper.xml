@@ -11,13 +11,15 @@
     <result column="bill_type" property="billType" jdbcType="INTEGER" />
     <result column="record_id" property="recordId" jdbcType="BIGINT" />
     <result column="order_result" property="orderResult" jdbcType="INTEGER" />
+    <result column="order_result_detail" property="orderResultDetail" jdbcType="VARCHAR" />
     <result column="order_platform_path" property="orderPlatformPath" jdbcType="INTEGER" />
+    <result column="order_back_time" property="orderBackTime" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, agency_id, purchase_id, rate_discount_id, order_amount, bill_type, record_id, order_result,order_platform_path
+    id, agency_id, purchase_id, rate_discount_id, order_amount, bill_type, record_id, order_result,order_platform_path,order_result_detail,order_back_time
   </sql>
   <sql id="Add_Column_List" >
-   agency_id, purchase_id, rate_discount_id, order_amount, bill_type, record_id, order_result,order_platform_path
+   agency_id, purchase_id, rate_discount_id, order_amount, bill_type, record_id, order_result,order_platform_path,order_result_detail,order_back_time
   </sql>
   <!-- 批量添加 -->
    <insert id="ap_addList" useGeneratedKeys="true" parameterType="java.util.List">
@@ -25,7 +27,7 @@
   	(<include refid="Add_Column_List"></include>)
   	values
   	<foreach collection="list" item="ap" index="index" separator=",">
-  		(#{ap.agencyId},#{ap.purchaseId},#{ap.rateDiscountId},#{ap.orderAmount},#{ap.billType},#{ap.recordId},#{ap.orderResult},#{ap.orderPlatformPath})
+  		(#{ap.agencyId},#{ap.purchaseId},#{ap.rateDiscountId},#{ap.orderAmount},#{ap.billType},#{ap.recordId},#{ap.orderResult},#{ap.orderPlatformPath},#{ap.orderResultDetail},#{ap.orderBackTime})
   	</foreach>
   </insert>
 </mapper>

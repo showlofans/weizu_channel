@@ -42,7 +42,7 @@
 					<select id="selectEpId" name="epId" class="select">
 						<c:forEach items="${resultMap.epList }" var="ep" varStatus="vs1">
 							<c:choose>
-								<c:when test="${ep.epId==resultMap.product_add.epId }">
+								<c:when test="${ep.epId==resultMap.epId }">
 									<option value="${ep.epId }" selected="selected" >${ep.epName }</option>
 								</c:when>
 								<c:otherwise>
@@ -149,24 +149,25 @@
 <script type="text/javascript">
 $().ready(function() {
     $("#product_form").validate({
+    	submitHandler: function(){
+            save();
+        },
     	rules:{
     		productCode : {
-	    			remote:{//验证用户名是否存在
+	    			remote:{//验证通编码是否存在
 	    				  type:"post",
 	    	               url:"/flowsys/productCode/product_code_exist.do",             //servlet
 	    	               data:{
 	    	            	  epId :function(){return $("#selectEpId").val().trim();},
 	    	               	  productCode :function(){return $("#productCode").val().trim();}
 	    					}
-    				}
+    				},
+    				required:true
     		}
     	},
     	messages:{
-    		productCode:{ remote:jQuery.format("该通道编码已存在！！ ")}
-    	},
-    	submitHandler: function(){
-             save();
-         }
+    		productCode:{ remote:jQuery.format("该通道编码已存在！！ "),required:"必填"}
+    	}
     });
 });
 
@@ -213,23 +214,27 @@ function changePg(){
  function ajaxGetPg(){
 	var stype = $("#serviceType").val();
 	var otype = $("#operatorType").val();
+	var epId = $('#selectEpId').val();
 	//alert(stype + "  " + otype);
 	$.ajax({
         type:"post",
         url:"/flowsys/productCode/productCode_add_page/ajax_pg_list.do",
-        data: {operatorType:otype,serviceType:stype},//表单数据
+        data: {operatorType:otype,serviceType:stype,epId:epId},//表单数据
         dataType: "json",
         async : false,
         success:function(data){
-        	//alert(data.length);
+        	alert(data.length);
+            $("#pgId").empty();//清空原有收据 
         	if(data.length > 0){
-                $("#pgId").empty();//清空原有收据 
                 var appendData;
+                $('#productCode').removeAttr('readonly');
         		for(var i=0; i < data.length; i++){
         			appendData += "<option value="+ data[i].id +">" + data[i].pgName +"</option>";
                 }
             }else{
-            	  appendData += "没有可选项 ！！";
+            	$('#productCode').val();
+            	 $('#productCode').attr('readonly', true);
+            	 appendData += "<option value=''>没有可选项 ！！</option>";
             }
         	$("#pgId").prepend(appendData);
         }

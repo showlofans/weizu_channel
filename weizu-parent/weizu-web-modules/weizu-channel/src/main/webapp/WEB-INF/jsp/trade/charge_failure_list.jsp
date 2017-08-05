@@ -93,7 +93,7 @@
 					<th width="80px">流量大小</th>
 					<th width="70px">面值</th>
 					<th width="100px">提交时间</th>
-					<th width="100px">充值时间</th>
+					<th width="100px">失败时间</th>
 					<th width="100px">号码归属</th>
 					<th width="60px">城市</th>
 					<th width="60px">充值方式</th>

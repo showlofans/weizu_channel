@@ -9,6 +9,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>weizu-web-api</artifactId>
+    <packaging>jar</packaging>
     <dependencies>
     	<dependency>
             <groupId>com.weizu.web</groupId>
