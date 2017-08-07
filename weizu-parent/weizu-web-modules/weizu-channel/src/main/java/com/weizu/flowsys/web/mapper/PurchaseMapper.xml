@@ -179,6 +179,12 @@
 	<if test="endTime != null">
 		AND pur.order_arrive_time &lt;= #{endTime}
 	</if>
+  	<if test="startTimeBack != null">
+		AND ap.order_back_time &gt;= #{startTimeBack}
+	</if>
+	<if test="endTimeBack != null">
+		AND ap.order_back_time &lt;= #{endTimeBack}
+	</if>
 	<if test="orderResult != null">
 		AND ap.order_result = #{orderResult}
 	</if>
