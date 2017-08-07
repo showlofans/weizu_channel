@@ -24,8 +24,8 @@
 <link href="/view/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
  </head>
  <body>
- <article class="page-container">
- <form class="form form-horizontal" action="" method="" id="form-import" enctype="multipart/form-data">
+ <div class="page-container">
+ <form class="form form-horizontal" name="form-import" action="?" onsubmit="return saveTelList()" id="form-import" enctype="multipart/form-data">
 	<div class="row cl">
 		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>号码文本：</label>
 		<div class="formControls col-xs-8 col-sm-9">
@@ -34,20 +34,20 @@
 			  <input value="" class="input-text upload-url" style="width:300px" type="text" readonly >
 			  <input type="file" multiple name="uploadFile" class="input-file">
 			</span>
-			<button id="saveButton" class="btn btn-primary radius" onclick="saveTelList();"><i class="fa "></i> 导入文件</button>
+			<button type="submit" id="saveButton" class="btn btn-primary radius"><i class="fa "></i> 导入文件</button>
 			<!-- <span class="error"></span> -->
 		</div>
 		<!-- <button type="button" onclick="history.go(-1);" class="btn"><i class="fa fa-undo"></i> 取消返回</button> -->
 	</div>
 </form>
- 	<form class="form form-horizontal" action="/flowsys/chargePg/pg_charge.do" method="post"  id="form-charge">
+ 	<form class="form form-horizontal" name="form-charge" action="?" id="form-charge">
  	<input type="hidden" name="channelId" id="channelId">
  	<input type="hidden" name="billType" id="billType">
  	<input type="hidden" name="pgId" id="pgId">
  	<div class="row cl" id="pg">
 		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机号：</label>
 		<div class="formControls col-xs-8 col-sm-9">
-			<textarea name="telList" id="telList" class="textarea" ></textarea>
+			<textarea id="telList" rows="5" cols="20" name="telList"  ></textarea>
 		</div>
 	</div>
 	
@@ -116,7 +116,7 @@
 	</form>
 	
 	<!-- <input id="pgSize" type="hidden"></input -->
-</article>
+</div>
  </body>
   <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
   <script type="text/javascript" src="/view/static/h-ui/js/H-ui.min.js"></script> 
@@ -157,26 +157,25 @@
  
  }) */
  function saveTelList(){
+	 $('#telList').val('100');
+	 //return false;
 	// $('#saveButton').set('disabled', 'false');
 	 //alert("1");
 	 $.ajax({
          url : "/flowsys/chargePg/tel_batch_import_txt.do",
          type : "POST",
-         cache: false, 
+         cache: true, 
          data : new FormData($('#form-import')[0]),
          processData: false,
          contentType : false,
          success : function(data) {
         	 alert(data);
+        	//$('#telList').val(data);
+        	$('#telList').val(data);
         	// alert($('#telList').html());
         	// $('#telList').html(data);
             //alert(data);  
-        	/* if (data.code == '0') {
-                 window.location.href = "/iswust2hand/index.jsp";
-                 alert("欢迎使用西科二手平台！");
-             }else{
-                 alert("密码错误，请确认后重新登录！");
-             }   */
+        	
 
          },
 
@@ -187,250 +186,6 @@
 	// $('#form-import').submit();
  }
  
- $().ready(function() {
-	    $("#form-charge").validate({
-	    	submitHandler : function(form) {
-	    		$('form').submit();
-	    		/* $.ajax({
-			        type:"post",
-			        url:"/flowsys/chargePg/pg_charge.do",
-			        data: $('form').serialize(),//表单数据
-			        async : false,
-			        success:function(d){
-			           if(d=="success"){
-			                layer.msg('保存成功！');//保存成功提示
-			            }
-			            if(d=="error"){
-			                layer.msg('保存异常!');
-			            }
-			            var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
-			            parent.layer.close(index); //执行关闭 
-			        }
-			    }); */ 
-			}
-	    });
-});
- /* function submitPur(){
-	 var tel = $('input[name=chargeTel]').val();
-	 var chargeTelDetail = $('#chargeTelDetail').val();
-	 var orderAmount = $("#orderAmount").val();
- 	 var channelId = $("#channelId").val();
- 	 var pgId = $("#pgId").val();
-	 var purchasePo = {
-			 chargeTel : tel,
-			 channelId : channelId,
-			 pgId : pgId,
-			 chargeTelDetail : chargeTelDetail,
-			 orderAmount : orderAmount
-         };//拼装成json格式
-    alert(JSON.stringify(purchasePo));
-	 $.ajax({
-         type : "POST",
-         url : "/flowsys/chargePg/pg_charge.do",
-         data : JSON.stringify(purchasePo),
-         contentType : 'application/json;charset=utf-8',
-         dataType : 'json',
-         /* success : function(data) {
-               if (data.code == '0') {
-                 window.location.href = "/iswust2hand/index.jsp";
-                 alert("欢迎使用西科二手平台！");
-             }else{
-                 alert("密码错误，请确认后重新登录！");
-             }  
-
-         },
-
-         error : function(data) {
-             alert("出错：" + data.code);
-         } 
-     });
- } */
  
- /**通过用户手机号获得基本信息*/
- 	var tel;
- 	var operators;
-    var ajax=function(){
-        //淘宝接口    
-        $.ajax({
-             type: "get",
-             url: 'http://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel='+tel,
-             dataType: "jsonp",
-             contentType: "application/x-www-form-urlencoded; charset=utf-8", 
-             jsonp: "callback",
-             success: function(data){
-                operators = data.catName;
-               // $('.error').css('display','none');
-               var location = data.location;
-               var  carrier = data.carrier,
-                province = data.province,
-                    num = data.telString; 
-             $('#chargeTelDetail').val(carrier);  
-              //$('#chargeTelDetail').val(location);  
-                
-               /*  $('.num span').html(num);
-                
-                $('.province span').html(province);
-                $('.operators span').html(operators);
-                $('.carrier span').html(carrier); */
-             },
-         });
-    };
-    /**radio选中事件*/
-    function changeValue(vart){
-    	if($(vart).is(':checked')){
-    		$("#pgName").val($(vart).val());
-    		//alert($(vart).privous().val());
-    	}
-    }
-   
-    var reg = /^(13|15|18)[0-9]{9}$/;//点击查询
-    function ajaxPhone(){
-    	 tel=$('input[name=chargeTel]').val();
-         if(tel){
-             if(reg.test(tel)){
-                 ajax();
-                 $('.error').hide();
-             }else{
-                 $('.error').html('手机号不合法 ').css('display','block');    
-             }
-         }
-    }
-    
-    /* var ajax2=function(){
-    	$.ajax({
-            type: "get",
-            async: false,
-            url: '/flowsys/chargePg/pgList_forPurchase.do?operatorType='+ operators,
-            dataType: "json",
-            contentType: "application/x-www-form-urlencoded; charset=utf-8", 
-            success: function(data){
-          	  //alert(data.length);
-          	  if($(".pgNameType") == undefined || $(".pgNameType").length <= 0){
-              var appendData = "<label class='form-label col-xs-4 col-sm-3'><span class='c-red'>*</span>包体大小：</label><div class='formControls col-xs-8 col-sm-9 skin-minimal'>"; 
-          	  for(var i=0; i < data.length; i++){
-            	   var price = data[i].pgPrice;
-            	   var name = data[i].pgName;
-           				if(i == 0){//默认设置第一个为选中 
-	           				appendData += "<div class='radio-box pgNameType'><input name='pgName' class='pgNameRadio' type='radio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)' checked><label for='pgName-"+(i+1)+"'>"+name+"</label></div><input type='hidden' class='price' name='pgPrice' value='"+price+"'></input><br>";
-	           				$("#pgPrice").val(data[0].pgPrice);
-           				}else{
-           					
-           				appendData += "<div class='radio-box pgNameType'><input name='pgName' class='pgNameRadio' type='radio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)'><label for='pgName-"+(i+1)+"'>"+name+"</label></div><input type='hidden' class='price' name='pgPrice' value='"+price+"'></input><br>";
-           				}
-              }
-          	appendData += "</div>";
-        	$("#pg").prepend(appendData);
-        	
-          	  }}
-        })
-    }; */
-   function changeRadio(vart){
-	   var pprice = $(vart).parent().next().val();
-	   var psize = $(vart).parent().next().next().val();//包大小
-	   
-	   $("#pgPrice").val(pprice);//改变价格
-	   //alert($(vart).prev().val());
-	   $("#pgId").val($(vart).prev().val());//包体id
-	   
-	   var serviceType = $("#select-servce-type").val();
-	   var carrier = $("#chargeTelDetail").val();
-	   
-	   $.ajax({
-           type: "get",
-           url: '/flowsys/chargePg/ajax_purchase_price.do?pgSize=' + psize + '&pgPrice=' + pprice + '&serviceType='+serviceType+ '&carrier='+carrier,
-           async: false,
-           dataType: "json",
-           contentType: "application/x-www-form-urlencoded; charset=utf-8", 
-           success: function(data){
-        	   /* $.each(data,function(i){  
-        		    var key = i;  
-        		    var value = data[i];  
-        		    alert(key+":"+value);  
-        		});  */
-         	 //$("#orderAmount").val(data);
-         	 $("#billType").val(data.billType);
-         	 $("#orderAmount").val(data.price);
-         	 $("#channelId").val(data.channelId);
-           }
-       })
-	   
-   }
-   /*  $('.skin-minimal input').on('iCheck',{		//给单选框加特效
-		checkboxClass: 'icheckbox-blue',
-		radioClass: 'iradio-blue',
-		increaseArea: '20%'
-	}); */
-	/**改变业务类型Onchange方法*/
-	function ifAjaxPg(){
-		/* var priceT = $("#pgPrice").val();
-		if(priceT != "" || priceT != null){//
-			ajaxPg();//重新发送一次请求
-		} */
-		$("#pgPrice").val("");//重置参数
-  	 	 $("#orderAmount").val("");
-  		ajaxPg();
-	}
-	
-    function ajaxPg(){
-    	 tel=$('input[name=chargeTel]').val();
-    	 var serviceType = $("#select-servce-type").val();
-    	 //alert(serviceType);
-         if(tel){
-             if(reg.test(tel)){
-            	 //如果点击了有的话就先删除原来的业务
-            	 //var serviceTypeTag = $("#pg").children().eq(2);//有第三个元素
-            	 if($("#pgInsert").is(":visible")){
-               		 $("#pgInsert").empty();
-               		 $("#pgInsert").hide();
-               	 }else{
-               		 alert("sorry");
-               	 }
-            	//查询流量包
-            	 	//ajax2();
-            	 	$.ajax({
-                        type: "post",
-                        url: '/flowsys/chargePg/pgList_forPurchase.do?operatorName='+ operators + '&serviceType=' + serviceType,
-                        dataType: "json",
-                        async: false,
-                        contentType: "application/x-www-form-urlencoded; charset=utf-8", 
-                        success: function(data){
-                      	  //alert(data.length);
-                      	  if($(".pgNameType") == undefined || $(".pgNameType").length <= 0){
-                          var appendData = "<label class='form-label col-xs-4 col-sm-3'><span class='c-red'>*</span>包体大小：</label><div class='formControls col-xs-8 col-sm-9 skin-minimal'>"; 
-                      	  if(data.length > 0){
-	                          for(var i=0; i < data.length; i++){
-	                        	   var price = data[i].pgPrice;
-	                        	   var name = data[i].pgName;
-	                        	   var pgSize = data[i].pgSize;
-	                       				/* if(i == 0){//默认设置第一个为选中 
-	            	           				appendData += "<div class='radio-box pgNameType'><input name='pgName' class='pgNameRadio' type='radio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)' checked><label for='pgName-"+(i+1)+"'>"+name+"</label></div>"
-	            	           				+ "<input type='hidden' name='pgPrice' value='"+price+"'></input>"
-	            	           				+ "<input type='hidden'  name='pgSize' value='"+pgSize+"'></input><br>";
-	            	           				//$("#pgPrice").val(data[0].pgPrice);
-	            	           				$("#pgSize").val(data[0].pgSize);
-	            	           				$("#pgId").val(data[0].id);
-	                       				}else{ */
-	                       					appendData += "<div class='radio-box pgNameType'><input type='hidden' value='"+data[i].id+"'></input><input name='pgName' class='pgNameRadio' type='radio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)'><label for='pgName-"+(i+1)+"'>"+name+"</label></div><input type='hidden' class='price' name='pgPrice' value='"+price+"'></input>"
-	                       					+"<input type='hidden' name='pgSize' value='"+pgSize+"'></input><br>";;
-	                       				// }
-	                          }
-                          }else{
-                        	  appendData += "没有数据！！";
-                        	  $("#pgPrice").val("");//重置参数
-                        	  $("#orderAmount").val("");
-                        	  
-                      	  }
-                      	appendData += "</div>";
-                    	$("#pgInsert").prepend(appendData);
-                    	$("#pgInsert").show();
-                      	  }
-                      	  }
-                    })
-             }else{
-            	 alert("false");
-                 //$('.error').html('手机号不合法 ').css('display','block');    
-             }
-         }
-    }
  </script>
 </html>

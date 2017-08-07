@@ -343,8 +343,14 @@ public class ChargePgController {
 		if(StringHelper.isNotEmpty(pageNo)){
 			pageParam = new PageParam(Integer.parseInt(pageNo), 10) ;
 		}else{//初始化开始时间和结束时间
-			purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(DateUtil.getStartTime()));
-			purchaseVO.setArriveEndTimeStr(DateUtil.formatAll(DateUtil.getEndTime()));
+			//充值成功使用充值时间
+			if(purchaseVO.getOrderResult() != null && purchaseVO.getOrderResult() == OrderStateEnum.CHARGED.getValue()){
+				purchaseVO.setBackStartTimeStr(DateUtil.formatAll(DateUtil.getStartTime()));
+				purchaseVO.setBackEndTimeStr(DateUtil.formatAll(DateUtil.getEndTime()));
+			}else{//其他状态使用到达时间
+				purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(DateUtil.getStartTime()));
+				purchaseVO.setArriveEndTimeStr(DateUtil.formatAll(DateUtil.getEndTime()));
+			}
 			pageParam = new PageParam(1, 10);
 		}
 		Map<String, Object> resultMap = new HashMap<String, Object>();

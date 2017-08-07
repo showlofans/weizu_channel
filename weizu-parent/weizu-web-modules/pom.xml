@@ -10,6 +10,7 @@
   <packaging>pom</packaging>
   <modules>
     <module>weizu-channel</module>
+    <module>weizu-web-forward</module>
   </modules>
   
   <dependencies>

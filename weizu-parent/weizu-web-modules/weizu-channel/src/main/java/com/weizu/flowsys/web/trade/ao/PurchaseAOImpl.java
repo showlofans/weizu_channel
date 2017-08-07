@@ -389,6 +389,12 @@ public class PurchaseAOImpl implements PurchaseAO {
 			if(StringHelper.isNotEmpty(purchaseVO.getArriveEndTimeStr())){
 				paramsMap.put("endTime", DateUtil.strToDate(purchaseVO.getArriveEndTimeStr(), null).getTime());
 			}
+			if(StringHelper.isNotEmpty(purchaseVO.getBackStartTimeStr())){
+				paramsMap.put("startTimeBack", DateUtil.strToDate(purchaseVO.getBackStartTimeStr(), null).getTime());
+			}
+			if(StringHelper.isNotEmpty(purchaseVO.getBackEndTimeStr())){
+				paramsMap.put("endTimeBack", DateUtil.strToDate(purchaseVO.getBackEndTimeStr(), null).getTime());
+			}
 			return paramsMap;
 		}
 		return null;
@@ -434,7 +440,6 @@ public class PurchaseAOImpl implements PurchaseAO {
 					{
 						purchaseVO2.setOrderBackTimeStr(DateUtil.formatAll(purchaseVO2.getOrderBackTime()));
 					}
-//					
 					if(purchaseVO2.getOrderArriveTime() != null){
 						purchaseVO2.setOrderArriveTimeStr(DateUtil.formatAll(purchaseVO2.getOrderArriveTime()));
 					}

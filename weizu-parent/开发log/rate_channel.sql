@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50626
 File Encoding         : 65001
 
-Date: 2017-08-03 18:36:25
+Date: 2017-08-05 19:09:44
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -163,7 +163,9 @@ CREATE TABLE `agency_purchase` (
   `bill_type` int(11) DEFAULT NULL COMMENT '票务类型（0-无票，1-带票）',
   `record_id` bigint(20) DEFAULT NULL COMMENT '消费记录id',
   `order_result` int(11) DEFAULT NULL COMMENT '订单状态',
+  `order_result_detail` varchar(255) DEFAULT NULL COMMENT '结果描述',
   `order_platform_path` int(11) DEFAULT NULL COMMENT '订单来源（0-网页，1-接口）',
+  `order_back_time` bigint(20) DEFAULT NULL COMMENT '订单返回时间',
   PRIMARY KEY (`id`),
   KEY `fk_ap_agency` (`agency_id`),
   KEY `fk_ap_purchase` (`purchase_id`),
@@ -173,14 +175,50 @@ CREATE TABLE `agency_purchase` (
   CONSTRAINT `fk_ap_chargerecord` FOREIGN KEY (`record_id`) REFERENCES `charge_record` (`id`),
   CONSTRAINT `fk_ap_purchase` FOREIGN KEY (`purchase_id`) REFERENCES `purchase` (`order_id`) ON DELETE CASCADE,
   CONSTRAINT `fk_ap_rateDiscount` FOREIGN KEY (`rate_discount_id`) REFERENCES `rate_discount` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of agency_purchase
 -- ----------------------------
-INSERT INTO `agency_purchase` VALUES ('1', '4', '703717823528046592', '49', '50', '0', null, null, null);
-INSERT INTO `agency_purchase` VALUES ('2', '21', '719011191992619008', '51', '27.9', '0', '122', '2', '0');
-INSERT INTO `agency_purchase` VALUES ('3', '4', '719011191992619008', '46', '25.5', '0', '123', '3', '1');
+INSERT INTO `agency_purchase` VALUES ('1', '4', '703717823528046592', '49', '50', '0', null, null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('2', '21', '719011191992619008', '51', '27.9', '0', '122', '2', null, '0', null);
+INSERT INTO `agency_purchase` VALUES ('3', '4', '719011191992619008', '46', '25.5', '0', '123', '3', null, '1', null);
+INSERT INTO `agency_purchase` VALUES ('4', '21', '719329966860275712', '51', '167.4', '0', '124', '2', null, '0', null);
+INSERT INTO `agency_purchase` VALUES ('5', '4', '719329966860275712', '46', '153', '0', '125', '3', null, '1', null);
+INSERT INTO `agency_purchase` VALUES ('6', '21', '719330701316460544', '51', '167.4', '0', '126', '2', null, '0', null);
+INSERT INTO `agency_purchase` VALUES ('7', '4', '719330701316460544', '46', '153', '0', '127', '3', null, '1', null);
+INSERT INTO `agency_purchase` VALUES ('8', '21', '719331169098797056', '51', '93', '0', '128', '2', null, '0', null);
+INSERT INTO `agency_purchase` VALUES ('9', '4', '719331169098797056', '46', '85', '0', '129', '3', null, '1', null);
+INSERT INTO `agency_purchase` VALUES ('10', '21', '719339850544713728', '51', '93', '0', '130', '2', null, '0', null);
+INSERT INTO `agency_purchase` VALUES ('11', '4', '719339850544713728', '46', '85', '0', '131', '3', null, '1', null);
+INSERT INTO `agency_purchase` VALUES ('12', '21', '719340036637593600', '51', '93', '0', '132', '2', null, '0', null);
+INSERT INTO `agency_purchase` VALUES ('13', '4', '719340036637593600', '46', '85', '0', '133', '3', null, '1', null);
+INSERT INTO `agency_purchase` VALUES ('14', '21', '719340961422905344', '51', '27.9', '0', '134', '2', null, '0', null);
+INSERT INTO `agency_purchase` VALUES ('15', '4', '719340961422905344', '46', '25.5', '0', '135', '3', null, '1', null);
+INSERT INTO `agency_purchase` VALUES ('16', '21', '719342466490175488', '51', '27.9', '0', '136', '2', null, '0', null);
+INSERT INTO `agency_purchase` VALUES ('17', '4', '719342466490175488', '46', '25.5', '0', '137', '3', null, '1', null);
+INSERT INTO `agency_purchase` VALUES ('18', '21', '719343379258806272', '51', '167.4', '0', '138', '2', null, '0', null);
+INSERT INTO `agency_purchase` VALUES ('19', '4', '719343379258806272', '46', '153', '0', '139', '3', null, '1', null);
+INSERT INTO `agency_purchase` VALUES ('20', '21', '719345434316771328', '51', '27.9', '0', '140', '2', null, '0', null);
+INSERT INTO `agency_purchase` VALUES ('21', '4', '719345434316771328', '46', '25.5', '0', '141', '3', null, '1', null);
+INSERT INTO `agency_purchase` VALUES ('22', '21', '719345849770971136', '51', '27.9', '0', '142', '2', null, '0', null);
+INSERT INTO `agency_purchase` VALUES ('23', '4', '719345849770971136', '46', '25.5', '0', '143', '3', null, '1', null);
+INSERT INTO `agency_purchase` VALUES ('24', '21', '719355601729097728', '51', '27.9', '0', '144', '2', null, '0', null);
+INSERT INTO `agency_purchase` VALUES ('25', '4', '719355601729097728', '46', '25.5', '0', null, '3', null, '1', null);
+INSERT INTO `agency_purchase` VALUES ('26', '21', '719356920300834816', '51', '27.9', '0', '145', '2', null, '0', null);
+INSERT INTO `agency_purchase` VALUES ('27', '4', '719356920300834816', '46', '25.5', '0', null, '3', null, '1', null);
+INSERT INTO `agency_purchase` VALUES ('28', '21', '719357743223279616', '51', '27.9', '0', '146', '2', null, '0', null);
+INSERT INTO `agency_purchase` VALUES ('29', '4', '719357743223279616', '46', '25.5', '0', null, '3', null, '1', null);
+INSERT INTO `agency_purchase` VALUES ('30', '21', '719362451019141120', '51', '27.9', '0', '149', '2', null, '0', null);
+INSERT INTO `agency_purchase` VALUES ('31', '4', '719362451019141120', null, null, '0', null, '3', null, '1', null);
+INSERT INTO `agency_purchase` VALUES ('32', '21', '719619879090524160', '51', '93', '0', '150', '2', null, '0', null);
+INSERT INTO `agency_purchase` VALUES ('33', '4', '719619879090524160', null, null, '0', null, '3', null, '1', null);
+INSERT INTO `agency_purchase` VALUES ('34', '21', '719714672592293888', '51', '167.4', '0', '151', '2', null, '0', null);
+INSERT INTO `agency_purchase` VALUES ('35', '4', '719714672592293888', null, null, '0', null, '3', null, '1', null);
+INSERT INTO `agency_purchase` VALUES ('36', '21', '719728803823226880', '51', '27.9', '0', '152', '0', '手动失败', '0', '1501929712326');
+INSERT INTO `agency_purchase` VALUES ('37', '4', '719728803823226880', null, null, '0', null, '0', '手动失败', '1', '1501929712326');
+INSERT INTO `agency_purchase` VALUES ('38', '21', '719744389366157312', '51', '27.9', '0', '153', '1', '手动成功', '0', '1501929603463');
+INSERT INTO `agency_purchase` VALUES ('39', '4', '719744389366157312', null, null, '0', null, '1', '手动成功', '1', '1501929603463');
 
 -- ----------------------------
 -- Table structure for `channel_channel`
@@ -385,8 +423,8 @@ CREATE TABLE `charge_account` (
 -- Records of charge_account
 -- ----------------------------
 INSERT INTO `charge_account` VALUES ('1', '3981', null, null, '200', '1', '0', null, '1495689716779');
-INSERT INTO `charge_account` VALUES ('2', '-2981.5', '工行', '123', '0', '4', '0', null, '1499736896474');
-INSERT INTO `charge_account` VALUES ('8', '972.1', null, null, '2001', '21', '0', null, '1500523402299');
+INSERT INTO `charge_account` VALUES ('2', '-4797.5', '工行', '123', '0', '4', '0', null, '1499736896474');
+INSERT INTO `charge_account` VALUES ('8', '651.5', null, null, '2001', '21', '0', null, '1500523402299');
 INSERT INTO `charge_account` VALUES ('10', '2000', null, null, '1', '23', '0', null, '1500523402299');
 INSERT INTO `charge_account` VALUES ('11', '356', null, null, '1212', '24', '0', null, '1498617873998');
 INSERT INTO `charge_account` VALUES ('12', '500', null, null, '2000', '25', '0', null, '1496479483371');
@@ -414,7 +452,7 @@ CREATE TABLE `charge_record` (
   `agency_id` int(11) DEFAULT NULL COMMENT '代理商账户id',
   `charge_for` int(11) DEFAULT NULL COMMENT '发生原因',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=124 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=154 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of charge_record
@@ -510,6 +548,36 @@ INSERT INTO `charge_record` VALUES ('112', '1501231919992', '100', '-2856', '-29
 INSERT INTO `charge_record` VALUES ('113', '1501231924154', '100', '0', '100', '0', '0', '20', '27', '1');
 INSERT INTO `charge_record` VALUES ('122', '1501753735785', '27.9', '1000', '972.1', '0', '1', '8', '21', '1');
 INSERT INTO `charge_record` VALUES ('123', '1501753735834', '25.5', '-2956', '-2981.5', '0', '1', '2', '4', '1');
+INSERT INTO `charge_record` VALUES ('124', '1501829737647', '167.4', '972.1', '804.7', '0', '1', '8', '21', '1');
+INSERT INTO `charge_record` VALUES ('125', '1501829737662', '153', '-2981.5', '-3134.5', '0', '1', '2', '4', '1');
+INSERT INTO `charge_record` VALUES ('126', '1501829912756', '167.4', '804.7', '637.3', '0', '1', '8', '21', '1');
+INSERT INTO `charge_record` VALUES ('127', '1501829912766', '153', '-3134.5', '-3287.5', '0', '1', '2', '4', '1');
+INSERT INTO `charge_record` VALUES ('128', '1501830024285', '93', '637.3', '544.3', '0', '1', '8', '21', '1');
+INSERT INTO `charge_record` VALUES ('129', '1501830024297', '85', '-3287.5', '-3372.5', '0', '1', '2', '4', '1');
+INSERT INTO `charge_record` VALUES ('130', '1501832094088', '93', '544.3', '451.3', '0', '1', '8', '21', '1');
+INSERT INTO `charge_record` VALUES ('131', '1501832094139', '85', '-3372.5', '-3457.5', '0', '1', '2', '4', '1');
+INSERT INTO `charge_record` VALUES ('132', '1501832138470', '93', '451.3', '358.3', '0', '1', '8', '21', '1');
+INSERT INTO `charge_record` VALUES ('133', '1501832138486', '85', '-3457.5', '-3542.5', '0', '1', '2', '4', '1');
+INSERT INTO `charge_record` VALUES ('134', '1501832358954', '27.9', '358.3', '330.4', '0', '1', '8', '21', '1');
+INSERT INTO `charge_record` VALUES ('135', '1501832358975', '25.5', '-3542.5', '-3568', '0', '1', '2', '4', '1');
+INSERT INTO `charge_record` VALUES ('136', '1501832717793', '27.9', '330.4', '302.5', '0', '1', '8', '21', '1');
+INSERT INTO `charge_record` VALUES ('137', '1501832717801', '25.5', '-3568', '-3593.5', '0', '1', '2', '4', '1');
+INSERT INTO `charge_record` VALUES ('138', '1501832935411', '167.4', '302.5', '135.1', '0', '1', '8', '21', '1');
+INSERT INTO `charge_record` VALUES ('139', '1501832935430', '153', '-3593.5', '-3746.5', '0', '1', '2', '4', '1');
+INSERT INTO `charge_record` VALUES ('140', '1501833425377', '27.9', '135.1', '107.2', '0', '1', '8', '21', '1');
+INSERT INTO `charge_record` VALUES ('141', '1501833425389', '25.5', '-3746.5', '-3772', '0', '1', '2', '4', '1');
+INSERT INTO `charge_record` VALUES ('142', '1501833524428', '27.9', '107.2', '79.3', '0', '1', '8', '21', '1');
+INSERT INTO `charge_record` VALUES ('143', '1501833524446', '25.5', '-3772', '-3797.5', '0', '1', '2', '4', '1');
+INSERT INTO `charge_record` VALUES ('144', '1501835849475', '27.9', '79.3', '51.4', '0', '1', '8', '21', '1');
+INSERT INTO `charge_record` VALUES ('145', '1501836163849', '27.9', '51.4', '23.5', '0', '1', '8', '21', '1');
+INSERT INTO `charge_record` VALUES ('146', '1501836360050', '27.9', '23.5', '-4.4', '0', '1', '8', '21', '1');
+INSERT INTO `charge_record` VALUES ('147', '1501837362622', '1000', '-3797.5', '-4797.5', '0', '1', '2', '4', '1');
+INSERT INTO `charge_record` VALUES ('148', '1501837362632', '1000', '-4.4', '995.6', '0', '0', '8', '21', '1');
+INSERT INTO `charge_record` VALUES ('149', '1501837482474', '27.9', '995.6', '967.7', '0', '1', '8', '21', '1');
+INSERT INTO `charge_record` VALUES ('150', '1501898858108', '93', '967.7', '874.7', '0', '1', '8', '21', '1');
+INSERT INTO `charge_record` VALUES ('151', '1501921458637', '167.4', '874.7', '707.3', '0', '1', '8', '21', '1');
+INSERT INTO `charge_record` VALUES ('152', '1501924827786', '27.9', '707.3', '679.4', '0', '1', '8', '21', '1');
+INSERT INTO `charge_record` VALUES ('153', '1501928543671', '27.9', '679.4', '651.5', '0', '1', '8', '21', '1');
 
 -- ----------------------------
 -- Table structure for `company_credentials`
@@ -688,7 +756,7 @@ CREATE TABLE `product_code` (
   `ep_id` int(11) DEFAULT NULL COMMENT '平台ID',
   `product_code` varchar(255) DEFAULT NULL COMMENT '产品编码',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of product_code
@@ -717,9 +785,11 @@ INSERT INTO `product_code` VALUES ('21', '全国', '16', '32', null, '32', '500'
 INSERT INTO `product_code` VALUES ('22', '浙江省', '1', '11', null, '32', '6144');
 INSERT INTO `product_code` VALUES ('23', '浙江省', '8', '11', null, '32', '3072');
 INSERT INTO `product_code` VALUES ('24', '浙江省', '16', '11', null, '32', '500');
-INSERT INTO `product_code` VALUES ('25', '全国', '1', '32', null, '2', '');
 INSERT INTO `product_code` VALUES ('26', '四川省', '10', '22', null, '32', '123');
 INSERT INTO `product_code` VALUES ('27', '全国', '1', '32', null, '2', '456');
+INSERT INTO `product_code` VALUES ('28', '全国', null, '32', null, '2', null);
+INSERT INTO `product_code` VALUES ('29', '全国', null, '32', null, '2', null);
+INSERT INTO `product_code` VALUES ('30', '全国', null, '32', null, '2', null);
 
 -- ----------------------------
 -- Table structure for `purchase`
@@ -733,30 +803,46 @@ CREATE TABLE `purchase` (
   `charge_tel` varchar(255) DEFAULT NULL COMMENT 'æ‰‹æœºå·',
   `pg_id` int(11) DEFAULT NULL COMMENT 'æµé‡åŒ…idï¼ˆå¤–é”®ï¼‰',
   `order_arrive_time` bigint(20) DEFAULT NULL COMMENT 'æäº¤æ—¶é—´ï¼ˆæœ¬å¹³å°èŽ·å¾—è¯¥æ•°æ®è¯·æ±‚çš„æ—¶é—´ï¼‰',
-  `order_back_time` bigint(20) DEFAULT NULL COMMENT 'å……å€¼æ—¶é—´ï¼ˆæœ¬å¹³å°èŽ·å¾—è¿”å›žç»“æžœï¼‰',
   `charge_tel_detail` varchar(255) DEFAULT NULL COMMENT 'å·ç å½’å±žï¼ˆï¼šæ±Ÿè¥¿ç§»åŠ¨ï¼‰',
   `charge_tel_city` varchar(255) DEFAULT NULL COMMENT 'å·ç å½’å±žå…·ä½“åŸŽå¸‚',
   `order_platform_path` int(11) DEFAULT NULL COMMENT 'å……å€¼æ–¹å¼(0-æŽ¥å£ï¼Œ1-æœ¬å¹³å°)',
   `channel_id` bigint(11) DEFAULT NULL COMMENT 'é€šé“idï¼ˆå¤–é”®ï¼‰',
-  `order_result_detail` varchar(255) DEFAULT NULL COMMENT 'ç»“æžœæè¿°',
   PRIMARY KEY (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of purchase
 -- ----------------------------
-INSERT INTO `purchase` VALUES ('703710166008205312', '20170622122808967868', null, '4', '15858343638', '1', '1498105686877', '1498105689000', '浙江移动', '嘉兴', '0', '35', '未充');
-INSERT INTO `purchase` VALUES ('703717823528046592', '20170622125834883058', null, '4', '15858343638', '1', '1498107512532', '1498107514000', '浙江移动', '嘉兴', '0', '35', '未充');
-INSERT INTO `purchase` VALUES ('704535206018686976', '20170624190623128150', null, '21', '15858343638', '1', null, '1498302381513', '浙江移动', '嘉兴', '1', '38', '欠费等待');
-INSERT INTO `purchase` VALUES ('704544611741212672', '20170624194216502396', null, '21', '15858343638', '1', '1498304515178', '1498304537000', '浙江移动', '嘉兴', '1', '39', '失败');
-INSERT INTO `purchase` VALUES ('705126212669808640', '20170626101458398987', null, '21', '15858343638', '1', '1498443287474', '1498443298000', '浙江移动', '嘉兴', '1', '39', '未充');
-INSERT INTO `purchase` VALUES ('705127733130170368', '20170626102101696623', null, '21', '15858343638', '1', '1498443661235', '1498443661000', '浙江移动', '嘉兴', '0', '39', '失败');
-INSERT INTO `purchase` VALUES ('705129750095470592', '20170626102901656910', null, '21', '15858343638', '1', '1498444085497', '1498444142000', '浙江移动', '嘉兴', '1', '39', '未充');
-INSERT INTO `purchase` VALUES ('705133259956166656', '20170626104258028713', null, '21', '15858343638', '1', '1498444954103', '1498444979000', '浙江移动', '嘉兴', '1', '39', '未充');
-INSERT INTO `purchase` VALUES ('705162055119802368', '20170626123724333015', null, '4', '15858343638', '1', '1498451844217', '1498451844000', '浙江移动', '嘉兴', '0', '35', '未充');
-INSERT INTO `purchase` VALUES ('705172103195791360', '20170626131720748968', null, '21', '15858343638', '1', '1498454239867', '1498454240000', '浙江移动', '嘉兴', '0', '39', '失败');
-INSERT INTO `purchase` VALUES ('705499613372620800', null, null, null, '15858343638', '1', '1498532288078', null, '浙江移动', '嘉兴', null, null, null);
-INSERT INTO `purchase` VALUES ('719011191992619008', null, null, '21', '13750464600', '16', '1501753735785', null, '广东移动', null, null, '12', null);
+INSERT INTO `purchase` VALUES ('703710166008205312', '20170622122808967868', null, '4', '15858343638', '1', '1498105686877', '浙江移动', '嘉兴', '0', '35');
+INSERT INTO `purchase` VALUES ('703717823528046592', '20170622125834883058', null, '4', '15858343638', '1', '1498107512532', '浙江移动', '嘉兴', '0', '35');
+INSERT INTO `purchase` VALUES ('704535206018686976', '20170624190623128150', null, '21', '15858343638', '1', null, '浙江移动', '嘉兴', '1', '38');
+INSERT INTO `purchase` VALUES ('704544611741212672', '20170624194216502396', null, '21', '15858343638', '1', '1498304515178', '浙江移动', '嘉兴', '1', '39');
+INSERT INTO `purchase` VALUES ('705126212669808640', '20170626101458398987', null, '21', '15858343638', '1', '1498443287474', '浙江移动', '嘉兴', '1', '39');
+INSERT INTO `purchase` VALUES ('705127733130170368', '20170626102101696623', null, '21', '15858343638', '1', '1498443661235', '浙江移动', '嘉兴', '0', '39');
+INSERT INTO `purchase` VALUES ('705129750095470592', '20170626102901656910', null, '21', '15858343638', '1', '1498444085497', '浙江移动', '嘉兴', '1', '39');
+INSERT INTO `purchase` VALUES ('705133259956166656', '20170626104258028713', null, '21', '15858343638', '1', '1498444954103', '浙江移动', '嘉兴', '1', '39');
+INSERT INTO `purchase` VALUES ('705162055119802368', '20170626123724333015', null, '4', '15858343638', '1', '1498451844217', '浙江移动', '嘉兴', '0', '35');
+INSERT INTO `purchase` VALUES ('705172103195791360', '20170626131720748968', null, '21', '15858343638', '1', '1498454239867', '浙江移动', '嘉兴', '0', '39');
+INSERT INTO `purchase` VALUES ('705499613372620800', null, null, null, '15858343638', '1', '1498532288078', '浙江移动', '嘉兴', null, null);
+INSERT INTO `purchase` VALUES ('719011191992619008', null, null, '21', '13750464600', '16', '1501753735785', '广东移动', null, null, '12');
+INSERT INTO `purchase` VALUES ('719329966860275712', null, null, '21', '15976328234', '1', '1501829737647', '广东移动', null, null, '12');
+INSERT INTO `purchase` VALUES ('719330701316460544', null, null, '21', '15976328234', '1', '1501829912756', '广东移动', null, null, '12');
+INSERT INTO `purchase` VALUES ('719331169098797056', null, null, '21', '15976328234', '8', '1501830024285', '广东移动', null, null, '12');
+INSERT INTO `purchase` VALUES ('719339850544713728', null, null, '21', '15976328234', '8', '1501832094088', '广东移动', null, null, '12');
+INSERT INTO `purchase` VALUES ('719340036637593600', null, null, '21', '15976328234', '8', '1501832138470', '广东移动', null, null, '12');
+INSERT INTO `purchase` VALUES ('719340961422905344', null, null, '21', '15976328234', '16', '1501832358954', '广东移动', null, null, '12');
+INSERT INTO `purchase` VALUES ('719342466490175488', null, null, '21', '15976328234', '16', '1501832717793', '广东移动', null, null, '12');
+INSERT INTO `purchase` VALUES ('719343379258806272', null, null, '21', '15976328234', '1', '1501832935411', '广东移动', null, null, '12');
+INSERT INTO `purchase` VALUES ('719345434316771328', null, null, '21', '15976328234', '16', '1501833425377', '广东移动', null, null, '12');
+INSERT INTO `purchase` VALUES ('719345849770971136', null, null, '21', '15976328234', '16', '1501833524428', '广东移动', null, null, '12');
+INSERT INTO `purchase` VALUES ('719355601729097728', null, null, '21', '15976328234', '16', '1501835849475', '广东移动', null, null, '12');
+INSERT INTO `purchase` VALUES ('719356920300834816', null, null, '21', '15976328234', '16', '1501836163849', '广东移动', null, null, '12');
+INSERT INTO `purchase` VALUES ('719357743223279616', null, null, '21', '15976328234', '16', '1501836360050', '广东移动', null, null, '12');
+INSERT INTO `purchase` VALUES ('719362451019141120', null, null, '21', '15976328234', '16', '1501837482474', '广东移动', null, null, '12');
+INSERT INTO `purchase` VALUES ('719619879090524160', null, null, '21', '13711849867', '8', '1501898858108', '广东移动', null, null, '12');
+INSERT INTO `purchase` VALUES ('719714672592293888', null, null, '21', '15919301311', '1', '1501921458637', '广东移动', null, null, '12');
+INSERT INTO `purchase` VALUES ('719728803823226880', null, null, '21', '15816061543', '16', '1501924827786', '广东移动', null, null, '12');
+INSERT INTO `purchase` VALUES ('719744389366157312', null, null, '21', '15013779746', '16', '1501928543671', '广东移动', null, null, '12');
 
 -- ----------------------------
 -- Table structure for `rate_backward`
