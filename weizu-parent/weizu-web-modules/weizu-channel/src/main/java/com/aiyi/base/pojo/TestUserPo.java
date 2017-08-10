@@ -1,9 +1,9 @@
 package com.aiyi.base.pojo;
 
-import com.weizu.flowsys.core.annotation.po.FieldName;
-import com.weizu.flowsys.core.annotation.po.TableName;
-import com.weizu.flowsys.core.annotation.po.TempField;
-import com.weizu.flowsys.core.beans.Po;
+import org.weizu.web.foundation.core.annotation.po.FieldName;
+import org.weizu.web.foundation.core.annotation.po.TableName;
+import org.weizu.web.foundation.core.annotation.po.TempField;
+import org.weizu.web.foundation.core.beans.Po;
 
 @TableName(name="q_test_table1")
 public class TestUserPo extends Po {

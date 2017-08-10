@@ -1,6 +1,5 @@
 package com.weizu.flowsys.web.http.ao;
 
-import java.io.IOException;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -15,7 +14,6 @@ import org.weizu.api.facet.charge.impl.ChargeParamsPage;
 import org.weizu.api.facet.charge.impl.ChargeResultPage;
 import org.weizu.api.facet.orderState.OrderStateBase;
 import org.weizu.api.facet.orderState.OrderStateFactory;
-import org.weizu.api.facet.orderState.OrderStatePageEnum;
 import org.weizu.api.facet.orderState.impl.OrderStateParamsPage;
 import org.weizu.api.facet.orderState.impl.OrderStateResultPage;
 import org.weizu.api.outter.enums.ChargeStatusEnum;
@@ -23,17 +21,14 @@ import org.weizu.api.outter.facade.ChargeFacade;
 import org.weizu.api.outter.pojo.charge.ChargeDTO;
 import org.weizu.api.outter.pojo.charge.ChargeOrder;
 import org.weizu.api.outter.pojo.charge.ChargeParams;
+import org.weizu.web.foundation.core.util.NumberTool;
 
-import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
-import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
-import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.util.OrderUril;
 import com.weizu.flowsys.web.activity.dao.IOperatorDiscountDao;
-import com.weizu.flowsys.web.activity.dao.impl.OperatorDiscountDaoImpl;
 import com.weizu.flowsys.web.activity.pojo.OperatorDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.OperatorScopeVO;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
@@ -52,7 +47,6 @@ import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
-import com.weizu.flowsys.web.http.weizu.OrderStateParams;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;

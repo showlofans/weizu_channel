@@ -1,6 +1,5 @@
 package com.weizu.flowsys.web.trade.pojo;
 
-import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 
 /**

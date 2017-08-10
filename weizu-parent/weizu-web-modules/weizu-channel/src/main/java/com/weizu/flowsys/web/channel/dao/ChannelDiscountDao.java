@@ -3,9 +3,8 @@ package com.weizu.flowsys.web.channel.dao;
 import java.util.List;
 import java.util.Map;
 
-import com.weizu.flowsys.core.dao.Dao;
-import com.weizu.flowsys.web.activity.pojo.OperatorDiscount;
-import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
+import org.weizu.web.foundation.core.dao.Dao;
+
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 
 /**

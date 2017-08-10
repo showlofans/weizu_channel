@@ -1,17 +1,13 @@
 package com.weizu.flowsys.web.activity.dao.impl;
 
-import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
+import org.weizu.web.foundation.core.dao.impl.DaoImpl;
 
-import com.weizu.flowsys.core.beans.WherePrams;
-import com.weizu.flowsys.core.dao.impl.DaoImpl;
-import com.weizu.flowsys.core.util.Formatter;
 import com.weizu.flowsys.web.activity.dao.AacJoinRdDao;
 import com.weizu.flowsys.web.activity.pojo.AacJoinRdPo;
 

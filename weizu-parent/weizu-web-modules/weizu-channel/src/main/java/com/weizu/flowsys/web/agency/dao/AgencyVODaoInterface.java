@@ -3,7 +3,8 @@ package com.weizu.flowsys.web.agency.dao;
 import java.util.List;
 import java.util.Map;
 
-import com.weizu.flowsys.core.dao.Dao;
+import org.weizu.web.foundation.core.dao.Dao;
+
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 

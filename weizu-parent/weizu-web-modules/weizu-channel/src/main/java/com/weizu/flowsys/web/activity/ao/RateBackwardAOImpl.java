@@ -7,9 +7,9 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.weizu.web.foundation.String.StringHelper;
 
 import com.aiyi.base.pojo.PageParam;
-import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.dao.impl.RateBackwardDaoImpl;
 import com.weizu.flowsys.web.activity.pojo.RateBackwardPo;

@@ -9,9 +9,9 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.weizu.web.foundation.String.StringHelper;
 
 import com.alibaba.fastjson.JSONArray;
-import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.web.activity.dao.IOperatorDiscountDao;
 import com.weizu.flowsys.web.activity.dao.impl.RateBackwardDaoImpl;

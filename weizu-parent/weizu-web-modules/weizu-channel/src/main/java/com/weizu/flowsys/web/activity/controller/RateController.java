@@ -1,7 +1,6 @@
 package com.weizu.flowsys.web.activity.controller;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -17,17 +16,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.weizu.web.foundation.String.StringHelper;
+import org.weizu.web.foundation.core.beans.WherePrams;
 
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
-import com.weizu.flowsys.core.annotation.po.TempField;
-import com.weizu.flowsys.core.beans.WherePrams;
-import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
-import com.weizu.flowsys.operatorPg.enums.ChannelDiscountTypeEnum;
-import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
+import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
@@ -38,12 +35,8 @@ import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
-import com.weizu.flowsys.web.activity.pojo.OperatorDiscount;
-import com.weizu.flowsys.web.activity.pojo.OperatorDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateBackwardPo;
-import com.weizu.flowsys.web.activity.pojo.RateBackwardVo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
-import com.weizu.flowsys.web.activity.pojo.RateJoinChannelPo;
 import com.weizu.flowsys.web.activity.url.RateURL;
 import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
@@ -54,8 +47,6 @@ import com.weizu.flowsys.web.channel.ao.ChannelChannelAO;
 import com.weizu.flowsys.web.channel.ao.ChannelDiscountAO;
 import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
-import com.weizu.flowsys.web.channel.dao.impl.ChannelDiscountDaoImpl;
-import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 
 /**

@@ -7,8 +7,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.weizu.web.foundation.String.StringHelper;
 
-import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.web.activity.dao.impl.ServiceScopeDao;
 import com.weizu.flowsys.web.activity.pojo.ServiceScopePo;
 

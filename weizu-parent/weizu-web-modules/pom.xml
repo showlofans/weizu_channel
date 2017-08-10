@@ -11,18 +11,25 @@
   <modules>
     <module>weizu-channel</module>
     <module>weizu-web-forward</module>
+    <module>weizu-web-domain</module>
   </modules>
   
   <dependencies>
+      <dependency>
+              <groupId>com.weizu.web</groupId>
+              <artifactId>weizu-web-foundation</artifactId>
+              <version>0.0.1-SNAPSHOT</version>
+              <type>jar</type>
+        </dependency>
         <dependency>
                 <groupId>com.weizu.web</groupId>
-                <artifactId>weizu-web-foundation</artifactId>
+                <artifactId>weizu-web-api</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
                 <type>jar</type>
         </dependency>
         <dependency>
                 <groupId>com.weizu.web</groupId>
-                <artifactId>weizu-web-api</artifactId>
+                <artifactId>weizu-web-service</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
                 <type>jar</type>
         </dependency>

@@ -1,8 +1,8 @@
 package com.weizu.flowsys.web.agency.pojo;
 
-import com.weizu.flowsys.core.annotation.po.TableName;
-import com.weizu.flowsys.core.beans.Po;
-import com.weizu.flowsys.core.util.NumberTool;
+import org.weizu.web.foundation.core.annotation.po.TableName;
+import org.weizu.web.foundation.core.beans.Po;
+import org.weizu.web.foundation.core.util.NumberTool;
 
 /**
  * @description:代理商充值账户实体

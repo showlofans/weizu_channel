@@ -3,9 +3,9 @@ package com.weizu.flowsys.web.channel.dao;
 import java.util.List;
 import java.util.Map;
 
-import com.weizu.flowsys.core.dao.Dao;
+import org.weizu.web.foundation.core.dao.Dao;
+
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
-import com.weizu.flowsys.web.channel.pojo.ChannelForwardPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 
 /**
