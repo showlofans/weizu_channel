@@ -2,7 +2,8 @@ package com.weizu.flowsys.web.trade.dao;
 
 import java.util.List;
 
-import com.weizu.flowsys.core.dao.Dao;
+import org.weizu.web.foundation.core.dao.Dao;
+
 import com.weizu.flowsys.web.trade.pojo.AgencyPurchasePo;
 
 /**

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weizu.web.domain.dao.impl.OperatorPgDao">
+	<sql id="t_pg">operator_pg_data</sql>
+	<sql id="t_pc">product_code</sql>
+	<sql id="t_aar">agency_active_rate</sql>
+	<sql id="t_rte">rate_discount</sql>
+	<sql id="t_cnel">channel_channel</sql>
+	<sql id="t_cd">channel_discount</sql>
+	<sql id="t_pCode">product_code</sql>
+	<!-- <sql id="t_scope">service_scope</sql> -->
+	
+	<resultMap id="BaseResultMap" type="com.weizu.web.domain.dto.OperatorPgDataPo">
+	    <id column="id" jdbcType="INTEGER" property="id" />
+	    <result column="operator_type" jdbcType="INTEGER" property="operatorType" />
+	    <result column="operator_name" jdbcType="VARCHAR" property="operatorName" />
+	    <result column="pg_size" jdbcType="INTEGER" property="pgSize" />
+	    <result column="pg_price" jdbcType="DOUBLE" property="pgPrice" />
+	    <result column="pg_name" jdbcType="VARCHAR" property="pgName" />
+	    <result column="pg_service_id" jdbcType="VARCHAR" property="pgServiceId" />
+	    <result column="pg_in_service" jdbcType="INTEGER" property="pgInService" />
+	 </resultMap>
+	<resultMap id="OtherMap" type="com.weizu.web.domain.dto.OperatorPgDataPo">
+	   <id column="id" jdbcType="INTEGER" property="id" />
+	    <!-- <result column="root_agency_id" jdbcType="INTEGER" property="rootAgencyId" /> -->
+	    <result column="operator_type" property="operatorType" />
+	    <result column="operator_name" jdbcType="VARCHAR" property="operatorName" />
+	    <result column="pg_in_service"  property="pgInService" />
+	    <result column="pg_name" jdbcType="VARCHAR" property="pgName" />
+	    <result column="pg_price" property="pgPrice" />
+	    <result column="pg_size" property="pgSize" />
+	    <!-- <result column="scope_city_name" jdbcType="VARCHAR" property="scopeCityName" /> -->
+	    <result column="service_type" property="serviceType" />
+	    <result column="product_code" property="productCode" />
+	 </resultMap>
+  <sql id="Base_Column_List">
+    id,operator_type,operator_name,pg_in_service,pg_name,pg_price,pg_size,service_type
+  </sql>
+  <sql id="myPg_Column_List">
+    pg.id,pg.operator_type,pg.operator_name,pg.pg_in_service,pg.pg_name,pg.pg_price,pg.pg_size,pg.service_type,pc.product_code
+  </sql>
+    <!-- 重载Add -->
+	<insert id="operatorPg_addList" useGeneratedKeys="true" parameterType="java.util.List" >
+		insert into operator_pg_data (operator_type,operator_name,pg_size,pg_price,pg_name,pg_in_service,service_type)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.operatorType},#{item.operatorName},#{item.pgSize},#{item.pgPrice},#{item.pgName},#{item.pgInService},#{item.serviceType})
+		</foreach>
+
+	</insert>
+	
+	<!-- 查询分页包体list -->
+	<select id="pgList_select" resultMap="OtherMap">
+		 select 
+    	<include refid="Base_Column_List" />
+   		 from <include refid="t_pg"></include>
+   		 <where>
+   		 	<include refid="condition_sql"></include>
+   		 </where>
+   		 order by id desc
+   		 <if test="start != null">
+   		 	limit #{start}
+   		 </if>
+   		 <if test="end != null">
+   		 	, #{end}
+   		 </if>
+   		 <if test="start == null &amp; end == null">
+   		 	limit 0,10
+   		 </if> 
+	</select>
+	<!-- 通过运营商类型查询购买包体list -->
+	<select id="pgList_forPurchase_type" resultMap="OtherMap" parameterType="java.lang.Integer" >
+		 select 
+    	<include refid="Base_Column_List" />
+   		 from <include refid="t_pg"></include>
+   		 <where>
+   		 	<include refid="pg_for_purchase_type"></include>
+   		 </where>
+	</select>
+	<!-- 通过流量包参数查询购买包体list -->
+	<select id="pgList_forPurchase_po" resultMap="OtherMap" parameterType="map" >
+		SELECT <include refid="myPg_Column_List"></include> 
+		FROM <include refid="t_pg"></include> pg
+		INNER JOIN <include refid="t_pc"></include> pc
+		on pc.pg_id=pg.id
+		<where>
+		AND pc.ep_id =
+		 (SELECT cnel.ep_id FROM <include refid="t_aar"></include> aar
+		INNER JOIN <include refid="t_rte"></include> rte
+		on aar.rate_discount_id=rte.id
+		INNER JOIN <include refid="t_cd"></include> cd
+		on rte.channel_discount_id=cd.id
+		INNER JOIN <include refid="t_cnel"></include> cnel
+		on rte.channel_id=cnel.id
+		<where>
+			AND rte.bill_type=0<!-- 默认用对私账户进行页面充值 -->
+			<if test="agencyId != null">
+				AND aar.agency_id= #{agencyId}
+			</if>
+			<if test="operatorType != null">
+				AND cd.operator_type = #{operatorType}
+			</if>
+			<if test="serviceType != null">
+				AND cd.service_type = #{serviceType}
+			</if>
+			<if test="scopeCityCode != null">
+				AND cd.scope_city_code = #{scopeCityCode}
+			</if>
+		</where>)
+		<include refid="pg_for_purchase_po"></include>
+		</where> 
+		<!--  select 
+    	<include refid="myPg_Column_List" />
+   		 from <include refid="t_pg"></include>
+   		 <where>
+   		 	<include refid="pg_for_purchase_po"></include>
+   		 </where> -->
+	</select>
+	<!-- 通过流量包参数查询 -->
+	<sql id="pg_for_purchase_po">
+		AND pg_in_service = 1
+		<!-- <if test="operatorName != null">
+			AND pg.operator_name = #{operatorName}
+		</if> -->
+		<if test="operatorType != null">
+			AND pg.operator_type = #{operatorType}
+		</if>
+		<if test="serviceType != null">
+			AND pg.service_type = #{serviceType}
+		</if>
+	</sql>
+	<!-- 通过运营商类型查询 -->
+	<sql id="pg_for_purchase_type">
+		pg_in_service = 1
+		<if test="_parameter != null">
+			AND operator_type = #{_parameter}
+		</if>
+	</sql>
+	
+	<!-- 查询总记录数 -->
+	<select id="pgList_size" resultType="int">
+		select count(*) from<include refid="t_pg"></include>
+		 <where>
+   		 	<include refid="condition_sql"></include>
+   		 </where>
+	</select>
+	<!-- 根据运营商类型查询通道规格列表 -->
+	<select id="pgSizeList" parameterType="com.weizu.web.domain.dto.OperatorPgDataPo" resultType="java.lang.Integer">
+		select pg_size from <include refid="t_pg"></include> pg
+		<where>
+			<include refid="condition_sql"></include>
+		</where>
+	</select>
+	
+	<!-- 查询where语句块 -->
+	<sql id="condition_sql">
+		<if test="operatorName != null">
+			AND operator_name LIKE CONCAT('%', TRIM(#{operatorName}), '%')
+		</if>
+		<if test="pgSize != null">
+			AND pg_size = #{pgSize}
+		</if>
+		<!-- <if test="scopeCityName != null">
+			AND scope_city_name LIKE CONCAT('%', TRIM(#{scopeCityName}), '%')
+		</if> -->
+		<if test="id != null">
+			AND id = #{id}
+		</if>
+		<if test="operatorType != null">
+			AND operator_type = #{operatorType}
+		</if>
+		<if test="serviceType != null">
+			AND service_type = #{serviceType}
+		</if>
+		<if test="pgInService != null">
+			AND pg_in_service = #{pgInService}
+		</if>
+		<if test="pgPrice != null">
+			AND pg_price = #{pgPrice}
+		</if>
+	</sql>
+ <!-- 查询某个平台没有设置产品编码的包体 -->
+ <select id="listPgListNotInPcode" parameterType="map" resultMap="BaseResultMap">
+ 	select <include refid="Base_Column_List"></include> 
+ 	from <include refid="t_pg"></include> pg1
+ 	<where>
+ 		pg1.id not IN (SELECT pcode.pg_id from <include refid="t_pCode"></include> pcode 
+ 		INNER JOIN <include refid="t_pg"></include> pg2 ON pcode.pg_id = pg2.id 
+		<where>
+			<if test="epId != null">
+				pcode.ep_id = #{epId}
+			</if>
+		</where>)
+		<if test="operatorType != null">
+			AND operator_type = #{operatorType}
+		</if>
+		<if test="serviceType != null">
+			AND service_type = #{serviceType}
+		</if>
+ 	</where>
+ </select>
+</mapper>

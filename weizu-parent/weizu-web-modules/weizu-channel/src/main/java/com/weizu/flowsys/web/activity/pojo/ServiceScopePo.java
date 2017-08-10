@@ -1,7 +1,7 @@
 package com.weizu.flowsys.web.activity.pojo;
 
-import com.weizu.flowsys.core.annotation.po.TableName;
-import com.weizu.flowsys.core.beans.Po;
+import org.weizu.web.foundation.core.annotation.po.TableName;
+import org.weizu.web.foundation.core.beans.Po;
 
 /**
  * @description:流量包业务范围实体类<br>

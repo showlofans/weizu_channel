@@ -8,9 +8,9 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.weizu.web.foundation.String.StringHelper;
 
 import com.aiyi.base.pojo.PageParam;
-import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.dao.IProductCodeDAO;

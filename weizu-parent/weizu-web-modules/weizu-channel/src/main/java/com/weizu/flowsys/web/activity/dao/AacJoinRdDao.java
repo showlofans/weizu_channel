@@ -2,7 +2,8 @@ package com.weizu.flowsys.web.activity.dao;
 
 import java.util.List;
 
-import com.weizu.flowsys.core.dao.Dao;
+import org.weizu.web.foundation.core.dao.Dao;
+
 import com.weizu.flowsys.web.activity.pojo.AacJoinRdPo;
 
 public interface AacJoinRdDao extends Dao<AacJoinRdPo, Long> {

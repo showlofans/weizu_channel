@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.channel.dao;
 
-import com.weizu.flowsys.core.dao.Dao;
+import org.weizu.web.foundation.core.dao.Dao;
+
 import com.weizu.flowsys.web.channel.pojo.ActiveChannelPo;
 
 /**

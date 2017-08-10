@@ -1,7 +1,5 @@
 package com.weizu.flowsys.web.channel.dao.impl;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -9,16 +7,9 @@ import javax.annotation.Resource;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
+import org.weizu.web.foundation.core.dao.impl.DaoImpl;
 
-import com.weizu.flowsys.core.dao.impl.DaoImpl;
-import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
-import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
-import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
-import com.weizu.flowsys.web.activity.pojo.OperatorDiscount;
-import com.weizu.flowsys.web.activity.pojo.OperatorDiscountPo;
-import com.weizu.flowsys.web.activity.pojo.ScopeDiscount;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
-import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 
 @Repository(value="channelDiscountDao")

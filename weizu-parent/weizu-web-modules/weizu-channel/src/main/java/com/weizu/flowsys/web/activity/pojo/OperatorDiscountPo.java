@@ -3,10 +3,9 @@ package com.weizu.flowsys.web.activity.pojo;
 import java.util.List;
 import java.util.Map;
 
-import com.weizu.flowsys.core.annotation.po.TableName;
-import com.weizu.flowsys.core.annotation.po.TempField;
-import com.weizu.flowsys.core.beans.Po;
-import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
+import org.weizu.web.foundation.core.annotation.po.TableName;
+import org.weizu.web.foundation.core.annotation.po.TempField;
+import org.weizu.web.foundation.core.beans.Po;
 
 /**
  * @description:费率（运营商地区折扣）实体

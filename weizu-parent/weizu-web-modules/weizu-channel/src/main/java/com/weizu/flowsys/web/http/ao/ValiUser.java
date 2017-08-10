@@ -1,11 +1,12 @@
+
 package com.weizu.flowsys.web.http.ao;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.weizu.web.foundation.MD5;
+import org.weizu.web.foundation.core.beans.WherePrams;
 
-import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.web.agency.dao.impl.AgencyBackwardDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.channel.dao.impl.OperatorPgDao;

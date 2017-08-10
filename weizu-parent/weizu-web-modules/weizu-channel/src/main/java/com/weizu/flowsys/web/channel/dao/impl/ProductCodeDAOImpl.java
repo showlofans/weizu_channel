@@ -6,12 +6,11 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
+import org.weizu.web.foundation.String.StringHelper;
+import org.weizu.web.foundation.core.dao.impl.DaoImpl;
 
-import com.weizu.flowsys.core.dao.impl.DaoImpl;
-import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.web.channel.dao.IProductCodeDAO;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 

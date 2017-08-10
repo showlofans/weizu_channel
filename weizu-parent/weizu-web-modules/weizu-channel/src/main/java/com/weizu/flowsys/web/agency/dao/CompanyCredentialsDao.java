@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.agency.dao;
 
-import com.weizu.flowsys.core.dao.Dao;
+import org.weizu.web.foundation.core.dao.Dao;
+
 import com.weizu.flowsys.web.agency.pojo.CompanyCredentialsPo;
 
 public interface CompanyCredentialsDao extends Dao<CompanyCredentialsPo, Integer> {

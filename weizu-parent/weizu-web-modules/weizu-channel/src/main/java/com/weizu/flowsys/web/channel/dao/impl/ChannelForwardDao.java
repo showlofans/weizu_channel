@@ -1,7 +1,6 @@
 package com.weizu.flowsys.web.channel.dao.impl;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -9,16 +8,13 @@ import javax.annotation.Resource;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
+import org.weizu.web.foundation.core.dao.impl.DaoImpl;
 
-import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
-import com.weizu.flowsys.util.StringUtil2;
-import com.weizu.flowsys.web.activity.pojo.ScopeDiscount;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 import com.weizu.flowsys.web.channel.dao.ChannelForwardDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.BestChannelPO;
-import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelForwardPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 

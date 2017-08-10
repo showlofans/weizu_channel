@@ -2,7 +2,8 @@ package com.weizu.flowsys.web.channel.util;
 
 import java.util.List;
 
-import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
+import org.weizu.web.foundation.String.StringHelper;
+
 import com.weizu.flowsys.web.channel.pojo.ChannelForwardPo;
 
 /**

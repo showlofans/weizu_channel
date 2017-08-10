@@ -6,8 +6,8 @@ import javax.annotation.Resource;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
+import org.weizu.web.foundation.core.dao.impl.DaoImpl;
 
-import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.web.channel.dao.IAgencyEpDAO;
 import com.weizu.flowsys.web.channel.pojo.AgencyEpPo;
 

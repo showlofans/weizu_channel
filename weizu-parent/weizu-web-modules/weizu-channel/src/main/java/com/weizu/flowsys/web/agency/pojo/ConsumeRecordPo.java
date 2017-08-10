@@ -1,10 +1,9 @@
 package com.weizu.flowsys.web.agency.pojo;
 
 import org.weizu.web.foundation.DateUtil;
-
-import com.weizu.flowsys.core.annotation.po.TableName;
-import com.weizu.flowsys.core.annotation.po.TempField;
-import com.weizu.flowsys.core.beans.Po;
+import org.weizu.web.foundation.core.annotation.po.TableName;
+import org.weizu.web.foundation.core.annotation.po.TempField;
+import org.weizu.web.foundation.core.beans.Po;
 
 /**
  * @description:账户消费记录实体

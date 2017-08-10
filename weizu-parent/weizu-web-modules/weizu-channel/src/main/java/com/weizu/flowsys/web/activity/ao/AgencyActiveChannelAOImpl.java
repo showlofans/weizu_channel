@@ -10,10 +10,9 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.weizu.web.foundation.DateUtil;
-import org.weizu.web.foundation.StringUtil;
+import org.weizu.web.foundation.String.StringHelper;
 
 import com.aiyi.base.pojo.PageParam;
-import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
@@ -22,15 +21,11 @@ import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.web.activity.dao.AacJoinRdDao;
 import com.weizu.flowsys.web.activity.dao.AgencyActiveChannelDao;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
-import com.weizu.flowsys.web.activity.pojo.AacJoinRdPo;
 import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
 import com.weizu.flowsys.web.activity.pojo.DiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
-import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
-import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
-import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 @Service(value="agencyActiveChannelAO")
 public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 

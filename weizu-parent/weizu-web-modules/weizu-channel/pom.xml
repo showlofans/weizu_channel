@@ -19,6 +19,11 @@
 	</properties>
   
   <dependencies>
+  	<dependency>
+		<groupId>com.weizu.web</groupId>
+ 			<artifactId>weizu-web-domain</artifactId>
+ 			<version>0.0.1-SNAPSHOT</version>
+	</dependency>
   	<!-- https://mvnrepository.com/artifact/aopalliance/aopalliance -->
 		<dependency>
 			<groupId>aopalliance</groupId>
