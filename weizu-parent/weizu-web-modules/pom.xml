@@ -27,12 +27,6 @@
                 <version>0.0.1-SNAPSHOT</version>
                 <type>jar</type>
         </dependency>
-        <dependency>
-                <groupId>com.weizu.web</groupId>
-                <artifactId>weizu-web-service</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-                <type>jar</type>
-        </dependency>
 
         <!-- servlet -->
         <dependency>

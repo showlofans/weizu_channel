@@ -1,0 +1,285 @@
+[33mcommit 29e496533a8bf4ac81f0f48d327c052590aaddcf[m
+Author: showlofans <1727661035@qq.com>
+Date:   Thu Aug 10 18:24:01 2017 +0800
+
+    08-10
+    
+    分离项目，把充值接口模块和充值逻辑从主项目中分离出来
+
+[33mcommit 4d8a3212474934ba2f0c3248da19a70054d004a0[m
+Author: showlofans <1727661035@qq.com>
+Date:   Mon Aug 7 18:39:35 2017 +0800
+
+    08-07
+    
+    订单列表查询优化
+    分模块设置接口，待完成
+
+[33mcommit 6b151f19761d66c422e5158c7b896c37af0f0c62[m
+Author: showlofans <1727661035@qq.com>
+Date:   Sat Aug 5 19:09:56 2017 +0800
+
+    08-05
+    
+    解决maven打包问题
+    通道编码逻辑优化
+    得到充值进行，等待，成功，失败列表
+    
+    手动修改状态还剩一个修改状态权限的问题
+
+[33mcommit 72256ba5118ab4c10c408c7666b0cfe6d3a69fb3[m
+Author: showlofans <1727661035@qq.com>
+Date:   Fri Aug 4 18:23:48 2017 +0800
+
+    08-04
+    
+    消费记录查询有待完善
+    订单查询优化
+    在线充值减少响应时间
+
+[33mcommit 03aefe957eb3aee797c1c6f5ffb11a6f724dd9a9[m
+Author: showlofans <1727661035@qq.com>
+Date:   Thu Aug 3 18:38:34 2017 +0800
+
+    08-03
+    
+    页面充值
+    加载页面订单基本正常
+
+[33mcommit cb7323c7ab7ee841a54fa13318b0648eec187886[m
+Author: showlofans <1727661035@qq.com>
+Date:   Wed Aug 2 18:14:37 2017 +0800
+
+    08-02
+    
+    页面充值
+    加载包体完成
+    流量充值订单逻辑完善（一个订单可由多个代理商共享）
+
+[33mcommit eff3c2fd784406744b8ce73cacfc684191fedd90[m
+Author: showlofans <1727661035@qq.com>
+Date:   Tue Aug 1 18:54:30 2017 +0800
+
+    08-01
+    
+    网页充值加载包体列表还有一点bug没解决
+
+[33mcommit 7644a25238f1af2bbc4fb3516248029119ccae61[m
+Author: showlofans <1727661035@qq.com>
+Date:   Mon Jul 31 18:28:47 2017 +0800
+
+    07-31
+    
+    流量充值的通道编码的详细设计做完了
+    修复通道折扣绑定列表添加折扣bug
+    
+    继续完成页面充值的通道编码
+
+[33mcommit caf4836ad477a8c073e97a9daf4070c0aecfcab4[m
+Author: showlofans <1727661035@qq.com>
+Date:   Sat Jul 29 19:22:08 2017 +0800
+
+    07-29-01
+    
+    修复主代理商也能得到孙代理商的bug
+    绑定费率列表页面首页显示通道折扣
+
+[33mcommit 1e94757b664dfc5e86422c26f76c87d48edc412c[m
+Author: showlofans <1727661035@qq.com>
+Date:   Sat Jul 29 18:50:37 2017 +0800
+
+    07-29
+    
+    完成给子代理商配置费率
+
+[33mcommit 1ca0255872990f8834ee187d335275de6d56aeb5[m
+Author: showlofans <1727661035@qq.com>
+Date:   Fri Jul 28 18:40:53 2017 +0800
+
+    07-28
+    
+    加款功能完善
+    绘制二级代理商给下级代理商添加折扣页面
+
+[33mcommit 88d78fa756b068688618552e56978ae843e60e1c[m
+Author: showlofans <1727661035@qq.com>
+Date:   Thu Jul 27 18:38:34 2017 +0800
+
+    07-27
+    
+    电话文本批量上传，得到所有号码（还有号码地区判断没写）
+    分析推送回调问题和部署问题
+    分析费率折扣添加问题
+
+[33mcommit 97ac55d7567263154ac0f9564a0eb99c6590dd2e[m
+Author: showlofans <1727661035@qq.com>
+Date:   Wed Jul 26 18:20:25 2017 +0800
+
+    07-26
+    
+    1. 编辑平台和删除平台信息；级联删除通道绑定
+    
+    2. 权限区分（给代理商配置通道的权限和其他操作权限）
+    
+    3. 添加qq交谈，注册代理商增加其他联系方式（qq号）字段，
+    登陆之后自动得到父级代理商的联系方式
+    
+    4. 绘制批量充值的页面
+
+[33mcommit c966fb3b82903c7819c8f7b49c6a954881f6a48f[m
+Author: showlofans <1727661035@qq.com>
+Date:   Tue Jul 25 20:59:03 2017 +0800
+
+    07-25
+    
+    child_agency_list
+
+[33mcommit 701071255770197f90b1e60fa1fa50327c0853f2[m
+Author: showlofans <1727661035@qq.com>
+Date:   Mon Jul 24 18:11:58 2017 +0800
+
+    07-24
+    
+    解决最后一个数据上传的问题（身份证反面上传的bug和修改审核时间）
+    修改审核状态
+
+[33mcommit cad59409639d1f4c68d66b27825dac148d4a4ed0[m
+Author: showlofans <1727661035@qq.com>
+Date:   Sat Jul 22 18:16:46 2017 +0800
+
+    07-22
+    
+    身份证反面上传的bug，还有修改审核状态等操作没完成
+    图片重新部署后自动清除的bug
+
+[33mcommit 22a07c9da312d4790682a110d8e5ed3f703e986d[m
+Author: showlofans <1727661035@qq.com>
+Date:   Fri Jul 21 18:30:00 2017 +0800
+
+    07-21
+    
+    图片上传功能基本完成了
+    开通对公账户完成了一部分，
+    还剩下一些问题，比如还没审核，或者已经审核过的，应该是只读的状态，不能编辑
+    审核过的要编辑，就需要上一级代理商的修改
+    还有开通后的通知显示，加载列表，以及审核认证
+
+[33mcommit 7b25a05baae89f1ac05a278f1e85a1ec8f9bcb05[m
+Author: showlofans <1727661035@qq.com>
+Date:   Thu Jul 20 18:20:24 2017 +0800
+
+    07-20
+    
+    所有列表搜索优化，刷新优化，重置优化
+    修改下级代理商，返回刷新优化。
+    重置下级代理商密码
+    上传图片和认证信息,待完成
+
+[33mcommit 95547b1642140b3d0545d866a0f892c726e148f0[m
+Author: showlofans <1727661035@qq.com>
+Date:   Wed Jul 19 20:35:21 2017 +0800
+
+    sql
+    
+    sql
+
+[33mcommit c6bb509ed38d41c4b5885abcbffdd4f9f7f911d9[m
+Author: showlofans <1727661035@qq.com>
+Date:   Wed Jul 19 20:34:36 2017 +0800
+
+    07-19
+    
+    修改数据库带票字段，通道折扣区分带票，绑定通道页面添加通道类型显示
+    首页显示最新折扣信息
+    确认最新的解决方案
+
+[33mcommit cf8c40221be78ed56ee4e2c88848502617077e4c[m
+Author: showlofans <1727661035@qq.com>
+Date:   Tue Jul 18 18:17:15 2017 +0800
+
+    07-18
+    
+    完成通道批量绑定代理商
+    活动费率列表还有是否带票的展示优化
+
+[33mcommit 9c9867b0c0f381941c300c834651a9339be579cf[m
+Author: showlofans <1727661035@qq.com>
+Date:   Mon Jul 17 18:34:36 2017 +0800
+
+    07-17
+    
+    通道绑定代理商
+    可以修改折扣，完成修改折扣之前要解除所有绑定的逻辑，还剩一个删除折扣的实现
+    待绑定代理商可以加载出来了。还剩最后的一键绑定代理商的实现
+
+[33mcommit 5024d858103359488d2820a920b4b7e7e4371b39[m
+Author: showlofans <1727661035@qq.com>
+Date:   Sat Jul 15 18:21:30 2017 +0800
+
+    07-15
+    
+    通道绑定代理商
+    折扣添加带票搜索，
+    列表增加代理商名称搜索，
+    解除绑定增加弹出提示（显示绑定信息）
+    在通道上直接添加折扣
+    还剩折扣编辑，批量绑定代理商待完成
+
+[33mcommit 920aa5d1cd777321bc048745f54a6bdd7e7e5eaa[m
+Author: showlofans <1727661035@qq.com>
+Date:   Fri Jul 14 18:42:25 2017 +0800
+
+    07-14
+    
+    页面优化（单选按钮等）
+    重新设计通道费率逻辑
+    修改绑定逻辑
+    待完善
+
+[33mcommit fe7fb8d4bb693ea3fa44d909d718f7eb62135da1[m
+Author: showlofans <1727661035@qq.com>
+Date:   Thu Jul 13 18:27:32 2017 +0800
+
+    07-13
+    
+    加载绑定代理商列表完成
+    还有关键的编辑折扣，添加折扣，批量绑定代理商，没完成
+
+[33mcommit 258c57ffd85a83d7ea88ea0ce049565bed69834d[m
+Author: showlofans <1727661035@qq.com>
+Date:   Wed Jul 12 18:32:47 2017 +0800
+
+    07-12
+    
+    通道绑定代理商，加载通道信息
+    还有关键的编辑折扣，添加折扣，批量绑定代理商，加载绑定代理商列表的工作没完成
+
+[33mcommit 4517874ec88c688209727bf3332053de472872b0[m
+Author: showlofans <1727661035@qq.com>
+Date:   Tue Jul 11 18:32:24 2017 +0800
+
+    07-11
+    
+    完成代理商修改自己的密码
+    对私账户充值正常
+    通道绑定代理商，添加一个aac_join_rd表，和设计
+
+[33mcommit 976f395f36bcc17f1cbe1024be5cb3ce9f761b94[m
+Author: showlofans <1727661035@qq.com>
+Date:   Mon Jul 10 19:08:33 2017 +0800
+
+    07-10
+    
+    账户充值完善，通道配置代理商设计
+
+[33mcommit eec6b581afeced2b1ac441710232e667cc75b535[m
+Author: showlofans <1727661035@qq.com>
+Date:   Sat Jul 8 18:05:04 2017 +0800
+
+    07-08
+    
+    优化代理商绑定通道列表展示，
+    绑定页面js逻辑
+    更新绑定状态等
+
+[33mcommit 23509569ad4760db0ccd11627ebf37bae287e266

@@ -2,7 +2,7 @@ package com.weizu.flowsys.web.trade.ao;
 
 import java.util.Map;
 
-import org.weizu.api.facet.orderState.PageOrder;
+//import org.weizu.api.facet.orderState.PageOrder;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
@@ -60,7 +60,7 @@ public interface PurchaseAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月26日 下午12:57:43
 	 */
-	int checkOrderState(PageOrder pageOrder, PurchaseVO purchaseVO);
+//	int checkOrderState(PageOrder pageOrder, PurchaseVO purchaseVO);
 	
 	/**
 	 * @description: 通过订单Id查询订单
