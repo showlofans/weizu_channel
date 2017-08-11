@@ -1,7 +1,5 @@
 package com.weizu.flowsys.web.http.api.forward.weizu;
 
-import org.weizu.web.foundation.http.HttpRequest;
-
 import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.web.http.api.base.APIParams;
 import com.weizu.flowsys.web.http.api.base.APIResult;
@@ -12,6 +10,7 @@ import com.weizu.flowsys.web.http.api.facet.orderState.OrderStatePageEnum;
 import com.weizu.flowsys.web.http.api.facet.orderState.PageOrder;
 import com.weizu.flowsys.web.http.api.facet.orderState.impl.OrderStateParamsPage;
 import com.weizu.flowsys.web.http.api.facet.orderState.impl.OrderStateResultPage;
+import com.weizu.web.foundation.http.HttpRequest;
 
 /**
  * @description:订单状态对上接口

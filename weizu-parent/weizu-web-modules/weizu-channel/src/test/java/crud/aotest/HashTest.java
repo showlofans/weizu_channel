@@ -1,9 +1,9 @@
 package crud.aotest;
 
-import org.weizu.web.foundation.hash.Hash;
-import org.weizu.web.foundation.hash.aes.AESUtil;
-import org.weizu.web.foundation.hash.base64.Base64Util;
-import org.weizu.web.foundation.hash.des.DESUtil;
+import com.weizu.web.foundation.hash.Hash;
+import com.weizu.web.foundation.hash.aes.AESUtil;
+import com.weizu.web.foundation.hash.base64.Base64Util;
+import com.weizu.web.foundation.hash.des.DESUtil;
 
 /**
  * @description:测试hash工具类

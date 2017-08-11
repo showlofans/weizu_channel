@@ -1,6 +1,6 @@
 package crud.aotest.apiTest;
 
-import org.weizu.web.foundation.MD5;
+import com.weizu.web.foundation.MD5;
 
 public class TestBalance {
 	

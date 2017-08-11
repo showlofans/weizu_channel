@@ -1,13 +1,14 @@
 package com.weizu.web.domain.dao.impl;
 
+
 import javax.annotation.Resource;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
-import org.weizu.web.foundation.core.dao.impl.DaoImpl;
 
 import com.weizu.web.domain.dao.AgengcyBackwardDaoInterface;
 import com.weizu.web.domain.dto.AgencyBackwardPo;
+import com.weizu.web.foundation.core.dao.impl.DaoImpl;
 
 /**
  * @description:代理商DAO层实现类

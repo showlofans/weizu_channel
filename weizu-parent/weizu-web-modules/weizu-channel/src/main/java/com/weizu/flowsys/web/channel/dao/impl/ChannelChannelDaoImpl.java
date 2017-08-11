@@ -9,7 +9,6 @@ import javax.annotation.Resource;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
-import org.weizu.web.foundation.core.dao.impl.DaoImpl;
 
 import com.weizu.flowsys.operatorPg.enums.ChannelDiscountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
@@ -21,6 +20,7 @@ import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
+import com.weizu.web.foundation.core.dao.impl.DaoImpl;
 
 @Repository(value = "channelChannelDao")
 public class ChannelChannelDaoImpl extends DaoImpl<ChannelChannelPo, Long> implements

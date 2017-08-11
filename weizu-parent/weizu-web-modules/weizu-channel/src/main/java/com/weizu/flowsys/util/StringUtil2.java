@@ -1,8 +1,7 @@
 package com.weizu.flowsys.util;
 
-import org.weizu.web.foundation.StringUtil;
-
 import com.weizu.flowsys.web.base.ATT;
+import com.weizu.web.foundation.StringUtil;
 
 /**
  * 字符串操作工具类整理

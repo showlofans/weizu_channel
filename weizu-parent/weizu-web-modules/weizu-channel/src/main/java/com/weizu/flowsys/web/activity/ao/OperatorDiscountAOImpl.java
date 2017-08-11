@@ -9,7 +9,6 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.weizu.web.foundation.String.StringHelper;
 
 import com.alibaba.fastjson.JSONArray;
 import com.weizu.flowsys.util.StringUtil2;
@@ -22,6 +21,7 @@ import com.weizu.flowsys.web.activity.pojo.RateBackwardVo;
 import com.weizu.flowsys.web.activity.pojo.ScopeDiscount;
 import com.weizu.flowsys.web.agency.dao.impl.AgencyVODao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
+import com.weizu.web.foundation.String.StringHelper;
 
 /**
  * @description:费率操作业务层接口实现

@@ -2,9 +2,8 @@ package com.weizu.flowsys.web.channel.util;
 
 import java.util.List;
 
-import org.weizu.web.foundation.String.StringHelper;
-
 import com.weizu.flowsys.web.channel.pojo.ChannelForwardPo;
+import com.weizu.web.foundation.String.StringHelper;
 
 /**
  * @description: 通道工具类

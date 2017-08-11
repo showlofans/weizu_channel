@@ -1,6 +1,6 @@
 package com.weizu.flowsys.web.base;
 
-import org.weizu.web.foundation.MD5;
+import com.weizu.web.foundation.MD5;
 
 /**
  * 公共字段类

@@ -3,13 +3,13 @@ package com.weizu.flowsys.web.http.ao;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
-import org.weizu.web.foundation.MD5;
-import org.weizu.web.foundation.core.beans.WherePrams;
 
 import com.weizu.flowsys.web.http.dao.AgencyBackwardDao;
 import com.weizu.flowsys.web.http.pojo.AgencyBackwardPo;
 import com.weizu.web.domain.dao.impl.OperatorPgDao;
 import com.weizu.web.domain.dto.OperatorPgDataPo;
+import com.weizu.web.foundation.MD5;
+import com.weizu.web.foundation.core.beans.WherePrams;
 
 /**
  * @description: 验证调用接口用户是否合法

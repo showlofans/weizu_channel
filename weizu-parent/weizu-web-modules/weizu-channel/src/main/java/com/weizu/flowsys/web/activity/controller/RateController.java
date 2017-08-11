@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.weizu.web.foundation.String.StringHelper;
-import org.weizu.web.foundation.core.beans.WherePrams;
 
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
@@ -48,6 +46,8 @@ import com.weizu.flowsys.web.channel.ao.ChannelDiscountAO;
 import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
+import com.weizu.web.foundation.String.StringHelper;
+import com.weizu.web.foundation.core.beans.WherePrams;
 
 /**
  * @description:费率管理

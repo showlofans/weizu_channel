@@ -1,8 +1,8 @@
 package com.weizu.flowsys.web.activity.pojo;
 
-import org.weizu.web.foundation.core.annotation.po.TableName;
-import org.weizu.web.foundation.core.annotation.po.TempField;
-import org.weizu.web.foundation.core.beans.Po;
+import com.weizu.web.foundation.core.annotation.po.TableName;
+import com.weizu.web.foundation.core.annotation.po.TempField;
+import com.weizu.web.foundation.core.beans.Po;
 
 @TableName(name="agency_active_rate")
 public class AgencyActiveRateDTO extends Po {

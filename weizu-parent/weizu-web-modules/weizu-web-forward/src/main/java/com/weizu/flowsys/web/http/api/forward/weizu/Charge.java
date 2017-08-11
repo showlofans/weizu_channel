@@ -1,7 +1,5 @@
 package com.weizu.flowsys.web.http.api.forward.weizu;
 
-import org.weizu.web.foundation.http.HttpRequest;
-
 import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.web.http.api.base.APIParams;
 import com.weizu.flowsys.web.http.api.base.APIResult;
@@ -11,6 +9,7 @@ import com.weizu.flowsys.web.http.api.facet.charge.ChargeBase;
 import com.weizu.flowsys.web.http.api.facet.charge.ChargePageOrder;
 import com.weizu.flowsys.web.http.api.facet.charge.impl.ChargeParamsPage;
 import com.weizu.flowsys.web.http.api.facet.charge.impl.ChargeResultPage;
+import com.weizu.web.foundation.http.HttpRequest;
 
 /**
  * @description:微族充值

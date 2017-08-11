@@ -1,12 +1,11 @@
 package com.weizu.apiTest;
 
 
-import org.weizu.web.foundation.MD5;
-
 import com.weizu.flowsys.web.http.api.facet.balance.BalanceBase;
 import com.weizu.flowsys.web.http.api.facet.balance.BalanceFactory;
 import com.weizu.flowsys.web.http.api.facet.balance.impl.BalanceParamsPage;
 import com.weizu.flowsys.web.http.api.facet.balance.impl.BalanceResultPage;
+import com.weizu.web.foundation.MD5;
 
 public class TestBalance {
 	

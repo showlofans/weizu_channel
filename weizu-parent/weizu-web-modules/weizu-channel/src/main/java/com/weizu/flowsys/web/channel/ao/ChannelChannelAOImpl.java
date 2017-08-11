@@ -9,7 +9,6 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import org.weizu.web.foundation.String.StringHelper;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
@@ -23,6 +22,7 @@ import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
+import com.weizu.web.foundation.String.StringHelper;
 
 @Service(value="channelChannelAO")
 public class ChannelChannelAOImpl implements ChannelChannelAO {

@@ -3,10 +3,9 @@ package com.weizu.flowsys.web.agency.dao;
 import java.util.List;
 import java.util.Map;
 
-import org.weizu.web.foundation.core.dao.Dao;
-
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
+import com.weizu.web.foundation.core.dao.Dao;
 
 public interface AgencyVODaoInterface extends Dao<AgencyBackwardPo, Integer> {
 	/**

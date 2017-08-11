@@ -6,7 +6,8 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.weizu.web.foundation.DateUtil;
+
+import com.weizu.web.foundation.DateUtil;
 
 /**
  * 订单号生成工具类

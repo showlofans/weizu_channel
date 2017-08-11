@@ -17,12 +17,12 @@ import org.weizu.api.outter.pojo.charge.ChargeDTO;
 import org.weizu.api.outter.pojo.charge.ChargeParams;
 import org.weizu.api.outter.pojo.order.OrderDTO;
 import org.weizu.api.outter.pojo.order.OrderParams;
-import org.weizu.web.foundation.String.StringHelper;
 
 import com.alibaba.fastjson.JSON;
 //import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 //import com.weizu.flowsys.web.agency.dao.impl.ChargeRecordDao;
 //import com.weizu.flowsys.web.http.ao.ValiUser;
+import com.weizu.web.foundation.String.StringHelper;
 
 /**
  * @description:对外开放的查询接口

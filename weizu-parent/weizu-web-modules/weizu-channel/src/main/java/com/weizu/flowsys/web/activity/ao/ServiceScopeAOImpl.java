@@ -7,10 +7,10 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
-import org.weizu.web.foundation.String.StringHelper;
 
 import com.weizu.flowsys.web.activity.dao.impl.ServiceScopeDao;
 import com.weizu.flowsys.web.activity.pojo.ServiceScopePo;
+import com.weizu.web.foundation.String.StringHelper;
 
 /**
  * @description:流量范围AO层接口实现类

@@ -1,9 +1,8 @@
 package com.weizu.flowsys.web.http.api.forward.weizu;
 
-import org.weizu.web.foundation.MD5;
-
 import com.weizu.flowsys.web.http.api.base.APIParams;
 import com.weizu.flowsys.web.http.api.base.ParamsAPIBase;
+import com.weizu.web.foundation.MD5;
 
 
 /**
