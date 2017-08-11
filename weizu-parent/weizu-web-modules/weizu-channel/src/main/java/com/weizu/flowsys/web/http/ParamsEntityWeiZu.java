@@ -1,6 +1,6 @@
 package com.weizu.flowsys.web.http;
 
-import org.weizu.web.foundation.MD5;
+import com.weizu.web.foundation.MD5;
 
 /**
  * @description:订购参数

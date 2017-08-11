@@ -1,6 +1,6 @@
 package com.weizu.flowsys.web.activity.pojo;
 
-import org.weizu.web.foundation.core.annotation.po.TempField;
+import com.weizu.web.foundation.core.annotation.po.TempField;
 
 /**
  * @description: 首页展示实体

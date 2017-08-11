@@ -8,11 +8,11 @@ import javax.annotation.Resource;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
-import org.weizu.web.foundation.core.dao.impl.DaoImpl;
 
 import com.weizu.flowsys.web.activity.dao.AgencyActiveChannelDao;
 import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
+import com.weizu.web.foundation.core.dao.impl.DaoImpl;
 
 @Repository(value="agencyActiveChannelDao")
 public class AgencyActiveChannelDaoImpl extends DaoImpl<AgencyActiveRatePo, Long> implements

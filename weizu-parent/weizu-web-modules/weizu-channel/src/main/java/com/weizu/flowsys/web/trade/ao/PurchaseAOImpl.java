@@ -10,12 +10,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.weizu.api.facet.orderState.PageOrder;
 import org.weizu.api.outter.enums.ChargeStatusEnum;
-import org.weizu.web.foundation.DateUtil;
-import org.weizu.web.foundation.String.StringHelper;
-import org.weizu.web.foundation.core.util.NumberTool;
-import org.weizu.web.foundation.http.HttpRequest;
 
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
@@ -46,6 +41,10 @@ import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseStateParams;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
+import com.weizu.web.foundation.DateUtil;
+import com.weizu.web.foundation.String.StringHelper;
+import com.weizu.web.foundation.core.util.NumberTool;
+import com.weizu.web.foundation.http.HttpRequest;
 
 @Service(value="purchaseAO")
 public class PurchaseAOImpl implements PurchaseAO {
@@ -455,30 +454,30 @@ public class PurchaseAOImpl implements PurchaseAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月26日 下午12:57:18
 	 */
-	@Override
-	public int checkOrderState(PageOrder pageOrder, PurchaseVO purchaseVO) {
-		int updateRes = 0;
-		if(purchaseVO.getOrderResult() != pageOrder.getStatus())
-		{
-			purchaseVO.setOrderResult(pageOrder.getStatus());
-			//如果过
-			if(StringHelper.isEmpty(pageOrder.getMsg())){
-				for (OrderStateEnum enumt : OrderStateEnum.values()) {
-					if(pageOrder.getStatus() == enumt.getValue())
-					{
-						purchaseVO.setOrderResultDetail(enumt.getDesc());
-						break;
-					}
-				}
-			}else{
-				purchaseVO.setOrderResultDetail(pageOrder.getMsg());
-			}
-			String created_at_api = pageOrder.getCreated_at();
-			purchaseVO.setOrderBackTimeStr(created_at_api);
-			updateRes = purchaseDAO.updatePurchaseState(new PurchaseStateParams(purchaseVO.getOrderId(), DateUtil.strToDate(created_at_api, "").getTime() , purchaseVO.getOrderResult(), purchaseVO.getOrderResultDetail(),pageOrder.getTransaction_id()));
-		}
-		return updateRes;
-	}
+//	@Override
+//	public int checkOrderState(PageOrder pageOrder, PurchaseVO purchaseVO) {
+//		int updateRes = 0;
+//		if(purchaseVO.getOrderResult() != pageOrder.getStatus())
+//		{
+//			purchaseVO.setOrderResult(pageOrder.getStatus());
+//			//如果过
+//			if(StringHelper.isEmpty(pageOrder.getMsg())){
+//				for (OrderStateEnum enumt : OrderStateEnum.values()) {
+//					if(pageOrder.getStatus() == enumt.getValue())
+//					{
+//						purchaseVO.setOrderResultDetail(enumt.getDesc());
+//						break;
+//					}
+//				}
+//			}else{
+//				purchaseVO.setOrderResultDetail(pageOrder.getMsg());
+//			}
+//			String created_at_api = pageOrder.getCreated_at();
+//			purchaseVO.setOrderBackTimeStr(created_at_api);
+//			updateRes = purchaseDAO.updatePurchaseState(new PurchaseStateParams(purchaseVO.getOrderId(), DateUtil.strToDate(created_at_api, "").getTime() , purchaseVO.getOrderResult(), purchaseVO.getOrderResultDetail(),pageOrder.getTransaction_id()));
+//		}
+//		return updateRes;
+//	}
 
 	/**
 	 * @description: 通过订单Id查询订单

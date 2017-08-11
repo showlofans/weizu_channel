@@ -10,8 +10,6 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import org.weizu.web.foundation.StringUtil;
-import org.weizu.web.foundation.String.StringHelper;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
@@ -28,6 +26,8 @@ import com.weizu.flowsys.web.channel.pojo.BestChannelPO;
 import com.weizu.flowsys.web.channel.pojo.ChannelForwardPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.util.ChannelUtil;
+import com.weizu.web.foundation.StringUtil;
+import com.weizu.web.foundation.String.StringHelper;
 
 /**
  * @description:对上通道接口实现

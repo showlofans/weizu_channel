@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.activity.pojo;
 
-import org.weizu.web.foundation.core.beans.Po;
+import com.weizu.web.foundation.core.annotation.po.TableName;
+import com.weizu.web.foundation.core.beans.Po;
 
 /**
  * @description: 费率折扣连接实体
@@ -10,6 +11,7 @@ import org.weizu.web.foundation.core.beans.Po;
  * @createTime:2017年7月11日 上午11:39:34
  * @version 1.0
  */
+@TableName(name="aac_join_rd")
 public class AacJoinRdPo extends Po {
 	
     private Long id;

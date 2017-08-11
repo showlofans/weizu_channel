@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.weizu.web.foundation.VerifyCodeUtils;
-import org.weizu.web.foundation.String.StringHelper;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
@@ -36,6 +34,8 @@ import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.CompanyCredentialsPo;
 import com.weizu.flowsys.web.agency.url.AgencyURL;
+import com.weizu.web.foundation.VerifyCodeUtils;
+import com.weizu.web.foundation.String.StringHelper;
 
 @Controller
 @RequestMapping(value = AgencyURL.MODEL_NAME)

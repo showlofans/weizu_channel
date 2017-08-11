@@ -1,8 +1,8 @@
 package com.weizu.flowsys.web.trade.pojo;
 
-import org.weizu.web.foundation.core.annotation.po.TableName;
-import org.weizu.web.foundation.core.annotation.po.TempField;
-import org.weizu.web.foundation.core.beans.Po;
+import com.weizu.web.foundation.core.annotation.po.TableName;
+import com.weizu.web.foundation.core.annotation.po.TempField;
+import com.weizu.web.foundation.core.beans.Po;
 
 /**
  * @description: 代理商订单绑定实体

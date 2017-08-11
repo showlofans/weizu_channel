@@ -3,9 +3,8 @@ package com.weizu.flowsys.web.channel.dao;
 import java.util.List;
 import java.util.Map;
 
-import org.weizu.web.foundation.core.dao.Dao;
-
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
+import com.weizu.web.foundation.core.dao.Dao;
 
 /**
  * @description:包体编码DAO层接口

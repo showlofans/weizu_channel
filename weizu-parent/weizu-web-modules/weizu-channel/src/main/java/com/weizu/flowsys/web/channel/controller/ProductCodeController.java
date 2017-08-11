@@ -13,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.weizu.web.foundation.String.StringHelper;
 
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
@@ -28,6 +27,7 @@ import com.weizu.flowsys.web.channel.pojo.AgencyEpPo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.channel.url.ProductCodeURL;
+import com.weizu.web.foundation.String.StringHelper;
 
 /**
  * @description:产品编码管理

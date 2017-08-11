@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.weizu.web.foundation.String.StringHelper;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
@@ -23,6 +22,7 @@ import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.url.OperatorPgURL;
+import com.weizu.web.foundation.String.StringHelper;
 
 @Controller
 @RequestMapping(value = OperatorPgURL.MODOE_NAME)

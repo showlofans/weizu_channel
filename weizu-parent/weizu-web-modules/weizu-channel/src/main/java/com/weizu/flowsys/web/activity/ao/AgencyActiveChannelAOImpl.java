@@ -9,8 +9,6 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.weizu.web.foundation.DateUtil;
-import org.weizu.web.foundation.String.StringHelper;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
@@ -26,6 +24,8 @@ import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
 import com.weizu.flowsys.web.activity.pojo.DiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
+import com.weizu.web.foundation.DateUtil;
+import com.weizu.web.foundation.String.StringHelper;
 @Service(value="agencyActiveChannelAO")
 public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 

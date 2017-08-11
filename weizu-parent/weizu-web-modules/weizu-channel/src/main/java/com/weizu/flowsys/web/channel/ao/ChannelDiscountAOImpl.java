@@ -9,7 +9,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
-import org.weizu.web.foundation.String.StringHelper;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
@@ -20,6 +19,7 @@ import com.weizu.flowsys.web.activity.pojo.OperatorDiscount;
 import com.weizu.flowsys.web.activity.pojo.ScopeDiscount;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
+import com.weizu.web.foundation.String.StringHelper;
 
 @Service(value="channelDiscountAO")
 public class ChannelDiscountAOImpl implements ChannelDiscountAO {

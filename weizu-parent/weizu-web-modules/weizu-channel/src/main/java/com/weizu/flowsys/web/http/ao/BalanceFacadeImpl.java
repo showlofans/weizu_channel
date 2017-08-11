@@ -20,7 +20,7 @@ import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
  * @createTime:2017年6月23日 下午4:37:44
  * @version 1.0
  */
-@Service(value="balanceFacade")
+//@Service(value="balanceFacade")
 public class BalanceFacadeImpl implements BalanceFacade {
 
 	@Resource

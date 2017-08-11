@@ -9,9 +9,6 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.weizu.web.foundation.DateUtil;
-import org.weizu.web.foundation.String.StringHelper;
-import org.weizu.web.foundation.core.beans.WherePrams;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
@@ -28,6 +25,9 @@ import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
+import com.weizu.web.foundation.DateUtil;
+import com.weizu.web.foundation.String.StringHelper;
+import com.weizu.web.foundation.core.beans.WherePrams;
 
 @Service("agencyAO")
 public class AgencyAOImpl implements AgencyAO {

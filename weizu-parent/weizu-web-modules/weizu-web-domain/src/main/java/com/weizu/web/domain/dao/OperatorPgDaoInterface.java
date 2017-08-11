@@ -3,9 +3,8 @@ package com.weizu.web.domain.dao;
 import java.util.List;
 import java.util.Map;
 
-import org.weizu.web.foundation.core.dao.Dao;
-
 import com.weizu.web.domain.dto.OperatorPgDataPo;
+import com.weizu.web.foundation.core.dao.Dao;
 
 
 public interface OperatorPgDaoInterface extends Dao<OperatorPgDataPo, Integer> {

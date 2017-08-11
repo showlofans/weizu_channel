@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.weizu.web.foundation.String.StringHelper;
 
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSONObject;
@@ -35,6 +34,7 @@ import com.weizu.flowsys.web.channel.dao.impl.ExchangePlatformDao;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.url.ChannelURL;
+import com.weizu.web.foundation.String.StringHelper;
 
 /**
  * @description:上级通道控制层
