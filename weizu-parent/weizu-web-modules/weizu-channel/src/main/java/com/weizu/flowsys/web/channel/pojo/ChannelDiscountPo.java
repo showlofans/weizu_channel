@@ -2,10 +2,10 @@ package com.weizu.flowsys.web.channel.pojo;
 
 import java.util.List;
 
+import com.weizu.flowsys.core.annotation.po.TableName;
+import com.weizu.flowsys.core.annotation.po.TempField;
+import com.weizu.flowsys.core.beans.Po;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
-import com.weizu.web.foundation.core.annotation.po.TableName;
-import com.weizu.web.foundation.core.annotation.po.TempField;
-import com.weizu.web.foundation.core.beans.Po;
 
 /**
  * @description: 通道折扣实体

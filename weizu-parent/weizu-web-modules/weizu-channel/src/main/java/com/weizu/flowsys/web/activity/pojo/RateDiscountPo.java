@@ -2,9 +2,9 @@ package com.weizu.flowsys.web.activity.pojo;
 
 import java.util.List;
 
-import com.weizu.web.foundation.core.annotation.po.TableName;
-import com.weizu.web.foundation.core.annotation.po.TempField;
-import com.weizu.web.foundation.core.beans.Po;
+import com.weizu.flowsys.core.annotation.po.TableName;
+import com.weizu.flowsys.core.annotation.po.TempField;
+import com.weizu.flowsys.core.beans.Po;
 
 /**
  * @description: 费率折扣

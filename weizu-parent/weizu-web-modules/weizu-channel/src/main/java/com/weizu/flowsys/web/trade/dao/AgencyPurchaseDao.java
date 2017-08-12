@@ -2,8 +2,8 @@ package com.weizu.flowsys.web.trade.dao;
 
 import java.util.List;
 
+import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.trade.pojo.AgencyPurchasePo;
-import com.weizu.web.foundation.core.dao.Dao;
 
 /**
  * @description: 代理商订单绑定Dao接口

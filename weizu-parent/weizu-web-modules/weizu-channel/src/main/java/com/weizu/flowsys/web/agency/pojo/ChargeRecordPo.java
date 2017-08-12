@@ -1,9 +1,9 @@
 package com.weizu.flowsys.web.agency.pojo;
 
+import com.weizu.flowsys.core.annotation.po.TableName;
+import com.weizu.flowsys.core.annotation.po.TempField;
+import com.weizu.flowsys.core.beans.Po;
 import com.weizu.web.foundation.DateUtil;
-import com.weizu.web.foundation.core.annotation.po.TableName;
-import com.weizu.web.foundation.core.annotation.po.TempField;
-import com.weizu.web.foundation.core.beans.Po;
 
 /**
  * @description:账户发生金额记录实体

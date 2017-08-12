@@ -5,10 +5,10 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.web.agency.dao.CompanyCredentialsDao;
 import com.weizu.flowsys.web.agency.pojo.CompanyCredentialsPo;
-import com.weizu.web.foundation.core.beans.WherePrams;
-import com.weizu.web.foundation.core.dao.impl.DaoImpl;
 
 /**
  * @description: 对公账户认证实体

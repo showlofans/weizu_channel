@@ -3,10 +3,10 @@ package com.weizu.flowsys.web.trade.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseStateParams;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
-import com.weizu.web.foundation.core.dao.Dao;
 
 /**
  * @description:订单管理

@@ -8,7 +8,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.aiyi.base.pojo.TestUserPo;
-import com.weizu.web.foundation.core.dao.impl.DaoImpl;
+import com.weizu.flowsys.core.dao.impl.DaoImpl;
 
 /**
  * UserDao的实现类，该类继承了公共Dao的原始方法。当你要给爱易REUD框架增加新功能时，不用去改源码，爱易CRUD提供了可编程式插件接口的方案。

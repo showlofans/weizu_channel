@@ -9,9 +9,9 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.web.channel.dao.OperatorPgDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
-import com.weizu.web.foundation.core.dao.impl.DaoImpl;
 
 /**
  * @description:流量包dao

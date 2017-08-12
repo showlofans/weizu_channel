@@ -1,7 +1,7 @@
 package com.weizu.flowsys.web.activity.pojo;
 
-import com.weizu.web.foundation.core.annotation.po.TableName;
-import com.weizu.web.foundation.core.beans.Po;
+import com.weizu.flowsys.core.annotation.po.TableName;
+import com.weizu.flowsys.core.beans.Po;
 
 @TableName(name="rate_backward")
 public class RateBackwardPo extends Po {

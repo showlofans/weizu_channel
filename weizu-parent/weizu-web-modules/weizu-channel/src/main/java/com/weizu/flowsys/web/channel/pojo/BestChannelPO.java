@@ -1,7 +1,7 @@
 package com.weizu.flowsys.web.channel.pojo;
 
-import com.weizu.web.foundation.core.annotation.po.TempField;
-import com.weizu.web.foundation.core.beans.Po;
+import com.weizu.flowsys.core.annotation.po.TempField;
+import com.weizu.flowsys.core.beans.Po;
 
 /**
  * @description:最优通道实体

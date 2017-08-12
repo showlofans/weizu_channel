@@ -7,10 +7,10 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.web.trade.dao.AgencyPurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.AgencyPurchasePo;
-import com.weizu.web.foundation.core.beans.WherePrams;
-import com.weizu.web.foundation.core.dao.impl.DaoImpl;
 
 /**
  * @description: 代理商订单绑定Dao接口实现类

@@ -1,7 +1,7 @@
 package com.weizu.flowsys.web.channel.dao;
 
+import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.channel.pojo.ActiveChannelPo;
-import com.weizu.web.foundation.core.dao.Dao;
 
 /**
  * @description:活动通道dao层接口

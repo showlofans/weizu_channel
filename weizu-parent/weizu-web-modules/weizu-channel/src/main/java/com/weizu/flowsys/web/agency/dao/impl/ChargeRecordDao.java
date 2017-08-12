@@ -8,10 +8,10 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.web.agency.dao.ChargeRecordDaoInterface;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
-import com.weizu.web.foundation.core.dao.impl.DaoImpl;
 
 @Repository("chargeRecordDao")
 public class ChargeRecordDao extends DaoImpl<ChargeRecordPo, Integer> implements ChargeRecordDaoInterface {

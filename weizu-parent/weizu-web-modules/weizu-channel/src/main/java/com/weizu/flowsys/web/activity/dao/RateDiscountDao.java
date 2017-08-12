@@ -3,8 +3,8 @@ package com.weizu.flowsys.web.activity.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
-import com.weizu.web.foundation.core.dao.Dao;
 
 public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	
