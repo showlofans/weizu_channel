@@ -1,6 +1,6 @@
 package com.aiyi.base.pojo;
 
-import com.weizu.web.foundation.core.beans.Po;
+import com.weizu.flowsys.core.beans.Po;
 
 /**
  * @description:订单实体

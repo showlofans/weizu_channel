@@ -9,10 +9,10 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.web.channel.dao.IProductCodeDAO;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.web.foundation.String.StringHelper;
-import com.weizu.web.foundation.core.dao.impl.DaoImpl;
 
 /**
  * @description:包体编码DAO层接口实现

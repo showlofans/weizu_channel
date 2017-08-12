@@ -1,7 +1,7 @@
 package com.aiyi.base.pojo;
 
-import com.weizu.web.foundation.core.annotation.po.TableName;
-import com.weizu.web.foundation.core.beans.Po;
+import com.weizu.flowsys.core.annotation.po.TableName;
+import com.weizu.flowsys.core.beans.Po;
 
 @TableName(name="q_test_table2")
 public class TestImgResourcePo extends Po {

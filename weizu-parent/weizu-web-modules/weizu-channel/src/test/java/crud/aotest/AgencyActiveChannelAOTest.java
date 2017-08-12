@@ -16,12 +16,13 @@
 //import com.weizu.flowsys.web.activity.dao.AgencyActiveChannelDao;
 //import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
 //import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
+//import com.weizu.web.foundation.core.beans.WherePrams;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
 //public class AgencyActiveChannelAOTest {
-//	@Resource
-//	private AgencyActiveChannelAO agencyActiveChannelAO;
+////	@Resource
+////	private AgencyActiveChannelAO agencyActiveChannelAO;
 //	@Resource
 //	private AgencyActiveChannelDao agencyActiveChannelDao;
 //	
@@ -88,4 +89,9 @@
 ////	public void batchUpdateBindState(){
 ////		agencyActiveChannelDao.batchUpdateBindState(41l, 1, agencyIds);
 ////	}
+//	@Test
+//	public void testGetByParams(){
+//		AgencyActiveRatePo apo = agencyActiveChannelDao.get(new WherePrams("agency_name", "=", "456"));
+//		System.out.println(apo.getAgencyId());
+//	}
 //}

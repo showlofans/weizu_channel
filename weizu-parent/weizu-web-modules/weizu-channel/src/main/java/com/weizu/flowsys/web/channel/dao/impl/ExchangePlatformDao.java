@@ -9,9 +9,9 @@ import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
-import com.weizu.web.foundation.core.dao.impl.DaoImpl;
 
 @Repository(value="exchangePlatformDao")
 public class ExchangePlatformDao extends DaoImpl<ExchangePlatformPo, Integer> implements ExchangePlatformDaoInterface {

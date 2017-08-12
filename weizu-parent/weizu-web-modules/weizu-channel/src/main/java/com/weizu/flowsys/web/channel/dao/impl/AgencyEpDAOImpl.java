@@ -7,9 +7,9 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.web.channel.dao.IAgencyEpDAO;
 import com.weizu.flowsys.web.channel.pojo.AgencyEpPo;
-import com.weizu.web.foundation.core.dao.impl.DaoImpl;
 
 /**
  * @description: 代理商平台连接DAO层接口实现类

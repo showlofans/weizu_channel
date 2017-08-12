@@ -8,9 +8,9 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
-import com.weizu.web.foundation.core.dao.impl.DaoImpl;
 
 @Repository(value="channelDiscountDao")
 public class ChannelDiscountDaoImpl extends DaoImpl<ChannelDiscountPo, Integer> implements

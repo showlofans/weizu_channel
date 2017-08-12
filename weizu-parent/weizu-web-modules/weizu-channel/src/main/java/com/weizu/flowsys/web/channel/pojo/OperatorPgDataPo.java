@@ -1,8 +1,8 @@
 package com.weizu.flowsys.web.channel.pojo;
 
-import com.weizu.web.foundation.core.annotation.po.TableName;
-import com.weizu.web.foundation.core.annotation.po.TempField;
-import com.weizu.web.foundation.core.beans.Po;
+import com.weizu.flowsys.core.annotation.po.TableName;
+import com.weizu.flowsys.core.annotation.po.TempField;
+import com.weizu.flowsys.core.beans.Po;
 
 /**
  * @description:订购流量包种类实体类

@@ -8,9 +8,9 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.web.activity.dao.ServiceScopeDaoInterface;
 import com.weizu.flowsys.web.activity.pojo.ServiceScopePo;
-import com.weizu.web.foundation.core.dao.impl.DaoImpl;
 
 /**
  * @description:流量包业务范围dao层

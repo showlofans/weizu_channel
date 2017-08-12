@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.dao.impl.AgencyEpDAOImpl;
 import com.weizu.flowsys.web.channel.dao.impl.ExchangePlatformDao;
 import com.weizu.flowsys.web.channel.pojo.AgencyEpPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.web.foundation.String.StringHelper;
-import com.weizu.web.foundation.core.beans.WherePrams;
 
 /**
  * @description:上级对接平台管理业务层

@@ -9,11 +9,11 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseStateParams;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
-import com.weizu.web.foundation.core.dao.impl.DaoImpl;
 
 /**
  * @description: 订单管理

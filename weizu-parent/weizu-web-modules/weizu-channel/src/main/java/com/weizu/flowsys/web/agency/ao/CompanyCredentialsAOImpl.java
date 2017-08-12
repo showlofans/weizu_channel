@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.ConfirmStateEnum;
 import com.weizu.flowsys.web.agency.dao.CompanyCredentialsDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.CompanyCredentialsPo;
-import com.weizu.web.foundation.core.beans.WherePrams;
 
 /**
  * @description: 认证实体业务层接口实现类

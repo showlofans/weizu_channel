@@ -14,6 +14,7 @@ import org.weizu.api.outter.enums.ChargeStatusEnum;
 
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
+import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
@@ -39,11 +40,9 @@ import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.AgencyPurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
-import com.weizu.flowsys.web.trade.pojo.PurchaseStateParams;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
-import com.weizu.web.foundation.core.util.NumberTool;
 import com.weizu.web.foundation.http.HttpRequest;
 
 @Service(value="purchaseAO")

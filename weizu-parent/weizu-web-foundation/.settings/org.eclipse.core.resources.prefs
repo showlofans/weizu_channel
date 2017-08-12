@@ -1,7 +1,5 @@
 eclipse.preferences.version=1
 encoding//src/main/java=UTF-8
-encoding//src/main/java/com/weizu/web/foundation/core/annotation/po/Log.java=UTF-8
-encoding//src/main/java/com/weizu/web/foundation/core/beans/FmtParm.java=UTF-8
-encoding//src/main/java/com/weizu/web/foundation/core/dao/Dao.java=UTF-8
+encoding//src/main/resources=UTF-8
 encoding//src/test/java=UTF-8
 encoding/<project>=UTF-8
