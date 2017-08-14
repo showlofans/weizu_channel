@@ -102,13 +102,22 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 	 * @createTime:2017年5月9日 上午11:10:30
 	 */
 	@Override
-	public Pagination<ChargeRecordPo> listChargeRecord(Integer contextAgencyId,
+	public Pagination<ChargeRecordPo> listChargeRecord(Map<String, Object> resultMap, Integer contextAgencyId,
 			ChargeRecordPo chargeRecordPo, PageParam pageParam) {
 		
 		Map<String, Object> params = getMapByEntity(chargeRecordPo);
 		
 		params.put("contextAgencyId", contextAgencyId);
 		int totalRecords = chargeRecordDao.countRecord(params);
+		
+		if(totalRecords == 0){
+			params.put("startTime",null);//解除开始时间限制
+			chargeRecordPo.setStartTimeStr(null);//重置开始时间为空
+			params.put("endTime", System.currentTimeMillis());
+			chargeRecordPo.setEndTimeStr(DateUtil.formatAll(System.currentTimeMillis()));
+			totalRecords = chargeRecordDao.countRecord(params);
+		}
+		
 		
 		int pageSize = pageParam.getPageSize();
 		int pageNo = pageParam.getPageNo();
@@ -121,6 +130,7 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 			chargeRecordPo2.setRemittanceTimeStr(DateUtil.formatAll(chargeRecordPo2.getRemittanceTime()));
 		}
 		
+		resultMap.put("searchParams", chargeRecordPo);
 		return new Pagination<ChargeRecordPo>(records,totalRecords,pageNo,pageSize);
 	}
 	
@@ -137,15 +147,32 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		if(StringHelper.isNotEmpty(consumeRecordPo.getUserName())){
 			params.put("userName", consumeRecordPo.getUserName());
 		}
-		if(consumeRecordPo.getStartTime() != null){
-			params.put("startTime", consumeRecordPo.getStartTime());
+		if(StringHelper.isEmpty(consumeRecordPo.getStartTimeStr()) ){
+			params.put("startTime", DateUtil.getStartTime().getTime());
+			consumeRecordPo.setStartTimeStr(DateUtil.formatAll(DateUtil.getStartTime()));
+		}else{
+			Long startTime = DateUtil.strToDate(consumeRecordPo.getStartTimeStr(), null).getTime();
+			params.put("startTime", startTime);
 		}
-//		else{//设置当天开始时间
-//			params.put("startTime", DateUtil.getStartTime().getTime());
+		
+		if(StringHelper.isEmpty(consumeRecordPo.getEndTimeStr())){
+			params.put("endTime", DateUtil.getEndTime().getTime());
+			consumeRecordPo.setEndTimeStr(DateUtil.formatAll(DateUtil.getEndTime()));
+		}else{
+			Long endTime = DateUtil.strToDate(consumeRecordPo.getEndTimeStr(), null).getTime();
+			params.put("endTime", endTime);
+		}
+		
+		
+//		if(consumeRecordPo.getStartTime() != null){
+//			params.put("startTime", consumeRecordPo.getStartTime());
 //		}
-		if(consumeRecordPo.getEndTime() != null){
-			params.put("endTime", consumeRecordPo.getEndTime());
-		}
+////		else{//设置当天开始时间
+////			params.put("startTime", DateUtil.getStartTime().getTime());
+////		}
+//		if(consumeRecordPo.getEndTime() != null){
+//			params.put("endTime", consumeRecordPo.getEndTime());
+//		}
 //		else{//设置当天结束时间
 //			params.put("endTime", DateUtil.getEndTime().getTime());
 //		}
@@ -175,10 +202,17 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 	 * @createTime:2017年7月3日 下午5:18:50
 	 */
 	@Override
-	public Pagination<ConsumeRecordPo> listConsumeRecord(Integer contextAgencyId,ConsumeRecordPo consumeRecordPo, PageParam pageParam) {
+	public Pagination<ConsumeRecordPo> listConsumeRecord(Map<String, Object> resultMap, Integer contextAgencyId,ConsumeRecordPo consumeRecordPo, PageParam pageParam) {
 		Map<String, Object> params = getMapByConsume(consumeRecordPo,contextAgencyId);
 		
 		int totalRecords = chargeRecordDao.countConsume(params);
+		if(totalRecords == 0){
+			params.put("startTime",null);//解除开始时间限制
+			consumeRecordPo.setStartTimeStr(null);//重置开始时间为空
+			params.put("endTime", System.currentTimeMillis());
+			consumeRecordPo.setEndTimeStr(DateUtil.formatAll(System.currentTimeMillis()));
+			totalRecords = chargeRecordDao.countConsume(params);
+		}
 		
 		int pageSize = pageParam.getPageSize();
 		int pageNo = pageParam.getPageNo();
@@ -186,6 +220,7 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		params.put("start", (pageNo-1) * pageSize);
 		params.put("end", pageSize);
 		List<ConsumeRecordPo> records = chargeRecordDao.getConsume(params);
+		resultMap.put("searchParams", consumeRecordPo);
 		//初始化时间(引用变量)
 		for (ConsumeRecordPo consumeRecordPo2 : records) {
 			consumeRecordPo2.setRemittanceTimeStr(DateUtil.formatAll(consumeRecordPo2.getRemittanceTime()));
@@ -207,15 +242,32 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		if(StringHelper.isNotEmpty(chargeRecordPo.getUserName())){
 			params.put("userName", chargeRecordPo.getUserName());
 		}
-		if(chargeRecordPo.getStartTime() != null){
-			params.put("startTime", chargeRecordPo.getStartTime());
+		
+		if(StringHelper.isEmpty(chargeRecordPo.getStartTimeStr()) ){
+			params.put("startTime", DateUtil.getStartTime().getTime());
+			chargeRecordPo.setStartTimeStr(DateUtil.formatAll(DateUtil.getStartTime()));
+		}else{
+			Long startTime = DateUtil.strToDate(chargeRecordPo.getStartTimeStr(), null).getTime();
+			params.put("startTime", startTime);
 		}
-//		else{//设置当天开始时间
-//			params.put("startTime", DateUtil.getStartTime().getTime());
+		
+		if(StringHelper.isEmpty(chargeRecordPo.getEndTimeStr())){
+			params.put("endTime", DateUtil.getEndTime().getTime());
+			chargeRecordPo.setEndTimeStr(DateUtil.formatAll(DateUtil.getEndTime()));
+		}else{
+			Long endTime = DateUtil.strToDate(chargeRecordPo.getEndTimeStr(), null).getTime();
+			params.put("endTime", endTime);
+		}
+		
+//		if(chargeRecordPo.getStartTime() != null){
+//			params.put("startTime", chargeRecordPo.getStartTime());
 //		}
-		if(chargeRecordPo.getEndTime() != null){
-			params.put("endTime", chargeRecordPo.getEndTime());
-		}
+////		else{//设置当天开始时间
+////			params.put("startTime", DateUtil.getStartTime().getTime());
+////		}
+//		if(chargeRecordPo.getEndTime() != null){
+//			params.put("endTime", chargeRecordPo.getEndTime());
+//		}
 //		else{//设置当天结束时间
 //			params.put("endTime", DateUtil.getEndTime().getTime());
 //		}

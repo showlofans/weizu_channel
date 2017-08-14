@@ -4,6 +4,7 @@ import java.util.Map;
 
 //import org.weizu.api.facet.orderState.PageOrder;
 
+
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
@@ -41,7 +42,7 @@ public interface PurchaseAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月13日 下午12:52:58
 	 */
-	Pagination<PurchaseVO> getPurchase(PurchaseVO purchaseVO,PageParam pageParam);
+	Pagination<PurchaseVO> getPurchase(Map<String, Object> resultMap,PurchaseVO purchaseVO,PageParam pageParam);
 	
 	/**
 	 * @description:通过微族api充值

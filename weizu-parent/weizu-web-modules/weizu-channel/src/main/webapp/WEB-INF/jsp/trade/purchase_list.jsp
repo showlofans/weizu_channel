@@ -103,7 +103,7 @@
 					<c:if test="${loginContext.rootAgencyId == 0 }">
 						<th width="120px">通道名称</th>
 					</c:if>
-					<th width="120px">通道类型</th>
+					<th width="120px">扣款类型</th>
 				</tr>
 			</thead>
 			<tbody>

@@ -26,8 +26,18 @@ public class PgChargeVO {
 	
 	private Integer serviceType;			//业务类型 
 	
+	private Long rateId;					//费率id
+	
 	private Integer agencyId;				//当前登录用户id
 	
+	public Long getRateId() {
+		return rateId;
+	}
+
+	public void setRateId(Long rateId) {
+		this.rateId = rateId;
+	}
+
 	public Integer getAgencyId() {
 		return agencyId;
 	}
