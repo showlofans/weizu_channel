@@ -99,7 +99,7 @@ public class ChargeRecordPo extends Po implements Cloneable{
 
 	public void setStartTimeStr(String startTimeStr) {
 		this.startTimeStr = startTimeStr;
-		this.startTime = DateUtil.strToDate(startTimeStr, null).getTime();
+//		this.startTime = DateUtil.strToDate(startTimeStr, null).getTime();
 	}
 
 	public String getEndTimeStr() {
@@ -108,7 +108,7 @@ public class ChargeRecordPo extends Po implements Cloneable{
 
 	public void setEndTimeStr(String endTimeStr) {
 		this.endTimeStr = endTimeStr;
-		this.endTime = DateUtil.strToDate(endTimeStr, null).getTime();
+//		this.endTime = DateUtil.strToDate(endTimeStr, null).getTime();
 	}
 
 	public String getUserName() {

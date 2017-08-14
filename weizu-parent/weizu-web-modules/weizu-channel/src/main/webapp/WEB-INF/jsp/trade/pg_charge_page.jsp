@@ -30,6 +30,7 @@
  	<input type="hidden" name="billType" id="billType">
  	<input type="hidden" name="pgId" id="pgId">
  	<input type="hidden" name="productCode" id="productCode">
+ 	<input style="display: none;" type="text" value="${resultMap.pageMsg }" id="pageMsg">
 	
 	<div class="row cl">
 		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机号码：</label>
@@ -93,6 +94,7 @@
 		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>采购金额：</label>
 		<div class="formControls col-xs-8 col-sm-9">
 			<input id="orderAmount" name="orderAmount" type="text" readonly class="input-text" required  style="width:400px" value="" placeholder="请选择购买包体">
+			<input id="rateId" name="rateId" type="hidden" value="">
 			<br>折扣：<span id="rateDiscount" class="c-red"></span>
 		</div>
 	</div>
@@ -112,6 +114,9 @@
   <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
  <script type="text/javascript">
  $().ready(function() {
+	 if($('#pageMsg').val() != ''){
+		 alert($('#pageMsg').val());
+	 }
 	    $("#form-charge").validate({
 	    	submitHandler : function(form) {
 	    		form.submit();
@@ -134,7 +139,7 @@
 			}
 	    });
 });
- 
+ /**手机号改变时所有参数都要改变*/
  function initForm(){
 	 $("#select-servce-type option:first").prop("selected", 'selected');
 	 if($("#pgInsert").is(":visible")){
@@ -341,15 +346,17 @@
                         async: false,
                         contentType: "application/x-www-form-urlencoded; charset=utf-8", 
                         success: function(data){
-                      	  //alert(data.length);
+                      	  //alert(data.pgList.length);
+                      		$('#rateDiscount').html(data.ratePo.activeDiscount);
+                      		$('#rateId').val(data.ratePo.id);
                       	  if($(".pgNameType") == undefined || $(".pgNameType").length <= 0){
                           var appendData = "<label class='form-label col-xs-4 col-sm-3'><span class='c-red'>*</span>包体大小：</label><div class='formControls col-xs-8 col-sm-9 skin-minimal'>"; 
-                      	  if(data.length > 0){
-	                          for(var i=0; i < data.length; i++){
-	                        	   var price = data[i].pgPrice;
-	                        	   var name = data[i].pgName;
-	                        	   var pgSize = data[i].pgSize;
-	                        	   var productCode = data[i].productCode;
+                          if(data.pgList.length > 0){
+	                          for(var i=0; i < data.pgList.length; i++){
+	                        	   var price = data.pgList[i].pgPrice;
+	                        	   var name = data.pgList[i].pgName;
+	                        	   var pgSize = data.pgList[i].pgSize;
+	                        	   var productCode = data.pgList[i].productCode;
 	                       				/* if(i == 0){//默认设置第一个为选中 
 	            	           				appendData += "<div class='radio-box pgNameType'><input name='pgName' class='pgNameRadio' type='radio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)' checked><label for='pgName-"+(i+1)+"'>"+name+"</label></div>"
 	            	           				+ "<input type='hidden' name='pgPrice' value='"+price+"'></input>"
@@ -358,7 +365,7 @@
 	            	           				$("#pgSize").val(data[0].pgSize);
 	            	           				$("#pgId").val(data[0].id);
 	                       				}else{ */
-	                       					appendData += "<div class='radio-box pgNameType'><input type='hidden' value='"+data[i].id+"'></input><input class='pgNameRadio' type='radio' name='pgNameRadio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)'><label for='pgName-"+(i+1)+"'>"+name+"</label></div><input type='hidden' class='price' value='"+price+"'></input>"
+	                       					appendData += "<div class='radio-box pgNameType'><input type='hidden' value='"+data.pgList[i].id+"'></input><input class='pgNameRadio' type='radio' name='pgNameRadio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)'><label for='pgName-"+(i+1)+"'>"+name+"</label></div><input type='hidden' class='price' value='"+price+"'></input>"
 	                       					+"<input type='hidden' value='"+pgSize+"'></input><input type='hidden' value='"+productCode+"'></input><br>";;
 	                       				// }
 	                          }

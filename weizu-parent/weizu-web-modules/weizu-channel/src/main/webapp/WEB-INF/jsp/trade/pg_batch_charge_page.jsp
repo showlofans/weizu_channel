@@ -25,7 +25,7 @@
  </head>
  <body>
  <div class="page-container">
- <form class="form form-horizontal" name="form-import" action="?" onsubmit="return saveTelList()" id="form-import" enctype="multipart/form-data">
+ <form class="form form-horizontal" name="form-import" action="?"  id="form-import" enctype="multipart/form-data">
 	<div class="row cl">
 		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>号码文本：</label>
 		<div class="formControls col-xs-8 col-sm-9">
@@ -34,7 +34,7 @@
 			  <input value="" class="input-text upload-url" style="width:300px" type="text" readonly >
 			  <input type="file" multiple name="uploadFile" class="input-file">
 			</span>
-			<button type="submit" id="saveButton" class="btn btn-primary radius"><i class="fa "></i> 导入文件</button>
+			<button type="button" id="saveButton" class="btn btn-primary radius" onclick="saveTelList()"><i class="fa "></i> 导入文件</button>
 			<!-- <span class="error"></span> -->
 		</div>
 		<!-- <button type="button" onclick="history.go(-1);" class="btn"><i class="fa fa-undo"></i> 取消返回</button> -->
@@ -47,7 +47,7 @@
  	<div class="row cl" id="pg">
 		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机号：</label>
 		<div class="formControls col-xs-8 col-sm-9">
-			<textarea id="telList" rows="5" cols="20" name="telList"  ></textarea>
+			<textarea id="telList" rows="5" cols="10" style="width:500px;" class="textarea" name="telList"  ></textarea>
 		</div>
 	</div>
 	
@@ -157,11 +157,12 @@
  
  }) */
  function saveTelList(){
-	 $('#telList').val('100');
-	 //return false;
+	
+	//alert($('#telList').val());
+	 //$('#telList').val('100');
 	// $('#saveButton').set('disabled', 'false');
 	 //alert("1");
-	 $.ajax({
+	$.ajax({
          url : "/flowsys/chargePg/tel_batch_import_txt.do",
          type : "POST",
          cache: true, 

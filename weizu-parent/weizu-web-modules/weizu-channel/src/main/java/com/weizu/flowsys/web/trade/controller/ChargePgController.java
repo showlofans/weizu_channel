@@ -96,16 +96,24 @@ public class ChargePgController {
 //			{
 //				accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
 //			}
+			Map<String, Object> resultMap = new HashMap<String, Object>();
+			String pageMsg = "";
+			String referURL = "";
 			if(pcVO.getOrderAmount() > accountPo.getAccountBalance()){//订单价格大于余额
-				return pg_charge_page("余额不足，充值失败");
+				pageMsg = "余额不足，充值失败";
+//				resultMap.put("referURL", "/flowsys/chargePg/purchase_list.do?orderResult=2");
 			}
 			Integer purResult = purchaseAO.purchase(pcVO);
 			if(purResult == OrderResultEnum.SUCCESS.getCode())
 			{
-				return purchaseList(request, new PurchaseVO(), "");
+				pageMsg = "success";
+				referURL = "/flowsys/chargePg/purchase_list.do?orderResult=2";
 			}else{//重新选择通道充值
-				return pg_charge_page("系统错误，充值失败");
+				pageMsg = "系统错误，充值失败";
 			}
+			resultMap.put("referURL", referURL);
+			resultMap.put("pageMsg", pageMsg);
+			return new ModelAndView("/trade/charge_result_page", "resultMap", resultMap);
 		}
 		
 		return null;
@@ -144,23 +152,30 @@ public class ChargePgController {
 		String carrier = operatorName.trim();//江西移动
 		int sLength = carrier.length();
 		List<OperatorPgDataPo> list = new ArrayList<OperatorPgDataPo>();
+		RateDiscountPo rateDiscountPo = null;
 		if(sLength>2){
 			String scopeCityName = carrier.substring(0,sLength-2);//地区参数
 			if(agencyVO != null){
-				boolean isAccept = rateDiscountAO.checkScopeIsAccept(agencyVO.getId(), scopeCityName);
+				Integer contextId = agencyVO.getId();
+				boolean isAccept = rateDiscountAO.checkScopeIsAccept(contextId, scopeCityName);
 				if(isAccept){//如果包涵该地区，就加载包体列表
 					String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动
 					int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
 					oppo.setOperatorType(opType);
 //					oppo.setOperatorName(carrier);
-					oppo.setServiceType(Integer.parseInt(serviceType.trim()));
-					list = operatorPgAO.pgList_forPurchase(oppo,ScopeCityEnum.getValueByDesc(scopeCityName), agencyVO.getId());
+					int sType = Integer.parseInt(serviceType.trim());
+					oppo.setServiceType(sType);
+					list = operatorPgAO.pgList_forPurchase(oppo,ScopeCityEnum.getValueByDesc(scopeCityName), contextId);
+					rateDiscountPo = rateDiscountAO.getRateForCharge(sType, carrier, contextId);
 				}
 			}
 		}
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("pgList", list);
+		map.put("ratePo", rateDiscountPo);
 		try {
 			response.setContentType("text/html;charset=UTF-8");
-			response.getWriter().print(JSON.toJSONString(list));
+			response.getWriter().print(JSON.toJSONString(map));
 			System.out.println(JSON.toJSONString(list));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -178,7 +193,7 @@ public class ChargePgController {
 	public ModelAndView pg_charge_page(@RequestParam(value="msg",required=false)String msg){
 		Map<String,Object> resultMap = new HashMap<String,Object>();
 		resultMap.put("serviceTypeEnum", ServiceTypeEnum.toList());
-		
+		resultMap.put("pageMsg", msg);
 		return new ModelAndView("/trade/pg_charge_page","resultMap",resultMap);
 	}
 	
@@ -340,23 +355,16 @@ public class ChargePgController {
 			purchaseVO.setRootAgencyId(agencyVO.getId());//设置为当前登陆用户的订单
 		}
 		PageParam pageParam = null;
+		Pagination<PurchaseVO> pagination = null;
 		if(StringHelper.isNotEmpty(pageNo)){
 			pageParam = new PageParam(Integer.parseInt(pageNo), 10) ;
 		}else{//初始化开始时间和结束时间
-			//充值成功使用充值时间
-			if(purchaseVO.getOrderResult() != null && purchaseVO.getOrderResult() == OrderStateEnum.CHARGED.getValue()){
-				purchaseVO.setBackStartTimeStr(DateUtil.formatAll(DateUtil.getStartTime()));
-				purchaseVO.setBackEndTimeStr(DateUtil.formatAll(DateUtil.getEndTime()));
-			}else{//其他状态使用到达时间
-				purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(DateUtil.getStartTime()));
-				purchaseVO.setArriveEndTimeStr(DateUtil.formatAll(DateUtil.getEndTime()));
-			}
+			
 			pageParam = new PageParam(1, 10);
 		}
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		Pagination<PurchaseVO> pagination = purchaseAO.getPurchase(purchaseVO, pageParam);
+		pagination = purchaseAO.getPurchase(resultMap,purchaseVO, pageParam);//
 		resultMap.put("pagination", pagination);
-		resultMap.put("searchParams", purchaseVO);
 		resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		resultMap.put("orderPathEnums", OrderPathEnum.toList());

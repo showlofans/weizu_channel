@@ -68,8 +68,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 	private OperatorPgAO operatorPgAO;
 	@Resource
 	private ProductCodeAO productCodeAO;
-	@Resource
-	private RateDiscountAO rateDiscountAO;
+//	@Resource
+//	private RateDiscountAO rateDiscountAO;
 	@Resource
 	private RateDiscountDao rateDiscountDao; 
 	
@@ -109,7 +109,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 		int agencyId = pcVO.getAgencyId();		//订单产生方代理商
 		int orderResult = OrderStateEnum.CHARGING.getValue();		//默认订单状态
 		int aapAddRes = 0;
-		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(pcVO.getServiceType(), pcVO.getChargeTelDetail(), agencyId);
+//		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(pcVO.getServiceType(), pcVO.getChargeTelDetail(), agencyId);
+		RateDiscountPo ratePo = rateDiscountDao.get(pcVO.getRateId());
 		int chargeRes = -1;			//充值状态
 		if(ratePo != null){
 			int billType = ratePo.getBillType();//票务全部使用费率配置的票务
@@ -333,7 +334,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 	 */
 	@Override
 	public Map<String, Object> getMapByPojo(PurchaseVO purchaseVO) {
-		
+		//充值成功列表使用充值时间查询
 		if(purchaseVO != null){
 			Map<String, Object> paramsMap = new HashMap<String, Object>();
 			if(StringHelper.isNotEmpty(purchaseVO.getChargeTel())){
@@ -360,17 +361,53 @@ public class PurchaseAOImpl implements PurchaseAO {
 			if(purchaseVO.getOperatorType() != null){
 				paramsMap.put("operatorType", purchaseVO.getOperatorType());
 			}
-			if(StringHelper.isNotEmpty(purchaseVO.getArriveStartTimeStr())){
-				paramsMap.put("startTime", DateUtil.strToDate(purchaseVO.getArriveStartTimeStr(), null).getTime());
-			}
-			if(StringHelper.isNotEmpty(purchaseVO.getArriveEndTimeStr())){
-				paramsMap.put("endTime", DateUtil.strToDate(purchaseVO.getArriveEndTimeStr(), null).getTime());
-			}
-			if(StringHelper.isNotEmpty(purchaseVO.getBackStartTimeStr())){
-				paramsMap.put("startTimeBack", DateUtil.strToDate(purchaseVO.getBackStartTimeStr(), null).getTime());
-			}
-			if(StringHelper.isNotEmpty(purchaseVO.getBackEndTimeStr())){
-				paramsMap.put("endTimeBack", DateUtil.strToDate(purchaseVO.getBackEndTimeStr(), null).getTime());
+			
+			//充值成功列表使用充值时间查询
+//			if(purchaseVO.getOrderResult() != null && purchaseVO.getOrderResult() == OrderStateEnum.CHARGED.getValue()){
+//				purchaseVO.setBackStartTimeStr(DateUtil.formatAll(DateUtil.getStartTime()));
+//				purchaseVO.setBackEndTimeStr(DateUtil.formatAll(DateUtil.getEndTime()));
+//			}else{//其他状态使用订单到达时间
+//				purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(DateUtil.getStartTime()));
+//				purchaseVO.setArriveEndTimeStr(DateUtil.formatAll(DateUtil.getEndTime()));
+//			}
+			Long startTime = null;
+			Long endTime = null;
+			Long dateUtilStartTime = DateUtil.getStartTime().getTime();
+//			Long dateUtilEndTime = System.currentTimeMillis();
+			Long dateUtilEndTime = DateUtil.getEndTime().getTime();
+			
+			if(purchaseVO.getOrderResult() != null && purchaseVO.getOrderResult() == OrderStateEnum.CHARGED.getValue()){
+				//充值成功列表
+				if(StringHelper.isEmpty(purchaseVO.getBackStartTimeStr())){//默认打开列表
+					paramsMap.put("startTimeBack", dateUtilStartTime);
+					purchaseVO.setBackStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+				}else{
+					startTime = DateUtil.strToDate(purchaseVO.getBackStartTimeStr(), null).getTime();
+					paramsMap.put("startTimeBack", startTime);
+				}
+				if(StringHelper.isEmpty(purchaseVO.getBackEndTimeStr())){
+					paramsMap.put("endTimeBack", dateUtilEndTime);
+					purchaseVO.setBackEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
+				}else{
+					endTime = DateUtil.strToDate(purchaseVO.getBackEndTimeStr(), null).getTime();
+					paramsMap.put("endTimeBack", endTime);
+				}
+//				purchaseVO.setBackEndTimeStr(DateUtil.formatAll(DateUtil.getEndTime()));
+			}else{//其他状态使用订单到达时间
+				if(StringHelper.isEmpty(purchaseVO.getArriveStartTimeStr())){//默认打开列表
+					paramsMap.put("startTime", dateUtilStartTime);
+					purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+				}else{
+					startTime = DateUtil.strToDate(purchaseVO.getArriveStartTimeStr(), null).getTime();
+					paramsMap.put("startTime", startTime);
+				}
+				if(StringHelper.isEmpty(purchaseVO.getArriveEndTimeStr())){
+					paramsMap.put("endTime", dateUtilEndTime);
+					purchaseVO.setArriveEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
+				}else{
+					endTime = DateUtil.strToDate(purchaseVO.getArriveEndTimeStr(), null).getTime();
+					paramsMap.put("endTime", endTime);
+				}
 			}
 			return paramsMap;
 		}
@@ -386,20 +423,43 @@ public class PurchaseAOImpl implements PurchaseAO {
 	 * @createTime:2017年6月13日 下午12:53:21
 	 */
 	@Override
-	public Pagination<PurchaseVO> getPurchase(PurchaseVO purchaseVO,
+	public Pagination<PurchaseVO> getPurchase(Map<String, Object> resultMap,PurchaseVO purchaseVO,
 			PageParam pageParam) {
-		
 		Map<String, Object> paramsMap = getMapByPojo(purchaseVO);
-		int totalRecord = purchaseDAO.countPurchase(paramsMap);
-		if(pageParam != null){
-			int pageSize = pageParam.getPageSize();
-			int pageNo = pageParam.getPageNo();
-			paramsMap.put("start", (pageNo-1) * pageSize);
-			paramsMap.put("end", pageSize);
-			List<PurchaseVO> records = purchaseDAO.getPurchase(paramsMap);
-			if(records != null){
-				//遍历每一个订单，查看它的订单状态
-				for (PurchaseVO purchaseVO2 : records) {//格式化展示时间
+		//当天的页面参数
+		
+		int totalRecord = purchaseDAO.countPurchase(paramsMap);//今天的订单数量
+		//重置查询时间和查询参数（返回新的总记录数，并且重置查询参数，然后利用新的参数得到最新的订单列表）
+		if(totalRecord == 0){
+			//重新封装一次参数，并得到最新的记录总数
+			Long currentTime = System.currentTimeMillis();
+			if(purchaseVO.getOrderResult() != null && purchaseVO.getOrderResult() == OrderStateEnum.CHARGED.getValue()){
+				paramsMap.put("startTimeBack",null);//解除开始时间限制
+				if(StringHelper.isNotEmpty(purchaseVO.getBackStartTimeStr())){
+					purchaseVO.setBackStartTimeStr(null);
+				}
+				
+				paramsMap.put("endTimeBack", currentTime);
+				purchaseVO.setBackEndTimeStr(DateUtil.formatAll(currentTime));
+			}else{
+				paramsMap.put("startTime",null);
+				if(StringHelper.isNotEmpty(purchaseVO.getArriveStartTimeStr())){
+					purchaseVO.setArriveStartTimeStr(null);
+				}
+				
+				paramsMap.put("endTime", currentTime);
+				purchaseVO.setArriveEndTimeStr(DateUtil.formatAll(currentTime));
+			}
+			totalRecord = purchaseDAO.countPurchase(paramsMap);//今天的订单数量
+		}
+		int pageSize = pageParam.getPageSize();
+		int pageNo = pageParam.getPageNo();
+		paramsMap.put("start", (pageNo-1) * pageSize);
+		paramsMap.put("end", pageSize);
+		
+		List<PurchaseVO> records = purchaseDAO.getPurchase(paramsMap);
+		//遍历每一个订单，查看它的订单状态
+		for (PurchaseVO purchaseVO2 : records) {//格式化展示时间
 //					ExchangePlatformPo purchaseEp = purchaseVO2.getEp();
 //					
 //					OrderStateBase orderStatePage = OrderStateFactory.getOrderStateBase(purchaseEp.getEpName());
@@ -413,24 +473,20 @@ public class PurchaseAOImpl implements PurchaseAO {
 //					
 //					//更新查看订单状态
 //					checkOrderState(pageOrder, purchaseVO2);
-					if(purchaseVO2.getOrderBackTime() != null)
-					{
-						purchaseVO2.setOrderBackTimeStr(DateUtil.formatAll(purchaseVO2.getOrderBackTime()));
-					}
-					if(purchaseVO2.getOrderArriveTime() != null){
-						purchaseVO2.setOrderArriveTimeStr(DateUtil.formatAll(purchaseVO2.getOrderArriveTime()));
-					}
-				}
+			if(purchaseVO2.getOrderBackTime() != null)
+			{
+				purchaseVO2.setOrderBackTimeStr(DateUtil.formatAll(purchaseVO2.getOrderBackTime()));
 			}
-			
-			return new Pagination<PurchaseVO>(records, totalRecord, pageNo, pageSize);
+			if(purchaseVO2.getOrderArriveTime() != null){
+				purchaseVO2.setOrderArriveTimeStr(DateUtil.formatAll(purchaseVO2.getOrderArriveTime()));
+			}
 		}
-		return null;
 		
-		
-		
+		resultMap.put("searchParams", purchaseVO);	//查询参数放入返回参数
+		return new Pagination<PurchaseVO>(records, totalRecord, pageNo, pageSize);
 	}
 
+	
 	/**
 	 * @description: 通过微族api充值
 	 * @param paramsEntity

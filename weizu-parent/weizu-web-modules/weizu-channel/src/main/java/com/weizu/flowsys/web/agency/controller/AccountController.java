@@ -60,10 +60,10 @@ public class AccountController {
 	@Resource
 	private CompanyCredentialsDao companyCredentialsDao;
 	
-	//属性值，单文件的情况，对应的是upload3.js中的name属性，name属性值为file，此时struts就可以获取到file的文件对象，不需要实例化，struts框架会自动注入对象值，打开调试窗口，看一下就明白了
-	private File file;
-	//单文件上传的文件名，spring上传特性，文件名格式为name属性+FileName
-	private String fileFileName;
+//	//属性值，单文件的情况，对应的是upload3.js中的name属性，name属性值为file，此时struts就可以获取到file的文件对象，不需要实例化，struts框架会自动注入对象值，打开调试窗口，看一下就明白了
+//	private File file;
+//	//单文件上传的文件名，spring上传特性，文件名格式为name属性+FileName
+//	private String fileFileName;
 	
 	/**
 	 * @description:跳转到账户充值界面
@@ -107,14 +107,14 @@ public class AccountController {
 		if(StringHelper.isNotEmpty(pageNo)){
 			pageParam = new PageParam(Integer.parseInt(pageNo), 10);
 		}else{
-			chargeRecordPo.setStartTimeStr(DateUtil.formatAll(DateUtil.getStartTime()));
-			chargeRecordPo.setEndTimeStr(DateUtil.formatAll(DateUtil.getEndTime()));
+//			chargeRecordPo.setStartTimeStr(DateUtil.formatAll(DateUtil.getStartTime()));
+//			chargeRecordPo.setEndTimeStr(DateUtil.formatAll(DateUtil.getEndTime()));
 			pageParam = new PageParam(1, 10);
 		}
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVo != null){
 			chargeRecordPo.setAccountType(AccountTypeEnum.INCREASE.getValue());
-			Pagination<ChargeRecordPo> pagination =  chargeRecordAO.listChargeRecord(agencyVo.getId(), chargeRecordPo, pageParam);
+			Pagination<ChargeRecordPo> pagination =  chargeRecordAO.listChargeRecord(resultMap, agencyVo.getId(), chargeRecordPo, pageParam);
 			resultMap.put("pagination", pagination);
 			resultMap.put("billTypeEnum", BillTypeEnum.toList());
 			resultMap.put("accountTypeEnum", AccountTypeEnum.toList());
@@ -125,7 +125,6 @@ public class AccountController {
 					chargeRecordPo.setUserName(agencyPO.getUserName());
 				}
 			}
-			resultMap.put("searchParams", chargeRecordPo);
 		}
 		return new ModelAndView("/account/charge_list", "resultMap", resultMap);
 	}
@@ -141,18 +140,16 @@ public class AccountController {
 	@RequestMapping(value= AccountURL.CONSUME_LIST)
 	public ModelAndView getConsumeList(@RequestParam(value = "pageNo", required = false) String pageNo,
 			HttpServletRequest request,ConsumeRecordPo consumeRecordPo){
-		Map<String, Object> resultMap = new HashMap<String, Object>();
 		PageParam pageParam = null;
 		if(StringHelper.isNotEmpty(pageNo)){
 			pageParam = new PageParam(Integer.parseInt(pageNo), 10);
 		}else{
-			consumeRecordPo.setStartTimeStr(DateUtil.formatAll(DateUtil.getStartTime()));
-			consumeRecordPo.setEndTimeStr(DateUtil.formatAll(DateUtil.getEndTime()));
 			pageParam = new PageParam(1, 10);
 		}
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		if(agencyVo != null){
-			Pagination<ConsumeRecordPo> pagination =  chargeRecordAO.listConsumeRecord(agencyVo.getId(),consumeRecordPo, pageParam);
+			Pagination<ConsumeRecordPo> pagination =  chargeRecordAO.listConsumeRecord(resultMap,agencyVo.getId(),consumeRecordPo, pageParam);
 			resultMap.put("pagination", pagination);
 			resultMap.put("billTypeEnum", BillTypeEnum.toList());
 			resultMap.put("accountTypeEnum", AccountTypeEnum.toList());
@@ -163,7 +160,6 @@ public class AccountController {
 					consumeRecordPo.setUserName(agencyPO.getUserName());
 				}
 			}
-			resultMap.put("searchParams", consumeRecordPo);
 		}
 		return new ModelAndView("/account/consume_list", "resultMap", resultMap);
 	}

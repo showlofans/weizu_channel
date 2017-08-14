@@ -40,7 +40,7 @@ public interface ChargeRecordAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月6日 下午4:07:35
 	 */
-	Pagination<ChargeRecordPo> listChargeRecord(Integer contextAgencyId,ChargeRecordPo chargeRecordPo, PageParam pageParam);
+	Pagination<ChargeRecordPo> listChargeRecord(Map<String, Object> resultMap,Integer contextAgencyId,ChargeRecordPo chargeRecordPo, PageParam pageParam);
 	
 	/**
 	 * @description: 封装查询参数
@@ -60,7 +60,7 @@ public interface ChargeRecordAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月3日 下午5:17:19
 	 */
-	Pagination<ConsumeRecordPo> listConsumeRecord(Integer contextAgencyId,ConsumeRecordPo consumeRecordPo, PageParam pageParam);
+	Pagination<ConsumeRecordPo> listConsumeRecord(Map<String, Object> resultMap,Integer contextAgencyId,ConsumeRecordPo consumeRecordPo, PageParam pageParam);
 	
 	/**
 	 * @description:购买流量

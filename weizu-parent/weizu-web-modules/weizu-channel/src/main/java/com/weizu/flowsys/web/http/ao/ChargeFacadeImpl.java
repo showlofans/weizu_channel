@@ -232,7 +232,7 @@ public class ChargeFacadeImpl implements ChargeFacade {
 						return new ChargeDTO(chargeEnum.getValue(), chargeEnum.getDesc(), new ChargeOrder(purchasePo.getOrderId()+"", chargeTel+"", pgData.getPgSize()+"",billType));
 					}else
 					{
-						Logger log = Logger.getLogger(ChargeFacadeImpl.class); 
+						Logger log = Logger.getLogger(this.getClass()); 
 						log.info("添加订单失败！");
 					}
 				}else{
@@ -276,59 +276,59 @@ public class ChargeFacadeImpl implements ChargeFacade {
 	 * @createTime:2017年6月29日 上午11:14:38
 	 */
 	private ChargeDTO doChannel(BestChannelPO bestChannel,OperatorPgDataPo pgData,PurchasePo purchasePo,AgencyBackwardPo backPo,String scopeCityCode,String chargeTel,int billType) {
-		ChargeStatusEnum chargeEnum = null;
-		ProductCodePo product =  productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, pgData.getPgSize(), pgData.getOperatorType(), pgData.getServiceType(),bestChannel.getEpd()));
-		if(product != null){
-			ExchangePlatformPo epPo = exchangePlatformDao.get(bestChannel.getEpd());
-			ChargeBase chargeBase = ChargeFactory.getChargeBase(bestChannel.getEpName());
-			
-//			purchasePo.setOrderPlatformPath(OrderPathEnum.CHARGE_SOCKET.getValue());
-			purchasePo.setAgencyId(backPo.getId());
-//			purchasePo.setRootAgencyId(backPo.getRootAgencyId());
-			//添加待充订单
-			purchasePo.setOrderResult(OrderStateEnum.DAICHONG.getValue());
-//			purchasePo.setOrderRe
-//			purchasePo.setChannelId(bestChannel.getChanneld());
-			int addPurResult = purchaseDAO.addPurchase(purchasePo);//数据库中有了待充订单，通过平台的查询页面可以查到，通过订单接口也可以查到
-			//充值：通过充值返回的订单查询订单详情，然后更新状态
-			ChargeResultPage chargeResultPage = chargeBase.charge(new ChargeParamsPage(epPo.getEpPurchaseIp(), epPo.getEpName(), epPo.getEpUserName(), epPo.getEpApikey(), chargeTel, product.getProductCode()));
-			ChargePageOrder chargePageOrder = chargeResultPage.getChargePageOrder();
-			if(chargePageOrder != null)
-			{
-				//查看订单状态
-				OrderStateBase orderStatePage = OrderStateFactory.getOrderStateBase(epPo.getEpName());
-				OrderStateResultPage osrp = orderStatePage.getOrderState(new OrderStateParamsPage(epPo.getPgdataCheckIp(), chargePageOrder.getTransaction_id(), epPo.getEpName(), epPo.getEpUserName(), epPo.getEpApikey()));
-				int orderStateAPI = osrp.getPageOrder().getStatus();
-				//如果成功，就更新该订单；失败就拦下来设置为未冲
-				int status = getStatusByStatus(orderStateAPI);
-				if(status == OrderStateEnum.CHARGED.getValue())
-				{//成功
-					//更新该订单状态
-					purchaseDAO.updatePurchaseState(new PurchaseStateParams(purchasePo.getOrderId(), chargePageOrder.getOrderBackTime(), status, ChargeStatusEnum.CHARGE_SUCCESS.getDesc(),chargePageOrder.getTransaction_id()));
-				}else if(status == OrderStateEnum.UNCHARGE.getValue())
-				{//失败(没有接口订单号)
-					purchaseDAO.updatePurchaseState(new PurchaseStateParams(purchasePo.getOrderId(), chargePageOrder.getOrderBackTime(), status, OrderStateEnum.WEICHONG.getDesc(),""));
-				}
-			}
-		}
-		else{//缺少通道编码
-			
-		}
-		int channelId = bestChannel.getChanneld();//
-		Double channelDiscount = bestChannel.getChannelDiscount();
-		Double channelAmount = NumberTool.mul(pgData.getPgPrice(), channelDiscount);//通道交易增加额
-//		purchasePo.setChannelId(channelId);
-		ChannelForwardPo channelPo = channelForwardDao.get(channelId);
-		channelPo.setId(channelId);
-		channelPo.addTotalUse();
-		channelPo.addTotalAmount(channelAmount);
-		int channelRes = channelForwardDao.update(channelPo);
-		//更新订单表
-		if(channelRes > 0){
-			ChargeOrder chargeOrder = new ChargeOrder(purchasePo.getOrderId()+"", purchasePo.getChargeTel(), pgData.getPgSize()+"",billType);
-			chargeEnum = ChargeStatusEnum.CHARGE_SUCCESS;
-			return new ChargeDTO(chargeEnum.getValue(),chargeEnum.getDesc(), chargeOrder);
-		}
+//		ChargeStatusEnum chargeEnum = null;
+//		ProductCodePo product =  productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, pgData.getPgSize(), pgData.getOperatorType(), pgData.getServiceType(),bestChannel.getEpd()));
+//		if(product != null){
+//			ExchangePlatformPo epPo = exchangePlatformDao.get(bestChannel.getEpd());
+//			ChargeBase chargeBase = ChargeFactory.getChargeBase(bestChannel.getEpName());
+//			
+////			purchasePo.setOrderPlatformPath(OrderPathEnum.CHARGE_SOCKET.getValue());
+//			purchasePo.setAgencyId(backPo.getId());
+////			purchasePo.setRootAgencyId(backPo.getRootAgencyId());
+//			//添加待充订单
+//			purchasePo.setOrderResult(OrderStateEnum.DAICHONG.getValue());
+////			purchasePo.setOrderRe
+////			purchasePo.setChannelId(bestChannel.getChanneld());
+//			int addPurResult = purchaseDAO.addPurchase(purchasePo);//数据库中有了待充订单，通过平台的查询页面可以查到，通过订单接口也可以查到
+//			//充值：通过充值返回的订单查询订单详情，然后更新状态
+//			ChargeResultPage chargeResultPage = chargeBase.charge(new ChargeParamsPage(epPo.getEpPurchaseIp(), epPo.getEpName(), epPo.getEpUserName(), epPo.getEpApikey(), chargeTel, product.getProductCode()));
+//			ChargePageOrder chargePageOrder = chargeResultPage.getChargePageOrder();
+//			if(chargePageOrder != null)
+//			{
+//				//查看订单状态
+//				OrderStateBase orderStatePage = OrderStateFactory.getOrderStateBase(epPo.getEpName());
+//				OrderStateResultPage osrp = orderStatePage.getOrderState(new OrderStateParamsPage(epPo.getPgdataCheckIp(), chargePageOrder.getTransaction_id(), epPo.getEpName(), epPo.getEpUserName(), epPo.getEpApikey()));
+//				int orderStateAPI = osrp.getPageOrder().getStatus();
+//				//如果成功，就更新该订单；失败就拦下来设置为未冲
+//				int status = getStatusByStatus(orderStateAPI);
+//				if(status == OrderStateEnum.CHARGED.getValue())
+//				{//成功
+//					//更新该订单状态
+//					purchaseDAO.updatePurchaseState(new PurchaseStateParams(purchasePo.getOrderId(), chargePageOrder.getOrderBackTime(), status, ChargeStatusEnum.CHARGE_SUCCESS.getDesc(),chargePageOrder.getTransaction_id()));
+//				}else if(status == OrderStateEnum.UNCHARGE.getValue())
+//				{//失败(没有接口订单号)
+//					purchaseDAO.updatePurchaseState(new PurchaseStateParams(purchasePo.getOrderId(), chargePageOrder.getOrderBackTime(), status, OrderStateEnum.WEICHONG.getDesc(),""));
+//				}
+//			}
+//		}
+//		else{//缺少通道编码
+//			
+//		}
+//		int channelId = bestChannel.getChanneld();//
+//		Double channelDiscount = bestChannel.getChannelDiscount();
+//		Double channelAmount = NumberTool.mul(pgData.getPgPrice(), channelDiscount);//通道交易增加额
+////		purchasePo.setChannelId(channelId);
+//		ChannelForwardPo channelPo = channelForwardDao.get(channelId);
+//		channelPo.setId(channelId);
+//		channelPo.addTotalUse();
+//		channelPo.addTotalAmount(channelAmount);
+//		int channelRes = channelForwardDao.update(channelPo);
+//		//更新订单表
+//		if(channelRes > 0){
+//			ChargeOrder chargeOrder = new ChargeOrder(purchasePo.getOrderId()+"", purchasePo.getChargeTel(), pgData.getPgSize()+"",billType);
+//			chargeEnum = ChargeStatusEnum.CHARGE_SUCCESS;
+//			return new ChargeDTO(chargeEnum.getValue(),chargeEnum.getDesc(), chargeOrder);
+//		}
 		return null;
 	}
 
