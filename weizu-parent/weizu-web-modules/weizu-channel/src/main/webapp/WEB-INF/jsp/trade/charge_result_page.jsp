@@ -10,7 +10,7 @@
 <body>
 	<c:choose>
 		<c:when test="${resultMap.pageMsg == 'success' }">
-			<span class="c-blue">充值成功</span>
+			<span class="c-blue">订单提交成功</span>
 			<a data-href="${resultMap.referURL}" data-title="订单列表" href="javascript:;" onclick="Hui_admin_tab(this)" style="text-decoration:none;">订单列表</a>
 		</c:when>
 		<c:otherwise>

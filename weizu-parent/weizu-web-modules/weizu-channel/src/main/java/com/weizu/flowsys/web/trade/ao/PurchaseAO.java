@@ -32,7 +32,7 @@ public interface PurchaseAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月13日 下午12:51:41
 	 */
-	Map<String,Object> getMapByPojo(PurchaseVO purchaseVO);
+	Map<String,Object> getMapByPojo(PurchaseVO purchaseVO,Boolean isCharged);
 	
 	/**
 	 * @description:查询订单列表

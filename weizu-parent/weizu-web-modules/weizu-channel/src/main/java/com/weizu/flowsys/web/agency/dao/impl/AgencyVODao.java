@@ -1,5 +1,6 @@
 package com.weizu.flowsys.web.agency.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -157,6 +158,22 @@ public class AgencyVODao extends DaoImpl<AgencyBackwardPo, Integer> implements A
 	@Override
 	public List<AgencyBackwardPo> getBatchAgency(AgencyBackwardPo params) {
 		return sqlSessionTemplateASS.selectList("getBatchAgency", params);
+	}
+
+	/**
+	 * @description: 查询是否属于二级代理商（接口用户）,是否可以通过接口传单
+	 * @param paramMap
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月15日 下午4:10:56
+	 */
+	@Override
+	public AgencyBackwardPo getSecondAgency(String userName,String userApiKey) {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("userName", userName);
+		paramMap.put("userApiKey", userApiKey);
+		paramMap.put("agencyTag", 1);
+		return sqlSessionTemplateASS.selectOne("getSecondAgency", paramMap);
 	}
 
 	/**

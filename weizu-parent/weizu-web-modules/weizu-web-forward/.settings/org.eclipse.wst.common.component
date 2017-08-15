@@ -8,6 +8,9 @@
         <dependent-module archiveName="weizu-web-domain-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/weizu-web-domain/weizu-web-domain">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="weizu-web-api-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/weizu-web-api/weizu-web-api">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="weizu-web-forward"/>
         <property name="java-output-path" value="/weizu-web-forward/target/classes"/>
     </wb-module>

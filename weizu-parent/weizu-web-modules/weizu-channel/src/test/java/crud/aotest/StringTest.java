@@ -3,6 +3,8 @@ package crud.aotest;
 import java.util.Random;
 
 import com.weizu.flowsys.util.StringUtil2;
+import com.weizu.flowsys.util.UUIDGenerator;
+import com.weizu.web.foundation.MD5Util;
 
 public class StringTest {
 
@@ -63,8 +65,11 @@ public class StringTest {
 //    }
 //
 	public static void main(String[] args) {
-		String test = "内蒙古移动";
-		System.out.println(test.substring(0, test.length()-2));
+		UUIDGenerator generator = new UUIDGenerator();
+		String userApiKey = generator.generate().toString();
+		
+//		String test = "内蒙古移动";
+//		System.out.println(test.substring(0, test.length()-2));
 //		System.out.println(StringUtil2.getDiscount(21d));
 ////		Random r = new Random(1+5);
 ////		System.out.println(r.nextInt());
