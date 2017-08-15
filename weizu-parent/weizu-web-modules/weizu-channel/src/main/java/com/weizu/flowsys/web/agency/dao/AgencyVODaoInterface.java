@@ -126,4 +126,11 @@ public interface AgencyVODaoInterface extends Dao<AgencyBackwardPo, Integer> {
 	 * @createTime:2017年7月11日 上午10:19:04
 	 */
 //	int updateUserPass(Map<String,Object> paramMap);
+	
+	/** 查询是否属于二级代理商（接口用户）,是否可以通过接口传单 
+	 * @param paramMap
+	 * @return null
+	 */
+	AgencyBackwardPo getSecondAgency(String userName,String userAPIKey);
+	
 }

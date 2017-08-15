@@ -302,4 +302,28 @@ WHERE a2.root_agency_id=4 and active1.rate_discount_id=22 and active1.bind_state
 		where root_agency_id not IN (select id from agency_backward WHERE root_agency_id=0)
 		AND root_agency_id !=0 and id = #{_parameter}
 	</select>
+	
+	<!-- 查询是否属于二级代理商（接口用户）,是否可以通过接口传单 -->
+	<select id="getSecondAgency" parameterType="map" resultMap="BaseResultMap">
+		select * from <include refid="agency_backward"></include> 
+		<where>
+			root_agency_id IN (select id from <include refid="agency_backward"></include>
+			<where>
+				 AND root_agency_id=0
+			</where>)
+			<if test="id != null">
+				AND id = #{id}
+			</if>
+			<if test="userName != null">
+				AND user_name = #{userName}
+			</if>
+			<if test="userApiKey != null">
+				AND user_api_key = #{userApiKey}
+			</if>
+			<if test="agencyTag != null"><!-- 应该传1-接口用户，已认证 -->
+				AND agency_tag = #{agencyTag}
+			</if>
+		</where>
+	</select>
+	
 </mapper>

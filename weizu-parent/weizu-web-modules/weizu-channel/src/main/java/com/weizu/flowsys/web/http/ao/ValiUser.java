@@ -28,18 +28,21 @@ public class ValiUser {
 	private OperatorPgDao operatorPgDao;
 	
 	/**
-	 * @description: 看代理商是否存在
+	 * @description: 看代理商是否能传单
 	 * @param agencyPo
 	 * @return
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月23日 下午3:02:43
 	 */
 	public AgencyBackwardPo findAgency(String userName,String sign){
-		
+		//userapikey作为参数穿进去
 		AgencyBackwardPo backPo = agencyBackwardDao.get(new WherePrams("user_name","=",userName));
 		if(backPo == null){
 			return null;
 		}
+		
+		//用sign得到apikey
+		
 		String backAPIKey = backPo.getUserApiKey();
 		String rightSign = MD5.getMd5(backAPIKey);
 		if(rightSign.equals(sign)){

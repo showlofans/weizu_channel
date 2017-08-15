@@ -106,18 +106,28 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 			ChargeRecordPo chargeRecordPo, PageParam pageParam) {
 		
 		Map<String, Object> params = getMapByEntity(chargeRecordPo);
-		
 		params.put("contextAgencyId", contextAgencyId);
 		int totalRecords = chargeRecordDao.countRecord(params);
 		
 		if(totalRecords == 0){
-			params.put("startTime",null);//解除开始时间限制
-			chargeRecordPo.setStartTimeStr(null);//重置开始时间为空
-			params.put("endTime", System.currentTimeMillis());
-			chargeRecordPo.setEndTimeStr(DateUtil.formatAll(System.currentTimeMillis()));
+			if(StringHelper.isEmpty(chargeRecordPo.getStartTimeStr())){
+				params.put("startTime",null);//解除开始时间限制
+			}
+			if(StringHelper.isEmpty(chargeRecordPo.getEndTimeStr())){
+				params.put("endTime", System.currentTimeMillis());
+				chargeRecordPo.setEndTimeStr(DateUtil.formatAll(System.currentTimeMillis()));
+			}
 			totalRecords = chargeRecordDao.countRecord(params);
+		}else{
+			if(StringHelper.isEmpty(chargeRecordPo.getStartTimeStr())){
+				Long dateUtilStartTime = Long.parseLong(params.get("startTime").toString());
+				chargeRecordPo.setStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+			}
+			if(StringHelper.isEmpty(chargeRecordPo.getEndTimeStr())){
+				Long dateUtilEndTime = Long.parseLong(params.get("endTime").toString());
+				chargeRecordPo.setEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
+			}
 		}
-		
 		
 		int pageSize = pageParam.getPageSize();
 		int pageNo = pageParam.getPageNo();
@@ -149,7 +159,7 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		}
 		if(StringHelper.isEmpty(consumeRecordPo.getStartTimeStr()) ){
 			params.put("startTime", DateUtil.getStartTime().getTime());
-			consumeRecordPo.setStartTimeStr(DateUtil.formatAll(DateUtil.getStartTime()));
+//			consumeRecordPo.setStartTimeStr(DateUtil.formatAll(DateUtil.getStartTime()));
 		}else{
 			Long startTime = DateUtil.strToDate(consumeRecordPo.getStartTimeStr(), null).getTime();
 			params.put("startTime", startTime);
@@ -157,25 +167,12 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		
 		if(StringHelper.isEmpty(consumeRecordPo.getEndTimeStr())){
 			params.put("endTime", DateUtil.getEndTime().getTime());
-			consumeRecordPo.setEndTimeStr(DateUtil.formatAll(DateUtil.getEndTime()));
+//			consumeRecordPo.setEndTimeStr(DateUtil.formatAll(DateUtil.getEndTime()));
 		}else{
 			Long endTime = DateUtil.strToDate(consumeRecordPo.getEndTimeStr(), null).getTime();
 			params.put("endTime", endTime);
 		}
 		
-		
-//		if(consumeRecordPo.getStartTime() != null){
-//			params.put("startTime", consumeRecordPo.getStartTime());
-//		}
-////		else{//设置当天开始时间
-////			params.put("startTime", DateUtil.getStartTime().getTime());
-////		}
-//		if(consumeRecordPo.getEndTime() != null){
-//			params.put("endTime", consumeRecordPo.getEndTime());
-//		}
-//		else{//设置当天结束时间
-//			params.put("endTime", DateUtil.getEndTime().getTime());
-//		}
 		if(consumeRecordPo.getAccountType() != null){
 			params.put("accountType", consumeRecordPo.getAccountType());
 		}
@@ -206,12 +203,27 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		Map<String, Object> params = getMapByConsume(consumeRecordPo,contextAgencyId);
 		
 		int totalRecords = chargeRecordDao.countConsume(params);
+		
 		if(totalRecords == 0){
-			params.put("startTime",null);//解除开始时间限制
-			consumeRecordPo.setStartTimeStr(null);//重置开始时间为空
-			params.put("endTime", System.currentTimeMillis());
-			consumeRecordPo.setEndTimeStr(DateUtil.formatAll(System.currentTimeMillis()));
+			if(StringHelper.isEmpty(consumeRecordPo.getStartTimeStr())){
+				params.put("startTime",null);//解除开始时间限制
+			}
+			if(StringHelper.isEmpty(consumeRecordPo.getEndTimeStr())){
+				params.put("endTime", System.currentTimeMillis());
+				consumeRecordPo.setEndTimeStr(DateUtil.formatAll(System.currentTimeMillis()));
+			}
 			totalRecords = chargeRecordDao.countConsume(params);
+		}else{
+			if(StringHelper.isEmpty(consumeRecordPo.getStartTimeStr())){
+				Long dateUtilStartTime = Long.parseLong(params.get("startTime").toString());
+				consumeRecordPo.setStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+//				purchaseVO.setBackStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+			}
+			if(StringHelper.isEmpty(consumeRecordPo.getEndTimeStr())){
+				Long dateUtilEndTime = Long.parseLong(params.get("endTime").toString());
+				consumeRecordPo.setEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
+//				purchaseVO.setBackEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
+			}
 		}
 		
 		int pageSize = pageParam.getPageSize();
@@ -245,7 +257,7 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		
 		if(StringHelper.isEmpty(chargeRecordPo.getStartTimeStr()) ){
 			params.put("startTime", DateUtil.getStartTime().getTime());
-			chargeRecordPo.setStartTimeStr(DateUtil.formatAll(DateUtil.getStartTime()));
+//			chargeRecordPo.setStartTimeStr(DateUtil.formatAll(DateUtil.getStartTime()));
 		}else{
 			Long startTime = DateUtil.strToDate(chargeRecordPo.getStartTimeStr(), null).getTime();
 			params.put("startTime", startTime);
@@ -253,24 +265,12 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		
 		if(StringHelper.isEmpty(chargeRecordPo.getEndTimeStr())){
 			params.put("endTime", DateUtil.getEndTime().getTime());
-			chargeRecordPo.setEndTimeStr(DateUtil.formatAll(DateUtil.getEndTime()));
+//			chargeRecordPo.setEndTimeStr(DateUtil.formatAll(DateUtil.getEndTime()));
 		}else{
 			Long endTime = DateUtil.strToDate(chargeRecordPo.getEndTimeStr(), null).getTime();
 			params.put("endTime", endTime);
 		}
 		
-//		if(chargeRecordPo.getStartTime() != null){
-//			params.put("startTime", chargeRecordPo.getStartTime());
-//		}
-////		else{//设置当天开始时间
-////			params.put("startTime", DateUtil.getStartTime().getTime());
-////		}
-//		if(chargeRecordPo.getEndTime() != null){
-//			params.put("endTime", chargeRecordPo.getEndTime());
-//		}
-//		else{//设置当天结束时间
-//			params.put("endTime", DateUtil.getEndTime().getTime());
-//		}
 		if(chargeRecordPo.getAccountType() != null){
 			params.put("accountType", chargeRecordPo.getAccountType());
 		}
