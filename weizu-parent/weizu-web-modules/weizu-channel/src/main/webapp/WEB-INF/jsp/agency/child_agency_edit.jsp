@@ -63,12 +63,12 @@
 			</div>
 		</div>
 		</c:if>
-		<div class="row cl">
+		<%-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">用户信用：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" style="width:200px" class="input-text"  value="${resultMap.agencyPo.accountCredit }" placeholder="" id="accountCredit" name="accountCredit">元
 			</div>
-		</div>
+		</div> --%>
 		<%-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>不带票费率：</label>
 			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">

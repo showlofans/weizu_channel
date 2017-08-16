@@ -27,6 +27,7 @@ import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.web.foundation.DateUtil;
+import com.weizu.web.foundation.MD5;
 import com.weizu.web.foundation.String.StringHelper;
 
 @Service("agencyAO")
@@ -316,6 +317,7 @@ public class AgencyAOImpl implements AgencyAO {
 			{
 				UUIDGenerator generator = new UUIDGenerator();
 				String uuid = generator.generate().toString();
+//				String md5ApiKey = MD5.getMd5(agBackwardPo.getUserName())
 				agBackwardPo.setUserApiKey(uuid);
 				int res = agencyBackwardDao.update(agBackwardPo);//更新代理商apikey信息
 				if(res < 1)//没有更新成功也不展示出来

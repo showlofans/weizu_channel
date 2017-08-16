@@ -168,10 +168,9 @@ public class AgencyVODao extends DaoImpl<AgencyBackwardPo, Integer> implements A
 	 * @createTime:2017年8月15日 下午4:10:56
 	 */
 	@Override
-	public AgencyBackwardPo getSecondAgency(String userName,String userApiKey) {
+	public AgencyBackwardPo getSecondAgency(String userName) {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("userName", userName);
-		paramMap.put("userApiKey", userApiKey);
 		paramMap.put("agencyTag", 1);
 		return sqlSessionTemplateASS.selectOne("getSecondAgency", paramMap);
 	}

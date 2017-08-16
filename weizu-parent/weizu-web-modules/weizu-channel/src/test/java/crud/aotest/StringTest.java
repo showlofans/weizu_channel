@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.util.UUIDGenerator;
+import com.weizu.web.foundation.MD5;
 import com.weizu.web.foundation.MD5Util;
 
 public class StringTest {
@@ -65,9 +66,14 @@ public class StringTest {
 //    }
 //
 	public static void main(String[] args) {
-		UUIDGenerator generator = new UUIDGenerator();
-		String userApiKey = generator.generate().toString();
-		
+//		UUIDGenerator generator = new UUIDGenerator();
+//		String userApiKey = generator.generate().toString();
+//		System.out.println("098f6bcd4621d373cade4e832627b4f6".length());//待md5编码的32位字符串
+//		String text1 = MD5.getMd5("456"+"&098f6bcd4621d373cade4e832627b4f6");
+//		System.out.println(text1);
+//		String text = MD5.getMd5("456"+"&098f6bcd4621d373cade4e832627b4f6");
+//		System.out.println(text);
+//		System.out.println(text.equals(text1));
 //		String test = "内蒙古移动";
 //		System.out.println(test.substring(0, test.length()-2));
 //		System.out.println(StringUtil2.getDiscount(21d));

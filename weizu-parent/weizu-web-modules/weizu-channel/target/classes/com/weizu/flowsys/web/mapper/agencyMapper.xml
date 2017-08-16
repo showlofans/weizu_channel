@@ -317,9 +317,6 @@ WHERE a2.root_agency_id=4 and active1.rate_discount_id=22 and active1.bind_state
 			<if test="userName != null">
 				AND user_name = #{userName}
 			</if>
-			<if test="userApiKey != null">
-				AND user_api_key = #{userApiKey}
-			</if>
 			<if test="agencyTag != null"><!-- 应该传1-接口用户，已认证 -->
 				AND agency_tag = #{agencyTag}
 			</if>

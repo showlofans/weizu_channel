@@ -31,11 +31,11 @@
 </head>
 <body>
 <div class="page-container">
-	<p class="f-20 text-success">欢迎使用H-ui.admin <span class="f-14">3.0</span>后台模版！</p>
+	<p class="f-20 text-success">欢迎使用微族通道系统 <span class="f-14">Beta</span>版本</p>
 	<p>登录次数：18 </p>
 	<p>上次登录IP：222.35.131.79.1  上次登录时间：2014-6-14 11:19:55</p>
 	<!-- <iframe width='738' height='523' class='preview-iframe' scrolling='no' frameborder='0' src='http://download.csdn.net/source/preview/2453923/e55ebbf1b3ddcc48ccaa5684a663488d' ></iframe> -->
-	<table class="table table-border table-bordered table-bg">
+	<!-- <table class="table table-border table-bordered table-bg">
 		<thead>
 			<tr>
 				<th colspan="7" scope="col">信息统计</th>
@@ -91,7 +91,7 @@
 				<td>0</td>
 			</tr>
 		</tbody>
-	</table>
+	</table> -->
 	<%-- <c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vst"></c:forEach> --%>
 	<h3>带费率：</h3>
 	<c:if test="${not empty resultMap.map.billDTO }">
@@ -105,7 +105,7 @@
 		联通：${resultMap.map.noDTO.discountPo.discount1 }<br>
 		电信：${resultMap.map.noDTO.discountPo.discount2 }<br>
 	</c:if>
-	<table class="table table-border table-bordered table-bg mt-20">
+	<!-- <table class="table table-border table-bordered table-bg mt-20">
 		<thead>
 			<tr>
 				<th colspan="2" scope="col">服务器信息</th>
@@ -205,13 +205,14 @@
 				<td>NETWORK SERVICE</td>
 			</tr>
 		</tbody>
-	</table>
+	</table> -->
 </div>
 <footer class="footer mt-20">
 	<div class="container">
-		<p>感谢jQuery、layer、laypage、Validform、UEditor、My97DatePicker、iconfont、Datatables、WebUploaded、icheck、highcharts、bootstrap-Switch<br>
-			Copyright &copy;2015-2017 H-ui.admin 3.0 All Rights Reserved.<br>
-			本后台系统由<a href="http://www.h-ui.net/" target="_blank" title="H-ui前端框架">H-ui前端框架</a>提供前端技术支持</p>
+		<p><!-- 感谢jQuery、layer、laypage、Validform、UEditor、My97DatePicker、iconfont、Datatables、WebUploaded、icheck、highcharts、bootstrap-Switch<br> -->
+			Copyright &copy;2017-2018 南昌微族科技有限公司 All Rights Reserved.<br>
+			<!-- 本后台系统由<a href="http://www.h-ui.net/" target="_blank" title="H-ui前端框架">H-ui前端框架</a>提供前端技术支持 -->
+			</p>
 	</div>
 </footer>
 <!--_footer 作为公共模版分离出去-->

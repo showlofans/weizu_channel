@@ -31,7 +31,7 @@
 <title>资讯列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 下游管理 <span class="c-gray en">&gt;</span> 代理商列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 代理商管理 <span class="c-gray en">&gt;</span> 代理商列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
 	<div class="text-c">
@@ -73,7 +73,7 @@
 					<th width="80">邮箱</th>
 					<th width="75">地址</th>
 					<th width="60">余额</th>
-					<th width="60">信用</th>
+					<!-- <th width="60">信用</th> -->
 					<th width="60">费率类型</th>
 					<!-- <th width="60">费率</th>
 					<th width="60">带票费率</th> -->
@@ -120,7 +120,7 @@
 							</c:otherwise>
 						</c:choose>
 						</td>
-						<td>${agency.accountCredit }</td>
+						<%-- <td>${agency.accountCredit }</td> --%>
 						
 						<td class="td-status"><c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
 						<c:if test="${agency.billType == billTypeEnum.value }"> ${billTypeEnum.desc }</c:if>

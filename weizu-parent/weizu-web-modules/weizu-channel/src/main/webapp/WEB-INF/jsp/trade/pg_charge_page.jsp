@@ -19,11 +19,15 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   <meta content="" name="description" />
   <meta content="" name="author" />
-<link href="/view/static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
-<link href="/view/static/h-ui.admin/css/style.css" rel="stylesheet" type="text/css" />
-<link href="/view/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" type="text/css" href="/view/static/h-ui/css/H-ui.min.css" />
+	<link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/H-ui.admin.css" />
+	<!-- DataTables CSS -->
+	<link rel="stylesheet" type="text/css" href="/view/lib/Hui-iconfont/1.0.8/iconfont.css" />
+	<link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/skin/default/skin.css" id="skin" />
+	<link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/style.css" />
  </head>
  <body>
+ <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 在线充值 <span class="c-gray en">&gt;</span> 单号充值<!--  <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> --></nav>
  <article class="page-container">
  	<form class="form form-horizontal" action="/flowsys/chargePg/pg_charge.do" method="post"  id="form-charge">
  	<input type="hidden" name="channelId" id="channelId">
