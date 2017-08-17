@@ -50,7 +50,7 @@ public interface ExchangePlatformAO {
 	 */
 	Pagination<ExchangePlatformPo> getEp(int agencyId,ExchangePlatformPo ep,PageParam pageParam);
 	/**
-	 * @description:平台添加
+	 * @description:平台添加（单系统）
 	 * @param exchangePlatformPo
 	 * @param agencyId
 	 * @param agencyName
@@ -59,6 +59,15 @@ public interface ExchangePlatformAO {
 	 * @createTime:2017年6月8日 下午6:20:40
 	 */
 	String addEp(ExchangePlatformPo exchangePlatformPo,int agencyId,String agencyName);
+	
+	/**
+	 * @description: 平台添加
+	 * @param exchangePlatformPo
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月17日 下午4:59:04
+	 */
+	String addEp(ExchangePlatformPo exchangePlatformPo);
 	
 	/**
 	 * @description: 更新平台信息
@@ -77,4 +86,14 @@ public interface ExchangePlatformAO {
 	 * @createTime:2017年7月26日 上午10:54:57
 	 */
 	String delEp(String epId);
+	
+	/**
+	 * @description: 看英文标识是否存在
+	 * @param epEngId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月17日 上午11:38:20
+	 */
+	boolean checkEpEngId(String epEngId);
+	
 }

@@ -224,6 +224,9 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 			if(channelPo.getId() != null){
 				paramsMap.put("channelId", channelPo.getId());
 			}
+			if(StringHelper.isNotEmpty(channelPo.getEpName())){
+				paramsMap.put("epName", channelPo.getEpName());
+			}
 			
 		}
 		

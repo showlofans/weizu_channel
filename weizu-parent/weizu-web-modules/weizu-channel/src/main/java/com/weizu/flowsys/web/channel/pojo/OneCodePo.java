@@ -20,6 +20,8 @@ public class OneCodePo {
 	
 	private Integer epId;
 	
+	private Integer pgId;				//包体Id
+	
 	public OneCodePo() {
 		super();
 	}
@@ -34,6 +36,20 @@ public class OneCodePo {
 		this.serviceType = serviceType;
 	}
 	
+	public OneCodePo(Integer epId, Integer pgId) {
+		super();
+		this.epId = epId;
+		this.pgId = pgId;
+	}
+
+	public Integer getPgId() {
+		return pgId;
+	}
+
+	public void setPgId(Integer pgId) {
+		this.pgId = pgId;
+	}
+
 	public Integer getEpId() {
 		return epId;
 	}

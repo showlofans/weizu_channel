@@ -44,17 +44,21 @@ public class PlatformController {
 	 * @createTime:2017年6月8日 下午3:16:48
 	 */
 	@RequestMapping(value = PlatformURL.PLATFORM_ADD)
-	public void addPlatform(ExchangePlatformPo exchangePlatformPo,HttpServletResponse resonse,HttpServletRequest request)
+	@ResponseBody
+	public String addPlatform(ExchangePlatformPo exchangePlatformPo,HttpServletResponse resonse,HttpServletRequest request)
 	{
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO != null){
-			String result = exchangePlatformAO.addEp(exchangePlatformPo,agencyVO.getId(),agencyVO.getUserName());
-			try {
-					resonse.getWriter().print(result);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			String result = exchangePlatformAO.addEp(exchangePlatformPo);
+//			String result = exchangePlatformAO.addEp(exchangePlatformPo,agencyVO.getId(),agencyVO.getUserName());
+//			try {
+//					resonse.getWriter().print(result);
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+			return result;
 		}
+		return "error";
 	}
 	
 	/**
@@ -153,5 +157,21 @@ public class PlatformController {
 //		} catch (UnsupportedEncodingException e) {
 //			e.printStackTrace();
 //		}
+	}
+	
+	/**
+	 * @description: CHECK_EP_ENGID
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月17日 下午3:08:41
+	 */
+	@RequestMapping(value = PlatformURL.CHECK_EP_ENGID)
+	@ResponseBody
+	public String checkEpEngId(String epEngId){
+		boolean isExist = exchangePlatformAO.checkEpEngId(epEngId);
+		if(isExist){
+			return "exist";
+		}
+		return "not";
 	}
 }

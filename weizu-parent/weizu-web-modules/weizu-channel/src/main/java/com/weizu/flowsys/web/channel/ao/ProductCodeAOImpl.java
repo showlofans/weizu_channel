@@ -182,10 +182,14 @@ public class ProductCodeAOImpl implements ProductCodeAO {
 	@Override
 	public ProductCodePo getOneProductCode(OneCodePo paramsPo) {
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("operatorType", paramsPo.getOperatorType());
-		paramsMap.put("serviceType", paramsPo.getServiceType());
-		paramsMap.put("pgSize", paramsPo.getPgSize());
-		paramsMap.put("scopeCityCode", paramsPo.getScopeCityCode());
+		if(paramsPo.getPgId() != null){
+			paramsMap.put("pgId", paramsPo.getPgId());
+		}else{
+			paramsMap.put("operatorType", paramsPo.getOperatorType());
+			paramsMap.put("serviceType", paramsPo.getServiceType());
+			paramsMap.put("pgSize", paramsPo.getPgSize());
+			paramsMap.put("scopeCityCode", paramsPo.getScopeCityCode());
+		}
 		paramsMap.put("epId", paramsPo.getEpId());
 		return productCodeDAO.getOneProductCode(paramsMap);
 	}

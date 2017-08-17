@@ -1,5 +1,7 @@
 package com.weizu.flowsys.web.trade.ao;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,6 +16,9 @@ import org.weizu.api.outter.enums.ChargeStatusEnum;
 
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
+import com.weizu.flowsys.api.base.ChargeDTO;
+import com.weizu.flowsys.api.base.facet.IChargeFacet;
+import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
@@ -21,7 +26,7 @@ import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.util.OrderUril;
 import com.weizu.flowsys.util.Pagination;
-import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
+import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
@@ -33,6 +38,10 @@ import com.weizu.flowsys.web.channel.ao.ExchangePlatformAO;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
 import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
+import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
+import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
+import com.weizu.flowsys.web.channel.pojo.OneCodePo;
+import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.http.ParamsEntityWeiZu;
 import com.weizu.flowsys.web.http.weizu.OrderStateResult;
 import com.weizu.flowsys.web.trade.dao.AgencyPurchaseDao;
@@ -213,6 +222,54 @@ public class PurchaseAOImpl implements PurchaseAO {
 				}
 				if(apPoList.size() > 0){
 					int batchAddApp = agencyPurchaseDao.ap_addList(apPoList);		//批量添加
+					//
+					ChannelChannelPo channelPo = channelChannelDao.get(purchasePo.getChannelId());
+					if(channelPo != null){
+						ExchangePlatformPo epPo = exchangePlatformAO.getEpById(channelPo.getEpId());
+						ProductCodePo dataPo = productCodeAO.getOneProductCode(new OneCodePo(channelPo.getEpId(), purchasePo.getPgId()));
+						if(dataPo == null){
+							logger.config("编码未配置");
+						}else if(batchAddApp > 0 && epPo != null){//开始走接口
+							 try {
+//								 String epEngId = StringUtil2.toUpperClass(epPo.getEpEngId());
+//								 String classRealPath = "com.weizu.flowsys.api.weizu."+epPo.getEpEngId()+"Charge";	//包完整路径
+//								Class onwClass = Class.forName(classRealPath);
+//								Constructor constructor = onwClass.getConstructor(String.class,String.class,String.class,String.class);
+//								IChargeFacet chargeFacet = (IChargeFacet)constructor.newInstance(epPo.getEpPurchaseIp(),epPo.getEpApikey(),epPo.getEpUserName(),dataPo.getProductCode());
+//								ChargeDTO chargeDTO = chargeFacet.charge();
+								 ChargeDTO chargeDTO = chargeByFacet(epPo,dataPo);
+								System.out.println(chargeDTO.getOrderIdApi());//测试打印出对应平台的提单地址
+								
+								//判断是否正常提单,
+								
+								//充值之后更新订单的orderIdApi
+//								purchasePo.setOrderIdApi(chargeDTO.getOrderIdApi());
+//								int updatePur = purchaseDAO.updateLocal(purchasePo, new WherePrams("order_id", "=", purchasePo.getOrderId()));
+//								if()
+								
+							} catch (ClassNotFoundException e) {
+								e.printStackTrace();
+							} catch (InstantiationException e) {
+								e.printStackTrace();
+							} catch (IllegalAccessException e) {
+								e.printStackTrace();
+							} catch (NoSuchMethodException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (SecurityException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (IllegalArgumentException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (InvocationTargetException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						
+					}
+//					purchasePo.get
 //					if(batchAddApp > 0 && dataPo.getProductCode()  != null){//订单信息完成之后，马上利用接口把订单通过通道传到上游
 //						ChannelChannelPo channelPo = channelChannelDao.get(ratePo.getChannelId());
 //						ExchangePlatformPo epPo = exchangePlatformAO.getEpById(channelPo.getEpId());
@@ -323,6 +380,28 @@ public class PurchaseAOImpl implements PurchaseAO {
 //		}
 		
 		
+	}
+	/**
+	 * @description: 接口充值
+	 * @param epPo
+	 * @param dataPo
+	 * @return
+	 * @throws ClassNotFoundException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月17日 下午5:36:19
+	 */
+	public ChargeDTO chargeByFacet(ExchangePlatformPo epPo,ProductCodePo dataPo) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
+		 String classRealPath = "com.weizu.flowsys.api.weizu."+epPo.getEpEngId()+"Charge";	//包完整路径
+			Class onwClass = Class.forName(classRealPath);
+			Constructor constructor = onwClass.getConstructor(String.class,String.class,String.class,String.class);
+			IChargeFacet chargeFacet = (IChargeFacet)constructor.newInstance(epPo.getEpPurchaseIp(),epPo.getEpApikey(),epPo.getEpUserName(),dataPo.getProductCode());
+			return chargeFacet.charge();
 	}
 
 	/**

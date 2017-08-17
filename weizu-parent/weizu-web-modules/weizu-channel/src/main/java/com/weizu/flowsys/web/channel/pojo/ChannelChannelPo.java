@@ -42,6 +42,8 @@ public class ChannelChannelPo extends Po {
     private Integer channelUseState;
 
     private Long lastAccess;
+    @TempField
+    private String epName;								//平台名字
     
     @TempField
     private Integer billType;
@@ -72,7 +74,15 @@ public class ChannelChannelPo extends Po {
     @TempField
     private String scopeCityCode;				//省份编码（查询参数）
     
-    public Integer getBillType() {
+    public String getEpName() {
+		return epName;
+	}
+
+	public void setEpName(String epName) {
+		this.epName = epName;
+	}
+
+	public Integer getBillType() {
 		return billType;
 	}
 

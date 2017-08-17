@@ -40,6 +40,12 @@
 				<input type="text" class="input-text" value="" placeholder="" id="epName" name="epName">
 			</div>
 		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>平台英文标识：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" onblur="checkEpEngId(this)" placeholder="" id="epEngId" name="epEngId">
+			</div>
+		</div>
 		<!-- id, ep_name, ep_purchase_ip, product_list_ip, pgdata_check_ip, ep_balance_ip, 
     ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip -->
 		<div class="row cl">
@@ -57,7 +63,7 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">流量查询地址：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text required" required  value="" placeholder="" id="pgdataCheckIp" name="pgdataCheckIp">
+				<input type="text" class="input-text required" value="" placeholder="" id="pgdataCheckIp" name="pgdataCheckIp">
 			</div>
 		</div>
 		<div class="row cl">
@@ -96,7 +102,6 @@
 				<input type="text" class="input-text" required  value="" placeholder="" id="epIp" name="epIp">
 			</div>
 		</div>
-		
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
 				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
@@ -124,33 +129,56 @@
 <script type="text/javascript" src="/view/lib/ueditor/1.4.3/ueditor.all.min.js"> </script> 
 <script type="text/javascript" src="/view/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
 <script type="text/javascript">
+/**判断平台标识是否存在*/
+function checkEpEngId(vart){
+	var epEngId = $(vart).val();
+	$.ajax({
+        type:"post",
+        url:"/flowsys/platform/check_ep_engId.do",
+        data: {epEngId:epEngId},//表单数据
+        async : false,
+        success:function(d){
+        	//layer.msg(d);
+         	if(d == "exist"){
+         		$("#epEngId").focus();
+         		 layer.msg("英文标识已存在");
+           }
+        }
+    });
+}
+
+
 $().ready(function() {
     $("#platfrom").validate({
     	submitHandler : function(form) {
-    		$.ajax({
-                type:"post",
-                url:"/flowsys/platform/platform_add.do",
-                data: $('form').serialize(),//表单数据
-                async : false,
-                success:function(d){
-                    if(d=="success"){
-                        layer.msg('保存成功！');//保存成功提示
-                        var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
-                        if($("h3").html().trim() != ""){//列表打开
-                    		parent.layer.close(index); // 执行关闭
-                        }else{
-                        	window.location.pathname = "/flowsys/platform/platform_list.do";
-                        }
-                    }
-                    if(d=="error"){
-                        layer.msg('保存异常!');
-                    }
-                    if(d=="errorEp"){
-                        alert('保存异常,已经添加过该平台了!');
-                        
-                    }
-                }
-            });
+    		if($("#epEngId").val() == ""){
+    			layer.msg("英文标识为空！");
+    			$("#epEngId").focus();
+    		}else{
+		   		$.ajax({
+	               type:"post",
+	               url:"/flowsys/platform/platform_add.do",
+	               data: $('form').serialize(),//表单数据
+	               async : false,
+	               success:function(d){
+	                   if(d=="success"){
+	                       layer.msg('保存成功！');//保存成功提示
+	                       var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+	                       if($("h3").html().trim() != ""){//列表打开
+	                   		parent.layer.close(index); // 执行关闭
+	                       }else{
+	                       	window.location.pathname = "/flowsys/platform/platform_list.do";
+	                       }
+	                   }
+	                   if(d=="error"){
+	                       layer.msg('保存异常!');
+	                   }
+	                   if(d=="errorEp"){
+	                       alert('保存异常,已经添加过该平台了!');
+	                   }
+	               }
+	           });
+    		}
     	}
     });
 })

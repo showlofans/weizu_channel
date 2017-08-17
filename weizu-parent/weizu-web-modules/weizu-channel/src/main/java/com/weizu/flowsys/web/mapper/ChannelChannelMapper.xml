@@ -20,12 +20,13 @@
     <result column="channel_use_state" property="channelUseState" jdbcType="INTEGER" />
     <result column="last_access" property="lastAccess" jdbcType="BIGINT" />
     <result column="belong_agency_id" property="belongAgencyId" jdbcType="INTEGER" />
+    <result column="ep_name" property="epName" jdbcType="VARCHAR" />
     <collection property="discountList" resultMap="com.weizu.flowsys.web.channel.dao.ChannelDiscountDao.BaseResultMap"></collection>
   </resultMap>
   <sql id="Base_Column_List" >
     channel.id, channel.channel_name, pg_size, ep_id, channel_total_use, channel_total_amount, channel_total_profit, 
     channel_balance, channel_state, channel_use_state, last_access,belong_agency_id,
-    discount.id,channel_id,scope_city_code,channel_discount,operator_type,service_type,discount.bill_type
+    discount.id,channel_id,scope_city_code,channel_discount,operator_type,service_type,discount.bill_type,ep.ep_name ep_name
   </sql>
   
   <!-- <resultMap id="SimpleChannelMap" type="com.weizu.flowsys.web.channel.pojo.ChannelChannelPo" >
@@ -53,7 +54,9 @@
   
   <select id="list_channel_channel" parameterType="com.weizu.flowsys.web.channel.pojo.ChannelChannelPo" resultMap="BaseResultMap">
   	select <include refid="Base_Column_List"></include>
-  	from <include refid="t_channel"></include> channel
+  	from <include refid="t_ep"></include> ep 
+  	inner join	<include refid="t_channel"></include> channel
+  	on channel.ep_id = ep.id
   	inner join <include refid="t_discount"></include> discount
   	on channel.id = discount.channel_id
   	<where>
@@ -72,7 +75,9 @@
   </select>
   
   <select id="count_channel_channel" parameterType="map" resultType="int">
-  	select count(*) from <include refid="t_channel"></include> channel
+  	select count(*) from <include refid="t_ep"></include> ep 
+  	inner join	<include refid="t_channel"></include> channel
+  	on channel.ep_id = ep.id
   	inner join <include refid="t_discount"></include> discount
   	on channel.id = discount.channel_id
   	<where>
@@ -121,6 +126,9 @@
   <sql id="condition_sql">
   	<if test="channelName != null">
   		AND channel.channel_name like CONCAT('%', TRIM(#{channelName}), '%')
+  	</if>
+  	<if test="epName != null">
+  		AND ep.ep_name like CONCAT('%', TRIM(#{epName}), '%')
   	</if>
   	<if test="channelState != null">
   		AND channel_state = #{channelState}

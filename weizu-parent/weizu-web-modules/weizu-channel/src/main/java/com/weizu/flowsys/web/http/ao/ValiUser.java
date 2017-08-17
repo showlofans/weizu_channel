@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
 import com.weizu.flowsys.web.agency.dao.impl.AgencyBackwardDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.channel.dao.impl.OperatorPgDao;
@@ -22,29 +23,34 @@ import com.weizu.web.foundation.MD5;
  */
 @Service(value="valiUser")
 public class ValiUser {
+//	@Resource
+//	private AgencyBackwardDao agencyBackwardDao;
 	@Resource
-	private AgencyBackwardDao agencyBackwardDao;
+	private AgencyVODaoInterface agencyVODao;
 	@Resource
 	private OperatorPgDao operatorPgDao;
 	
+	
 	/**
 	 * @description: 看代理商是否能传单
-	 * @param agencyPo
+	 * @param userName
+	 * @param sign 用户传过来的经指定md5加密过的认证参数
 	 * @return
-	 * @author:POP产品研发部 宁强
-	 * @createTime:2017年6月23日 下午3:02:43
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月16日 下午2:12:25
 	 */
 	public AgencyBackwardPo findAgency(String userName,String sign){
 		//userapikey作为参数穿进去
-		AgencyBackwardPo backPo = agencyBackwardDao.get(new WherePrams("user_name","=",userName));
+		
+//		AgencyBackwardPo backPo1 = agencyBackwardDao.get(new WherePrams("user_name","=",userName));
+		AgencyBackwardPo backPo = agencyVODao.getSecondAgency(userName);
 		if(backPo == null){
 			return null;
 		}
 		
-		//用sign得到apikey
-		
 		String backAPIKey = backPo.getUserApiKey();
-		String rightSign = MD5.getMd5(backAPIKey);
+		String rightSign = MD5.getMd5(backPo.getUserName()+"&"+backAPIKey);
+		
 		if(rightSign.equals(sign)){
 			return backPo;
 		}else{

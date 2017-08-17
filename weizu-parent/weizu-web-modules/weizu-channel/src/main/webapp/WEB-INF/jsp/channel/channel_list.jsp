@@ -35,7 +35,8 @@
 	<div class="text-c">
 	<form action="/flowsys/channel/channel_list.do" method="post" id="formD" name="dataListForm">
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
-		通道名称：<input type="text" value="${resultMap.searchParam.channelName }" name="channelName" id="" placeholder=" 通道名称" style="width:250px" class="input-text">
+		通道名称：<input type="text" value="${resultMap.searchParam.channelName }" name="channelName" id="" placeholder=" 通道名称" style="width:100px" class="input-text">
+		平台名称：<input type="text" value="${resultMap.searchParam.epName }" name="epName" id="" placeholder=" 平台名称" style="width:100px" class="input-text">
 		通道状态
 		<span class="select-box inline">
 			<select name="channelState" class="select" onchange="getChannelList()">
@@ -55,7 +56,7 @@
 		</select>
 		</span>
 		
-		通道省份：<input type="text" value="${resultMap.searchParam.scopeCityName }" name="scopeCityName" id="" placeholder=" 通道省份" style="width:250px" class="input-text">
+		通道省份：<input type="text" value="${resultMap.searchParam.scopeCityName }" name="scopeCityName" id="" placeholder=" 通道省份" style="width:100px" class="input-text">
 		
 		<!-- <input type="hidden" value="" name="channelId" id="channelId"> -->
 		
@@ -72,6 +73,7 @@
 				<tr class="text-c">
 					<!-- <th width="80">流量包Id</th> -->
 					<th >ID</th>
+					<th >平台名称</th>
 					<th >通道名称</th>
 					<th >业务类型</th>
 					<!-- <th >交易单数</th>
@@ -97,6 +99,7 @@
 				<c:forEach items="${resultMap.pagination.records }" var="channel" varStatus="vs">
 					<tr class="text-c">
 						<td>${channel.id }</td> 
+						<td>${channel.epName }</td>
 						<td>${channel.channelName }</td>
 						<td><c:forEach items="${resultMap.serviceTypeEnums }" var="serTypeEnum" varStatus="vs1">
 								<c:if test="${channel.serviceType == serTypeEnum.value }">

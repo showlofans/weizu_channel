@@ -35,9 +35,18 @@ public class ExchangePlatformPo extends Po {
     private String epApikey;			//apikey
 
     private String epIp;				//平台官网地址
+    
+    private String epEngId;				//平台英文标识
 
+    public String getEpEngId() {
+		return epEngId;
+	}
 
-    public Integer getId() {
+	public void setEpEngId(String epEngId) {
+		this.epEngId = epEngId;
+	}
+
+	public Integer getId() {
 		return id;
 	}
 

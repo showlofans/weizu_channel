@@ -131,6 +131,6 @@ public interface AgencyVODaoInterface extends Dao<AgencyBackwardPo, Integer> {
 	 * @param paramMap
 	 * @return null
 	 */
-	AgencyBackwardPo getSecondAgency(String userName,String userAPIKey);
+	AgencyBackwardPo getSecondAgency(String userName);
 	
 }

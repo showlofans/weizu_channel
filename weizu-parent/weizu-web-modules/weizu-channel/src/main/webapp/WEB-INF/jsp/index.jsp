@@ -25,15 +25,15 @@
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
-<title>H-ui.admin 3.0</title>
+<title>微族通道系统</title>
 <meta name="keywords" content="H-ui.admin 3.0,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
 <meta name="description" content="H-ui.admin 3.0，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
 </head>
 <body>
 <header class="navbar-wrapper">
 	<div class="navbar navbar-fixed-top">
-		<div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" href="/aboutHui.shtml">微族通道系统</a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="/aboutHui.shtml">H-ui</a> 
-			<span class="logo navbar-slogan f-l mr-10 hidden-xs">1.0</span> 
+		<div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" href="#">微族通道系统</a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="#">H-ui</a> 
+			<span class="logo navbar-slogan f-l mr-10 hidden-xs">Beta</span> 
 			<a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:;">&#xe667;</a>
 			<c:if test="${loginContext.rootAgencyId == 0 }">
 			<nav class="nav navbar-nav">
@@ -52,7 +52,7 @@
 			<nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
 				<ul class="cl">
 					<!-- <li>超级管理员</li> -->
-					<li>个人信用：<a href="#"><c:if test="${empty chargeAccount.accountCredit }">0.00</c:if> ${chargeAccount.accountCredit }</a></li>
+					<%-- <li>个人信用：<a href="#"><c:if test="${empty chargeAccount.accountCredit }">0.00</c:if> ${chargeAccount.accountCredit }</a></li> --%>
 					<li>余额：<a title="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-href="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-title="充值扣款记录" onclick="Hui_admin_tab(this)"><c:if test="${empty chargeAccount.accountBalance && empty chargeAccount1.accountBalance }">0.00</c:if> ${chargeAccount.accountBalance + chargeAccount1.accountBalance}</a></li>
 					<li class="dropDown dropDown_hover">
 						<a href="javascript:;" onClick="myselfinfo()" class="dropDown_A">${loginContext.userName} <i class="Hui-iconfont">&#xe6d5;</i></a>
@@ -279,7 +279,7 @@ function myselfinfo(){
         closeBtn: 1,
         content: '/flowsys/agency/agency_info.do',
         end: function () {
-            location.reload();
+            //location.reload();
         }
     });
 }
@@ -293,7 +293,7 @@ function resetPass(){
         closeBtn: 1,
         content: '/flowsys/agency/reset_pass_page.do?tag=1',
         end: function () {
-            location.reload();
+           // location.reload();
         }
     });
 }
