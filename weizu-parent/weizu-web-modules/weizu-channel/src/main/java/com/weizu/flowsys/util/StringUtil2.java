@@ -94,4 +94,69 @@ public class StringUtil2 {
 		}
 		return discount+"";
 	}
+	
+	/**
+	 * @description: 转换成类名字符串
+	 * @see ：把“weizu_tec”换成WeizuTec
+	 * @param epEngId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月17日 上午11:45:48
+	 */
+	public static String toUpperClass(String epEngId){
+		StringBuffer sb = new StringBuffer();
+		//如果后面没有下划线，就直接加上剩余部分，如果有下划线，就先加上第一个下划线之前的部分
+		if(epEngId.lastIndexOf("_") == -1){//不带下划线
+			sb.append(epEngId.substring(0, 1).toUpperCase());
+			sb.append(epEngId.substring(1));
+		}else{
+			int indexOfXiaHua = epEngId.indexOf("_");
+			String first = epEngId;
+			do{
+				if(first.lastIndexOf("_") == -1){
+					sb.append(first.substring(0, 1).toUpperCase());
+					sb.append(first.substring(1));	
+					break;
+				}else{
+					indexOfXiaHua = first.indexOf("_");
+					sb.append(first.substring(0, 1).toUpperCase());
+					sb.append(first.substring(1,indexOfXiaHua));
+				}
+				first = first.substring(indexOfXiaHua+1);
+			}while(indexOfXiaHua != -1);
+		}
+		return sb.toString();
+	}
+	
+	
+	
+//	public static String toUpperClass(String epEngId){
+//		StringBuffer sb = new StringBuffer();
+//		//如果后面没有下划线，就直接加上剩余部分，如果有下划线，就先加上第一个下划线之前的部分
+//		if(epEngId.lastIndexOf("_") == -1){//不带下划线
+//			sb.append(epEngId.substring(0, 1).toUpperCase());
+//			sb.append(epEngId.substring(1));
+//		}else{
+//			String first = epEngId;
+//			do{
+//				int indexOfNextXiaHua = first.indexOf("_");
+//				if(indexOfNextXiaHua != -1){//包涵下划线
+//					if(indexOfNextXiaHua == 0){//需要重新修改值（_second_fisrt）
+//						first = first.substring(1);
+//						indexOfNextXiaHua = first.indexOf("_");
+//						if(indexOfNextXiaHua == -1){//最后一个
+//							sb.append(first.substring(0, 1).toUpperCase());
+//							sb.append(first.substring(1));
+//							break;
+//						}
+//					}
+//					sb.append(first.substring(0, 1).toUpperCase());
+//					sb.append(first.substring(1,indexOfNextXiaHua));
+//				}
+//				first = first.substring(indexOfNextXiaHua);
+//			}while(first.indexOf("_")!=-1);
+//		}
+//		
+//		return sb.toString();
+//	}
 }

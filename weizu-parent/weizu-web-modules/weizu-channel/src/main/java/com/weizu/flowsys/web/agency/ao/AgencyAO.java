@@ -124,6 +124,15 @@ public interface AgencyAO {
 	int updatePass(int agencyId,String enterPass);
 	
 	/**
+	 * @description: remote验证用户名是否存在
+	 * @param name
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月17日 上午11:27:54
+	 */
+	boolean checkName(String name); 
+	
+	/**
 	 * @description: 查询没有绑定的代理商
 	 * @param rootAgencyId
 	 * @return

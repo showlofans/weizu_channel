@@ -467,4 +467,13 @@ public class AgencyAOImpl implements AgencyAO {
 		}
 		return paramsMap;
 	}
+
+	@Override
+	public boolean checkName(String name) {
+		long res = agencyBackwardDao.count(new WherePrams("user_name", "=", name));
+		if(res > 0){
+			return true;
+		}
+		return false;
+	}
 }

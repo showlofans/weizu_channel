@@ -2,6 +2,8 @@ package crud.aotest;
 
 import java.util.Random;
 
+import org.junit.Test;
+
 import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.util.UUIDGenerator;
 import com.weizu.web.foundation.MD5;
@@ -65,7 +67,28 @@ public class StringTest {
 //    	return str.length();
 //    }
 //
-	public static void main(String[] args) {
+//	@Test
+//	public void testToUppseClass(){
+//		String str = StringUtil2.toUpperClass("zero_fisr_sec");
+//		String str1 = StringUtil2.toUpperClass("zero_sec");
+//		String str2 = StringUtil2.toUpperClass("zero");
+//		System.out.println(str);
+//		System.out.println(str1);
+//		System.out.println(str2);
+//	}
+//	@Test
+//	public void testToUppseClass1(){
+//		String str = StringUtil2.toUpperClass("zero_fisr_sec");
+//		String str1 = StringUtil2.toUpperClass("zero_sec");
+//		String str2 = StringUtil2.toUpperClass("zero");
+//		System.out.println(str);
+//		System.out.println(str1);
+//		System.out.println(str2);
+//	}
+//	public static void main(String[] args) {
+//		String str = StringUtil2.toUpperClass("zero_fisr_sec");
+//		System.out.println(str);
+		
 //		UUIDGenerator generator = new UUIDGenerator();
 //		String userApiKey = generator.generate().toString();
 //		System.out.println("098f6bcd4621d373cade4e832627b4f6".length());//待md5编码的32位字符串
@@ -97,4 +120,4 @@ public class StringTest {
 ////		Calendar todayStart = Calendar.getInstance();
 ////		System.out.println(DateUtil.formatAll(todayStart.getTime()));
 	}
-}
+//}

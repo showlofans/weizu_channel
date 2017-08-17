@@ -24,6 +24,10 @@ public class PlatformURL extends BaseURL{
 	 */
 	public static final String PLATFORM_ADD_PAGE = "/platform_add_page" + DYNAMIC_WEB_SUFFIX;
 	/**
+	 * 看平台英文标识是否存在
+	 */
+	public static final String CHECK_EP_ENGID = "/check_ep_engId" + DYNAMIC_WEB_SUFFIX;
+	/**
 	 * 清除平台
 	 */
 	public static final String PLATFORM_DEL = "/platform_del" + DYNAMIC_WEB_SUFFIX;
@@ -43,5 +47,7 @@ public class PlatformURL extends BaseURL{
 	 * 平台列表
 	 */
 	public static final String PLATFORM_LIST = "/platform_list" + DYNAMIC_WEB_SUFFIX;
+	
+	
 	
 }

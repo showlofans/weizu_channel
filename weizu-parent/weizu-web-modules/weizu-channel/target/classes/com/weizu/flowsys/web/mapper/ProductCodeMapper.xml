@@ -102,6 +102,16 @@
   		AND pc.scope_city_code = #{scopeCityCode}
   	</if>
   	<!-- 用等值判断 -->
+	<!-- <choose>
+		<when test="pgId == null"></when>
+		<when test="pgId != null">
+			
+		</when>
+	</choose> -->
+	
+	<if test="pgId != null">
+  		AND opd.id = #{pgId}
+  	</if>
 	<if test="pgSize != null">
   		AND opd.pg_size = #{pgSize}
   	</if>

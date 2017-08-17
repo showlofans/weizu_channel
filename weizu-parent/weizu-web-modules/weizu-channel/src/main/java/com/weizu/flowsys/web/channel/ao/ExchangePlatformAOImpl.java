@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.web.channel.dao.impl.AgencyEpDAOImpl;
 import com.weizu.flowsys.web.channel.dao.impl.ExchangePlatformDao;
 import com.weizu.flowsys.web.channel.pojo.AgencyEpPo;
@@ -69,6 +70,19 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 	 */
 	@Transactional
 	@Override
+	public String addEp(ExchangePlatformPo exchangePlatformPo) {
+		
+		String epEngId = StringUtil2.toUpperClass(exchangePlatformPo.getEpEngId());
+		exchangePlatformPo.setEpEngId(epEngId);
+		
+		int res = exchangePlatformDao.add(exchangePlatformPo);
+		if(res > 0){
+			return "success";
+		}else{
+			return "error";
+		}
+	}
+	@Override
 	public String addEp(ExchangePlatformPo exchangePlatformPo, int agencyId,String agencyName) {
 //		exchangePlatformPo.setId(epId);
 		//查看看系统是否已经对接过该平台，如果对接过就不用添加该平台
@@ -78,6 +92,7 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 		if(epPo == null)
 		{//有该平台名称的平台，但同时要保证用户名和密码apikey不一样
 			epId = new Long(exchangePlatformDao.nextId()).intValue();
+			
 			res2 = exchangePlatformDao.add(exchangePlatformPo);
 		}else{
 			epId = epPo.getId();
@@ -146,10 +161,14 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 	@Transactional
 	@Override
 	public String updateEp(ExchangePlatformPo epPo) {
-		if(exchangePlatformDao.update(epPo) > 0){
-			return "success";
+		String flag = "error";
+//		String epEngId = StringUtil2.toUpperClass(epPo.getEpEngId());
+		if(checkEpEngId(epPo.getEpEngId())){
+			flag = "exist";
+		}else if(exchangePlatformDao.update(epPo) > 0){
+			flag = "success";
 		}
-		return "error";
+		return flag;
 	}
 	/**
 	 * @description: 清除平台信息
@@ -167,6 +186,16 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 			}
 		}
 		return "error";
+	}
+	@Override
+	public boolean checkEpEngId(String epEngId) {
+		Map<String,Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("epEngId", epEngId);
+		int res = exchangePlatformDao.countEp(paramsMap);
+		if(res > 0 ){
+			return true;
+		}
+		return false;
 	}
 
 }

@@ -9,5 +9,22 @@ package com.weizu.flowsys.api.base;
  * @version 1.0
  */
 public class ChargeDTO {
-	
+	private String orderIdApi;			//充值之后上游返回的订单
+	private int orderStatus;			//正常提单，提单失败
+
+	public String getOrderIdApi() {
+		return orderIdApi;
+	}
+
+	public void setOrderIdApi(String orderIdApi) {
+		this.orderIdApi = orderIdApi;
+	}
+
+	public int getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(int orderStatus) {
+		this.orderStatus = orderStatus;
+	}
 }

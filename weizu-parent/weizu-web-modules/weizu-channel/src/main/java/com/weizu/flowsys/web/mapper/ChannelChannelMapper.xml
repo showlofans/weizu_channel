@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weizu.flowsys.web.channel.dao.ChannelChannelDao" >
+  <sql id="t_channel">channel_channel</sql>
+ 	<sql id="t_scope">service_scope</sql>
+ 	<sql id="t_discount">channel_discount</sql>
+ 	<!-- <sql id="t">rate_discount</sql> -->
+ 	<sql id="t_ep">exchange_platform</sql>
+  
+  <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.ChannelChannelPo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="pg_size" property="pgSize" jdbcType="VARCHAR" />
+    <result column="ep_id" property="epId" jdbcType="INTEGER" />
+    <result column="channel_total_use" property="channelTotalUse" jdbcType="INTEGER" />
+    <result column="channel_total_amount" property="channelTotalAmount" jdbcType="DOUBLE" />
+    <result column="channel_total_profit" property="channelTotalProfit" jdbcType="DOUBLE" />
+    <result column="channel_balance" property="channelBalance" jdbcType="DOUBLE" />
+    <result column="channel_state" property="channelState" jdbcType="INTEGER" />
+    <result column="channel_use_state" property="channelUseState" jdbcType="INTEGER" />
+    <result column="last_access" property="lastAccess" jdbcType="BIGINT" />
+    <result column="belong_agency_id" property="belongAgencyId" jdbcType="INTEGER" />
+    <result column="ep_name" property="epName" jdbcType="VARCHAR" />
+    <collection property="discountList" resultMap="com.weizu.flowsys.web.channel.dao.ChannelDiscountDao.BaseResultMap"></collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    channel.id, channel.channel_name, pg_size, ep_id, channel_total_use, channel_total_amount, channel_total_profit, 
+    channel_balance, channel_state, channel_use_state, last_access,belong_agency_id,
+    discount.id,channel_id,scope_city_code,channel_discount,operator_type,service_type,discount.bill_type,ep.ep_name ep_name
+  </sql>
+  
+  <!-- <resultMap id="SimpleChannelMap" type="com.weizu.flowsys.web.channel.pojo.ChannelChannelPo" >
+  	<id column="id" property="id" jdbcType="BIGINT" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="operator_type" property="operatorType" jdbcType="VARCHAR" />
+    <result column="scope_city_code" property="scopeCityCode" jdbcType="VARCHAR" />
+  </resultMap>
+   简易通道信息
+   <sql id="Simple_Column_List" >
+    discount.id, channel.channel_name,discount.channel_discount
+    ,discount.operator_type,discount.scope_city_code
+  </sql>
+  查询简易通道信息
+  <select id="listSimpleChannel" resultMap="SimpleChannelMap">
+  	select <include refid="Simple_Column_List"></include>
+  	from <include refid="t_channel"></include> channel
+  	inner join <include refid="t_discount"></include> discount
+  	on channel.id = discount.channel_id
+  	<where>
+  		<include refid="condition_sql"></include>
+  	</where>
+  	order by channel.id desc
+  </select> -->
+  
+  <select id="list_channel_channel" parameterType="com.weizu.flowsys.web.channel.pojo.ChannelChannelPo" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"></include>
+  	from <include refid="t_ep"></include> ep 
+  	inner join	<include refid="t_channel"></include> channel
+  	on channel.ep_id = ep.id
+  	inner join <include refid="t_discount"></include> discount
+  	on channel.id = discount.channel_id
+  	<where>
+  		<include refid="condition_sql"></include>
+  	</where>
+  	order by channel.id desc
+  	<if test="start != null">
+	 	limit #{start}
+	 </if>
+	 <if test="end != null">
+	 	, #{end}
+	 </if>
+	 <if test="start == null &amp; end == null">
+	 	limit 0,10
+	 </if> 
+  </select>
+  
+  <select id="count_channel_channel" parameterType="map" resultType="int">
+  	select count(*) from <include refid="t_ep"></include> ep 
+  	inner join	<include refid="t_channel"></include> channel
+  	on channel.ep_id = ep.id
+  	inner join <include refid="t_discount"></include> discount
+  	on channel.id = discount.channel_id
+  	<where>
+  		<include refid="condition_sql"></include>
+  	</where>
+  </select>
+  
+  
+  <!--  通过通道ID找到所属平台 -->
+  <select id="getEpByChannelId" parameterType="java.lang.Integer" resultMap="com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface.BaseResultMap">
+  	SELECT ep.* 
+  	FROM <include refid="t_ep"></include> ep 
+  	WHERE ep.id = (SELECT ep_id from <include refid="t_channel"></include>
+  	channel where channel.id = #{_parameter})
+  </select>
+  
+   <!-- 更新通道使用状态 -->
+  <update id="updateChannelUseState" parameterType="map">
+  	update <include refid="t_channel"></include>
+  	<set>
+  		channel_use_state = #{channelUseState}
+  		<if test="lastAccess != null">
+  			,last_access = #{lastAccess}
+  		</if>
+  	</set>
+  	<where>
+  		id = #{id}
+  	</where>
+  </update>
+  
+  <!-- 更新通道状态 -->
+  <update id="updateChannelState" parameterType="map">
+  	update <include refid="t_channel"></include>
+  	<set>
+  		channel_state = #{channelState}
+  		<if test="lastAccess != null">
+  			,last_access = #{lastAccess}
+  		</if>
+  	</set>
+  	<where>
+  		id = #{id}
+  	</where>
+  </update>
+  
+  <!-- 查询通道列表参数 -->
+  <sql id="condition_sql">
+  	<if test="channelName != null">
+  		AND channel.channel_name like CONCAT('%', TRIM(#{channelName}), '%')
+  	</if>
+  	<if test="epName != null">
+  		AND ep.ep_name like CONCAT('%', TRIM(#{epName}), '%')
+  	</if>
+  	<if test="channelState != null">
+  		AND channel_state = #{channelState}
+  	</if>
+  	<!-- <if test="scopeCityName != null">
+  		AND scope.scope_city_name like CONCAT('%', TRIM(#{scopeCityName}), '%')
+  	</if> -->
+  	<if test="belongAgencyId != null">
+  		AND belong_agency_id = #{belongAgencyId}
+  	</if>
+  	<if test="discountType != null">
+  		AND discount.discount_type = #{discountType}
+  	</if>
+  	<if test="channelId != null">
+  		AND channel.id = #{channelId}
+  	</if>
+  	<if test="operatorType != null">
+  		AND discount.operator_type = #{operatorType}
+  	</if>
+  	<if test="serviceType != null">
+  		AND discount.service_type = #{serviceType}
+  	</if>
+  	<if test="scopeCityCode != null">
+  		AND discount.scope_city_code = #{scopeCityCode}
+  	</if>
+  	<if test="scopeCityCodes != null">
+  		AND scope_city_code in
+                  <foreach item="item" index="index" collection="scopeCityCodes" 
+                         open="(" separator="," close=")">
+                        #{item}
+                </foreach>
+  	</if>
+  	
+  	
+  </sql>
+  
+  
+</mapper>

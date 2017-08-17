@@ -422,15 +422,21 @@ public class AgencyController {
 	public void checkName(String userName,
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		AgencyBackwardPo po = new AgencyBackwardPo();
+//		AgencyBackwardPo po = new AgencyBackwardPo();
 //		po.setUserName(new String(userName.getBytes("iso-8859-1"), "utf-8"));
-		po.setUserName(userName);
-		Map<String, Object> map = agencyAO.login(po);
-		String msg = map.get("msg").toString();
-		if (! "该用户名不存在！".equals(msg)) {
-			response.getWriter().print(false);
-		}else{
-			response.getWriter().print(true);
+//		po.setUserName(userName);
+//		Map<String, Object> map = agencyAO.login(po);
+//		String msg = map.get("msg").toString();
+//		if (! "该用户名不存在！".equals(msg)) {
+//			response.getWriter().print(false);
+//		}else{
+//			response.getWriter().print(true);
+//		}
+		boolean isExist = agencyAO.checkName(userName);
+		try {
+			response.getWriter().print(isExist);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	

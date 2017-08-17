@@ -1,14 +1,19 @@
 package com.weizu.flowsys.web.trade.ao;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 //import org.weizu.api.facet.orderState.PageOrder;
 
 
+
 import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.api.base.ChargeDTO;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
+import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
+import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.http.ParamsEntityWeiZu;
 import com.weizu.flowsys.web.http.weizu.OrderStateResult;
 import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
@@ -71,6 +76,8 @@ public interface PurchaseAO {
 	 * @createTime:2017年6月26日 下午1:04:25
 	 */
 	PurchasePo getOnePurchase(long orderId);
+	
+	ChargeDTO chargeByFacet(ExchangePlatformPo epPo,ProductCodePo dataPo) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException;
 	
 	
 }
