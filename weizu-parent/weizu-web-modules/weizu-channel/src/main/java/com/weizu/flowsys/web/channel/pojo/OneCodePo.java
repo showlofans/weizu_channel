@@ -36,8 +36,9 @@ public class OneCodePo {
 		this.serviceType = serviceType;
 	}
 	
-	public OneCodePo(Integer epId, Integer pgId) {
+	public OneCodePo(String scopeCityCode, Integer epId, Integer pgId) {
 		super();
+		this.scopeCityCode = scopeCityCode;
 		this.epId = epId;
 		this.pgId = pgId;
 	}

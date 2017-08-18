@@ -44,6 +44,7 @@ import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.http.ParamsEntityWeiZu;
 import com.weizu.flowsys.web.http.weizu.OrderStateResult;
+import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.dao.AgencyPurchaseDao;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.AgencyPurchasePo;
@@ -192,7 +193,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 					Long rateDiscountId = ratePo.getId();			//折扣id
 					
 					if(whileStop == 1){//可以向上提单，但是不扣上面的款
-						int orderPath = OrderPathEnum.CHARGE_SOCKET.getValue();
+						int orderPath = OrderPathEnum.CHILD_WEB_PAGE.getValue();
 						AgencyPurchasePo app = new AgencyPurchasePo(agencyId, purchasePo.getOrderId(), null, null, billType, null, orderResult,ChargeStatusEnum.LACK_OF_BALANCE.getDesc(),orderPath);
 						apPoList.add(app);
 						break;
@@ -226,7 +227,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 					ChannelChannelPo channelPo = channelChannelDao.get(purchasePo.getChannelId());
 					if(channelPo != null){
 						ExchangePlatformPo epPo = exchangePlatformAO.getEpById(channelPo.getEpId());
-						ProductCodePo dataPo = productCodeAO.getOneProductCode(new OneCodePo(channelPo.getEpId(), purchasePo.getPgId()));
+						Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(purchasePo.getChargeTelDetail());
+						String scopeCityCode = scopeMap.get("scopeCityCode").toString();
+						ProductCodePo dataPo = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode,channelPo.getEpId(), purchasePo.getPgId()));
 						if(dataPo == null){
 							logger.config("编码未配置");
 						}else if(batchAddApp > 0 && epPo != null){//开始走接口
@@ -564,18 +567,28 @@ public class PurchaseAOImpl implements PurchaseAO {
 			Long dateUtilStartTime = null;
 			Long dateUtilEndTime = null;
 			if(isCharged){
-				if(StringHelper.isEmpty(purchaseVO.getBackStartTimeStr())){
+				if(purchaseVO.getBackStartTimeStr() == null){
 					dateUtilStartTime = Long.parseLong(paramsMap.get("startTimeBack").toString());
 					purchaseVO.setBackStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+				}else if("".equals(purchaseVO.getBackStartTimeStr().trim())){
+					//为空或者值重新设置	
+					paramsMap.put("startTimeBack", null);
+					totalRecord = purchaseDAO.countPurchase(paramsMap);
 				}
 				if(StringHelper.isEmpty(purchaseVO.getBackEndTimeStr())){
 					dateUtilEndTime = Long.parseLong(paramsMap.get("endTimeBack").toString());
 					purchaseVO.setBackEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
 				}
 			}else{
-				if(StringHelper.isEmpty(purchaseVO.getArriveStartTimeStr())){
+				if(purchaseVO.getArriveStartTimeStr() == null){
 					dateUtilStartTime = Long.parseLong(paramsMap.get("startTime").toString());
 					purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+				}else{
+					//为空或者值重新设置
+					if("".equals(purchaseVO.getArriveStartTimeStr().trim())){
+						paramsMap.put("startTime", null);
+						totalRecord = purchaseDAO.countPurchase(paramsMap);
+					}
 				}
 				if(StringHelper.isEmpty(purchaseVO.getArriveEndTimeStr())){
 					dateUtilEndTime = Long.parseLong(paramsMap.get("endTime").toString());

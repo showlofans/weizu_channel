@@ -1,5 +1,6 @@
 package com.weizu.flowsys.web.trade.pojo;
 
+import com.weizu.flowsys.web.channel.pojo.ChannelForwardPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 
 /**
@@ -10,7 +11,7 @@ import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
  * @createTime:2017年6月13日 下午12:16:36
  * @version 1.0
  */
-public class PurchaseVO {
+public class PurchaseVO implements Cloneable {
 	
     private Long orderId;						//订单号
     
@@ -67,7 +68,22 @@ public class PurchaseVO {
     
     private Integer billType;					//票务
     
-    public String getBackEndTimeStr() {
+    @Override
+	public PurchaseVO clone() {
+    	PurchaseVO pvo = null;
+    	try{  
+    		pvo = (PurchaseVO)super.clone();  
+        }catch(CloneNotSupportedException e) {  
+            e.printStackTrace();  
+        }  
+		return pvo;
+	}
+
+	public void setPgPrice(Double pgPrice) {
+		this.pgPrice = pgPrice;
+	}
+
+	public String getBackEndTimeStr() {
 		return backEndTimeStr;
 	}
 
@@ -147,7 +163,7 @@ public class PurchaseVO {
 		this.pgSize = pgSize;
 	}
 
-	public double getPgPrice() {
+	public Double getPgPrice() {
 		return pgPrice;
 	}
 

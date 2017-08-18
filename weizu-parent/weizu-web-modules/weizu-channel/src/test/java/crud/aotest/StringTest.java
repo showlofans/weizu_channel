@@ -4,8 +4,10 @@ import java.util.Random;
 
 import org.junit.Test;
 
+import com.weizu.flowsys.util.ClassUtil;
 import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.util.UUIDGenerator;
+import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 import com.weizu.web.foundation.MD5;
 import com.weizu.web.foundation.MD5Util;
 
@@ -85,6 +87,44 @@ public class StringTest {
 //		System.out.println(str1);
 //		System.out.println(str2);
 //	}
+	/**
+	 * @description: 测试空格
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月18日 上午11:17:12
+	 */
+//	@Test
+//	public void testBlankSub(){
+//		String t = "2015 30";
+//		String t1 = "";
+//		String t2 = t1+"  ";
+//		System.out.println(t.indexOf(" "));
+//		System.out.println(t1.equals(t2));
+//	}
+//	@Test
+//	public void testBlankSub(){
+//		String t = "2015 30";
+//		Object o1 = null;
+//		
+//		String s1 = o1 == null ? "" : o1.toString();//避免空指针异常  
+//		System.out.println(t.indexOf(" "));
+//	}
+	/**
+	 * @description: 测试两个对象的属性值是否相等
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月18日 上午11:46:20
+	 */
+//	@Test
+//	public void testClassUtil(){
+//		PurchaseVO purchaseVo1 = new PurchaseVO();
+//		String t = "2015 30";
+//		purchaseVo1.setBillType(0);
+//		purchaseVo1.setBackEndTimeStr(t);
+////		PurchaseVO purchaseVo2 = purchaseVo1.clone();
+//		PurchaseVO purchaseVo2 = new PurchaseVO();
+//		purchaseVo2.setBackEndTimeStr(t);
+//		boolean isContrast = ClassUtil.contrastObj(purchaseVo1, purchaseVo2);
+//		System.out.println(isContrast);
+//	}
 //	public static void main(String[] args) {
 //		String str = StringUtil2.toUpperClass("zero_fisr_sec");
 //		System.out.println(str);
@@ -120,4 +160,5 @@ public class StringTest {
 ////		Calendar todayStart = Calendar.getInstance();
 ////		System.out.println(DateUtil.formatAll(todayStart.getTime()));
 	}
+
 //}

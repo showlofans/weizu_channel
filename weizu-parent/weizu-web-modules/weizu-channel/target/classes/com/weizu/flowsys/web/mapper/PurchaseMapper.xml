@@ -155,6 +155,9 @@
   	<if test="agencyId != null">
   		AND ap.agency_id = #{agencyId}
   	</if>
+<!--   	<if test="agencyId != null">
+  		AND (agency.id = #{agencyId} OR agency.root_agency_id = #{agencyId}) 
+  	</if> -->
   	<if test="billType != null">
   		AND ap.bill_type = #{billType}
   	</if>

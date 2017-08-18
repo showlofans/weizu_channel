@@ -20,6 +20,10 @@ public enum OrderPathEnum {
 	 */
 	WEB_PAGE("网页",0),
 	/**
+	 * 网页充值
+	 */
+	CHILD_WEB_PAGE("下级代理商网页",2),
+	/**
 	 * 接口充值
 	 */
 	CHARGE_SOCKET("接口",1);
