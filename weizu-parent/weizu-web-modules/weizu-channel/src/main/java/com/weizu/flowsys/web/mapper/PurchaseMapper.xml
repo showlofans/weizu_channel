@@ -26,7 +26,6 @@
     <result column="channel_id" property="channelId" jdbcType="BIGINT" />
     <result column="order_result_detail" property="orderResultDetail" jdbcType="VARCHAR" />
     <result column="order_amount" property="orderAmount" jdbcType="DOUBLE" />
-    <result column="record_id" property="recordId" jdbcType="BIGINT" />
     <result column="bill_type" property="billType" jdbcType="INTEGER" />
   </resultMap>
   <!--  订单页面 -->
@@ -34,20 +33,23 @@
     <id column="order_id" property="orderId" jdbcType="BIGINT" />
     <result column="order_id_api" property="orderIdApi" jdbcType="VARCHAR" />
     <result column="order_id_from" property="orderIdFrom" jdbcType="VARCHAR" />
-    <result column="user_name" property="agencyName" jdbcType="INTEGER" />
     <result column="charge_tel" property="chargeTel" jdbcType="VARCHAR" />
     <result column="pg_size" property="pgSize" />
+    <result column="order_result" property="orderResult" jdbcType="INTEGER" />
+    <result column="order_result_detail" property="orderResultDetail" jdbcType="VARCHAR" />
     <result column="operator_type" property="operatorType" />
     <result column="pg_price" property="pgPrice" />
-    
+    <!-- 连接表信息 -->
     <result column="order_arrive_time" property="orderArriveTime" jdbcType="BIGINT" />
     <result column="order_back_time" property="orderBackTime" jdbcType="BIGINT" />
     <result column="charge_tel_detail" property="chargeTelDetail" jdbcType="VARCHAR" />
     <result column="charge_tel_city" property="chargeTelCity" jdbcType="VARCHAR" />
     <result column="order_platform_path" property="orderPlatformPath" jdbcType="INTEGER" />
-    <result column="order_result" property="orderResult" jdbcType="INTEGER" />
-    <result column="order_result_detail" property="orderResultDetail" jdbcType="VARCHAR" />
+    <result column="from_agency_name" property="agencyName" jdbcType="INTEGER" />
+    <result column="order_state" property="orderState" jdbcType="INTEGER" />
+    <result column="order_state_detail" property="orderStateDetail" jdbcType="VARCHAR" />
     <result column="order_amount" property="orderAmount" jdbcType="DOUBLE" />
+    <result column="order_price" property="orderPrice" jdbcType="DOUBLE" />
     <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
     <result column="channel_id" property="channelId" jdbcType="BIGINT" />
     <result column="apBill_type" property="billType" jdbcType="INTEGER" />
@@ -70,9 +72,9 @@
     charge_tel_city,  channel_id
   </sql>
   <sql id="VO_Column_List"><!-- 订单页面 -->
-  	ep.*,agency.user_name, pur.order_id, pur.order_id_api, pur.order_id_from, pur.charge_tel, pg.pg_size, pg.operator_type, pg.pg_price, pur.order_arrive_time,
-  	ap.order_back_time, pur.charge_tel_detail, pur.charge_tel_city,ap.order_amount,ap.order_result,ap.order_platform_path,
-  	 ap.order_result_detail,channel.channel_name,pur.channel_id,ap.bill_type apBill_type
+  	ep.*,ap.from_agency_name, pur.order_id, pur.order_id_api, pur.order_id_from, pur.charge_tel, pg.pg_size, pg.operator_type, pg.pg_price, pur.order_arrive_time,
+  	pur.order_back_time, pur.charge_tel_detail, pur.charge_tel_city,ap.order_amount,pur.order_result,ap.order_platform_path,
+  	 pur.order_result_detail,channel.channel_name,pur.channel_id,ap.bill_type apBill_type
   </sql>
   
   <!-- 通过订单号查询订单 -->
@@ -89,8 +91,8 @@
      FROM <include refid="t_purchase"></include> pur
 	 inner join <include refid="t_ap"></include> ap
      on pur.order_id = ap.purchase_id
-	INNER join <include refid="t_agency"></include> agency
-	on ap.agency_id=agency.id
+	<!-- INNER join <include refid="t_agency"></include> agency
+	on ap.agency_id=agency.id -->
 	INNER join <include refid="t_pg"></include> pg
 	on pg.id = pur.pg_id
 	inner join <include refid="t_channel"></include> channel
@@ -135,8 +137,8 @@
      FROM <include refid="t_purchase"></include> pur
      inner join <include refid="t_ap"></include> ap
      on pur.order_id = ap.purchase_id
-	INNER join <include refid="t_agency"></include> agency
-	on ap.agency_id=agency.id
+	<!-- INNER join <include refid="t_agency"></include> agency
+	on ap.agency_id=agency.id -->
 	INNER join <include refid="t_pg"></include> pg
 	on pg.id = pur.pg_id
 	inner join <include refid="t_channel"></include> channel
@@ -162,7 +164,7 @@
   		AND ap.bill_type = #{billType}
   	</if>
   	<if test="agencyName != null">
-  		AND agency.user_name LIKE concat("%",trim(#{agencyName}) ,"%") 
+  		AND ap.from_agency_name LIKE concat("%",trim(#{agencyName}) ,"%") 
   	</if>
   	<if test="orderId != null">
   		AND pur.order_id LIKE concat("%",trim(#{orderId}) ,"%")
@@ -183,13 +185,13 @@
 		AND pur.order_arrive_time &lt;= #{endTime}
 	</if>
   	<if test="startTimeBack != null">
-		AND ap.order_back_time &gt;= #{startTimeBack}
+		AND pur.order_back_time &gt;= #{startTimeBack}
 	</if>
 	<if test="endTimeBack != null">
-		AND ap.order_back_time &lt;= #{endTimeBack}
+		AND pur.order_back_time &lt;= #{endTimeBack}
 	</if>
 	<if test="orderResult != null">
-		AND ap.order_result = #{orderResult}
+		AND pur.order_result = #{orderResult}
 	</if>
   </sql>
   

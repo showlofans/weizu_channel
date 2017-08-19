@@ -36,6 +36,8 @@ public class ChargeRecordPo extends Po implements Cloneable{
 	
 	private Integer agencyId; 			// 代理商id
 	
+	private Long purchaseId;			//订单号
+	
 	@TempField
 	private String userName;			//代理商名称
 	@TempField
@@ -66,10 +68,11 @@ public class ChargeRecordPo extends Po implements Cloneable{
 	 * @param accountType
 	 * @param accountId
 	 * @param chargeFor
+	 * @param purchaseId
 	 */
 	public ChargeRecordPo(Long remittanceTime, Double rechargeAmount,
 			Double chargeBefore, Double chargeAfter, Integer billType,
-			Integer accountType, Integer accountId, Integer agencyId, Integer chargeFor) {
+			Integer accountType, Integer accountId, Integer agencyId, Integer chargeFor, Long purchaseId) {
 		super();
 		this.agencyId = agencyId;
 		this.remittanceTime = remittanceTime;
@@ -80,7 +83,18 @@ public class ChargeRecordPo extends Po implements Cloneable{
 		this.accountType = accountType;
 		this.accountId = accountId;
 		this.chargeFor = chargeFor;
+		this.purchaseId = purchaseId;
 	}
+	
+	public Long getPurchaseId() {
+		return purchaseId;
+	}
+
+	public void setPurchaseId(Long purchaseId) {
+		this.purchaseId = purchaseId;
+	}
+
+
 
 	@Override
 	public ChargeRecordPo clone() throws CloneNotSupportedException {

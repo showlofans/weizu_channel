@@ -1,7 +1,8 @@
 package crud.aotest;
 
-import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -11,14 +12,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.aiyi.base.pojo.PageParam;
-import com.weizu.flowsys.api.base.ChargeDTO;
-import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.util.Pagination;
-import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
-import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
-import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -41,8 +37,8 @@ public class PurchaseAOImplTest {
 //	public void testGetPurchase(){
 //		PurchaseVO purchaseVO = new PurchaseVO();
 //		purchaseVO.setRootAgencyId(4);
-//		
-//		Pagination<PurchaseVO> pagination = purchaseAO.getPurchase(purchaseVO, new PageParam(1, 10));
+//		Map<String, Object> params = new HashMap<String, Object>();
+//		Pagination<PurchaseVO> pagination = purchaseAO.getPurchase(params,purchaseVO, new PageParam(1, 10));
 //		List<PurchaseVO> records = pagination.getRecords();
 //		for (PurchaseVO purchaseVO2 : records) {
 //			System.out.println(purchaseVO2.getEp().getEpName());

@@ -50,10 +50,10 @@ public class AgencyPurchaseDaoImpl extends DaoImpl<AgencyPurchasePo, Long> imple
 	@Override
 	public int batchUpdateState(Long purchaseId, Integer orderResult, String orderResultDettail) {
 		AgencyPurchasePo apPo = new AgencyPurchasePo();
-		apPo.setOrderResult(orderResult);
-		apPo.setOrderResultDetail(orderResultDettail);
+//		apPo.setOrderResult(orderResult);
+//		apPo.setOrderResultDetail(orderResultDettail);
 		//apPo.setOrderBackTimeStr(DateUtil.formatAll(System.currentTimeMillis()));
-		apPo.setOrderBackTime(System.currentTimeMillis());
+//		apPo.setOrderBackTime(System.currentTimeMillis());
 		return updateLocal(apPo, new WherePrams("purchase_id", "=", purchaseId));
 	}
 

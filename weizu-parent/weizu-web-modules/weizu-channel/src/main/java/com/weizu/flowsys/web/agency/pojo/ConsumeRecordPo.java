@@ -52,7 +52,7 @@ public class ConsumeRecordPo extends Po implements Cloneable{
 	@TempField
 	private Long endTime; 				// 结束时间
 	
-	private Long orderId;				//订单号
+	private Long purchaseId;			//订单号
 	
 	private String chargeTel;			//充值手机号
 	
@@ -94,12 +94,12 @@ public class ConsumeRecordPo extends Po implements Cloneable{
 		return chargeRecordPo;
 	}
 	
-	public Long getOrderId() {
-		return orderId;
+	public Long getPurchaseId() {
+		return purchaseId;
 	}
 
-	public void setOrderId(Long orderId) {
-		this.orderId = orderId;
+	public void setPurchaseId(Long purchaseId) {
+		this.purchaseId = purchaseId;
 	}
 
 	public String getChargeTel() {

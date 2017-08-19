@@ -85,9 +85,9 @@ public class ChargePgController {
 	@RequestMapping(value = ChargePgURL.PG_CHARGE)
 	public ModelAndView pgCharge(HttpServletRequest request,PgChargeVO pcVO){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
 		if(agencyVO != null){
 			pcVO.setAgencyId(agencyVO.getId());
+			pcVO.setFromAgencyName(agencyVO.getUserName());
 //			purchasePo.setOrderArriveTime(System.currentTimeMillis());
 //			ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
 //			if(purchasePo.getBillType()==BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())
@@ -100,18 +100,9 @@ public class ChargePgController {
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 			String pageMsg = "";
 			String referURL = "";
-			if(pcVO.getOrderAmount() > accountPo.getAccountBalance()){//订单价格大于余额
-				pageMsg = "余额不足，充值失败";
-//				resultMap.put("referURL", "/flowsys/chargePg/purchase_list.do?orderResult=2");
-			}
-			Integer purResult = purchaseAO.purchase(pcVO);
-			if(purResult == OrderResultEnum.SUCCESS.getCode())
-			{
-				pageMsg = "success";
-				referURL = "/flowsys/chargePg/purchase_list.do?orderResult=2";
-			}else{//重新选择通道充值
-				pageMsg = "系统错误，充值失败";
-			}
+			
+			pageMsg = purchaseAO.purchase(pcVO, agencyVO.getId());
+			referURL = "/flowsys/chargePg/purchase_list.do?orderResult=2";
 			resultMap.put("referURL", referURL);
 			resultMap.put("pageMsg", pageMsg);
 			return new ModelAndView("/trade/charge_result_page", "resultMap", resultMap);

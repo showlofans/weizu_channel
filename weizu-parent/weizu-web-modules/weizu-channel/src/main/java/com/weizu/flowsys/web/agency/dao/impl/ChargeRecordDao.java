@@ -14,7 +14,7 @@ import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
 
 @Repository("chargeRecordDao")
-public class ChargeRecordDao extends DaoImpl<ChargeRecordPo, Integer> implements ChargeRecordDaoInterface {
+public class ChargeRecordDao extends DaoImpl<ChargeRecordPo, Long> implements ChargeRecordDaoInterface {
 
 	@Resource
 	private SqlSessionTemplate sqlSessionTemplate;

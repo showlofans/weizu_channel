@@ -3,10 +3,11 @@ package com.weizu.flowsys.web.agency.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
 
-public interface ChargeRecordDaoInterface {
+public interface ChargeRecordDaoInterface extends Dao<ChargeRecordPo, Long> {
 	
 	/**
 	 * @description:查询充值列表 

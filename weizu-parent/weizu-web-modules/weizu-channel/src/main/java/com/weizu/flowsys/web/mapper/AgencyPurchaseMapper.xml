@@ -9,17 +9,17 @@
     <result column="rate_discount_id" property="rateDiscountId" jdbcType="BIGINT" />
     <result column="order_amount" property="orderAmount" jdbcType="DOUBLE" />
     <result column="bill_type" property="billType" jdbcType="INTEGER" />
-    <result column="record_id" property="recordId" jdbcType="BIGINT" />
-    <result column="order_result" property="orderResult" jdbcType="INTEGER" />
-    <result column="order_result_detail" property="orderResultDetail" jdbcType="VARCHAR" />
+    <result column="order_state" property="orderState" jdbcType="INTEGER" />
+    <result column="order_state_detail" property="orderStateDetail" jdbcType="VARCHAR" />
     <result column="order_platform_path" property="orderPlatformPath" jdbcType="INTEGER" />
-    <result column="order_back_time" property="orderBackTime" jdbcType="BIGINT" />
+    <result column="order_price" property="orderPrice" jdbcType="DOUBLE" />
+    <result column="from_agency_name" property="fromAgencyName" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, agency_id, purchase_id, rate_discount_id, order_amount, bill_type, record_id, order_result,order_platform_path,order_result_detail,order_back_time
+    id, agency_id, purchase_id, rate_discount_id, order_amount, bill_type, order_state,order_platform_path,order_state_detail, order_price, from_agency_name 
   </sql>
   <sql id="Add_Column_List" >
-   agency_id, purchase_id, rate_discount_id, order_amount, bill_type, record_id, order_result,order_platform_path,order_result_detail,order_back_time
+   agency_id, purchase_id, rate_discount_id, order_amount, bill_type, order_state,,order_state_detail, order_platform_path, order_price, from_agency_name
   </sql>
   <!-- 批量添加 -->
    <insert id="ap_addList" useGeneratedKeys="true" parameterType="java.util.List">
@@ -27,7 +27,7 @@
   	(<include refid="Add_Column_List"></include>)
   	values
   	<foreach collection="list" item="ap" index="index" separator=",">
-  		(#{ap.agencyId},#{ap.purchaseId},#{ap.rateDiscountId},#{ap.orderAmount},#{ap.billType},#{ap.recordId},#{ap.orderResult},#{ap.orderPlatformPath},#{ap.orderResultDetail},#{ap.orderBackTime})
+  		(#{ap.agencyId},#{ap.purchaseId},#{ap.rateDiscountId},#{ap.orderAmount},#{ap.billType},#{ap.orderState},#{ap.orderState},#{ap.orderStateDetail},#{ap.orderPlatformPath},#{ap.orderPrice},#{ap.fromAgencyName})
   	</foreach>
   </insert>
 </mapper>

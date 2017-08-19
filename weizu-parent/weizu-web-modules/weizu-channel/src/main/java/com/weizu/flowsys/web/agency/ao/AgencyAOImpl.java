@@ -34,9 +34,9 @@ import com.weizu.web.foundation.String.StringHelper;
 public class AgencyAOImpl implements AgencyAO {
 
 	@Resource
-	AgencyBackwardDao agencyBackwardDao;
+	private AgencyBackwardDao agencyBackwardDao;
 	@Resource
-	AgencyVODao agencyVODao;
+	private AgencyVODao agencyVODao;
 	@Resource
 	private RateBackwardDaoImpl rateBackwardDao;
 	@Resource
@@ -475,5 +475,10 @@ public class AgencyAOImpl implements AgencyAO {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public AgencyBackwardPo getRootAgencyById(Integer agencyId) {
+		return agencyVODao.getRootAgencyById(agencyId);
 	}
 }

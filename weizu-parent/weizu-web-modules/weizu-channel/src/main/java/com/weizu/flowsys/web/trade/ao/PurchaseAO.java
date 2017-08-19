@@ -29,7 +29,7 @@ public interface PurchaseAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月12日 下午5:34:23
 	 */
-	Integer purchase(PgChargeVO pcVO);
+	String purchase(PgChargeVO pcVO, Integer ap_agency_id);
 	
 	/**
 	 * @description:封装查询参数

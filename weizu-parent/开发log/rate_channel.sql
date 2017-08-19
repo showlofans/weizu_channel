@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50626
 File Encoding         : 65001
 
-Date: 2017-08-18 18:08:30
+Date: 2017-08-19 18:59:32
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -159,17 +159,18 @@ CREATE TABLE `agency_purchase` (
   `agency_id` int(11) DEFAULT NULL,
   `purchase_id` bigint(20) DEFAULT NULL,
   `rate_discount_id` bigint(20) DEFAULT NULL,
-  `order_amount` double DEFAULT NULL COMMENT '充值金额(扣款）',
+  `order_amount` double DEFAULT NULL COMMENT '充值金额(成本）',
   `bill_type` int(11) DEFAULT NULL COMMENT '票务类型（0-无票，1-带票）',
-  `record_id` bigint(20) DEFAULT NULL COMMENT '消费记录id',
   `order_platform_path` int(11) DEFAULT NULL COMMENT '订单来源（0-网页，1-接口）',
+  `order_price` double DEFAULT NULL COMMENT '下级代理商的扣款',
+  `from_agency_name` varchar(255) DEFAULT NULL COMMENT '订单来源代理商名称',
+  `order_state` int(11) DEFAULT NULL COMMENT '代理商的订单状态',
+  `order_state_detail` varchar(255) DEFAULT NULL COMMENT '代理商的订单状态详情',
   PRIMARY KEY (`id`),
   KEY `fk_ap_agency` (`agency_id`),
   KEY `fk_ap_purchase` (`purchase_id`),
   KEY `fk_ap_rateDiscount` (`rate_discount_id`),
-  KEY `fk_ap_chargerecord` (`record_id`),
   CONSTRAINT `fk_ap_agency` FOREIGN KEY (`agency_id`) REFERENCES `agency_backward` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_ap_chargerecord` FOREIGN KEY (`record_id`) REFERENCES `charge_record` (`id`),
   CONSTRAINT `fk_ap_purchase` FOREIGN KEY (`purchase_id`) REFERENCES `purchase` (`order_id`) ON DELETE CASCADE,
   CONSTRAINT `fk_ap_rateDiscount` FOREIGN KEY (`rate_discount_id`) REFERENCES `rate_discount` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8;
@@ -177,72 +178,72 @@ CREATE TABLE `agency_purchase` (
 -- ----------------------------
 -- Records of agency_purchase
 -- ----------------------------
-INSERT INTO `agency_purchase` VALUES ('1', '4', '703717823528046592', '49', '50', '0', null, null);
-INSERT INTO `agency_purchase` VALUES ('2', '21', '719011191992619008', '51', '27.9', '0', '122', '0');
-INSERT INTO `agency_purchase` VALUES ('3', '4', '719011191992619008', '46', '25.5', '0', '123', '1');
-INSERT INTO `agency_purchase` VALUES ('4', '21', '719329966860275712', '51', '167.4', '0', '124', '0');
-INSERT INTO `agency_purchase` VALUES ('5', '4', '719329966860275712', '46', '153', '0', '125', '1');
-INSERT INTO `agency_purchase` VALUES ('6', '21', '719330701316460544', '51', '167.4', '0', '126', '0');
-INSERT INTO `agency_purchase` VALUES ('7', '4', '719330701316460544', '46', '153', '0', '127', '1');
-INSERT INTO `agency_purchase` VALUES ('8', '21', '719331169098797056', '51', '93', '0', '128', '0');
-INSERT INTO `agency_purchase` VALUES ('9', '4', '719331169098797056', '46', '85', '0', '129', '1');
-INSERT INTO `agency_purchase` VALUES ('10', '21', '719339850544713728', '51', '93', '0', '130', '0');
-INSERT INTO `agency_purchase` VALUES ('11', '4', '719339850544713728', '46', '85', '0', '131', '1');
-INSERT INTO `agency_purchase` VALUES ('12', '21', '719340036637593600', '51', '93', '0', '132', '0');
-INSERT INTO `agency_purchase` VALUES ('13', '4', '719340036637593600', '46', '85', '0', '133', '1');
-INSERT INTO `agency_purchase` VALUES ('14', '21', '719340961422905344', '51', '27.9', '0', '134', '0');
-INSERT INTO `agency_purchase` VALUES ('15', '4', '719340961422905344', '46', '25.5', '0', '135', '1');
-INSERT INTO `agency_purchase` VALUES ('16', '21', '719342466490175488', '51', '27.9', '0', '136', '0');
-INSERT INTO `agency_purchase` VALUES ('17', '4', '719342466490175488', '46', '25.5', '0', '137', '1');
-INSERT INTO `agency_purchase` VALUES ('18', '21', '719343379258806272', '51', '167.4', '0', '138', '0');
-INSERT INTO `agency_purchase` VALUES ('19', '4', '719343379258806272', '46', '153', '0', '139', '1');
-INSERT INTO `agency_purchase` VALUES ('20', '21', '719345434316771328', '51', '27.9', '0', '140', '0');
-INSERT INTO `agency_purchase` VALUES ('21', '4', '719345434316771328', '46', '25.5', '0', '141', '1');
-INSERT INTO `agency_purchase` VALUES ('22', '21', '719345849770971136', '51', '27.9', '0', '142', '0');
-INSERT INTO `agency_purchase` VALUES ('23', '4', '719345849770971136', '46', '25.5', '0', '143', '1');
-INSERT INTO `agency_purchase` VALUES ('24', '21', '719355601729097728', '51', '27.9', '0', '144', '0');
-INSERT INTO `agency_purchase` VALUES ('25', '4', '719355601729097728', '46', '25.5', '0', null, '1');
-INSERT INTO `agency_purchase` VALUES ('26', '21', '719356920300834816', '51', '27.9', '0', '145', '0');
-INSERT INTO `agency_purchase` VALUES ('27', '4', '719356920300834816', '46', '25.5', '0', null, '1');
-INSERT INTO `agency_purchase` VALUES ('28', '21', '719357743223279616', '51', '27.9', '0', '146', '0');
-INSERT INTO `agency_purchase` VALUES ('29', '4', '719357743223279616', '46', '25.5', '0', null, '1');
-INSERT INTO `agency_purchase` VALUES ('30', '21', '719362451019141120', '51', '27.9', '0', '149', '0');
-INSERT INTO `agency_purchase` VALUES ('31', '4', '719362451019141120', null, null, '0', null, '1');
-INSERT INTO `agency_purchase` VALUES ('32', '21', '719619879090524160', '51', '93', '0', '150', '0');
-INSERT INTO `agency_purchase` VALUES ('33', '4', '719619879090524160', null, null, '0', null, '1');
-INSERT INTO `agency_purchase` VALUES ('34', '21', '719714672592293888', '51', '167.4', '0', '151', '0');
-INSERT INTO `agency_purchase` VALUES ('35', '4', '719714672592293888', null, null, '0', null, '1');
-INSERT INTO `agency_purchase` VALUES ('36', '21', '719728803823226880', '51', '27.9', '0', '152', '0');
-INSERT INTO `agency_purchase` VALUES ('37', '4', '719728803823226880', null, null, '0', null, '1');
-INSERT INTO `agency_purchase` VALUES ('38', '21', '719744389366157312', '51', '27.9', '0', '153', '0');
-INSERT INTO `agency_purchase` VALUES ('39', '4', '719744389366157312', null, null, '0', null, '1');
-INSERT INTO `agency_purchase` VALUES ('40', '21', '721137612567351296', '51', '93', '0', '154', '0');
-INSERT INTO `agency_purchase` VALUES ('41', '4', '721137612567351296', null, null, '0', null, '1');
-INSERT INTO `agency_purchase` VALUES ('42', '21', '722963358633955328', '51', '27.9', '0', '155', '0');
-INSERT INTO `agency_purchase` VALUES ('43', '4', '722963358633955328', null, null, '0', null, '1');
-INSERT INTO `agency_purchase` VALUES ('44', '21', '722964196236464128', '51', '27.9', '0', '156', '0');
-INSERT INTO `agency_purchase` VALUES ('45', '4', '722964196236464128', null, null, '0', null, '1');
-INSERT INTO `agency_purchase` VALUES ('46', '21', '722964282974670848', '51', '27.9', '0', '157', '0');
-INSERT INTO `agency_purchase` VALUES ('47', '4', '722964282974670848', null, null, '0', null, '1');
-INSERT INTO `agency_purchase` VALUES ('48', '21', '722974500202745856', '51', '27.9', '0', '158', '0');
-INSERT INTO `agency_purchase` VALUES ('49', '4', '722974500202745856', null, null, '0', null, '1');
-INSERT INTO `agency_purchase` VALUES ('50', '21', '722975212622057472', '51', '167.4', '0', '159', '0');
-INSERT INTO `agency_purchase` VALUES ('51', '4', '722975212622057472', null, null, '0', null, '1');
-INSERT INTO `agency_purchase` VALUES ('52', '21', '722975635730862080', '51', '27.9', '0', '160', '0');
-INSERT INTO `agency_purchase` VALUES ('53', '4', '722975635730862080', null, null, '0', null, '1');
-INSERT INTO `agency_purchase` VALUES ('54', '21', '722976020872826880', '51', '167.4', '0', '161', '0');
-INSERT INTO `agency_purchase` VALUES ('55', '4', '722976020872826880', null, null, '0', null, '1');
-INSERT INTO `agency_purchase` VALUES ('56', '21', '722976197541105664', '51', '27.9', '0', '162', '0');
-INSERT INTO `agency_purchase` VALUES ('57', '4', '722976197541105664', null, null, '0', null, '1');
-INSERT INTO `agency_purchase` VALUES ('58', '21', '722977151560716288', '51', '27.9', '0', '163', '0');
-INSERT INTO `agency_purchase` VALUES ('59', '4', '722977151560716288', null, null, '0', null, '1');
-INSERT INTO `agency_purchase` VALUES ('60', '21', '723252189975285760', '51', '27.9', '0', '166', '0');
-INSERT INTO `agency_purchase` VALUES ('61', '4', '723252189975285760', '46', '25.5', '0', '167', '1');
-INSERT INTO `agency_purchase` VALUES ('62', '21', '723257145881006080', '51', '27.9', '0', '170', '0');
-INSERT INTO `agency_purchase` VALUES ('63', '4', '723257145881006080', '46', '25.5', '0', '171', '1');
-INSERT INTO `agency_purchase` VALUES ('64', '4', '724401142573830144', '46', '25.5', '0', '172', '0');
-INSERT INTO `agency_purchase` VALUES ('69', '21', '724429670308646912', '51', '27.9', '0', '177', '0');
-INSERT INTO `agency_purchase` VALUES ('70', '4', '724429670308646912', '46', '25.5', '0', '178', '1');
+INSERT INTO `agency_purchase` VALUES ('1', '4', '703717823528046592', '49', '50', '0', null, null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('2', '21', '719011191992619008', '51', '27.9', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('3', '4', '719011191992619008', '46', '25.5', '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('4', '21', '719329966860275712', '51', '167.4', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('5', '4', '719329966860275712', '46', '153', '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('6', '21', '719330701316460544', '51', '167.4', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('7', '4', '719330701316460544', '46', '153', '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('8', '21', '719331169098797056', '51', '93', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('9', '4', '719331169098797056', '46', '85', '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('10', '21', '719339850544713728', '51', '93', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('11', '4', '719339850544713728', '46', '85', '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('12', '21', '719340036637593600', '51', '93', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('13', '4', '719340036637593600', '46', '85', '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('14', '21', '719340961422905344', '51', '27.9', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('15', '4', '719340961422905344', '46', '25.5', '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('16', '21', '719342466490175488', '51', '27.9', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('17', '4', '719342466490175488', '46', '25.5', '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('18', '21', '719343379258806272', '51', '167.4', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('19', '4', '719343379258806272', '46', '153', '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('20', '21', '719345434316771328', '51', '27.9', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('21', '4', '719345434316771328', '46', '25.5', '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('22', '21', '719345849770971136', '51', '27.9', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('23', '4', '719345849770971136', '46', '25.5', '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('24', '21', '719355601729097728', '51', '27.9', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('25', '4', '719355601729097728', '46', '25.5', '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('26', '21', '719356920300834816', '51', '27.9', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('27', '4', '719356920300834816', '46', '25.5', '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('28', '21', '719357743223279616', '51', '27.9', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('29', '4', '719357743223279616', '46', '25.5', '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('30', '21', '719362451019141120', '51', '27.9', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('31', '4', '719362451019141120', null, null, '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('32', '21', '719619879090524160', '51', '93', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('33', '4', '719619879090524160', null, null, '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('34', '21', '719714672592293888', '51', '167.4', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('35', '4', '719714672592293888', null, null, '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('36', '21', '719728803823226880', '51', '27.9', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('37', '4', '719728803823226880', null, null, '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('38', '21', '719744389366157312', '51', '27.9', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('39', '4', '719744389366157312', null, null, '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('40', '21', '721137612567351296', '51', '93', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('41', '4', '721137612567351296', null, null, '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('42', '21', '722963358633955328', '51', '27.9', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('43', '4', '722963358633955328', null, null, '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('44', '21', '722964196236464128', '51', '27.9', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('45', '4', '722964196236464128', null, null, '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('46', '21', '722964282974670848', '51', '27.9', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('47', '4', '722964282974670848', null, null, '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('48', '21', '722974500202745856', '51', '27.9', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('49', '4', '722974500202745856', null, null, '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('50', '21', '722975212622057472', '51', '167.4', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('51', '4', '722975212622057472', null, null, '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('52', '21', '722975635730862080', '51', '27.9', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('53', '4', '722975635730862080', null, null, '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('54', '21', '722976020872826880', '51', '167.4', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('55', '4', '722976020872826880', null, null, '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('56', '21', '722976197541105664', '51', '27.9', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('57', '4', '722976197541105664', null, null, '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('58', '21', '722977151560716288', '51', '27.9', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('59', '4', '722977151560716288', null, null, '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('60', '21', '723252189975285760', '51', '27.9', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('61', '4', '723252189975285760', '46', '25.5', '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('62', '21', '723257145881006080', '51', '27.9', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('63', '4', '723257145881006080', '46', '25.5', '0', '1', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('64', '4', '724401142573830144', '46', '25.5', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('69', '21', '724429670308646912', '51', '27.9', '0', '0', null, null, null, null);
+INSERT INTO `agency_purchase` VALUES ('70', '4', '724429670308646912', '46', '25.5', '0', '1', null, null, null, null);
 
 -- ----------------------------
 -- Table structure for `channel_channel`
@@ -475,154 +476,156 @@ CREATE TABLE `charge_record` (
   `account_id` int(11) DEFAULT NULL COMMENT '账户id',
   `agency_id` int(11) DEFAULT NULL COMMENT '代理商账户id',
   `charge_for` int(11) DEFAULT NULL COMMENT '发生原因',
+  `purchase_id` bigint(20) DEFAULT NULL COMMENT '订单id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=179 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=180 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of charge_record
 -- ----------------------------
-INSERT INTO `charge_record` VALUES ('1', '1494472130819', '200', '4343', '4543', '0', '0', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('2', '1494475783929', '300', '4543', '4843', '0', '0', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('3', '1494476477425', '200', '4843', '5043', '0', '0', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('4', '1494476697825', '622', '5043', '5665', '1', '0', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('5', '1495698206637', '564', '0', '564', '0', '0', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('6', '1496306974700', '500', '0', '500', '1', '0', '12', '25', '1');
-INSERT INTO `charge_record` VALUES ('7', '1496457191946', '244', '564', '808', '1', '0', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('8', '1496457234241', '100', '0', '100', '1', '0', '11', '24', '1');
-INSERT INTO `charge_record` VALUES ('9', '1496479230732', '5665', '5665', '11330', '1', '0', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('10', '1497070558065', '-124', '11330', '11454', '1', '1', '2', '21', '1');
-INSERT INTO `charge_record` VALUES ('11', '1497070572618', '124', '808', '932', '1', '0', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('12', '1497070830424', '100', '11206', '11106', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('13', '1497070830432', '100', '0', '100', '0', '0', '10', '23', '1');
-INSERT INTO `charge_record` VALUES ('14', '1497071092695', '200', '11106', '10906', '1', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('15', '1497071092702', '200', '100', '300', '1', '0', '11', '24', '1');
-INSERT INTO `charge_record` VALUES ('16', '1497096706561', '100', '10906', '10806', '1', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('17', '1497096706578', '100', '932', '1032', '1', '0', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('18', '1497230761210', '56', '10806', '10750', '1', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('19', '1497230761228', '56', '1032', '1088', '1', '0', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('20', '1497234286518', '123', '100', '-23', '1', '1', '10', '23', '1');
-INSERT INTO `charge_record` VALUES ('21', '1497234286526', '123', '0', '123', '1', '0', '13', '26', '1');
-INSERT INTO `charge_record` VALUES ('22', '1497319843388', '100.8', '10750', '10649.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('23', '1497320189655', '23', '10649.2', '10626.2', '1', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('24', '1497320189670', '23', '-23', '0', '1', '0', '10', '23', '1');
-INSERT INTO `charge_record` VALUES ('30', '1497324711645', '100.8', '10323.8', '10223', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('31', '1497334170959', '100.8', '10323.8', '10223', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('32', '1497334320341', '100.8', '10323.8', '10223', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('33', '1497334589164', '100.8', '10323.8', '10223', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('34', '1497334678719', '100.8', '10323.8', '10223', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('35', '1497335041420', '100.8', '10323.8', '10223', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('36', '1497335072514', '100.8', '10223', '10122.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('37', '1497335205009', '100.8', '10122.2', '10021.4', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('38', '1497335350632', '100.8', '10021.4', '9920.6', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('39', '1497341079646', '100.8', '9920.6', '9819.8', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('40', '1497422624876', '100.8', '9819.8', '9719', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('41', '1497502581980', '100.8', '9719', '9618.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('42', '1497664802383', '15', '9618.2', '9603.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('44', '1497672169552', '50', '9603.2', '9553.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('46', '1497673214580', '90', '9553.2', '9463.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('51', '1498011543965', '90', '9103.2', '9013.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('53', '1498019892416', '90', '9013.2', '8923.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('54', '1498020864242', '50', '8923.2', '8873.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('55', '1498020864305', '50', '8873.2', '8823.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('56', '1498036472826', '-1000', '8823.2', '9823.2', '1', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('57', '1498036472838', '-1000', '1088', '88', '1', '0', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('58', '1498105372504', '90', '9823.2', '9733.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('59', '1498105686902', '90', '9733.2', '9643.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('60', '1498107512542', '90', '9643.2', '9553.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('61', '1498114604746', '1000', '9553.2', '8553.2', '1', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('62', '1498114604752', '1000', '0', '1000', '1', '0', '10', '23', '1');
-INSERT INTO `charge_record` VALUES ('63', '1498443661235', '90', '88', '-2', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('64', '1498451844240', '90', '8553.2', '8463.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('65', '1498454239884', '90', '-2', '-92', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('66', '1498557176529', '123', '8463.2', '8340.2', '1', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('67', '1498557176568', '123', '-92', '31', '1', '0', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('68', '1498557176595', '123', '8217.2', '8094.2', '1', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('69', '1498557176605', '123', '31', '154', '1', '0', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('70', '1498557588247', '-123', '8094.2', '8217.2', '1', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('71', '1498557588259', '-123', '154', '31', '1', '0', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('72', '1498557605211', '-56', '8340.2', '8396.2', '1', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('73', '1498557605215', '-56', '31', '-25', '1', '0', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('75', '1498709926710', '100', '8396.2', '8296.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('76', '1498710206728', '100', '8296.2', '8196.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('77', '1498710232235', '100', '8196.2', '8096.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('78', '1498710238401', '100', '8096.2', '7996.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('79', '1498710239941', '100', '7996.2', '7896.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('80', '1498710418569', '100', '7896.2', '7796.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('81', '1498710618612', '100', '7796.2', '7696.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('82', '1498710793814', '100', '7696.2', '7596.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('83', '1498711032309', '100', '7596.2', '7496.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('84', '1498711156057', '100', '7496.2', '7396.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('85', '1498711174058', '100', '7396.2', '7296.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('86', '1498711184556', '100', '7296.2', '7196.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('87', '1498711224189', '100', '7196.2', '7096.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('88', '1498711397517', '100', '7096.2', '6996.2', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('89', '1498791831345', '25', '6996.2', '6971.2', '1', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('90', '1498791831355', '25', '-25', '0', '1', '0', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('91', '1499676982137', '56', '0', '-56', '1', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('92', '1499676982175', '56', '300', '356', '1', '0', '11', '24', '1');
-INSERT INTO `charge_record` VALUES ('94', '1499741844216', '200', '-56', '-256', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('95', '1499741844254', '200', '200', '400', '0', '0', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('96', '1499741905706', '200', '-256', '-456', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('97', '1499741914681', '200', '400', '600', '0', '0', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('108', '1501231518184', '1000', '-456', '-1456', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('109', '1501231518603', '1000', '1000', '2000', '0', '0', '10', '23', '1');
-INSERT INTO `charge_record` VALUES ('110', '1501231763745', '400', '-2456', '-2856', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('111', '1501231779234', '400', '600', '1000', '0', '0', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('112', '1501231919992', '100', '-2856', '-2956', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('113', '1501231924154', '100', '0', '100', '0', '0', '20', '27', '1');
-INSERT INTO `charge_record` VALUES ('122', '1501753735785', '27.9', '1000', '972.1', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('123', '1501753735834', '25.5', '-2956', '-2981.5', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('124', '1501829737647', '167.4', '972.1', '804.7', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('125', '1501829737662', '153', '-2981.5', '-3134.5', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('126', '1501829912756', '167.4', '804.7', '637.3', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('127', '1501829912766', '153', '-3134.5', '-3287.5', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('128', '1501830024285', '93', '637.3', '544.3', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('129', '1501830024297', '85', '-3287.5', '-3372.5', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('130', '1501832094088', '93', '544.3', '451.3', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('131', '1501832094139', '85', '-3372.5', '-3457.5', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('132', '1501832138470', '93', '451.3', '358.3', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('133', '1501832138486', '85', '-3457.5', '-3542.5', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('134', '1501832358954', '27.9', '358.3', '330.4', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('135', '1501832358975', '25.5', '-3542.5', '-3568', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('136', '1501832717793', '27.9', '330.4', '302.5', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('137', '1501832717801', '25.5', '-3568', '-3593.5', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('138', '1501832935411', '167.4', '302.5', '135.1', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('139', '1501832935430', '153', '-3593.5', '-3746.5', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('140', '1501833425377', '27.9', '135.1', '107.2', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('141', '1501833425389', '25.5', '-3746.5', '-3772', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('142', '1501833524428', '27.9', '107.2', '79.3', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('143', '1501833524446', '25.5', '-3772', '-3797.5', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('144', '1501835849475', '27.9', '79.3', '51.4', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('145', '1501836163849', '27.9', '51.4', '23.5', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('146', '1501836360050', '27.9', '23.5', '-4.4', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('147', '1501837362622', '1000', '-3797.5', '-4797.5', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('148', '1501837362632', '1000', '-4.4', '995.6', '0', '0', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('149', '1501837482474', '27.9', '995.6', '967.7', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('150', '1501898858108', '93', '967.7', '874.7', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('151', '1501921458637', '167.4', '874.7', '707.3', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('152', '1501924827786', '27.9', '707.3', '679.4', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('153', '1501928543671', '27.9', '679.4', '651.5', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('154', '1502260713966', '93', '651.5', '558.5', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('155', '1502696005714', '27.9', '558.5', '530.6', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('156', '1502696205446', '27.9', '530.6', '502.7', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('157', '1502696226131', '27.9', '502.7', '474.8', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('158', '1502698662105', '27.9', '474.8', '446.9', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('159', '1502698831963', '167.4', '446.9', '279.5', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('160', '1502698932839', '27.9', '279.5', '251.6', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('161', '1502699024665', '167.4', '251.6', '84.2', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('162', '1502699066786', '27.9', '84.2', '56.3', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('163', '1502699294241', '27.9', '56.3', '28.4', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('164', '1502700533165', '100000', '3981', '-96019', '0', '1', '1', '1', '1');
-INSERT INTO `charge_record` VALUES ('165', '1502700533176', '100000', '-4797.5', '95202.5', '0', '0', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('166', '1502764868508', '27.9', '28.4', '0.5', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('167', '1502764868524', '25.5', '95202.5', '95177', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('168', '1502766011846', '10000', '95177', '85177', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('169', '1502766011856', '10000', '0.5', '10000.5', '0', '0', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('170', '1502766050089', '27.9', '10000.5', '9972.6', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('171', '1502766050103', '25.5', '85177', '85151.5', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('172', '1503038800149', '25.5', '85151.5', '85126', '0', '1', '2', '4', '1');
-INSERT INTO `charge_record` VALUES ('177', '1503045601695', '27.9', '9972.6', '9944.7', '0', '1', '8', '21', '1');
-INSERT INTO `charge_record` VALUES ('178', '1503045601714', '25.5', '85126', '85100.5', '0', '1', '2', '4', '1');
+INSERT INTO `charge_record` VALUES ('1', '1494472130819', '200', '4343', '4543', '0', '0', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('2', '1494475783929', '300', '4543', '4843', '0', '0', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('3', '1494476477425', '200', '4843', '5043', '0', '0', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('4', '1494476697825', '622', '5043', '5665', '1', '0', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('5', '1495698206637', '564', '0', '564', '0', '0', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('6', '1496306974700', '500', '0', '500', '1', '0', '12', '25', '1', null);
+INSERT INTO `charge_record` VALUES ('7', '1496457191946', '244', '564', '808', '1', '0', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('8', '1496457234241', '100', '0', '100', '1', '0', '11', '24', '1', null);
+INSERT INTO `charge_record` VALUES ('9', '1496479230732', '5665', '5665', '11330', '1', '0', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('10', '1497070558065', '-124', '11330', '11454', '1', '1', '2', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('11', '1497070572618', '124', '808', '932', '1', '0', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('12', '1497070830424', '100', '11206', '11106', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('13', '1497070830432', '100', '0', '100', '0', '0', '10', '23', '1', null);
+INSERT INTO `charge_record` VALUES ('14', '1497071092695', '200', '11106', '10906', '1', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('15', '1497071092702', '200', '100', '300', '1', '0', '11', '24', '1', null);
+INSERT INTO `charge_record` VALUES ('16', '1497096706561', '100', '10906', '10806', '1', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('17', '1497096706578', '100', '932', '1032', '1', '0', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('18', '1497230761210', '56', '10806', '10750', '1', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('19', '1497230761228', '56', '1032', '1088', '1', '0', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('20', '1497234286518', '123', '100', '-23', '1', '1', '10', '23', '1', null);
+INSERT INTO `charge_record` VALUES ('21', '1497234286526', '123', '0', '123', '1', '0', '13', '26', '1', null);
+INSERT INTO `charge_record` VALUES ('22', '1497319843388', '100.8', '10750', '10649.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('23', '1497320189655', '23', '10649.2', '10626.2', '1', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('24', '1497320189670', '23', '-23', '0', '1', '0', '10', '23', '1', null);
+INSERT INTO `charge_record` VALUES ('30', '1497324711645', '100.8', '10323.8', '10223', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('31', '1497334170959', '100.8', '10323.8', '10223', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('32', '1497334320341', '100.8', '10323.8', '10223', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('33', '1497334589164', '100.8', '10323.8', '10223', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('34', '1497334678719', '100.8', '10323.8', '10223', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('35', '1497335041420', '100.8', '10323.8', '10223', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('36', '1497335072514', '100.8', '10223', '10122.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('37', '1497335205009', '100.8', '10122.2', '10021.4', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('38', '1497335350632', '100.8', '10021.4', '9920.6', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('39', '1497341079646', '100.8', '9920.6', '9819.8', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('40', '1497422624876', '100.8', '9819.8', '9719', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('41', '1497502581980', '100.8', '9719', '9618.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('42', '1497664802383', '15', '9618.2', '9603.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('44', '1497672169552', '50', '9603.2', '9553.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('46', '1497673214580', '90', '9553.2', '9463.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('51', '1498011543965', '90', '9103.2', '9013.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('53', '1498019892416', '90', '9013.2', '8923.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('54', '1498020864242', '50', '8923.2', '8873.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('55', '1498020864305', '50', '8873.2', '8823.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('56', '1498036472826', '-1000', '8823.2', '9823.2', '1', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('57', '1498036472838', '-1000', '1088', '88', '1', '0', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('58', '1498105372504', '90', '9823.2', '9733.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('59', '1498105686902', '90', '9733.2', '9643.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('60', '1498107512542', '90', '9643.2', '9553.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('61', '1498114604746', '1000', '9553.2', '8553.2', '1', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('62', '1498114604752', '1000', '0', '1000', '1', '0', '10', '23', '1', null);
+INSERT INTO `charge_record` VALUES ('63', '1498443661235', '90', '88', '-2', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('64', '1498451844240', '90', '8553.2', '8463.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('65', '1498454239884', '90', '-2', '-92', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('66', '1498557176529', '123', '8463.2', '8340.2', '1', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('67', '1498557176568', '123', '-92', '31', '1', '0', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('68', '1498557176595', '123', '8217.2', '8094.2', '1', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('69', '1498557176605', '123', '31', '154', '1', '0', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('70', '1498557588247', '-123', '8094.2', '8217.2', '1', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('71', '1498557588259', '-123', '154', '31', '1', '0', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('72', '1498557605211', '-56', '8340.2', '8396.2', '1', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('73', '1498557605215', '-56', '31', '-25', '1', '0', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('75', '1498709926710', '100', '8396.2', '8296.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('76', '1498710206728', '100', '8296.2', '8196.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('77', '1498710232235', '100', '8196.2', '8096.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('78', '1498710238401', '100', '8096.2', '7996.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('79', '1498710239941', '100', '7996.2', '7896.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('80', '1498710418569', '100', '7896.2', '7796.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('81', '1498710618612', '100', '7796.2', '7696.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('82', '1498710793814', '100', '7696.2', '7596.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('83', '1498711032309', '100', '7596.2', '7496.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('84', '1498711156057', '100', '7496.2', '7396.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('85', '1498711174058', '100', '7396.2', '7296.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('86', '1498711184556', '100', '7296.2', '7196.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('87', '1498711224189', '100', '7196.2', '7096.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('88', '1498711397517', '100', '7096.2', '6996.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('89', '1498791831345', '25', '6996.2', '6971.2', '1', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('90', '1498791831355', '25', '-25', '0', '1', '0', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('91', '1499676982137', '56', '0', '-56', '1', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('92', '1499676982175', '56', '300', '356', '1', '0', '11', '24', '1', null);
+INSERT INTO `charge_record` VALUES ('94', '1499741844216', '200', '-56', '-256', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('95', '1499741844254', '200', '200', '400', '0', '0', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('96', '1499741905706', '200', '-256', '-456', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('97', '1499741914681', '200', '400', '600', '0', '0', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('108', '1501231518184', '1000', '-456', '-1456', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('109', '1501231518603', '1000', '1000', '2000', '0', '0', '10', '23', '1', null);
+INSERT INTO `charge_record` VALUES ('110', '1501231763745', '400', '-2456', '-2856', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('111', '1501231779234', '400', '600', '1000', '0', '0', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('112', '1501231919992', '100', '-2856', '-2956', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('113', '1501231924154', '100', '0', '100', '0', '0', '20', '27', '1', null);
+INSERT INTO `charge_record` VALUES ('122', '1501753735785', '27.9', '1000', '972.1', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('123', '1501753735834', '25.5', '-2956', '-2981.5', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('124', '1501829737647', '167.4', '972.1', '804.7', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('125', '1501829737662', '153', '-2981.5', '-3134.5', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('126', '1501829912756', '167.4', '804.7', '637.3', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('127', '1501829912766', '153', '-3134.5', '-3287.5', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('128', '1501830024285', '93', '637.3', '544.3', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('129', '1501830024297', '85', '-3287.5', '-3372.5', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('130', '1501832094088', '93', '544.3', '451.3', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('131', '1501832094139', '85', '-3372.5', '-3457.5', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('132', '1501832138470', '93', '451.3', '358.3', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('133', '1501832138486', '85', '-3457.5', '-3542.5', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('134', '1501832358954', '27.9', '358.3', '330.4', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('135', '1501832358975', '25.5', '-3542.5', '-3568', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('136', '1501832717793', '27.9', '330.4', '302.5', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('137', '1501832717801', '25.5', '-3568', '-3593.5', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('138', '1501832935411', '167.4', '302.5', '135.1', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('139', '1501832935430', '153', '-3593.5', '-3746.5', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('140', '1501833425377', '27.9', '135.1', '107.2', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('141', '1501833425389', '25.5', '-3746.5', '-3772', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('142', '1501833524428', '27.9', '107.2', '79.3', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('143', '1501833524446', '25.5', '-3772', '-3797.5', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('144', '1501835849475', '27.9', '79.3', '51.4', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('145', '1501836163849', '27.9', '51.4', '23.5', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('146', '1501836360050', '27.9', '23.5', '-4.4', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('147', '1501837362622', '1000', '-3797.5', '-4797.5', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('148', '1501837362632', '1000', '-4.4', '995.6', '0', '0', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('149', '1501837482474', '27.9', '995.6', '967.7', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('150', '1501898858108', '93', '967.7', '874.7', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('151', '1501921458637', '167.4', '874.7', '707.3', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('152', '1501924827786', '27.9', '707.3', '679.4', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('153', '1501928543671', '27.9', '679.4', '651.5', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('154', '1502260713966', '93', '651.5', '558.5', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('155', '1502696005714', '27.9', '558.5', '530.6', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('156', '1502696205446', '27.9', '530.6', '502.7', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('157', '1502696226131', '27.9', '502.7', '474.8', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('158', '1502698662105', '27.9', '474.8', '446.9', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('159', '1502698831963', '167.4', '446.9', '279.5', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('160', '1502698932839', '27.9', '279.5', '251.6', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('161', '1502699024665', '167.4', '251.6', '84.2', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('162', '1502699066786', '27.9', '84.2', '56.3', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('163', '1502699294241', '27.9', '56.3', '28.4', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('164', '1502700533165', '100000', '3981', '-96019', '0', '1', '1', '1', '1', null);
+INSERT INTO `charge_record` VALUES ('165', '1502700533176', '100000', '-4797.5', '95202.5', '0', '0', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('166', '1502764868508', '27.9', '28.4', '0.5', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('167', '1502764868524', '25.5', '95202.5', '95177', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('168', '1502766011846', '10000', '95177', '85177', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('169', '1502766011856', '10000', '0.5', '10000.5', '0', '0', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('170', '1502766050089', '27.9', '10000.5', '9972.6', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('171', '1502766050103', '25.5', '85177', '85151.5', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('172', '1503038800149', '25.5', '85151.5', '85126', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('177', '1503045601695', '27.9', '9972.6', '9944.7', '0', '1', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('178', '1503045601714', '25.5', '85126', '85100.5', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('179', '1503110037018', '1000', null, null, null, '0', '1', '4', '0', '703710166008205312');
 
 -- ----------------------------
 -- Table structure for `company_credentials`
@@ -851,9 +854,9 @@ CREATE TABLE `purchase` (
   `order_arrive_time` bigint(20) DEFAULT NULL COMMENT 'æäº¤æ—¶é—´ï¼ˆæœ¬å¹³å°èŽ·å¾—è¯¥æ•°æ®è¯·æ±‚çš„æ—¶é—´ï¼‰',
   `charge_tel_detail` varchar(255) DEFAULT NULL COMMENT 'å·ç å½’å±žï¼ˆï¼šæ±Ÿè¥¿ç§»åŠ¨ï¼‰',
   `charge_tel_city` varchar(255) DEFAULT NULL COMMENT 'å·ç å½’å±žå…·ä½“åŸŽå¸‚',
-  `order_result` int(11) DEFAULT NULL COMMENT '订单状态',
+  `order_result` int(11) DEFAULT NULL COMMENT '订单状态（超级管理员）',
   `channel_id` bigint(11) DEFAULT NULL COMMENT 'é€šé“idï¼ˆå¤–é”®ï¼‰',
-  `order_result_detail` varchar(255) DEFAULT NULL COMMENT '订单结果描述',
+  `order_result_detail` varchar(255) DEFAULT NULL COMMENT '订单结果描述（超级管理员）',
   `order_back_time` bigint(20) DEFAULT NULL COMMENT '订单返回时间',
   PRIMARY KEY (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

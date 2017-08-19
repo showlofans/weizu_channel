@@ -22,7 +22,7 @@ public interface ChargeAccountDaoInterface {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年8月3日 下午2:47:49
 	 */
-	ChargeAccountPo selectRootAccountByAgencyId(int agencyId, int billType);
+//	ChargeAccountPo selectRootAccountByAgencyId(int agencyId, int billType);
 	
 	/**
 	 * @description:通过agencyId更新账户信息

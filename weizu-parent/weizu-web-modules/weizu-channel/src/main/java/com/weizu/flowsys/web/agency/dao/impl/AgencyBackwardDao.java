@@ -23,4 +23,7 @@ public class AgencyBackwardDao extends DaoImpl<AgencyBackwardPo, Integer> implem
 	@Resource
 	private SqlSessionTemplate sqlSessionTemplateASS;
 	
+//	public AgencyBackwardPo getRootAgencyById(Integer agencyId){
+//		return sqlSessionTemplateASS.
+//	}
 }

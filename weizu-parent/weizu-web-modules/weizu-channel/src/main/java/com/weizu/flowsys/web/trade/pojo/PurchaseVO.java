@@ -54,15 +54,19 @@ public class PurchaseVO implements Cloneable {
 
     private Integer orderPlatformPath;			//充值方式(0-接口，1-本平台)
     
-    private Integer orderResult;				//结果（enum:）
-
     private String channelName;					//通道名称
     
     private Long channelId;					//通道ID
 
-    private String orderResultDetail;			//结果描述
+    private Integer orderResult;				//结果（管理员enum:）
+
+    private String orderResultDetail;			//结果描述:管理员
     
     private Double orderAmount;					//扣款
+    
+    private Integer orderState;					//结果（enum:）
+    
+    private Integer orderStateDetail;			//结果描述
     
     private ExchangePlatformPo ep;				//平台信息
     
@@ -78,6 +82,23 @@ public class PurchaseVO implements Cloneable {
         }  
 		return pvo;
 	}
+    
+	public Integer getOrderState() {
+		return orderState;
+	}
+	public void setOrderState(Integer orderState) {
+		this.orderState = orderState;
+	}
+
+	public Integer getOrderStateDetail() {
+		return orderStateDetail;
+	}
+
+	public void setOrderStateDetail(Integer orderStateDetail) {
+		this.orderStateDetail = orderStateDetail;
+	}
+
+
 
 	public void setPgPrice(Double pgPrice) {
 		this.pgPrice = pgPrice;

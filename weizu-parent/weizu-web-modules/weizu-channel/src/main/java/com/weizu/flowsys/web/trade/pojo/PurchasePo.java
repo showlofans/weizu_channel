@@ -21,29 +21,29 @@ public class PurchasePo extends Po {
     
     private String orderIdFrom;					//下级代理商传过来的订单号
     
-    private Integer agencyId;					//代理id（外键）
+    private Integer agencyId;					//订单来源代理id（外键）
 
     private String chargeTel;					//手机号
 
     private Integer pgId;						//流量包id（外键）
 
     private Long orderArriveTime;				//提交时间（本平台获得该数据请求的时间）
-    @TempField
+    
     private Long orderBackTime;					//充值时间（本平台获得返回结果，或者返回给下游平台结果的时间戳）
 
     private String chargeTelDetail;				//号码归属（：江西移动）
 
     private String chargeTelCity;				//号码归属具体城市
-    @TempField
-    private Integer orderResult;				//结果（enum:）(0-失败，1-成功，3-待充，4-为充)
+    
+    private Integer orderResult;				//结果（超管enum:）(0-失败，1-成功，3-待充，4-为充)
 
-    private Long channelId;					//通道id（外键）
-    @TempField
-    private String orderResultDetail;			//结果描述(失败原因)
+    private Long channelId;						//通道id（外键）
+
+    private String orderResultDetail;			//结果描述(超管失败原因)
     @TempField
     private Double orderAmount;					//扣款:用与判断订单价格是否高于余额
-    @TempField
-    private Long recordId;						//消费记录id-外键
+//    @TempField
+//    private Long recordId;						//消费记录id-外键
     @TempField
     private Integer billType;					//票务类型
 	
@@ -65,9 +65,6 @@ public PurchasePo(String chargeTel, Integer pgId,
 		this.pgId = pgId;
 		this.chargeTelDetail = chargeTelDetail;
 	}
-
-
-
 
 
 public PurchasePo(Long orderId, String orderIdApi, String orderIdFrom,
@@ -104,14 +101,6 @@ public PurchasePo(Long orderId, String orderIdApi, String orderIdFrom,
 
 	public void setBillType(Integer billType) {
 		this.billType = billType;
-	}
-
-	public Long getRecordId() {
-		return recordId;
-	}
-
-	public void setRecordId(Long recordId) {
-		this.recordId = recordId;
 	}
 
 	public String getOrderIdApi() {

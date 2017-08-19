@@ -174,6 +174,18 @@ public class AgencyVODao extends DaoImpl<AgencyBackwardPo, Integer> implements A
 		paramMap.put("agencyTag", 1);
 		return sqlSessionTemplateASS.selectOne("getSecondAgency", paramMap);
 	}
+	@Override
+	public AgencyBackwardPo getSecondAgency(Integer agencyId) {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("id", agencyId);
+		return sqlSessionTemplateASS.selectOne("getSecondAgency", paramMap);
+	}
+
+	@Override
+	public AgencyBackwardPo getRootAgencyById(int agencyId) {
+		
+		return sqlSessionTemplateASS.selectOne("getRootAgencyById", agencyId);
+	}
 
 	/**
 	 * @description:  更新密码

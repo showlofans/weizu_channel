@@ -21,8 +21,6 @@ import com.weizu.flowsys.api.base.facet.IChargeFacet;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
-import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
-import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
@@ -31,13 +29,9 @@ import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
-import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
-import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
-import com.weizu.flowsys.web.agency.dao.impl.AgencyBackwardDao;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeRecordDao;
-import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.channel.ao.ExchangePlatformAO;
@@ -50,7 +44,6 @@ import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.http.ParamsEntityWeiZu;
 import com.weizu.flowsys.web.http.weizu.OrderStateResult;
-import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.dao.AgencyPurchaseDao;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.AgencyPurchasePo;
@@ -88,12 +81,6 @@ public class PurchaseAOImpl implements PurchaseAO {
 //	private RateDiscountAO rateDiscountAO;
 	@Resource
 	private RateDiscountDao rateDiscountDao; 
-//	@Resource
-//	private AgencyBackwardDao agencyBackwardDao;
-//	@Resource
-//	private AgencyAO agencyAO;
-	@Resource
-	private AgencyVODaoInterface agencyVODao;
 	
 	@Resource
 	private AgencyPurchaseDao agencyPurchaseDao;
@@ -103,229 +90,187 @@ public class PurchaseAOImpl implements PurchaseAO {
 //	private ChargeFacade chargeFacade;
 	
 	/**
-	 * @description: æ ¹æ®é¡µé¢è®¢å•å‚æ•°åˆå§‹åŒ–è®¢å•å®ä½“
+	 * @description: ¸ù¾İÒ³Ãæ¶©µ¥²ÎÊı³õÊ¼»¯¶©µ¥ÊµÌå
 	 * @param pcVO
 	 * @return
-	 * @author:POPäº§å“ç ”å‘éƒ¨ å®å¼º
-	 * @createTime:2017å¹´8æœˆ4æ—¥ ä¸‹åˆ3:16:02
+	 * @author:POP²úÆ·ÑĞ·¢²¿ ÄşÇ¿
+	 * @createTime:2017Äê8ÔÂ4ÈÕ ÏÂÎç3:16:02
 	 */
 	private PurchasePo initPurchase(PgChargeVO pcVO) {
 		return new PurchasePo(pcVO.getChargeTel(), pcVO.getPgId(), pcVO.getChargeTelDetail());
 	}
 	
 	/**
-	 * @description: é¡µé¢ä¸Šå……å€¼
+	 * @description: Ò³ÃæÉÏ³äÖµ
 	 * @param purchasePo
 	 * @return
-	 * @author:POPäº§å“ç ”å‘éƒ¨ å®å¼º
-	 * @createTime:2017å¹´6æœˆ12æ—¥ ä¸‹åˆ5:35:16
+	 * @author:POP²úÆ·ÑĞ·¢²¿ ÄşÇ¿
+	 * @createTime:2017Äê6ÔÂ12ÈÕ ÏÂÎç5:35:16
 	 */
 	@Transactional
 	@Override
-	public String purchase(PgChargeVO pcVO, Integer ap_agency_id) {
-		/****************å®Œæˆå¯¹æ‰€æœ‰ä¸Šçº§ä»£ç†å•†åŒ…æ‹¬è‡ªå·±çš„è®¢å•ä¸ä»£ç†å•†çš„ç»‘å®š********************/
-		//å·²ç»å½“å‰ç™»é™†ç”¨æˆ·ä½™é¢å……è¶³ï¼Œå¼€å§‹å……å€¼æµç¨‹
-		//åœ¨è®¢å•ä¿¡æ¯å®Œå…¨æ·»åŠ å®Œä¹‹åï¼Œå†è°ƒç”¨æ¥å£è¿›è¡Œå……å€¼
-		//å…ˆæ·»åŠ ä¸€ä¸ªåŸºæœ¬çš„ï¼Œå†æ‰¹é‡æ·»åŠ çˆ¶çº§ä»£ç†å•†å’Œè®¢å•çš„ç»‘å®š
+	public Integer purchase(PgChargeVO pcVO) {
+		/****************Íê³É¶ÔËùÓĞÉÏ¼¶´úÀíÉÌ°üÀ¨×Ô¼ºµÄ¶©µ¥Óë´úÀíÉÌµÄ°ó¶¨********************/
+		//ÒÑ¾­µ±Ç°µÇÂ½ÓÃ»§Óà¶î³ä×ã£¬¿ªÊ¼³äÖµÁ÷³Ì
+		//ÔÚ¶©µ¥ĞÅÏ¢ÍêÈ«Ìí¼ÓÍêÖ®ºó£¬ÔÙµ÷ÓÃ½Ó¿Ú½øĞĞ³äÖµ
+		//ÏÈÌí¼ÓÒ»¸ö»ù±¾µÄ£¬ÔÙÅúÁ¿Ìí¼Ó¸¸¼¶´úÀíÉÌºÍ¶©µ¥µÄ°ó¶¨
 		PurchasePo purchasePo = initPurchase(pcVO);
-		int agencyId = pcVO.getAgencyId();		//è®¢å•äº§ç”Ÿæ–¹ä»£ç†å•†
-		int orderResult = OrderStateEnum.CHARGING.getValue();		//é»˜è®¤è®¢å•çŠ¶æ€
-		int purResult = 0;
+		int agencyId = pcVO.getAgencyId();		//¶©µ¥²úÉú·½´úÀíÉÌ
+		int orderResult = OrderStateEnum.CHARGING.getValue();		//Ä¬ÈÏ¶©µ¥×´Ì¬
+		int aapAddRes = 0;
 //		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(pcVO.getServiceType(), pcVO.getChargeTelDetail(), agencyId);
 		RateDiscountPo ratePo = rateDiscountDao.get(pcVO.getRateId());
-		int chargeRes = -1;			//å……å€¼çŠ¶æ€
+		int chargeRes = -1;			//³äÖµ×´Ì¬
 		if(ratePo != null){
-			int billType = ratePo.getBillType();//ç¥¨åŠ¡å…¨éƒ¨ä½¿ç”¨è´¹ç‡é…ç½®çš„ç¥¨åŠ¡
-			//æ›´æ–°æ¶ˆè´¹è®°å½•è¡¨ï¼ˆå…ˆæ›´æ–°è´¦æˆ·ä½™é¢ï¼Œå†æ›´æ–°è®¢å•ï¼Œæœ€åæ›´æ–°è®°å½•ï¼‰
+			int billType = ratePo.getBillType();//Æ±ÎñÈ«²¿Ê¹ÓÃ·ÑÂÊÅäÖÃµÄÆ±Îñ
+			//¸üĞÂÏû·Ñ¼ÇÂ¼±í£¨ÏÈ¸üĞÂÕË»§Óà¶î£¬ÔÙ¸üĞÂ¼ÇÂ¼£©
 			ChargeAccountPo accountPo = chargeAccountAO.getAccountByAgencyId(agencyId, billType);
-			/**å……å€¼å‰ä½™é¢*/
-			double agencyBeforeBalance = 0d;
-			/**å……å€¼é¢ï¼ˆï¼‰*/
-			Double orderAmount = null;
-			
-			/**åŒ…ä½“åŸä»·*/
+			/**³äÖµÇ°Óà¶î*/
+			double agencyBeforeBalance = accountPo.getAccountBalance();
+			/**³äÖµ¶î£¨£©*/
 			Double pgPrice = pcVO.getPgPrice();
-			
-			/**è´¦æˆ·ä¿¡æ¯çš„æ›´æ–°ç»“æœ*/
-			int recordRes = 0;
-			
-			ChannelChannelPo channel = channelChannelDao.get(new WherePrams("id", "=", ratePo.getChannelId()));
-			boolean isChannelUseStateStoped = channel.getChannelUseState() == ChannelUseStateEnum.CLOSE.getValue();//é€šé“çŠ¶æ€åœæ­¢
-			if(isChannelUseStateStoped){//é€šé“ä½¿ç”¨çŠ¶æ€æš‚åœï¼Œä¸èƒ½æå•
-				return "äº§å“å¾…æ›´æ–°ï¼Œäº§å“æš‚ä¸æ”¯æŒè´­ä¹°ï¼ï¼";
-			}
-			boolean isSecondAgency = agencyVODao.getSecondAgency(agencyId) == null ;
-			//åœ¨äºŒçº§ä»£ç†å•†çš„æƒ…å†µä¸‹æ‰å»åˆ¤æ–­ä½™é¢
-			boolean ifLackBalance = isSecondAgency && pcVO.getOrderAmount() > accountPo.getAccountBalance();
-			
-			if(ifLackBalance){//è®¢å•ä»·æ ¼å¤§äºä½™é¢
-				return "ä½™é¢ä¸è¶³ï¼Œä¸‹å•å¤±è´¥";
-//				resultMap.put("referURL", "/flowsys/chargePg/purchase_list.do?orderResult=2");
-			}else{
-				/**å……å€¼å‰ä½™é¢*/
-				agencyBeforeBalance = accountPo.getAccountBalance();
-				/**å……å€¼é¢ï¼ˆï¼‰*/
-				orderAmount = NumberTool.mul(ratePo.getActiveDiscount(), pgPrice);
-				accountPo.addBalance(orderAmount,-1);
-				/** æ›´æ–°ç™»å½•ç”¨æˆ·è´¦æˆ·ä¿¡æ¯**/
-				recordRes = chargeAccountAO.updateAccount(accountPo);
-				if(recordRes > 0){
-					Long rateDiscountId = ratePo.getId();			//æŠ˜æ‰£id
-					try {
-						OrderUril ou1 = new OrderUril(1);
-						Long orderId = ou1.nextId();
-						purchasePo.setOrderId(orderId);//è®¾ç½®è®¢å•å·
-						purchasePo.setAgencyId(pcVO.getAgencyId());
-						Long currentTime = System.currentTimeMillis();
-						purchasePo.setOrderArriveTime(currentTime);
-						purchasePo.setOrderResult(orderResult);
-						purchasePo.setChannelId(ratePo.getChannelId());
-	//					Map<String, Object> telMap = PurchaseUtil.getOperatorsByTel(purchasePo.getChargeTel());
-	//					 String chargeTelCity = null;
-	//					 if(telMap != null)
-	//					{
-	//						chargeTelCity = telMap.get("chargeTelCity").toString();
-	//					}
-	//					purchasePo.setChargeTelCity(chargeTelCity);
-						purResult = purchaseDAO.addPurchase(purchasePo);
-						
-						if(purResult > 0){//å¼€å§‹æŠŠç¬¬ä¸€ä¸ªæ¶ˆè´¹è®°å½•ï¼Œè¿æ¥åŠ ä¸Šï¼Œ
-							/** å‘æ¶ˆè´¹è®°å½•è¡¨æ’å…¥ç™»é™†ç”¨æˆ·æ•°æ® */
-							Long nextIdRecord = chargeRecordDao.nextId();
-							chargeRecordDao.add(new ChargeRecordPo(currentTime, orderAmount,
-									agencyBeforeBalance, accountPo.getAccountBalance(), 
-									billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), agencyId, 1 , orderId));
-							/**å†å‘ä¸‹æ¸¸è¿”å›å›è°ƒï¼Œå¹¶æ›´æ–°æ•°æ®åº“ä¸­è®¢å•è¡¨ä¸­è¿”å›æ—¶é—´å’Œè¿”å›ç»“æœ*/
-							int orderPath = OrderPathEnum.WEB_PAGE.getValue();
-							AgencyPurchasePo app = new AgencyPurchasePo(ap_agency_id, orderId, rateDiscountId, orderAmount, billType, orderAmount, pcVO.getFromAgencyName(), orderPath, orderResult);
-							int aapAddRes = agencyPurchaseDao.add(app);
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}else{
-					logger.config("æ›´æ–°è´¦æˆ·è¡¨å¤±è´¥");
+			Double orderAmount = NumberTool.mul(ratePo.getActiveDiscount(), pgPrice);
+			accountPo.addBalance(orderAmount,-1);
+			/** ¸üĞÂµÇÂ¼ÓÃ»§ÕË»§ĞÅÏ¢**/
+			int recordRes = chargeAccountAO.updateAccount(accountPo);
+			if(recordRes > 0){
+				/** ÏòÏû·Ñ¼ÇÂ¼±í²åÈëµÇÂ½ÓÃ»§Êı¾İ */
+				Long nextIdRecord = chargeRecordDao.nextId();
+				Long currentTime = System.currentTimeMillis();
+				chargeRecordDao.add(new ChargeRecordPo(currentTime, orderAmount,
+						agencyBeforeBalance, accountPo.getAccountBalance(), 
+						billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), agencyId,1));
+				Long rateDiscountId = ratePo.getId();			//ÕÛ¿Ûid
+				try {
+					OrderUril ou1 = new OrderUril(1);
+					Long orderId = ou1.nextId();
+					purchasePo.setOrderId(orderId);//ÉèÖÃ¶©µ¥ºÅ
+					purchasePo.setAgencyId(agencyId);
+					purchasePo.setOrderArriveTime(currentTime);
+//					purchasePo.setOrderResult(orderResult);
+					purchasePo.setChannelId(ratePo.getChannelId());
+//					Map<String, Object> telMap = PurchaseUtil.getOperatorsByTel(purchasePo.getChargeTel());
+//					 String chargeTelCity = null;
+//					 if(telMap != null)
+//					{
+//						chargeTelCity = telMap.get("chargeTelCity").toString();
+//					}
+//					purchasePo.setChargeTelCity(chargeTelCity);
+					int purResult = purchaseDAO.addPurchase(purchasePo);
+					
+					/**ÔÙÏòÏÂÓÎ·µ»Ø»Øµ÷£¬²¢¸üĞÂÊı¾İ¿âÖĞ¶©µ¥±íÖĞ·µ»ØÊ±¼äºÍ·µ»Ø½á¹û*/
+					int orderPath = OrderPathEnum.WEB_PAGE.getValue();
+					AgencyPurchasePo app = new AgencyPurchasePo(agencyId, orderId, rateDiscountId, orderAmount, billType, nextIdRecord, orderResult,OrderStateEnum.CHARGING.getDesc(),orderPath);
+					aapAddRes = agencyPurchaseDao.add(app);
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-				// å¼€å§‹è¿­ä»£æ·»åŠ çˆ¶çº§ä»£ç†å•†çš„è´¦æˆ·æ‰£æ¬¾å’Œæ¶ˆè´¹è®°å½•ï¼Œä»¥åŠæ‰¹é‡æ·»åŠ çˆ¶çº§ä»£ç†å•†å’Œè®¢å•çš„ç»‘å®š
-				if(purResult > 0){//è®¢å•æ·»åŠ å¥½äº†,å¼€å§‹è¿­ä»£æ·»åŠ çˆ¶çº§ä»£ç†å•†çš„è´¦æˆ·æ‰£æ¬¾å’Œæ¶ˆè´¹è®°å½•
-					chargeRes = OrderResultEnum.SUCCESS.getCode();		//åœ¨å…¨éƒ¨ä¸Šçº§éƒ½æ·»åŠ å®Œäº†ä¹‹åè¿”å›æˆåŠŸ;
-					List<AgencyPurchasePo> apPoList = new LinkedList<AgencyPurchasePo>();
+			}else{
+				logger.config("¸üĞÂÕË»§±íÊ§°Ü");
+			}
+			
+			//ÅúÁ¿Ìí¼Ó¸¸¼¶´úÀíÉÌºÍ¶©µ¥µÄ°ó¶¨
+			if(aapAddRes > 0){//µÚÒ»¼¶´úÀíÉÌºÍ¶©µ¥Ìí¼ÓºÃÁË
+				chargeRes = OrderResultEnum.SUCCESS.getCode();		//ÔÚÈ«²¿ÉÏ¼¶¶¼Ìí¼ÓÍêÁËÖ®ºó·µ»Ø³É¹¦;
+				List<AgencyPurchasePo> apPoList = new LinkedList<AgencyPurchasePo>();
+				int whileStop = 0;
+				while(ratePo.getActiveId() != null){//Ã»ÓĞÕÒµ½µÚ¶ş¼¶´úÀíÉÌ£¬¿ªÊ¼Ìí¼Ó´úÀíÉÌºÍ¶©µ¥
+					ratePo = rateDiscountDao.get(ratePo.getActiveId());		//ÖØÖÃratePoÎª¸¸¼¶·ÑÂÊÕÛ¿Û;²»Îª¿Õ
+					billType = ratePo.getBillType();		//ÖØÖÃÆ±Îñ
+					accountPo  = chargeAccountDao.selectRootAccountByAgencyId(agencyId, billType);//ÖØÖÃÎª¸¸¼¶´úÀíÉÌµÄÕË»§
+					agencyId = accountPo.getAgencyId();//ÖØÖÃ´úÀíÉÌidÎª¸¸¼¶´úÀíÉÌµÄid
 					
-					RateDiscountPo activeRatePo = null;		//çˆ¶çº§è´¹ç‡å¯¹è±¡
-					RateDiscountPo ratePo1 = ratePo;		//å­çº§è´¹ç‡å¯¹è±¡
+					/**ÒµÎñÅĞ¶ÏºÍÌí¼Ó**/
+					/**³äÖµ¶î£¨£©*/
+					orderAmount = NumberTool.mul(ratePo.getActiveDiscount(), pgPrice);
+					if(orderAmount > accountPo.getAccountBalance()){
+						orderResult = OrderStateEnum.DAICHONG.getValue();	//Ç··ÑµÈ´ı
+						whileStop = 1;
+					}else{
+						orderResult = OrderStateEnum.CHARGING.getValue();		//³äÖµ½øĞĞ
+					}
+					Long rateDiscountId = ratePo.getId();			//ÕÛ¿Ûid
 					
-					AgencyBackwardPo rootAgencyPo = null;	//çˆ¶çº§ä»£ç†å•†å®ä½“
-					int contextAgencyId = agencyId ;		//å­çº§ä»£ç†å•†id
-					
-					//å¾—åˆ°å½“å‰ä»£ç†å•†å’ŒæŠ˜æ‰£çš„ç»‘å®šå®ä½“ï¼Œ
-					//ç„¶åæ ¹æ®çˆ¶çº§å¾—åˆ°çˆ¶çº§æŠ˜æ‰£
-					int whileStop = 0;
-					Double balance = 0d;//å·®é¢:çˆ¶è´¹ç‡å‡å»å­è´¹ç‡ä¹˜ä»¥ä»·æ ¼
-					while(ratePo1.getActiveId() != null){//æ²¡æœ‰æ‰¾åˆ°ç¬¬äºŒçº§ä»£ç†å•†ï¼Œå¼€å§‹æ·»åŠ ä»£ç†å•†å’Œè®¢å•
-						
-						//é‡ç½®ratePoä¸ºçˆ¶çº§è´¹ç‡æŠ˜æ‰£;ä¸ä¸ºç©º
-						//æŸ¥è¯¢çˆ¶çº§æ“ä½œå¯¹è±¡
-						activeRatePo = rateDiscountDao.get(ratePo1.getActiveId());		
-						rootAgencyPo = agencyVODao.getRootAgencyById(agencyId);
-						
-						accountPo  = chargeAccountDao.selectByAgencyId(rootAgencyPo.getId(), activeRatePo.getBillType());//é‡ç½®ä¸ºçˆ¶çº§ä»£ç†å•†çš„è´¦æˆ·ï¼ˆæ— è®ºæ˜¯å¯¹å…¬å’Œå¯¹ç§éƒ½æ˜¯æœ‰çš„ï¼‰
-						/**ä¸šåŠ¡åˆ¤æ–­å’Œæ·»åŠ **/
-						/**å……å€¼é¢ï¼ˆï¼‰*/
-//						orderAmount = NumberTool.mul(ratePo.getActiveDiscount(), pgPrice);
-//						if(orderAmount > accountPo.getAccountBalance()){
-//							orderResult = OrderStateEnum.DAICHONG.getValue();	//æ¬ è´¹ç­‰å¾…
-//							whileStop = 1;
-//						}else{
-//							orderResult = OrderStateEnum.CHARGING.getValue();		//å……å€¼è¿›è¡Œ
-//						}
-//						Long rateDiscountId = ratePo.getId();			//æŠ˜æ‰£id
-						
-//						if(whileStop == 1){//å¯ä»¥å‘ä¸Šæå•ï¼Œä½†æ˜¯ä¸æ‰£ä¸Šé¢çš„æ¬¾
-//							int orderPath = OrderPathEnum.CHILD_WEB_PAGE.getValue();
-////						AgencyPurchasePo app = new AgencyPurchasePo(agencyId, purchasePo.getOrderId(), null, null, billType, null, orderResult,ChargeStatusEnum.LACK_OF_BALANCE.getDesc(),orderPath);
-////						apPoList.add(app);
-//							break;
-//						}else{
-							/**å……å€¼å‰ä½™é¢*/
-							agencyBeforeBalance = accountPo.getAccountBalance();
-							/**çˆ¶è´¹ç‡å‡å»å­è´¹ç‡ä¹˜ä»¥ä»·æ ¼ï¼Œå°±æ˜¯å·®ä»·*/
-							balance = NumberTool.mul(NumberTool.sub(activeRatePo.getActiveDiscount(), ratePo1.getActiveDiscount()), pgPrice);
-							accountPo.addBalance(balance,1);
-							/** æ›´æ–°ç™»å½•ç”¨æˆ·è´¦æˆ·ä¿¡æ¯**/
-							recordRes = chargeAccountAO.updateAccount(accountPo);
-							if(recordRes > 0){
-								/** å‘æ¶ˆè´¹è®°å½•è¡¨æ’å…¥ç™»é™†ç”¨æˆ·æ•°æ® */
-								Long nextIdRecord = chargeRecordDao.nextId();
-								Long currentTime = System.currentTimeMillis();
-								chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
-										agencyBeforeBalance, accountPo.getAccountBalance(), 
-										billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), agencyId,1, purchasePo.getOrderId()));
-								int orderPath = OrderPathEnum.CHARGE_SOCKET.getValue();
-//							AgencyPurchasePo app = new AgencyPurchasePo(agencyId, purchasePo.getOrderId(), rateDiscountId, orderAmount, billType, nextIdRecord, orderResult,OrderStateEnum.CHARGING.getDesc(),orderPath);
-//							apPoList.add(app);
-							}
-//						}
-						//æœ€åå†å¾ªç¯ä¸€æ¬¡ï¼Œä¿è¯æ¬ è´¹ç­‰å¾…çš„å•å­çˆ¶çº§ä»£ç†å•†èƒ½å¤Ÿçœ‹åˆ°ï¼Œä½†æ˜¯ä¸èƒ½æ‰£çˆ¶çº§ä»£ç†å•†çš„æ¬¾å’Œæ¶ˆè´¹è®°å½•
-//					if(whileStop > 0){//æ¬ è´¹ç­‰å¾…
+					if(whileStop == 1){//¿ÉÒÔÏòÉÏÌáµ¥£¬µ«ÊÇ²»¿ÛÉÏÃæµÄ¿î
+						int orderPath = OrderPathEnum.CHARGE_SOCKET.getValue();
+						AgencyPurchasePo app = new AgencyPurchasePo(agencyId, purchasePo.getOrderId(), null, null, billType, null, orderResult,ChargeStatusEnum.LACK_OF_BALANCE.getDesc(),orderPath);
+						apPoList.add(app);
+						break;
+					}else{
+						/**³äÖµÇ°Óà¶î*/
+						agencyBeforeBalance = accountPo.getAccountBalance();
+						accountPo.addBalance(orderAmount,-1);
+						/** ¸üĞÂµÇÂ¼ÓÃ»§ÕË»§ĞÅÏ¢**/
+						recordRes = chargeAccountAO.updateAccount(accountPo);
+						if(recordRes > 0){
+							/** ÏòÏû·Ñ¼ÇÂ¼±í²åÈëµÇÂ½ÓÃ»§Êı¾İ */
+							Long nextIdRecord = chargeRecordDao.nextId();
+							Long currentTime = System.currentTimeMillis();
+							chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
+									agencyBeforeBalance, accountPo.getAccountBalance(), 
+									billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), agencyId,1));
+							
+							int orderPath = OrderPathEnum.CHARGE_SOCKET.getValue();
+							AgencyPurchasePo app = new AgencyPurchasePo(agencyId, purchasePo.getOrderId(), rateDiscountId, orderAmount, billType, nextIdRecord, orderResult,OrderStateEnum.CHARGING.getDesc(),orderPath);
+							apPoList.add(app);
+						}
+					}
+					//×îºóÔÙÑ­»·Ò»´Î£¬±£Ö¤Ç··ÑµÈ´ıµÄµ¥×Ó¸¸¼¶´úÀíÉÌÄÜ¹»¿´µ½£¬µ«ÊÇ²»ÄÜ¿Û¸¸¼¶´úÀíÉÌµÄ¿îºÍÏû·Ñ¼ÇÂ¼
+//					if(whileStop > 0){//Ç··ÑµÈ´ı
 //						whileStop++ ;
 //					}
-							//ç”±çˆ¶å˜æˆå­ï¼Œè¿›è¡Œè¿­ä»£
-							ratePo1 = activeRatePo;	
-							agencyId = rootAgencyPo.getId();
-					}
-					if(apPoList.size() > 0){
-						int batchAddApp = agencyPurchaseDao.ap_addList(apPoList);		//æ‰¹é‡æ·»åŠ 
-						//
-						ChannelChannelPo channelPo = channelChannelDao.get(purchasePo.getChannelId());
-						if(channelPo != null){
-							ExchangePlatformPo epPo = exchangePlatformAO.getEpById(channelPo.getEpId());
-							Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(purchasePo.getChargeTelDetail());
-							String scopeCityCode = scopeMap.get("scopeCityCode").toString();
-							ProductCodePo dataPo = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode,channelPo.getEpId(), purchasePo.getPgId()));
-							if(dataPo == null){
-								logger.config("ç¼–ç æœªé…ç½®");
-							}else if(batchAddApp > 0 && epPo != null){//å¼€å§‹èµ°æ¥å£
-								try {
+				}
+				if(apPoList.size() > 0){
+					int batchAddApp = agencyPurchaseDao.ap_addList(apPoList);		//ÅúÁ¿Ìí¼Ó
+					//
+					ChannelChannelPo channelPo = channelChannelDao.get(purchasePo.getChannelId());
+					if(channelPo != null){
+						ExchangePlatformPo epPo = exchangePlatformAO.getEpById(channelPo.getEpId());
+						ProductCodePo dataPo = productCodeAO.getOneProductCode(new OneCodePo(channelPo.getEpId(), purchasePo.getPgId()));
+						if(dataPo == null){
+							logger.config("±àÂëÎ´ÅäÖÃ");
+						}else if(batchAddApp > 0 && epPo != null){//¿ªÊ¼×ß½Ó¿Ú
+							 try {
 //								 String epEngId = StringUtil2.toUpperClass(epPo.getEpEngId());
-//								 String classRealPath = "com.weizu.flowsys.api.weizu."+epPo.getEpEngId()+"Charge";	//åŒ…å®Œæ•´è·¯å¾„
+//								 String classRealPath = "com.weizu.flowsys.api.weizu."+epPo.getEpEngId()+"Charge";	//°üÍêÕûÂ·¾¶
 //								Class onwClass = Class.forName(classRealPath);
 //								Constructor constructor = onwClass.getConstructor(String.class,String.class,String.class,String.class);
 //								IChargeFacet chargeFacet = (IChargeFacet)constructor.newInstance(epPo.getEpPurchaseIp(),epPo.getEpApikey(),epPo.getEpUserName(),dataPo.getProductCode());
 //								ChargeDTO chargeDTO = chargeFacet.charge();
-									ChargeDTO chargeDTO = chargeByFacet(epPo,dataPo);
-									System.out.println(chargeDTO.getOrderIdApi());//æµ‹è¯•æ‰“å°å‡ºå¯¹åº”å¹³å°çš„æå•åœ°å€
-									
-									//åˆ¤æ–­æ˜¯å¦æ­£å¸¸æå•,
-									
-									//å……å€¼ä¹‹åæ›´æ–°è®¢å•çš„orderIdApi
+								 ChargeDTO chargeDTO = chargeByFacet(epPo,dataPo);
+								System.out.println(chargeDTO.getOrderIdApi());//²âÊÔ´òÓ¡³ö¶ÔÓ¦Æ½Ì¨µÄÌáµ¥µØÖ·
+								
+								//ÅĞ¶ÏÊÇ·ñÕı³£Ìáµ¥,
+								
+								//³äÖµÖ®ºó¸üĞÂ¶©µ¥µÄorderIdApi
 //								purchasePo.setOrderIdApi(chargeDTO.getOrderIdApi());
 //								int updatePur = purchaseDAO.updateLocal(purchasePo, new WherePrams("order_id", "=", purchasePo.getOrderId()));
 //								if()
-									
-								} catch (ClassNotFoundException e) {
-									e.printStackTrace();
-								} catch (InstantiationException e) {
-									e.printStackTrace();
-								} catch (IllegalAccessException e) {
-									e.printStackTrace();
-								} catch (NoSuchMethodException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								} catch (SecurityException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								} catch (IllegalArgumentException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								} catch (InvocationTargetException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
+								
+							} catch (ClassNotFoundException e) {
+								e.printStackTrace();
+							} catch (InstantiationException e) {
+								e.printStackTrace();
+							} catch (IllegalAccessException e) {
+								e.printStackTrace();
+							} catch (NoSuchMethodException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (SecurityException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (IllegalArgumentException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (InvocationTargetException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
 							}
-							
 						}
+						
+					}
 //					purchasePo.get
-//					if(batchAddApp > 0 && dataPo.getProductCode()  != null){//è®¢å•ä¿¡æ¯å®Œæˆä¹‹åï¼Œé©¬ä¸Šåˆ©ç”¨æ¥å£æŠŠè®¢å•é€šè¿‡é€šé“ä¼ åˆ°ä¸Šæ¸¸
+//					if(batchAddApp > 0 && dataPo.getProductCode()  != null){//¶©µ¥ĞÅÏ¢Íê³ÉÖ®ºó£¬ÂíÉÏÀûÓÃ½Ó¿Ú°Ñ¶©µ¥Í¨¹ıÍ¨µÀ´«µ½ÉÏÓÎ
 //						ChannelChannelPo channelPo = channelChannelDao.get(ratePo.getChannelId());
 //						ExchangePlatformPo epPo = exchangePlatformAO.getEpById(channelPo.getEpId());
 //						if(epPo != null){
@@ -333,32 +278,31 @@ public class PurchaseAOImpl implements PurchaseAO {
 //							//
 //							ChargeResultPage chargeResultPage = chargeBase.charge(new ChargeParamsPage(epPo.getEpPurchaseIp(), epPo.getEpName(), epPo.getEpUserName(), epPo.getEpApikey(), purchasePo.getChargeTel(), dataPo.getProductCode()));
 //							
-//							//åˆå§‹åŒ–è®¢å•ç»“æœ
+//							//³õÊ¼»¯¶©µ¥½á¹û
 //							ChargePageOrder chargePageOrder = chargeResultPage.getChargePageOrder();
 //							if(chargePageOrder != null)
 //							{
 //								PurchasePo ppo = new PurchasePo();
 ////							ppo.setOrderId(purchasePo.getOrderId());
-//								ppo.setOrderBackTime(chargePageOrder.getOrderBackTime());//è®¢å•å……å€¼è¿”å›æ—¶é—´
-//								ppo.setOrderIdApi(chargePageOrder.getTransaction_id());	//æ¥å£è®¢å•å·
-//								ppo.setOrderResultDetail(chargeResultPage.tipMsg); 		//ç»“æœæè¿°
+//								ppo.setOrderBackTime(chargePageOrder.getOrderBackTime());//¶©µ¥³äÖµ·µ»ØÊ±¼ä
+//								ppo.setOrderIdApi(chargePageOrder.getTransaction_id());	//½Ó¿Ú¶©µ¥ºÅ
+//								ppo.setOrderResultDetail(chargeResultPage.tipMsg); 		//½á¹ûÃèÊö
 //								purchaseDAO.updateLocal(ppo, new WherePrams("order_id", "=", purchasePo.getOrderId()));
 //							}
 //						}
 //					}
-					}
-				}else{//ç¬¬ä¸€æ‰¹ä»£ç†å•†å’Œè®¢å•æ²¡æœ‰æ·»åŠ æˆåŠŸ
-					chargeRes = OrderStateEnum.UNCHARGE.getValue();
 				}
+			}else{//µÚÒ»Åú´úÀíÉÌºÍ¶©µ¥Ã»ÓĞÌí¼Ó³É¹¦
+				chargeRes = OrderStateEnum.UNCHARGE.getValue();
 			}
 		}
 		
-		return null;
+		return chargeRes;
 		
 		
 		
 		
-		/****************ä¿®æ”¹ç™»é™†ç”¨æˆ·çš„å¯¹ç§è´¦æˆ·********************/
+		/****************ĞŞ¸ÄµÇÂ½ÓÃ»§µÄ¶ÔË½ÕË»§********************/
 		
 		
 //		channelPo.setChannelTotalUse();
@@ -367,10 +311,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 //		int channelRes = channelForwardDao.update(channelPo);
 		
 		
-//		/**è®¢å•ä¿¡æ¯æ·»åŠ */
+//		/**¶©µ¥ĞÅÏ¢Ìí¼Ó*/
 //		OrderUril ou1 = new OrderUril(1);
 //		try {
-//			purchasePo.setOrderId(ou1.nextId());//è®¾ç½®è®¢å•å·
+//			purchasePo.setOrderId(ou1.nextId());//ÉèÖÃ¶©µ¥ºÅ
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
@@ -381,32 +325,32 @@ public class PurchaseAOImpl implements PurchaseAO {
 //			//
 //			ChargeResultPage chargeResultPage = chargeBase.charge(new ChargeParamsPage(epPo.getEpPurchaseIp(), epPo.getEpName(), epPo.getEpUserName(), epPo.getEpApikey(), purchasePo.getChargeTel(), productCode));
 //			
-//			//åˆå§‹åŒ–è®¢å•ç»“æœ
+//			//³õÊ¼»¯¶©µ¥½á¹û
 //			ChargePageOrder chargePageOrder = chargeResultPage.getChargePageOrder();
 //			if(chargePageOrder != null)
 //			{
 //				purchasePo.setOrderBackTime(chargePageOrder.getOrderBackTime());
 //				purchasePo.setOrderIdApi(chargePageOrder.getTransaction_id());
-//				//æŸ¥çœ‹è®¢å•çŠ¶æ€
+//				//²é¿´¶©µ¥×´Ì¬
 //				OrderStateBase orderStatePage = OrderStateFactory.getOrderStateBase(epPo.getEpName());
 //				OrderStateResultPage osrp = orderStatePage.getOrderState(new OrderStateParamsPage(epPo.getPgdataCheckIp(), chargePageOrder.getTransaction_id(), epPo.getEpName(), epPo.getEpUserName(), epPo.getEpApikey()));
 //				purchasePo.setOrderResult(osrp.getPageOrder().getStatus());
 //				purchasePo.setOrderResultDetail(osrp.getPageOrder().getMsg());
 //				if(osrp == null){
 ////					Log
-//					System.out.println("æ²¡æœ‰æ·»åŠ è¯¥å…¬å¸ä»£ç ");
+//					System.out.println("Ã»ÓĞÌí¼Ó¸Ã¹«Ë¾´úÂë");
 //				}
 //				System.out.println(osrp.getPageOrder().getCreated_at());
 //				System.out.println(osrp.getPageOrder().getCharge_fee());
 //				System.out.println(osrp.getPageOrder().getStatus());
-//				//å°†è®¢å•çŠ¶æ€å†™å…¥å……å€¼çŠ¶æ€ä¸­
+//				//½«¶©µ¥×´Ì¬Ğ´Èë³äÖµ×´Ì¬ÖĞ
 ////				chargePageOrder.getTransaction_id()
 //			}
 //			
 ////			OrderStateResult osr =  purchaseByWeizuAPI(new ParamsEntityWeiZu(epPo.getEpUserName(), purchasePo.getChargeTel(), product.getProductCode(), epPo.getEpApikey()));
 //			
 //			
-//			purchasePo.setRootAgencyId(accountPo.getAgencyId());//è®¾ä¸ºå½“å‰ç™»é™†è´¦æˆ·çš„è®¢å•
+//			purchasePo.setRootAgencyId(accountPo.getAgencyId());//ÉèÎªµ±Ç°µÇÂ½ÕË»§µÄ¶©µ¥
 //			 Map<String, Object> telMap = PurchaseUtil.getOperatorsByTel(purchasePo.getChargeTel());
 //			 String chargeTelCity = null;
 //			 if(telMap != null)
@@ -415,11 +359,11 @@ public class PurchaseAOImpl implements PurchaseAO {
 //			}
 //			purchasePo.setChargeTelCity(chargeTelCity);
 //			purchasePo.setRecordId(nextIdRecord);
-//			//æ›´æ–°è®¢å•è¡¨
+//			//¸üĞÂ¶©µ¥±í
 //			int purResult = purchaseDAO.addPurchase(purchasePo);
 ////			purchasePo
 //			
-//			/**å†å‘ä¸‹æ¸¸è¿”å›å›è°ƒï¼Œå¹¶æ›´æ–°æ•°æ®åº“ä¸­è®¢å•è¡¨ä¸­è¿”å›æ—¶é—´å’Œè¿”å›ç»“æœ*/
+//			/**ÔÙÏòÏÂÓÎ·µ»Ø»Øµ÷£¬²¢¸üĞÂÊı¾İ¿âÖĞ¶©µ¥±íÖĞ·µ»ØÊ±¼äºÍ·µ»Ø½á¹û*/
 //			if(purResult > 0){
 //				return OrderResultEnum.SUCCESS.getCode();
 //			}else{
@@ -438,7 +382,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 		
 	}
 	/**
-	 * @description: æ¥å£å……å€¼
+	 * @description: ½Ó¿Ú³äÖµ
 	 * @param epPo
 	 * @param dataPo
 	 * @return
@@ -449,11 +393,11 @@ public class PurchaseAOImpl implements PurchaseAO {
 	 * @throws InvocationTargetException
 	 * @throws NoSuchMethodException
 	 * @throws SecurityException
-	 * @author:å¾®æ—é€šé“ä»£ç è®¾è®¡äºº å®å¼º
-	 * @createTime:2017å¹´8æœˆ17æ—¥ ä¸‹åˆ5:36:19
+	 * @author:Î¢×åÍ¨µÀ´úÂëÉè¼ÆÈË ÄşÇ¿
+	 * @createTime:2017Äê8ÔÂ17ÈÕ ÏÂÎç5:36:19
 	 */
 	public ChargeDTO chargeByFacet(ExchangePlatformPo epPo,ProductCodePo dataPo) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
-		 String classRealPath = "com.weizu.flowsys.api.weizu."+epPo.getEpEngId()+"Charge";	//åŒ…å®Œæ•´è·¯å¾„
+		 String classRealPath = "com.weizu.flowsys.api.weizu."+epPo.getEpEngId()+"Charge";	//°üÍêÕûÂ·¾¶
 			Class onwClass = Class.forName(classRealPath);
 			Constructor constructor = onwClass.getConstructor(String.class,String.class,String.class,String.class);
 			IChargeFacet chargeFacet = (IChargeFacet)constructor.newInstance(epPo.getEpPurchaseIp(),epPo.getEpApikey(),epPo.getEpUserName(),dataPo.getProductCode());
@@ -461,15 +405,15 @@ public class PurchaseAOImpl implements PurchaseAO {
 	}
 
 	/**
-	 * @description: å°è£…æŸ¥è¯¢å‚æ•°
+	 * @description: ·â×°²éÑ¯²ÎÊı
 	 * @param purchaseVO
 	 * @return
-	 * @author:POPäº§å“ç ”å‘éƒ¨ å®å¼º
-	 * @createTime:2017å¹´6æœˆ13æ—¥ ä¸‹åˆ12:53:34
+	 * @author:POP²úÆ·ÑĞ·¢²¿ ÄşÇ¿
+	 * @createTime:2017Äê6ÔÂ13ÈÕ ÏÂÎç12:53:34
 	 */
 	@Override
 	public Map<String, Object> getMapByPojo(PurchaseVO purchaseVO,Boolean isCharged) {
-		//å……å€¼æˆåŠŸåˆ—è¡¨ä½¿ç”¨å……å€¼æ—¶é—´æŸ¥è¯¢
+		//³äÖµ³É¹¦ÁĞ±íÊ¹ÓÃ³äÖµÊ±¼ä²éÑ¯
 		if(purchaseVO != null){
 			Map<String, Object> paramsMap = new HashMap<String, Object>();
 			if(StringHelper.isNotEmpty(purchaseVO.getChargeTel())){
@@ -502,27 +446,27 @@ public class PurchaseAOImpl implements PurchaseAO {
 			Long endTime = null;
 			Long dateUtilStartTime = DateUtil.getStartTime().getTime();
 			Long dateUtilEndTime = DateUtil.getEndTime().getTime();
-			if(isCharged){//å……å€¼æˆåŠŸåˆ—è¡¨ä½¿ç”¨å……å€¼æ—¶é—´æŸ¥è¯¢
-				if(StringHelper.isEmpty(purchaseVO.getBackStartTimeStr())){//é»˜è®¤æ‰“å¼€åˆ—è¡¨
+			if(isCharged){//³äÖµ³É¹¦ÁĞ±íÊ¹ÓÃ³äÖµÊ±¼ä²éÑ¯
+				if(StringHelper.isEmpty(purchaseVO.getBackStartTimeStr())){//Ä¬ÈÏ´ò¿ªÁĞ±í
 					paramsMap.put("startTimeBack", dateUtilStartTime);
 				}else{
 					startTime = DateUtil.strToDate(purchaseVO.getBackStartTimeStr(), null).getTime();
 					paramsMap.put("startTimeBack", startTime);
 				}
-				if(StringHelper.isEmpty(purchaseVO.getBackEndTimeStr())){//é»˜è®¤æ‰“å¼€åˆ—è¡¨
+				if(StringHelper.isEmpty(purchaseVO.getBackEndTimeStr())){//Ä¬ÈÏ´ò¿ªÁĞ±í
 					paramsMap.put("endTimeBack", dateUtilEndTime);
 				}else{
 					endTime = DateUtil.strToDate(purchaseVO.getBackEndTimeStr(), null).getTime();
 					paramsMap.put("endTimeBack", endTime);
 				}
-			}else{//å…¶ä»–çŠ¶æ€ä½¿ç”¨è®¢å•åˆ°è¾¾æ—¶é—´
-				if(StringHelper.isEmpty(purchaseVO.getArriveStartTimeStr())){//é»˜è®¤æ‰“å¼€åˆ—è¡¨
+			}else{//ÆäËû×´Ì¬Ê¹ÓÃ¶©µ¥µ½´ïÊ±¼ä
+				if(StringHelper.isEmpty(purchaseVO.getArriveStartTimeStr())){//Ä¬ÈÏ´ò¿ªÁĞ±í
 					paramsMap.put("startTime", dateUtilStartTime);
 				}else{
 					startTime = DateUtil.strToDate(purchaseVO.getArriveStartTimeStr(), null).getTime();
 					paramsMap.put("startTime", startTime);
 				}
-				if(StringHelper.isEmpty(purchaseVO.getArriveEndTimeStr())){//é»˜è®¤æ‰“å¼€åˆ—è¡¨
+				if(StringHelper.isEmpty(purchaseVO.getArriveEndTimeStr())){//Ä¬ÈÏ´ò¿ªÁĞ±í
 					paramsMap.put("endTime", dateUtilEndTime);
 				}else{
 					endTime = DateUtil.strToDate(purchaseVO.getArriveEndTimeStr(), null).getTime();
@@ -536,20 +480,20 @@ public class PurchaseAOImpl implements PurchaseAO {
 	}
 
 	/**
-	 * @description: æŸ¥è¯¢è®¢å•åˆ—è¡¨
+	 * @description: ²éÑ¯¶©µ¥ÁĞ±í
 	 * @param purchaseVO
 	 * @param pageParam
 	 * @return
-	 * @author:POPäº§å“ç ”å‘éƒ¨ å®å¼º
-	 * @createTime:2017å¹´6æœˆ13æ—¥ ä¸‹åˆ12:53:21
+	 * @author:POP²úÆ·ÑĞ·¢²¿ ÄşÇ¿
+	 * @createTime:2017Äê6ÔÂ13ÈÕ ÏÂÎç12:53:21
 	 */
 	@Override
 	public Pagination<PurchaseVO> getPurchase(Map<String, Object> resultMap,PurchaseVO purchaseVO,
 			PageParam pageParam) {
 		Boolean isCharged = purchaseVO.getOrderResult() != null && purchaseVO.getOrderResult() == OrderStateEnum.CHARGED.getValue();
 		Map<String, Object> paramsMap = getMapByPojo(purchaseVO,isCharged);
-		int totalRecord = purchaseDAO.countPurchase(paramsMap);//ä»Šå¤©çš„è®¢å•æ•°é‡
-		//è®¾ç½®æ€»è®°å½•æ•°å’Œé¡µé¢å‚æ•°å’ŒæŸ¥è¯¢å‚æ•°
+		int totalRecord = purchaseDAO.countPurchase(paramsMap);//½ñÌìµÄ¶©µ¥ÊıÁ¿
+		//ÉèÖÃ×Ü¼ÇÂ¼ÊıºÍÒ³Ãæ²ÎÊıºÍ²éÑ¯²ÎÊı
 		totalRecord = resetTotalRecord(purchaseVO,paramsMap,isCharged,totalRecord);
 		
 		int pageSize = pageParam.getPageSize();
@@ -558,20 +502,20 @@ public class PurchaseAOImpl implements PurchaseAO {
 		paramsMap.put("end", pageSize);
 		
 		List<PurchaseVO> records = purchaseDAO.getPurchase(paramsMap);
-		//éå†æ¯ä¸€ä¸ªè®¢å•ï¼ŒæŸ¥çœ‹å®ƒçš„è®¢å•çŠ¶æ€
-		for (PurchaseVO purchaseVO2 : records) {//æ ¼å¼åŒ–å±•ç¤ºæ—¶é—´
+		//±éÀúÃ¿Ò»¸ö¶©µ¥£¬²é¿´ËüµÄ¶©µ¥×´Ì¬
+		for (PurchaseVO purchaseVO2 : records) {//¸ñÊ½»¯Õ¹Ê¾Ê±¼ä
 //					ExchangePlatformPo purchaseEp = purchaseVO2.getEp();
 //					
 //					OrderStateBase orderStatePage = OrderStateFactory.getOrderStateBase(purchaseEp.getEpName());
 //					
 //					OrderStateResultPage osrp = orderStatePage.getOrderState(new OrderStateParamsPage(purchaseEp.getPgdataCheckIp(), purchaseVO2.getOrderIdApi(), purchaseEp.getEpName(), purchaseEp.getEpUserName(), purchaseEp.getEpApikey()));
-//					//æ›´æ–°åŠ è½½çš„è®¢å•çŠ¶æ€ä¿¡æ¯
-//					//åˆ¤æ–­æ˜¯å¦ä¸æ•°æ®åº“ä¸­çš„æ•°æ®ç›¸ç­‰,å¦‚æœä¸ç›¸ç­‰ï¼Œå°±æ›´æ–°é¡µé¢å’Œæ•°æ®åº“ä¿¡æ¯
+//					//¸üĞÂ¼ÓÔØµÄ¶©µ¥×´Ì¬ĞÅÏ¢
+//					//ÅĞ¶ÏÊÇ·ñÓëÊı¾İ¿âÖĞµÄÊı¾İÏàµÈ,Èç¹û²»ÏàµÈ£¬¾Í¸üĞÂÒ³ÃæºÍÊı¾İ¿âĞÅÏ¢
 //					PageOrder pageOrder = osrp.getPageOrder();
-//					//å¦‚æœå¤±è´¥ï¼ŒæŠŠç­‰å¾…çŠ¶æ€è½¬æ¢æˆæœªå……çŠ¶æ€
+//					//Èç¹ûÊ§°Ü£¬°ÑµÈ´ı×´Ì¬×ª»»³ÉÎ´³ä×´Ì¬
 //					pageOrder.setStatus(ChargeFacadeImpl.getStatusByStatus(pageOrder.getStatus())); 
 //					
-//					//æ›´æ–°æŸ¥çœ‹è®¢å•çŠ¶æ€
+//					//¸üĞÂ²é¿´¶©µ¥×´Ì¬
 //					checkOrderState(pageOrder, purchaseVO2);
 			if(purchaseVO2.getOrderBackTime() != null)
 			{
@@ -581,12 +525,12 @@ public class PurchaseAOImpl implements PurchaseAO {
 				purchaseVO2.setOrderArriveTimeStr(DateUtil.formatAll(purchaseVO2.getOrderArriveTime()));
 			}
 		}
-		resultMap.put("searchParams", purchaseVO);	//æŸ¥è¯¢å‚æ•°æ”¾å…¥è¿”å›å‚æ•°
+		resultMap.put("searchParams", purchaseVO);	//²éÑ¯²ÎÊı·ÅÈë·µ»Ø²ÎÊı
 		return new Pagination<PurchaseVO>(records, totalRecord, pageNo, pageSize);
 	}
 
 	
-	/** è®¾ç½®æ€»è®°å½•æ•°å’Œé¡µé¢å‚æ•°å’ŒæŸ¥è¯¢å‚æ•°
+	/** ÉèÖÃ×Ü¼ÇÂ¼ÊıºÍÒ³Ãæ²ÎÊıºÍ²éÑ¯²ÎÊı
 	 * @param purchaseVO
 	 * @param paramsMap
 	 * @param isCharged
@@ -595,7 +539,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 	 */
 	private int resetTotalRecord(PurchaseVO purchaseVO,
 			Map<String, Object> paramsMap, Boolean isCharged, int totalRecord) {
-		//åœ¨æ²¡æœ‰è®°å½•çš„æƒ…å†µä¸‹é‡ç½®æŸ¥è¯¢æ¡ä»¶å’ŒæŸ¥è¯¢å‚æ•°
+		//ÔÚÃ»ÓĞ¼ÇÂ¼µÄÇé¿öÏÂÖØÖÃ²éÑ¯Ìõ¼şºÍ²éÑ¯²ÎÊı
 		if(totalRecord == 0){
 			Long currentTime = System.currentTimeMillis();
 			if(isCharged){
@@ -606,7 +550,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 					purchaseVO.setBackEndTimeStr(DateUtil.formatAll(currentTime));
 					paramsMap.put("endTimeBack", currentTime);
 				}
-			}else{//å…¶ä»–åˆ—è¡¨
+			}else{//ÆäËûÁĞ±í
 				if(StringHelper.isEmpty(purchaseVO.getArriveStartTimeStr())){
 					paramsMap.put("startTime",null);
 				}
@@ -615,33 +559,23 @@ public class PurchaseAOImpl implements PurchaseAO {
 					purchaseVO.setArriveEndTimeStr(DateUtil.formatAll(currentTime));
 				}
 			}
-			totalRecord = purchaseDAO.countPurchase(paramsMap);//é‡ç½®è®¢å•æ•°é‡
-		}else{//æœ‰è®°å½•æ¡ä»¶ä¸‹ï¼Œè®¾ç½®é¡µé¢å‚æ•°
+			totalRecord = purchaseDAO.countPurchase(paramsMap);//ÖØÖÃ¶©µ¥ÊıÁ¿
+		}else{//ÓĞ¼ÇÂ¼Ìõ¼şÏÂ£¬ÉèÖÃÒ³Ãæ²ÎÊı
 			Long dateUtilStartTime = null;
 			Long dateUtilEndTime = null;
 			if(isCharged){
-				if(purchaseVO.getBackStartTimeStr() == null){
+				if(StringHelper.isEmpty(purchaseVO.getBackStartTimeStr())){
 					dateUtilStartTime = Long.parseLong(paramsMap.get("startTimeBack").toString());
 					purchaseVO.setBackStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
-				}else if("".equals(purchaseVO.getBackStartTimeStr().trim())){
-					//ä¸ºç©ºæˆ–è€…å€¼é‡æ–°è®¾ç½®	
-					paramsMap.put("startTimeBack", null);
-					totalRecord = purchaseDAO.countPurchase(paramsMap);
 				}
 				if(StringHelper.isEmpty(purchaseVO.getBackEndTimeStr())){
 					dateUtilEndTime = Long.parseLong(paramsMap.get("endTimeBack").toString());
 					purchaseVO.setBackEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
 				}
 			}else{
-				if(purchaseVO.getArriveStartTimeStr() == null){
+				if(StringHelper.isEmpty(purchaseVO.getArriveStartTimeStr())){
 					dateUtilStartTime = Long.parseLong(paramsMap.get("startTime").toString());
 					purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
-				}else{
-					//ä¸ºç©ºæˆ–è€…å€¼é‡æ–°è®¾ç½®
-					if("".equals(purchaseVO.getArriveStartTimeStr().trim())){
-						paramsMap.put("startTime", null);
-						totalRecord = purchaseDAO.countPurchase(paramsMap);
-					}
 				}
 				if(StringHelper.isEmpty(purchaseVO.getArriveEndTimeStr())){
 					dateUtilEndTime = Long.parseLong(paramsMap.get("endTime").toString());
@@ -652,9 +586,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 		return totalRecord;
 	}
 
-	/** åˆå§‹åŒ–é¡µé¢æŸ¥è¯¢å‚æ•°
-	 * @param purchaseVO åˆå§‹åŒ–å¯¹è±¡
-	 * @param paramsMap åˆå§‹åŒ–æ•°æ®æº
+	/** ³õÊ¼»¯Ò³Ãæ²éÑ¯²ÎÊı
+	 * @param purchaseVO ³õÊ¼»¯¶ÔÏó
+	 * @param paramsMap ³õÊ¼»¯Êı¾İÔ´
 	 */
 //	private void initVO(PurchaseVO purchaseVO, Map<String, Object> paramsMap) {
 //		Boolean isChargedList =  purchaseVO.getOrderResult() != null && purchaseVO.getOrderResult() == OrderStateEnum.CHARGED.getValue();
@@ -682,11 +616,11 @@ public class PurchaseAOImpl implements PurchaseAO {
 //	}
 
 	/**
-	 * @description: é€šè¿‡å¾®æ—apiå……å€¼
+	 * @description: Í¨¹ıÎ¢×åapi³äÖµ
 	 * @param paramsEntity
 	 * @return
-	 * @author:POPäº§å“ç ”å‘éƒ¨ å®å¼º
-	 * @createTime:2017å¹´6æœˆ17æ—¥ ä¸Šåˆ11:23:33
+	 * @author:POP²úÆ·ÑĞ·¢²¿ ÄşÇ¿
+	 * @createTime:2017Äê6ÔÂ17ÈÕ ÉÏÎç11:23:33
 	 */
 	@Override
 	public OrderStateResult purchaseByWeizuAPI(ParamsEntityWeiZu paramsEntity) {
@@ -696,12 +630,12 @@ public class PurchaseAOImpl implements PurchaseAO {
 		return osr;
 	}
 	/**
-	 * @description:   æ›´æ–°æŸ¥çœ‹è®¢å•çŠ¶æ€
+	 * @description:   ¸üĞÂ²é¿´¶©µ¥×´Ì¬
 	 * @param pageOrder
 	 * @param purchaseVO
 	 * @return
-	 * @author:POPäº§å“ç ”å‘éƒ¨ å®å¼º
-	 * @createTime:2017å¹´6æœˆ26æ—¥ ä¸‹åˆ12:57:18
+	 * @author:POP²úÆ·ÑĞ·¢²¿ ÄşÇ¿
+	 * @createTime:2017Äê6ÔÂ26ÈÕ ÏÂÎç12:57:18
 	 */
 //	@Override
 //	public int checkOrderState(PageOrder pageOrder, PurchaseVO purchaseVO) {
@@ -709,7 +643,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 //		if(purchaseVO.getOrderResult() != pageOrder.getStatus())
 //		{
 //			purchaseVO.setOrderResult(pageOrder.getStatus());
-//			//å¦‚æœè¿‡
+//			//Èç¹û¹ı
 //			if(StringHelper.isEmpty(pageOrder.getMsg())){
 //				for (OrderStateEnum enumt : OrderStateEnum.values()) {
 //					if(pageOrder.getStatus() == enumt.getValue())
@@ -729,11 +663,11 @@ public class PurchaseAOImpl implements PurchaseAO {
 //	}
 
 	/**
-	 * @description: é€šè¿‡è®¢å•IdæŸ¥è¯¢è®¢å•
+	 * @description: Í¨¹ı¶©µ¥Id²éÑ¯¶©µ¥
 	 * @param orderId
 	 * @return
-	 * @author:POPäº§å“ç ”å‘éƒ¨ å®å¼º
-	 * @createTime:2017å¹´6æœˆ26æ—¥ ä¸‹åˆ1:05:03
+	 * @author:POP²úÆ·ÑĞ·¢²¿ ÄşÇ¿
+	 * @createTime:2017Äê6ÔÂ26ÈÕ ÏÂÎç1:05:03
 	 */
 	@Override
 	public PurchasePo getOnePurchase(long orderId) {
