@@ -1,5 +1,6 @@
 package com.weizu.flowsys.web.trade.pojo;
 
+import com.weizu.flowsys.web.channel.pojo.ChannelForwardPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 
 /**
@@ -10,7 +11,7 @@ import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
  * @createTime:2017年6月13日 下午12:16:36
  * @version 1.0
  */
-public class PurchaseVO {
+public class PurchaseVO implements Cloneable {
 	
     private Long orderId;						//订单号
     
@@ -53,21 +54,57 @@ public class PurchaseVO {
 
     private Integer orderPlatformPath;			//充值方式(0-接口，1-本平台)
     
-    private Integer orderResult;				//结果（enum:）
-
     private String channelName;					//通道名称
     
     private Long channelId;					//通道ID
 
-    private String orderResultDetail;			//结果描述
+    private Integer orderResult;				//结果（管理员enum:）
+
+    private String orderResultDetail;			//结果描述:管理员
     
     private Double orderAmount;					//扣款
+    
+    private Integer orderState;					//结果（enum:）
+    
+    private Integer orderStateDetail;			//结果描述
     
     private ExchangePlatformPo ep;				//平台信息
     
     private Integer billType;					//票务
     
-    public String getBackEndTimeStr() {
+    @Override
+	public PurchaseVO clone() {
+    	PurchaseVO pvo = null;
+    	try{  
+    		pvo = (PurchaseVO)super.clone();  
+        }catch(CloneNotSupportedException e) {  
+            e.printStackTrace();  
+        }  
+		return pvo;
+	}
+    
+	public Integer getOrderState() {
+		return orderState;
+	}
+	public void setOrderState(Integer orderState) {
+		this.orderState = orderState;
+	}
+
+	public Integer getOrderStateDetail() {
+		return orderStateDetail;
+	}
+
+	public void setOrderStateDetail(Integer orderStateDetail) {
+		this.orderStateDetail = orderStateDetail;
+	}
+
+
+
+	public void setPgPrice(Double pgPrice) {
+		this.pgPrice = pgPrice;
+	}
+
+	public String getBackEndTimeStr() {
 		return backEndTimeStr;
 	}
 
@@ -147,7 +184,7 @@ public class PurchaseVO {
 		this.pgSize = pgSize;
 	}
 
-	public double getPgPrice() {
+	public Double getPgPrice() {
 		return pgPrice;
 	}
 

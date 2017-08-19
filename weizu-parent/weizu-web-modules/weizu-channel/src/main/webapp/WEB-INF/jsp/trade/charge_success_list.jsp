@@ -88,23 +88,23 @@
 				<tr class="text-c">
 					<!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
 					<!-- <th width="80">流量包Id</th> -->
-					<th width="80px">所属代理商</th>
-					<th width="200px">订单号</th>
-					<th width="120px">手机号</th>
-					<th width="80px">流量大小</th>
-					<th width="70px">面值</th>
-					<th width="100px">提交时间</th>
-					<th width="100px">充值时间</th>
-					<th width="100px">号码归属</th>
-					<th width="60px">城市</th>
-					<th width="60px">充值方式</th>
-					<th width="80px">结果</th>
-					<th width="80px">结果描述</th>
-					<th width="60px">扣款</th>
+					<th width="100">所属代理商</th>
+					<th width="130">订单号</th>
+					<th width="120">手机号</th>
+					<th width="80">流量大小</th>
+					<th width="70">面值</th>
+					<th width="140">提交时间</th>
+					<th width="140">充值时间</th>
+					<th width="100">号码归属</th>
+					<th width="60">城市</th>
+					<th width="60">充值方式</th>
+					<th width="80">结果</th>
+					<th width="80">结果描述</th>
+					<th width="60">扣款</th>
 					<c:if test="${loginContext.rootAgencyId == 0 }">
-						<th width="120px">通道名称</th>
+						<th width="120">通道名称</th>
 					</c:if>
-					<th width="120px">通道类型</th>
+					<th width="60">通道类型</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -150,6 +150,15 @@
 						</td>
 					</tr>
 				</c:forEach>
+				<tr class="c-success">
+					<td class="text-r c-success" >总单数</td>
+					<td  class="text-l c-warning"></td>
+					<td  class="text-r c-success">总面值</td>
+					<td colspan="2" class="text-l c-warning">1000</td>
+					<td  class="text-r c-success">扣款</td>
+					<td colspan="2"  class="text-l c-warning"></td>
+					<td colspan="6"></td>
+				</tr>
 			</tbody>
 		</table>
 		<mytag:Pagination pagination="${resultMap.pagination}" queryForm="dataListForm" divId="purchaseId" />  

@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,7 @@ import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
+import com.weizu.flowsys.util.ClassUtil;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
@@ -47,7 +49,6 @@ import com.weizu.flowsys.web.trade.dao.AgencyPurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 import com.weizu.flowsys.web.trade.url.ChargePgURL;
-import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
 
 /**
@@ -84,9 +85,9 @@ public class ChargePgController {
 	@RequestMapping(value = ChargePgURL.PG_CHARGE)
 	public ModelAndView pgCharge(HttpServletRequest request,PgChargeVO pcVO){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
 		if(agencyVO != null){
 			pcVO.setAgencyId(agencyVO.getId());
+			pcVO.setFromAgencyName(agencyVO.getUserName());
 //			purchasePo.setOrderArriveTime(System.currentTimeMillis());
 //			ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
 //			if(purchasePo.getBillType()==BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())
@@ -99,18 +100,9 @@ public class ChargePgController {
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 			String pageMsg = "";
 			String referURL = "";
-			if(pcVO.getOrderAmount() > accountPo.getAccountBalance()){//订单价格大于余额
-				pageMsg = "余额不足，充值失败";
-//				resultMap.put("referURL", "/flowsys/chargePg/purchase_list.do?orderResult=2");
-			}
-			Integer purResult = purchaseAO.purchase(pcVO);
-			if(purResult == OrderResultEnum.SUCCESS.getCode())
-			{
-				pageMsg = "success";
-				referURL = "/flowsys/chargePg/purchase_list.do?orderResult=2";
-			}else{//重新选择通道充值
-				pageMsg = "系统错误，充值失败";
-			}
+			
+			pageMsg = purchaseAO.purchase(pcVO, agencyVO.getId());
+			referURL = "/flowsys/chargePg/purchase_list.do?orderResult=2";
 			resultMap.put("referURL", referURL);
 			resultMap.put("pageMsg", pageMsg);
 			return new ModelAndView("/trade/charge_result_page", "resultMap", resultMap);
@@ -346,11 +338,14 @@ public class ChargePgController {
 	 * @param pageNo
 	 * @return
 	 * @author:POP产品研发部 宁强
+	 * @throws CloneNotSupportedException 
 	 * @createTime:2017年6月13日 下午1:20:59
 	 */
+	@SuppressWarnings("restriction")
 	@RequestMapping(value = ChargePgURL.PURCHASE_LIST)
 	public ModelAndView purchaseList(HttpServletRequest request, PurchaseVO purchaseVO, @RequestParam(value="pageNo",required=false)String pageNo){
-		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		HttpSession httpSession = request.getSession();
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)httpSession.getAttribute("loginContext");
 		if(agencyVO != null){
 			purchaseVO.setRootAgencyId(agencyVO.getId());//设置为当前登陆用户的订单
 		}
@@ -378,6 +373,28 @@ public class ChargePgController {
 				model = new ModelAndView("/trade/charge_failure_list", "resultMap", resultMap);
 				break;
 			case 1://充值成功
+				int callTag = 0; 
+				if(httpSession.getAttribute("lastSearch") == null){
+					httpSession.setAttribute("lastSearch", purchaseVO);
+					//没有搜索过，就可以统计一遍
+					callTag = 1;
+				}else{
+					PurchaseVO pvo = (PurchaseVO)httpSession.getAttribute("lastSearch");
+					PurchaseVO pvoC = pvo.clone();
+					PurchaseVO sample = purchaseVO.clone();
+					ignoreEndTime(pvoC,sample);
+					if(!ClassUtil.contrastObj(pvoC, sample)){
+						callTag = 1;
+						//查询参数不相等，就把新的purhcaeVO放到lastSearch中
+						httpSession.setAttribute("lastSearch", purchaseVO);
+					}
+				}
+				
+				if(callTag == 1){
+					System.out.println(callTag +"-开始统计");
+				}
+				
+				
 				model = new ModelAndView("/trade/charge_success_list", "resultMap", resultMap);
 				break;
 			case 2://充值进行
@@ -394,6 +411,26 @@ public class ChargePgController {
 		return model;
 	}
 	
+	/**
+	 * @description: 让两个对象忽略结束时间进行比较
+	 * @param pvo
+	 * @param purchaseVO
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月18日 上午11:21:22
+	 */
+	private void ignoreEndTime(PurchaseVO pvo, PurchaseVO sample) {
+		String sampleEndTimeStr = sample.getBackEndTimeStr().trim();
+		String pvoEndTimeStr = pvo.getBackEndTimeStr().trim();
+		if(!sampleEndTimeStr.equals(pvoEndTimeStr)){
+			String sampleTagTime = sampleEndTimeStr.substring(0, sampleEndTimeStr.indexOf(" "));
+			String pvoTagTime = pvoEndTimeStr.substring(0, pvoEndTimeStr.indexOf(" "));
+			if(sampleTagTime.equals(pvoTagTime)){
+				sample.setBackEndTimeStr(sampleTagTime);
+				pvo.setBackEndTimeStr(sampleTagTime);
+			}
+		}
+	}
+
 	/**
 	 * @description: 推送订单状态
 	 * @param orderId

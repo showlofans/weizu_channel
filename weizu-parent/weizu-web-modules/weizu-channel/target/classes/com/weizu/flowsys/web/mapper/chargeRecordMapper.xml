@@ -20,11 +20,12 @@
     <result column="account_type" jdbcType="INTEGER" property="accountType" />
     <result column="account_id" jdbcType="INTEGER" property="accountId" />
     <result column="agency_id" jdbcType="INTEGER" property="agencyId" />
+    <result column="purchase_id" jdbcType="BIGINT" property="purchaseId" />
     <result column="charge_for" jdbcType="INTEGER" property="chargeFor" />
   </resultMap>
   <sql id="Base_Column_List">
     id, remittance_time, recharge_amount, charge_before, charge_after, bill_type, account_type, 
-    account_id, agency_id, charge_for
+    account_id, agency_id,purchase_id, charge_for
   </sql>
   
    <resultMap id="OtherMap" type="com.weizu.flowsys.web.agency.pojo.ChargeRecordPo">
@@ -37,13 +38,14 @@
     <result column="account_type" jdbcType="INTEGER" property="accountType" />
     <result column="account_id" jdbcType="INTEGER" property="accountId" />
     <result column="agency_id" jdbcType="INTEGER" property="agencyId" />
+    <result column="purchase_id" jdbcType="BIGINT" property="purchaseId" />
     <result column="charge_for" jdbcType="INTEGER" property="chargeFor" />
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="user_real_name" jdbcType="VARCHAR" property="userRealName" />
   </resultMap>
   <sql id="other_Column_List">
     record.id, remittance_time, recharge_amount, charge_before, charge_after, bill_type, account_type, 
-    account_id, agency_id, charge_for, user_name, user_real_name
+    account_id, agency_id, purchase_id, charge_for, user_name, user_real_name
   </sql>
   
   <!-- 消费记录 -->
@@ -58,12 +60,12 @@
     <result column="account_id" jdbcType="INTEGER" property="accountId" />
     <result column="agency_id" jdbcType="INTEGER" property="agencyId" />
     <result column="charge_for" jdbcType="INTEGER" property="chargeFor" />
+    <result column="purchase_id" jdbcType="BIGINT" property="purchaseId" />
     <result column="user_name" property="userName" />
-    <result column="order_id" jdbcType="BIGINT" property="orderId" />
     <result column="charge_tel" property="chargeTel" />
   </resultMap>
   <sql id="Consume_Column_List">
-    crt.*,pc.order_id,pc.charge_tel,agb.user_name
+    crt.*,pc.charge_tel,agb.user_name
   </sql>
   
   
@@ -126,10 +128,8 @@
   <select id="countConsume" parameterType="map" resultType="int">	
   	select count(*) 
   	from <include refid="t_record"></include> crt
-  	inner join <include refid="t_ap"></include> ap
-  	on crt.id = ap.record_id
   	inner join <include refid="t_purchase"></include> pc
-  	on pc.order_id = ap.purchase_id
+  	on pc.order_id = crt.purchase_id
 	INNER join <include refid="t_agency"></include> agb
 	on crt.agency_id = agb.id
 	<where>
@@ -139,10 +139,8 @@
   <select id="getConsume" parameterType="map" resultMap="ConsumeRecordMap">	
   	select <include refid="Consume_Column_List"></include>
   	from <include refid="t_record"></include> crt
-  	inner join <include refid="t_ap"></include> ap
-  	on crt.id = ap.record_id
   	inner join <include refid="t_purchase"></include> pc
-  	on pc.order_id = ap.purchase_id
+  	on pc.order_id = crt.purchase_id
 	INNER join <include refid="t_agency"></include> agb
 	on crt.agency_id = agb.id
 	<where>

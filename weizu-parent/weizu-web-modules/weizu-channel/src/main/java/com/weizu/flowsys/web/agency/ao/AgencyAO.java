@@ -105,6 +105,16 @@ public interface AgencyAO {
 	AgencyBackwardPo getAgencyById(String id);
 	
 	/**
+	 * @description: 获得父级代理商的实体
+	 * @param id
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月19日 下午4:34:17
+	 */
+	AgencyBackwardPo getRootAgencyById(Integer id);
+	
+	
+	/**
 	 * @description: 查询是否id属于二级代理商以下(限制登陆用户权限)
 	 * @param agencyId
 	 * @return 1，属于

@@ -26,24 +26,34 @@ public class PgChargeVO {
 	
 	private Integer serviceType;			//业务类型 
 	
+	private String fromAgencyName;		//提单来源代理名称
+	
+	private Integer agencyId;				//提单来源代理id
+	
 	private Long rateId;					//费率id
 	
-	private Integer agencyId;				//当前登录用户id
-	
-	public Long getRateId() {
-		return rateId;
-	}
-
-	public void setRateId(Long rateId) {
-		this.rateId = rateId;
-	}
-
 	public Integer getAgencyId() {
 		return agencyId;
 	}
 
 	public void setAgencyId(Integer agencyId) {
 		this.agencyId = agencyId;
+	}
+
+	public String getFromAgencyName() {
+		return fromAgencyName;
+	}
+
+	public void setFromAgencyName(String fromAgencyName) {
+		this.fromAgencyName = fromAgencyName;
+	}
+
+	public Long getRateId() {
+		return rateId;
+	}
+
+	public void setRateId(Long rateId) {
+		this.rateId = rateId;
 	}
 
 	public Long getChannelId() {

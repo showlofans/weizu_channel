@@ -89,23 +89,25 @@
 					<!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
 					<!-- <th width="80">流量包Id</th> -->
 					<th width="80">所属代理商</th>
-					<th width="200">订单号</th>
+					<th width="130">订单号</th>
 					<th width="120">手机号</th>
 					<th width="80">流量大小</th>
 					<th width="70">面值</th>
-					<th width="100">提交时间</th>
-					<th width="100">充值时间</th>
+					<th width="200">提交时间</th>
+					<th width="200">充值时间</th>
 					<th width="100">号码归属</th>
 					<th width="60">城市</th>
 					<th width="60">充值方式</th>
-					<th>操作</th>
+					<c:if test="${loginContext.rootAgencyId == 0 }">
+						<th>操作</th>
+					</c:if>
 					<th width="80">结果</th>
 					<th width="80">结果描述</th>
 					<th width="60">扣款</th>
 					<c:if test="${loginContext.rootAgencyId == 0 }">
 						<th width="120">通道名称</th>
 					</c:if>
-					<th width="120">通道类型</th>
+					<th width="60">扣款类型</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -129,6 +131,7 @@
 							</c:if>
 						</c:forEach>
 						</td>
+						<c:if test="${loginContext.rootAgencyId == 0 }">
 						<td class="f-14 td-manage">
 							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeState(this,'1')" href="javascript:;" title="成功">
 								<input type="hidden" value="${purchase.orderId }" >
@@ -139,6 +142,7 @@
 								<i class="Hui-iconfont">&#xe6e5;</i>
 							</a> 
 						</td>
+						</c:if>
 						<!-- 结果 -->
 						<td>
 						<c:forEach items="${resultMap.orderStateEnums }" var="orderStateEnum" varStatus="vs">

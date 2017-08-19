@@ -26,63 +26,89 @@ public class AgencyPurchasePo extends Po{
 
     private Integer billType;
 
-    private Long recordId;
+//    private Long recordId;
     
-    private Integer orderResult;		//	订单状态
-    
-    private String orderResultDetail;	//状态描述
+//    
+    private Double orderPrice;		//	订单扣款
+//    
+    private String fromAgencyName;	//订单来源代理商名称
     
     private Integer orderPlatformPath;			//充值方式(0-网页，1-接口)
     
-    private Long orderBackTime;			//订单返回结果
-    @TempField
-    private String orderBackTimeStr;	//订单返回时间
+    private Integer orderState;		////订单返回结果
+    
+    private String orderStateDetail;	//订单返回结果详情
+    
+//    private Long orderBackTime;			//订单返回结果
+//    @TempField
+//    private String orderBackTimeStr;	//订单返回时间
 
 	public AgencyPurchasePo(Integer agencyId, Long purchaseId,
 			Long rateDiscountId, Double orderAmount, Integer billType,
-			Long recordId, Integer orderResult, String orderResultDetail,
-			Integer orderPlatformPath) {
+			Double orderPrice, String fromAgencyName, Integer orderPlatformPath,Integer orderState) {
 		super();
 		this.agencyId = agencyId;
 		this.purchaseId = purchaseId;
 		this.rateDiscountId = rateDiscountId;
 		this.orderAmount = orderAmount;
 		this.billType = billType;
-		this.recordId = recordId;
-		this.orderResult = orderResult;
-		this.orderResultDetail = orderResultDetail;
+		this.orderPrice = orderPrice;
+		this.fromAgencyName = fromAgencyName;
 		this.orderPlatformPath = orderPlatformPath;
+		this.orderState = orderState;
 	}
 
-	public String getOrderBackTimeStr() {
-		return orderBackTimeStr;
+	public Double getOrderPrice() {
+		return orderPrice;
 	}
 
-
-
-	public void setOrderBackTimeStr(String orderBackTimeStr) {
-		this.orderBackTimeStr = orderBackTimeStr;
+	public void setOrderPrice(Double orderPrice) {
+		this.orderPrice = orderPrice;
 	}
 
-
-
-	public Long getOrderBackTime() {
-		return orderBackTime;
+	public String getFromAgencyName() {
+		return fromAgencyName;
 	}
 
-	public void setOrderBackTime(Long orderBackTime) {
-		this.orderBackTime = orderBackTime;
+	public void setFromAgencyName(String fromAgencyName) {
+		this.fromAgencyName = fromAgencyName;
+	}
+	
+	
+
+//	public String getOrderBackTimeStr() {
+//		return orderBackTimeStr;
+//	}
+//
+//	public void setOrderBackTimeStr(String orderBackTimeStr) {
+//		this.orderBackTimeStr = orderBackTimeStr;
+//	}
+//
+//
+//
+//	public Long getOrderBackTime() {
+//		return orderBackTime;
+//	}
+//
+//	public void setOrderBackTime(Long orderBackTime) {
+//		this.orderBackTime = orderBackTime;
+//	}
+
+	public Integer getOrderState() {
+		return orderState;
 	}
 
-	public String getOrderResultDetail() {
-		return orderResultDetail;
+	public void setOrderState(Integer orderState) {
+		this.orderState = orderState;
 	}
 
-	public void setOrderResultDetail(String orderResultDetail) {
-		this.orderResultDetail = orderResultDetail;
+	public String getOrderStateDetail() {
+		return orderStateDetail;
 	}
 
-
+	public void setOrderStateDetail(String orderStateDetail) {
+		this.orderStateDetail = orderStateDetail;
+	}
 
 	public AgencyPurchasePo() {
 		super();
@@ -95,15 +121,6 @@ public class AgencyPurchasePo extends Po{
 
 	public void setOrderPlatformPath(Integer orderPlatformPath) {
 		this.orderPlatformPath = orderPlatformPath;
-	}
-
-
-	public Integer getOrderResult() {
-		return orderResult;
-	}
-
-	public void setOrderResult(Integer orderResult) {
-		this.orderResult = orderResult;
 	}
 
 
@@ -153,13 +170,5 @@ public class AgencyPurchasePo extends Po{
 
     public void setBillType(Integer billType) {
         this.billType = billType;
-    }
-
-    public Long getRecordId() {
-        return recordId;
-    }
-
-    public void setRecordId(Long recordId) {
-        this.recordId = recordId;
     }
 }

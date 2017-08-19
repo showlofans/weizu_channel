@@ -64,7 +64,7 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		chargeRecordDao.add(new ChargeRecordPo(System
 				.currentTimeMillis(), chargeAmount,
 				agencyBeforeBalance, NumberTool.sub(agencyBeforeBalance, chargeAmount), 
-				chargeRecordPo.getBillType(),AccountTypeEnum.DECREASE.getValue(), loginAccountPo.getId(), loginAccountPo.getAgencyId(),1));
+				chargeRecordPo.getBillType(),AccountTypeEnum.DECREASE.getValue(), loginAccountPo.getId(), loginAccountPo.getAgencyId(),1,null));
 		
 		/** 更新登录用户账户信息**/
 		loginAccountPo.addBalance(chargeAmount,-1);
@@ -85,7 +85,7 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		int resultMsg = chargeRecordDao.add(new ChargeRecordPo(System
 				.currentTimeMillis(), chargeAmount,
 				beforeBalance, NumberTool.add(beforeBalance, chargeAmount), 
-				chargeRecordPo.getBillType(),chargeRecordPo.getAccountType(), chargeAccountPo.getId(), chargeRecordPo.getAgencyId(),1));
+				chargeRecordPo.getBillType(),chargeRecordPo.getAccountType(), chargeAccountPo.getId(), chargeRecordPo.getAgencyId(),1,null));
 
 		/** 更新账户表的余额值 */
 		chargeAccountPo.addBalance(chargeAmount,0);

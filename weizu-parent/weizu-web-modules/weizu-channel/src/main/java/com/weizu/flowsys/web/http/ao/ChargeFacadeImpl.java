@@ -240,7 +240,7 @@ public class ChargeFacadeImpl implements ChargeFacade {
 					chargeRecordDao.add(new ChargeRecordPo(System
 							.currentTimeMillis(), orderAmount,
 							balance, NumberTool.sub(balance, orderAmount), 
-							BillTypeEnum.BUSINESS_INDIVIDUAL.getValue(),AccountTypeEnum.DECREASE.getValue(), chargeAccount.getId(), purchasePo.getAgencyId(),1));
+							BillTypeEnum.BUSINESS_INDIVIDUAL.getValue(),AccountTypeEnum.DECREASE.getValue(), chargeAccount.getId(), purchasePo.getAgencyId(),1,purchasePo.getOrderId()));
 					/*******************最优通道*******************/
 					String scopeCityCode = "";
 					for (Map<String, Object> cityMap : ScopeCityEnum.toList()) {
@@ -253,7 +253,7 @@ public class ChargeFacadeImpl implements ChargeFacade {
 					BestChannelPO bestChannel = channelForwardAO.getBestChannel(new OperatorScopeVO(scopeName, backPo.getId(), otype));
 					if(bestChannel  != null){//走了通道
 //						if()
-						purchasePo.setRecordId(nextIdRecord);
+//						purchasePo.setRecordId(nextIdRecord);
 						chargeDTO = doChannel( bestChannel, pgData, purchasePo, backPo, scopeCityCode, chargeTel, billType);
 					}
 				}

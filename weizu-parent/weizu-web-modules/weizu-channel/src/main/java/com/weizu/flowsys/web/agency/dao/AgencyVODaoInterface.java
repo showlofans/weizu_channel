@@ -132,5 +132,22 @@ public interface AgencyVODaoInterface extends Dao<AgencyBackwardPo, Integer> {
 	 * @return null
 	 */
 	AgencyBackwardPo getSecondAgency(String userName);
+	/**
+	 * @description: 查询是否属于二级代理商,通过页面传单的时候是否需要判断余额
+	 * @param agencyId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月19日 下午6:02:02
+	 */
+	AgencyBackwardPo getSecondAgency(Integer agencyId);
+	
+	/**
+	 * @description: 通过代理商id查询父级代理商实体
+	 * @param agencyId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月19日 下午4:44:38
+	 */
+	AgencyBackwardPo getRootAgencyById(int agencyId);
 	
 }

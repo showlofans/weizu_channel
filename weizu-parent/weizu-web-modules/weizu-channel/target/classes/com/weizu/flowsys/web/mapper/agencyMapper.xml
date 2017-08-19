@@ -29,6 +29,18 @@
     agency_id, root_agency_id, user_name, user_pass, user_real_name, agency_tel, other_contact, user_email, 
     agency_ip, rate_id, account_id
   </sql>
+  
+
+<!-- 查询父级代理商实体 -->
+<select id="getRootAgencyById" parameterType="int" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List"></include>
+	FROM <include refid="agency_backward"></include>
+	<where>
+		id = (SELECT root_agency_id from <include refid="agency_backward"></include>
+		 WHERE id= #{_parameter})
+	</where>
+</select>
+  
   <resultMap id="OtherMap" type="com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="root_agency_id" jdbcType="INTEGER" property="rootAgencyId" />
