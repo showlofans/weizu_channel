@@ -210,6 +210,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				if(purResult > 0){//订单添加好了,开始迭代添加父级代理商的账户扣款和消费记录
 					chargeRes = OrderResultEnum.SUCCESS.getCode();		//在全部上级都添加完了之后返回成功;
 					List<AgencyPurchasePo> apPoList = new LinkedList<AgencyPurchasePo>();
+					List<ChargeRecordPo> recordPoList = new LinkedList<ChargeRecordPo>();
 					
 					RateDiscountPo activeRatePo = null;		//父级费率对象
 					RateDiscountPo ratePo1 = ratePo;		//子级费率对象
@@ -257,9 +258,19 @@ public class PurchaseAOImpl implements PurchaseAO {
 								/** 向消费记录表插入登陆用户数据 */
 								Long nextIdRecord = chargeRecordDao.nextId();
 								Long currentTime = System.currentTimeMillis();
-								chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
-										agencyBeforeBalance, accountPo.getAccountBalance(), 
-										billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), agencyId,1, purchasePo.getOrderId()));
+								Double plusAmount = NumberTool.mul(ratePo1.getActiveDiscount(),pgPrice);
+								Double minusAmount = NumberTool.mul(activeRatePo.getActiveDiscount(),pgPrice);
+								recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), plusAmount,
+// 										agencyBeforeBalance, accountPo.getAccountBalance(), 
+// 										billType,AccountTypeEnum.Replenishment.getValue(), accountPo.getId(), agencyId,1, purchasePo.getOrderId()));
+												    
+// 								recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
+// 										agencyBeforeBalance, accountPo.getAccountBalance(), 
+// 										billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), agencyId,1, purchasePo.getOrderId()));	
+								
+// 								//chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
+// 										agencyBeforeBalance, accountPo.getAccountBalance(), 
+// 										billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), agencyId,1, purchasePo.getOrderId()));
 								int orderPath = OrderPathEnum.CHARGE_SOCKET.getValue();
 //							AgencyPurchasePo app = new AgencyPurchasePo(agencyId, purchasePo.getOrderId(), rateDiscountId, orderAmount, billType, nextIdRecord, orderResult,OrderStateEnum.CHARGING.getDesc(),orderPath);
 //							apPoList.add(app);
