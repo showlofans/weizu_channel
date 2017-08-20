@@ -216,6 +216,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 					RateDiscountPo ratePo1 = ratePo;		//子级费率对象
 					
 					AgencyBackwardPo rootAgencyPo = null;	//父级代理商实体
+					AgencyBackwardPo agencyPo = null;	//子级代理商实体
 					int contextAgencyId = agencyId ;		//子级代理商id
 					
 					//得到当前代理商和折扣的绑定实体，
@@ -229,6 +230,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 						//查询父级操作对象
 						activeRatePo = rateDiscountDao.get(ratePo1.getActiveId());		
 						rootAgencyPo = agencyVODao.getRootAgencyById(agencyId);
+						agencyPo = agencyVODao.get(agencyId);
+						String fromAgencyName = agencyPo.getUserName();
 						accountPo  = chargeAccountDao.selectByAgencyId(rootAgencyPo.getId(), activeRatePo.getBillType());//重置为父级代理商的账户（无论是对公和对私都是有的）
 						/**业务判断和添加**/
 						/**充值额（）*/
@@ -275,7 +278,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 // 										agencyBeforeBalance, accountPo.getAccountBalance(), 
 // 										billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), agencyId,1, purchasePo.getOrderId()));
 								int orderPath = OrderPathEnum.CHILD_WEB_PAGE.getValue();
-								AgencyPurchasePo app = new AgencyPurchasePo(ap_agency_id, orderId, activeRatePo, minusAmount, activeRatePo.getBillType(), orderAmount, pcVO.getFromAgencyName(), orderPath, orderResult);
+								AgencyPurchasePo app = new AgencyPurchasePo(ap_agency_id, orderId, activeRatePo.getId(), plusAmount, activeRatePo.getBillType(), minusAmount, fromAgencyName, orderPath, orderResult);
 								apPoList.add(app);
 							}
 //						}
