@@ -221,6 +221,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 					//得到当前代理商和折扣的绑定实体，
 					//然后根据父级得到父级折扣
 					int whileStop = 0;
+					Long orderId = purchasePo.getOrderId();
 					Double balance = 0d;//差额:父费率减去子费率乘以价格
 					while(ratePo1.getActiveId() != null){//没有找到第二级代理商，开始添加代理商和订单
 						
@@ -228,7 +229,6 @@ public class PurchaseAOImpl implements PurchaseAO {
 						//查询父级操作对象
 						activeRatePo = rateDiscountDao.get(ratePo1.getActiveId());		
 						rootAgencyPo = agencyVODao.getRootAgencyById(agencyId);
-						
 						accountPo  = chargeAccountDao.selectByAgencyId(rootAgencyPo.getId(), activeRatePo.getBillType());//重置为父级代理商的账户（无论是对公和对私都是有的）
 						/**业务判断和添加**/
 						/**充值额（）*/
@@ -260,20 +260,23 @@ public class PurchaseAOImpl implements PurchaseAO {
 								Long currentTime = System.currentTimeMillis();
 								Double plusAmount = NumberTool.mul(ratePo1.getActiveDiscount(),pgPrice);
 								Double minusAmount = NumberTool.mul(activeRatePo.getActiveDiscount(),pgPrice);
+								agencyAfterBalance = NumberTool.add(agencyBeforeBalance,plusAmount);
+								
 								recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), plusAmount,
-// 										agencyBeforeBalance, accountPo.getAccountBalance(), 
-// 										billType,AccountTypeEnum.Replenishment.getValue(), accountPo.getId(), agencyId,1, purchasePo.getOrderId()));
-												    
-// 								recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
-// 										agencyBeforeBalance, accountPo.getAccountBalance(), 
-// 										billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), agencyId,1, purchasePo.getOrderId()));	
+										agencyBeforeBalance, agencyAfterBalance, 
+ 										ratePo1.getBillType(),AccountTypeEnum.Replenishment.getValue(), accountPo.getId(), agencyId,1, orderId));
+								agencyBeforeBalance += plusAmount;	//重置充值前的余额为补款后的余额
+								agencyAfterBalance = NumberTool.sub(agencyBeforeBalance,minusAmount);
+								recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), minusAmount,
+										agencyBeforeBalance, agencyAfterBalance, 
+ 										activeRatePo.getBillType(),AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), agencyId,1, orderId));	
 								
 // 								//chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
 // 										agencyBeforeBalance, accountPo.getAccountBalance(), 
 // 										billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), agencyId,1, purchasePo.getOrderId()));
-								int orderPath = OrderPathEnum.CHARGE_SOCKET.getValue();
-//							AgencyPurchasePo app = new AgencyPurchasePo(agencyId, purchasePo.getOrderId(), rateDiscountId, orderAmount, billType, nextIdRecord, orderResult,OrderStateEnum.CHARGING.getDesc(),orderPath);
-//							apPoList.add(app);
+								int orderPath = OrderPathEnum.CHILD_WEB_PAGE.getValue();
+								AgencyPurchasePo app = new AgencyPurchasePo(ap_agency_id, orderId, activeRatePo, minusAmount, activeRatePo.getBillType(), orderAmount, pcVO.getFromAgencyName(), orderPath, orderResult);
+								apPoList.add(app);
 							}
 //						}
 						//最后再循环一次，保证欠费等待的单子父级代理商能够看到，但是不能扣父级代理商的款和消费记录
@@ -285,7 +288,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 							agencyId = rootAgencyPo.getId();
 					}
 					if(apPoList.size() > 0){
-						int batchAddApp = agencyPurchaseDao.ap_addList(apPoList);		//批量添加
+						int batchAddApp = agencyPurchaseDao.ap_addList(apPoList);		//批量添加连接信息
+						int batchAddCrt = chargeRecordDao.crt_addList(recordPoList);		//批量添加扣款记录信息
 						//
 						ChannelChannelPo channelPo = channelChannelDao.get(purchasePo.getChannelId());
 						if(channelPo != null){
