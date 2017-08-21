@@ -2,6 +2,7 @@ package crud.aotest;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,9 +14,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.core.util.NumberTool;
+import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.ao.ChargeRecordAO;
+import com.weizu.flowsys.web.agency.dao.ChargeAccountDaoInterface;
 import com.weizu.flowsys.web.agency.dao.ChargeRecordDaoInterface;
+import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
 
@@ -27,6 +32,8 @@ public class ChargeRecordAOTest {
 	private ChargeRecordAO chargeRecordAO;
 	@Resource
 	private ChargeRecordDaoInterface chargeRecordDao;
+	@Resource
+	private ChargeAccountDaoInterface chargeAccountDao;
 	
 //	 @Test
 //	 public void testListChargeRecord(){
@@ -76,6 +83,29 @@ public class ChargeRecordAOTest {
 ////			 System.out.println(po.getRemittanceTimeStr());
 //////			System.out.println("username:"+chargeRecordPo.getUserName());
 ////		}
+//	}
+	
+	/**
+	 * @description: 批量添加
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月21日 上午9:52:39
+	 */
+//	@Test
+//	public void testCrt_addList(){
+//		List<ChargeRecordPo> recordPoList = new LinkedList<ChargeRecordPo>();
+//		int accountId = 2;
+//		ChargeAccountPo accPo = chargeAccountDao.get(accountId);
+//		Double chargeBeforeBalance = accPo.getAccountBalance();
+//		int agencyId = accPo.getAgencyId();
+//		Double chargeAfterBalance = null;
+//		//给123的对私账户，为719330701316460544l这个订单号加上批量加上10笔记录
+//		for (int i = 0; i < 5; i++) {
+//			chargeAfterBalance = NumberTool.sub(chargeBeforeBalance,i);
+//			ChargeRecordPo crtPo = new ChargeRecordPo(System.currentTimeMillis(), i+0.0d, chargeBeforeBalance, chargeAfterBalance, accPo.getBillType(), AccountTypeEnum.DECREASE.getValue(), accountId, agencyId, 1, 719330701316460544l);
+//			recordPoList.add(crtPo);
+//		}
+//		int res = chargeRecordDao.crt_addList(recordPoList);
+//		System.out.println(res);
 //	}
 
 

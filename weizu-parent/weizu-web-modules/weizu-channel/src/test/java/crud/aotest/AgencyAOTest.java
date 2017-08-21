@@ -99,6 +99,11 @@ public class AgencyAOTest {
 //		boolean isExist = agencyAO.checkName("wang");
 //		System.out.println(isExist);
 //	}
+//	@Test
+//	public void testGetRootAgencyById(){
+//		AgencyBackwardPo agencyPo = agencyVODao.getRootAgencyById(21);
+//		System.out.println(agencyPo.getId()+":"+agencyPo.getUserName());
+//	}
 
 
 

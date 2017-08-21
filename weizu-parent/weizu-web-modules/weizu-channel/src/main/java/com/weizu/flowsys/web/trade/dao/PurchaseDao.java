@@ -7,6 +7,7 @@ import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseStateParams;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
+import com.weizu.flowsys.web.trade.pojo.TotalResult;
 
 /**
  * @description:订单管理
@@ -60,5 +61,14 @@ public interface PurchaseDao extends Dao<PurchasePo, Long> {
 	 * @createTime:2017年6月26日 下午12:08:31
 	 */
 	PurchasePo getOnePurchase(Long orderId);
+	
+	/**
+	 * @description: 查询统计信息
+	 * @param agencyId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月21日 下午5:24:33
+	 */
+	TotalResult getTotalResultFromSuccess(int agencyId);
 
 }

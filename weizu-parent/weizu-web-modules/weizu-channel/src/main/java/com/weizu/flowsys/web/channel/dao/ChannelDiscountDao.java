@@ -14,7 +14,7 @@ import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
  * @createTime:2017年7月4日 下午3:48:26
  * @version 1.0
  */
-public interface ChannelDiscountDao extends Dao<ChannelDiscountPo, Integer> {
+public interface ChannelDiscountDao extends Dao<ChannelDiscountPo, Long> {
 	/**
 	 * @description: 批量添加通道折扣
 	 * @param list

@@ -1,6 +1,5 @@
 package com.weizu.flowsys.web.trade.pojo;
 
-import com.weizu.flowsys.web.channel.pojo.ChannelForwardPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 
 /**
@@ -42,7 +41,7 @@ public class PurchaseVO implements Cloneable {
     
     private String backStartTimeStr;			//充值结束时间字符串
     
-    private Integer rootAgencyId;				//当前登陆id（外键）
+    private Integer agencyId;				//当前登陆id（外键）
 
     private Long orderBackTime;					//充值时间（本平台获得返回结果，或者返回给下游平台结果的时间戳）
     
@@ -62,11 +61,13 @@ public class PurchaseVO implements Cloneable {
 
     private String orderResultDetail;			//结果描述:管理员
     
-    private Double orderAmount;					//扣款
+    private Double orderAmount;					//成本
+    
+    private Double orderPrice;					//下级代理商扣款
     
     private Integer orderState;					//结果（enum:）
     
-    private Integer orderStateDetail;			//结果描述
+    private String orderStateDetail;			//结果描述
     
     private ExchangePlatformPo ep;				//平台信息
     
@@ -83,6 +84,22 @@ public class PurchaseVO implements Cloneable {
 		return pvo;
 	}
     
+	public Integer getAgencyId() {
+		return agencyId;
+	}
+
+	public void setAgencyId(Integer agencyId) {
+		this.agencyId = agencyId;
+	}
+
+	public Double getOrderPrice() {
+		return orderPrice;
+	}
+
+	public void setOrderPrice(Double orderPrice) {
+		this.orderPrice = orderPrice;
+	}
+
 	public Integer getOrderState() {
 		return orderState;
 	}
@@ -90,15 +107,13 @@ public class PurchaseVO implements Cloneable {
 		this.orderState = orderState;
 	}
 
-	public Integer getOrderStateDetail() {
+	public String getOrderStateDetail() {
 		return orderStateDetail;
 	}
 
-	public void setOrderStateDetail(Integer orderStateDetail) {
+	public void setOrderStateDetail(String orderStateDetail) {
 		this.orderStateDetail = orderStateDetail;
 	}
-
-
 
 	public void setPgPrice(Double pgPrice) {
 		this.pgPrice = pgPrice;
@@ -158,14 +173,6 @@ public class PurchaseVO implements Cloneable {
 
 	public void setOrderIdApi(String orderIdApi) {
 		this.orderIdApi = orderIdApi;
-	}
-
-	public Integer getRootAgencyId() {
-		return rootAgencyId;
-	}
-
-	public void setRootAgencyId(Integer rootAgencyId) {
-		this.rootAgencyId = rootAgencyId;
 	}
 
 	public Integer getOperatorType() {

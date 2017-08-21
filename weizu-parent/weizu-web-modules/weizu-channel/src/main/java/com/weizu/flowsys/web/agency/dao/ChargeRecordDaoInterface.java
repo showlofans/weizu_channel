@@ -44,5 +44,14 @@ public interface ChargeRecordDaoInterface extends Dao<ChargeRecordPo, Long> {
 	 * @createTime:2017年7月3日 下午5:11:01
 	 */
 	int countConsume(Map<String, Object> paramsMap);
+
+	/**
+	 * @description: 批量添加充值记录
+	 * @param recordPoList
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月21日 上午9:50:23
+	 */
+	int crt_addList(List<ChargeRecordPo> recordPoList);
 	
 }

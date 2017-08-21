@@ -13,7 +13,7 @@ import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 
 @Repository(value="channelDiscountDao")
-public class ChannelDiscountDaoImpl extends DaoImpl<ChannelDiscountPo, Integer> implements
+public class ChannelDiscountDaoImpl extends DaoImpl<ChannelDiscountPo, Long> implements
 		ChannelDiscountDao {
 	@Resource
 	private SqlSessionTemplate sqlSessionTemplate;

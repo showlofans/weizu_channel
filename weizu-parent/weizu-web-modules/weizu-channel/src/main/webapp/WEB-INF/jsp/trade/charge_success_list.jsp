@@ -101,6 +101,7 @@
 					<th width="80">结果</th>
 					<th width="80">结果描述</th>
 					<th width="60">扣款</th>
+					<th width="60">成本</th>
 					<c:if test="${loginContext.rootAgencyId == 0 }">
 						<th width="120">通道名称</th>
 					</c:if>
@@ -138,6 +139,7 @@
 						</td>
 						
 						<td>${purchase.orderResultDetail }</td>
+						<td>${purchase.orderPrice }</td>
 						<td>${purchase.orderAmount }</td>
 						<c:if test="${loginContext.rootAgencyId == 0 }"><td>${purchase.channelName }</td> 
 						</c:if>
@@ -152,12 +154,19 @@
 				</c:forEach>
 				<tr class="c-success">
 					<td class="text-r c-success" >总单数</td>
-					<td  class="text-l c-warning"></td>
+					<td  class="text-l c-warning">${tot.totalRecords }</td>
 					<td  class="text-r c-success">总面值</td>
-					<td colspan="2" class="text-l c-warning">1000</td>
+					<td colspan="2" class="text-l c-warning">${tot.totalPrice }</td>
 					<td  class="text-r c-success">扣款</td>
-					<td colspan="2"  class="text-l c-warning"></td>
-					<td colspan="6"></td>
+					<td colspan="2"  class="text-l c-warning">${tot.totalAmount }</td>
+					<c:choose>
+						<c:when test="${loginContext.rootAgencyId == 0 }">
+							<td colspan="7"></td>
+						</c:when>
+						<c:otherwise>
+							<td colspan="6"></td>
+						</c:otherwise>
+					</c:choose>
 				</tr>
 			</tbody>
 		</table>

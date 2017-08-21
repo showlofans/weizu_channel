@@ -190,6 +190,7 @@ public class ProductCodeController {
 		//List<ExchangePlatformPo> epList = 
 		
 		resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
+		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 		resultMap.put("searchParam", productCodePo);
 		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 		

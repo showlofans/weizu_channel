@@ -130,14 +130,14 @@
 						<!-- 结果 -->
 						<td>
 						<c:forEach items="${resultMap.orderStateEnums }" var="orderStateEnum" varStatus="vs">
-							<c:if test="${purchase.orderResult == orderStateEnum.value }">
+							<c:if test="${purchase.orderState == orderStateEnum.value }">
 								${orderStateEnum.desc }
 							</c:if>
 						</c:forEach>
 						</td>
 						
-						<td>${purchase.orderResultDetail }</td>
-						<td>${purchase.orderAmount }</td>
+						<td>${purchase.orderStateDetail }</td>
+						<td>${purchase.orderPrice }</td>
 						<c:if test="${loginContext.rootAgencyId == 0 }"><td>${purchase.channelName }</td> 
 						</c:if>
 						<td>

@@ -188,11 +188,10 @@
  	select <include refid="Base_Column_List"></include> 
  	from <include refid="t_pg"></include> pg1
  	<where>
- 		pg1.id not IN (SELECT pcode.pg_id from <include refid="t_pCode"></include> pcode 
- 		INNER JOIN <include refid="t_pg"></include> pg2 ON pcode.pg_id = pg2.id 
+ 		pg1.id not IN (SELECT pg_id from <include refid="t_pCode"></include>  
 		<where>
 			<if test="epId != null">
-				pcode.ep_id = #{epId}
+				ep_id = #{epId}
 			</if>
 		</where>)
 		<if test="operatorType != null">

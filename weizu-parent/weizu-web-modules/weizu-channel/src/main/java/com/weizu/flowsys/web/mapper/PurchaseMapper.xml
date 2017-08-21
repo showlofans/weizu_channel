@@ -73,9 +73,36 @@
   </sql>
   <sql id="VO_Column_List"><!-- 订单页面 -->
   	ep.*,ap.from_agency_name, pur.order_id, pur.order_id_api, pur.order_id_from, pur.charge_tel, pg.pg_size, pg.operator_type, pg.pg_price, pur.order_arrive_time,
-  	pur.order_back_time, pur.charge_tel_detail, pur.charge_tel_city,ap.order_amount,pur.order_result,ap.order_platform_path,
+  	pur.order_back_time, pur.charge_tel_detail, pur.charge_tel_city,ap.order_amount,ap.order_price,pur.order_result,ap.order_state,ap.order_state_Detail,ap.order_platform_path,
   	 pur.order_result_detail,channel.channel_name,pur.channel_id,ap.bill_type apBill_type
   </sql>
+  
+  
+  <!-- 统计信息 -->
+  <resultMap type="com.weizu.flowsys.web.trade.pojo.TotalResult" id="totalResultMap">
+  	<result column="total_amount" jdbcType="DOUBLE" property="totalAmount"/>
+  	<result column="total_price" jdbcType="DOUBLE" property="totalPrice"/>
+  	<result column="total_records" jdbcType="DOUBLE" property="totalRecords"/>
+  </resultMap>
+  
+  <sql id="Total_Result_Column_List">
+  	FORMAT(sum(pg.pg_price),2) total_price, FORMAT(sum(ap.order_price),4) total_amount, count(*) total_records
+  </sql>
+  <!-- 查询统计信息 -->
+  <select id="getTotalResultFromSuccess" parameterType="map" resultMap="totalResultMap">
+  	select <include refid="Total_Result_Column_List"></include>
+  	from <include refid="t_purchase"></include> pur
+  	inner join <include refid="t_ap"></include> ap
+  	ON pur.order_id = ap.purchase_id
+  	inner join <include refid="t_pg"></include> pg
+  	on pg.id = pur.pg_id
+  	<where>
+  		<if test="agencyId != null">
+  			AND ap.agency_id = #{agencyId}
+  		</if>
+  		AND ap.order_state = 1
+  	</where>
+  </select>
   
   <!-- 通过订单号查询订单 -->
   <select id="getOnePurchase" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -125,7 +152,12 @@
   		<if test="orderIdApi != null">
   			order_id_api = trim(#{orderIdApi})
   		</if>
-  		
+  		<if test="orderResult != null">
+  			order_result = #{orderResult}
+  		</if>
+  		<if test="orderResultDetail != null">
+  			order_result_detail = #{orderResultDetail}
+  		</if>
   	</set>
   	<where>order_id = #{orderId}</where>
   </update>
@@ -192,6 +224,9 @@
 	</if>
 	<if test="orderResult != null">
 		AND pur.order_result = #{orderResult}
+	</if>
+	<if test="orderState != null">
+		AND ap.order_state = #{orderState}
 	</if>
   </sql>
   

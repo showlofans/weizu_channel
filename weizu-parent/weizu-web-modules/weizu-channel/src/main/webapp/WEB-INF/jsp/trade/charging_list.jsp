@@ -99,7 +99,7 @@
 					<th width="60">城市</th>
 					<th width="60">充值方式</th>
 					<c:if test="${loginContext.rootAgencyId == 0 }">
-						<th>操作</th>
+						<th width="60">操作</th>
 					</c:if>
 					<th width="80">结果</th>
 					<th width="80">结果描述</th>
@@ -214,12 +214,13 @@ function changeState(vart,state){
 			async: false,
 			success: function(data){
 				//tag = data;
-				 alert(data);
+				 //alert(data);
 				if(data=="success")
 				{
+					layer.msg('手动修改成功',{icon:1,time:1000});
 					location.reload();
 				}else{
-					layer.msg('手动修改成功',{icon:1,time:1000});
+					layer.msg('手动修改失败',{icon:1,time:1000});
 				}
 			},
 			error:function(data) {
