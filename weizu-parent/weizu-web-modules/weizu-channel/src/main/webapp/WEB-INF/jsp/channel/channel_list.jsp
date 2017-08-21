@@ -143,7 +143,12 @@
 								<c:if test="${channel.channelUseState == cUseState.value  && channel.channelUseState==1}"> <span class="label radius">${cUseState.desc }</span></c:if>
 							</c:forEach>
 						</td>
-						<td>${channel.billType }</td>
+						<td><c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+								<c:if test="${channel.billType == billTypeEnum.value }">
+									<span>${billTypeEnum.desc }</span>
+								</c:if>
+							</c:forEach>
+						</td>
 						<td>${channel.pgSize }</td>
 					<!-- 	<td class="td-status"><span class="label label-success radius">已发布</span></td> -->
 						<td class="f-14 td-manage">
@@ -198,7 +203,7 @@
 <script type="text/javascript">
 function channel_edit(url,objt){
 	var channelId = $(objt).parent().parent().children(":first").html();
-	var serviceType = $(objt).parent().parent().children(":eq(3)").html();
+	var billType = $(objt).parent().parent().children(":eq(3)").html();
 	var operatorType = $(objt).parent().parent().children(":eq(4)").html();
 	//alert(serviceType);
 	//alert(channelId);

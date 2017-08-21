@@ -19,7 +19,7 @@
     id, agency_id, purchase_id, rate_discount_id, order_amount, bill_type, order_state,order_platform_path,order_state_detail, order_price, from_agency_name 
   </sql>
   <sql id="Add_Column_List" >
-   agency_id, purchase_id, rate_discount_id, order_amount, bill_type, order_state,,order_state_detail, order_platform_path, order_price, from_agency_name
+   agency_id, purchase_id, rate_discount_id, order_amount, bill_type, order_state,order_state_detail, order_platform_path, order_price, from_agency_name
   </sql>
   <!-- 批量添加 -->
    <insert id="ap_addList" useGeneratedKeys="true" parameterType="java.util.List">
@@ -27,7 +27,7 @@
   	(<include refid="Add_Column_List"></include>)
   	values
   	<foreach collection="list" item="ap" index="index" separator=",">
-  		(#{ap.agencyId},#{ap.purchaseId},#{ap.rateDiscountId},#{ap.orderAmount},#{ap.billType},#{ap.orderState},#{ap.orderState},#{ap.orderStateDetail},#{ap.orderPlatformPath},#{ap.orderPrice},#{ap.fromAgencyName})
+  		(#{ap.agencyId},#{ap.purchaseId},#{ap.rateDiscountId},#{ap.orderAmount},#{ap.billType},#{ap.orderState},#{ap.orderStateDetail},#{ap.orderPlatformPath},#{ap.orderPrice},#{ap.fromAgencyName})
   	</foreach>
   </insert>
 </mapper>

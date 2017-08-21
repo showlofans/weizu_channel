@@ -70,5 +70,10 @@ public class ChargeRecordDao extends DaoImpl<ChargeRecordPo, Long> implements Ch
 	public int countConsume(Map<String, Object> paramsMap) {
 		return sqlSessionTemplate.selectOne("countConsume", paramsMap);
 	}
+
+	@Override
+	public int crt_addList(List<ChargeRecordPo> recordPoList) {
+		return sqlSessionTemplate.insert("crt_addList", recordPoList);
+	}
 	
 }

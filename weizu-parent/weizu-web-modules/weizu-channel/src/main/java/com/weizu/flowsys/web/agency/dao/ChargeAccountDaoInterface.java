@@ -2,9 +2,10 @@ package com.weizu.flowsys.web.agency.dao;
 
 import java.util.Map;
 
+import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 
-public interface ChargeAccountDaoInterface {
+public interface ChargeAccountDaoInterface extends Dao<ChargeAccountPo, Integer> {
 	/**
 	 * @description:通过代理商id获得账户信息（包涵Id的简易账户信息）
 	 * @param agencyId

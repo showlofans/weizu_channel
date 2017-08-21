@@ -78,7 +78,7 @@
 				<c:forEach items="${resultMap.pagination.records }" var="consumeRec" varStatus="vs">
 					<tr class="text-c">
 						<%-- <td>${pg.pgId }</td> --%>
-						<td>${consumeRec.orderId }</td><!--订单号 -->
+						<td>${consumeRec.purchaseId }</td><!--订单号 -->
 						<td class="c-red">${consumeRec.userName }</td><!-- 代理名称 -->
 						<td>${consumeRec.chargeTel }</td><!--  -->
 						<td>${consumeRec.chargeBefore }</td>

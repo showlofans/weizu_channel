@@ -1,5 +1,6 @@
 package com.weizu.flowsys.web.trade.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseStateParams;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
+import com.weizu.flowsys.web.trade.pojo.TotalResult;
 
 /**
  * @description: 订单管理
@@ -87,6 +89,13 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePo, Long> implements Purcha
 	@Override
 	public PurchasePo getOnePurchase(Long orderId) {
 		return sqlSessionTemplate.selectOne("getOnePurchase", orderId);
+	}
+
+	@Override
+	public TotalResult getTotalResultFromSuccess(int agencyId) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("agencyId", agencyId);
+		return sqlSessionTemplate.selectOne("getTotalResultFromSuccess", map);
 	}
 
 }

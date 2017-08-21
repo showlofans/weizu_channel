@@ -85,6 +85,7 @@
 					<!-- <th width="120">支持城市</th> -->
 					<th width="60">运营商类型</th>
 					<th width="60">价格</th>
+					<th width="60">业务类型</th>
 					<th width="75">地区</th>
 					
 					<th width="60">操作</th>
@@ -104,6 +105,11 @@
 							</c:forEach>
 						</td>
 						<td>${product.pgPrice }</td> 
+						<td>
+							<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceType" varStatus="vs1">
+							<c:if test="${product.serviceType == serviceType.value }"> ${serviceType.desc }</c:if>
+							</c:forEach>
+						</td>
 						<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum">
 							<c:if test="${scopeCityEnum.value== product.scopeCityCode}">
 								<td><span data-toggle="tooltip" data-placement="right" title="${scopeCityEnum.desc }">${product.scopeCityCode }</span></td>

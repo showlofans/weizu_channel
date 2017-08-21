@@ -207,6 +207,7 @@ public class ChannelController {
 		resultMap.put("channelUseStateEnums", ChannelUseStateEnum.toList());
 		resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
 		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
+		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		
 		
 		return new ModelAndView("/channel/channel_list", "resultMap", resultMap); 

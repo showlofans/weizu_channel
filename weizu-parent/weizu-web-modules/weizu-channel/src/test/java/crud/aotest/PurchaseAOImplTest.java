@@ -1,9 +1,5 @@
 package crud.aotest;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.annotation.Resource;
 
 import org.junit.Test;
@@ -11,11 +7,9 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.aiyi.base.pojo.PageParam;
-import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
-import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
+import com.weizu.flowsys.web.trade.pojo.TotalResult;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -181,6 +175,11 @@ public class PurchaseAOImplTest {
 //			e.printStackTrace();
 //		}
 //		System.out.println(chargeDTO.getOrderIdApi());//测试打印出对应平台的提单地址
+//	}
+//	@Test
+//	public void testTotal(){
+//		TotalResult totalResult = purchaseDAO.getTotalResultFromSuccess(1);
+//		System.out.println(totalResult.getTotalRecords());
 //	}
 	
 }

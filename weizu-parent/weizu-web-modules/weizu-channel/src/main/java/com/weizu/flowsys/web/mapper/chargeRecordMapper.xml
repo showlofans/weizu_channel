@@ -27,6 +27,21 @@
     id, remittance_time, recharge_amount, charge_before, charge_after, bill_type, account_type, 
     account_id, agency_id,purchase_id, charge_for
   </sql>
+  <sql id="BatchAdd_Column_List">
+    remittance_time, recharge_amount, charge_before, charge_after, bill_type, account_type, 
+    account_id, agency_id,purchase_id, charge_for
+  </sql>
+  
+   <!-- 批量添加充值记录 -->
+  <insert id="crt_addList" parameterType="java.util.List" useGeneratedKeys="true">
+  	insert into <include refid="t_record"></include>
+  	(<include refid="BatchAdd_Column_List"></include>)
+  	values
+  	<foreach collection="list" item="crt" index="index" separator=",">
+  		(#{crt.remittanceTime},#{crt.rechargeAmount},#{crt.chargeBefore},#{crt.chargeAfter},#{crt.billType},
+  		#{crt.accountType},#{crt.accountId},#{crt.agencyId},#{crt.purchaseId},#{crt.chargeFor})
+  	</foreach>
+  </insert>
   
    <resultMap id="OtherMap" type="com.weizu.flowsys.web.agency.pojo.ChargeRecordPo">
     <id column="id" jdbcType="INTEGER" property="id" />
@@ -67,7 +82,6 @@
   <sql id="Consume_Column_List">
     crt.*,pc.charge_tel,agb.user_name
   </sql>
-  
   
   <!-- 查询充值列表 -->
   <select id="selectChargeList" parameterType="com.weizu.flowsys.web.agency.pojo.ChargeRecordPo" resultMap="OtherMap">
@@ -146,7 +160,7 @@
 	<where>
 		<include refid="consume_condition_sql"></include>
 	</where>
-	order by crt.remittance_time desc 
+	order by crt.remittance_time desc, crt.charge_after
   	<!-- order by -->
 	<if test="start != null">
 		 	limit #{start}
@@ -172,6 +186,7 @@
 				AND (agb.id = #{contextAgencyId} OR agb.root_agency_id = #{contextAgencyId})
 			</when>
 		</choose>
+		AND (account_type = 1 or account_type = 2)
 		<if test="userName != null">
 			AND user_name LIKE CONCAT('%', TRIM(#{userName}), '%')
 		</if>

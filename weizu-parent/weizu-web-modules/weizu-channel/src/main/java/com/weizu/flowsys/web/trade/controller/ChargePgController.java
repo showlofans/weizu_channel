@@ -44,12 +44,17 @@ import com.weizu.flowsys.web.channel.ao.ChannelForwardAO;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
+import com.weizu.flowsys.web.trade.ao.AgencyPurchaseAO;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
 import com.weizu.flowsys.web.trade.dao.AgencyPurchaseDao;
+import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
+import com.weizu.flowsys.web.trade.pojo.TotalResult;
 import com.weizu.flowsys.web.trade.url.ChargePgURL;
 import com.weizu.web.foundation.String.StringHelper;
+
+import crud.aotest.AgencyPurchaseAOTest;
 
 /**
  * @description:流量充值管理
@@ -71,9 +76,12 @@ public class ChargePgController {
 	@Resource
 	private PurchaseAO purchaseAO;
 	@Resource
+	private PurchaseDao purchaseDAO;
+	
+	@Resource
 	private RateDiscountAO rateDiscountAO;
 	@Resource
-	private AgencyPurchaseDao agencyPurchaseDao;
+	private AgencyPurchaseAO agencyPurchaseAO;
 	
 	
 	/**
@@ -347,7 +355,7 @@ public class ChargePgController {
 		HttpSession httpSession = request.getSession();
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)httpSession.getAttribute("loginContext");
 		if(agencyVO != null){
-			purchaseVO.setRootAgencyId(agencyVO.getId());//设置为当前登陆用户的订单
+			purchaseVO.setAgencyId(agencyVO.getId());//设置为当前登陆用户的订单
 		}
 		PageParam pageParam = null;
 		Pagination<PurchaseVO> pagination = null;
@@ -365,10 +373,10 @@ public class ChargePgController {
 		resultMap.put("orderPathEnums", OrderPathEnum.toList());
 		resultMap.put("orderStateEnums", OrderStateEnum.toList());
 		ModelAndView model = new ModelAndView("/trade/purchase_list", "resultMap", resultMap);
-		if(purchaseVO.getOrderResult() == null){
+		if(purchaseVO.getOrderState() == null){
 			return model;
 		}else{
-			switch (purchaseVO.getOrderResult()) {
+			switch (purchaseVO.getOrderState()) {
 			case 0://充值失败
 				model = new ModelAndView("/trade/charge_failure_list", "resultMap", resultMap);
 				break;
@@ -392,6 +400,8 @@ public class ChargePgController {
 				
 				if(callTag == 1){
 					System.out.println(callTag +"-开始统计");
+					TotalResult tot = purchaseDAO.getTotalResultFromSuccess(agencyVO.getId());
+					httpSession.setAttribute("tot", tot);
 				}
 				
 				
@@ -419,14 +429,17 @@ public class ChargePgController {
 	 * @createTime:2017年8月18日 上午11:21:22
 	 */
 	private void ignoreEndTime(PurchaseVO pvo, PurchaseVO sample) {
-		String sampleEndTimeStr = sample.getBackEndTimeStr().trim();
-		String pvoEndTimeStr = pvo.getBackEndTimeStr().trim();
-		if(!sampleEndTimeStr.equals(pvoEndTimeStr)){
-			String sampleTagTime = sampleEndTimeStr.substring(0, sampleEndTimeStr.indexOf(" "));
-			String pvoTagTime = pvoEndTimeStr.substring(0, pvoEndTimeStr.indexOf(" "));
-			if(sampleTagTime.equals(pvoTagTime)){
-				sample.setBackEndTimeStr(sampleTagTime);
-				pvo.setBackEndTimeStr(sampleTagTime);
+		boolean can = StringHelper.isNotEmpty(sample.getBackEndTimeStr()) && StringHelper.isNotEmpty(pvo.getBackEndTimeStr());
+		if(can){
+			String sampleEndTimeStr = sample.getBackEndTimeStr().trim();
+			String pvoEndTimeStr = pvo.getBackEndTimeStr().trim();
+			if(!sampleEndTimeStr.equals(pvoEndTimeStr)){
+				String sampleTagTime = sampleEndTimeStr.substring(0, sampleEndTimeStr.indexOf(" "));
+				String pvoTagTime = pvoEndTimeStr.substring(0, pvoEndTimeStr.indexOf(" "));
+				if(sampleTagTime.equals(pvoTagTime)){
+					sample.setBackEndTimeStr(sampleTagTime);
+					pvo.setBackEndTimeStr(sampleTagTime);
+				}
 			}
 		}
 	}
@@ -443,15 +456,11 @@ public class ChargePgController {
 	@RequestMapping(value=ChargePgURL.UPDATE_PURCHASE_STATE)
 	@ResponseBody
 	public void updatePurchaseState(Long orderId,Integer orderResult, String orderResultDetail,HttpServletResponse response){
-		int updateRes = agencyPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
+		String updateRes = agencyPurchaseAO.updatePurchaseState(orderId, orderResult, orderResultDetail);
+		
 		response.setContentType("text/html;charset=utf-8");
 		try {
-			if(updateRes > 0)
-			{
-				response.getWriter().print("success");
-			}else{
-				response.getWriter().print("error");
-			}
+				response.getWriter().print(updateRes);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
