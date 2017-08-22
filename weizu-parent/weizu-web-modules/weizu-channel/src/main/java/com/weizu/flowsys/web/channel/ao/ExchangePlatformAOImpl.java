@@ -11,12 +11,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.util.ClassUtil;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.web.channel.dao.impl.AgencyEpDAOImpl;
 import com.weizu.flowsys.web.channel.dao.impl.ExchangePlatformDao;
 import com.weizu.flowsys.web.channel.pojo.AgencyEpPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
+import com.weizu.flowsys.web.trade.PurchaseUtil;
+import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
 
 /**
@@ -137,6 +140,8 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 		List<ExchangePlatformPo> records = exchangePlatformDao.getEp(paramsMap);
 		for (ExchangePlatformPo exchangePlatformPo : records) {//动态设置平台余额
 //			exchangePlatformPo.setEpBalance(epBalance);
+			String lastAccessStr = DateUtil.formatPramm(exchangePlatformPo.getLastAccess(),"yyyy-MM-dd");
+			exchangePlatformPo.setLastAccessStr(lastAccessStr);
 		}
 		return new Pagination<ExchangePlatformPo>(records, toatalRecord, pageNo, pageSize);
 	}
@@ -162,11 +167,21 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 	@Override
 	public String updateEp(ExchangePlatformPo epPo) {
 		String flag = "error";
-//		String epEngId = StringUtil2.toUpperClass(epPo.getEpEngId());
-		if(checkEpEngId(epPo.getEpEngId())){
-			flag = "exist";
-		}else if(exchangePlatformDao.update(epPo) > 0){
+		ExchangePlatformPo ep = exchangePlatformDao.get(epPo.getId());
+		String engId = ep.getEpEngId();
+		epPo.setEpEngId(StringUtil2.toUpperClass(epPo.getEpEngId()));
+		if(ClassUtil.contrastObj(ep, epPo)){
 			flag = "success";
+		}else if(!engId.equals(epPo.getEpEngId()) && checkEpEngId(epPo.getEpEngId()) ){
+			flag = "exist";
+		}else{//两个对象值不一样，并且英文标识不存在，或者和原来的不一样 就更新
+			epPo.setLastAccess(System.currentTimeMillis());
+			int upRes = exchangePlatformDao.updateLocal(epPo,new WherePrams("id", "=", epPo.getId()));
+			if(upRes > 0){
+				flag = "success";
+			}else{
+				flag = "updateError";
+			}
 		}
 		return flag;
 	}

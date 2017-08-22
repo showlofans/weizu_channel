@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
+import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseStateParams;
@@ -92,9 +93,10 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePo, Long> implements Purcha
 	}
 
 	@Override
-	public TotalResult getTotalResultFromSuccess(int agencyId) {
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("agencyId", agencyId);
+	public TotalResult getTotalResultFromSuccess(Map<String,Object> map) {
+//		Map<String,Object> map = new HashMap<String, Object>();
+//		map.put("agencyId", agencyId);
+		map.put("orderState", OrderStateEnum.CHARGED.getValue());
 		return sqlSessionTemplate.selectOne("getTotalResultFromSuccess", map);
 	}
 

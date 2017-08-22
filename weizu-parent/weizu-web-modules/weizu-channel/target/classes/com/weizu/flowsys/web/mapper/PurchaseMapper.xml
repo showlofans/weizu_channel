@@ -82,11 +82,12 @@
   <resultMap type="com.weizu.flowsys.web.trade.pojo.TotalResult" id="totalResultMap">
   	<result column="total_amount" jdbcType="DOUBLE" property="totalAmount"/>
   	<result column="total_price" jdbcType="DOUBLE" property="totalPrice"/>
+  	<result column="total_cost" jdbcType="DOUBLE" property="totalCost"/>
   	<result column="total_records" jdbcType="DOUBLE" property="totalRecords"/>
   </resultMap>
   
   <sql id="Total_Result_Column_List">
-  	FORMAT(sum(pg.pg_price),2) total_price, FORMAT(sum(ap.order_price),4) total_amount, count(*) total_records
+  	FORMAT(sum(pg.pg_price),2) total_price, FORMAT(sum(ap.order_price),4) total_amount,FORMAT(sum(ap.order_amount),4) total_cost, count(*) total_records
   </sql>
   <!-- 查询统计信息 -->
   <select id="getTotalResultFromSuccess" parameterType="map" resultMap="totalResultMap">
@@ -94,13 +95,12 @@
   	from <include refid="t_purchase"></include> pur
   	inner join <include refid="t_ap"></include> ap
   	ON pur.order_id = ap.purchase_id
+  	inner join <include refid="t_channel"></include> channel
+	on pur.channel_id = channel.id
   	inner join <include refid="t_pg"></include> pg
   	on pg.id = pur.pg_id
   	<where>
-  		<if test="agencyId != null">
-  			AND ap.agency_id = #{agencyId}
-  		</if>
-  		AND ap.order_state = 1
+  		<include refid="condition_sql"></include>
   	</where>
   </select>
   
@@ -150,10 +150,10 @@
   			order_back_time = #{orderBackTime},
   		</if>
   		<if test="orderIdApi != null">
-  			order_id_api = trim(#{orderIdApi})
+  			order_id_api = trim(#{orderIdApi}),
   		</if>
   		<if test="orderResult != null">
-  			order_result = #{orderResult}
+  			order_result = #{orderResult},
   		</if>
   		<if test="orderResultDetail != null">
   			order_result_detail = #{orderResultDetail}

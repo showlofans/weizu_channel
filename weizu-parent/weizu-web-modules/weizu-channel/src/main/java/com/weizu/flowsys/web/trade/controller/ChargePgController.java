@@ -75,8 +75,8 @@ public class ChargePgController {
 	private ProductCodeAO productCodeAO;
 	@Resource
 	private PurchaseAO purchaseAO;
-	@Resource
-	private PurchaseDao purchaseDAO;
+//	@Resource
+//	private PurchaseDao purchaseDAO;
 	
 	@Resource
 	private RateDiscountAO rateDiscountAO;
@@ -397,11 +397,13 @@ public class ChargePgController {
 						httpSession.setAttribute("lastSearch", purchaseVO);
 					}
 				}
-				
-				if(callTag == 1){
+				List<PurchaseVO> records = pagination.getRecords();
+				if(callTag == 1 && records != null && records.size() > 0){
 					System.out.println(callTag +"-开始统计");
-					TotalResult tot = purchaseDAO.getTotalResultFromSuccess(agencyVO.getId());
+					TotalResult tot = purchaseAO.getTotalResultFromSuccess(purchaseVO);
 					httpSession.setAttribute("tot", tot);
+				}else{
+					httpSession.setAttribute("tot", null);
 				}
 				
 				

@@ -94,8 +94,17 @@
 			<label class="form-label col-xs-4 col-sm-3">充值额：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" class="input-text" required="required" style="width:100px;" autocomplete="off" placeholder="请输入double值" name="rechargeAmount" id="rechargeAmount">元
+				<c:choose>
+					<c:when test="${resultMap.billType == 0 }">
+						<span style="display:none;" id="accountBalance">${chargeAccount.accountBalance }</span>
+					</c:when>
+					<c:otherwise>
+						<span style="display:none;" id="accountBalance">${chargeAccount1.accountBalance }</span>
+					</c:otherwise>
+				</c:choose>
 				<input type="hidden" name="accountType" value="0"> <!-- 设置为充值 -->
 				<input type="hidden" name="agencyId" value="${resultMap.agencyId }"> <!-- 代理商id -->
+				<input type="hidden" id="contextRootId" value="${loginContext.rootAgencyId }"> <!-- 代理商id -->
 				<%-- ${resultMap.error_msg } --%>
 			</div>
 		</div>
@@ -170,22 +179,35 @@
 $().ready(function() {
 	$("#charge-form").validate({
 		submitHandler : function(form) {
-			$.ajax({
-		        type:"post",
-		        url:"/flowsys/account/add_charge.do",
-		        data: $('form').serialize(),//表单数据
-		        async : false,
-		        success:function(d){
-		            if(d=="success"){
-		                layer.msg('保存成功！');//保存成功提示
-		            }
-		            if(d=="error"){
-		                layer.msg('保存异常!');
-		            }
-		            var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
-		            parent.layer.close(index); //执行关闭
-		        }
-		    }); 
+			var rechargeAmount = parseFloat($('#rechargeAmount').val());
+			var accountAmount = parseFloat($('#accountBalance').html());
+			var contextRootId = $('#contextRootId').val();
+			alert(contextRootId);
+			alert(rechargeAmount);
+			alert(accountAmount);
+			if(rechargeAmount > accountAmount && contextRootId != 0){
+				layer.msg('余额不足，请重新输入充值额！');
+				$('#rechargeAmount').val('');
+				$('#rechargeAmount').focus();
+			}else{
+				$.ajax({
+			        type:"post",
+			        url:"/flowsys/account/add_charge.do",
+			        data: $('form').serialize(),//表单数据
+			        async : false,
+			        success:function(d){
+			            if(d=="success"){
+			                layer.msg('保存成功！');//保存成功提示
+			            }
+			            if(d=="error"){
+			                layer.msg('保存异常!');
+			            }
+			            var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+			            parent.layer.close(index); //执行关闭
+			        }
+			    }); 
+			}
+				
 		}
 	});
 	

@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.weizu.api.outter.enums.OrderStateCheckEnum;
 
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
@@ -20,6 +21,7 @@ import com.weizu.flowsys.api.base.facet.IChargeFacet;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
@@ -54,6 +56,7 @@ import com.weizu.flowsys.web.trade.pojo.AgencyPurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
+import com.weizu.flowsys.web.trade.pojo.TotalResult;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
 import com.weizu.web.foundation.http.HttpRequest;
@@ -311,8 +314,14 @@ public class PurchaseAOImpl implements PurchaseAO {
 							agencyBeforeBalance, agencyAfterBalance, 
 							billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), ap_agency_id, 1 , orderId));
 					/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
-					int orderPath = OrderPathEnum.CHARGE_SOCKET.getValue();
-					AgencyPurchasePo app = new AgencyPurchasePo(ap_agency_id, orderId, ratePo1.getId(), orderAmount, billType, orderAmount, fromAgencyName, orderPath, orderResult);
+					int orderPath = OrderPathEnum.CHILD_WEB_PAGE.getValue();
+					String orderStateDetail = "";
+					if(channel.getChannelState() == ChannelStateEnum.CLOSE.getValue()){//通道暂停，把系统级用户的订单状态设置为充值等待
+						orderResult = OrderStateEnum.DAICHONG.getValue();
+						orderStateDetail = "通道暂停等待";
+					}
+					AgencyPurchasePo app = new AgencyPurchasePo(ap_agency_id, orderId, ratePo1.getId(), orderAmount, billType, orderPrice, fromAgencyName, orderPath, orderResult);
+					app.setOrderStateDetail(orderStateDetail);
 					apPoList.add(app);
 					
 					int batchAddApp = agencyPurchaseDao.ap_addList(apPoList);		//批量添加连接信息
@@ -550,7 +559,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 		if(purchaseVO != null){
 			Map<String, Object> paramsMap = new HashMap<String, Object>();
 			if(StringHelper.isNotEmpty(purchaseVO.getChargeTel())){
-				paramsMap.put("chargeTel", purchaseVO.getChargeTel());
+				paramsMap.put("chargeTel", purchaseVO.getChargeTel().trim());
+			}
+			if(StringHelper.isNotEmpty(purchaseVO.getChannelName())){
+				paramsMap.put("channelName", purchaseVO.getChannelName().trim());
 			}
 			if(purchaseVO.getAgencyId() != null){
 				paramsMap.put("agencyId", purchaseVO.getAgencyId());
@@ -559,7 +571,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				paramsMap.put("billType", purchaseVO.getBillType());
 			}
 			if(StringHelper.isNotEmpty(purchaseVO.getAgencyName())){
-				paramsMap.put("agencyName", purchaseVO.getAgencyName());
+				paramsMap.put("agencyName", purchaseVO.getAgencyName().trim());
 			}
 			if(purchaseVO.getOrderId() != null){
 				paramsMap.put("orderId", purchaseVO.getOrderId());
@@ -571,7 +583,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				paramsMap.put("orderState", purchaseVO.getOrderState());
 			}
 			if(StringHelper.isNotEmpty(purchaseVO.getChargeTelDetail())){
-				paramsMap.put("chargeTelDetail", purchaseVO.getChargeTelDetail());
+				paramsMap.put("chargeTelDetail", purchaseVO.getChargeTelDetail().trim());
 			}
 			if(purchaseVO.getOperatorType() != null){
 				paramsMap.put("operatorType", purchaseVO.getOperatorType());
@@ -818,6 +830,12 @@ public class PurchaseAOImpl implements PurchaseAO {
 	@Override
 	public PurchasePo getOnePurchase(long orderId) {
 		return purchaseDAO.getOnePurchase(orderId);
+	}
+
+	@Override
+	public TotalResult getTotalResultFromSuccess(PurchaseVO purchaseVO) {
+		Map<String,Object> map = getMapByPojo(purchaseVO, true);
+		return purchaseDAO.getTotalResultFromSuccess(map);
 	}
 
 	

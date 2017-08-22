@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.channel.pojo;
 
 import com.weizu.flowsys.core.annotation.po.TableName;
+import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
 
 /**
@@ -37,8 +38,29 @@ public class ExchangePlatformPo extends Po {
     private String epIp;				//平台官网地址
     
     private String epEngId;				//平台英文标识
+    
+    private Long lastAccess;			//最后更新时间
+    
+    @TempField
+    private String lastAccessStr;		//页面展示时间
+    
+    public Long getLastAccess() {
+		return lastAccess;
+	}
 
-    public String getEpEngId() {
+	public void setLastAccess(Long lastAccess) {
+		this.lastAccess = lastAccess;
+	}
+
+	public String getLastAccessStr() {
+		return lastAccessStr;
+	}
+
+	public void setLastAccessStr(String lastAccessStr) {
+		this.lastAccessStr = lastAccessStr;
+	}
+
+	public String getEpEngId() {
 		return epEngId;
 	}
 

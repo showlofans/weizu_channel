@@ -79,7 +79,7 @@ public class AccountController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("agencyUserName", userName); // 代理商名字
 		resultMap.put("agencyId", agencyId); // 代理商ID
-		resultMap.put("accountId", accountId); // 代理商ID
+		resultMap.put("accountId", accountId); // 代理商账户ID
 		resultMap.put("billTypeEnum", BillTypeEnum.toList());
 		resultMap.put("billType", billType);//默认对私
 		if(billType == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()){

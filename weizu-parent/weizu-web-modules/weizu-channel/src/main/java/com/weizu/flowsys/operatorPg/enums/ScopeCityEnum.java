@@ -74,10 +74,10 @@ public enum ScopeCityEnum {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年8月2日 上午11:49:03
 	 */
-	public static String getValueByDesc(String desct){
+	public static String getValueByDesc(String desc){
 		ScopeCityEnum[] enumAry = ScopeCityEnum.values();
 		for (ScopeCityEnum scopeCityEnum : enumAry) {
-			if(scopeCityEnum.desc.contains(desct) ){
+			if(scopeCityEnum.desc.contains(desc) ){
 				return scopeCityEnum.value;
 			}
 		}
