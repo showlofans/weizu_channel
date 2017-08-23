@@ -158,6 +158,13 @@ public class OperatorPgDao extends DaoImpl<OperatorPgDataPo, Integer> implements
 			params.put("epId", epId);
 		return sqlSessionTemplateASS.selectList("listPgListNotInPcode", params);
 	}
-	
+	@Override
+	public List<OperatorPgDataPo> listPgListInPcode(Map<String,Object> map) {
+		/*Map<String, Object> params = new HashMap<String, Object>();
+		params.put("serviceType", serviceType);
+		params.put("operatorType", operatorType);
+		params.put("epEngId", epEngId);*/
+		return sqlSessionTemplateASS.selectList("listPgListInPcode", map);
+	}
 
 }

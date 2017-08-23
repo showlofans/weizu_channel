@@ -15,14 +15,19 @@ import com.aiyi.base.pojo.PageParam;
 import com.aiyi.base.pojo.PageTag;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgInServiceEnum;
 import com.weizu.flowsys.operatorPg.enums.PgSizeEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 import com.weizu.flowsys.web.channel.dao.impl.OperatorPgDao;
+import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
+import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
+import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.web.foundation.String.StringHelper;
 
 @Service("operatorPgAO")
@@ -30,6 +35,8 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 
 	@Resource
 	private OperatorPgDao operatorPgDao;
+	@Resource
+	private ChannelDiscountDao channelDiscountDao;
 
 	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
@@ -601,6 +608,47 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 	@Override
 	public OperatorPgDataPo getPgById(Integer pgId) {
 		return operatorPgDao.get(pgId);
+	}
+
+	@Override
+	public Map<String, Object> getBy(SuperPurchaseParam spp) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> params = getMapForBy(spp);
+		WherePrams where = new WherePrams("operator_type", "=", spp.getOperatorType());
+		where.and("service_type", "=", spp.getSerType());
+		where.and("scope_city_code", "=", spp.getScopeCityCode());
+		List<ChannelDiscountPo> discountList = channelDiscountDao.list(where);
+		resultMap.put("discountList", discountList);
+		
+		List<OperatorPgDataPo> pgList = operatorPgDao.listPgListInPcode(params);
+		resultMap.put("pgList", pgList);
+		
+		return resultMap;
+	}
+	
+	private Map<String, Object> getMapForBy(SuperPurchaseParam spp){
+		Map<String, Object> params = new HashMap<String, Object>();
+		String carrier = spp.getCarrier();
+		if(StringHelper.isNotEmpty(carrier)){
+			int sLength = carrier.length();
+			Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(carrier);
+			String scopeCityCode = scopeMap.get("scopeCityCode").toString();
+			params.put("scopeCityCode", scopeCityCode);
+			spp.setScopeCityCode(scopeCityCode);
+			String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动
+			int opType = OperatorTypeEnum.getValueByDesc(oType);
+			params.put("operatorType", opType);
+			spp.setOperatorType(opType);
+		}
+		if(StringHelper.isNotEmpty(spp.getServiceType())){
+			int sType = Integer.parseInt(spp.getServiceType().trim());
+			params.put("serviceType", sType);
+			spp.setSerType(sType);
+		}
+		if(StringHelper.isNotEmpty(spp.getEpEngId())){
+			params.put("epEngId", spp.getEpEngId());
+		}
+		return params;
 	}
 
 }

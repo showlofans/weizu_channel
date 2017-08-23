@@ -1,5 +1,8 @@
 package crud.aotest;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.annotation.Resource;
 
 import org.junit.Test;
@@ -9,6 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
+import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 import com.weizu.flowsys.web.trade.pojo.TotalResult;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -178,7 +182,10 @@ public class PurchaseAOImplTest {
 //	}
 //	@Test
 //	public void testTotal(){
-//		TotalResult totalResult = purchaseDAO.getTotalResultFromSuccess(1);
+////		Map<String, Object> params = new HashMap<String, Object>();
+//		PurchaseVO pvo = new PurchaseVO();
+//		pvo.setAgencyId(21);
+//		TotalResult totalResult = purchaseAO.getTotalResultFromSuccess(pvo);
 //		System.out.println(totalResult.getTotalCost());
 //	}
 	

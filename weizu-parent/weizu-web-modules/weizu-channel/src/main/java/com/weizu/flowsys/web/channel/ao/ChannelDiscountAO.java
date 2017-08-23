@@ -9,6 +9,7 @@ import com.weizu.flowsys.web.activity.pojo.OperatorDiscount;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
+import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
 
 
 /**
@@ -67,4 +68,5 @@ public interface ChannelDiscountAO {
 	 * @createTime:2017年7月6日 下午5:40:36
 	 */
 	List<ChannelDiscountPo> listOpenChannel(ChannelDiscountPo discountPo);
+	
 }

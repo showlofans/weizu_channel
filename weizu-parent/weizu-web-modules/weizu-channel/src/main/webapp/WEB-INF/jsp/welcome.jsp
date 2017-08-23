@@ -32,8 +32,8 @@
 <body>
 <div class="page-container">
 	<p class="f-20 text-success">欢迎使用微族通道系统 <span class="f-14">Beta</span>版本</p>
-	<p>登录次数：18 </p>
-	<p>上次登录IP：222.35.131.79.1  上次登录时间：2014-6-14 11:19:55</p>
+	<!-- <p>登录次数：18 </p>
+	<p>上次登录IP：222.35.131.79.1  上次登录时间：2014-6-14 11:19:55</p> -->
 	<!-- <iframe width='738' height='523' class='preview-iframe' scrolling='no' frameborder='0' src='http://download.csdn.net/source/preview/2453923/e55ebbf1b3ddcc48ccaa5684a663488d' ></iframe> -->
 	<!-- <table class="table table-border table-bordered table-bg">
 		<thead>

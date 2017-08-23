@@ -36,6 +36,7 @@ import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.ClassUtil;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
@@ -44,6 +45,8 @@ import com.weizu.flowsys.web.channel.ao.ChannelForwardAO;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
+import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
+import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.ao.AgencyPurchaseAO;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
 import com.weizu.flowsys.web.trade.dao.AgencyPurchaseDao;
@@ -173,6 +176,53 @@ public class ChargePgController {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("pgList", list);
 		map.put("ratePo", rateDiscountPo);
+		try {
+			response.setContentType("text/html;charset=UTF-8");
+			response.getWriter().print(JSON.toJSONString(map));
+			System.out.println(JSON.toJSONString(list));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	@RequestMapping(value=ChargePgURL.PGLIST_SUPER_FORPURCHASE)
+	public void pgList_super_forPurchase(HttpServletRequest request, HttpServletResponse response,String operatorName,String serviceType,String epEngId) throws UnsupportedEncodingException{
+//		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//		for (OperatorTypeEnum typeEnum : OperatorTypeEnum.values()) {
+//			if(operatorType.contains(typeEnum.getDesc())){//中国移动包涵移动
+//				oppo.setOperatorType(typeEnum.getValue());
+//			}
+//		}
+//		operatorName = new String(operatorName.getBytes("iso-8859-1"), "utf-8");
+		String carrier = operatorName.trim();//江西移动
+		int sLength = carrier.length();
+		List<OperatorPgDataPo> list = new ArrayList<OperatorPgDataPo>();
+//		RateDiscountPo rateDiscountPo = null;
+		Map<String,Object> map = new HashMap<String, Object>();
+		if(sLength>2){
+//			String scopeCityName = carrier.substring(0,sLength-2);//地区参数
+//			Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(carrier);
+//			String scopeCityCode = scopeMap.get("scopeCityCode").toString();
+//			int sType = Integer.parseInt(serviceType.trim());
+//			String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动
+//			int opType = OperatorTypeEnum.getValueByDesc(oType);
+			
+			map = operatorPgAO.getBy(new SuperPurchaseParam(carrier, serviceType, epEngId));
+			
+//			if(agencyVO != null){
+//				Integer contextId = agencyVO.getId();
+//				boolean isAccept = rateDiscountAO.checkScopeIsAccept(contextId, scopeCityName);
+//				if(isAccept){//如果包涵该地区，就加载包体列表
+//					String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动
+//					int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
+//					oppo.setOperatorType(opType);
+////					oppo.setOperatorName(carrier);
+//					int sType = Integer.parseInt(serviceType.trim());
+//					oppo.setServiceType(sType);
+//					list = operatorPgAO.pgList_forPurchase(oppo,ScopeCityEnum.getValueByDesc(scopeCityName), contextId);
+//					rateDiscountPo = rateDiscountAO.getRateForCharge(sType, carrier, contextId);
+//				}
+//			}
+		}
 		try {
 			response.setContentType("text/html;charset=UTF-8");
 			response.getWriter().print(JSON.toJSONString(map));
@@ -402,9 +452,10 @@ public class ChargePgController {
 					System.out.println(callTag +"-开始统计");
 					TotalResult tot = purchaseAO.getTotalResultFromSuccess(purchaseVO);
 					httpSession.setAttribute("tot", tot);
-				}else{
-					httpSession.setAttribute("tot", null);
 				}
+//				else{
+//					httpSession.setAttribute("tot", null);
+//				}
 				
 				
 				model = new ModelAndView("/trade/charge_success_list", "resultMap", resultMap);

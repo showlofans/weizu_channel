@@ -157,13 +157,15 @@ public class PurchaseAOImpl implements PurchaseAO {
 			ExchangePlatformPo epPo = null;
 			ProductCodePo dataPo = null;
 			if(channel != null){
-				epPo = exchangePlatformAO.getEpById(channel.getEpId());
-				Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(purchasePo.getChargeTelDetail());
-				String scopeCityCode = scopeMap.get("scopeCityCode").toString();
-				dataPo = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode,channel.getEpId(), purchasePo.getPgId()));
-				if(dataPo == null){
-					logger.config("编码未配置");
-					return "产品待更新，产品暂不支持购买！！";
+				if(channel.getChannelState() == ChannelStateEnum.OPEN.getValue()){
+					epPo = exchangePlatformAO.getEpById(channel.getEpId());
+					Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(purchasePo.getChargeTelDetail());
+					String scopeCityCode = scopeMap.get("scopeCityCode").toString();
+					dataPo = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode,channel.getEpId(), purchasePo.getPgId()));
+					if(dataPo == null){
+						logger.config("编码未配置");
+						return "产品待更新，产品暂不支持购买！！";
+					}
 				}
 			}else{
 				logger.config("通道不存在");
@@ -328,76 +330,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 					int batchAddCrt = chargeRecordDao.crt_addList(recordPoList);		//批量添加扣款记录信息
 					//
 					if(batchAddApp > 0 && batchAddCrt > 0){//开始走接口
-						try {
-//						orderAmount = NumberTool.mul(ratePo.getActiveDiscount(), pgPrice);
-//						if(orderAmount > accountPo.getAccountBalance()){
-//							orderResult = OrderStateEnum.DAICHONG.getValue();	//欠费等待
-//							whileStop = 1;
-//						}else{
-//							orderResult = OrderStateEnum.CHARGING.getValue();		//充值进行
-//						}
-//						Long rateDiscountId = ratePo.getId();			//折扣id
 						
-//						if(whileStop == 1){//可以向上提单，但是不扣上面的款
-//							int orderPath = OrderPathEnum.CHILD_WEB_PAGE.getValue();
-////						AgencyPurchasePo app = new AgencyPurchasePo(agencyId, purchasePo.getOrderId(), null, null, billType, null, orderResult,ChargeStatusEnum.LACK_OF_BALANCE.getDesc(),orderPath);
-////						apPoList.add(app);
-//							break;
-//						}else{
-							/**充值前余额*/
-							agencyBeforeBalance = accountPo.getAccountBalance();
-							/**父费率减去子费率乘以价格，就是差价*/
-							balance = NumberTool.mul(NumberTool.sub(activeRatePo.getActiveDiscount(), ratePo1.getActiveDiscount()), pgPrice);
-							accountPo.addBalance(balance,1);
-							/** 更新登录用户账户信息**/
-							recordRes = chargeAccountAO.updateAccount(accountPo);
-							if(recordRes > 0){
-								/** 向消费记录表插入登陆用户数据 */
-								Long nextIdRecord = chargeRecordDao.nextId();
-								Long currentTime = System.currentTimeMillis();
-								Double plusAmount = NumberTool.mul(ratePo1.getActiveDiscount(),pgPrice);
-								Double minusAmount = NumberTool.mul(activeRatePo.getActiveDiscount(),pgPrice);
-								agencyAfterBalance = NumberTool.add(agencyBeforeBalance,plusAmount);
-								
-								recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), plusAmount,
-										agencyBeforeBalance, agencyAfterBalance, 
- 										ratePo1.getBillType(),AccountTypeEnum.Replenishment.getValue(), accountPo.getId(), agencyId,1, orderId));
-								agencyBeforeBalance += plusAmount;	//重置充值前的余额为补款后的余额
-								agencyAfterBalance = NumberTool.sub(agencyBeforeBalance,minusAmount);
-								recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), minusAmount,
-										agencyBeforeBalance, agencyAfterBalance, 
- 										activeRatePo.getBillType(),AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), agencyId,1, orderId));	
-								
-// 								//chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
-// 										agencyBeforeBalance, accountPo.getAccountBalance(), 
-// 										billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), agencyId,1, purchasePo.getOrderId()));
-								int orderPath = OrderPathEnum.CHILD_WEB_PAGE.getValue();
-								AgencyPurchasePo app = new AgencyPurchasePo(ap_agency_id, orderId, activeRatePo.getId(), plusAmount, activeRatePo.getBillType(), minusAmount, fromAgencyName, orderPath, orderResult);
-								apPoList.add(app);
-							}
-//						}
-						//最后再循环一次，保证欠费等待的单子父级代理商能够看到，但是不能扣父级代理商的款和消费记录
-//					if(whileStop > 0){//欠费等待
-//						whileStop++ ;
-//					}
-							//由父变成子，进行迭代
-							ratePo1 = activeRatePo;	
-							agencyId = rootAgencyPo.getId();
-					}
-					if(apPoList.size() > 0){
-						int batchAddApp = agencyPurchaseDao.ap_addList(apPoList);		//批量添加连接信息
-						int batchAddCrt = chargeRecordDao.crt_addList(recordPoList);		//批量添加扣款记录信息
-						//
-						ChannelChannelPo channelPo = channelChannelDao.get(purchasePo.getChannelId());
-						if(channelPo != null){
-							ExchangePlatformPo epPo = exchangePlatformAO.getEpById(channelPo.getEpId());
-							Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(purchasePo.getChargeTelDetail());
-							String scopeCityCode = scopeMap.get("scopeCityCode").toString();
-							ProductCodePo dataPo = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode,channelPo.getEpId(), purchasePo.getPgId()));
-							if(dataPo == null){
-								logger.config("编码未配置");
-							}else if(batchAddApp > 0 && epPo != null){//开始走接口
-								try {
+						try {
 
 //								 String epEngId = StringUtil2.toUpperClass(epPo.getEpEngId());
 //								 String classRealPath = "com.weizu.flowsys.api.weizu."+epPo.getEpEngId()+"Charge";	//包完整路径
@@ -406,7 +340,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 //								IChargeFacet chargeFacet = (IChargeFacet)constructor.newInstance(epPo.getEpPurchaseIp(),epPo.getEpApikey(),epPo.getEpUserName(),dataPo.getProductCode());
 //								ChargeDTO chargeDTO = chargeFacet.charge();
 							ChargeDTO chargeDTO = chargeByFacet(epPo,dataPo);
-							System.out.println(chargeDTO.getOrderIdApi());//测试打印出对应平台的提单地址
+							if(chargeDTO != null){
+								System.out.println(chargeDTO.getOrderIdApi());//测试打印出对应平台的提单地址
+							}
 							return "订单添加成功";
 							//判断是否正常提单,
 							
@@ -440,88 +376,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 //					chargeRes = OrderStateEnum.UNCHARGE.getValue();
 					return "订单添加失败！";
 				}
-			}//在判断了余额足够的情况下
-		}//费率存在
+			}//费率存在
+		}
 		return null;
-		
-		/****************修改登陆用户的对私账户********************/
-		
-		
-//		channelPo.setChannelTotalUse();
-//		channelPo.addTotalUse();
-//		channelPo.addTotalAmount(orderAmount);
-//		int channelRes = channelForwardDao.update(channelPo);
-		
-		
-//		/**订单信息添加*/
-//		OrderUril ou1 = new OrderUril(1);
-//		try {
-//			purchasePo.setOrderId(ou1.nextId());//设置订单号
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		purchasePo.setOrderPlatformPath(OrderPathEnum.WEB_PAGE.getValue());
-//		if(recordRes + channelRes -1 >0 && productCode  != null){
-//			
-//			ChargeBase chargeBase = ChargeFactory.getChargeBase(epPo.getEpName());
-//			//
-//			ChargeResultPage chargeResultPage = chargeBase.charge(new ChargeParamsPage(epPo.getEpPurchaseIp(), epPo.getEpName(), epPo.getEpUserName(), epPo.getEpApikey(), purchasePo.getChargeTel(), productCode));
-//			
-//			//初始化订单结果
-//			ChargePageOrder chargePageOrder = chargeResultPage.getChargePageOrder();
-//			if(chargePageOrder != null)
-//			{
-//				purchasePo.setOrderBackTime(chargePageOrder.getOrderBackTime());
-//				purchasePo.setOrderIdApi(chargePageOrder.getTransaction_id());
-//				//查看订单状态
-//				OrderStateBase orderStatePage = OrderStateFactory.getOrderStateBase(epPo.getEpName());
-//				OrderStateResultPage osrp = orderStatePage.getOrderState(new OrderStateParamsPage(epPo.getPgdataCheckIp(), chargePageOrder.getTransaction_id(), epPo.getEpName(), epPo.getEpUserName(), epPo.getEpApikey()));
-//				purchasePo.setOrderResult(osrp.getPageOrder().getStatus());
-//				purchasePo.setOrderResultDetail(osrp.getPageOrder().getMsg());
-//				if(osrp == null){
-////					Log
-//					System.out.println("没有添加该公司代码");
-//				}
-//				System.out.println(osrp.getPageOrder().getCreated_at());
-//				System.out.println(osrp.getPageOrder().getCharge_fee());
-//				System.out.println(osrp.getPageOrder().getStatus());
-//				//将订单状态写入充值状态中
-////				chargePageOrder.getTransaction_id()
-//			}
-//			
-////			OrderStateResult osr =  purchaseByWeizuAPI(new ParamsEntityWeiZu(epPo.getEpUserName(), purchasePo.getChargeTel(), product.getProductCode(), epPo.getEpApikey()));
-//			
-//			
-//			purchasePo.setRootAgencyId(accountPo.getAgencyId());//设为当前登陆账户的订单
-//			 Map<String, Object> telMap = PurchaseUtil.getOperatorsByTel(purchasePo.getChargeTel());
-//			 String chargeTelCity = null;
-//			 if(telMap != null)
-//			{
-//				chargeTelCity = telMap.get("chargeTelCity").toString();
-//			}
-//			purchasePo.setChargeTelCity(chargeTelCity);
-//			purchasePo.setRecordId(nextIdRecord);
-//			//更新订单表
-//			int purResult = purchaseDAO.addPurchase(purchasePo);
-////			purchasePo
-//			
-//			/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
-//			if(purResult > 0){
-//				return OrderResultEnum.SUCCESS.getCode();
-//			}else{
-//				return OrderResultEnum.ERROR.getCode();
-//			}
-//		}else{
-//			return OrderResultEnum.ERROR.getCode();
-//		}
-		
-//		if(purResult + recordRes + channelRes - 2 > 0){
-//			return OrderResultEnum.SUCCESS.getCode();
-//		}else{
-//			return OrderResultEnum.ERROR.getCode();
-//		}
-		
-		
 	}
 	/**
 	 * @description: 接口充值
@@ -539,11 +396,15 @@ public class PurchaseAOImpl implements PurchaseAO {
 	 * @createTime:2017年8月17日 下午5:36:19
 	 */
 	public ChargeDTO chargeByFacet(ExchangePlatformPo epPo,ProductCodePo dataPo) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
-		 String classRealPath = "com.weizu.flowsys.api.weizu."+epPo.getEpEngId()+"Charge";	//包完整路径
+		if(epPo != null && dataPo != null){
+			String classRealPath = "com.weizu.flowsys.api.weizu."+epPo.getEpEngId()+"Charge";	//包完整路径
 			Class onwClass = Class.forName(classRealPath);
 			Constructor constructor = onwClass.getConstructor(String.class,String.class,String.class,String.class);
 			IChargeFacet chargeFacet = (IChargeFacet)constructor.newInstance(epPo.getEpPurchaseIp(),epPo.getEpApikey(),epPo.getEpUserName(),dataPo.getProductCode());
 			return chargeFacet.charge();
+		}else{
+			return null;
+		}
 	}
 
 	/**
@@ -835,6 +696,13 @@ public class PurchaseAOImpl implements PurchaseAO {
 	@Override
 	public TotalResult getTotalResultFromSuccess(PurchaseVO purchaseVO) {
 		Map<String,Object> map = getMapByPojo(purchaseVO, true);
+		if(StringHelper.isEmpty(purchaseVO.getBackStartTimeStr())){
+			map.put("startTimeBack",null);
+		}
+		if(StringHelper.isEmpty(purchaseVO.getBackEndTimeStr())){
+			purchaseVO.setBackEndTimeStr(DateUtil.formatAll(System.currentTimeMillis()));
+			map.put("endTimeBack", System.currentTimeMillis());
+		}
 		return purchaseDAO.getTotalResultFromSuccess(map);
 	}
 
