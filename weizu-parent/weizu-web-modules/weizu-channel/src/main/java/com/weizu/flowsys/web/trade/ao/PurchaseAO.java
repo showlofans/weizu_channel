@@ -7,6 +7,7 @@ import java.util.Map;
 
 
 
+
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.api.base.ChargeDTO;
 import com.weizu.flowsys.util.Pagination;
@@ -19,6 +20,7 @@ import com.weizu.flowsys.web.http.weizu.OrderStateResult;
 import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
+import com.weizu.flowsys.web.trade.pojo.TotalResult;
 
 public interface PurchaseAO {
 	
@@ -78,5 +80,14 @@ public interface PurchaseAO {
 	PurchasePo getOnePurchase(long orderId);
 	
 	ChargeDTO chargeByFacet(ExchangePlatformPo epPo,ProductCodePo dataPo) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException;
+	
+	/**
+	 * @description: 获得成功列表统计信息
+	 * @param purchaseVO
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月22日 下午2:18:36
+	 */
+	TotalResult getTotalResultFromSuccess(PurchaseVO purchaseVO);
 	
 }

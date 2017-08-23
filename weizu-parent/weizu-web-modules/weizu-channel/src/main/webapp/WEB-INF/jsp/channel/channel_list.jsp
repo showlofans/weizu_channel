@@ -91,6 +91,7 @@
 					<th>通道类型</th>
 					<!-- <th>修改时间</th> -->
 					<th>通道规格</th>
+					<!-- <th>通道更新时间</th> -->
 					
 					<th>操作</th>
 				</tr>
@@ -104,6 +105,7 @@
 						<td><c:forEach items="${resultMap.serviceTypeEnums }" var="serTypeEnum" varStatus="vs1">
 								<c:if test="${channel.serviceType == serTypeEnum.value }">
 									<span>${serTypeEnum.desc }</span>
+									<%-- <span class="serType" style="display:none">${serTypeEnum.value }</span> --%>
 								</c:if>
 							</c:forEach>
 						</td> 
@@ -150,6 +152,7 @@
 							</c:forEach>
 						</td>
 						<td>${channel.pgSize }</td>
+						<%-- <td>${channel.lastAccessStr }</td> --%>
 					<!-- 	<td class="td-status"><span class="label label-success radius">已发布</span></td> -->
 						<td class="f-14 td-manage">
 						<c:if test="${channel.channelState == 1 }"><!-- 暂停 -->
@@ -203,9 +206,10 @@
 <script type="text/javascript">
 function channel_edit(url,objt){
 	var channelId = $(objt).parent().parent().children(":first").html();
-	var billType = $(objt).parent().parent().children(":eq(3)").html();
-	var operatorType = $(objt).parent().parent().children(":eq(4)").html();
+	var serviceType = $(objt).parent().parent().children(":eq(4)").html();
+	var operatorType = $(objt).parent().parent().children(":eq(5)").html();
 	//alert(serviceType);
+	//alert(operatorType);
 	//alert(channelId);
 	$("#channelId").val(channelId);
 	 $(objt).attr('data-href',url+'?'+'channelId='+Number(channelId)+'&serviceType='+ serviceType+'&operatorType='+ operatorType); //+$('form').serialize()

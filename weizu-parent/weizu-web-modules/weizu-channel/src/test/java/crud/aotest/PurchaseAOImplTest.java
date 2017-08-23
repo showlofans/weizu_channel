@@ -179,7 +179,7 @@ public class PurchaseAOImplTest {
 //	@Test
 //	public void testTotal(){
 //		TotalResult totalResult = purchaseDAO.getTotalResultFromSuccess(1);
-//		System.out.println(totalResult.getTotalRecords());
+//		System.out.println(totalResult.getTotalCost());
 //	}
 	
 }

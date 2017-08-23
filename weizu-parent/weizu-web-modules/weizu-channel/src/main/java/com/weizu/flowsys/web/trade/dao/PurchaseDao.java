@@ -69,6 +69,6 @@ public interface PurchaseDao extends Dao<PurchasePo, Long> {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年8月21日 下午5:24:33
 	 */
-	TotalResult getTotalResultFromSuccess(int agencyId);
+	TotalResult getTotalResultFromSuccess(Map<String,Object> map);
 
 }

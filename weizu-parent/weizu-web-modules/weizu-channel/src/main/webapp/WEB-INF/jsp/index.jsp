@@ -127,7 +127,9 @@
 				<ul>
 					<li><a data-href="/flowsys/chargePg/purchase_list.do" data-title="订单列表" href="javascript:void(0)">订单列表</a></li>
 					<li><a data-href="/flowsys/chargePg/purchase_list.do?orderState=2" data-title="充值进行" href="javascript:void(0)">充值进行</a></li>
+					<c:if test="${loginContext.rootAgencyId == 0 }">
 					<li><a data-href="/flowsys/chargePg/purchase_list.do?orderState=3" data-title="充值等待" href="javascript:void(0)">充值等待</a></li>
+					</c:if>
 					<li><a data-href="/flowsys/chargePg/purchase_list.do?orderState=1" data-title="充值成功" href="javascript:void(0)">充值成功</a></li>
 					<li><a data-href="/flowsys/chargePg/purchase_list.do?orderState=0" data-title="充值失败" href="javascript:void(0)">充值失败</a></li>
 			</ul>

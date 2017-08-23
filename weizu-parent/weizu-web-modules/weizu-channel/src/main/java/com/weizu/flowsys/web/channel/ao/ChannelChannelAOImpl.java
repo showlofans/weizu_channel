@@ -202,16 +202,17 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 			}
 			if(StringHelper.isNotEmpty(channelPo.getScopeCityName()))
 			{
-				String scopeCityCode = "";
-				for(Map<String, Object> cityMap : ScopeCityEnum.toList())
-				{
-					String cityName = cityMap.get("desc").toString();
-					if(cityName.contains(channelPo.getScopeCityName().trim()))//江西属于江西省
-					{
-						scopeCityCode = cityMap.get("value").toString();
-					}
-					paramsMap.put("scopeCityCode", scopeCityCode);
-				}
+				//江西属于江西省
+				String scopeCityCode = ScopeCityEnum.getValueByDesc(channelPo.getScopeCityName().trim());
+//				for(Map<String, Object> cityMap : ScopeCityEnum.toList())
+//				{
+//					String cityName = cityMap.get("desc").toString();
+//					if(cityName.contains(channelPo.getScopeCityName().trim()))//江西属于江西省
+//					{
+//						scopeCityCode = cityMap.get("value").toString();
+//					}
+//				}
+				paramsMap.put("scopeCityCode", scopeCityCode);
 			}
 //			if(StringHelper.isNotEmpty(channelPo.getScopeCityCode()))
 //			{

@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50626
 File Encoding         : 65001
 
-Date: 2017-08-21 18:09:10
+Date: 2017-08-22 18:26:39
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -173,7 +173,7 @@ CREATE TABLE `agency_purchase` (
   CONSTRAINT `fk_ap_agency` FOREIGN KEY (`agency_id`) REFERENCES `agency_backward` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_ap_purchase` FOREIGN KEY (`purchase_id`) REFERENCES `purchase` (`order_id`) ON DELETE CASCADE,
   CONSTRAINT `fk_ap_rateDiscount` FOREIGN KEY (`rate_discount_id`) REFERENCES `rate_discount` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of agency_purchase
@@ -257,6 +257,21 @@ INSERT INTO `agency_purchase` VALUES ('88', '1', '725500515160428544', '46', '25
 INSERT INTO `agency_purchase` VALUES ('91', '21', '725503500187865088', '51', '27.9', '0', '0', '27.9', '456', '1', '手动成功');
 INSERT INTO `agency_purchase` VALUES ('92', '4', '725503500187865088', '46', '25.5', '0', '2', '27.9', '456', '1', '手动成功');
 INSERT INTO `agency_purchase` VALUES ('93', '1', '725503500187865088', '46', '25.5', '0', '1', '25.5', '123', '1', '手动成功');
+INSERT INTO `agency_purchase` VALUES ('94', '21', '725549008616951808', '51', '27.9', '0', '0', '27.9', '456', '2', null);
+INSERT INTO `agency_purchase` VALUES ('95', '4', '725549008616951808', '46', '25.5', '0', '2', '27.9', '456', '2', null);
+INSERT INTO `agency_purchase` VALUES ('96', '1', '725549008616951808', '46', '22.5', '0', '1', '22.5', '123', '2', null);
+INSERT INTO `agency_purchase` VALUES ('97', '21', '725766062242533376', '51', '27.9', '0', '0', '27.9', '456', '2', null);
+INSERT INTO `agency_purchase` VALUES ('98', '4', '725766062242533376', '46', '25.5', '0', '2', '27.9', '456', '2', null);
+INSERT INTO `agency_purchase` VALUES ('99', '1', '725766062242533376', '46', '22.5', '0', '1', '22.5', '123', '2', null);
+INSERT INTO `agency_purchase` VALUES ('100', '21', '725769253227073536', '51', '27.9', '0', '0', '27.9', '456', '1', '手动成功');
+INSERT INTO `agency_purchase` VALUES ('101', '4', '725769253227073536', '46', '25.5', '0', '2', '27.9', '456', '1', '手动成功');
+INSERT INTO `agency_purchase` VALUES ('102', '1', '725769253227073536', '46', '22.5', '0', '2', '25.5', '123', '1', '手动成功');
+INSERT INTO `agency_purchase` VALUES ('103', '21', '725784037636968448', '51', '27.9', '0', '0', '27.9', '456', '2', null);
+INSERT INTO `agency_purchase` VALUES ('104', '4', '725784037636968448', '46', '25.5', '0', '2', '27.9', '456', '2', null);
+INSERT INTO `agency_purchase` VALUES ('105', '1', '725784037636968448', '46', '22.5', '0', '2', '25.5', '123', '3', null);
+INSERT INTO `agency_purchase` VALUES ('107', '21', '725786851754905600', '51', '27.9', '0', '0', '27.9', '456', '2', null);
+INSERT INTO `agency_purchase` VALUES ('108', '4', '725786851754905600', '46', '25.5', '0', '2', '27.9', '456', '2', null);
+INSERT INTO `agency_purchase` VALUES ('109', '1', '725786851754905600', '46', '22.5', '0', '2', '25.5', '123', '3', '通道暂停等待');
 
 -- ----------------------------
 -- Table structure for `channel_channel`
@@ -286,7 +301,7 @@ INSERT INTO `channel_channel` VALUES ('8', '省内-wz江西省', '500& 500', '32
 INSERT INTO `channel_channel` VALUES ('9', '全国-wz福建', '100', null, null, null, null, null, '0', '0', null, '1');
 INSERT INTO `channel_channel` VALUES ('10', '省内-wz广东', '200', '32', null, null, null, null, '0', '0', null, '1');
 INSERT INTO `channel_channel` VALUES ('11', '全国-wz广东移动95', '6144& 3072& 500', '32', null, null, null, null, '0', '0', null, '1');
-INSERT INTO `channel_channel` VALUES ('12', '省漫游-wz广东移动75', '500& 6144', '32', null, null, null, null, '0', '0', '1503283928164', '1');
+INSERT INTO `channel_channel` VALUES ('12', '省漫游-wz广东移动75', '500& 6144', '32', null, null, null, null, '1', '0', '1503368478006', '1');
 INSERT INTO `channel_channel` VALUES ('13', '省漫游-江西', '1000', '32', null, null, null, null, '0', '1', '1499680372499', '1');
 INSERT INTO `channel_channel` VALUES ('14', '全国-', '6144& 3072& 500', '32', null, null, null, null, '0', '0', '1500862266556', '1');
 INSERT INTO `channel_channel` VALUES ('15', '全国-1w', '100,500', '32', null, null, null, null, '0', '0', '1500862263126', '1');
@@ -460,12 +475,12 @@ CREATE TABLE `charge_account` (
 -- ----------------------------
 -- Records of charge_account
 -- ----------------------------
-INSERT INTO `charge_account` VALUES ('1', '-96019', null, null, '200', '1', '0', null, '1495689716779');
-INSERT INTO `charge_account` VALUES ('2', '85112.5', '工行', '123', '0', '4', '0', null, '1499736896474');
-INSERT INTO `charge_account` VALUES ('8', '9805.2', null, null, '2001', '21', '0', null, '1500523402299');
+INSERT INTO `charge_account` VALUES ('1', '-96219', null, null, '200', '1', '0', null, '1495689716779');
+INSERT INTO `charge_account` VALUES ('2', '94001.8', '工行', '123', '0', '4', '0', null, '1499736896474');
+INSERT INTO `charge_account` VALUES ('8', '788.4', null, null, '2001', '21', '0', null, '1500523402299');
 INSERT INTO `charge_account` VALUES ('10', '2000', null, null, '1', '23', '0', null, '1500523402299');
 INSERT INTO `charge_account` VALUES ('11', '356', null, null, '1212', '24', '0', null, '1498617873998');
-INSERT INTO `charge_account` VALUES ('12', '500', null, null, '2000', '25', '0', null, '1496479483371');
+INSERT INTO `charge_account` VALUES ('12', '700', null, null, '2000', '25', '0', null, '1496479483371');
 INSERT INTO `charge_account` VALUES ('13', '123', null, null, '0', '26', '0', null, '1497231635832');
 INSERT INTO `charge_account` VALUES ('17', '100', null, null, '0', '21', '1', '/download?fileName=149881550554119859915_980x1200_0.jpg', '1500519015597');
 INSERT INTO `charge_account` VALUES ('18', '0', null, null, '0', '24', '1', '/certification//download?fileName=149881581565019859915_980x1200_0.jpg', '1498617873998');
@@ -491,7 +506,7 @@ CREATE TABLE `charge_record` (
   `charge_for` int(11) DEFAULT NULL COMMENT '发生原因',
   `purchase_id` bigint(20) DEFAULT NULL COMMENT '订单id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=208 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=234 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of charge_record
@@ -657,6 +672,31 @@ INSERT INTO `charge_record` VALUES ('204', '1503301622695', '27.9', '9833.1', '9
 INSERT INTO `charge_record` VALUES ('205', '1503301640123', '25.5', '-96019', '-96044.5', '0', '1', '1', '1', '1', '725503500187865088');
 INSERT INTO `charge_record` VALUES ('206', '1503301627448', '27.9', '85110.1', '85138', '0', '2', '2', '4', '1', '725503500187865088');
 INSERT INTO `charge_record` VALUES ('207', '1503301627448', '25.5', '85138', '85112.5', '0', '1', '2', '4', '1', '725503500187865088');
+INSERT INTO `charge_record` VALUES ('208', '1503311277139', '200', '-96019', '-96219', '0', '1', '1', '1', '1', null);
+INSERT INTO `charge_record` VALUES ('209', '1503311277157', '200', '500', '700', '0', '0', '12', '25', '1', null);
+INSERT INTO `charge_record` VALUES ('210', '1503312472750', '27.9', '9805.2', '9777.3', '0', '1', '8', '21', '1', '725549008616951808');
+INSERT INTO `charge_record` VALUES ('211', '1503312477897', '25.5', '85140.4', '85114.9', '0', '1', '2', '4', '1', '725549008616951808');
+INSERT INTO `charge_record` VALUES ('212', '1503312479306', '22.5', '-96193.5', '-96216', '0', '1', '1', '1', '1', '725549008616951808');
+INSERT INTO `charge_record` VALUES ('213', '1503314019267', '100000', '85114.9', '-14885.1', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('214', '1503314019271', '100000', '9777.3', '109777.3', '0', '0', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('215', '1503314258626', '-109777.3', '-14885.1', '94892.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('216', '1503314258630', '-109777.3', '109777.3', '0', '0', '0', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('217', '1503364189924', '1000', '94892.2', '93892.2', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('218', '1503364189942', '1000', '0', '1000', '0', '0', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('219', '1503364222367', '27.9', '1000', '972.1', '0', '1', '8', '21', '1', '725766062242533376');
+INSERT INTO `charge_record` VALUES ('220', '1503364299427', '25.5', '93920.1', '93894.6', '0', '1', '2', '4', '1', '725766062242533376');
+INSERT INTO `charge_record` VALUES ('221', '1503364401802', '22.5', '-96193.5', '-96216', '0', '1', '1', '1', '1', '725766062242533376');
+INSERT INTO `charge_record` VALUES ('222', '1503364983157', '27.9', '972.1', '944.2', '0', '1', '8', '21', '1', '725769253227073536');
+INSERT INTO `charge_record` VALUES ('223', '1503364987214', '25.5', '93922.5', '93897', '0', '1', '2', '4', '1', '725769253227073536');
+INSERT INTO `charge_record` VALUES ('224', '1503364989516', '22.5', '-96193.5', '-96216', '0', '1', '1', '1', '1', '725769253227073536');
+INSERT INTO `charge_record` VALUES ('225', '1503368508035', '27.9', '944.2', '916.3', '0', '1', '8', '21', '1', '725784037636968448');
+INSERT INTO `charge_record` VALUES ('226', '1503368508053', '25.5', '93924.9', '93899.4', '0', '1', '2', '4', '1', '725784037636968448');
+INSERT INTO `charge_record` VALUES ('227', '1503368508055', '22.5', '-96193.5', '-96216', '0', '1', '1', '1', '1', '725784037636968448');
+INSERT INTO `charge_record` VALUES ('229', '1503369178973', '27.9', '916.3', '888.4', '0', '1', '8', '21', '1', '725786851754905600');
+INSERT INTO `charge_record` VALUES ('230', '1503369179000', '25.5', '93927.3', '93901.8', '0', '1', '2', '4', '1', '725786851754905600');
+INSERT INTO `charge_record` VALUES ('231', '1503369179004', '22.5', '-96193.5', '-96216', '0', '1', '1', '1', '1', '725786851754905600');
+INSERT INTO `charge_record` VALUES ('232', '1503384584955', '-100', '93901.8', '94001.8', '0', '1', '2', '4', '1', null);
+INSERT INTO `charge_record` VALUES ('233', '1503384584970', '-100', '888.4', '788.4', '0', '0', '8', '21', '1', null);
 
 -- ----------------------------
 -- Table structure for `company_credentials`
@@ -721,19 +761,21 @@ CREATE TABLE `exchange_platform` (
   `ep_balance` double DEFAULT NULL COMMENT '平台余额',
   `ep_apikey` varchar(255) DEFAULT NULL COMMENT 'apikey',
   `ep_ip` varchar(255) DEFAULT NULL COMMENT '主页地址',
+  `last_access` bigint(20) DEFAULT NULL COMMENT '平台更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of exchange_platform
 -- ----------------------------
-INSERT INTO `exchange_platform` VALUES ('1', '迈远', 'Weizu', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'ncwz22', '333221', '2000', '48dee3af73174054b3a5f88c58d17d61', 'http://120.76.194.45');
-INSERT INTO `exchange_platform` VALUES ('2', '尚通', 'WeiZu', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'ncwz22', '11', '3000', '48dee3af73174054b3a5f88c58d17d61', 'http://120.76.194.45');
-INSERT INTO `exchange_platform` VALUES ('13', '123', null, '12', '3', '121', '2', '2', '2123', '12', '3', '2');
-INSERT INTO `exchange_platform` VALUES ('30', '5', null, '5', '5', '5', '55', '5', '55', '5', '5', '5');
-INSERT INTO `exchange_platform` VALUES ('31', '0', null, '0', '0', '0', '0', '0', '0', '0', '0', '0');
-INSERT INTO `exchange_platform` VALUES ('32', 'wzkj', 'Weizu', 'http://139.224.70.161:32001/api/v1/sendOrder', 'http://139.224.70.161:32001/api/v1/sendOrder', 'http://139.224.70.161:32001/api/v1/orderState', 'http://139.224.70.161:32001/api/v1/getBalance', 'CS111111', '123456', null, '722c16de0a83e5bd2f988e3c7bc9fee8', 'http://139.224.70.161/');
-INSERT INTO `exchange_platform` VALUES ('40', '456', null, '45', '645', '45', '45', '454', '4', '545', '5', '4');
+INSERT INTO `exchange_platform` VALUES ('1', '迈远', 'MaiyuanKeji', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'ncwz22', '333221', '2000', '48dee3af73174054b3a5f88c58d17d61', 'http://120.76.194.45', '1503376408629');
+INSERT INTO `exchange_platform` VALUES ('2', '尚通', 'WeiZu', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'ncwz22', '11', '3000', '48dee3af73174054b3a5f88c58d17d61', 'http://120.76.194.45', '1503369178973');
+INSERT INTO `exchange_platform` VALUES ('13', '123', null, '12', '3', '121', '2', '2', '2123', '12', '3', '2', '1503369178973');
+INSERT INTO `exchange_platform` VALUES ('30', '5', null, '5', '5', '5', '55', '5', '55', '5', '5', '5', '1503369178973');
+INSERT INTO `exchange_platform` VALUES ('31', '0', null, '0', '0', '0', '0', '0', '0', '0', '0', '0', '1503369178973');
+INSERT INTO `exchange_platform` VALUES ('32', 'wzkj', 'Weizu', 'http://139.224.70.161:32001/api/v1/sendOrder', 'http://139.224.70.161:32001/api/v1/sendOrder', 'http://139.224.70.161:32001/api/v1/orderState', 'http://139.224.70.161:32001/api/v1/getBalance', 'CS111111', '123456', null, '722c16de0a83e5bd2f988e3c7bc9fee8', 'http://139.224.70.161/', '1503369178973');
+INSERT INTO `exchange_platform` VALUES ('40', '456', null, '45', '645', '45', '45', '454', '4', '545', '5', '4', '1503369178973');
+INSERT INTO `exchange_platform` VALUES ('41', 'wzkjj', 'WeizuKeji', 'http://127.0.0.1:8080/flowsys/agency/login.do', 'http://127.0.0.1:8080/flowsys/agency/login.do', 'http://127.0.0.1:8080/flowsys/agency/login.do', 'http://127.0.0.1:8080/flowsys/agency/login.do', 'ncwz', 'ncwz', '100', 'http://127.0.0.1:8080/flowsys/agency/login.do', 'http://127.0.0.1:8080/flowsys/agency/login.do', '1503381834471');
 
 -- ----------------------------
 -- Table structure for `operator_discount`
@@ -806,7 +848,7 @@ CREATE TABLE `operator_pg_data` (
   `operator_name` varchar(255) DEFAULT NULL COMMENT '运营商名称',
   `service_type` int(11) DEFAULT NULL COMMENT '业务类型（0-全国，1-省内，2-省漫游，3-转赠,4-红包）',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of operator_pg_data
@@ -816,12 +858,12 @@ INSERT INTO `operator_pg_data` VALUES ('8', '3072', '100', '100元3072MB', '1', 
 INSERT INTO `operator_pg_data` VALUES ('10', '100', '10', '10元100MB', '1', '1', '中国联通', '0');
 INSERT INTO `operator_pg_data` VALUES ('11', '200', '10', '10yuan200m', '1', '1', '中国联通', '1');
 INSERT INTO `operator_pg_data` VALUES ('12', '1000', '10', '10yuan1000m', '1', '1', '中国联通', '2');
-INSERT INTO `operator_pg_data` VALUES ('13', '500', '30', '移动', '1', '0', '中国移动', '1');
 INSERT INTO `operator_pg_data` VALUES ('15', '500', '30', '移动30.0元500MB省漫游', '1', '0', '中国移动', '2');
 INSERT INTO `operator_pg_data` VALUES ('16', '500', '30', '移动30.0元500MB全国', '1', '0', '中国移动', '0');
 INSERT INTO `operator_pg_data` VALUES ('17', '6144', '180', '联通180.0元6144MB转增', '1', '1', '中国联通', '3');
 INSERT INTO `operator_pg_data` VALUES ('18', '6144', '180', '移动180.0元6144MB省漫游', '1', '0', '中国移动', '2');
 INSERT INTO `operator_pg_data` VALUES ('19', '500', '30', '移动30.0元500MB省内', '1', '0', '中国移动', '1');
+INSERT INTO `operator_pg_data` VALUES ('20', '100', '10', '移动10.0元100MB省内', '1', '0', '中国移动', '1');
 
 -- ----------------------------
 -- Table structure for `product_code`
@@ -941,6 +983,11 @@ INSERT INTO `purchase` VALUES ('725492786119315456', null, null, '21', '13556801
 INSERT INTO `purchase` VALUES ('725498150399250432', null, null, '21', '13556801477', '16', '1503300347206', '广东移动', null, null, '12', null, null);
 INSERT INTO `purchase` VALUES ('725500515160428544', null, null, '21', '13556801477', '16', '1503300911009', '广东移动', null, null, '12', null, null);
 INSERT INTO `purchase` VALUES ('725503500187865088', null, null, '21', '13556801477', '16', '1503301622695', '广东移动', null, null, '12', null, '1503303896413');
+INSERT INTO `purchase` VALUES ('725549008616951808', null, null, '21', '15820314556', '16', '1503312472750', '广东移动', null, null, '12', null, null);
+INSERT INTO `purchase` VALUES ('725766062242533376', null, null, '21', '13592838704', '16', '1503364222367', '广东移动', null, null, '12', null, null);
+INSERT INTO `purchase` VALUES ('725769253227073536', null, null, '21', '13592838704', '16', '1503364983157', '广东移动', null, '1', '12', '手动成功', '1503382299436');
+INSERT INTO `purchase` VALUES ('725784037636968448', null, null, '21', '13592838704', '16', '1503368508035', '广东移动', null, null, '12', null, null);
+INSERT INTO `purchase` VALUES ('725786851754905600', null, null, '21', '13592838704', '16', '1503369178973', '广东移动', null, null, '12', null, null);
 
 -- ----------------------------
 -- Table structure for `rate_backward`

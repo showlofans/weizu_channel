@@ -25,7 +25,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     channel.id, channel.channel_name, pg_size, ep_id, channel_total_use, channel_total_amount, channel_total_profit, 
-    channel_balance, channel_state, channel_use_state, last_access,belong_agency_id,
+    channel_balance, channel_state, channel_use_state, channel.last_access,belong_agency_id,
     discount.id,channel_id,scope_city_code,channel_discount,operator_type,service_type,discount.bill_type,ep.ep_name ep_name
   </sql>
   

@@ -12,7 +12,15 @@ public class TotalResult {
 	private Integer totalRecords;		//总记录数
 	private Double totalPrice;			//原价
 	private Double totalAmount;			//总扣款
+	private Double totalCost;			//总扣款
 	
+	
+	public Double getTotalCost() {
+		return totalCost;
+	}
+	public void setTotalCost(Double totalCost) {
+		this.totalCost = totalCost;
+	}
 	public Integer getTotalRecords() {
 		return totalRecords;
 	}

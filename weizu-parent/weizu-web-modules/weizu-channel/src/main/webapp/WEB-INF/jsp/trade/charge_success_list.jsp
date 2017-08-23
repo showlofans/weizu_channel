@@ -34,7 +34,7 @@
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 订单管理 <span class="c-gray en">&gt;</span> 订单列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
-		<form class="form form-horizontal" action="/flowsys/chargePg/purchase_list.do" method="post" id="formD" name="dataListForm">
+		<form class="form form-horizontal" action="/flowsys/chargePg/purchase_list.do?orderState=1" method="post" id="formD" name="dataListForm">
 				<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
 				<div class="row cl formControls">
 					手机号:<input type="text"  value="${resultMap.searchParams.chargeTel }" name="chargeTel" id="" placeholder=" 手机号" style="width:150px" class="input-text">
@@ -110,7 +110,7 @@
 			</thead>
 			<tbody>
 				<c:forEach items="${resultMap.pagination.records }" var="purchase" varStatus="vs">
-					<tr class="text-c">
+					<tr class="text-c one">
 						<td>${purchase.agencyName }</td>
 						<td>${purchase.orderId }</td>
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
@@ -132,13 +132,13 @@
 						<!-- 结果 -->
 						<td>
 						<c:forEach items="${resultMap.orderStateEnums }" var="orderStateEnum" varStatus="vs">
-							<c:if test="${purchase.orderResult == orderStateEnum.value }">
+							<c:if test="${purchase.orderState == orderStateEnum.value }">
 								${orderStateEnum.desc }
 							</c:if>
 						</c:forEach>
 						</td>
 						
-						<td>${purchase.orderResultDetail }</td>
+						<td>${purchase.orderStateDetail }</td>
 						<td>${purchase.orderPrice }</td>
 						<td>${purchase.orderAmount }</td>
 						<c:if test="${loginContext.rootAgencyId == 0 }"><td>${purchase.channelName }</td> 
@@ -152,22 +152,26 @@
 						</td>
 					</tr>
 				</c:forEach>
-				<tr class="c-success">
+				<c:if test="${resultMap.pagination.records != null && resultMap.pagination.records.size() > 0 }">
+				<tr>
 					<td class="text-r c-success" >总单数</td>
 					<td  class="text-l c-warning">${tot.totalRecords }</td>
 					<td  class="text-r c-success">总面值</td>
 					<td colspan="2" class="text-l c-warning">${tot.totalPrice }</td>
-					<td  class="text-r c-success">扣款</td>
+					<td  class="text-r c-success">总扣款</td>
 					<td colspan="2"  class="text-l c-warning">${tot.totalAmount }</td>
+					<td  class="text-r c-success">总成本</td>
+					<td colspan="4"  class="text-l c-warning">${tot.totalCost}</td>
 					<c:choose>
 						<c:when test="${loginContext.rootAgencyId == 0 }">
-							<td colspan="7"></td>
+							<td colspan="3"></td>
 						</c:when>
 						<c:otherwise>
-							<td colspan="6"></td>
+							<td colspan="2"></td>
 						</c:otherwise>
 					</c:choose>
 				</tr>
+				</c:if>
 			</tbody>
 		</table>
 		<mytag:Pagination pagination="${resultMap.pagination}" queryForm="dataListForm" divId="purchaseId" />  
