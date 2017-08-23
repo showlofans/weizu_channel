@@ -35,6 +35,18 @@ public class OperatorPgDataPo extends Po {
     private Double pgDiscountPrice;		//流量包价格（折扣）
     @TempField
     private String productCode;				//产品编码
+//    @TempField
+//    private String scopeCityCode;				//产品编码
+    @TempField
+    private Long channelId;				//通道id
+
+	public Long getChannelId() {
+		return channelId;
+	}
+
+	public void setChannelId(Long channelId) {
+		this.channelId = channelId;
+	}
 
 	public String getProductCode() {
 		return productCode;

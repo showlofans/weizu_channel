@@ -43,6 +43,10 @@ public class ChargePgURL extends BaseURL {
 	 */
 	public static final String PGLIST_FORPURCHASE = "/pgList_forPurchase" + DYNAMIC_WEB_SUFFIX;
 	/**
+	 * 流量包购买列表(超管)
+	 */
+	public static final String PGLIST_SUPER_FORPURCHASE = "/pgList_super_forPurchase" + DYNAMIC_WEB_SUFFIX;
+	/**
 	 * 流量包购买页面
 	 */
 	public static final String PG_CHARGE_PAGE = "/pg_charge_page" + DYNAMIC_WEB_SUFFIX;

@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50626
 File Encoding         : 65001
 
-Date: 2017-08-22 18:26:39
+Date: 2017-08-23 18:39:08
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -173,7 +173,7 @@ CREATE TABLE `agency_purchase` (
   CONSTRAINT `fk_ap_agency` FOREIGN KEY (`agency_id`) REFERENCES `agency_backward` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_ap_purchase` FOREIGN KEY (`purchase_id`) REFERENCES `purchase` (`order_id`) ON DELETE CASCADE,
   CONSTRAINT `fk_ap_rateDiscount` FOREIGN KEY (`rate_discount_id`) REFERENCES `rate_discount` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of agency_purchase
@@ -272,6 +272,9 @@ INSERT INTO `agency_purchase` VALUES ('105', '1', '725784037636968448', '46', '2
 INSERT INTO `agency_purchase` VALUES ('107', '21', '725786851754905600', '51', '27.9', '0', '0', '27.9', '456', '2', null);
 INSERT INTO `agency_purchase` VALUES ('108', '4', '725786851754905600', '46', '25.5', '0', '2', '27.9', '456', '2', null);
 INSERT INTO `agency_purchase` VALUES ('109', '1', '725786851754905600', '46', '22.5', '0', '2', '25.5', '123', '3', '通道暂停等待');
+INSERT INTO `agency_purchase` VALUES ('110', '21', '726174248493649920', '51', '27.9', '0', '0', '27.9', '456', '2', null);
+INSERT INTO `agency_purchase` VALUES ('111', '4', '726174248493649920', '46', '25.5', '0', '2', '27.9', '456', '2', null);
+INSERT INTO `agency_purchase` VALUES ('112', '1', '726174248493649920', '46', '22.5', '0', '2', '25.5', '123', '3', '通道暂停等待');
 
 -- ----------------------------
 -- Table structure for `channel_channel`
@@ -476,8 +479,8 @@ CREATE TABLE `charge_account` (
 -- Records of charge_account
 -- ----------------------------
 INSERT INTO `charge_account` VALUES ('1', '-96219', null, null, '200', '1', '0', null, '1495689716779');
-INSERT INTO `charge_account` VALUES ('2', '94001.8', '工行', '123', '0', '4', '0', null, '1499736896474');
-INSERT INTO `charge_account` VALUES ('8', '788.4', null, null, '2001', '21', '0', null, '1500523402299');
+INSERT INTO `charge_account` VALUES ('2', '94004.2', '工行', '123', '0', '4', '0', null, '1499736896474');
+INSERT INTO `charge_account` VALUES ('8', '760.5', null, null, '2001', '21', '0', null, '1500523402299');
 INSERT INTO `charge_account` VALUES ('10', '2000', null, null, '1', '23', '0', null, '1500523402299');
 INSERT INTO `charge_account` VALUES ('11', '356', null, null, '1212', '24', '0', null, '1498617873998');
 INSERT INTO `charge_account` VALUES ('12', '700', null, null, '2000', '25', '0', null, '1496479483371');
@@ -506,7 +509,7 @@ CREATE TABLE `charge_record` (
   `charge_for` int(11) DEFAULT NULL COMMENT '发生原因',
   `purchase_id` bigint(20) DEFAULT NULL COMMENT '订单id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=234 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=237 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of charge_record
@@ -697,6 +700,9 @@ INSERT INTO `charge_record` VALUES ('230', '1503369179000', '25.5', '93927.3', '
 INSERT INTO `charge_record` VALUES ('231', '1503369179004', '22.5', '-96193.5', '-96216', '0', '1', '1', '1', '1', '725786851754905600');
 INSERT INTO `charge_record` VALUES ('232', '1503384584955', '-100', '93901.8', '94001.8', '0', '1', '2', '4', '1', null);
 INSERT INTO `charge_record` VALUES ('233', '1503384584970', '-100', '888.4', '788.4', '0', '0', '8', '21', '1', null);
+INSERT INTO `charge_record` VALUES ('234', '1503461541553', '27.9', '788.4', '760.5', '0', '1', '8', '21', '1', '726174248493649920');
+INSERT INTO `charge_record` VALUES ('235', '1503461541585', '25.5', '94029.7', '94004.2', '0', '1', '2', '4', '1', '726174248493649920');
+INSERT INTO `charge_record` VALUES ('236', '1503461547249', '22.5', '-96193.5', '-96216', '0', '1', '1', '1', '1', '726174248493649920');
 
 -- ----------------------------
 -- Table structure for `company_credentials`
@@ -988,6 +994,7 @@ INSERT INTO `purchase` VALUES ('725766062242533376', null, null, '21', '13592838
 INSERT INTO `purchase` VALUES ('725769253227073536', null, null, '21', '13592838704', '16', '1503364983157', '广东移动', null, '1', '12', '手动成功', '1503382299436');
 INSERT INTO `purchase` VALUES ('725784037636968448', null, null, '21', '13592838704', '16', '1503368508035', '广东移动', null, null, '12', null, null);
 INSERT INTO `purchase` VALUES ('725786851754905600', null, null, '21', '13592838704', '16', '1503369178973', '广东移动', null, null, '12', null, null);
+INSERT INTO `purchase` VALUES ('726174248493649920', null, null, '21', '13592838704', '16', '1503461541553', '广东移动', null, null, '12', null, null);
 
 -- ----------------------------
 -- Table structure for `rate_backward`

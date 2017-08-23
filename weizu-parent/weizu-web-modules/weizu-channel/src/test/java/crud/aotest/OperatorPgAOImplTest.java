@@ -1,6 +1,7 @@
 package crud.aotest;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -12,6 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 import com.weizu.flowsys.web.channel.dao.OperatorPgDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
+import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -76,7 +78,7 @@ public class OperatorPgAOImplTest {
 //		PageParam pageParam = new PageParam(1,10);
 //		Map<String,Object> params = new HashMap<String, Object>();
 //		Pagination<OperatorPgDataPo> pagination =  operatorPgAO.listPg(params, pageParam);
-//		System.out.println(pagination.getRecords().get(1));
+//		System.out.println(pagination.getRecords().get(1).getOperatorName());
 //		
 //	}
 //	@Test
@@ -85,7 +87,7 @@ public class OperatorPgAOImplTest {
 //		operatorPgPo.setOperatorType(0);
 //		operatorPgPo.setServiceType(0);
 ////		operatorPgPo.set
-//		List<OperatorPgDataPo> list = operatorPgAO.pgList_forPurchase(operatorPgPo, 4);
+//		List<OperatorPgDataPo> list = operatorPgAO.pgList_forPurchase(operatorPgPo,"21", 4);
 //		System.out.println(list == null ?"": list.size());
 //	}
 	
@@ -103,6 +105,13 @@ public class OperatorPgAOImplTest {
 //	}
 //	@Test
 //	public void testPgListNoCode(){
-//		operatorPgDao.listPgListNotInPcode(epId, serviceType, operatorType)
+//		List<OperatorPgDataPo> list = operatorPgDao.listPgListNotInPcode(2, 0, 0);
+//		System.out.println(list.size());
 //	}
+	@Test
+	public void testPgListCode(){
+		Map<String,Object> map = operatorPgAO.getBy(new SuperPurchaseParam("广东移动", "0", "Weizu"));
+		List<OperatorPgDataPo> list = (List<OperatorPgDataPo>) map.get("pgList");
+		System.out.println(list.size());
+	}
 }

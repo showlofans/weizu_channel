@@ -11,6 +11,7 @@
 	<sql id="t_cnel">channel_channel</sql>
 	<sql id="t_cd">channel_discount</sql>
 	<sql id="t_pCode">product_code</sql>
+	<sql id="t_ep">exchange_platform</sql>
 	<!-- <sql id="t_scope">service_scope</sql> -->
 	
 	<resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo">
@@ -35,12 +36,13 @@
 	    <!-- <result column="scope_city_name" jdbcType="VARCHAR" property="scopeCityName" /> -->
 	    <result column="service_type" property="serviceType" />
 	    <result column="product_code" property="productCode" />
+	    <result column="cnel_id" property="channelId" />
 	 </resultMap>
   <sql id="Base_Column_List">
-    id,operator_type,operator_name,pg_in_service,pg_name,pg_price,pg_size,service_type
+    pg.id,operator_type,operator_name,pg_in_service,pg_name,pg_price,pg_size,service_type
   </sql>
   <sql id="myPg_Column_List">
-    pg.id,pg.operator_type,pg.operator_name,pg.pg_in_service,pg.pg_name,pg.pg_price,pg.pg_size,pg.service_type,pc.product_code
+    pg.id,pg.operator_type,pg.operator_name,pg.pg_in_service,pg.pg_name,pg.pg_price,pg.pg_size,pg.service_type,pc.product_code,cnel.id cnel_id
   </sql>
     <!-- 重载Add -->
 	<insert id="operatorPg_addList" useGeneratedKeys="true" parameterType="java.util.List" >
@@ -57,7 +59,7 @@
 	<select id="pgList_select" resultMap="OtherMap">
 		 select 
     	<include refid="Base_Column_List" />
-   		 from <include refid="t_pg"></include>
+   		 from <include refid="t_pg"></include> pg
    		 <where>
    		 	<include refid="condition_sql"></include>
    		 </where>
@@ -76,7 +78,7 @@
 	<select id="pgList_forPurchase_type" resultMap="OtherMap" parameterType="java.lang.Integer" >
 		 select 
     	<include refid="Base_Column_List" />
-   		 from <include refid="t_pg"></include>
+   		 from <include refid="t_pg"></include> pg
    		 <where>
    		 	<include refid="pg_for_purchase_type"></include>
    		 </where>
@@ -137,7 +139,7 @@
 	<sql id="pg_for_purchase_type">
 		pg_in_service = 1
 		<if test="_parameter != null">
-			AND operator_type = #{_parameter}
+			AND pg.operator_type = #{_parameter}
 		</if>
 	</sql>
 	
@@ -168,7 +170,7 @@
 			AND scope_city_name LIKE CONCAT('%', TRIM(#{scopeCityName}), '%')
 		</if> -->
 		<if test="id != null">
-			AND id = #{id}
+			AND pg.id = #{id}
 		</if>
 		<if test="operatorType != null">
 			AND operator_type = #{operatorType}
@@ -186,9 +188,9 @@
  <!-- 查询某个平台没有设置产品编码的包体 -->
  <select id="listPgListNotInPcode" parameterType="map" resultMap="BaseResultMap">
  	select <include refid="Base_Column_List"></include> 
- 	from <include refid="t_pg"></include> pg1
+ 	from <include refid="t_pg"></include> pg
  	<where>
- 		pg1.id not IN (SELECT pg_id from <include refid="t_pCode"></include>  
+ 		pg.id not IN (SELECT pg_id from <include refid="t_pCode"></include>  
 		<where>
 			<if test="epId != null">
 				ep_id = #{epId}
@@ -199,6 +201,38 @@
 		</if>
 		<if test="serviceType != null">
 			AND service_type = #{serviceType}
+		</if>
+ 	</where>
+ </select>
+ <select id="listPgListInPcode" parameterType="map" resultMap="OtherMap">
+ 	select <include refid="myPg_Column_List"></include> 
+ 	from <include refid="t_pg"></include> pg
+ 	inner join <include refid="t_pCode"></include> pc
+ 	on pc.pg_id = pg.id
+ 	INNER JOIN <include refid="t_ep"></include> ep
+	on pc.ep_id = ep.id
+	INNER JOIN <include refid="t_cnel"></include> cnel
+	on ep.id = cnel.ep_id
+	INNER join <include refid="t_cd"></include> cd
+	ON cnel.id = cd.channel_id
+ 	<where>
+ 		 <if test="epEngId != null">
+			AND ep.ep_eng_id = #{epEngId}
+		</if> 
+		<if test="operatorType != null">
+			AND cd.operator_type = #{operatorType}
+		</if>
+		<if test="serviceType != null">
+			AND cd.service_type = #{serviceType}
+		</if>
+		<if test="channelId != null">
+			AND cnel.id = #{channelId}
+		</if>
+		<if test="id != null">
+			AND pg.id = #{id}
+		</if>
+		<if test="scopeCityCode != null">
+			AND pc.scope_city_code = #{scopeCityCode}
 		</if>
  	</where>
  </select>

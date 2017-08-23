@@ -30,12 +30,12 @@ public class WherePrams {
 		
 		if (null == value) {
 			
-			if (where.equals("=")) {
-				where = " is";
-			}else{
-				where = " not ";
-			}
-			this.pram = " where " + file + where + "null";
+//			if (where.equals("=")) {
+//				where = " is ";
+//			}else{
+//				where = " not ";
+//			}
+//			this.pram = " where " + file + where + "null";
 		}else{
 			if ("like".equals(where)) {
 				this.pram = " where " + file + where + " '%" + value + "%'";

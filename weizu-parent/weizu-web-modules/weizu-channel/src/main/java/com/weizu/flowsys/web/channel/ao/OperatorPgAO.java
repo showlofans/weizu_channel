@@ -7,6 +7,7 @@ import com.aiyi.base.pojo.PageParam;
 import com.aiyi.base.pojo.PageTag;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
+import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
 
 public interface OperatorPgAO {
 	/**
@@ -131,6 +132,15 @@ public interface OperatorPgAO {
 	 * @createTime:2017年8月2日 下午5:21:20
 	 */
 	List<OperatorPgDataPo> pgList_forPurchase(OperatorPgDataPo operatorPgPo);
+	
+	/**
+	 * @description: 平台包体，折扣查询
+	 * @param spp
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月23日 下午4:41:49
+	 */
+	Map<String,Object> getBy(SuperPurchaseParam spp);
 	
 //	boolean checkScopeIsAccept(Integer loginAgencyId, String scopeCityName);
 }

@@ -81,5 +81,7 @@ public interface OperatorPgDaoInterface {
 	 */
 	List<OperatorPgDataPo> listPgListNotInPcode(Integer epId,Integer serviceType,Integer operatorType);
 	
+	List<OperatorPgDataPo> listPgListInPcode(Map<String,Object> map);
+	
 //	Pagination<OperatorPgDataPo> list();
 }
