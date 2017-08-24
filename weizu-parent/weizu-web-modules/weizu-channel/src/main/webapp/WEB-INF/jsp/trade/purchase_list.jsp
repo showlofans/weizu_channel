@@ -99,7 +99,7 @@
 					<th width="60">充值方式</th>
 					<th width="80">结果</th>
 					<th width="80">结果描述</th>
-					<th width="60">返款</th>
+					<th width="60">金额</th><!-- 返款 -->
 					<c:if test="${loginContext.rootAgencyId == 0 }">
 						<th width="120">通道名称</th>
 					</c:if>

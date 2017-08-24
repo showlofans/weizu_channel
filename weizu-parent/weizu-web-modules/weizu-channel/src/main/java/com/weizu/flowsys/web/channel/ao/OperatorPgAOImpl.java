@@ -16,6 +16,7 @@ import com.aiyi.base.pojo.PageTag;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgInServiceEnum;
@@ -558,7 +559,9 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 		
 		if(operatorPgPo != null){
 			List<OperatorPgDataPo> list = operatorPgDao.pgList_forPurchase(operatorPgPo,scopeCityCode,agencyId);
-			
+			for (OperatorPgDataPo operatorPgDataPo : list) {
+				operatorPgDataPo.setPgDiscountPrice(NumberTool.mul(operatorPgDataPo.getPgPrice(), operatorPgDataPo.getRteDis()));
+			}
 			return list;
 		}
 		return null;
@@ -614,13 +617,16 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 	public Map<String, Object> getBy(SuperPurchaseParam spp) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		Map<String, Object> params = getMapForBy(spp);
-		WherePrams where = new WherePrams("operator_type", "=", spp.getOperatorType());
-		where.and("service_type", "=", spp.getSerType());
-		where.and("scope_city_code", "=", spp.getScopeCityCode());
-		List<ChannelDiscountPo> discountList = channelDiscountDao.list(where);
-		resultMap.put("discountList", discountList);
+//		WherePrams where = new WherePrams("operator_type", "=", spp.getOperatorType());
+//		where.and("service_type", "=", spp.getSerType());
+//		where.and("scope_city_code", "=", spp.getScopeCityCode());
+//		List<ChannelDiscountPo> discountList = channelDiscountDao.list(where);
+//		resultMap.put("discountList", discountList);
 		
 		List<OperatorPgDataPo> pgList = operatorPgDao.listPgListInPcode(params);
+		for (OperatorPgDataPo operatorPgDataPo : pgList) {
+			operatorPgDataPo.setPgDiscountPrice(NumberTool.mul(operatorPgDataPo.getPgPrice(), operatorPgDataPo.getCdis()));
+		}
 		resultMap.put("pgList", pgList);
 		
 		return resultMap;

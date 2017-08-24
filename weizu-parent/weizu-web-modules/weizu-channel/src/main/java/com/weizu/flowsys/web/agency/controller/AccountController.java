@@ -382,11 +382,12 @@ public class AccountController {
 	 */
 	@RequestMapping(value=AccountURL.ACCOUNT_INFO)
 	public ModelAndView accountInfo(HttpServletRequest request){
-//		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-//		ChargeAccountPo chargeAccount = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
-//		ChargeAccountPo chargeAccount1 = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
-//		Map<String,Object> resultMap = new HashMap<String, Object>();
-		
+		//重新根据当前登陆id获取一遍账户信息
+		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		ChargeAccountPo chargeAccount = chargeAccountAO.getAccountByAgencyId(agencyVo.getId(), BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+		ChargeAccountPo chargeAccount1 = chargeAccountAO.getAccountByAgencyId(agencyVo.getId(), BillTypeEnum.CORPORATE_BUSINESS.getValue());
+		request.getSession().setAttribute("chargeAccount",chargeAccount);
+		request.getSession().setAttribute("chargeAccount1",chargeAccount1);
 		return new ModelAndView("/account/account_info");
 //		return new ModelAndView("/account/account_info","resultMap",resultMap);
 	}

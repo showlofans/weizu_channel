@@ -37,12 +37,24 @@
 	    <result column="service_type" property="serviceType" />
 	    <result column="product_code" property="productCode" />
 	    <result column="cnel_id" property="channelId" />
+	    <result column="cnel_name" property="cnelName" />
+	    <result column="cdis" property="cdis" />
+	    <result column="cdis_id" property="cdisId" />
+	    <result column="rte_dis" property="rteDis" />
+	    <result column="rte_id" property="rteId" />
 	 </resultMap>
   <sql id="Base_Column_List">
     pg.id,operator_type,operator_name,pg_in_service,pg_name,pg_price,pg_size,service_type
   </sql>
+  <!-- 通过通道查询购买包体list -->
+  <sql id="myCnelPg_Column_List">
+    pg.id,pg.operator_type,pg.operator_name,pg.pg_in_service,pg.pg_name,pg.pg_price,pg.pg_size,
+    pg.service_type,pc.product_code,cnel.id cnel_id,cnel.channel_name cnel_name,cd.channel_discount cdis,cd.id cdis_id
+  </sql>
+  <!-- 通过费率查询购买包体list -->
   <sql id="myPg_Column_List">
-    pg.id,pg.operator_type,pg.operator_name,pg.pg_in_service,pg.pg_name,pg.pg_price,pg.pg_size,pg.service_type,pc.product_code,cnel.id cnel_id
+    pg.id,pg.operator_type,pg.operator_name,pg.pg_in_service,pg.pg_name,pg.pg_price,pg.pg_size,pg.service_type,
+    pc.product_code,cnel.id cnel_id,rte.active_discount rte_dis,rte.id rte_id
   </sql>
     <!-- 重载Add -->
 	<insert id="operatorPg_addList" useGeneratedKeys="true" parameterType="java.util.List" >
@@ -83,44 +95,39 @@
    		 	<include refid="pg_for_purchase_type"></include>
    		 </where>
 	</select>
-	<!-- 通过流量包参数查询购买包体list -->
+	<!-- 通过费率查询购买包体list -->
 	<select id="pgList_forPurchase_po" resultMap="OtherMap" parameterType="map" >
 		SELECT <include refid="myPg_Column_List"></include> 
 		FROM <include refid="t_pg"></include> pg
 		INNER JOIN <include refid="t_pc"></include> pc
 		on pc.pg_id=pg.id
-		<where>
-		AND pc.ep_id =
-		 (SELECT cnel.ep_id FROM <include refid="t_aar"></include> aar
-		INNER JOIN <include refid="t_rte"></include> rte
-		on aar.rate_discount_id=rte.id
-		INNER JOIN <include refid="t_cd"></include> cd
-		on rte.channel_discount_id=cd.id
+		INNER JOIN <include refid="t_ep"></include> ep
+		on ep.id = pc.ep_id
 		INNER JOIN <include refid="t_cnel"></include> cnel
-		on rte.channel_id=cnel.id
+		on ep.id = cnel.ep_id
+		INNER JOIN <include refid="t_cd"></include> cd
+		on cd.channel_id = cnel.id
+		INNER JOIN <include refid="t_rte"></include> rte
+		on rte.channel_discount_id = cd.id
+		INNER JOIN <include refid="t_aar"></include> aar
+		on aar.rate_discount_id = rte.id
 		<where>
 			AND rte.bill_type=0<!-- 默认用对私账户进行页面充值 -->
 			<if test="agencyId != null">
 				AND aar.agency_id= #{agencyId}
 			</if>
 			<if test="operatorType != null">
+				AND pg.operator_type = #{operatorType}
 				AND cd.operator_type = #{operatorType}
 			</if>
 			<if test="serviceType != null">
+				AND pg.service_type = #{serviceType}
 				AND cd.service_type = #{serviceType}
 			</if>
 			<if test="scopeCityCode != null">
 				AND cd.scope_city_code = #{scopeCityCode}
 			</if>
-		</where>)
-		<include refid="pg_for_purchase_po"></include>
-		</where> 
-		<!--  select 
-    	<include refid="myPg_Column_List" />
-   		 from <include refid="t_pg"></include>
-   		 <where>
-   		 	<include refid="pg_for_purchase_po"></include>
-   		 </where> -->
+		</where>
 	</select>
 	<!-- 通过流量包参数查询 -->
 	<sql id="pg_for_purchase_po">
@@ -204,8 +211,9 @@
 		</if>
  	</where>
  </select>
+ <!-- 通过通道查询包体 -->
  <select id="listPgListInPcode" parameterType="map" resultMap="OtherMap">
- 	select <include refid="myPg_Column_List"></include> 
+ 	select <include refid="myCnelPg_Column_List"></include> 
  	from <include refid="t_pg"></include> pg
  	inner join <include refid="t_pCode"></include> pc
  	on pc.pg_id = pg.id
@@ -221,9 +229,11 @@
 		</if> 
 		<if test="operatorType != null">
 			AND cd.operator_type = #{operatorType}
+			AND pg.operator_type = #{operatorType}
 		</if>
 		<if test="serviceType != null">
 			AND cd.service_type = #{serviceType}
+			AND pg.service_type = #{serviceType}
 		</if>
 		<if test="channelId != null">
 			AND cnel.id = #{channelId}
@@ -232,7 +242,7 @@
 			AND pg.id = #{id}
 		</if>
 		<if test="scopeCityCode != null">
-			AND pc.scope_city_code = #{scopeCityCode}
+			AND cd.scope_city_code = #{scopeCityCode}
 		</if>
  	</where>
  </select>

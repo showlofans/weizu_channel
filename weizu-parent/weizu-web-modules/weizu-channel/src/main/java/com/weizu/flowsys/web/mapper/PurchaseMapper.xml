@@ -129,7 +129,14 @@
     <where>
     	<include refid="condition_sql"></include>
     </where>
-  	order by order_arrive_time desc 
+    <choose>
+    	<when test="endTimeBack != null">
+    		order by order_back_time desc,order_arrive_time DESC 
+    	</when>
+    	<when test="endTimeBack == null">
+		  	order by order_arrive_time DESC,order_back_time desc 
+    	</when>
+    </choose>
     <if test="start != null">
 	 	limit #{start}
 	 </if>

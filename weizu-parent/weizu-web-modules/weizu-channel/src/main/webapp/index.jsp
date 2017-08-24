@@ -11,10 +11,10 @@
 	<!--通过对session中登陆信息的判断，看是否需要返回登陆页面 -->
 	<c:choose>
 		<c:when test="${empty loginContext }">
-			<jsp:forward page="WEB-INF/jsp/agency/login_page.jsp"></jsp:forward>
+			<jsp:forward page="/flowsys/agency/login_page.do"></jsp:forward>
 		</c:when>
 		<c:otherwise>
-			<jsp:forward page="WEB-INF/jsp/index.jsp"></jsp:forward>
+			<jsp:forward page="WEB-INF/jsp/index.jsp"></jsp:forward> 
 		</c:otherwise>
 	</c:choose>
 </body>

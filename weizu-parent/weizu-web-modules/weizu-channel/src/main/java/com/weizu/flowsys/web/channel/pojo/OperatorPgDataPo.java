@@ -39,6 +39,56 @@ public class OperatorPgDataPo extends Po {
 //    private String scopeCityCode;				//产品编码
     @TempField
     private Long channelId;				//通道id
+    @TempField
+    private String cnelName;			//通道名字
+    @TempField
+    private Double cdis;				//通道折扣
+    @TempField
+    private Long cdisId;				//通道折扣id
+    @TempField
+    private Long rteId;					//费率id
+    @TempField
+    private Double rteDis;				//费率折扣
+
+	public Long getCdisId() {
+		return cdisId;
+	}
+
+	public void setCdisId(Long cdisId) {
+		this.cdisId = cdisId;
+	}
+
+	public Long getRteId() {
+		return rteId;
+	}
+
+	public void setRteId(Long rteId) {
+		this.rteId = rteId;
+	}
+
+	public Double getRteDis() {
+		return rteDis;
+	}
+
+	public void setRteDis(Double rteDis) {
+		this.rteDis = rteDis;
+	}
+
+	public String getCnelName() {
+		return cnelName;
+	}
+
+	public void setCnelName(String cnelName) {
+		this.cnelName = cnelName;
+	}
+
+	public Double getCdis() {
+		return cdis;
+	}
+
+	public void setCdis(Double cdis) {
+		this.cdis = cdis;
+	}
 
 	public Long getChannelId() {
 		return channelId;
