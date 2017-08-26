@@ -190,6 +190,9 @@
 		<if test="userName != null">
 			AND user_name LIKE CONCAT('%', TRIM(#{userName}), '%')
 		</if>
+		<if test="purchaseId != null">
+			AND purchase_id = #{purchaseId}
+		</if>
 		<if test="accountType != null">
 			AND account_type = #{accountType}
 		</if>

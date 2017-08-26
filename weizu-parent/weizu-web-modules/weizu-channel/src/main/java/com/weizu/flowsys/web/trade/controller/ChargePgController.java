@@ -57,8 +57,6 @@ import com.weizu.flowsys.web.trade.pojo.TotalResult;
 import com.weizu.flowsys.web.trade.url.ChargePgURL;
 import com.weizu.web.foundation.String.StringHelper;
 
-import crud.aotest.AgencyPurchaseAOTest;
-
 /**
  * @description:流量充值管理
  * @projectName:crud
@@ -169,13 +167,14 @@ public class ChargePgController {
 					int sType = Integer.parseInt(serviceType.trim());
 					oppo.setServiceType(sType);
 					list = operatorPgAO.pgList_forPurchase(oppo,ScopeCityEnum.getValueByDesc(scopeCityName), contextId);
-					rateDiscountPo = rateDiscountAO.getRateForCharge(sType, carrier, contextId);
+					
+//					rateDiscountPo = rateDiscountAO.getRateForCharge(sType, carrier, contextId);
 				}
 			}
 		}
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("pgList", list);
-		map.put("ratePo", rateDiscountPo);
+//		map.put("ratePo", rateDiscountPo);
 		try {
 			response.setContentType("text/html;charset=UTF-8");
 			response.getWriter().print(JSON.toJSONString(map));
@@ -226,7 +225,7 @@ public class ChargePgController {
 		try {
 			response.setContentType("text/html;charset=UTF-8");
 			response.getWriter().print(JSON.toJSONString(map));
-			System.out.println(JSON.toJSONString(list));
+//			System.out.println(JSON.toJSONString(list));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -341,7 +340,7 @@ public class ChargePgController {
 //			}
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 			if(agencyVO != null){
-				RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(serviceType, carrier, agencyVO.getId());
+				RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(serviceType, carrier, agencyVO.getId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());//获得对私的充值费率
 				if(pgPrice != null && ratePo != null){//判断余额
 					Double purchasePrice = NumberTool.mul(pgPrice, ratePo.getActiveDiscount());//利率后的价格
 					ChargeAccountPo account1 = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");

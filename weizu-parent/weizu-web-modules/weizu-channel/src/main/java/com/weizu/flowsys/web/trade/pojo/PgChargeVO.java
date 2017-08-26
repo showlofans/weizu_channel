@@ -32,6 +32,16 @@ public class PgChargeVO {
 	
 	private Long rateId;					//费率id
 	
+	private Long cdisId;					//通道折扣id
+	
+	public Long getCdisId() {
+		return cdisId;
+	}
+
+	public void setCdisId(Long cdisId) {
+		this.cdisId = cdisId;
+	}
+
 	public Integer getAgencyId() {
 		return agencyId;
 	}

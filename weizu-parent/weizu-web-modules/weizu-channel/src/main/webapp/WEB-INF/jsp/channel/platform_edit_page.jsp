@@ -44,7 +44,7 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>平台英文标识：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="${exchangePlatformPo.epEngId }" onchange="checkEpEngId(this)"  placeholder="" id="epEngId" name="epEngId">
+				<input type="text" class="input-text"  value="${exchangePlatformPo.epEngId }" onchange="checkEpEngId(this)"  placeholder="" id="epEngId" name="epEngId">
 			</div>
 		</div>
 		<!-- id, ep_name, ep_purchase_ip, product_list_ip, pgdata_check_ip, ep_balance_ip, 

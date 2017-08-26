@@ -87,8 +87,15 @@ public class OperatorPgAOImplTest {
 //		operatorPgPo.setOperatorType(0);
 //		operatorPgPo.setServiceType(0);
 ////		operatorPgPo.set
-//		List<OperatorPgDataPo> list = operatorPgAO.pgList_forPurchase(operatorPgPo,"21", 4);
+//		List<OperatorPgDataPo> list = operatorPgAO.pgList_forPurchase(operatorPgPo,"19", 21);
 //		System.out.println(list == null ?"": list.size());
+//		if(list != null && list.size() > 0){
+//			for (OperatorPgDataPo operatorPgDataPo : list) {
+////				System.out.println(operatorPgDataPo.getRteId());
+////				System.out.println(operatorPgDataPo.getChannelId());
+//				System.out.println(operatorPgDataPo.getOperatorType());
+//			}
+//		}
 //	}
 	
 	/**
@@ -108,10 +115,16 @@ public class OperatorPgAOImplTest {
 //		List<OperatorPgDataPo> list = operatorPgDao.listPgListNotInPcode(2, 0, 0);
 //		System.out.println(list.size());
 //	}
-	@Test
-	public void testPgListCode(){
-		Map<String,Object> map = operatorPgAO.getBy(new SuperPurchaseParam("广东移动", "0", "Weizu"));
-		List<OperatorPgDataPo> list = (List<OperatorPgDataPo>) map.get("pgList");
-		System.out.println(list.size());
-	}
+//	@Test
+//	public void testPgListCode(){
+//		Map<String,Object> map = operatorPgAO.getBy(new SuperPurchaseParam("广东移动", "0", "Weizu"));
+//		List<OperatorPgDataPo> list = (List<OperatorPgDataPo>) map.get("pgList");
+//		System.out.println(list.size());
+//		if(list != null && list.size() > 0){
+//			for (OperatorPgDataPo operatorPgDataPo : list) {
+//				System.out.println(operatorPgDataPo.getCdisId());
+//				System.out.println(operatorPgDataPo.getChannelId());
+//			}
+//		}
+//	}
 }

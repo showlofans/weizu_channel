@@ -82,12 +82,12 @@ public class WherePrams {
 	 */
 	public WherePrams and(String file, String where, Serializable value){
 		if (null == value) {
-			if (where.equals("=")) {
+			/*if (where.equals("=")) {
 				where = " is";
 			} else {
 				where = " not ";
 			}
-			this.pram = " and " + file + where + "null";
+			this.pram = " and " + file + where + "null";*/
 		} else {
 			if ("like".equals(where)) {
 				this.pram += " and " + file + " " + where + " '%" + value + "%'";

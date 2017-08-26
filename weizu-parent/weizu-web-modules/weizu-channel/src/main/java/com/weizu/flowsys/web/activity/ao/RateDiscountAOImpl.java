@@ -467,9 +467,9 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	 */
 	@Override
 	public RateDiscountPo getRateForCharge(int serviceType,
-			String carrier, int loginAgencyId) {
+			String carrier, int loginAgencyId,int billTypeRate) {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("billTypeRate", 0);//用不带票的账户去获得价格
+		params.put("billTypeRate", billTypeRate);//用不带票的账户去获得价格
 		params.put("agencyId", loginAgencyId);
 		params.put("serviceType", serviceType);
 		int sLength = carrier.length();

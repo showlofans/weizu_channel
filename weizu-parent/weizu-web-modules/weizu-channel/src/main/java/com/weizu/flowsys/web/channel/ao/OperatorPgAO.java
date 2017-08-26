@@ -7,6 +7,7 @@ import com.aiyi.base.pojo.PageParam;
 import com.aiyi.base.pojo.PageTag;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
+import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
 
 public interface OperatorPgAO {
@@ -61,7 +62,7 @@ public interface OperatorPgAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月16日 上午9:04:56
 	 */
-	String addPg(OperatorPgDataPo operatorPgDataPo);
+	String addPg(PgDataPo operatorPgDataPo);
 	/**
 	 * @description:删除流量包
 	 * @param operatorPgDataPo
@@ -78,7 +79,7 @@ public interface OperatorPgAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月17日 上午11:31:54
 	 */
-	OperatorPgDataPo getPgById(Integer pgId);
+	PgDataPo getPgById(Integer pgId);
 	
 	/**
 	 * @description:根据运营商类型查询通道规格列表

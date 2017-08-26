@@ -116,7 +116,14 @@
 		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>采购金额：</label>
 		<div class="formControls col-xs-8 col-sm-9">
 			<input id="orderAmount" name="orderAmount" type="text" readonly class="input-text" required  style="width:400px" value="" placeholder="请选择购买包体">
-			<input id="rateId" name="rateId" type="hidden" value="">
+			<c:choose>
+				<c:when test="${loginContext.rootAgencyId == 0 }">
+					<input id="cdisId" name="cdisId" type="hidden" value="">
+				</c:when>
+				<c:otherwise>
+					<input id="rateId" name="rateId" type="hidden" value="">
+				</c:otherwise>
+			</c:choose>
 			<br>折扣：<span id="rateDiscount" class="c-red"></span>
 		</div>
 	</div>
@@ -286,31 +293,48 @@
           	  }}
         })
     }; */
+    var rootAgencyId = $('#rootAgencyId').val();
+	//   alert(rootAgencyId);
    function changeRadio(vart){
 	   var pprice = $(vart).parent().next().val();
 	   var psize = $(vart).parent().next().next().val();//包大小
 	   var productCode = $(vart).parent().next().next().next().val();//包编码
+	   var pgDiscountPrice = $(vart).parent().next().next().next().next().val();
+	   var rateDis = $(vart).parent().next().next().next().next().next().val();
+	   var channelId = $(vart).parent().next().next().next().next().next().next().val();
+	  // alert(channelId);
+	   if(rootAgencyId == 0){
+		   var cdisId = $(vart).parent().next().next().next().next().next().next().next().val();
+		   $('#cdisId').val(cdisId);
+		   //alert(cdisId);
+	   }else{
+		   var rteId = $(vart).parent().next().next().next().next().next().next().next().val();
+		   $('#rateId').val(rteId);
+	   }
+	   $('#rateDiscount').html(rateDis);
+	   $('#channelId').val(channelId);
 	   //alert(productCode);
 	   $("#productCode").val(productCode);
-	   
+	   $("#orderAmount").val(pgDiscountPrice);
 	   $("#pgPrice").val(pprice);//改变价格
 	   //alert($(vart).prev().val());
 	   $("#pgId").val($(vart).prev().val());//包体id
 	   
 	   var serviceType = $("#select-servce-type").val();
 	   var carrier = $("#chargeTelDetail").val();
-	   $.ajax({
+	   $("#billType").val(0);
+	   /* $.ajax({
            type: "get",
            url: '/flowsys/chargePg/ajax_purchase_price.do?pgSize=' + psize + '&pgPrice=' + pprice + '&serviceType='+serviceType+ '&carrier='+carrier,
            async: false,
            dataType: "json",
            contentType: "application/x-www-form-urlencoded; charset=utf-8", 
            success: function(data){
-        	   /* $.each(data,function(i){  
-        		    var key = i;  
-        		    var value = data[i];  
-        		    alert(key+":"+value);  
-        		});  */
+        	  //$.each(data,function(i){  
+        		//    var key = i;  
+        		   // var value = data[i];  
+        		  //  alert(key+":"+value);  
+        		//}); 
          	 //$("#orderAmount").val(data);
         		//alert(data.msg);
         	if(data.msg == 2){
@@ -324,7 +348,7 @@
         		
          	 $("#billType").val(data.billType);
            }
-       })
+       }) */
 	   
    }
    /*  $('.skin-minimal input').on('iCheck',{		//给单选框加特效
@@ -360,10 +384,10 @@
                	 } */
             	//查询流量包
             	 	//ajax2();
-           	 var rootAgencyId = $('#rootAgencyId').val();
-       	   alert(rootAgencyId);
+           	 
        	   if(rootAgencyId == 0){
-	       	  var epEngId = $('epEngId').val();
+	       	  var epEngId = $('#epEngId').val();
+	       	 // alert(epEngId);
        		   $.ajax({
 	                type: "post",
 	                url: '/flowsys/chargePg/pgList_super_forPurchase.do?operatorName='+ carrier + '&serviceType=' + serviceType + '&epEngId=' + epEngId,
@@ -372,8 +396,8 @@
 	                contentType: "application/x-www-form-urlencoded; charset=utf-8", 
 	                success: function(data){
 	              	  //alert(data.pgList.length);
-	              		$('#rateDiscount').html(data.ratePo.activeDiscount);
-	              		$('#rateId').val(data.ratePo.id);
+	              		/* $('#rateDiscount').html(data.ratePo.activeDiscount);
+	              		$('#rateId').val(data.ratePo.id); */
 	              	  if($(".pgNameType") == undefined || $(".pgNameType").length <= 0){
 	                  var appendData = "<label class='form-label col-xs-4 col-sm-3'><span class='c-red'>*</span>包体大小：</label><div class='formControls col-xs-8 col-sm-9 skin-minimal'>"; 
 	                  if(data.pgList.length > 0){
@@ -382,6 +406,11 @@
 	                    	   var name = data.pgList[i].pgName;
 	                    	   var pgSize = data.pgList[i].pgSize;
 	                    	   var productCode = data.pgList[i].productCode;
+	                    	   var cdis = data.pgList[i].cdis;
+	                    	   var cnelName = data.pgList[i].cnelName;
+	                    	   var cdisId = data.pgList[i].cdisId;
+	                    	   var channelId = data.pgList[i].channelId;
+	                    	   var pgDiscountPrice = data.pgList[i].pgDiscountPrice;
 	                   				/* if(i == 0){//默认设置第一个为选中 
 	        	           				appendData += "<div class='radio-box pgNameType'><input name='pgName' class='pgNameRadio' type='radio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)' checked><label for='pgName-"+(i+1)+"'>"+name+"</label></div>"
 	        	           				+ "<input type='hidden' name='pgPrice' value='"+price+"'></input>"
@@ -390,8 +419,10 @@
 	        	           				$("#pgSize").val(data[0].pgSize);
 	        	           				$("#pgId").val(data[0].id);
 	                   				}else{ */
-	                   					appendData += "<div class='radio-box pgNameType'><input type='hidden' value='"+data.pgList[i].id+"'></input><input class='pgNameRadio' type='radio' name='pgNameRadio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)'><label for='pgName-"+(i+1)+"'>"+name+"</label></div><input type='hidden' class='price' value='"+price+"'></input>"
-	                   					+"<input type='hidden' value='"+pgSize+"'></input><input type='hidden' value='"+productCode+"'></input><br>";;
+	                   					appendData += "<div class='radio-box pgNameType'><input type='hidden' value='"+data.pgList[i].id+"'></input><input class='pgNameRadio' type='radio' name='pgNameRadio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)'><label for='pgName-"+(i+1)+"'>"
+	                   					+name+"</label></div><input type='hidden' class='price' value='"+price+"'></input>"
+	                   					+"<input type='hidden' value='"+pgSize+"'></input><input type='hidden' value='"+productCode+"'></input><input type='hidden'  value='"+pgDiscountPrice 
+	                   					+"'></input></input><input type='hidden' value='"+cdis +"'></input><input type='hidden' value='"+channelId +"'></input><input type='hidden' value='"+cdisId +"'></input><input type='text' value='"+cnelName +"'></input><br>";;
 	                   				// }
 	                      }
 	                  }else{
@@ -406,8 +437,7 @@
 	              	  }
 	              	  }
 	            }) 
-	       	   }
-       	   }else{
+	       	   }else{
        		$.ajax({
                 type: "post",
                 url: '/flowsys/chargePg/pgList_forPurchase.do?operatorName='+ carrier + '&serviceType=' + serviceType,
@@ -416,8 +446,8 @@
                 contentType: "application/x-www-form-urlencoded; charset=utf-8", 
                 success: function(data){
               	  //alert(data.pgList.length);
-              		$('#rateDiscount').html(data.ratePo.activeDiscount);
-              		$('#rateId').val(data.ratePo.id);
+              		//$('#rateDiscount').html(data.ratePo.activeDiscount);
+              		//$('#rateId').val(data.ratePo.id);
               	  if($(".pgNameType") == undefined || $(".pgNameType").length <= 0){
                   var appendData = "<label class='form-label col-xs-4 col-sm-3'><span class='c-red'>*</span>包体大小：</label><div class='formControls col-xs-8 col-sm-9 skin-minimal'>"; 
                   if(data.pgList.length > 0){
@@ -426,6 +456,10 @@
                     	   var name = data.pgList[i].pgName;
                     	   var pgSize = data.pgList[i].pgSize;
                     	   var productCode = data.pgList[i].productCode;
+                    	   var pgDiscountPrice = data.pgList[i].pgDiscountPrice;
+                    	   var rteDis = data.pgList[i].rteDis;
+                    	   var rteId = data.pgList[i].rteId;
+                    	   var channelId = data.pgList[i].channelId;
                    				/* if(i == 0){//默认设置第一个为选中 
         	           				appendData += "<div class='radio-box pgNameType'><input name='pgName' class='pgNameRadio' type='radio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)' checked><label for='pgName-"+(i+1)+"'>"+name+"</label></div>"
         	           				+ "<input type='hidden' name='pgPrice' value='"+price+"'></input>"
@@ -435,7 +469,8 @@
         	           				$("#pgId").val(data[0].id);
                    				}else{ */
                    					appendData += "<div class='radio-box pgNameType'><input type='hidden' value='"+data.pgList[i].id+"'></input><input class='pgNameRadio' type='radio' name='pgNameRadio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)'><label for='pgName-"+(i+1)+"'>"+name+"</label></div><input type='hidden' class='price' value='"+price+"'></input>"
-                   					+"<input type='hidden' value='"+pgSize+"'></input><input type='hidden' value='"+productCode+"'></input><br>";;
+                   					+"<input type='hidden' value='"+pgSize+"'></input><input type='hidden' value='"+productCode+"'></input><input type='hidden'  value='"+pgDiscountPrice +"'></input></input><input type='hidden' value='"+rteDis 
+                   					+"'></input><input type='hidden' value='"+channelId +"'></input><input type='hidden' value='"+rteId +"'></input><br>";;
                    				// }
                       }
                   }else{
@@ -451,7 +486,7 @@
               	  }
             }) 
        	   }
-            	 	
+             }	 	
          }else{
         	 alert("false");
              //$('.error').html('手机号不合法 ').css('display','block');    
