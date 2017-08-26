@@ -1,5 +1,8 @@
 package com.weizu.flowsys.api.singleton;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.weizu.flowsys.api.base.test.Singleton;
 
 /**
@@ -32,8 +35,10 @@ public class Weizu implements BaseInterface {
 	
 	@Override
 	public ChargeDTO charge() {
+		
 		System.out.println(msg);
 		System.out.println(baseParams.getOrderId());
+		System.out.println(baseParams.getAddParams());
 		return null;
 	}
 
@@ -47,6 +52,20 @@ public class Weizu implements BaseInterface {
 	public OrderDTO getOrderState() {
 		
 		return null;
+	}
+	@Override
+	public void initSpecialP(Object... objs) {
+		//顺序和加入位置，都是可以随时调的
+		String [] paramsNames = new String [] {"serviceCode","interVersion","callBackWay"};
+		StringBuffer sBuffer = new StringBuffer();
+		for (int i = 0; i < objs.length; i++) {
+			sBuffer.append(paramsNames[i]);
+			sBuffer.append("=");
+			sBuffer.append(objs[i].toString());
+			sBuffer.append("&");
+		}
+		Weizu.baseParams.setAddParams(sBuffer.toString());
+		
 	}
 	
 }

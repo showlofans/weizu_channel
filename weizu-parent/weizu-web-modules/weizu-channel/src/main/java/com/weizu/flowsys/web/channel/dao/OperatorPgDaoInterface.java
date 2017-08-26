@@ -3,9 +3,11 @@ package com.weizu.flowsys.web.channel.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
+import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 
-public interface OperatorPgDaoInterface {
+public interface OperatorPgDaoInterface extends Dao<PgDataPo, Integer> {
 	/**
 	 * @description:添加一些用于测试的流量包记录到数据库
 	 * @param list

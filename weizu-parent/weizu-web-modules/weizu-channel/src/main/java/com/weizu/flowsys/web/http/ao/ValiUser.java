@@ -11,6 +11,7 @@ import com.weizu.flowsys.web.agency.dao.impl.AgencyBackwardDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.channel.dao.impl.OperatorPgDao;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
+import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.web.foundation.MD5;
 
 /**
@@ -67,9 +68,9 @@ public class ValiUser {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月23日 下午4:59:55
 	 */
-	public OperatorPgDataPo findPg(int scope, int pgSize, int operatorType)
+	public PgDataPo findPg(int scope, int pgSize, int operatorType)
 	{
-		OperatorPgDataPo pgData = operatorPgDao.get(new WherePrams("service_type", "=", scope).and("pg_size", "=", pgSize).and("operator_type", "=", operatorType));
+		PgDataPo pgData = operatorPgDao.get(new WherePrams("service_type", "=", scope).and("pg_size", "=", pgSize).and("operator_type", "=", operatorType));
 		return pgData;
 	}
 	

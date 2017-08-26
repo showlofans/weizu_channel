@@ -42,7 +42,7 @@
                <input id="agencyTel" name="agencyTel" value="${resultMap.reg.agencyTel }" required  autocomplete="off" type="text" placeholder="联系电话" class="kuang_txt phone input-text size-L">
                <input id="otherContact" name="otherContact" value="${resultMap.reg.otherContact }" required  autocomplete="off" type="text" placeholder="其他联系方式：qq号" class="kuang_txt phone input-text size-L">
                 <input id="userEmail" name="userEmail" value="${resultMap.reg.userEmail }" required  autocomplete="off" type="email" placeholder="电子邮箱" class="kuang_txt emailt input-text size-L">
-                <input id="agencyIp" name="agencyIp" value="${resultMap.reg.agencyIp }" required  autocomplete="off" type="text"  placeholder=" 用户地址" class="kuang_txt emailt input-text size-L">
+                <input id="agencyIp" name="agencyIp" value="${resultMap.reg.agencyIp }" required  autocomplete="off" type="text"  placeholder=" 用户地址" class="kuang_txt input-text size-L">
                 <input id="verifyCode" name="verifyCode" value="${resultMap.reg.verifyCode }" required  autocomplete="off" type="text" placeholder="注册邀请码" class="kuang_txt	 yanzm input-text size-L">
                 
                 <!-- <input name="" type="text" class="kuang_txt yanzm" placeholder="验证码"> -->

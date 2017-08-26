@@ -21,6 +21,7 @@ import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
+import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.channel.url.OperatorPgURL;
 import com.weizu.web.foundation.String.StringHelper;
 
@@ -209,7 +210,7 @@ public class OperatorPgController {
 	 */
 	@RequestMapping(value=OperatorPgURL.PG_ADD)
 	@ResponseBody
-	public void pg_add(OperatorPgDataPo opp,HttpServletResponse response) throws IOException{
+	public void pg_add(PgDataPo opp,HttpServletResponse response) throws IOException{
 		//添加失败的情况
 //		Map<String, Object> resultMap = new HashMap<String, Object>();
 //		resultMap.put("pageTitle", pageTitle);

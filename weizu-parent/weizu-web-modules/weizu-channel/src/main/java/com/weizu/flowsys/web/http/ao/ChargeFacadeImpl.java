@@ -33,15 +33,11 @@ import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
 import com.weizu.flowsys.web.channel.dao.impl.ChannelForwardDao;
 import com.weizu.flowsys.web.channel.dao.impl.ExchangePlatformDao;
 import com.weizu.flowsys.web.channel.pojo.BestChannelPO;
-import com.weizu.flowsys.web.channel.pojo.ChannelForwardPo;
-import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
-import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
-import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
+import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
-import com.weizu.flowsys.web.trade.pojo.PurchaseStateParams;
 
 /**
  * @description: 充值对外接口实现类
@@ -95,8 +91,9 @@ public class ChargeFacadeImpl implements ChargeFacade {
 		AgencyBackwardPo backPo = valiUser.findAgency(chargeParams.getUsername(), chargeParams.getSign());
 		String chargeTel = chargeParams.getNumber();
 		Map<String, Object> resMap = PurchaseUtil.getOperatorsByTel(chargeTel);
-		OperatorPgDataPo pgData = null;
 		int otype = -1;
+		otype = Integer.parseInt(resMap.get("operatorType").toString());
+		PgDataPo pgData = null;
 		ChargeStatusEnum chargeEnum = null;
 		int billType = chargeParams.getBillType();
 		BillTypeEnum billTypeE = BillTypeEnum.getEnum(billType);
@@ -106,10 +103,7 @@ public class ChargeFacadeImpl implements ChargeFacade {
 		}
 		//初始化包体和运营商类型
 		try {
-			int scope = Integer.parseInt(chargeParams.getScope());
-			int pgSize = Integer.parseInt(chargeParams.getFlowsize());
-			otype = Integer.parseInt(resMap.get("operatorType").toString());
-			pgData = valiUser.findPg(scope, pgSize,otype);//
+			pgData = valiUser.findPg(chargeParams.getScope(), chargeParams.getFlowsize(),otype);//
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 			chargeEnum = ChargeStatusEnum.INT_REQUIRED;
@@ -275,7 +269,7 @@ public class ChargeFacadeImpl implements ChargeFacade {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月29日 上午11:14:38
 	 */
-	private ChargeDTO doChannel(BestChannelPO bestChannel,OperatorPgDataPo pgData,PurchasePo purchasePo,AgencyBackwardPo backPo,String scopeCityCode,String chargeTel,int billType) {
+	private ChargeDTO doChannel(BestChannelPO bestChannel,PgDataPo pgData,PurchasePo purchasePo,AgencyBackwardPo backPo,String scopeCityCode,String chargeTel,int billType) {
 //		ChargeStatusEnum chargeEnum = null;
 //		ProductCodePo product =  productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, pgData.getPgSize(), pgData.getOperatorType(), pgData.getServiceType(),bestChannel.getEpd()));
 //		if(product != null){

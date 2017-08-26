@@ -67,6 +67,44 @@ public PurchasePo(String chargeTel, Integer pgId,
 	}
 
 
+
+/** 接口充值构造订单
+ * @param orderId
+ * @param orderIdFrom
+ * @param agencyId
+ * @param chargeTel
+ * @param pgId
+ * @param orderArriveTime
+ * @param chargeTelDetail
+ * @param chargeTelCity
+ * @param orderResult
+ * @param channelId
+ * @param orderResultDetail
+ * @param orderAmount
+ * @param billType
+ */
+public PurchasePo(Long orderId, String orderIdFrom, Integer agencyId,
+		String chargeTel, Integer pgId, Long orderArriveTime,
+		String chargeTelDetail, String chargeTelCity, Integer orderResult,
+		Long channelId, String orderResultDetail, Double orderAmount,
+		Integer billType) {
+	super();
+	this.orderId = orderId;
+	this.orderIdFrom = orderIdFrom;
+	this.agencyId = agencyId;
+	this.chargeTel = chargeTel;
+	this.pgId = pgId;
+	this.orderArriveTime = orderArriveTime;
+	this.chargeTelDetail = chargeTelDetail;
+	this.chargeTelCity = chargeTelCity;
+	this.orderResult = orderResult;
+	this.channelId = channelId;
+	this.orderResultDetail = orderResultDetail;
+	this.orderAmount = orderAmount;
+	this.billType = billType;
+}
+
+
 public PurchasePo(Long orderId, String orderIdApi, String orderIdFrom,
 		Integer agencyId, String chargeTel, Integer pgId, Long orderArriveTime,
 		Long orderBackTime, String chargeTelDetail, String chargeTelCity,

@@ -12,22 +12,14 @@ public class ChargeParams {
 	
 	private String username;			//用户账号
 	private String number;				//充值号码
-	private String flowsize;			//流量大小
-	private String scope;				//流量范围
+	private Integer flowsize;			//流量大小
+	private Integer scope;				//流量范围
 	private String sign;				//密钥
 	private Integer billType;			//是否带票0-不带票，1-带票
+	private String orderIdFrom;			//用户传过来的订单号
 	
-	public ChargeParams(String scope, String username, String number, String flowsize,
-			String sign) {
-		super();
-		this.username = username;
-		this.number = number;
-		this.flowsize = flowsize;
-		this.scope = scope;
-		this.sign = sign;
-	}
-	public ChargeParams(String username, String number, String flowsize,
-			String scope, String sign, Integer billType) {
+	public ChargeParams(String username, String number, Integer flowsize,
+			Integer scope, String sign, Integer billType, String orderIdFrom) {
 		super();
 		this.username = username;
 		this.number = number;
@@ -35,8 +27,34 @@ public class ChargeParams {
 		this.scope = scope;
 		this.sign = sign;
 		this.billType = billType;
+		this.orderIdFrom = orderIdFrom;
 	}
 
+	public String getOrderIdFrom() {
+		return orderIdFrom;
+	}
+
+	public void setOrderIdFrom(String orderIdFrom) {
+		this.orderIdFrom = orderIdFrom;
+	}
+
+
+
+	public Integer getFlowsize() {
+		return flowsize;
+	}
+
+	public void setFlowsize(Integer flowsize) {
+		this.flowsize = flowsize;
+	}
+
+	public Integer getScope() {
+		return scope;
+	}
+
+	public void setScope(Integer scope) {
+		this.scope = scope;
+	}
 
 	public Integer getBillType() {
 		return billType;
@@ -61,18 +79,7 @@ public class ChargeParams {
 	public void setNumber(String number) {
 		this.number = number;
 	}
-	public String getFlowsize() {
-		return flowsize;
-	}
-	public void setFlowsize(String flowsize) {
-		this.flowsize = flowsize;
-	}
-	public String getScope() {
-		return scope;
-	}
-	public void setScope(String scope) {
-		this.scope = scope;
-	}
+	
 	public String getSign() {
 		return sign;
 	}

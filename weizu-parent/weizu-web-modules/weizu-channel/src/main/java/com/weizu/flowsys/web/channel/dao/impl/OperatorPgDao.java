@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.web.channel.dao.OperatorPgDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
+import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 
 /**
  * @description:流量包dao
@@ -22,7 +23,7 @@ import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
  * @version 1.0
  */
 @Repository(value="operatorPgDao")
-public class OperatorPgDao extends DaoImpl<OperatorPgDataPo, Integer> implements OperatorPgDaoInterface {
+public class OperatorPgDao extends DaoImpl<PgDataPo, Integer> implements OperatorPgDaoInterface {
 	@Resource
 	private SqlSessionTemplate sqlSessionTemplateASS;
 	

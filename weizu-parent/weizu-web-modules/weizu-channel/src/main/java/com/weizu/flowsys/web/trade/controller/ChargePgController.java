@@ -340,7 +340,7 @@ public class ChargePgController {
 //			}
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 			if(agencyVO != null){
-				RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(serviceType, carrier, agencyVO.getId());
+				RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(serviceType, carrier, agencyVO.getId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());//获得对私的充值费率
 				if(pgPrice != null && ratePo != null){//判断余额
 					Double purchasePrice = NumberTool.mul(pgPrice, ratePo.getActiveDiscount());//利率后的价格
 					ChargeAccountPo account1 = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");

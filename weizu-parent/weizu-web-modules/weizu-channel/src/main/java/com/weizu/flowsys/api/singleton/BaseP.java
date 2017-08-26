@@ -1,6 +1,7 @@
 package com.weizu.flowsys.api.singleton;
 
 import com.weizu.flowsys.api.base.test.Singleton;
+import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 
 /**
  * @description: 自己系统能够提供的参数
@@ -11,37 +12,46 @@ import com.weizu.flowsys.api.base.test.Singleton;
  * @version 1.0
  */
 public class BaseP {
-	private static BaseP instance = new BaseP();
-	private static String productCode;		//产品编码
-	private static String orderId;			//订单号
-	private static String chargeTel;		//手机号
-	private static Integer serviceType;		//业务类型
-	private static EpDTO epDTO;				//平台信息
+//	private static BaseP instance = new BaseP();
+	private String productCode;		//产品编码
+	private  String orderId;			//订单号
+	private  String chargeTel;		//手机号
+	private  Integer serviceType;		//业务类型
+//	private  EpDTO epDTO;				//平台信息
+	private ExchangePlatformPo epo;		//平台信息
+	private String addParams;		//特殊的参数s=1&s2=3 
+	
 	public BaseP() {
 		super();
 	}
-	public static BaseP getInstance(String productCode,String orderId,String chargeTel,Integer serviceType,EpDTO epDTO) {
-		BaseP.epDTO = epDTO;
-		BaseP.productCode = productCode;
-		BaseP.orderId = orderId;
-		BaseP.chargeTel = chargeTel;
-		BaseP.serviceType = serviceType;
-		return instance;
+	public BaseP(String productCode,String orderId,String chargeTel,Integer serviceType,ExchangePlatformPo epo) {
+//		this.epDTO = epDTO;
+		this.epo = epo;
+		this.productCode = productCode;
+		this.orderId = orderId;
+		this.chargeTel = chargeTel;
+		this.serviceType = serviceType;
 	}
 	
-	public static String getProductCode() {
+	public String getAddParams() {
+		return addParams;
+	}
+	public void setAddParams(String addParams) {
+		this.addParams = addParams;
+	}
+	public  String getProductCode() {
 		return productCode;
 	}
-	public static String getOrderId() {
+	public  String getOrderId() {
 		return orderId;
 	}
-	public static String getChargeTel() {
+	public  String getChargeTel() {
 		return chargeTel;
 	}
-	public static Integer getServiceType() {
+	public  Integer getServiceType() {
 		return serviceType;
 	}
-	public static EpDTO getEpDTO() {
-		return epDTO;
+	public  ExchangePlatformPo getEpo() {
+		return epo;
 	}
 }	

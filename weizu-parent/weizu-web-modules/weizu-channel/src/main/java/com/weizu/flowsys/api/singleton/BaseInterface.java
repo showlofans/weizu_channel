@@ -35,4 +35,12 @@ public interface BaseInterface {
 	 * @createTime:2017年8月25日 下午5:50:53
 	 */
 	OrderDTO getOrderState();
+	
+	/**
+	 * @description: 初始化特殊的参数
+	 * @param objs
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月26日 上午9:50:57
+	 */
+	void initSpecialP(Object...objs);
 }

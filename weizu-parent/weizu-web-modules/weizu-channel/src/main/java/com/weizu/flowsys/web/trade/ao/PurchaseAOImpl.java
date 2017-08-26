@@ -182,16 +182,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 			}else{
 				ChargeAccountPo accountPo = chargeAccountAO.getAccountByAgencyId(agencyId, billType);
 				agencyBeforeBalance = accountPo.getAccountBalance();
-	//			Double orderPrice = NumberTool.mul(pgPrice, cdisPo.getChannelDiscount());//价格
 				orderAmount = NumberTool.mul(pgPrice, cdisPo.getChannelDiscount());//成本
-	//		agencyAfterBalance = NumberTool.add(agencyBeforeBalance, orderPrice);
-	//		recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), orderPrice,
-	//				agencyBeforeBalance, agencyAfterBalance, 
-	//				billType,AccountTypeEnum.Replenishment.getValue(), accountPo.getId(), ap_agency_id, 1 , orderId));
-				
-	//			agencyBeforeBalance = NumberTool.add(agencyBeforeBalance, orderAmount);//之前加上价格
-				//agencyBeforeBalance = agencyAfterBalance;//把加之后的价格转成之前的价格
 				agencyAfterBalance = NumberTool.sub(agencyBeforeBalance, orderAmount);
+				accountPo.setAccountBalance(agencyAfterBalance);
+				chargeAccountAO.updateAccount(accountPo);
 				chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
 						agencyBeforeBalance, agencyAfterBalance, 
 						billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), agencyId, 1 , orderId));
