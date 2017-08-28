@@ -1,5 +1,7 @@
 package com.weizu.flowsys.api.singleton;
 
+import org.weizu.api.util.MD5;
+
 import com.weizu.flowsys.api.base.test.Singleton;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 

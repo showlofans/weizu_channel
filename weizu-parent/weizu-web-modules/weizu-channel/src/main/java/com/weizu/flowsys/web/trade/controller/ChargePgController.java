@@ -44,6 +44,8 @@ import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.channel.ao.ChannelForwardAO;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
+import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
+import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
@@ -70,8 +72,8 @@ import com.weizu.web.foundation.String.StringHelper;
 public class ChargePgController {
 	@Resource
 	private OperatorPgAO operatorPgAO;
-	@Resource
-	private ChannelForwardAO channelForwardAO;
+//	@Resource
+//	private ChannelForwardAO channelForwardAO;
 	@Resource
 	private ProductCodeAO productCodeAO;
 	@Resource
@@ -386,6 +388,22 @@ public class ChargePgController {
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/** 
+	 * @description: 充值页面异步获得充值通道
+	 * <br>页面： pg_charge_page
+	 * @param ccpp
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月28日 下午3:58:05
+	 */
+	@ResponseBody
+	@RequestMapping(value=ChargePgURL.AJAX_CHARGE_CHANNEL)
+	public String ajaxChargeChannel(ChargeChannelParamsPo ccpp){
+		List<ChargeChannelPo> chargeList = purchaseAO.ajaxChargeChannel(ccpp);
+		String listJsonStr = JSON.toJSONString(chargeList);
+		return listJsonStr;
 	}
 	
 	/**

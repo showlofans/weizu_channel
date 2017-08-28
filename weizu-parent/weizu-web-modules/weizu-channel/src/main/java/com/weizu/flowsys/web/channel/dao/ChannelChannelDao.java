@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
+import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 
 /**
@@ -73,5 +74,14 @@ public interface ChannelChannelDao extends Dao<ChannelChannelPo, Long> {
 	 * @createTime:2017年7月5日 上午10:21:40
 	 */
 	int count_channel(Map<String, Object> paramsMap);
+	
+	/**
+	 * @description: 通道充值页面返回实体
+	 * @param params
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月28日 下午3:45:36
+	 */
+	List<ChargeChannelPo> list_charge_channel(Map<String,Object> params);
 
 }

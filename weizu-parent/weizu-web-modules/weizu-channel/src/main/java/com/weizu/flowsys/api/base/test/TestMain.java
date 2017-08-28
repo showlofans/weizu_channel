@@ -15,7 +15,7 @@ public class TestMain {
 		BaseParams baseParams = sing.getBaseParams();
 //		System.out.println(baseParams.getProductCode());
 //		System.out.println(baseParams.getServiceType());
-		sing.charge();
+//		sing.charge();
 //		System.out.println();
 //		System.out.println(baseParams.getProductCode());
 //		System.out.println(baseParams.getProductCode());

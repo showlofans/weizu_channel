@@ -1,9 +1,15 @@
 package com.weizu.flowsys.api.singleton;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.weizu.api.util.HttpRequest;
+import org.weizu.api.util.MD5;
 
-import com.weizu.flowsys.api.base.test.Singleton;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONException;
+import com.alibaba.fastjson.JSONObject;
+import com.weizu.flowsys.api.base.charge.ChargeDTO;
+import com.weizu.flowsys.api.base.charge.ChargeOrder;
+import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 
 /**
  * @description: 微族接口实现
@@ -16,12 +22,12 @@ import com.weizu.flowsys.api.base.test.Singleton;
 public class Weizu implements BaseInterface {
 
 	private static Weizu instance = new Weizu();  
-	private static String msg;
+	private static String epEngId;
 	private static BaseP baseParams;
 	
     private Weizu (){}  
-    public static Weizu getInstance(String msg,BaseP baseParams) {  
-    	Weizu.msg = msg;
+    public static Weizu getInstance(String epEngId,BaseP baseParams) {  
+    	Weizu.epEngId = epEngId;
 //    	baseParams = baseParams;
     	Weizu.baseParams=baseParams;
     	return instance;  
@@ -35,11 +41,49 @@ public class Weizu implements BaseInterface {
 	
 	@Override
 	public ChargeDTO charge() {
+//		"http://139.224.70.161:32001/api/v1/sendOrder", "weizu", "CS111111", "722c16de0a83e5bd2f988e3c7bc9fee8", "15858343638", "500"
+		System.out.println(epEngId);
+//		 baseParams.getEpo().getEpPurchaseIp();
+		 
+//		initSpecialP("1","1.0","GET");
+		 String jsonStr = HttpRequest.sendGet(baseParams.getEpo().getEpPurchaseIp(), toParams());
+		 ChargeDTO chargeDTO = null;
+		 try {  
+	            JSONObject obj = JSON.parseObject(jsonStr);
+	            int tipCode = obj.getIntValue("errcode");
+	            String tipMsg = obj.getString("errmsg");
+	            
+	            JSONObject orderObj = obj.getJSONObject("order");
+	            String orderIdApi = orderObj.getString("transaction_id");
+	            String number = orderObj.getString("number");
+	            String pgSize = orderObj.getString("flowsize");
+	            //用我这边默认的对私账户充值
+	            chargeDTO = new ChargeDTO(tipCode, tipMsg, new ChargeOrder(orderIdApi, number, pgSize, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
+			    // 最后输出到控制台  
+	            System.out.println(tipCode+"<--->"+tipMsg);  
+	  
+	        } catch (JSONException e) {  
+	            e.printStackTrace();  
+	        }  
+		 
+//		System.out.println(baseParams.getOrderId());
+//		System.out.println(baseParams.getAddParams());
+		return chargeDTO;
+	}
+	
+	/**
+	 * @description: 封装充值参数方法
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月28日 上午11:39:28
+	 */
+	public String toParams() {
+		ExchangePlatformPo epPo = baseParams.getEpo();
+		String sign = MD5.getMd5("username="+epPo.getEpUserName()+"&apikey="+epPo.getEpApikey());
 		
-		System.out.println(msg);
-		System.out.println(baseParams.getOrderId());
-		System.out.println(baseParams.getAddParams());
-		return null;
+		return "username=" + epPo.getEpUserName() + "&number=" + baseParams.getChargeTel()
+				+ "&flowsize=" + baseParams.getProductCode() + "&user_order_id=" + baseParams.getOrderId()
+				+ "&sign=" + sign;
 	}
 
 	@Override

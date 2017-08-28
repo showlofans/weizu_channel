@@ -20,6 +20,7 @@ import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
+import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 
 @Repository(value = "channelChannelDao")
@@ -137,6 +138,10 @@ public class ChannelChannelDaoImpl extends DaoImpl<ChannelChannelPo, Long> imple
 	@Override
 	public int count_channel(Map<String, Object> paramsMap) {
 		return sqlSessionTemplate.selectOne("count_channel_channel",paramsMap);
+	}
+	@Override
+	public List<ChargeChannelPo> list_charge_channel(Map<String, Object> params) {
+		return sqlSessionTemplate.selectList("list_charge_channel",params);
 	}
 
 }

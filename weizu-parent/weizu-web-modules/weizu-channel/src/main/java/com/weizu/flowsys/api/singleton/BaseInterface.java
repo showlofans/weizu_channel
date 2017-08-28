@@ -1,5 +1,7 @@
 package com.weizu.flowsys.api.singleton;
 
+import com.weizu.flowsys.api.base.charge.ChargeDTO;
+
 /**
  * @description: 对接上游要实现的接口
  * @projectName:weizu-channel

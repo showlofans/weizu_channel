@@ -2,14 +2,18 @@ package com.weizu.flowsys.web.http.ao;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.annotation.Resource;
 
 import org.weizu.api.outter.enums.ChargeStatusEnum;
-import org.weizu.api.outter.facade.ChargeFacade;
-import org.weizu.api.outter.pojo.charge.ChargeDTO;
-import org.weizu.api.outter.pojo.charge.ChargeParams;
 
+import com.weizu.flowsys.api.base.ChargeParams;
+import com.weizu.flowsys.api.base.charge.ChargeDTO;
+import com.weizu.flowsys.api.base.facet.IChargeFacet;
+import com.weizu.flowsys.api.singleton.BaseInterface;
+import com.weizu.flowsys.api.singleton.BaseP;
+import com.weizu.flowsys.api.singleton.SingletonFactory;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
@@ -30,20 +34,22 @@ import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
 import com.weizu.flowsys.web.channel.dao.impl.ExchangePlatformDao;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
+import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
+import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 
 /**
- * @description: 充值接口实现（最新）
+ * @description: 下游充值接口实现（最新）
  * @projectName:weizu-channel
  * @className:ChargeImpl.java
  * @author:微族通道代码设计人 宁强
  * @createTime:2017年8月26日 下午3:44:40
  * @version 1.0
  */
-public class ChargeImpl implements ChargeFacade {
+public class ChargeImpl implements IChargeFacet {
 
 	@Resource
 	private ValiUser valiUser;
@@ -70,6 +76,8 @@ public class ChargeImpl implements ChargeFacade {
 	private RateDiscountAO rateDiscountAO;
 	@Resource
 	private ChannelChannelDao channelChannelDao;
+	
+	private Logger logger = Logger.getLogger("ChargeImpl");
 	
 	@Override
 	public ChargeDTO charge(ChargeParams chargeParams) {
@@ -120,13 +128,15 @@ public class ChargeImpl implements ChargeFacade {
 					purResult = purchaseDAO.addPurchase(purchasePo);
 					if(canCharge){//可以通过接口充值
 						ExchangePlatformPo epPo = exchangePlatformDao.get(channelPo.getEpId());
-						
+						String scopeCityCode = PurchaseUtil.getScopeCityByCarrier(chargeTelDetail).get("scopeCityCode").toString();
+						ProductCodePo pc = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, epPo.getId(), pgData.getId()));
+						if(pc != null){
+							BaseInterface bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(pc.getProductCode(),orderId+"",chargeTel,chargeParams.getScope(),epPo));
+							ChargeDTO chargeDTO = bi.charge();
+						}else{
+							logger.config("产品编码未配置");
+						}
 					}
-					
-					
-					
-					
-					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

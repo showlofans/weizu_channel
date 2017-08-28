@@ -28,6 +28,18 @@
     channel_balance, channel_state, channel_use_state, channel.last_access,belong_agency_id,
     discount.id,channel_id,scope_city_code,channel_discount,operator_type,service_type,discount.bill_type,ep.ep_name ep_name
   </sql>
+  <!-- 通道充值页面返回实体 -->
+  <resultMap id="ChargeResultMap" type="com.weizu.flowsys.web.channel.pojo.ChargeChannelPo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="pg_size" property="pgSize" jdbcType="VARCHAR" />
+    <result column="ep_id" property="epId" jdbcType="INTEGER" />
+    <result column="ep_name" property="epName" jdbcType="VARCHAR" />
+    <result column="channel_discount" property="channelDiscount" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Charge_Colume_List">
+  	cnel.id,cnel.channel_name,cnel.pg_size,cnel.ep_id,ep.ep_name,cd.channel_discount
+  </sql>
   
   <!-- <resultMap id="SimpleChannelMap" type="com.weizu.flowsys.web.channel.pojo.ChannelChannelPo" >
   	<id column="id" property="id" jdbcType="BIGINT" />
@@ -72,6 +84,30 @@
 	 <if test="start == null &amp; end == null">
 	 	limit 0,10
 	 </if> 
+  </select>
+  <!-- 通道充值页面返回实体 -->
+  <select id="list_charge_channel" parameterType="map" resultMap="ChargeResultMap">
+  	select <include refid="Charge_Colume_List"></include>
+  	from <include refid="t_ep"></include> ep 
+  	inner join	<include refid="t_channel"></include> cnel
+  	on cnel.ep_id = ep.id
+  	inner join <include refid="t_discount"></include> cd
+  	on cnel.id = cd.channel_id
+  	<where>
+	 	<if test="epEngId != null">
+	 		AND ep.ep_eng_id = #{epEngId}
+	 	</if>
+	 	<if test="operatorType != null">
+  		AND cd.operator_type = #{operatorType}
+	  	</if>
+	  	<if test="serviceType != null">
+	  		AND cd.service_type = #{serviceType}
+	  	</if>
+	  	<if test="scopeCityCode != null">
+	  		AND cd.scope_city_code = #{scopeCityCode}
+	  	</if>
+  	</where>
+  	order by cnel.id desc
   </select>
   
   <select id="count_channel_channel" parameterType="map" resultType="int">
@@ -129,6 +165,9 @@
   	</if>
   	<if test="epName != null">
   		AND ep.ep_name like CONCAT('%', TRIM(#{epName}), '%')
+  	</if>
+  	<if test="epEngId != null">
+  		AND ep.ep_eng_id = #{epEngId}
   	</if>
   	<if test="channelState != null">
   		AND channel_state = #{channelState}

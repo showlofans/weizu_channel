@@ -168,4 +168,10 @@ public class OperatorPgDao extends DaoImpl<PgDataPo, Integer> implements Operato
 		return sqlSessionTemplateASS.selectList("listPgListInPcode", map);
 	}
 
+	@Override
+	public List<OperatorPgDataPo> getPgByChanel(Map<String, Object> map) {
+		
+		return sqlSessionTemplateASS.selectList("getPgByChanel", map);
+	}
+
 }

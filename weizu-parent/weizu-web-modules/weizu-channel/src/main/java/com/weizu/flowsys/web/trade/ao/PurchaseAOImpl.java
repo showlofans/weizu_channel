@@ -1,7 +1,5 @@
 package com.weizu.flowsys.web.trade.ao;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,17 +10,19 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.weizu.api.outter.enums.OrderStateCheckEnum;
 
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
-import com.weizu.flowsys.api.base.ChargeDTO;
-import com.weizu.flowsys.api.base.facet.IChargeFacet;
+import com.weizu.flowsys.api.base.charge.ChargeDTO;
+import com.weizu.flowsys.api.singleton.BaseInterface;
+import com.weizu.flowsys.api.singleton.BaseP;
+import com.weizu.flowsys.api.singleton.SingletonFactory;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
+import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
@@ -42,10 +42,14 @@ import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
 import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
+import com.weizu.flowsys.web.channel.dao.OperatorPgDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
+import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
+import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.pojo.OneCodePo;
+import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.http.ParamsEntityWeiZu;
 import com.weizu.flowsys.web.http.weizu.OrderStateResult;
@@ -84,6 +88,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 	private ExchangePlatformAO exchangePlatformAO;
 	@Resource
 	private OperatorPgAO operatorPgAO;
+	@Resource
+	private OperatorPgDaoInterface operatorPgDao;
 	@Resource
 	private ProductCodeAO productCodeAO;
 //	@Resource
@@ -213,9 +219,11 @@ public class PurchaseAOImpl implements PurchaseAO {
 			AgencyPurchasePo app = new AgencyPurchasePo(agencyId, orderId,pcVO.getCdisId(), orderAmount, billType, orderAmount, fromAgencyName, orderPath, orderResult);
 			int aarAdd = agencyPurchaseDao.add(app);
 			if(aarAdd > 0){
-				ChargeDTO chargeDTO = chargeByFacet(epPo,dataPo);
+				BaseInterface bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(dataPo.getProductCode(),orderId+"",pcVO.getChargeTel(),pcVO.getServiceType(),epPo));
+				ChargeDTO chargeDTO = bi.charge();
+//				ChargeDTO chargeDTO = chargeByFacet(epPo,dataPo);
 				if(chargeDTO != null){
-					System.out.println(chargeDTO.getOrderIdApi());//测试打印出对应平台的提单地址
+					System.out.println(chargeDTO.getChargeOrder().getOrderIdApi());//测试打印出对应平台的提单地址
 				}
 				return "订单添加成功";
 			}
@@ -397,9 +405,12 @@ public class PurchaseAOImpl implements PurchaseAO {
 //								Constructor constructor = onwClass.getConstructor(String.class,String.class,String.class,String.class);
 //								IChargeFacet chargeFacet = (IChargeFacet)constructor.newInstance(epPo.getEpPurchaseIp(),epPo.getEpApikey(),epPo.getEpUserName(),dataPo.getProductCode());
 //								ChargeDTO chargeDTO = chargeFacet.charge();
-								ChargeDTO chargeDTO = chargeByFacet(epPo,dataPo);
+								
+//							ChargeDTO chargeDTO = chargeByFacet(epPo,dataPo);
+							BaseInterface bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(dataPo.getProductCode(),orderId+"",pcVO.getChargeTel(),pcVO.getServiceType(),epPo));
+							ChargeDTO chargeDTO = bi.charge();
 								if(chargeDTO != null){
-									System.out.println(chargeDTO.getOrderIdApi());//测试打印出对应平台的提单地址
+									System.out.println(chargeDTO.getChargeOrder().getOrderIdApi());//测试打印出对应平台的提单地址
 								}
 								return "订单添加成功";
 								//判断是否正常提单,
@@ -433,39 +444,42 @@ public class PurchaseAOImpl implements PurchaseAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年8月17日 下午5:36:19
 	 */
-	public ChargeDTO chargeByFacet(ExchangePlatformPo epPo,ProductCodePo dataPo) {
-		if(epPo != null && dataPo != null){
-			IChargeFacet chargeFacet = null;
-			try {
-				String classRealPath = "com.weizu.flowsys.api.charge."+epPo.getEpEngId()+"Charge";	//包完整路径
-				Class onwClass = Class.forName(classRealPath);
-				Constructor constructor = onwClass.getConstructor(String.class,String.class,String.class,String.class);
-				chargeFacet = (IChargeFacet)constructor.newInstance(epPo.getEpPurchaseIp(),epPo.getEpApikey(),epPo.getEpUserName(),dataPo.getProductCode());
-			} catch (ClassNotFoundException e) {
-				logger.config("英文标识和接口不匹配");
-				e.printStackTrace();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return chargeFacet.charge();
-		}else{
-			return null;
-		}
-	}
+//	public ChargeDTO chargeByFacet(ExchangePlatformPo epPo,ProductCodePo dataPo) {
+//		if(epPo != null && dataPo != null){
+//			BaseInterface bi = null;
+////			IChargeFacet chargeFacet = null;
+//			try {
+//				bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(pc.getProductCode(),orderId+"",chargeTel,pgData.getServiceType(),epPo));
+//				ChargeDTO chargeDTO = bi.charge();
+////				String classRealPath = "com.weizu.flowsys.api.charge."+epPo.getEpEngId()+"Charge";	//包完整路径
+////				Class onwClass = Class.forName(classRealPath);
+////				Constructor constructor = onwClass.getConstructor(String.class,String.class,String.class,String.class);
+////				chargeFacet = (IChargeFacet)constructor.newInstance(epPo.getEpPurchaseIp(),epPo.getEpApikey(),epPo.getEpUserName(),dataPo.getProductCode());
+//			} catch (ClassNotFoundException e) {
+//				logger.config("英文标识和接口不匹配");
+//				e.printStackTrace();
+//			} catch (InstantiationException e) {
+//				e.printStackTrace();
+//			} catch (IllegalAccessException e) {
+//				e.printStackTrace();
+//			} catch (NoSuchMethodException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (SecurityException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (IllegalArgumentException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (InvocationTargetException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			return chargeFacet.charge();
+//		}else{
+//			return null;
+//		}
+//	}
 
 	/**
 	 * @description: 封装查询参数
@@ -764,6 +778,50 @@ public class PurchaseAOImpl implements PurchaseAO {
 			map.put("endTimeBack", System.currentTimeMillis());
 		}
 		return purchaseDAO.getTotalResultFromSuccess(map);
+	}
+
+	@Override
+	public List<ChargeChannelPo> ajaxChargeChannel(ChargeChannelParamsPo ccpp) {
+		Map<String,Object> searchMap = getSearachMap(ccpp);
+		List<ChargeChannelPo> channelList = channelChannelDao.list_charge_channel(searchMap);
+		for (ChargeChannelPo chargeChannelPo : channelList) {
+			Map<String, Object> objMap = new HashMap<String, Object>();
+			Long cId = chargeChannelPo.getId();
+			objMap.put("cnelId", cId);
+			objMap.put("operatorType", ccpp.getOperatorType());
+			objMap.put("serviceType", ccpp.getServiceType());
+			List<OperatorPgDataPo> pgList = operatorPgDao.getPgByChanel(objMap);
+			chargeChannelPo.setList(pgList);
+		}
+		return channelList;
+	}
+	
+	/**
+	 * @description: 获得查询参数
+	 * @param ccpp
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月28日 下午4:07:08
+	 */
+	private Map<String,Object> getSearachMap(ChargeChannelParamsPo ccpp){
+		Map<String,Object> searchMap = new HashMap<String, Object>();
+		String carrier = ccpp.getCarrier();
+		int operatorType = OperatorTypeEnum.getValueByDesc(carrier.substring(carrier.length()-2,carrier.length()-2));
+		searchMap.put("operatorType", operatorType);
+		ccpp.setOperatorType(operatorType);
+		Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(carrier);
+		if(scopeMap != null)
+		{
+			String scopeCityCode = scopeMap.get("scopeCityCode").toString();
+			searchMap.put("scopeCityCode", scopeCityCode);
+		}
+		if(ccpp.getServiceType() != null){
+			searchMap.put("serviceType", ccpp.getServiceType());
+		}
+		if(ccpp.getEpEngId() != null){
+			searchMap.put("epEngId", ccpp.getEpEngId());
+		}
+		return searchMap;
 	}
 
 	
