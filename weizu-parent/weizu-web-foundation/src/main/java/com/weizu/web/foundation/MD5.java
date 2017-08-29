@@ -3,6 +3,7 @@ package com.weizu.web.foundation;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -46,6 +47,18 @@ public class MD5 {
 	
 	public static String getMd5(String text){
 		return getMd5(text.getBytes());
+	}
+	/**
+	 * @description: 指定编码格式md5编码
+	 * @param text
+	 * @param encode
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月29日 下午4:35:26
+	 */
+	public static String getMd5(String text,String encode) throws UnsupportedEncodingException{
+		return getMd5(text.getBytes(encode));
 	}
 	
 	public static String getMd5(File file){

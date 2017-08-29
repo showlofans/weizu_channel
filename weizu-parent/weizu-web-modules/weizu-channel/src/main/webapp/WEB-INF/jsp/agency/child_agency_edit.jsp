@@ -91,11 +91,11 @@
 				</select>
 				</span> </div>
 		</div> --%>
-		<div class="row cl">
+		<!-- <div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
 				<button class="btn btn-primary radius" type="submit" onclick="save()"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
 			</div>
-		</div>
+		</div> -->
 	</form>
 </body>
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 

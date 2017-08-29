@@ -9,6 +9,7 @@ import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
+import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.http.ParamsEntityWeiZu;
 import com.weizu.flowsys.web.http.weizu.OrderStateResult;
@@ -96,5 +97,14 @@ public interface PurchaseAO {
 	 * @createTime:2017年8月28日 下午3:57:57
 	 */
 	List<ChargeChannelPo> ajaxChargeChannel(ChargeChannelParamsPo ccpp);
+	
+	/**
+	 * @description: 充值页面异步获得充值包体（超级管理员）
+	 * @param ccpp
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月29日 上午9:15:57
+	 */
+	List<OperatorPgDataPo> ajaxChargePg(ChargeChannelParamsPo ccpp);
 	
 }

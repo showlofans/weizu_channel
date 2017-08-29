@@ -18,11 +18,12 @@
     <result column="ep_apikey" jdbcType="VARCHAR" property="epApikey" />
     <result column="ep_ip" jdbcType="VARCHAR" property="epIp" />
     <result column="ep_eng_id" jdbcType="VARCHAR" property="epEngId" />
+    <result column="ep_other_params" jdbcType="VARCHAR" property="epOtherParams" />
     <result column="last_access" jdbcType="BIGINT" property="lastAccess" />
   </resultMap>
   <sql id="Base_Column_List">
     id, ep_name, ep_purchase_ip, product_list_ip, pgdata_check_ip, ep_balance_ip, 
-    ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip, ep_eng_id, last_access
+    ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip, ep_eng_id,ep_other_params, last_access
   </sql>
   <!-- <sql id="Other_Column_List">
     ep.id, ep.ep_name, ep_purchase_ip, product_list_ip, pgdata_check_ip, ep_balance_ip, 

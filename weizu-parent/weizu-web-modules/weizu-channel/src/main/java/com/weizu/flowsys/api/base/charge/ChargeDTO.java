@@ -10,7 +10,7 @@ package com.weizu.flowsys.api.base.charge;
  */
 public class ChargeDTO {
 	
-	private int tipCode;				//提示信息编码:正常提单，提单失败
+	private int tipCode;				//提示信息编码:正常提单0-，提单失败1-
 	private String tipMsg;				//提示信息
 	private ChargeOrder chargeOrder;	//充值形成的订单对象
 	public ChargeDTO() {

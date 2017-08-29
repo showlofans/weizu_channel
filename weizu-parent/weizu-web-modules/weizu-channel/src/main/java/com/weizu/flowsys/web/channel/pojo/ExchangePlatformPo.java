@@ -41,10 +41,20 @@ public class ExchangePlatformPo extends Po {
     
     private Long lastAccess;			//最后更新时间
     
+    private String epOtherParams;		//平台其他参数
+    
     @TempField
     private String lastAccessStr;		//页面展示时间
     
-    public Long getLastAccess() {
+    public String getEpOtherParams() {
+		return epOtherParams;
+	}
+
+	public void setEpOtherParams(String epOtherParams) {
+		this.epOtherParams = epOtherParams;
+	}
+
+	public Long getLastAccess() {
 		return lastAccess;
 	}
 

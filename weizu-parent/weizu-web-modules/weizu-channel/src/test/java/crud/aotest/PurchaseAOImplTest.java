@@ -194,12 +194,13 @@ public class PurchaseAOImplTest {
 //		List<ChargeChannelPo> chargeList = purchaseAO.ajaxChargeChannel(new ChargeChannelParamsPo("广东移动", "19", "Weizu"));
 //		String listJsonStr = JSON.toJSONString(chargeList);
 //		System.out.println(listJsonStr);
-//		for (ChargeChannelPo chargeChannelPo : chargeList) {
-//			List<OperatorPgDataPo> pgList = chargeChannelPo.getList();
-//			for (OperatorPgDataPo operatorPgDataPo : pgList) {
-//				System.out.println(operatorPgDataPo.getPgName());
-//			}
-//		}
+//		System.out.println(chargeList.size());
+////		for (ChargeChannelPo chargeChannelPo : chargeList) {
+////			List<OperatorPgDataPo> pgList = chargeChannelPo.getList();
+////			for (OperatorPgDataPo operatorPgDataPo : pgList) {
+////				System.out.println(operatorPgDataPo.getPgName());
+////			}
+////		}
 //
 //	}
 	

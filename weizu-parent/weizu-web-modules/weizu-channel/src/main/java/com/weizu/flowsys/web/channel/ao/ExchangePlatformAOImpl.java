@@ -77,6 +77,7 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 		
 		String epEngId = StringUtil2.toUpperClass(exchangePlatformPo.getEpEngId());
 		exchangePlatformPo.setEpEngId(epEngId);
+		exchangePlatformPo.setLastAccess(System.currentTimeMillis());
 		
 		int res = exchangePlatformDao.add(exchangePlatformPo);
 		if(res > 0){

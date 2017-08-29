@@ -15,6 +15,7 @@ public class ChargeChannelParamsPo {
     private String scopeCityCode;			//地区编码    
     private Integer serviceType;			//流量类型
 	private String epEngId;					//平台英文标志
+	private Long channelId;					//通道id（再次通过通道查询包体的时候参数）
 	
 	public ChargeChannelParamsPo(String carrier, String scopeCityCode,
 			String epEngId) {
@@ -23,9 +24,30 @@ public class ChargeChannelParamsPo {
 		this.scopeCityCode = scopeCityCode;
 		this.epEngId = epEngId;
 	}
+	
+	
+	/** 代理商通过费率参数找到通道，再找到包体
+	 * @param carrier
+	 * @param serviceType
+	 * @param channelId
+	 */
+	public ChargeChannelParamsPo(String carrier, Integer serviceType,
+			Long channelId) {
+		super();
+		this.carrier = carrier;
+		this.serviceType = serviceType;
+		this.channelId = channelId;
+	}
+
+
 	public ChargeChannelParamsPo() {
 		super();
-		// TODO Auto-generated constructor stub
+	}
+	public Long getChannelId() {
+		return channelId;
+	}
+	public void setChannelId(Long channelId) {
+		this.channelId = channelId;
 	}
 	public String getCarrier() {
 		return carrier;

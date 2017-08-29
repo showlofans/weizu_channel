@@ -39,7 +39,7 @@
 		<label class="form-label col-xs-4 col-sm-3">平台</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<span class="select-box inline">
-					<select id="selectEpId" name="epId" class="select">
+					<select id="selectEpId" name="epId" onchange="ajaxGetPg()"  class="select">
 						<c:forEach items="${resultMap.epList }" var="ep" varStatus="vs1">
 							<c:choose>
 								<c:when test="${ep.epId==resultMap.epId }">
