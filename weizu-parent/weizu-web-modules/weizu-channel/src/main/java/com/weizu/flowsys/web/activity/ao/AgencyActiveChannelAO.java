@@ -129,4 +129,13 @@ public interface AgencyActiveChannelAO {
 	 */
 	int batchBindAgency(AgencyActiveRateDTO aardto);
 	
+	/**
+	 * @description:删除代理商和通道的绑定
+	 * @param aarId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月30日 下午3:43:48
+	 */
+	String delAar(Long aarId);
+	
 }

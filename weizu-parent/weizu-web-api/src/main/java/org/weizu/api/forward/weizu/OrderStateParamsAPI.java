@@ -1,8 +1,11 @@
 package org.weizu.api.forward.weizu;
 
+import java.io.UnsupportedEncodingException;
+
 import org.weizu.api.base.APIParams;
 import org.weizu.api.base.ParamsAPIBase;
-import org.weizu.api.util.MD5;
+
+import com.weizu.web.foundation.MD5;
 
 
 /**
@@ -45,7 +48,12 @@ public class OrderStateParamsAPI extends ParamsAPIBase implements APIParams {
 
 	@Override
 	public String toParams() {
-		String sign = MD5.getMd5("username="+username+"&apikey="+apikey);
+		String sign = null;
+		try {
+			sign = MD5.getMd5("username="+username+"&apikey="+apikey,null,null);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		return "username="+username+"&order_id="+ order_id +"&sign="+sign;
 		//+"&telphone="+ telphone 不能传空值
 	}

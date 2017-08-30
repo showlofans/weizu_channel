@@ -31,7 +31,7 @@ public class ParamsEntityWeiZu extends BaseParams {
 		this.username = username;
 		this.number = number;
 		this.flowsize = flowsize;
-		this.sign = MD5.getMd5("username="+username+"&apikey="+apikey);;
+//		this.sign = MD5.getMd5("username="+username+"&apikey="+apikey);;
 	}
 	
 	

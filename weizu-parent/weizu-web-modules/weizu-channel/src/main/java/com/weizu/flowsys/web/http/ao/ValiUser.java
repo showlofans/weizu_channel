@@ -1,6 +1,8 @@
 
 package com.weizu.flowsys.web.http.ao;
 
+import java.io.UnsupportedEncodingException;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -50,7 +52,13 @@ public class ValiUser {
 		}
 		
 		String backAPIKey = backPo.getUserApiKey();
-		String rightSign = MD5.getMd5(backPo.getUserName()+"&"+backAPIKey);
+		
+		String rightSign = null;
+		try {
+			rightSign = MD5.getMd5("username="+backPo.getUserName()+"&apikey="+backAPIKey,null,null);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		
 		if(rightSign.equals(sign)){
 			return backPo;

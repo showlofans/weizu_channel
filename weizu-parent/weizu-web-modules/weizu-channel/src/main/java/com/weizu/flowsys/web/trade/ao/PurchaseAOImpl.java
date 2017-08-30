@@ -219,16 +219,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 			AgencyPurchasePo app = new AgencyPurchasePo(agencyId, orderId,null, orderAmount, billType, orderAmount, fromAgencyName, orderPath, orderResult);
 			int aarAdd = agencyPurchaseDao.add(app);
 			if(aarAdd > 0){
-				BaseInterface bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(dataPo.getProductCode(),orderId+"",pcVO.getChargeTel(),pcVO.getServiceType(),epPo));
-				ChargeDTO chargeDTO = bi.charge();
-//				ChargeDTO chargeDTO = chargeByFacet(epPo,dataPo);
-				if(chargeDTO != null){
-					System.out.println(chargeDTO.getChargeOrder().getOrderIdApi());//测试打印出对应平台的提单地址
-					if(updatePurchase(chargeDTO, orderId) > 0){
-						return "订单添加成功";
-					}
-				}
-				return "订单充值接口返回错误";
+				return chargeByBI(epPo, orderId, pcVO, dataPo.getProductCode());
 			}
 		}else if(pcVO.getRateId() == null && pcVO.getCdisId() != null){//通过通道折扣充值
 			String fromAgencyName = pcVO.getFromAgencyName();
@@ -278,16 +269,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 			AgencyPurchasePo app = new AgencyPurchasePo(agencyId, orderId,pcVO.getCdisId(), orderAmount, billType, orderAmount, fromAgencyName, orderPath, orderResult);
 			int aarAdd = agencyPurchaseDao.add(app);
 			if(aarAdd > 0){
-				BaseInterface bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(dataPo.getProductCode(),orderId+"",pcVO.getChargeTel(),pcVO.getServiceType(),epPo));
-				ChargeDTO chargeDTO = bi.charge();
-//				ChargeDTO chargeDTO = chargeByFacet(epPo,dataPo);
-				if(chargeDTO != null){
-					System.out.println(chargeDTO.getChargeOrder().getOrderIdApi());//测试打印出对应平台的提单地址
-					if(updatePurchase(chargeDTO, orderId) > 0){
-						return "订单添加成功";
-					}
-				}
-				return "订单充值接口返回错误";
+				return chargeByBI(epPo, orderId, pcVO, dataPo.getProductCode());
 			}
 		}else{//通过费率折扣充值
 			RateDiscountPo ratePo = rateDiscountDao.get(pcVO.getRateId());
@@ -475,15 +457,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 								
 //							ChargeDTO chargeDTO = chargeByFacet(epPo,dataPo);
 							
-//							BaseInterface bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(dataPo.getProductCode(),orderId+"",pcVO.getChargeTel(),pcVO.getServiceType(),epPo));
-//							ChargeDTO chargeDTO = bi.charge();
-//							if(chargeDTO != null){
-//								System.out.println(chargeDTO.getChargeOrder().getOrderIdApi());//测试打印出对应平台的提单地址
-//								if(updatePurchase(chargeDTO, orderId) > 0){
-									return "订单添加成功";
-//								}
-//							}
-//							return "订单充值接口返回错误";
+							return chargeByBI(epPo, orderId, pcVO, dataPo.getProductCode());
 								//判断是否正常提单,
 								
 								//充值之后更新订单的orderIdApi
@@ -533,42 +507,17 @@ public class PurchaseAOImpl implements PurchaseAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年8月17日 下午5:36:19
 	 */
-//	public ChargeDTO chargeByFacet(ExchangePlatformPo epPo,ProductCodePo dataPo) {
-//		if(epPo != null && dataPo != null){
-//			BaseInterface bi = null;
-////			IChargeFacet chargeFacet = null;
-//			try {
-//				bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(pc.getProductCode(),orderId+"",chargeTel,pgData.getServiceType(),epPo));
-//				ChargeDTO chargeDTO = bi.charge();
-////				String classRealPath = "com.weizu.flowsys.api.charge."+epPo.getEpEngId()+"Charge";	//包完整路径
-////				Class onwClass = Class.forName(classRealPath);
-////				Constructor constructor = onwClass.getConstructor(String.class,String.class,String.class,String.class);
-////				chargeFacet = (IChargeFacet)constructor.newInstance(epPo.getEpPurchaseIp(),epPo.getEpApikey(),epPo.getEpUserName(),dataPo.getProductCode());
-//			} catch (ClassNotFoundException e) {
-//				logger.config("英文标识和接口不匹配");
-//				e.printStackTrace();
-//			} catch (InstantiationException e) {
-//				e.printStackTrace();
-//			} catch (IllegalAccessException e) {
-//				e.printStackTrace();
-//			} catch (NoSuchMethodException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (SecurityException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (IllegalArgumentException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (InvocationTargetException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			return chargeFacet.charge();
-//		}else{
-//			return null;
-//		}
-//	}
+	public String chargeByBI(ExchangePlatformPo epPo,Long orderId,PgChargeVO pcVO,String productCode) {
+		BaseInterface bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(productCode,orderId + "",pcVO.getChargeTel(),pcVO.getServiceType(),epPo));
+		ChargeDTO chargeDTO = bi.charge();
+		if(chargeDTO != null){
+			System.out.println(chargeDTO.getChargeOrder().getOrderIdApi());//测试打印出对应平台的提单地址
+			if(updatePurchase(chargeDTO, orderId) > 0){
+				return "订单添加成功";
+			}
+		}
+		return "订单充值接口返回错误";
+	}
 
 	/**
 	 * @description: 封装查询参数

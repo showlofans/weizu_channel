@@ -17,7 +17,7 @@ public class ATT {
 	/**
 	 * 参数要统一生成
 	 */
-	public static final String sign = MD5.getMd5("");
+//	public static final String sign = MD5.getMd5("");
 	
 	/**
 	 * 折扣只有一个数字的除数

@@ -15,7 +15,10 @@ public class SingletonFactory {
 		{
 			return Weizu.getInstance(epEngId, baseParams);
 		}
+		if(MyConstants.LLJYPT_ENG.equals(epEngId) || MyConstants.LLJYPT_ENG_0.equals(epEngId)){
+			return Lljypt.getInstance(epEngId, baseParams);
+		}
 		
-		return Weizu.getInstance(epEngId, baseParams);
+		return null;
 	}
 }

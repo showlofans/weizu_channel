@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50626
 File Encoding         : 65001
 
-Date: 2017-08-29 18:05:05
+Date: 2017-08-30 18:04:40
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -52,18 +52,20 @@ CREATE TABLE `agency_active_rate` (
   CONSTRAINT `agency_agency` FOREIGN KEY (`agency_id`) REFERENCES `agency_backward` (`id`),
   CONSTRAINT `bind_agency_fk` FOREIGN KEY (`bind_agency_id`) REFERENCES `agency_backward` (`id`),
   CONSTRAINT `channel_agency_fk` FOREIGN KEY (`rate_discount_id`) REFERENCES `rate_discount` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of agency_active_rate
 -- ----------------------------
-INSERT INTO `agency_active_rate` VALUES ('48', '4', '1', '46', '0', '123', '1501237922699');
 INSERT INTO `agency_active_rate` VALUES ('51', '21', '4', '49', '0', '456', '1501320864402');
 INSERT INTO `agency_active_rate` VALUES ('53', '21', '4', '51', '0', '456', '1501324836354');
 INSERT INTO `agency_active_rate` VALUES ('54', '23', '4', '52', '0', 'w', '1501324861846');
 INSERT INTO `agency_active_rate` VALUES ('55', '24', '4', '53', '0', 'kkk', '1501324986265');
 INSERT INTO `agency_active_rate` VALUES ('56', '27', '4', '54', '0', 'company', '1501327522306');
-INSERT INTO `agency_active_rate` VALUES ('57', '4', '1', '58', '0', '123', '1503991636846');
+INSERT INTO `agency_active_rate` VALUES ('61', '4', '1', '62', '1', '123', '1504080232496');
+INSERT INTO `agency_active_rate` VALUES ('62', '25', '1', '46', '0', 'lexin', '1504080354044');
+INSERT INTO `agency_active_rate` VALUES ('63', '4', '1', '63', '1', '123', '1504080855477');
+INSERT INTO `agency_active_rate` VALUES ('64', '4', '1', '64', '1', '123', '1504080951560');
 
 -- ----------------------------
 -- Table structure for `agency_backward`
@@ -750,8 +752,8 @@ INSERT INTO `exchange_platform` VALUES ('30', '5', null, '5', '5', '5', '55', '5
 INSERT INTO `exchange_platform` VALUES ('31', '0', null, '0', '0', '0', '0', '0', '0', '0', '0', '0', null, '1503369178973');
 INSERT INTO `exchange_platform` VALUES ('32', 'wzkj', 'Weizu', 'http://139.224.70.161:32001/api/v1/sendOrder', 'http://139.224.70.161:32001/api/v1/sendOrder', 'http://139.224.70.161:32001/api/v1/orderState', 'http://139.224.70.161:32001/api/v1/getBalance', 'CS111111', '123456', null, '722c16de0a83e5bd2f988e3c7bc9fee8', 'http://139.224.70.161/', null, '1503369178973');
 INSERT INTO `exchange_platform` VALUES ('40', '456', null, '45', '645', '45', '45', '454', '4', '545', '5', '4', null, '1503369178973');
-INSERT INTO `exchange_platform` VALUES ('42', '行云', 'Lljypt', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/query.order', 'http://api.lljypt.com/capi/query.balance', 'cncwz', '249636', '0', 'KKIGoAFUTxoIFfC', 'http://customer.lljypt.com/a', 'merchant=10210&version=v100&clientId=10000', '1504000807525');
-INSERT INTO `exchange_platform` VALUES ('43', '行云对私', 'Lljypt0', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/query.order', 'http://api.lljypt.com/capi/query.balance', 'cncwz', '249636', '0', 'AoYIuPLXMmpTwTw', 'http://customer.lljypt.com/a', 'merchant=10304&version=v100&clientId=10000 ', '1504000740478');
+INSERT INTO `exchange_platform` VALUES ('42', '行云', 'Lljypt', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/query.order', 'http://api.lljypt.com/capi/query.balance', 'cncwz', '249636', '0', 'KKIGoAFUTxoIFfC', 'http://customer.lljypt.com/a', 'merchant=10210&clientId=10000&version=V100&', '1504000807525');
+INSERT INTO `exchange_platform` VALUES ('43', '行云对私', 'Lljypt0', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/query.order', 'http://api.lljypt.com/capi/query.balance', 'cncwz', '249636', '0', 'AoYIuPLXMmpTwTw', 'http://customer.lljypt.com/a', 'merchant=10304&clientId=10000&version=V100& ', '1504000740478');
 
 -- ----------------------------
 -- Table structure for `operator_discount`
@@ -864,7 +866,6 @@ INSERT INTO `product_code` VALUES ('1', '江西移动500M全国流量包', '15',
 INSERT INTO `product_code` VALUES ('2', null, '1', '32', null, '2', '333333');
 INSERT INTO `product_code` VALUES ('3', '全国', '1', '32', null, '2', '1255456');
 INSERT INTO `product_code` VALUES ('4', '全国', '10', '32', null, '2', '565656');
-INSERT INTO `product_code` VALUES ('5', '江西省', '10', '14', null, '2', '56666');
 INSERT INTO `product_code` VALUES ('6', '云南省', '1', '24', null, '13', '11111111111');
 INSERT INTO `product_code` VALUES ('7', '全国', '11', '32', null, '13', '22222');
 INSERT INTO `product_code` VALUES ('8', '全国', '13', '32', null, '2', '56');
@@ -975,7 +976,7 @@ CREATE TABLE `rate_discount` (
   KEY `active_discount_fk` (`active_id`),
   KEY `fk_channel_dis_rate` (`channel_discount_id`),
   CONSTRAINT `fk_channel_dis_rate` FOREIGN KEY (`channel_discount_id`) REFERENCES `channel_discount` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of rate_discount
@@ -990,6 +991,12 @@ INSERT INTO `rate_discount` VALUES ('55', '0.8', null, '13', '0', '12');
 INSERT INTO `rate_discount` VALUES ('56', '0.88', null, '13', '0', '12');
 INSERT INTO `rate_discount` VALUES ('57', '0.85', null, '13', '0', '12');
 INSERT INTO `rate_discount` VALUES ('58', '0.95', null, '13', '1', null);
+INSERT INTO `rate_discount` VALUES ('59', '0.76', null, '13', '0', null);
+INSERT INTO `rate_discount` VALUES ('60', '0.77', null, '13', '0', null);
+INSERT INTO `rate_discount` VALUES ('61', '0.78', null, '13', '0', null);
+INSERT INTO `rate_discount` VALUES ('62', '0.85', null, '13', '0', null);
+INSERT INTO `rate_discount` VALUES ('63', '0.89', null, '13', '0', null);
+INSERT INTO `rate_discount` VALUES ('64', '0.85', null, '13', '0', null);
 
 -- ----------------------------
 -- Table structure for `rate_join_channel`

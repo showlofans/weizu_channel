@@ -115,22 +115,22 @@ public class StringTest {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年8月18日 上午11:46:20
 	 */
-	@Test
-	public void testClassUtil(){
-//		PurchaseVO purchaseVo1 = new PurchaseVO();
-//		String t = "2015 30";
-////		purchaseVo1.setBillType(0);
-//		purchaseVo1.setBackEndTimeStr(t);
-////		PurchaseVO purchaseVo2 = purchaseVo1.clone();
-//		PurchaseVO purchaseVo2 = new PurchaseVO();
-//		purchaseVo2.setBackEndTimeStr(t);
-//		boolean isContrast = ClassUtil.contrastObj(purchaseVo1, purchaseVo2);
-		ExchangePlatformPo ep1 = new ExchangePlatformPo();
-		ExchangePlatformPo ep2 = new ExchangePlatformPo();
-		ep1.setEpApikey("123");
-		boolean isContrast = ClassUtil.contrastObj(ep1, ep2);
-		System.out.println(isContrast);
-	}
+//	@Test
+//	public void testClassUtil(){
+////		PurchaseVO purchaseVo1 = new PurchaseVO();
+////		String t = "2015 30";
+//////		purchaseVo1.setBillType(0);
+////		purchaseVo1.setBackEndTimeStr(t);
+//////		PurchaseVO purchaseVo2 = purchaseVo1.clone();
+////		PurchaseVO purchaseVo2 = new PurchaseVO();
+////		purchaseVo2.setBackEndTimeStr(t);
+////		boolean isContrast = ClassUtil.contrastObj(purchaseVo1, purchaseVo2);
+//		ExchangePlatformPo ep1 = new ExchangePlatformPo();
+//		ExchangePlatformPo ep2 = new ExchangePlatformPo();
+//		ep1.setEpApikey("123");
+//		boolean isContrast = ClassUtil.contrastObj(ep1, ep2);
+//		System.out.println(isContrast);
+//	}
 //	public static void main(String[] args) {
 ////		String str = StringUtil2.toUpperClass("zero_fisr_sec");
 ////		System.out.println(str);
@@ -167,6 +167,19 @@ public class StringTest {
 ////		
 //////		Calendar todayStart = Calendar.getInstance();
 //////		System.out.println(DateUtil.formatAll(todayStart.getTime()));
+//	}
+//	@Test
+//	public void testFindParams(){
+////		String test = "clientId=10000&merchant=10304&version=v100&";
+////		int charSeqInd = test.indexOf("clientId");	//字段索引
+////		String referStr = test.substring(charSeqInd);//以便找到这个字段后面的第一个&
+////		String params = referStr.substring(0,referStr.indexOf("&"));
+//		String params = StringUtil2.getParamsByCharSeq("clientId=10000&merchant=10304&version=v100&", "clientId");
+//		System.out.println(params);
+////		String getClientId = "";
+////		String getMerchant = "";
+////		String getVersion = "";
+//		
 //	}
 
 }

@@ -130,8 +130,16 @@
 						
 						<td class="td-manage">
 						<%-- <a style="text-decoration:none" onClick="article_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
-						<a style="text-decoration:none" class="ml-5" onClick="article_edit('账户充值',${agency.userName },${agency.id })" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> 
-						<a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a> --%>
+						<a style="text-decoration:none" class="ml-5" onClick="article_edit('账户充值',${agency.userName },${agency.id })" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> --%>
+						<a style="text-decoration:none" class="ml-5" onClick="bind_del(this,${activePo.id })" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+						<c:choose>
+							<c:when test="${activePo.bindState == 0 }">
+								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top"  onClick="changeBState('/flowsys/rate/update_bind_state.do',${activePo.id },1)" href="javascript:;" title="解绑"><i class="Hui-iconfont">&#xe605;</i></a> 
+							</c:when>
+							<c:otherwise>
+								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top"  onClick="changeBState('/flowsys/rate/update_bind_state.do',${activePo.id },0)" href="javascript:;" title="绑定"><i class="Hui-iconfont">&#xe60e;</i></a> 
+							</c:otherwise>
+						</c:choose> 
 						</td>
 						<%--  <td class="td-status"><c:forEach items="${resultMap.rateStateEnums }" var="stateEnum" varStatus="vs1">
 						<c:if test="${rate.rateState == stateEnum.value }"> ${stateEnum.desc }</c:if>
@@ -174,6 +182,68 @@
 <script type="text/javascript">
 function onSub(){
 	location.reload();
+}
+//更新绑定状态
+function changeBState(url,activeId,bindS){
+	var bindConfirm = "";
+	var bindState = -1;
+	if(bindS==1){
+		bindConfirm = '解绑';
+		bindState = 0;
+	}else{
+		bindConfirm = '绑定';
+		bindState = 1;
+	}
+            //当点击‘确定’按钮的时候，获取弹出层返回的值
+           // var res = window["layui-layer-iframe" + index].callbackdata();
+            //打印返回的值，看是否有我们想返回的值。
+            //console.log(res);
+            //最后关闭弹出层
+          layer.confirm('确认要清除绑定吗？',function(index){
+        	  $.ajax({
+  				type: 'POST',
+  				url: url,
+  				//dataType: 'json',
+  				data: {activeId:activeId, bindState:bindS},
+  				async: false,
+  				success: function(data){
+  					//alert(data);
+  					if(data=="success")
+  					{
+  						location.reload();
+  					}else{
+  						layer.msg('更新绑定状态!',{icon:1,time:1000});
+  					} 
+  				},
+  				error:function(data) {
+  					console.log(data.msg);
+  				},
+  			});
+          })
+            
+}
+/**删除绑定**/
+function bind_del(vart,id){
+	var url = "/flowsys/rate/del_agency_active_rate.do";
+	layer.confirm('确认要清除绑定吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			url: url,
+			data: {id:id},
+			success: function(data){
+				if(data=="success")
+				{
+					layer.msg('下架绑定成功!',{icon:1,time:1000});
+					location.reload();
+				}else{
+					layer.msg('下架平台失败!',{icon:1,time:1000});
+				}
+			},
+			error:function(data) {
+				console.log(data.msg);
+			}
+		});		
+	});
 }
 /*包体-添加*/
 function rate_add(title,url){

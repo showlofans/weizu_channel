@@ -1031,5 +1031,18 @@ public class RateController {
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		return new ModelAndView("/welcome", "resultMap", resultMap);
 	}
+	/**
+	 * @description: 删除代理商和通道的绑定
+	 * @param id
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月30日 下午3:46:36
+	 */
+	@ResponseBody
+	@RequestMapping(value=RateURL.DEL_AGENCY_ACTIVE_RATE)
+	public String delAar(Long id){
+		String res = agencyActiveChannelAO.delAar(id);
+		return res;
+	}
 	
 }

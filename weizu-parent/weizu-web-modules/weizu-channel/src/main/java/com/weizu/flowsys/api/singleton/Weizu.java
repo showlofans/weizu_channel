@@ -1,7 +1,8 @@
 package com.weizu.flowsys.api.singleton;
 
+import java.io.UnsupportedEncodingException;
+
 import org.weizu.api.util.HttpRequest;
-import org.weizu.api.util.MD5;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
@@ -10,6 +11,7 @@ import com.weizu.flowsys.api.base.charge.ChargeDTO;
 import com.weizu.flowsys.api.base.charge.ChargeOrder;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
+import com.weizu.web.foundation.MD5;
 
 /**
  * @description: 微族接口实现
@@ -24,6 +26,7 @@ public class Weizu implements BaseInterface {
 	private static Weizu instance = new Weizu();  
 	private static String epEngId;
 	private static BaseP baseParams;
+	private static StringBuffer sbParams = new StringBuffer();;			//输入参数
 	
     private Weizu (){}  
     public static Weizu getInstance(String epEngId,BaseP baseParams) {  
@@ -79,11 +82,25 @@ public class Weizu implements BaseInterface {
 	 */
 	public String toParams() {
 		ExchangePlatformPo epPo = baseParams.getEpo();
-		String sign = MD5.getMd5("username="+epPo.getEpUserName()+"&apikey="+epPo.getEpApikey());
+		String sign = null;
+		try {
+			sign = MD5.getMd5("username="+epPo.getEpUserName()+"&apikey="+epPo.getEpApikey(),null,null);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		
-		return "username=" + epPo.getEpUserName() + "&number=" + baseParams.getChargeTel()
-				+ "&flowsize=" + baseParams.getProductCode() + "&user_order_id=" + baseParams.getOrderId()
-				+ "&sign=" + sign;
+		sbParams.append("username=").append(epPo.getEpUserName());
+		sbParams.append("&number=").append(baseParams.getChargeTel());
+		sbParams.append("&flowsize=").append(baseParams.getProductCode());
+		sbParams.append("&user_order_id=").append(baseParams.getOrderId());
+		sbParams.append("&sign=").append(sign);
+		
+		return sbParams.toString();
+		
+		
+//		return "username=" + epPo.getEpUserName() + "&number=" + baseParams.getChargeTel()
+//				+ "&flowsize=" + baseParams.getProductCode() + "&user_order_id=" + baseParams.getOrderId()
+//				+ "&sign=" + sign;
 	}
 
 	@Override
@@ -108,8 +125,17 @@ public class Weizu implements BaseInterface {
 			sBuffer.append(objs[i].toString());
 			sBuffer.append("&");
 		}
-		Weizu.baseParams.setAddParams(sBuffer.toString());
+//		Weizu.baseParams.setAddParams(sBuffer.toString());
 		
+	}
+	@Override
+	public void initSpecialP(String addParams) {
+//		Weizu.baseParams.setAddParams(addParams);
+	}
+	@Override
+	public String toBalanceParams() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
