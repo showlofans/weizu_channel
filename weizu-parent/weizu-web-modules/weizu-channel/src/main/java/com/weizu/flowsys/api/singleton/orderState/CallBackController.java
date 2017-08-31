@@ -1,6 +1,5 @@
-package com.weizu.flowsys.api.singleton;
+package com.weizu.flowsys.api.singleton.orderState;
 
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -9,7 +8,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
-import com.weizu.flowsys.api.base.CallBackURL;
 
 /**
  * @description: 回调控制层

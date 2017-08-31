@@ -1,4 +1,4 @@
-package com.weizu.flowsys.web.http;
+package com.weizu.flowsys.web.http.controller;
 
 import com.weizu.flowsys.web.base.BaseURL;
 

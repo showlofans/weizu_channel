@@ -26,6 +26,8 @@ public class ExchangePlatformPo extends Po {
     private String pgdataCheckIp;		//流量查询地址
 
     private String epBalanceIp;			//余额查询地址
+    
+    private String epOrderStateIp;			//订单状态查询地址
 
     private String epUserName;			//账号
 
@@ -46,7 +48,15 @@ public class ExchangePlatformPo extends Po {
     @TempField
     private String lastAccessStr;		//页面展示时间
     
-    public String getEpOtherParams() {
+    public String getEpOrderStateIp() {
+		return epOrderStateIp;
+	}
+
+	public void setEpOrderStateIp(String epOrderStateIp) {
+		this.epOrderStateIp = epOrderStateIp;
+	}
+
+	public String getEpOtherParams() {
 		return epOtherParams;
 	}
 

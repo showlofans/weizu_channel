@@ -8,12 +8,12 @@ import javax.annotation.Resource;
 
 import org.weizu.api.outter.enums.ChargeStatusEnum;
 
-import com.weizu.flowsys.api.base.ChargeParams;
-import com.weizu.flowsys.api.base.charge.ChargeDTO;
-import com.weizu.flowsys.api.base.facet.IChargeFacet;
 import com.weizu.flowsys.api.singleton.BaseInterface;
 import com.weizu.flowsys.api.singleton.BaseP;
 import com.weizu.flowsys.api.singleton.SingletonFactory;
+import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
+import com.weizu.flowsys.api.weizu.charge.ChargeParams;
+import com.weizu.flowsys.api.weizu.facet.IChargeFacet;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
@@ -142,9 +142,6 @@ public class ChargeImpl implements IChargeFacet {
 				}
 			}
 			
-			
-//			String chargeTelDetail = resMap.get("chargeTelDetail").toString();
-			
 		}else{
 			return (ChargeDTO) sqlMap.get("chargeDTO");
 		}
@@ -234,9 +231,7 @@ public class ChargeImpl implements IChargeFacet {
 					}
 				}
 			}
-//			return new ChargeDTO(chargeEnum.getValue(),chargeTelDetail+chargeEnum.getDesc()+":没有开通对私业务", null);
 		}
-		//
 		return sqlMap;
 	}
 

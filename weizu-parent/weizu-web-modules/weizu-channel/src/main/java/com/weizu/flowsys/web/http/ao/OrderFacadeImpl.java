@@ -4,15 +4,20 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.weizu.api.outter.enums.OrderStateCheckEnum;
-import org.weizu.api.outter.facade.OrderFacade;
-import org.weizu.api.outter.pojo.order.OrderDTO;
-import org.weizu.api.outter.pojo.order.OrderParams;
 
+import com.weizu.flowsys.api.singleton.OrderDTO;
+import com.weizu.flowsys.api.singleton.OrderIn;
+import com.weizu.flowsys.api.weizu.facet.IOrderFacet;
+import com.weizu.flowsys.api.weizu.order.QueryOrderParams;
+import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.channel.ao.ChannelForwardAO;
 import com.weizu.flowsys.web.channel.dao.impl.OperatorPgDao;
+import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
+import com.weizu.flowsys.web.trade.dao.AgencyPurchaseDao;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
+import com.weizu.flowsys.web.trade.pojo.AgencyPurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.web.foundation.String.StringHelper;
 
@@ -25,7 +30,7 @@ import com.weizu.web.foundation.String.StringHelper;
  * @version 1.0
  */
 @Service("orderFacade")
-public class OrderFacadeImpl implements OrderFacade {
+public class OrderFacadeImpl implements IOrderFacet {
 
 	@Resource
 	private ValiUser valiUser;
@@ -39,6 +44,8 @@ public class OrderFacadeImpl implements OrderFacade {
 	private OperatorPgDao operatorPgDao;
 	@Resource
 	private ChannelForwardAO channelForwardAO;
+	@Resource
+	private AgencyPurchaseDao agencyPurchaseDao;
 	
 	/**
 	 * @description:查询订单详情
@@ -48,7 +55,7 @@ public class OrderFacadeImpl implements OrderFacade {
 	 * @createTime:2017年6月23日 下午6:04:40
 	 */
 	@Override
-	public OrderDTO checkOrder(OrderParams orderParams) {
+	public OrderDTO getOrderDTO(QueryOrderParams orderParams) {
 		AgencyBackwardPo agencyPo = valiUser.findAgency(orderParams.getUserName(), orderParams.getSign());
 		OrderDTO orderDTO = null;
 		PurchasePo purchasePo = null;
@@ -56,7 +63,7 @@ public class OrderFacadeImpl implements OrderFacade {
 		if(StringHelper.isEmpty(orderParams.getOrderId()))
 		{
 			oscEnum = OrderStateCheckEnum.ORDERID_ISNULL;
-			return new OrderDTO(oscEnum.getValue(), oscEnum.getDesc(), null);
+			return new OrderDTO(null, oscEnum.getValue(), oscEnum.getDesc());
 		}else{
 			Long orderId = Long.parseLong(orderParams.getOrderId());
 			purchasePo = purchaseAO.getOnePurchase(orderId);
@@ -65,15 +72,22 @@ public class OrderFacadeImpl implements OrderFacade {
 		if(agencyPo == null)
 		{
 			oscEnum = OrderStateCheckEnum.AUTHENTICATION_FAILURE;
-			orderDTO = new OrderDTO(oscEnum.getValue(), oscEnum.getDesc(), null);
+			orderDTO = new OrderDTO(null,oscEnum.getValue(), oscEnum.getDesc());
 		}else if(purchasePo == null)
 		{
 			oscEnum = OrderStateCheckEnum.ORDER_NOT_FOUND;
-			orderDTO = new OrderDTO(oscEnum.getValue(), oscEnum.getDesc(), null);
+			orderDTO = new OrderDTO(null,oscEnum.getValue(), oscEnum.getDesc());
 		}else if(!purchasePo.getChargeTel().equals(orderParams.getNumber())){
 			oscEnum = OrderStateCheckEnum.TELPHONE_ERROR;
-			orderDTO = new OrderDTO(oscEnum.getValue(), oscEnum.getDesc(), null);
-		}else{//通过api更新订单状态
+			orderDTO = new OrderDTO(null,oscEnum.getValue(), oscEnum.getDesc());
+		}
+		else{//通过api更新订单状态
+			oscEnum = OrderStateCheckEnum.PARAMS_SUCCESS;
+			PgDataPo pgPo = operatorPgDao.get(purchasePo.getPgId());
+//			AgencyPurchasePo agencyPurPo = agencyPurchaseDao.get(new WherePrams("agency_id", "=", agencyPo.getId()).and("purchase_id", "=", purchasePo.getOrderId()));
+			if(pgPo != null){
+				orderDTO = new OrderDTO(new OrderIn(purchasePo.getOrderId()+"", purchasePo.getOrderIdFrom(), purchasePo.getChargeTel(), pgPo.getPgSize()+"", purchasePo.getOrderAmount()+"", purchasePo.getOrderArriveTime(),purchasePo.getOrderResult(), purchasePo.getOrderResultDetail()),oscEnum.getValue(), oscEnum.getDesc());
+			}
 			//获取通道所属平台信息
 //			ExchangePlatformPo epPo = channelForwardAO.getEpByChannelId(purchasePo.getChannelId());
 //			//查看订单状态

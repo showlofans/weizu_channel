@@ -1,4 +1,4 @@
-package com.weizu.flowsys.api.base;
+package com.weizu.flowsys.api.weizu.charge;
 
 /**
  * @description: 下级代理充值api参数

@@ -1,4 +1,4 @@
-package com.weizu.flowsys.api.singleton;
+package com.weizu.flowsys.api.base;
 
 import com.weizu.flowsys.core.annotation.po.TableName;
 import com.weizu.flowsys.core.annotation.po.TempField;
@@ -40,12 +40,23 @@ import com.weizu.flowsys.core.beans.Po;
 //    
 //    private Long lastAccess;			//最后更新时间
 //    
+//    @TempField
+//    private String lastAccessStr;		//页面展示时间
+//    
 //    public Long getLastAccess() {
 //		return lastAccess;
 //	}
 //
 //	public void setLastAccess(Long lastAccess) {
 //		this.lastAccess = lastAccess;
+//	}
+//
+//	public String getLastAccessStr() {
+//		return lastAccessStr;
+//	}
+//
+//	public void setLastAccessStr(String lastAccessStr) {
+//		this.lastAccessStr = lastAccessStr;
 //	}
 //
 //	public String getEpEngId() {

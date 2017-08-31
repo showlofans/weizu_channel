@@ -166,6 +166,9 @@ public class StringUtil2 {
 	 */
 	public static String getParamsByCharSeq(String referStr, String charSeq) {
 		int charSeqInd = referStr.indexOf(charSeq); // 字段索引
+		if(charSeqInd == -1){
+			return null;
+		}
 		String seperatorRefer = referStr.substring(charSeqInd);// 以便找到这个字段后面的第一个&
 		String params = seperatorRefer
 				.substring(0, seperatorRefer.indexOf("&"));
