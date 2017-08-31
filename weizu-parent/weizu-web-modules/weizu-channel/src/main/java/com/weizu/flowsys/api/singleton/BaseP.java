@@ -1,6 +1,5 @@
 package com.weizu.flowsys.api.singleton;
 
-import com.weizu.flowsys.api.base.test.Singleton;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 
 /**
@@ -19,7 +18,7 @@ public class BaseP {
 	private  Integer serviceType;		//业务类型
 //	private  EpDTO epDTO;				//平台信息
 	private ExchangePlatformPo epo;		//平台信息
-	private String addParams;		//特殊的参数s=1&s2=3 
+//	private String addParams;		//特殊的参数s=1&s2=3 
 	
 	public BaseP() {
 		super();
@@ -33,12 +32,12 @@ public class BaseP {
 		this.serviceType = serviceType;
 	}
 	
-	public String getAddParams() {
-		return addParams;
-	}
-	public void setAddParams(String addParams) {
-		this.addParams = addParams;
-	}
+//	public String getAddParams() {
+//		return addParams;
+//	}
+//	public void setAddParams(String addParams) {
+//		this.addParams = addParams;
+//	}
 	public  String getProductCode() {
 		return productCode;
 	}

@@ -2,6 +2,8 @@ package com.weizu.flowsys.api.base;
 
 import org.weizu.api.util.HttpRequest;
 
+import com.weizu.flowsys.api.base.charge.ChargeDTO;
+
 /**
  * @description: 对上充值方式基类
  * @projectName:weizu-channel

@@ -3,6 +3,7 @@ package com.weizu.web.foundation;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -15,8 +16,12 @@ import java.security.MessageDigest;
  * @email 719348277@qq.com
  */
 public class MD5 {
-
-	public static String getMd5(byte[] b){
+	public final static int UPPERCASE = 1;  		//大写
+	public final static int LOWERCASE = 0;  		//小写
+	public final static String ENCODE = "utf-8";  		//默认编码：utf-8
+	
+	
+	public static String getMd5(byte[] b,int stringCase){
 		String s = null;  
 		char hexDigits[] = { // 用来将字节转换成 16 进制表示的字符
 				'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
@@ -35,7 +40,11 @@ public class MD5 {
 				// >>> 为逻辑右移，将符号位一起右移
 				str[k++] = hexDigits[byte0 & 0xf]; // 取字节中低 4 位的数字转换
 			}
-			s = new String(str).toUpperCase(); // 换后的结果转换为字符串
+			if(UPPERCASE == stringCase ){
+				s = new String(str).toUpperCase(); // 换后的结果转换为大写字符串
+			}else if(LOWERCASE == stringCase){
+				s = new String(str).toLowerCase(); // 换后的结果转换为小写字符串
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -44,8 +53,31 @@ public class MD5 {
 
 	}
 	
-	public static String getMd5(String text){
-		return getMd5(text.getBytes());
+	/**
+	 * @description: 指定编码格式md5编码 和大小写
+	 * @param text
+	 * @param stringCase
+	 * @param encode
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月30日 上午10:18:38
+	 */
+	public static String getMd5(String text,Integer stringCase,String encode) throws UnsupportedEncodingException{
+		if (encode != null) {
+			if(stringCase != null){
+				return getMd5(text.getBytes(encode),stringCase);
+			}else{
+				return getMd5(text.getBytes(encode),UPPERCASE);		//默认大写
+			}
+		}else{
+			if(stringCase != null){
+				return getMd5(text.getBytes(ENCODE),stringCase);
+			}else{
+				return getMd5(text.getBytes(ENCODE),UPPERCASE);		//默认大写 utf-8编码
+			}
+		}
+		
 	}
 	
 	public static String getMd5(File file){

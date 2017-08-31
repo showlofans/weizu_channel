@@ -44,6 +44,8 @@ import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.channel.ao.ChannelForwardAO;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
+import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
+import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
@@ -70,8 +72,8 @@ import com.weizu.web.foundation.String.StringHelper;
 public class ChargePgController {
 	@Resource
 	private OperatorPgAO operatorPgAO;
-	@Resource
-	private ChannelForwardAO channelForwardAO;
+//	@Resource
+//	private ChannelForwardAO channelForwardAO;
 	@Resource
 	private ProductCodeAO productCodeAO;
 	@Resource
@@ -140,9 +142,10 @@ public class ChargePgController {
 	 * @throws UnsupportedEncodingException 
 	 * @createTime:2017年5月31日 下午12:04:22
 	 */
+	@ResponseBody
 	@RequestMapping(value=ChargePgURL.PGLIST_FORPURCHASE)
-	public void pgList_forPurchase(HttpServletRequest request, HttpServletResponse response,String operatorName,String serviceType) throws UnsupportedEncodingException{
-		OperatorPgDataPo oppo = new OperatorPgDataPo();
+	public String pgList_forPurchase(HttpServletRequest request, HttpServletResponse response,String operatorName,String serviceType) throws UnsupportedEncodingException{
+//		OperatorPgDataPo oppo = new OperatorPgDataPo();
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 //		for (OperatorTypeEnum typeEnum : OperatorTypeEnum.values()) {
 //			if(operatorType.contains(typeEnum.getDesc())){//中国移动包涵移动
@@ -153,35 +156,48 @@ public class ChargePgController {
 		String carrier = operatorName.trim();//江西移动
 		int sLength = carrier.length();
 		List<OperatorPgDataPo> list = new ArrayList<OperatorPgDataPo>();
-		RateDiscountPo rateDiscountPo = null;
+//		RateDiscountPo rateDiscountPo = null;
 		if(sLength>2){
 			String scopeCityName = carrier.substring(0,sLength-2);//地区参数
 			if(agencyVO != null){
 				Integer contextId = agencyVO.getId();
 				boolean isAccept = rateDiscountAO.checkScopeIsAccept(contextId, scopeCityName);
 				if(isAccept){//如果包涵该地区，就加载包体列表
-					String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动
-					int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
-					oppo.setOperatorType(opType);
+//					String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动
+//					int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
+//					oppo.setOperatorType(opType);
 //					oppo.setOperatorName(carrier);
 					int sType = Integer.parseInt(serviceType.trim());
-					oppo.setServiceType(sType);
-					list = operatorPgAO.pgList_forPurchase(oppo,ScopeCityEnum.getValueByDesc(scopeCityName), contextId);
+					RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(sType, carrier, contextId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());//获得对私的充值费率
+//					oppo.setServiceType(sType);
 					
-//					rateDiscountPo = rateDiscountAO.getRateForCharge(sType, carrier, contextId);
+					List<OperatorPgDataPo> chargeList = purchaseAO.ajaxChargePg(new ChargeChannelParamsPo(carrier, sType, ratePo.getChannelId()));
+					Double activeDiscount = ratePo.getActiveDiscount();
+					Long channelId = ratePo.getChannelId();
+					for (OperatorPgDataPo operatorPgDataPo : chargeList) {//初始化第一个折扣，折扣id和包体价格
+						operatorPgDataPo.setRteId(ratePo.getId());
+						operatorPgDataPo.setRteDis(activeDiscount);
+						operatorPgDataPo.setChannelId(channelId);
+						operatorPgDataPo.setPgDiscountPrice(NumberTool.mul(activeDiscount, operatorPgDataPo.getPgPrice()));
+					}
+					String listJsonStr = JSON.toJSONString(chargeList);
+					System.out.println(listJsonStr);
+					return listJsonStr;
+//					list = operatorPgAO.pgList_forPurchase(oppo,ScopeCityEnum.getValueByDesc(scopeCityName), contextId);
 				}
 			}
 		}
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("pgList", list);
-//		map.put("ratePo", rateDiscountPo);
-		try {
-			response.setContentType("text/html;charset=UTF-8");
-			response.getWriter().print(JSON.toJSONString(map));
-			System.out.println(JSON.toJSONString(list));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		return "";
+//		Map<String,Object> map = new HashMap<String, Object>();
+//		map.put("pgList", list);
+////		map.put("ratePo", rateDiscountPo);
+//		try {
+//			response.setContentType("text/html;charset=UTF-8");
+//			response.getWriter().print(JSON.toJSONString(map));
+//			System.out.println(JSON.toJSONString(list));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 	@RequestMapping(value=ChargePgURL.PGLIST_SUPER_FORPURCHASE)
 	public void pgList_super_forPurchase(HttpServletRequest request, HttpServletResponse response,String operatorName,String serviceType,String epEngId) throws UnsupportedEncodingException{
@@ -386,6 +402,37 @@ public class ChargePgController {
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/** 
+	 * @description: 充值页面异步获得充值通道
+	 * <br>页面： pg_charge_page
+	 * @param ccpp
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月28日 下午3:58:05
+	 */
+	@ResponseBody
+	@RequestMapping(value=ChargePgURL.AJAX_CHARGE_CHANNEL)
+	public String ajaxChargeChannel(ChargeChannelParamsPo ccpp){
+		List<ChargeChannelPo> chargeList = purchaseAO.ajaxChargeChannel(ccpp);
+		String listJsonStr = JSON.toJSONString(chargeList);
+		return listJsonStr;
+	}
+	/**
+	 * @description: 异步获得充值包体列表
+	 * @param ccpp
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月29日 上午9:14:43
+	 */
+	@ResponseBody
+	@RequestMapping(value=ChargePgURL.AJAX_CHARGE_PG)
+	public String ajaxChargePg(ChargeChannelParamsPo ccpp){
+		List<OperatorPgDataPo> chargeList = purchaseAO.ajaxChargePg(ccpp);
+		String listJsonStr = JSON.toJSONString(chargeList);
+		System.out.println(listJsonStr);
+		return listJsonStr;
 	}
 	
 	/**

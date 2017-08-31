@@ -431,6 +431,16 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 		return 0;
 	}
 
+	@Override
+	@Transactional
+	public String delAar(Long aarId) {
+		int res = agencyActiveChannelDao.del(aarId);
+		if(res > 0){
+			return "success";
+		}
+		return "error";
+	}
+
 	
 
 	/**

@@ -1,5 +1,7 @@
 package com.weizu.flowsys.api.singleton;
 
+import com.weizu.flowsys.api.base.charge.ChargeDTO;
+
 /**
  * @description: 对接上游要实现的接口
  * @projectName:weizu-channel
@@ -43,4 +45,27 @@ public interface BaseInterface {
 	 * @createTime:2017年8月26日 上午9:50:57
 	 */
 	void initSpecialP(Object...objs);
+	
+	/**
+	 * @description: 根据表中信息添加到参数当中
+	 * @param addParams
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月30日 上午9:25:22
+	 */
+	void initSpecialP(String addParams);
+	
+	/**
+	 * @description: 封装参数
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月30日 上午9:15:55
+	 */
+	String toParams();
+	
+	/**
+	 * @description:封装余额参数
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月30日 下午12:18:24
+	 */
+	String toBalanceParams();
 }

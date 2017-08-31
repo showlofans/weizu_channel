@@ -138,7 +138,7 @@
 						</td>
 						
 						<td>${purchase.orderStateDetail }</td>
-						<td>${purchase.orderAmount }</td>
+						<td>${purchase.orderPrice }</td>
 						<c:if test="${loginContext.rootAgencyId == 0 }"><td>${purchase.channelName }</td> 
 						</c:if>
 						<td>

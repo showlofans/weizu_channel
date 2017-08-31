@@ -49,8 +49,12 @@
   <!-- 通过通道查询购买包体list -->
   <sql id="myCnelPg_Column_List">
     pg.id,pg.operator_type,pg.operator_name,pg.pg_in_service,pg.pg_name,pg.pg_price,pg.pg_size,
-    pg.service_type,pc.product_code,cnel.id cnel_id,cnel.channel_name cnel_name,cd.channel_discount cdis,cd.id cdis_id
+    pg.service_type,pc.product_code
   </sql>
+<!--   <sql id="myCnelPg_Column_List">
+    pg.id,pg.operator_type,pg.operator_name,pg.pg_in_service,pg.pg_name,pg.pg_price,pg.pg_size,
+    pg.service_type,pc.product_code,cnel.id cnel_id,cnel.channel_name cnel_name,cd.channel_discount cdis,cd.id cdis_id
+  </sql> -->
   <!-- 通过费率查询购买包体list -->
   <sql id="myPg_Column_List">
     pg.id,pg.operator_type,pg.operator_name,pg.pg_in_service,pg.pg_name,pg.pg_price,pg.pg_size,pg.service_type,
@@ -246,4 +250,22 @@
 		</if>
  	</where>
  </select>
+ 
+ <!-- 通过通道id和包体其他参数得到超管的充值包体参数 -->
+ <select id="getPgByChanel" parameterType="map" resultMap="OtherMap">
+ 	select <include refid="myCnelPg_Column_List"></include>
+ 	from <include refid="t_pg"></include> pg
+	INNER JOIN <include refid="t_pc"></include> pc
+	on pc.pg_id = pg.id
+	<where>
+		pg_size in (SELECT pg_size from <include refid="t_cnel"></include> WHERE id=#{cnelId})
+		<if test="operatorType != null">
+			AND pg.operator_type = #{operatorType}
+		</if>
+		<if test="serviceType != null">
+			AND pg.service_type = #{serviceType}
+		</if>
+	</where> 
+ </select>
+ 	
 </mapper>

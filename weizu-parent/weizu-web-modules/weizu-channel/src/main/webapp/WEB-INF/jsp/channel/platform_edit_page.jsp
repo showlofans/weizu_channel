@@ -103,6 +103,12 @@
 				<input type="text" class="input-text" required  value="${exchangePlatformPo.epIp }" placeholder="" id="epIp" name="epIp">
 			</div>
 		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">其他参数：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="${exchangePlatformPo.epOtherParams }" placeholder="" id="epOtherParams" name="epOtherParams">
+			</div>
+		</div>
 		
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">

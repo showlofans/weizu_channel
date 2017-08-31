@@ -1,17 +1,13 @@
 package com.weizu.flowsys.web.trade.ao;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.Map;
 
-//import org.weizu.api.facet.orderState.PageOrder;
-
-
-
-
-import com.aiyi.base.pojo.PageParam;
-import com.weizu.flowsys.api.base.ChargeDTO;
+import com.weizu.flowsys.api.base.charge.ChargeDTO;
 import com.weizu.flowsys.util.Pagination;
-import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
+import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
+import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
@@ -21,6 +17,8 @@ import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 import com.weizu.flowsys.web.trade.pojo.TotalResult;
+//import org.weizu.api.facet.orderState.PageOrder;
+import com.aiyi.base.pojo.PageParam;
 
 public interface PurchaseAO {
 	
@@ -79,7 +77,7 @@ public interface PurchaseAO {
 	 */
 	PurchasePo getOnePurchase(long orderId);
 	
-	ChargeDTO chargeByFacet(ExchangePlatformPo epPo,ProductCodePo dataPo) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException;
+//	ChargeDTO chargeByFacet(ExchangePlatformPo epPo,ProductCodePo dataPo) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException;
 	
 	/**
 	 * @description: 获得成功列表统计信息
@@ -89,5 +87,24 @@ public interface PurchaseAO {
 	 * @createTime:2017年8月22日 下午2:18:36
 	 */
 	TotalResult getTotalResultFromSuccess(PurchaseVO purchaseVO);
+	
+	
+	/**
+	 * @description: 充值页面异步获得充值通道
+	 * @param ccpp
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月28日 下午3:57:57
+	 */
+	List<ChargeChannelPo> ajaxChargeChannel(ChargeChannelParamsPo ccpp);
+	
+	/**
+	 * @description: 充值页面异步获得充值包体（超级管理员）
+	 * @param ccpp
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月29日 上午9:15:57
+	 */
+	List<OperatorPgDataPo> ajaxChargePg(ChargeChannelParamsPo ccpp);
 	
 }

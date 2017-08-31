@@ -85,5 +85,16 @@ public interface OperatorPgDaoInterface extends Dao<PgDataPo, Integer> {
 	
 	List<OperatorPgDataPo> listPgListInPcode(Map<String,Object> map);
 	
+	/**
+	 * @description: 通过通道id和包体其他参数得到超管的充值包体参数
+	 * @param map
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月28日 下午5:26:36
+	 */
+	List<OperatorPgDataPo> getPgByChanel(Map<String,Object> map);
+	
+	
+	
 //	Pagination<OperatorPgDataPo> list();
 }

@@ -1,7 +1,5 @@
 package com.weizu.flowsys.web.trade.ao;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,17 +10,20 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.weizu.api.outter.enums.OrderStateCheckEnum;
 
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
-import com.weizu.flowsys.api.base.ChargeDTO;
-import com.weizu.flowsys.api.base.facet.IChargeFacet;
+import com.weizu.flowsys.api.base.charge.ChargeDTO;
+import com.weizu.flowsys.api.singleton.BaseInterface;
+import com.weizu.flowsys.api.singleton.BaseP;
+import com.weizu.flowsys.api.singleton.SingletonFactory;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
+import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
@@ -42,10 +43,14 @@ import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
 import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
+import com.weizu.flowsys.web.channel.dao.OperatorPgDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
+import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
+import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.pojo.OneCodePo;
+import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.http.ParamsEntityWeiZu;
 import com.weizu.flowsys.web.http.weizu.OrderStateResult;
@@ -84,6 +89,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 	private ExchangePlatformAO exchangePlatformAO;
 	@Resource
 	private OperatorPgAO operatorPgAO;
+	@Resource
+	private OperatorPgDaoInterface operatorPgDao;
 	@Resource
 	private ProductCodeAO productCodeAO;
 //	@Resource
@@ -147,8 +154,13 @@ public class PurchaseAOImpl implements PurchaseAO {
 		ChannelChannelPo channel = channelChannelDao.get(new WherePrams("id", "=", pcVO.getChannelId()));
 		ExchangePlatformPo epPo = null;
 		ProductCodePo dataPo = null;
+		String orderStateDetail = "";
 		if(channel != null){
-			if(channel.getChannelState() == ChannelStateEnum.OPEN.getValue()){
+			boolean isChannelUseStateStoped = channel.getChannelUseState() == ChannelUseStateEnum.CLOSE.getValue();//通道状态停止
+			if(isChannelUseStateStoped){//通道使用状态暂停，不能提单
+				logger.config("通道使用状态暂停");
+				return "产品待更新，产品暂不支持购买！！";
+			}else{
 				epPo = exchangePlatformAO.getEpById(channel.getEpId());
 				Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(purchasePo.getChargeTelDetail());
 				String scopeCityCode = scopeMap.get("scopeCityCode").toString();
@@ -164,7 +176,52 @@ public class PurchaseAOImpl implements PurchaseAO {
 		}
 		Long orderId = null;
 		Long currentTime = System.currentTimeMillis();
-		if(pcVO.getRateId() == null && pcVO.getCdisId() != null){//通过通道折扣充值
+		if(pcVO.getRateId() == null && pcVO.getCdisId() == null){
+			//通过通道折扣充值
+			String fromAgencyName = pcVO.getFromAgencyName();
+			/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
+			int orderPath = OrderPathEnum.WEB_PAGE.getValue();
+			int billType = BillTypeEnum.BUSINESS_INDIVIDUAL.getValue();//默认对私
+			if(channel.getChannelState() == ChannelStateEnum.CLOSE.getValue()){//通道暂停，把系统级用户的订单状态设置为充值等待
+//				orderResult = OrderStateEnum.DAICHONG.getValue();
+//				orderStateDetail = "通道暂停等待";
+				return "充值失败，通道暂停";
+			}else{
+				ChargeAccountPo accountPo = chargeAccountAO.getAccountByAgencyId(agencyId, billType);
+				agencyBeforeBalance = accountPo.getAccountBalance();
+				orderAmount = pcVO.getOrderAmount();//成本
+				agencyAfterBalance = NumberTool.sub(agencyBeforeBalance, orderAmount);
+				accountPo.setAccountBalance(agencyAfterBalance);
+				chargeAccountAO.updateAccount(accountPo);
+				chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
+						agencyBeforeBalance, agencyAfterBalance, 
+						billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), agencyId, 1 , orderId));
+					try {
+						OrderUril ou1 = new OrderUril(1);
+						orderId = ou1.nextId();
+						purchasePo.setOrderId(orderId);//设置订单号
+						purchasePo.setAgencyId(pcVO.getAgencyId());
+						purchasePo.setOrderArriveTime(currentTime);
+						purchasePo.setOrderResult(orderResult);
+						purchasePo.setChannelId(channel.getId());
+						//					Map<String, Object> telMap = PurchaseUtil.getOperatorsByTel(purchasePo.getChargeTel());
+						//					 String chargeTelCity = null;
+						//					 if(telMap != null)
+						//					{
+						//						chargeTelCity = telMap.get("chargeTelCity").toString();
+						//					}
+						//					purchasePo.setChargeTelCity(chargeTelCity);
+						purResult = purchaseDAO.addPurchase(purchasePo);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+			}
+			AgencyPurchasePo app = new AgencyPurchasePo(agencyId, orderId,null, orderAmount, billType, orderAmount, fromAgencyName, orderPath, orderResult);
+			int aarAdd = agencyPurchaseDao.add(app);
+			if(aarAdd > 0){
+				return chargeByBI(epPo, orderId, pcVO, dataPo.getProductCode());
+			}
+		}else if(pcVO.getRateId() == null && pcVO.getCdisId() != null){//通过通道折扣充值
 			String fromAgencyName = pcVO.getFromAgencyName();
 			ChannelDiscountPo cdisPo = null;
 			if(pcVO.getCdisId() != null){
@@ -189,7 +246,6 @@ public class PurchaseAOImpl implements PurchaseAO {
 				chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
 						agencyBeforeBalance, agencyAfterBalance, 
 						billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), agencyId, 1 , orderId));
-				String orderStateDetail = "";
 					try {
 						OrderUril ou1 = new OrderUril(1);
 						orderId = ou1.nextId();
@@ -213,11 +269,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 			AgencyPurchasePo app = new AgencyPurchasePo(agencyId, orderId,pcVO.getCdisId(), orderAmount, billType, orderAmount, fromAgencyName, orderPath, orderResult);
 			int aarAdd = agencyPurchaseDao.add(app);
 			if(aarAdd > 0){
-				ChargeDTO chargeDTO = chargeByFacet(epPo,dataPo);
-				if(chargeDTO != null){
-					System.out.println(chargeDTO.getOrderIdApi());//测试打印出对应平台的提单地址
-				}
-				return "订单添加成功";
+				return chargeByBI(epPo, orderId, pcVO, dataPo.getProductCode());
 			}
 		}else{//通过费率折扣充值
 			RateDiscountPo ratePo = rateDiscountDao.get(pcVO.getRateId());
@@ -229,10 +281,6 @@ public class PurchaseAOImpl implements PurchaseAO {
 				/**账户信息的更新结果*/
 				int recordRes = 0;
 				
-				boolean isChannelUseStateStoped = channel.getChannelUseState() == ChannelUseStateEnum.CLOSE.getValue();//通道状态停止
-				if(isChannelUseStateStoped){//通道使用状态暂停，不能提单
-					return "产品待更新，产品暂不支持购买！！";
-				}
 				boolean isSecondAgency = agencyVODao.getSecondAgency(agencyId) == null ;
 				//在二级代理商的情况下才去判断余额
 				boolean ifLackBalance = isSecondAgency && pcVO.getOrderAmount() > accountPo.getAccountBalance();
@@ -330,7 +378,6 @@ public class PurchaseAOImpl implements PurchaseAO {
 								Double plusAmount = NumberTool.mul(ratePo1.getActiveDiscount(),pgPrice);
 								Double minusAmount = NumberTool.mul(activeRatePo.getActiveDiscount(),pgPrice);
 //							agencyAfterBalance = NumberTool.add(agencyBeforeBalance,plusAmount);
-								
 //							recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), plusAmount,
 //									agencyBeforeBalance, agencyAfterBalance, 
 //									ratePo1.getBillType(),AccountTypeEnum.Replenishment.getValue(), accountPo.getId(), ap_agency_id,1, orderId));
@@ -348,47 +395,57 @@ public class PurchaseAOImpl implements PurchaseAO {
 							agencyId = ap_agency_id;
 						}
 						
-						String orderStateDetail = "";
-						if(channel.getChannelState() == ChannelStateEnum.CLOSE.getValue()){//通道暂停，把系统级用户的订单状态设置为充值等待
-							orderResult = OrderStateEnum.DAICHONG.getValue();
-							orderStateDetail = "通道暂停等待";
-						}
-							//把超级管理员的记录加上
+//						if(channel.getChannelState() == ChannelStateEnum.CLOSE.getValue()){//通道暂停，把系统级用户的订单状态设置为充值等待
+//							orderResult = OrderStateEnum.DAICHONG.getValue();
+//							orderStateDetail = "通道暂停等待";
+//						}
+						//把超级管理员的记录加上
+						if(rootAgencyPo == null){
+							rootAgencyPo = agencyVODao.getRootAgencyById(agencyId);
+							ap_agency_id = rootAgencyPo.getId();
+						}else{
 							ap_agency_id = rootAgencyPo.getRootAgencyId();
-							String fromAgencyName = rootAgencyPo.getUserName();
-							ChannelDiscountPo cdisPo = channelDiscountDao.get(ratePo1.getChannelDiscountId());
-							billType = cdisPo.getBillType();
-							
-							accountPo = chargeAccountAO.getAccountByAgencyId(ap_agency_id, billType);
-							agencyBeforeBalance = accountPo.getAccountBalance();
-							Double orderPrice = NumberTool.mul(pgPrice, ratePo1.getActiveDiscount());//价格
-							orderAmount = NumberTool.mul(pgPrice, cdisPo.getChannelDiscount());//成本
+						}
+						String fromAgencyName = pcVO.getFromAgencyName();
+						ChannelDiscountPo cdisPo = channelDiscountDao.get(ratePo1.getChannelDiscountId());
+						billType = cdisPo.getBillType();
+						
+						accountPo = chargeAccountAO.getAccountByAgencyId(ap_agency_id, billType);
+						agencyBeforeBalance = accountPo.getAccountBalance();
+						Double orderPrice = NumberTool.mul(pgPrice, ratePo1.getActiveDiscount());//价格
+						orderAmount = NumberTool.mul(pgPrice, cdisPo.getChannelDiscount());//成本
 //					agencyAfterBalance = NumberTool.add(agencyBeforeBalance, orderPrice);
 //					recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), orderPrice,
 //							agencyBeforeBalance, agencyAfterBalance, 
 //							billType,AccountTypeEnum.Replenishment.getValue(), accountPo.getId(), ap_agency_id, 1 , orderId));
-							
-							agencyBeforeBalance = NumberTool.add(agencyBeforeBalance, orderPrice);//之前加上价格
-							//agencyBeforeBalance = agencyAfterBalance;//把加之后的价格转成之前的价格
-							agencyAfterBalance = NumberTool.sub(agencyBeforeBalance, orderAmount);
-							accountPo.setAccountBalance(agencyAfterBalance);
-							chargeAccountAO.updateAccount(accountPo);
-							recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
-									agencyBeforeBalance, agencyAfterBalance, 
-									billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), ap_agency_id, 1 , orderId));
-							/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
-							int orderPath = OrderPathEnum.CHILD_WEB_PAGE.getValue();
-							
-							AgencyPurchasePo app = new AgencyPurchasePo(ap_agency_id, orderId, ratePo1.getId(), orderAmount, billType, orderPrice, fromAgencyName, orderPath, orderResult);
-							app.setOrderStateDetail(orderStateDetail);
-							apPoList.add(app);
+						
+						agencyBeforeBalance = NumberTool.add(agencyBeforeBalance, orderPrice);//之前加上价格
+						//agencyBeforeBalance = agencyAfterBalance;//把加之后的价格转成之前的价格
+						agencyAfterBalance = NumberTool.sub(agencyBeforeBalance, orderAmount);
+						accountPo.setAccountBalance(agencyAfterBalance);
+						chargeAccountAO.updateAccount(accountPo);
+						recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
+								agencyBeforeBalance, agencyAfterBalance, 
+								billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), ap_agency_id, 1 , orderId));
+						/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
+						int orderPath = OrderPathEnum.CHILD_WEB_PAGE.getValue();
+						Boolean isChannelStateCanceled = channel.getChannelState() == ChannelUseStateEnum.CLOSE.getValue();
+						if(isChannelStateCanceled){
+							orderResult = OrderStateEnum.DAICHONG.getValue();
+							orderStateDetail = "通道暂停等待";
+							logger.config("通道使用状态暂停");
+						}
+						
+						AgencyPurchasePo app = new AgencyPurchasePo(ap_agency_id, orderId, ratePo1.getId(), orderAmount, billType, orderPrice, fromAgencyName, orderPath, orderResult);
+						app.setOrderStateDetail(orderStateDetail);
+						apPoList.add(app);
 //					rootAgencyPo = agencyVODao.getRootAgencyById(agencyId);
 						
 						
 						int batchAddApp = agencyPurchaseDao.ap_addList(apPoList);		//批量添加连接信息
 						int batchAddCrt = chargeRecordDao.crt_addList(recordPoList);		//批量添加扣款记录信息
 						//
-						if(batchAddApp > 0 && batchAddCrt > 0){//开始走接口
+						if(batchAddApp > 0 && batchAddCrt > 0 && !isChannelStateCanceled){//开始走接口
 							
 								
 //								 String epEngId = StringUtil2.toUpperClass(epPo.getEpEngId());
@@ -397,11 +454,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 //								Constructor constructor = onwClass.getConstructor(String.class,String.class,String.class,String.class);
 //								IChargeFacet chargeFacet = (IChargeFacet)constructor.newInstance(epPo.getEpPurchaseIp(),epPo.getEpApikey(),epPo.getEpUserName(),dataPo.getProductCode());
 //								ChargeDTO chargeDTO = chargeFacet.charge();
-								ChargeDTO chargeDTO = chargeByFacet(epPo,dataPo);
-								if(chargeDTO != null){
-									System.out.println(chargeDTO.getOrderIdApi());//测试打印出对应平台的提单地址
-								}
-								return "订单添加成功";
+								
+//							ChargeDTO chargeDTO = chargeByFacet(epPo,dataPo);
+							
+							return chargeByBI(epPo, orderId, pcVO, dataPo.getProductCode());
 								//判断是否正常提单,
 								
 								//充值之后更新订单的orderIdApi
@@ -418,6 +474,24 @@ public class PurchaseAOImpl implements PurchaseAO {
 		}
 		return null;
 	}
+	
+	/**
+	 * @description: 根据上游返回结果更新订单表信息
+	 * @param chargeDTO
+	 * @param orderId
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月29日 上午11:19:08
+	 */
+	public int updatePurchase(ChargeDTO chargeDTO,Long orderId){
+		if(chargeDTO.getTipCode() == OrderResultEnum.SUCCESS.getCode()){
+			PurchasePo purchase =  purchaseDAO.getOnePurchase(orderId);
+			purchase.setOrderIdApi(chargeDTO.getChargeOrder().getOrderIdApi());
+			purchase.setOrderResult(OrderStateEnum.CHARGING.getValue());
+			purchase.setOrderResultDetail(OrderStateEnum.CHARGING.getDesc());
+			return purchaseDAO.update(purchase);
+		}
+		return 0;
+	}
 	/**
 	 * @description: 接口充值
 	 * @param epPo
@@ -433,38 +507,16 @@ public class PurchaseAOImpl implements PurchaseAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年8月17日 下午5:36:19
 	 */
-	public ChargeDTO chargeByFacet(ExchangePlatformPo epPo,ProductCodePo dataPo) {
-		if(epPo != null && dataPo != null){
-			IChargeFacet chargeFacet = null;
-			try {
-				String classRealPath = "com.weizu.flowsys.api.charge."+epPo.getEpEngId()+"Charge";	//包完整路径
-				Class onwClass = Class.forName(classRealPath);
-				Constructor constructor = onwClass.getConstructor(String.class,String.class,String.class,String.class);
-				chargeFacet = (IChargeFacet)constructor.newInstance(epPo.getEpPurchaseIp(),epPo.getEpApikey(),epPo.getEpUserName(),dataPo.getProductCode());
-			} catch (ClassNotFoundException e) {
-				logger.config("英文标识和接口不匹配");
-				e.printStackTrace();
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+	public String chargeByBI(ExchangePlatformPo epPo,Long orderId,PgChargeVO pcVO,String productCode) {
+		BaseInterface bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(productCode,orderId + "",pcVO.getChargeTel(),pcVO.getServiceType(),epPo));
+		ChargeDTO chargeDTO = bi.charge();
+		if(chargeDTO != null){
+			System.out.println(chargeDTO.getChargeOrder().getOrderIdApi());//测试打印出对应平台的提单地址
+			if(updatePurchase(chargeDTO, orderId) > 0){
+				return "订单添加成功";
 			}
-			return chargeFacet.charge();
-		}else{
-			return null;
 		}
+		return "订单充值接口返回错误";
 	}
 
 	/**
@@ -764,6 +816,65 @@ public class PurchaseAOImpl implements PurchaseAO {
 			map.put("endTimeBack", System.currentTimeMillis());
 		}
 		return purchaseDAO.getTotalResultFromSuccess(map);
+	}
+
+	@Override
+	public List<ChargeChannelPo> ajaxChargeChannel(ChargeChannelParamsPo ccpp) {
+		Map<String,Object> searchMap = getSearachMap(ccpp);
+		List<ChargeChannelPo> channelList = channelChannelDao.list_charge_channel(searchMap);
+		if(channelList != null && channelList.size()==1){//只有一条通道的时候，可以默认加载这条通道的包体
+			Map<String, Object> objMap = new HashMap<String, Object>();
+			Long cId = channelList.get(0).getId();
+			objMap.put("cnelId", cId);
+			objMap.put("operatorType", ccpp.getOperatorType());
+			objMap.put("serviceType", ccpp.getServiceType());
+			List<OperatorPgDataPo> pgList = operatorPgDao.getPgByChanel(objMap);
+			channelList.get(0).setList(pgList);
+		}
+		return channelList;
+	}
+	
+	/**
+	 * @description: 获得查询参数
+	 * @param ccpp
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月28日 下午4:07:08
+	 */
+	private Map<String,Object> getSearachMap(ChargeChannelParamsPo ccpp){
+		Map<String,Object> searchMap = new HashMap<String, Object>();
+		String carrier = ccpp.getCarrier();
+		int operatorType = OperatorTypeEnum.getValueByDesc(carrier.substring(carrier.length()-2,carrier.length()-2));
+		searchMap.put("operatorType", operatorType);
+		ccpp.setOperatorType(operatorType);
+		Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(carrier);
+		if(scopeMap != null)
+		{
+			String scopeCityCode = scopeMap.get("scopeCityCode").toString();
+			searchMap.put("scopeCityCode", scopeCityCode);
+		}
+		if(ccpp.getServiceType() != null){
+			searchMap.put("serviceType", ccpp.getServiceType());
+		}
+		if(ccpp.getEpEngId() != null){
+			searchMap.put("epEngId", ccpp.getEpEngId());
+		}
+		return searchMap;
+	}
+
+	@Override
+	public List<OperatorPgDataPo> ajaxChargePg(ChargeChannelParamsPo ccpp) {
+		Map<String, Object> objMap = new HashMap<String, Object>();
+		String carrier = ccpp.getCarrier();
+		int operatorType = OperatorTypeEnum.getValueByDesc(carrier.substring(carrier.length()-2,carrier.length()-2));
+		objMap.put("operatorType", operatorType);
+		objMap.put("cnelId", ccpp.getChannelId());
+		objMap.put("serviceType", ccpp.getServiceType());
+		List<OperatorPgDataPo> pgList = operatorPgDao.getPgByChanel(objMap);
+//		for (OperatorPgDataPo operatorPgDataPo : pgList) {
+//		//设置包体折扣价格	
+//		}
+		return pgList;
 	}
 
 	

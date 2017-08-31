@@ -145,4 +145,11 @@ public class RateURL extends BaseURL {
 	 */
 	public static final String ADD_MY_RATE = "/add_my_rate" + DYNAMIC_WEB_SUFFIX;
 	
+	/**
+	 * 删除代理商和通道的绑定
+	 * <br>/flowsys/rate/del_agency_active_rate.do
+	 */
+	public static final String DEL_AGENCY_ACTIVE_RATE = "/del_agency_active_rate" + DYNAMIC_WEB_SUFFIX;
+	
+	
 }

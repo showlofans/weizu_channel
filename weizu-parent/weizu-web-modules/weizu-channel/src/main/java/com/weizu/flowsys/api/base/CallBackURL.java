@@ -21,8 +21,15 @@ public class CallBackURL extends BaseURL{
 	 */
 	public static final String Weizu = "/weizu"+ DYNAMIC_WEB_SUFFIX;
 	/**
-	 * 微族科技回调接口<br>
+	 * 丽荣科技回调接口<br>
 	 * 真实地址：http://www.weizutec.top:28445/flowsys/callBack/li_rong.do
 	 */
 	public static final String LIRONG = "/li_rong"+ DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 丽荣科技回调接口<br>
+	 * 真实地址：http://www.weizutec.top:28445/flowsys/callBack/lljypt.do
+	 */
+	public static final String LLJYPT = "/lljypt"+ DYNAMIC_WEB_SUFFIX;
+	
+	
 }

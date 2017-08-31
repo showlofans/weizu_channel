@@ -60,6 +60,7 @@
 					<!-- <th width="60">平台余额</th> -->
 					<th width="60">apikey</th>
 					<th width="60">平台官网地址</th>
+					<th width="80">平台其他参数</th>
 					<th width="60">最后更新</th>
 					<th width="60">操作</th>
 				</tr>
@@ -69,15 +70,33 @@
 					<tr class="text-c">
 						<td class="f-14 td-manage">${platform.epName }</td>
 						<td class="f-14 td-manage">${platform.epEngId }</td>
-						<td><div class="f-12 c-999"><a href="${platform.epPurchaseIp }" target="_blank">${platform.epPurchaseIp }</a></div></td>
-						<td><div class="f-12 c-999"><a href="${platform.productListIp }">${platform.productListIp }</a></div></td>
-						<td><div class="f-12 c-999"><a href="${platform.pgdataCheckIp }">${platform.pgdataCheckIp }</a></div></td>
-						<td><div class="f-12 c-999"><a href="${platform.epBalanceIp }">${platform.epBalanceIp }</a></div></td>
+						<td><div class="f-12 c-999">
+						<span data-toggle="tooltip" data-placement="top" title="${platform.epPurchaseIp }">${fn:substring(platform.epPurchaseIp,0,10)}</span>
+						<%-- <a href="${platform.epPurchaseIp }" style="" target="_blank">${platform.epPurchaseIp }</a> --%>
+						</div></td>
+						<td><div class="f-12 c-999">
+						<span data-toggle="tooltip" data-placement="top" title="${platform.productListIp }">${fn:substring(platform.productListIp,0,10)}</span>
+						<%-- <a href="${platform.productListIp }">${platform.productListIp }</a> --%>
+						</div></td>
+						<td><div class="f-12 c-999">
+						<span data-toggle="tooltip" data-placement="top" title="${platform.pgdataCheckIp }">${fn:substring(platform.pgdataCheckIp,0,10)}</span>
+						<%-- <a href="${platform.pgdataCheckIp }">${platform.pgdataCheckIp }</a> --%>
+						</div></td>
+						<td><div class="f-12 c-999">
+						<span data-toggle="tooltip" data-placement="top" title="${platform.epBalanceIp }">${fn:substring(platform.epBalanceIp,0,10)}</span>
+						<%-- <a href="${platform.epBalanceIp }">${platform.epBalanceIp }</a> --%>
+						</div></td>
 						<td class="f-14 td-manage">${platform.epUserName }</td>
 						<td class="f-14 td-manage">${platform.epUserPass }</td>
 						<%-- <td class="f-14 td-manage">${platform.epBalance }</td> --%>
 						<td class="f-14 td-manage">${platform.epApikey }</td>
-						<td><div class="f-12 c-999"><a href="${platform.epIp }">${platform.epIp }</a></div></td>
+						<td><div class="f-12 c-999">
+						<a title="${platform.epIp }" data-href="${platform.epIp }" target="_blank">${fn:substring(platform.epIp,0,10)}</a><!--  onclick="Hui_admin_tab(this)" -->
+						<%-- <a href="${platform.epIp }" target="_blank">${platform.epIp }</a>--%>
+						</div></td> 
+						<td>
+							${platform.epOtherParams }
+						</td>
 						<td class="f-14 td-manage">${platform.lastAccessStr }</td>
 						<td class="f-14 td-manage"> <a style="text-decoration:none" onClick="platform_del('/flowsys/platform/platform_del.do','${platform.id}','${platform.epName }')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> <a style="text-decoration:none" class="ml-5" onClick="platform_edit('平台信息编辑','/flowsys/platform/platform_edit_page.do?epId=${platform.id}','10001')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> <!-- <a style="text-decoration:none" class="ml-5" onClick="platform_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a> --></td>
 					</tr>
