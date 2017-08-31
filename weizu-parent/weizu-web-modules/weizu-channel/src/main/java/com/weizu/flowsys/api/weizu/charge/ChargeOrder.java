@@ -1,4 +1,4 @@
-package com.weizu.flowsys.api.base.charge;
+package com.weizu.flowsys.api.weizu.charge;
 
 /**
  * @description: 充值形成的订单对象

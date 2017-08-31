@@ -40,7 +40,7 @@ public class PurchasePo extends Po {
     private Long channelId;						//通道id（外键）
 
     private String orderResultDetail;			//结果描述(超管失败原因)
-    @TempField
+    
     private Double orderAmount;					//扣款:用与判断订单价格是否高于余额
 //    @TempField
 //    private Long recordId;						//消费记录id-外键

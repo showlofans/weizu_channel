@@ -1,6 +1,6 @@
 package com.weizu.flowsys.api.singleton;
 
-import com.weizu.flowsys.api.base.charge.ChargeDTO;
+import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 
 /**
  * @description: 对接上游要实现的接口
@@ -68,4 +68,12 @@ public interface BaseInterface {
 	 * @createTime:2017年8月30日 下午12:18:24
 	 */
 	String toBalanceParams();
+	
+	/**
+	 * @description: 封装订单状态查询参数
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月31日 下午3:06:02
+	 */
+	String toOrderParams();
 }

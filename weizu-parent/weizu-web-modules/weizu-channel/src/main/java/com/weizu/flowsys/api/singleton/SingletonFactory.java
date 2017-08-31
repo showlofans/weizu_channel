@@ -1,6 +1,7 @@
 package com.weizu.flowsys.api.singleton;
 
-import com.weizu.flowsys.api.base.MyConstants;
+import com.weizu.flowsys.api.singleton.company.Lljypt;
+import com.weizu.flowsys.api.singleton.company.Weizu;
 
 public class SingletonFactory {
 	/**

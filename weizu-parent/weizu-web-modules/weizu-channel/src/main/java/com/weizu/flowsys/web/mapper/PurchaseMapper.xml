@@ -9,7 +9,6 @@
   <sql id="t_ep">exchange_platform</sql>
   
   
-  
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.trade.pojo.PurchasePo" >
     <id column="order_id" property="orderId" jdbcType="BIGINT" />
     <result column="order_id_api" property="orderIdApi" jdbcType="VARCHAR" />
@@ -48,7 +47,7 @@
     <result column="from_agency_name" property="agencyName" jdbcType="INTEGER" />
     <result column="order_state" property="orderState" jdbcType="INTEGER" />
     <result column="order_state_detail" property="orderStateDetail" jdbcType="VARCHAR" />
-    <result column="order_amount" property="orderAmount" jdbcType="DOUBLE" />
+    <result column="ap_order_amount" property="orderAmount" jdbcType="DOUBLE" />
     <result column="order_price" property="orderPrice" jdbcType="DOUBLE" />
     <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
     <result column="channel_id" property="channelId" jdbcType="BIGINT" />
@@ -68,12 +67,12 @@
     
   </resultMap>
    <sql id="Base_Column_List" >
-    order_id,order_id_api, order_id_from, agency_id, charge_tel, pg_id, order_arrive_time,charge_tel_detail, 
-    charge_tel_city,  channel_id
+    order_id,order_id_api, order_id_from, agency_id, charge_tel, pg_id, order_amount, order_arrive_time,charge_tel_detail, 
+    charge_tel_city,  channel_id 
   </sql>
   <sql id="VO_Column_List"><!-- 订单页面 -->
   	ep.*,ap.from_agency_name, pur.order_id, pur.order_id_api, pur.order_id_from, pur.charge_tel, pg.pg_size, pg.operator_type, pg.pg_price, pur.order_arrive_time,
-  	pur.order_back_time, pur.charge_tel_detail, pur.charge_tel_city,ap.order_amount,ap.order_price,pur.order_result,ap.order_state,ap.order_state_Detail,ap.order_platform_path,
+  	pur.order_back_time, pur.charge_tel_detail, pur.charge_tel_city,ap.order_amount ap_order_amount,ap.order_price,pur.order_result,ap.order_state,ap.order_state_Detail,ap.order_platform_path,
   	 pur.order_result_detail,channel.channel_name,pur.channel_id,ap.bill_type apBill_type
   </sql>
   
@@ -240,7 +239,7 @@
   <insert id="addPurchase" parameterType="com.weizu.flowsys.web.trade.pojo.PurchasePo">
   	insert into <include refid="t_purchase"></include>
   	( <include refid="Base_Column_List"></include> )
-  	values (#{orderId},#{orderIdApi},#{orderIdFrom},#{agencyId},#{chargeTel},#{pgId},#{orderArriveTime},
+  	values (#{orderId},#{orderIdApi},#{orderIdFrom},#{agencyId},#{chargeTel},#{pgId},#{order_amount},#{orderArriveTime},
   	#{chargeTelDetail},#{chargeTelCity},#{channelId})
   </insert>
   

@@ -1,8 +1,5 @@
 package com.weizu.flowsys.api.base.test;
 
-import com.weizu.flowsys.api.base.BaseParams;
-import com.weizu.flowsys.api.base.EpDTO;
-import com.weizu.flowsys.api.base.facet.IChargeFacet;
 
 //public class WeizuCharge extends BaseParams implements IChargeFacet{
 //

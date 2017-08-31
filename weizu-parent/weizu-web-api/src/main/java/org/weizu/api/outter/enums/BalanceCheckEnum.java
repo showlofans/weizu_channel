@@ -16,7 +16,15 @@ public enum BalanceCheckEnum {
 	/**
 	 * 用户验证成功
 	 */
-	AUTHENTICATION_SUCCESS("用户验证成功",1);
+	AUTHENTICATION_SUCCESS("用户验证成功",1),
+	/**
+	 * 没有该账户类型
+	 */
+	BILL_TYPE_ERROR("账户类型不存在",3),
+	/**
+	 * 未开通该类型账户
+	 */
+	ACCOUNT_NOT_FOUND("未开通该类型账户",5);
 	private String desc;
 	private Integer value;
 	

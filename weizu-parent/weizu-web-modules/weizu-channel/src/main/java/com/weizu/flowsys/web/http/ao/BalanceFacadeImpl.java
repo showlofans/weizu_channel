@@ -4,9 +4,9 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.weizu.api.outter.enums.BalanceCheckEnum;
-import org.weizu.api.outter.facade.BalanceFacade;
-import org.weizu.api.outter.pojo.BalanceDTO;
 
+import com.weizu.flowsys.api.singleton.BalanceDTO;
+import com.weizu.flowsys.api.weizu.facet.IBalanceFacet;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
@@ -20,8 +20,8 @@ import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
  * @createTime:2017年6月23日 下午4:37:44
  * @version 1.0
  */
-//@Service(value="balanceFacade")
-public class BalanceFacadeImpl implements BalanceFacade {
+@Service(value="balanceFacade")
+public class BalanceFacadeImpl implements IBalanceFacet {
 
 	@Resource
 	private ValiUser valiUser;
@@ -33,27 +33,43 @@ public class BalanceFacadeImpl implements BalanceFacade {
 	 * @description: 余额查询接口实现
 	 * @param userName
 	 * @param sign
+	 * @param accountType
 	 * @return
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月23日 下午4:37:30
 	 */
 	@Override
-	public BalanceDTO myBalance(String userName, String sign) {
+	public BalanceDTO myBalance(String userName, String sign,Integer accountType) {
 		AgencyBackwardPo backPo = valiUser.findAgency(userName, sign);
 		BalanceDTO balanceDTO = null;
 		BalanceCheckEnum bcEnum = null;
 		if(backPo == null)
 		{
 			bcEnum = BalanceCheckEnum.AUTHENTICATION_FAILURE;
-			balanceDTO = new BalanceDTO(bcEnum.getValue(), bcEnum.getDesc(),"0","0");
+			balanceDTO = new BalanceDTO(null,bcEnum.getValue(), bcEnum.getDesc());
 		}
 		else
 		{
-			ChargeAccountPo account = chargeAccountAO.getAccountByAgencyId(backPo.getId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-			ChargeAccountPo account1 = chargeAccountAO.getAccountByAgencyId(backPo.getId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
-			
-			bcEnum = BalanceCheckEnum.AUTHENTICATION_SUCCESS;
-			balanceDTO = new BalanceDTO(bcEnum.getValue(), bcEnum.getDesc(), account.getAccountBalance() + account1.getAccountBalance() + "",account.getAccountCredit()+ "");
+			ChargeAccountPo account = null;
+			if(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue() != accountType && BillTypeEnum.CORPORATE_BUSINESS.getValue() != accountType)
+			{
+				bcEnum = BalanceCheckEnum.BILL_TYPE_ERROR;
+				balanceDTO = new BalanceDTO(null,bcEnum.getValue(), bcEnum.getDesc());
+				return balanceDTO;
+			}else{
+				if(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue() == accountType){
+					account = chargeAccountAO.getAccountByAgencyId(backPo.getId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+				}else if(BillTypeEnum.CORPORATE_BUSINESS.getValue() == accountType){
+					account = chargeAccountAO.getAccountByAgencyId(backPo.getId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
+				}
+				if(account == null){
+					bcEnum = BalanceCheckEnum.ACCOUNT_NOT_FOUND;
+					balanceDTO = new BalanceDTO(null, bcEnum.getValue(), bcEnum.getDesc());
+				}else{
+					bcEnum = BalanceCheckEnum.AUTHENTICATION_SUCCESS;
+					balanceDTO = new BalanceDTO(account.getAccountBalance(), bcEnum.getValue(), bcEnum.getDesc());
+				}
+			}
 		}
 		return balanceDTO;
 	}

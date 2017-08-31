@@ -1,8 +1,5 @@
 package com.weizu.flowsys.api.charge;
 
-import com.weizu.flowsys.api.base.BaseCharge;
-import com.weizu.flowsys.api.base.facet.IChargeFacet;
-import com.weizu.web.foundation.MD5;
 
 /**
  * @description: 微族充值

@@ -1,7 +1,8 @@
-package com.weizu.flowsys.api.base.facet;
+package com.weizu.flowsys.api.weizu.facet;
 
-import com.weizu.flowsys.api.base.ChargeParams;
-import com.weizu.flowsys.api.base.charge.ChargeDTO;
+import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
+import com.weizu.flowsys.api.weizu.charge.ChargeParams;
+
 
 /**
  * @description: 对下充值接口

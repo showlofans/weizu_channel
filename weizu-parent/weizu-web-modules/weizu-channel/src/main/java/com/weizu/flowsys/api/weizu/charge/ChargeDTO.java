@@ -1,4 +1,4 @@
-package com.weizu.flowsys.api.base.charge;
+package com.weizu.flowsys.api.weizu.charge;
 
 /**
  * @description: 统一的充值返回实体（页面需要的结果）
