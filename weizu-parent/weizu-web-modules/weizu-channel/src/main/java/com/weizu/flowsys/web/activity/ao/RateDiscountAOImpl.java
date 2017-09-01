@@ -360,9 +360,45 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	@Override
 	public Map<String,Object> getShowRate(Integer agencyId) {
 		Map<String, Object> params = new HashMap<String, Object>();
+		Map<String,Object> dtoMap = new HashMap<String, Object>();
 		params.put("agencyId", agencyId);
+		
+		params.put("billType", BillTypeEnum.CORPORATE_BUSINESS.getValue());
+		List<RateDiscountPo> rateListBill = rateDiscountDao.getShowRate(params);
+		initRateList(rateListBill, dtoMap, BillTypeEnum.CORPORATE_BUSINESS.getValue());
+		
+		params.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 		List<RateDiscountPo> rateList = rateDiscountDao.getShowRate(params);
-		return initRateList(rateList);
+		initRateList(rateList, dtoMap, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+		
+//		if(rateListBill != null && rateListBill.size()>0){//有对公的费率
+////			DiscountPo dpo = null;
+//			StringBuffer discount0 = new StringBuffer("{");
+//			StringBuffer discount1 = new StringBuffer("{");
+//			StringBuffer discount2 = new StringBuffer("{");
+//			for (RateDiscountPo rateDiscountPo2 : rateListBill) {
+//				String code = rateDiscountPo2.getScopeCityCode();
+//				String ScopeCityName = ScopeCityEnum.getEnum(code).getDesc();	//城市名
+//				int operatorType = rateDiscountPo2.getOperatorType();
+//				if(operatorType == OperatorTypeEnum.MOBILE.getValue())
+//				{
+//					discount0.append("\""+ScopeCityName+"\":\""+rateDiscountPo2.getActiveDiscount()+"\",");
+//				}else if(operatorType == OperatorTypeEnum.TELECOME.getValue())
+//				{
+//					discount2.append("\""+ScopeCityName+"\":\""+rateDiscountPo2.getActiveDiscount()+"\",");
+//				}else//联通
+//				{
+//					discount1.append("\""+ScopeCityName+"\":\""+rateDiscountPo2.getActiveDiscount()+"\",");
+//				}
+//			}
+//			String dis0Str = discount0.append("}").toString();
+//			String dis1Str = discount1.append("}").toString();
+//			String dis2Str = discount2.append("}").toString();
+//			DiscountPo dpo = new DiscountPo(dis0Str, dis1Str, dis2Str);
+//			dtoMap.put("billDTO", new RateDiscountShowDTO(dpo, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
+//		}
+		
+		return dtoMap;
 	}
 	
 	/**
@@ -394,67 +430,104 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		return false;
 	}
 
-	private Map<String,Object> initRateList(List<RateDiscountPo> rateList) {
+	/**
+	 * @description: 把带票业务区分开来
+	 * @param rateList
+	 * @param dtoMap
+	 * @param billType
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月1日 下午4:41:56
+	 */
+	private void initRateList(List<RateDiscountPo> rateList,Map<String,Object> dtoMap,int billType) {
 //		List<RateDiscountShowDTO> dtoList = new ArrayList<RateDiscountShowDTO>();
-		Map<String,Object> dtoMap = new HashMap<String, Object>();
-		if(rateList != null && rateList.size()>0){
+		
+		if(rateList != null && rateList.size()>0){//有对公的费率
 //			DiscountPo dpo = null;
 			StringBuffer discount0 = new StringBuffer("{");
 			StringBuffer discount1 = new StringBuffer("{");
 			StringBuffer discount2 = new StringBuffer("{");
-			StringBuffer discount10 = new StringBuffer("{");//不带票
-			StringBuffer discount11 = new StringBuffer("{");
-			StringBuffer discount12 = new StringBuffer("{");
-			int tagBill = 0;		//有带票的折扣
-			int tag = 0;			//不带票的折扣标志
-			for (RateDiscountPo rateDiscountPo : rateList) {
-				String code = rateDiscountPo.getScopeCityCode();
+			for (RateDiscountPo rateDiscountPo2 : rateList) {
+				String code = rateDiscountPo2.getScopeCityCode();
 				String ScopeCityName = ScopeCityEnum.getEnum(code).getDesc();	//城市名
-				int operatorType = rateDiscountPo.getOperatorType();
-				int billTypeRate = rateDiscountPo.getBillType();
-				if(billTypeRate == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()){
-					if(operatorType == OperatorTypeEnum.MOBILE.getValue())
-					{
-						discount10.append("\""+ScopeCityName+"\":\""+rateDiscountPo.getActiveDiscount()+"\",");
-					}else if(operatorType == OperatorTypeEnum.TELECOME.getValue())
-					{
-						discount12.append("\""+ScopeCityName+"\":\""+rateDiscountPo.getActiveDiscount()+"\",");
-					}else//联通
-					{
-						discount11.append("\""+ScopeCityName+"\":\""+rateDiscountPo.getActiveDiscount()+"\",");
-					}
-					tag = 1;
-				}else{
-					if(operatorType == OperatorTypeEnum.MOBILE.getValue())
-					{
-						discount0.append("\""+ScopeCityName+"\":\""+rateDiscountPo.getActiveDiscount()+"\",");
-					}else if(operatorType == OperatorTypeEnum.TELECOME.getValue())
-					{
-						discount2.append("\""+ScopeCityName+"\":\""+rateDiscountPo.getActiveDiscount()+"\",");
-					}else//联通
-					{
-						discount1.append("\""+ScopeCityName+"\":\""+rateDiscountPo.getActiveDiscount()+"\",");
-					}
-					tagBill = 1;
+				int operatorType = rateDiscountPo2.getOperatorType();
+				if(operatorType == OperatorTypeEnum.MOBILE.getValue())
+				{
+					discount0.append("\""+ScopeCityName+"\":\""+rateDiscountPo2.getActiveDiscount()+"\",");
+				}else if(operatorType == OperatorTypeEnum.TELECOME.getValue())
+				{
+					discount2.append("\""+ScopeCityName+"\":\""+rateDiscountPo2.getActiveDiscount()+"\",");
+				}else//联通
+				{
+					discount1.append("\""+ScopeCityName+"\":\""+rateDiscountPo2.getActiveDiscount()+"\",");
 				}
 			}
 			String dis0Str = discount0.append("}").toString();
 			String dis1Str = discount1.append("}").toString();
 			String dis2Str = discount2.append("}").toString();
-			String dis10Str = discount10.append("}").toString();
-			String dis11Str = discount11.append("}").toString();
-			String dis12Str = discount12.append("}").toString();
 			DiscountPo dpo = new DiscountPo(dis0Str, dis1Str, dis2Str);
-			DiscountPo dpo1 = new DiscountPo(dis10Str, dis11Str, dis12Str);
-			if(tagBill == 1){
-				dtoMap.put("billDTO", new RateDiscountShowDTO(dpo, 0));
+			if(billType == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()){
+				dtoMap.put("noDTO", new RateDiscountShowDTO(dpo, 1));
+			}else{
+				dtoMap.put("billDTO", new RateDiscountShowDTO(dpo, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
 			}
-			if(tag == 1){
-				dtoMap.put("noDTO", new RateDiscountShowDTO(dpo1, 1));
-			}
-			
 		}
-		return dtoMap;
+//		if(rateList != null && rateList.size()>0){
+////			DiscountPo dpo = null;
+//			StringBuffer discount0 = new StringBuffer("{");
+//			StringBuffer discount1 = new StringBuffer("{");
+//			StringBuffer discount2 = new StringBuffer("{");
+//			StringBuffer discount10 = new StringBuffer("{");//不带票
+//			StringBuffer discount11 = new StringBuffer("{");
+//			StringBuffer discount12 = new StringBuffer("{");
+//			int tagBill = 0;		//有带票的折扣
+//			int tag = 0;			//不带票的折扣标志
+//			for (RateDiscountPo rateDiscountPo : rateList) {
+//				String code = rateDiscountPo.getScopeCityCode();
+//				String ScopeCityName = ScopeCityEnum.getEnum(code).getDesc();	//城市名
+//				int operatorType = rateDiscountPo.getOperatorType();
+//				int billTypeRate = rateDiscountPo.getBillType();
+//				if(billTypeRate == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()){
+//					if(operatorType == OperatorTypeEnum.MOBILE.getValue())
+//					{
+//						discount10.append("\""+ScopeCityName+"\":\""+rateDiscountPo.getActiveDiscount()+"\",");
+//					}else if(operatorType == OperatorTypeEnum.TELECOME.getValue())
+//					{
+//						discount12.append("\""+ScopeCityName+"\":\""+rateDiscountPo.getActiveDiscount()+"\",");
+//					}else//联通
+//					{
+//						discount11.append("\""+ScopeCityName+"\":\""+rateDiscountPo.getActiveDiscount()+"\",");
+//					}
+//					tag = 1;
+//				}else{
+//					if(operatorType == OperatorTypeEnum.MOBILE.getValue())
+//					{
+//						discount0.append("\""+ScopeCityName+"\":\""+rateDiscountPo.getActiveDiscount()+"\",");
+//					}else if(operatorType == OperatorTypeEnum.TELECOME.getValue())
+//					{
+//						discount2.append("\""+ScopeCityName+"\":\""+rateDiscountPo.getActiveDiscount()+"\",");
+//					}else//联通
+//					{
+//						discount1.append("\""+ScopeCityName+"\":\""+rateDiscountPo.getActiveDiscount()+"\",");
+//					}
+//					tagBill = 1;
+//				}
+//			}
+//			String dis0Str = discount0.append("}").toString();
+//			String dis1Str = discount1.append("}").toString();
+//			String dis2Str = discount2.append("}").toString();
+//			String dis10Str = discount10.append("}").toString();
+//			String dis11Str = discount11.append("}").toString();
+//			String dis12Str = discount12.append("}").toString();
+//			DiscountPo dpo = new DiscountPo(dis0Str, dis1Str, dis2Str);
+//			DiscountPo dpo1 = new DiscountPo(dis10Str, dis11Str, dis12Str);
+//			if(tagBill == 1){
+//				dtoMap.put("billDTO", new RateDiscountShowDTO(dpo, 0));
+//			}
+//			if(tag == 1){
+//				dtoMap.put("noDTO", new RateDiscountShowDTO(dpo1, 1));
+//			}
+//			
+//		}
 	}
 	/**
 	 * @description: 获得充值价格

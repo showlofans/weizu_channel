@@ -1,7 +1,6 @@
 package com.weizu.flowsys.web.http.controller;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,9 +9,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.api.singleton.BalanceDTO;
+import com.weizu.flowsys.api.singleton.OrderDTO;
 import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
+import com.weizu.flowsys.api.weizu.charge.ChargeParams;
 import com.weizu.flowsys.api.weizu.facet.IBalanceFacet;
+import com.weizu.flowsys.api.weizu.facet.IChargeFacet;
+import com.weizu.flowsys.api.weizu.facet.IOrderFacet;
+import com.weizu.flowsys.api.weizu.order.QueryOrderParams;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.web.foundation.String.StringHelper;
 
 /**
@@ -29,18 +34,22 @@ public class OuterAPIController {
 	
 	@Resource
 	private IBalanceFacet balanceFacade;
-//	@Resource
-//	private ChargeFacade chargeFacade;
-//	@Resource
-//	private OrderFacade orderFacade;
+	@Resource
+	private IChargeFacet chargeImpl;
+	@Resource
+	private IOrderFacet orderFacade;
+	
 	
 	
 	/**
+	 * @description:
 	 * @description: 查询账户余额接口
 	 * @param username 账号
 	 * @param sign 密钥
-	 * @author:POP产品研发部 宁强
-	 * @createTime:2017年6月23日 下午2:53:26
+	 * @param billType 票务类型,不传为对公
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月1日 下午5:59:57
 	 */
 	@RequestMapping(value=OuterApiURL.MY_BALANCE)
 	@ResponseBody
@@ -65,13 +74,17 @@ public class OuterAPIController {
 	 */
 	@RequestMapping(value=OuterApiURL.CHARGE)
 	@ResponseBody
-	public String chargePg(String userName, String number, String pgSize,
-			String scope, String sign,@RequestParam(value="billType",required=false) Integer billType){
-		ChargeDTO chargeDTO = null;
+	public String chargePg(String userName, String number,Integer flowsize,
+			@RequestParam(value="scope",required=false)Integer scope, String sign,
+			@RequestParam(value="billType",required=false) Integer billType,
+			@RequestParam(value="userOrderId",required=false) String userOrderId){
 		if(billType == null){//默认对私
 			billType = BillTypeEnum.BUSINESS_INDIVIDUAL.getValue();
 		}
-		
+		if(scope == null){//默认全国类型
+			scope = ServiceTypeEnum.NATION_WIDE.getValue();
+		}
+		ChargeDTO chargeDTO = chargeImpl.charge(new ChargeParams(userName, number, flowsize, scope, sign, billType, userOrderId));
 		String jsonResult = JSON.toJSON(chargeDTO).toString();
 //		System.out.println(jsonResult);
 		return jsonResult;
@@ -86,21 +99,22 @@ public class OuterAPIController {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月26日 上午10:55:24
 	 */
-//	@RequestMapping(value=OuterApiURL.MY_ORDER_STATE)
-//	public String myOrderState(String userName, String sign, String orderId, 
-//			@RequestParam(value="number", required=false)String number,HttpServletResponse response){
-//		OrderDTO orderDTO = null;
-//		
-//		OrderParams op =  new OrderParams(userName, sign, orderId);
-//		if(StringHelper.isNotEmpty(number))
-//		{
-//			op.setNumber(number);//方便验证是否和数据库中订单充值的号码相同
-//		}
-//		orderDTO = orderFacade.checkOrder(op);
-//			String jsonResult = JSON.toJSON(orderDTO).toString();
-//			System.out.println(jsonResult);
-//		return jsonResult;
-//	}
+	@RequestMapping(value=OuterApiURL.MY_ORDER_STATE)
+	public String myOrderState(String userName, String sign, Long orderId, 
+			@RequestParam(value="number", required=false)String number){
+		
+		QueryOrderParams orderParams = null;
+		if(StringHelper.isNotEmpty(number))
+		{
+			orderParams = new QueryOrderParams(userName, sign, orderId, number);//方便验证是否和数据库中订单充值的号码相同
+		}else{
+			orderParams = new QueryOrderParams(userName, sign, orderId);//方便验证是否和数据库中订单充值的号码相同
+		}
+		OrderDTO orderDTO = orderFacade.getOrderDTO(orderParams);
+		String jsonResult = JSON.toJSON(orderDTO).toString();
+		System.out.println(jsonResult);
+		return jsonResult;
+	}
 	
 	
 }

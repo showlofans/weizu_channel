@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import javax.annotation.Resource;
 
+import org.springframework.stereotype.Service;
 import org.weizu.api.outter.enums.ChargeStatusEnum;
 
 import com.weizu.flowsys.api.singleton.BaseInterface;
@@ -49,6 +50,7 @@ import com.weizu.flowsys.web.trade.pojo.PurchasePo;
  * @createTime:2017年8月26日 下午3:44:40
  * @version 1.0
  */
+@Service(value="chargeImpl")
 public class ChargeImpl implements IChargeFacet {
 
 	@Resource
@@ -148,13 +150,6 @@ public class ChargeImpl implements IChargeFacet {
 		return null;
 	}
 	
-	/**
-	 * @description: 添加订单前先验证参数是否正确
-	 * @param chargeParams
-	 * @return null-正确
-	 * @author:微族通道代码设计人 宁强
-	 * @createTime:2017年8月26日 下午3:46:02
-	 */
 	/**
 	 * @description:添加订单前先验证参数是否正确
 	 * @param chargeParams

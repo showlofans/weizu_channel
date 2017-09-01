@@ -60,35 +60,40 @@ public class OrderFacadeImpl implements IOrderFacet {
 		OrderDTO orderDTO = null;
 		PurchasePo purchasePo = null;
 		OrderStateCheckEnum oscEnum = null;
-		if(StringHelper.isEmpty(orderParams.getOrderId()))
-		{
-			oscEnum = OrderStateCheckEnum.ORDERID_ISNULL;
-			return new OrderDTO(null, oscEnum.getValue(), oscEnum.getDesc());
-		}else{
-			Long orderId = Long.parseLong(orderParams.getOrderId());
-			purchasePo = purchaseAO.getOnePurchase(orderId);
-		}
+//		if(StringHelper.isEmpty(orderParams.getOrderId()))
+//		{
+//			oscEnum = OrderStateCheckEnum.ORDERID_ISNULL;
+//			return new OrderDTO(null, oscEnum.getValue(), oscEnum.getDesc());
+//		}
 		
 		if(agencyPo == null)
 		{
 			oscEnum = OrderStateCheckEnum.AUTHENTICATION_FAILURE;
 			orderDTO = new OrderDTO(null,oscEnum.getValue(), oscEnum.getDesc());
-		}else if(purchasePo == null)
-		{
-			oscEnum = OrderStateCheckEnum.ORDER_NOT_FOUND;
-			orderDTO = new OrderDTO(null,oscEnum.getValue(), oscEnum.getDesc());
-		}else if(!purchasePo.getChargeTel().equals(orderParams.getNumber())){
-			oscEnum = OrderStateCheckEnum.TELPHONE_ERROR;
-			orderDTO = new OrderDTO(null,oscEnum.getValue(), oscEnum.getDesc());
-		}
-		else{//通过api更新订单状态
-			oscEnum = OrderStateCheckEnum.PARAMS_SUCCESS;
-			PgDataPo pgPo = operatorPgDao.get(purchasePo.getPgId());
-//			AgencyPurchasePo agencyPurPo = agencyPurchaseDao.get(new WherePrams("agency_id", "=", agencyPo.getId()).and("purchase_id", "=", purchasePo.getOrderId()));
-			if(pgPo != null){
-				orderDTO = new OrderDTO(new OrderIn(purchasePo.getOrderId()+"", purchasePo.getOrderIdFrom(), purchasePo.getChargeTel(), pgPo.getPgSize()+"", purchasePo.getOrderAmount()+"", purchasePo.getOrderArriveTime(),purchasePo.getOrderResult(), purchasePo.getOrderResultDetail()),oscEnum.getValue(), oscEnum.getDesc());
+		}else{
+			if(orderParams.getOrderId() == null)
+			{
+				oscEnum = OrderStateCheckEnum.ORDERID_ISNULL;
+				return new OrderDTO(null, oscEnum.getValue(), oscEnum.getDesc());
 			}
-			//获取通道所属平台信息
+			purchasePo = purchaseDAO.getMyPurchase(agencyPo.getId(), orderParams.getOrderId());
+			if(purchasePo == null)
+			{
+				oscEnum = OrderStateCheckEnum.ORDER_NOT_FOUND;
+				orderDTO = new OrderDTO(null,oscEnum.getValue(), oscEnum.getDesc());
+			}
+			else if(!purchasePo.getChargeTel().equals(orderParams.getNumber())){
+				oscEnum = OrderStateCheckEnum.TELPHONE_ERROR;
+				orderDTO = new OrderDTO(null,oscEnum.getValue(), oscEnum.getDesc());
+			}
+			else{//通过api更新订单状态
+				oscEnum = OrderStateCheckEnum.PARAMS_SUCCESS;
+				PgDataPo pgPo = operatorPgDao.get(purchasePo.getPgId());
+//			AgencyPurchasePo agencyPurPo = agencyPurchaseDao.get(new WherePrams("agency_id", "=", agencyPo.getId()).and("purchase_id", "=", purchasePo.getOrderId()));
+				if(pgPo != null){
+					orderDTO = new OrderDTO(new OrderIn(purchasePo.getOrderId()+"", purchasePo.getOrderIdFrom(), purchasePo.getChargeTel(), pgPo.getPgSize()+"", purchasePo.getOrderAmount()+"", purchasePo.getOrderArriveTime(),purchasePo.getOrderResult(), purchasePo.getOrderResultDetail()),oscEnum.getValue(), oscEnum.getDesc());
+				}
+				//获取通道所属平台信息
 //			ExchangePlatformPo epPo = channelForwardAO.getEpByChannelId(purchasePo.getChannelId());
 //			//查看订单状态
 //			OrderStateBase orderStatePage = OrderStateFactory.getOrderStateBase(epPo.getEpName());
@@ -118,7 +123,8 @@ public class OrderFacadeImpl implements IOrderFacet {
 //			String createdAt = DateUtil.formatAll(purchasePo.getOrderArriveTime());
 //			oscEnum = OrderStateCheckEnum.PARAMS_SUCCESS;
 //			orderDTO = new OrderDTO(oscEnum.getValue(), oscEnum.getDesc(), new OrderIn(purchasePo.getOrderId()+"", orderParams.getNumber(), pgSize+"", purchasePo.getOrderAmount()+"", createdAt , osrp.getPageOrder().getStatus(), purchasePo.getOrderResultDetail()));
-		}
+			}
+		} 
 		return orderDTO;
 	}
 

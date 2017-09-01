@@ -19,13 +19,14 @@
   <resultMap id="SimpleChannelMap" type="com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo" >
   	<id column="id" property="id" jdbcType="BIGINT" />
     <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="channel_id" property="channelId" jdbcType="BIGINT" />
     <result column="channel_discount" property="channelDiscount" jdbcType="DOUBLE" />
     <!-- <result column="operator_type" property="operatorType" jdbcType="VARCHAR" />
     <result column="scope_city_code" property="scopeCityCode" jdbcType="VARCHAR" /> -->
   </resultMap>
   
    <sql id="Simple_Column_List" >
-    discount.id, channel.channel_name,discount.channel_discount
+    discount.id,discount.channel_id, channel.channel_name,discount.channel_discount
     <!-- ,discount.operator_type,discount.scope_city_code -->
   </sql>
    <!-- 查询简易通道信息 -->

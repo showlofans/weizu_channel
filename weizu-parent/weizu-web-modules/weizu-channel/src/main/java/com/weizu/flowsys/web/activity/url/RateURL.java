@@ -150,6 +150,10 @@ public class RateURL extends BaseURL {
 	 * <br>/flowsys/rate/del_agency_active_rate.do
 	 */
 	public static final String DEL_AGENCY_ACTIVE_RATE = "/del_agency_active_rate" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 删除折扣
+	 */
+	public static final String DEL_RATE = "del_rate" + DYNAMIC_WEB_SUFFIX;
 	
 	
 }

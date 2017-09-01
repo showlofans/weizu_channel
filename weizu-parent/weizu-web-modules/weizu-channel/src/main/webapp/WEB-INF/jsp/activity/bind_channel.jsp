@@ -36,7 +36,7 @@
 </head>
 <body>
 <article class="page-container">
-	<form action="/flowsys/rate/bind_channel.do" method="post" class="form form-horizontal" id="form-member-add" onsubmit="return changeName()">
+	<form action="" method="" class="form form-horizontal" id="bind-channel">
 		<!-- 代理商id，方便自动绑定费率 -->
 		<%-- <input type="hidden" value="${resultMap.agencyId }"placeholder=""name="id"> --%>
 		<div class="row cl">
@@ -248,6 +248,7 @@
 		<span id="setDiscountList"></span>
 		<!-- channelName:通过js代码填充隐藏域的值 -->
 		<input type="hidden" id="channelName" name="channelName" value="" >
+		<input type="hidden" value="" name="channelId" id="channelId" />
 				
 		<!-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">备注：</label>
@@ -276,9 +277,16 @@
 
 </body>
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="/view/lib/layer/2.4/layer.js"></script>
 <script src="/view/tab/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/view/iCheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
+<script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="/view/static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="/view/static/h-ui.admin/js/H-ui.admin.js"></script> 
 <script type="text/javascript">
+
 $(function(){
 	$('.skin-minimal input').iCheck({
 		radioClass: 'iradio-blue',
@@ -286,7 +294,43 @@ $(function(){
 	});
 })
 $(document).ready(function(){
-
+	$("#bind-channel").validate({
+    	submitHandler : function(form) {
+    		//var tag = changeName();
+    		//alert(Object.prototype.toString.apply(tag))
+    		
+    		//var tagTrim = $.trim(tag);
+    		//alert(Object.prototype.toString.apply(tagTrim));//String
+    		 //alert(tag);
+    		//alert(!tag);alert(tag==false); 
+    		
+    		if(changeName()){
+    			 $.ajax({
+ 	               type:"post",
+ 	               url:"/flowsys/rate/bind_channel.do",
+ 	               data: $('form').serialize(),//表单数据
+ 	               async : false,
+ 	               success:function(d){
+ 	            	   //alert(d);
+ 	                   if(d=="success"){
+ 	                        layer.msg('保存成功！');//保存成功提示
+ 	                       removeIframe();
+ 	                   }
+ 	                   if(d=="error"){
+ 	                       layer.msg('保存异常!');
+ 	                   }
+ 	                   if(d=="hasScope"){
+ 	                	  layer.msg('保存异常,已经添加过该地区折扣了!');
+ 	                	 //removeIframe();
+ 	                   }
+ 	               },
+    			 "error":function(msg){
+ 		        	alert(msg);
+ 		         }
+ 	           });
+    		}
+    	}
+    });
 });
 //改变显示
 function changeDisplay(vart){
@@ -313,17 +357,34 @@ function initChannelName(){
 	var channelName = $("#selectC").find("option:selected").text();
 	//alert(channelName);//通道id已经被选中了，只需得到通道名称即可
 	$("#channelName").val(channelName);
+	//alert(channelName);
+	var channelId = $("#selectC").find("option:selected").val();
+	//alert(channelId);
+	$("#channelId").val(channelId);
 }
+/**表单提交前的验证*/
 function changeName(){
 	//alert($("#selectC").val());
 	if($("#selectC").val() == "0"){
 		alert("添加失败,没有配置地区折扣");
 		return false;
 	}
+	/* else{
+		var channelName = $("#selectC").find("option:selected").text();
+		//alert(channelName);//通道id已经被选中了，只需得到通道名称即可
+		$("#channelName").val(channelName);
+		//alert(channelName);
+		var channelId = $("#selectC").find("option:selected").val();
+		alert(channelId);
+		$("#channelId").val(channelId);
+	} */
 	var i = 0;
 	/* if($("input[name='scopeCityCode']:checked").next().val() != ""){//折扣不为空
 		i++;
 	} */
+	if($("#setDiscountList:has(input)" ).length!=0){
+		$('#setDiscountList').empty();
+	}
 	$(".disscount").each(function(){
     	if($(this).is(':visible')){ 
     		$('<input />', {
@@ -348,7 +409,7 @@ function changeName(){
 			} */
     		//alert('discountList['+ i +'].scopeCityName');
     	}
-	}) 
+	})
 	//alert(i);
 	if(i > 0){
 		//alert(i);
@@ -465,9 +526,11 @@ $(".radioItem").change( //都会发送ajax请求
 	        			 $("input[name='scopeCityCode']:checked").next().val("");
 	        			 $("input[name='scopeCityCode']:checked").next().removeAttr("readonly");
 	        		 }
+	        		// var appendData = "";
 	        		 //如果resp没有值，下面函数也不会执行
 		        	 $.each(resp, function(i, item) {
 		        		 
+        				$("#channelId").val(item.channelId);
         				$("#channelName").val(item.channelName);
 		             	 $("#selectC").append("<option class='rate' value='"+item.id+"'>" + item.channelName + "</option>");//"+ operatorType +"
 		             	 $("#channelCount").html(resp.length)
@@ -481,7 +544,7 @@ $(".radioItem").change( //都会发送ajax请求
 		        	//alert("success");
 		        },
 		        "error":function(msg){
-		        	alert(msg);
+		        	///alert(msg);
 		        }
 		    });  
 			 /* $(".disscount").hide();

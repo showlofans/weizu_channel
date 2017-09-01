@@ -101,4 +101,12 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePo, Long> implements Purcha
 		return sqlSessionTemplate.selectOne("getTotalResultFromSuccess", map);
 	}
 
+	@Override
+	public PurchasePo getMyPurchase(int agencyId,Long purchaseId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("agencyId", agencyId);
+		map.put("purchaseId", purchaseId);
+		return sqlSessionTemplate.selectOne("getMyPurchase", map);
+	}
+
 }

@@ -281,22 +281,45 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 	@Transactional
 	@Override
 	public int bindChannel(AgencyActiveRatePo aacp,RateDiscountPo rateDiscountPo) {
+		
+		
 		//只有一个地区,添加费率
 		int operatorType = aacp.getOperatorType();
 		int serviceType = aacp.getServiceType();
 		rateDiscountPo.setOperatorType(operatorType);
 		rateDiscountPo.setServiceType(serviceType);
-//		rateDiscountPo.setActiveId(nextActiveId);
-		rateDiscountPo.setActiveDiscount(StringUtil2.getDiscount(rateDiscountPo.getActiveDiscount()));
-		Long nextDiscountId = rateDiscountDao.nextId();
-		rateDiscountDao.add(rateDiscountPo);
 		
+		Map<String, Object> params = new HashMap<String, Object>();
+		//active.agency_id=4 and active.bind_state=0 and rate.bill_type=0 and rate.channel_id=12
+		//and cd.operator_type=0 and cd.service_type=0 and cd.scope_city_code=19;
 		
+		params.put("agencyId", aacp.getAgencyId());
+		params.put("bindState", 0);//绑定的状态
+		params.put("billType", rateDiscountPo.getBillType());
+		params.put("channelId", rateDiscountPo.getChannelId());
+		params.put("operatorType", rateDiscountPo.getOperatorType());
+		params.put("serviceType", rateDiscountPo.getServiceType());
+		params.put("scopeCityCode", rateDiscountPo.getScopeCityCode());
+		
+		int scopoeTag = rateDiscountDao.getScopeExceptionForRate(params);
+		if(scopoeTag == 0){
+			int bindRes = 0;
+			rateDiscountPo.setActiveDiscount(StringUtil2.getDiscount(rateDiscountPo.getActiveDiscount()));
+			Long nextDiscountId = rateDiscountDao.nextId();
+			rateDiscountDao.add(rateDiscountPo);
+			
+			
 //		Long nextActiveId = agencyActiveChannelDao.nextId();
-		aacp.setActiveTime(System.currentTimeMillis());
-		aacp.setBindState(BindStateEnum.BIND.getValue());
-		aacp.setRateDiscountId(nextDiscountId);
-		int bindRes = agencyActiveChannelDao.add(aacp);
+			aacp.setActiveTime(System.currentTimeMillis());
+			aacp.setBindState(BindStateEnum.BIND.getValue());
+			aacp.setRateDiscountId(nextDiscountId);
+			bindRes = agencyActiveChannelDao.add(aacp);
+			return bindRes;
+		}else{
+			return -1;
+		}
+//		rateDiscountPo.setActiveId(nextActiveId);
+		
 		
 		
 		
@@ -321,8 +344,6 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 //			initRateList(rateList2,aacp,nextActiveId);
 //			rateDiscountDao.rate_addList(rateList2);
 //		}
-		
-		return bindRes;
 	}
 
 	/**

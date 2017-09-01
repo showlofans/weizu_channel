@@ -10,8 +10,18 @@ package com.weizu.flowsys.api.singleton;
  */
 public class BalanceDTO {
 	private Double accountBalance;		//账户余额
-	private int rspCode;		//账户余额
-	private String rspMsg;		//账户余额
+	private int rspCode;		//返回状态码
+	private String rspMsg;		//状态描述
+	private int billType;		//账户类型
+
+	public BalanceDTO(Double accountBalance, int rspCode, String rspMsg,
+			int billType) {
+		super();
+		this.accountBalance = accountBalance;
+		this.rspCode = rspCode;
+		this.rspMsg = rspMsg;
+		this.billType = billType;
+	}
 
 	public BalanceDTO(Double accountBalance) {
 		super();
@@ -22,11 +32,12 @@ public class BalanceDTO {
 		super();
 	}
 
-	public BalanceDTO(Double accountBalance, int rspCode, String rspMsg) {
-		super();
-		this.accountBalance = accountBalance;
-		this.rspCode = rspCode;
-		this.rspMsg = rspMsg;
+	public int getBillType() {
+		return billType;
+	}
+
+	public void setBillType(int billType) {
+		this.billType = billType;
 	}
 
 	public int getRspCode() {

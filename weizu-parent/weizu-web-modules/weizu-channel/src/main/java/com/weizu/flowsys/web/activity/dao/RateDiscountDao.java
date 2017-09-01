@@ -110,6 +110,16 @@ public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	 */
 	RateDiscountPo getRateForCharge(Map<String, Object> params);
 	
+	
+	/**
+	 * @description: 查看代理商是否在某一通道上已经配置了该地区的折扣
+	 * @param params
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月1日 下午12:06:39
+	 */
+	int getScopeExceptionForRate(Map<String, Object> params);
+	
 	/**
 	 * @description: 获得所有费率的地区
 	 * @param rateDiscountPo
