@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 
 public interface RateDiscountAO {
@@ -125,4 +126,15 @@ public interface RateDiscountAO {
 	 * @createTime:2017年8月2日 上午11:54:07
 	 */
 	RateDiscountPo getRateForCharge(int serviceType,String carrier, int loginAgencyId,int billTypeRate);
+	
+	/**
+	 * @description:
+	 * @param aacp
+	 * @param rateDiscountPo
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月1日 下午12:10:59
+	 */
+//	int getScopeExceptionForRate(AgencyActiveRatePo aacp,RateDiscountPo rateDiscountPo);
+	
 }

@@ -3,16 +3,16 @@ package com.weizu.flowsys.api.weizu.order;
 public class QueryOrderParams {
 	private String userName;			//用户账号
 	private String sign;				//密钥
-	private String orderId;			//充值订单号
+	private Long orderId;			//充值订单号
 	private String number;				//充值号码
 	
-	public QueryOrderParams(String userName, String sign, String orderId) {
+	public QueryOrderParams(String userName, String sign, Long orderId) {
 		super();
 		this.userName = userName;
 		this.sign = sign;
 		this.orderId = orderId;
 	}
-	public QueryOrderParams(String userName, String sign, String orderId,
+	public QueryOrderParams(String userName, String sign, Long orderId,
 			String number) {
 		super();
 		this.userName = userName;
@@ -35,10 +35,10 @@ public class QueryOrderParams {
 	public void setSign(String sign) {
 		this.sign = sign;
 	}
-	public String getOrderId() {
+	public Long getOrderId() {
 		return orderId;
 	}
-	public void setOrderId(String orderId) {
+	public void setOrderId(Long orderId) {
 		this.orderId = orderId;
 	}
 	public String getNumber() {

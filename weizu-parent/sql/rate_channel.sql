@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50626
 File Encoding         : 65001
 
-Date: 2017-08-30 18:04:40
+Date: 2017-08-31 18:07:31
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -732,6 +732,7 @@ CREATE TABLE `exchange_platform` (
   `product_list_ip` varchar(255) DEFAULT NULL COMMENT '产品列表地址',
   `pgdata_check_ip` varchar(255) DEFAULT NULL COMMENT '订单查询地址',
   `ep_balance_ip` varchar(255) DEFAULT NULL COMMENT '余额查询地址',
+  `ep_order_state_ip` varchar(255) DEFAULT NULL COMMENT '订单状态主动查询地址',
   `ep_user_name` varchar(255) DEFAULT NULL COMMENT '账号',
   `ep_user_pass` varchar(255) DEFAULT NULL COMMENT '密码',
   `ep_balance` double DEFAULT NULL COMMENT '平台余额',
@@ -745,15 +746,15 @@ CREATE TABLE `exchange_platform` (
 -- ----------------------------
 -- Records of exchange_platform
 -- ----------------------------
-INSERT INTO `exchange_platform` VALUES ('1', '迈远', 'MaiyuanKeji', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'ncwz22', '333221', '2000', '48dee3af73174054b3a5f88c58d17d61', 'http://120.76.194.45', null, '1503376408629');
-INSERT INTO `exchange_platform` VALUES ('2', '尚通', 'WeiZu', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'ncwz22', '11', '3000', '48dee3af73174054b3a5f88c58d17d61', 'http://120.76.194.45', null, '1503369178973');
-INSERT INTO `exchange_platform` VALUES ('13', '123', null, '12', '3', '121', '2', '2', '2123', '12', '3', '2', null, '1503369178973');
-INSERT INTO `exchange_platform` VALUES ('30', '5', null, '5', '5', '5', '55', '5', '55', '5', '5', '5', null, '1503369178973');
-INSERT INTO `exchange_platform` VALUES ('31', '0', null, '0', '0', '0', '0', '0', '0', '0', '0', '0', null, '1503369178973');
-INSERT INTO `exchange_platform` VALUES ('32', 'wzkj', 'Weizu', 'http://139.224.70.161:32001/api/v1/sendOrder', 'http://139.224.70.161:32001/api/v1/sendOrder', 'http://139.224.70.161:32001/api/v1/orderState', 'http://139.224.70.161:32001/api/v1/getBalance', 'CS111111', '123456', null, '722c16de0a83e5bd2f988e3c7bc9fee8', 'http://139.224.70.161/', null, '1503369178973');
-INSERT INTO `exchange_platform` VALUES ('40', '456', null, '45', '645', '45', '45', '454', '4', '545', '5', '4', null, '1503369178973');
-INSERT INTO `exchange_platform` VALUES ('42', '行云', 'Lljypt', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/query.order', 'http://api.lljypt.com/capi/query.balance', 'cncwz', '249636', '0', 'KKIGoAFUTxoIFfC', 'http://customer.lljypt.com/a', 'merchant=10210&clientId=10000&version=V100&', '1504000807525');
-INSERT INTO `exchange_platform` VALUES ('43', '行云对私', 'Lljypt0', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/query.order', 'http://api.lljypt.com/capi/query.balance', 'cncwz', '249636', '0', 'AoYIuPLXMmpTwTw', 'http://customer.lljypt.com/a', 'merchant=10304&clientId=10000&version=V100& ', '1504000740478');
+INSERT INTO `exchange_platform` VALUES ('1', '迈远', 'MaiyuanKeji', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', null, 'ncwz22', '333221', '2000', '48dee3af73174054b3a5f88c58d17d61', 'http://120.76.194.45', null, '1503376408629');
+INSERT INTO `exchange_platform` VALUES ('2', '尚通', 'WeiZu', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', 'http://120.76.194.45:8080/api.aspx', null, 'ncwz22', '11', '3000', '48dee3af73174054b3a5f88c58d17d61', 'http://120.76.194.45', null, '1503369178973');
+INSERT INTO `exchange_platform` VALUES ('13', '123', null, '12', '3', '121', '2', null, '2', '2123', '12', '3', '2', null, '1503369178973');
+INSERT INTO `exchange_platform` VALUES ('30', '5', null, '5', '5', '5', '55', null, '5', '55', '5', '5', '5', null, '1503369178973');
+INSERT INTO `exchange_platform` VALUES ('31', '0', null, '0', '0', '0', '0', null, '0', '0', '0', '0', '0', null, '1503369178973');
+INSERT INTO `exchange_platform` VALUES ('32', 'wzkj', 'Weizu', 'http://139.224.70.161:32001/api/v1/sendOrder', 'http://139.224.70.161:32001/api/v1/sendOrder', 'http://139.224.70.161:32001/api/v1/orderState', 'http://139.224.70.161:32001/api/v1/getBalance', 'http://139.224.70.161:32001/api/v1/orderState', 'CS111111', '123456', null, '722c16de0a83e5bd2f988e3c7bc9fee8', 'http://139.224.70.161/', null, '1503369178973');
+INSERT INTO `exchange_platform` VALUES ('40', '456', null, '45', '645', '45', '45', null, '454', '4', '545', '5', '4', null, '1503369178973');
+INSERT INTO `exchange_platform` VALUES ('42', '行云', 'Lljypt', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/query.order', 'http://api.lljypt.com/capi/query.balance', null, 'cncwz', '249636', '0', 'KKIGoAFUTxoIFfC', 'http://customer.lljypt.com/a', 'merchant=10210&clientId=10000&version=V100&', '1504000807525');
+INSERT INTO `exchange_platform` VALUES ('43', '行云对私', 'Lljypt0', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/query.order', 'http://api.lljypt.com/capi/query.balance', null, 'cncwz', '249636', '0', 'AoYIuPLXMmpTwTw', 'http://customer.lljypt.com/a', 'merchant=10304&clientId=10000&version=V100& ', '1504000740478');
 
 -- ----------------------------
 -- Table structure for `operator_discount`
@@ -899,6 +900,7 @@ CREATE TABLE `purchase` (
   `order_id_from` varchar(255) DEFAULT NULL COMMENT '下级代理商传过来的订单号',
   `agency_id` int(11) DEFAULT NULL COMMENT '生成订单的代理商',
   `charge_tel` varchar(255) DEFAULT NULL COMMENT 'æ‰‹æœºå·',
+  `order_amount` double DEFAULT NULL COMMENT '订单的初始价格（适用于接口充值）',
   `pg_id` int(11) DEFAULT NULL COMMENT 'æµé‡åŒ…idï¼ˆå¤–é”®ï¼‰',
   `order_arrive_time` bigint(20) DEFAULT NULL COMMENT 'æäº¤æ—¶é—´ï¼ˆæœ¬å¹³å°èŽ·å¾—è¯¥æ•°æ®è¯·æ±‚çš„æ—¶é—´ï¼‰',
   `charge_tel_detail` varchar(255) DEFAULT NULL COMMENT 'å·ç å½’å±žï¼ˆï¼šæ±Ÿè¥¿ç§»åŠ¨ï¼‰',
@@ -913,15 +915,15 @@ CREATE TABLE `purchase` (
 -- ----------------------------
 -- Records of purchase
 -- ----------------------------
-INSERT INTO `purchase` VALUES ('726614433270337536', null, null, '21', '15014369834', '16', '1503566489755', '广东移动', null, '0', '12', '手动失败', '1503566653868');
-INSERT INTO `purchase` VALUES ('726617282914029568', null, null, '21', '15014369834', '16', '1503567169183', '广东移动', null, null, '12', null, null);
-INSERT INTO `purchase` VALUES ('726623422175514624', null, null, '21', '15014369834', '16', '1503568632896', '广东移动', null, null, '12', null, null);
-INSERT INTO `purchase` VALUES ('726628023574466560', null, null, '21', '15014369834', '16', '1503569729934', '广东移动', null, null, '12', null, null);
-INSERT INTO `purchase` VALUES ('726628486671765504', null, null, '21', '15014369834', '16', '1503569840368', '广东移动', null, '0', '12', '手动失败', '1503570066051');
-INSERT INTO `purchase` VALUES ('726633391352451072', null, null, '1', '15014369834', '16', '1503571009732', '广东移动', null, null, '12', null, null);
-INSERT INTO `purchase` VALUES ('728332613520986112', null, null, '1', '15014369834', '16', '1503976117855', '广东移动', null, null, '12', null, null);
-INSERT INTO `purchase` VALUES ('728385208486727680', null, null, '4', '15014369834', '16', '1503988657193', '广东移动', null, null, '12', null, null);
-INSERT INTO `purchase` VALUES ('728388336288272384', null, null, '4', '15014369834', '16', '1503989421198', '广东移动', null, null, '12', null, null);
+INSERT INTO `purchase` VALUES ('726614433270337536', null, null, '21', '15014369834', null, '16', '1503566489755', '广东移动', null, '0', '12', '手动失败', '1503566653868');
+INSERT INTO `purchase` VALUES ('726617282914029568', null, null, '21', '15014369834', null, '16', '1503567169183', '广东移动', null, null, '12', null, null);
+INSERT INTO `purchase` VALUES ('726623422175514624', null, null, '21', '15014369834', null, '16', '1503568632896', '广东移动', null, null, '12', null, null);
+INSERT INTO `purchase` VALUES ('726628023574466560', null, null, '21', '15014369834', null, '16', '1503569729934', '广东移动', null, null, '12', null, null);
+INSERT INTO `purchase` VALUES ('726628486671765504', null, null, '21', '15014369834', null, '16', '1503569840368', '广东移动', null, '0', '12', '手动失败', '1503570066051');
+INSERT INTO `purchase` VALUES ('726633391352451072', null, null, '1', '15014369834', null, '16', '1503571009732', '广东移动', null, null, '12', null, null);
+INSERT INTO `purchase` VALUES ('728332613520986112', null, null, '1', '15014369834', null, '16', '1503976117855', '广东移动', null, null, '12', null, null);
+INSERT INTO `purchase` VALUES ('728385208486727680', null, null, '4', '15014369834', null, '16', '1503988657193', '广东移动', null, null, '12', null, null);
+INSERT INTO `purchase` VALUES ('728388336288272384', null, null, '4', '15014369834', null, '16', '1503989421198', '广东移动', null, null, '12', null, null);
 
 -- ----------------------------
 -- Table structure for `rate_backward`

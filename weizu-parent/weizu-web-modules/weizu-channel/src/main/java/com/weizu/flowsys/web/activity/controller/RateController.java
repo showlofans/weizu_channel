@@ -552,7 +552,7 @@ public class RateController {
 	 */
 	@RequestMapping(value=RateURL.BIND_CHANNEL)
 	@ResponseBody
-	public void rateJoinChannel(AgencyActiveRatePo aacp,RateDiscountPo rateDiscountPo,HttpServletResponse response, HttpServletRequest request)
+	public String rateJoinChannel(AgencyActiveRatePo aacp,RateDiscountPo rateDiscountPo,HttpServletResponse response, HttpServletRequest request)
 	{
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		
@@ -563,11 +563,12 @@ public class RateController {
 		aacp.setAgencyId(Integer.parseInt(agencyId));
 		aacp.setAgencyName(agencyName);
 		int bindRes = agencyActiveChannelAO.bindChannel(aacp,rateDiscountPo);
-		
-		try {
-			response.getWriter().print("success");
-		} catch (IOException e) {
-			e.printStackTrace();
+		if(bindRes == -1){
+			return "hasScope";
+		}else if(bindRes > 0){
+			return "success";
+		}else{
+			return "error";
 		}
 		//return new ModelAndView("/rate/rate_join_channel_page","pageTitle","pageTitle");
 	}
@@ -1043,6 +1044,22 @@ public class RateController {
 	public String delAar(Long id){
 		String res = agencyActiveChannelAO.delAar(id);
 		return res;
+	}
+	/**
+	 * @description: 删除折扣
+	 * @param rateDiscountId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月1日 下午5:15:34
+	 */
+	@ResponseBody
+	@RequestMapping(value=RateURL.DEL_RATE)
+	public String delRateDiscount(Long rateDiscountId){
+		int res = rateDiscountDao.del(rateDiscountId);
+		if(res > 0){
+			return "success";
+		}
+		return "error";
 	}
 	
 }

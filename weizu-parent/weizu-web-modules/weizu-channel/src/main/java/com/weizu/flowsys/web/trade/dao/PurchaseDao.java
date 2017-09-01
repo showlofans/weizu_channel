@@ -63,6 +63,15 @@ public interface PurchaseDao extends Dao<PurchasePo, Long> {
 	PurchasePo getOnePurchase(Long orderId);
 	
 	/**
+	 * @description: 查询代理商订单
+	 * @param map
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月1日 下午6:53:24
+	 */
+	PurchasePo getMyPurchase(int agnecyId,Long purchaseId);
+	
+	/**
 	 * @description: 查询统计信息
 	 * @param agencyId
 	 * @return
@@ -70,5 +79,6 @@ public interface PurchaseDao extends Dao<PurchasePo, Long> {
 	 * @createTime:2017年8月21日 下午5:24:33
 	 */
 	TotalResult getTotalResultFromSuccess(Map<String,Object> map);
+	
 
 }

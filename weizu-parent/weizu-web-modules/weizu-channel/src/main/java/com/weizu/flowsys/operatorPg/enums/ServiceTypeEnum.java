@@ -22,19 +22,19 @@ public enum ServiceTypeEnum {
 	 * 省内流量
 	 */
 	PROVINCE("省内",1),
+//	/**
+//	 * 转增流量
+//	 */
+//	TRANSFER("转增",3),
+//	/**
+//	 * 红包流量
+//	 */
+//	RED_PACKET("红包",4),
 	/**
 	 * 省漫游流量
 	 */
-	PROVINCE_ROAMING("省漫游",2),
+	PROVINCE_ROAMING("省漫游",2);
 	
-	/**
-	 * 转增流量
-	 */
-	TRANSFER("转增",3),
-	/**
-	 * 红包流量
-	 */
-	RED_PACKET("红包",4);
 	
 	private String desc;
 	private int value;

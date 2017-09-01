@@ -185,4 +185,9 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 		return sqlSessionTemplate.selectList("getMyChildRate", params);
 	}
 
+	@Override
+	public int getScopeExceptionForRate(Map<String, Object> params) {
+		return sqlSessionTemplate.selectOne("getScopeExceptionForRate", params);
+	}
+
 }

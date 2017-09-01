@@ -70,7 +70,13 @@ public class Weizu implements BaseInterface {
             if(StringHelper.isNotEmpty(balanceStr)){
             	balance = Double.parseDouble(balanceStr);
             }
-            balanceDTO = new BalanceDTO(balance, rspCode, rspMsg);
+            String epEngId = baseParams.getEpo().getEpEngId();
+            String epEngIdTag = epEngId.substring(epEngId.length()-1);
+            if("0".equals(epEngIdTag)){
+            	balanceDTO = new BalanceDTO(balance, rspCode, rspMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
+            }else{
+            	balanceDTO = new BalanceDTO(balance, rspCode, rspMsg,BillTypeEnum.CORPORATE_BUSINESS.getValue()); 
+            }
     	 } catch (JSONException e) {  
              e.printStackTrace();  
          } 
