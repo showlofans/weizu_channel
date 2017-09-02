@@ -22,34 +22,37 @@ public class WeizuTest {
 	@Resource
 	private ExchangePlatformDao exchangePlatformDao;
 	
-	private BaseInterface bi = null;
+	private BaseInterface biCharge = null;
+	private BaseInterface biOrder = null;
+//	private BaseInterface bi = null;
 	
 	@Before
 	public void initBi(){
 		ExchangePlatformPo epPo = exchangePlatformDao.get(32);
-		bi = SingletonFactory.getSingleton("Weizu", new BaseP("pc123123","20170829141510693712","15014369834",1,epPo));
+		biCharge = SingletonFactory.getSingleton("Weizu", new BaseP("pc123123",726633391352451072l,"15014369834",1,epPo));//充值api测试
+		biOrder = SingletonFactory.getSingleton("Weizu", new BaseP("pc123123","20170902132222954417","15014369834",1,epPo));//方便查询订单详情
 	}
 	
-	@Test
-	public void testBalance(){
-//		ExchangePlatformPo epPo = exchangePlatformDao.get(32);
-//		BaseInterface bi = SingletonFactory.getSingleton("Weizu", new BaseP("pc123123","726633391352451072","15014369834",1,epPo));
-		System.out.println(bi.toParams());
-		System.out.println(bi.toBalanceParams());
-		BalanceDTO balanceDTO = bi.getBalance();
-		System.out.println(balanceDTO.getRspMsg());
-		System.out.println(balanceDTO.getAccountBalance());
-	}
+//	@Test
+//	public void testBalance(){
+////		ExchangePlatformPo epPo = exchangePlatformDao.get(32);
+////		BaseInterface bi = SingletonFactory.getSingleton("Weizu", new BaseP("pc123123","726633391352451072","15014369834",1,epPo));
+//		System.out.println(bi.toParams());
+//		System.out.println(bi.toBalanceParams());
+//		BalanceDTO balanceDTO = bi.getBalance();
+//		System.out.println(balanceDTO.getRspMsg());
+//		System.out.println(balanceDTO.getAccountBalance());
+//	}
 	
 //	public void testCharge(){
 //		
 //	}
-//	@Test
-//	public void testOrder(){
-//		OrderDTO orderDTO = bi.getOrderState();
-//		System.out.println(orderDTO.getCreated_at());
-//		System.out.println(orderDTO.getMsg());
-//		
-////		System.out.println(bi.getOrderState().getRspMsg());
-//	}
+	@Test
+	public void testOrder(){
+		OrderDTO orderDTO = biOrder.getOrderState();
+		System.out.println(orderDTO.getRspCode());
+		System.out.println(orderDTO.getRspMsg());
+		
+//		System.out.println(bi.getOrderState().getRspMsg());
+	}
 }

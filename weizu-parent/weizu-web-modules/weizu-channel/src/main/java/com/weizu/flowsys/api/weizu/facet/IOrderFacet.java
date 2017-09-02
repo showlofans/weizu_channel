@@ -1,7 +1,7 @@
 package com.weizu.flowsys.api.weizu.facet;
 
-import com.weizu.flowsys.api.singleton.OrderDTO;
 import com.weizu.flowsys.api.weizu.order.QueryOrderParams;
+import com.weizu.flowsys.web.http.entity.Order;
 
 /**
  * @description: 下级主动查询订单状态接口
@@ -19,5 +19,5 @@ public interface IOrderFacet {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年8月31日 下午5:12:00
 	 */
-	OrderDTO getOrderDTO(QueryOrderParams orderParam);
+	Order getOrder(QueryOrderParams orderParam);
 }

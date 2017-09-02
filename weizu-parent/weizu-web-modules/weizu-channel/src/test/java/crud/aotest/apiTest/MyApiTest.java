@@ -8,19 +8,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.weizu.api.outter.enums.ChargeStatusEnum;
 
 import com.weizu.flowsys.api.singleton.BalanceDTO;
-import com.weizu.flowsys.api.singleton.OrderDTO;
+import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
+import com.weizu.flowsys.api.weizu.charge.ChargeParams;
 import com.weizu.flowsys.api.weizu.facet.IBalanceFacet;
 import com.weizu.flowsys.api.weizu.facet.IChargeFacet;
 import com.weizu.flowsys.api.weizu.facet.IOrderFacet;
-import com.weizu.flowsys.api.weizu.order.QueryOrderParams;
-import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
+import com.weizu.flowsys.web.http.entity.Charge;
 import com.weizu.web.foundation.MD5;
-import com.weizu.web.foundation.http.HttpRequest;
 
 /**
  * @description:
@@ -77,27 +77,29 @@ public class MyApiTest {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年9月1日 下午6:14:37
 	 */
-	@Test
-	public void testOrder(){
-		AgencyBackwardPo backPo = agencyVODao.getSecondAgency("123");
-		if(backPo == null){
-			System.out.println("不是二级代理商");
-		}else{
-			String sign = "";
-			String apikey =backPo.getUserApiKey(); 
-			try {
-				sign = MD5.getMd5("username="+backPo.getUserName()+"&apikey="+apikey,null,null);
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-			OrderDTO orderDTO = orderFacade.getOrderDTO(new QueryOrderParams(backPo.getUserName(), sign, 726614433270337536l, "15014369834"));
-			
-//		String resultStr = HttpRequest.sendPost("http://api.lljypt.com/capi/query.balance", param.toString());
-//			System.out.println(balanceDTO.getAccountBalance());
-			System.out.println(orderDTO.getRspMsg());
-			System.out.println(orderDTO.getOrderIn().getNumber());
-		}
-	}
+//	@Test
+//	public void testOrder(){
+//		AgencyBackwardPo backPo = agencyVODao.getSecondAgency("123");
+//		if(backPo == null){
+//			System.out.println("不是二级代理商");
+//		}else{
+//			String sign = "";
+//			String apikey =backPo.getUserApiKey(); 
+//			try {
+//				sign = MD5.getMd5("username="+backPo.getUserName()+"&apikey="+apikey,null,null);
+//			} catch (UnsupportedEncodingException e) {
+//				e.printStackTrace();
+//			}
+//			Order order = orderFacade.getOrder(new QueryOrderParams(backPo.getUserName(), sign, 726614433270337536l, "15014369834"));
+//			OrderPo orderPo = order.getOrderPo();
+////		String resultStr = HttpRequest.sendPost("http://api.lljypt.com/capi/query.balance", param.toString());
+////			System.out.println(balanceDTO.getAccountBalance());
+////			System.out.println(orderPo.toString());
+//			System.out.println(order.getRspMsg());
+////			System.out.println(orderPo.getStatusMSg());
+////			System.out.println(orderPo.getNumber());
+//		}
+//	}
 	/**
 	 * @description: 测试充值
 	 * @author:微族通道代码设计人 宁强
@@ -105,7 +107,7 @@ public class MyApiTest {
 	 */
 //	@Test
 //	public void testCharge(){
-//		AgencyBackwardPo backPo = agencyVODao.getSecondAgency("456");
+//		AgencyBackwardPo backPo = agencyVODao.getSecondAgency("123");
 //		String sign = "";
 //		String apikey =backPo.getUserApiKey(); 
 //		try {
@@ -113,11 +115,22 @@ public class MyApiTest {
 //		} catch (UnsupportedEncodingException e) {
 //			e.printStackTrace();
 //		}
-//		BalanceDTO balanceDTO = balanceFacade.myBalance(backPo.getUserName(), sign, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+//		
+//		Charge charge = null;
+//		try {
+//			charge = chargeImpl.charge(new ChargeParams(backPo.getUserName(), "15014369834", 500, 0, sign, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue(), "123456123"));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		if(charge != null){
+//			System.out.println(charge.getTipMsg());
+//		}
+////		System.out.println(ChargeStatusEnum.CHANNEL_CLOSED.getDesc());
+//		
+////		BalanceDTO balanceDTO = balanceFacade.myBalance(backPo.getUserName(), sign, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 //		
 ////		String resultStr = HttpRequest.sendPost("http://api.lljypt.com/capi/query.balance", param.toString());
-//		System.out.println(balanceDTO.getAccountBalance());
-//		System.out.println(balanceDTO.getRspMsg());
+////		System.out.println(balanceDTO.getAccountBalance());
 //	}
 	
 }

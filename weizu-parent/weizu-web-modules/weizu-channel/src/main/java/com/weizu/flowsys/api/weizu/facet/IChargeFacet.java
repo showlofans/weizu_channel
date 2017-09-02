@@ -1,7 +1,7 @@
 package com.weizu.flowsys.api.weizu.facet;
 
-import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 import com.weizu.flowsys.api.weizu.charge.ChargeParams;
+import com.weizu.flowsys.web.http.entity.Charge;
 
 
 /**
@@ -19,5 +19,5 @@ public interface IChargeFacet {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年8月17日 上午10:43:12
 	 */
-	ChargeDTO charge(ChargeParams chargeParams);
+	Charge charge(ChargeParams chargeParams) throws Exception;
 }

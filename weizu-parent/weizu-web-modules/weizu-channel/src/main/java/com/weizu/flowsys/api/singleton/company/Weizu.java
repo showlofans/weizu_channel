@@ -17,6 +17,7 @@ import com.weizu.flowsys.api.singleton.OrderIn;
 import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 import com.weizu.flowsys.api.weizu.charge.ChargeOrder;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.MD5;
@@ -85,34 +86,62 @@ public class Weizu implements BaseInterface {
 
 	@Override
 	public OrderDTO getOrderState() {
-		String jsonStr = HttpRequest.sendGet(baseParams.getEpo().getEpOrderStateIp(), toOrderParams());
+		String jsonStr = HttpRequest.sendGet(baseParams.getEpo().getPgdataCheckIp(), toOrderParams());
 		OrderDTO orderDTO = null;
 		try {  
+			if(StringHelper.isEmpty(jsonStr)){
+		 		return null;
+		 	}
             JSONObject obj = JSON.parseObject(jsonStr);
             int rspCode = obj.getIntValue("errcode");
             String rspMsg = obj.getString("errmsg");
-            
-            JSONObject orderObj = obj.getJSONObject("order");
-            String orderIdApi = orderObj.getString("transaction_id");
-            String user_order_id = orderObj.getString("user_order_id");
-            String number = orderObj.getString("number");
-            String flowsize = orderObj.getString("flowsize");
-            String charge_fee = orderObj.getString("charge_fee");
-            int status = orderObj.getIntValue("status");
-            String msg = orderObj.getString("msg");
-            String created_at = orderObj.getString("created_at");
-            Long created_at_time = 0l;
-            Date date = DateUtil.strToDate(created_at, null);
-            if(DateUtil.strToDate(created_at, null) != null){
-            	created_at_time = date.getTime();
-            }
-            OrderIn orderId = new OrderIn(orderIdApi, user_order_id, number, flowsize, charge_fee, created_at, status, msg);
-            orderId.setCreated_at_time(created_at_time);
-            //用我这边默认的对私账户充值
-            orderDTO = new OrderDTO(orderId, rspCode, rspMsg);
+//            System.out.println(rspCode);
+            if(rspCode == 55006){//订单不存在
+            	
+            }else{
+            	JSONObject orderObj = obj.getJSONObject("order");
+            	String orderIdApi = orderObj.getString("transaction_id");
+            	String user_order_id = orderObj.getString("user_order_id");
+            	String number = orderObj.getString("number");
+            	String flowsize = orderObj.getString("flowsize");
+            	String charge_fee = orderObj.getString("charge_fee");
+            	int status = orderObj.getIntValue("status");
+            	String msg = orderObj.getString("msg");
+            	String created_at = orderObj.getString("created_at");
+            	Long created_at_time = 0l;
+            	Date date = DateUtil.strToDate(created_at, null);
+            	if(DateUtil.strToDate(created_at, null) != null){
+            		created_at_time = date.getTime();
+            	}
+            	int myStatus = OrderStateEnum.UNCHARGE.getValue();
+            	switch (status) {
+            	case 0://未充值
+            		myStatus = OrderStateEnum.WEICHONG.getValue();
+            		break;
+            	case 1://等待充值
+            		myStatus = OrderStateEnum.DAICHONG.getValue();
+            		break;
+            	case 2://正在充值
+            		myStatus = OrderStateEnum.CHARGING.getValue();
+            		break;
+            	case 4://充值成功
+            		myStatus = OrderStateEnum.CHARGED.getValue();
+            		break;
+            	case 8://充值失败
+//				myStatus = OrderStateEnum.UNCHARGE.getValue();
+            		break;
+            	default:
+            		break;
+            	}
+            	OrderIn orderId = new OrderIn(orderIdApi, user_order_id, number, flowsize, charge_fee, created_at, myStatus, msg);
+            	orderId.setCreated_at_time(created_at_time);
+            	//用我这边默认的对私账户充值
+            	orderDTO = new OrderDTO(orderId, rspCode, rspMsg);
 //            chargeDTO = new ChargeDTO(tipCode, tipMsg, new ChargeOrder(orderIdApi, number, pgSize, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
-		    // 最后输出到控制台  
+            	// 最后输出到控制台  
 //            System.out.println(tipCode+"<--->"+tipMsg);  
+            	
+            }
   
         } catch (JSONException e) {  
             e.printStackTrace();  
@@ -129,6 +158,9 @@ public class Weizu implements BaseInterface {
 		 String jsonStr = HttpRequest.sendGet(baseParams.getEpo().getEpPurchaseIp(), toParams());
 		 ChargeDTO chargeDTO = null;
 		 try {  
+			 	if(StringHelper.isEmpty(jsonStr)){
+			 		return null;
+			 	}
 	            JSONObject obj = JSON.parseObject(jsonStr);
 	            int tipCode = obj.getIntValue("errcode");
 	            String tipMsg = obj.getString("errmsg");
@@ -211,7 +243,7 @@ public class Weizu implements BaseInterface {
 		StringBuffer sbParams = new StringBuffer();
 		ExchangePlatformPo epPo = baseParams.getEpo();
 		sbParams.append("username=").append(epPo.getEpUserName());
-		sbParams.append("&order_id=").append(baseParams.getOrderId());
+		sbParams.append("&order_id=").append(baseParams.getOrderIdApi());		//通过api订单号去查，就是String类型
 		sbParams.append("&sign=").append(sign);
 		return sbParams.toString();
 	}

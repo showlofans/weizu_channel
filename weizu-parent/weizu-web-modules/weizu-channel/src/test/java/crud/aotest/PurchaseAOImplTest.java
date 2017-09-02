@@ -1,6 +1,8 @@
 package crud.aotest;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -9,12 +11,12 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.alibaba.fastjson.JSON;
-import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
-import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
-import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
+import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
+import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
+import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -35,7 +37,8 @@ public class PurchaseAOImplTest {
 //	@Test
 //	public void testGetPurchase(){
 //		PurchaseVO purchaseVO = new PurchaseVO();
-//		purchaseVO.setRootAgencyId(4);
+//		purchaseVO.setAgencyId(4);
+//		purchaseVO.setOrderState(OrderStateEnum.CHARGING.getValue());
 //		Map<String, Object> params = new HashMap<String, Object>();
 //		Pagination<PurchaseVO> pagination = purchaseAO.getPurchase(params,purchaseVO, new PageParam(1, 10));
 //		List<PurchaseVO> records = pagination.getRecords();

@@ -101,6 +101,7 @@
 					<th width="80">结果</th>
 					<th width="80">结果描述</th>
 					<th width="60">扣款</th>
+					<th width="60">操作</th>
 					<c:if test="${loginContext.rootAgencyId == 0 }">
 						<th width="120">通道名称</th>
 					</c:if>
@@ -139,6 +140,16 @@
 						
 						<td>${purchase.orderStateDetail }</td>
 						<td>${purchase.orderPrice }</td>
+						<td class="f-14 td-manage">
+							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeState(this,'1')" href="javascript:;" title="成功">
+								<input type="hidden" value="${purchase.orderId }" >
+								<i class="Hui-iconfont">&#xe6e6;</i>
+							</a>
+							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeState(this,'0')" href="javascript:;" title="失败">
+								<input type="hidden" value="${purchase.orderId }" >
+								<i class="Hui-iconfont">&#xe6e5;</i>
+							</a> 
+						</td>
 						<c:if test="${loginContext.rootAgencyId == 0 }"><td>${purchase.channelName }</td> 
 						</c:if>
 						<td>
@@ -201,6 +212,76 @@ $(document).ready(function() {
         "fnServerData": retrieveData // 获取数据的处理函数
 	});*/
 }); 
+function changeState(vart,state){
+	var orderId = $(vart).children().eq(0).val();
+	var tag = "";
+	var msg='确认设置成功吗？';
+	var msgStr = '手动成功';
+	if(state == 2){//手动提交（）
+		
+		var msg='确认提交订单吗？';
+		var msgStr = '手动提交';
+		layer.confirm(msg,function(index){
+			$.ajax({
+				type: 'POST',
+				url: '/flowsys/chargePg/update_purchase_state.do',
+				//dataType: 'json',
+				data: {orderId:orderId, orderResult:state,orderResultDetail:msgStr},
+				async: false,
+				success: function(data){
+					//tag = data;
+					 //alert(data);
+					if(data=="success")
+					{
+						layer.msg('手动提交成功',{icon:1,time:1000});
+						location.reload();
+					}else{
+						layer.msg('手动提交失败',{icon:1,time:1000});
+					}
+				},
+				error:function(data) {
+					console.log(data.msg);
+				},
+			});	
+		});
+	}else{//成功和失败
+		if(state==0){
+			var msgStr = '手动失败';
+			msg='确认设置失败吗？';
+		}
+		layer.confirm(msg,function(index){
+			$.ajax({
+				type: 'POST',
+				url: '/flowsys/chargePg/update_purchase_state.do',
+				//dataType: 'json',
+				data: {orderId:orderId, orderResult:state,orderResultDetail:msgStr},
+				async: false,
+				success: function(data){
+					//tag = data;
+					 //alert(data);
+					if(data=="success")
+					{
+						layer.msg('手动修改成功',{icon:1,time:1000});
+						location.reload();
+					}else{
+						layer.msg('手动修改失败',{icon:1,time:1000});
+					}
+				},
+				error:function(data) {
+					console.log(data.msg);
+				},
+			});		
+			/* if(tag == "success"){
+				layer.msg('删除成功', {icon:5,time:1000});
+			}
+			layer.close(index);
+			location.reload(); */
+		});
+	}
+	
+}	
+	
+
 
 //3个参数的名字可以随便命名,但必须是3个参数,少一个都不行
 function retrieveData( sSource111,aoData, fnCallback111) {

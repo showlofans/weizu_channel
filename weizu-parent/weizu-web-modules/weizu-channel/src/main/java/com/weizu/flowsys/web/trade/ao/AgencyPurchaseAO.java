@@ -10,5 +10,5 @@ public interface AgencyPurchaseAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年8月21日 下午4:11:21
 	 */
-	String updatePurchaseState(Long orderId,Integer orderResult, String orderResultDetail);
+	String updatePurchaseState(Long orderId,Integer orderResult, String orderResultDetail, Long realBackTime);
 }

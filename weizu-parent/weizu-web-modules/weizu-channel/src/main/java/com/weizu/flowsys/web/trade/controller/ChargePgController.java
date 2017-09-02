@@ -555,7 +555,7 @@ public class ChargePgController {
 	@RequestMapping(value=ChargePgURL.UPDATE_PURCHASE_STATE)
 	@ResponseBody
 	public void updatePurchaseState(Long orderId,Integer orderResult, String orderResultDetail,HttpServletResponse response){
-		String updateRes = agencyPurchaseAO.updatePurchaseState(orderId, orderResult, orderResultDetail);
+		String updateRes = agencyPurchaseAO.updatePurchaseState(orderId, orderResult, orderResultDetail,null);
 		
 		response.setContentType("text/html;charset=utf-8");
 		try {

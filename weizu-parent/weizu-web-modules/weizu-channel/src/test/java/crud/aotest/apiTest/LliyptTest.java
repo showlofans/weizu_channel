@@ -32,7 +32,7 @@ public class LliyptTest {
 	public void testBalance(){
 		ExchangePlatformPo epPo = exchangePlatformDao.get(43);
 //		System.out.println("apikey:"+epPo.getEpApikey());
-		BaseInterface bi = SingletonFactory.getSingleton("Lljypt", new BaseP("pc123123","726633391352451072","15014369834",1,epPo));
+		BaseInterface bi = SingletonFactory.getSingleton("Lljypt", new BaseP("pc123123",726633391352451072l,"15014369834",1,epPo));
 		System.out.println(bi.toParams());
 		System.out.println(bi.toBalanceParams());
 		//		bi.getBalance();

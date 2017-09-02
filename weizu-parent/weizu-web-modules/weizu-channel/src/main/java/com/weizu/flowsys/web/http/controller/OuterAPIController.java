@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.api.singleton.BalanceDTO;
-import com.weizu.flowsys.api.singleton.OrderDTO;
-import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 import com.weizu.flowsys.api.weizu.charge.ChargeParams;
 import com.weizu.flowsys.api.weizu.facet.IBalanceFacet;
 import com.weizu.flowsys.api.weizu.facet.IChargeFacet;
@@ -18,6 +16,8 @@ import com.weizu.flowsys.api.weizu.facet.IOrderFacet;
 import com.weizu.flowsys.api.weizu.order.QueryOrderParams;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
+import com.weizu.flowsys.web.http.entity.Charge;
+import com.weizu.flowsys.web.http.entity.Order;
 import com.weizu.web.foundation.String.StringHelper;
 
 /**
@@ -84,10 +84,17 @@ public class OuterAPIController {
 		if(scope == null){//默认全国类型
 			scope = ServiceTypeEnum.NATION_WIDE.getValue();
 		}
-		ChargeDTO chargeDTO = chargeImpl.charge(new ChargeParams(userName, number, flowsize, scope, sign, billType, userOrderId));
-		String jsonResult = JSON.toJSON(chargeDTO).toString();
+		Charge charge = null;
+		try {
+			charge = chargeImpl.charge(new ChargeParams(userName, number, flowsize, scope, sign, billType, userOrderId));
+			String jsonResult = JSON.toJSON(charge).toString();
 //		System.out.println(jsonResult);
-		return jsonResult;
+			return jsonResult;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	/**
@@ -110,8 +117,8 @@ public class OuterAPIController {
 		}else{
 			orderParams = new QueryOrderParams(userName, sign, orderId);//方便验证是否和数据库中订单充值的号码相同
 		}
-		OrderDTO orderDTO = orderFacade.getOrderDTO(orderParams);
-		String jsonResult = JSON.toJSON(orderDTO).toString();
+		Order order = orderFacade.getOrder(orderParams);
+		String jsonResult = JSON.toJSON(order).toString();
 		System.out.println(jsonResult);
 		return jsonResult;
 	}

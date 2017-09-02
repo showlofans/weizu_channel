@@ -42,6 +42,9 @@ public class Lljypt implements BaseInterface {
 		 String jsonStr = HttpRequest.sendPost(epPo.getEpPurchaseIp(), toParams());
 		 ChargeDTO chargeDTO = null;
 		 try {  
+			 	if(StringHelper.isEmpty(jsonStr)){
+			 		return null;
+			 	}
 	            JSONObject obj = JSON.parseObject(jsonStr);
 	            int tipCode = obj.getIntValue("rspCode");
 	            String tipMsg = obj.getString("rspMsg");

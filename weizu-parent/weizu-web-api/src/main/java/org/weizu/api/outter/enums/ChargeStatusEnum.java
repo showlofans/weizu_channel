@@ -34,7 +34,7 @@ public enum ChargeStatusEnum {
 	/**
 	 * 通道禁止提单
 	 */
-	CHANNEL_CLOSED("产品待更新，产品暂不支持购买！！",4),//	通道关停
+	CHANNEL_CLOSED("通道暂停，接口暂停",4),//	通道关停
 	/**
 	 * 票务类型错误
 	 */

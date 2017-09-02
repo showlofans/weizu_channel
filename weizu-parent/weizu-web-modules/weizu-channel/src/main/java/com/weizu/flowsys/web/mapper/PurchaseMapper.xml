@@ -22,8 +22,8 @@
     <result column="charge_tel_city" property="chargeTelCity" jdbcType="VARCHAR" />
     <result column="order_platform_path" property="orderPlatformPath" jdbcType="INTEGER" />
     <result column="order_result" property="orderResult" jdbcType="INTEGER" />
-    <result column="channel_id" property="channelId" jdbcType="BIGINT" />
     <result column="order_result_detail" property="orderResultDetail" jdbcType="VARCHAR" />
+    <result column="channel_id" property="channelId" jdbcType="BIGINT" />
     <result column="order_amount" property="orderAmount" jdbcType="DOUBLE" />
     <result column="bill_type" property="billType" jdbcType="INTEGER" />
   </resultMap>
@@ -63,6 +63,8 @@
     <result column="ep_user_pass" jdbcType="VARCHAR" property="ep.epUserPass" />
     <result column="ep_balance" jdbcType="DOUBLE" property="ep.epBalance" />
     <result column="ep_apikey" jdbcType="VARCHAR" property="ep.epApikey" />
+    <result column="ep_eng_id" jdbcType="VARCHAR" property="ep.epEngId" />
+    <result column="ep_call_back" jdbcType="INTEGER" property="ep.epCallBack" />
     <result column="ep_ip" jdbcType="VARCHAR" property="ep.epIp" />
     
   </resultMap>
@@ -71,7 +73,7 @@
     charge_tel_city,  channel_id 
   </sql>
    <sql id="get_base_Column_List" >
-    order_id,order_id_api, order_id_from, ap.agency_id, pur.charge_tel, pg_id, ap.order_amount, order_arrive_time,charge_tel_detail, 
+    order_id,order_id_api, order_id_from, ap.agency_id,ap.order_state order_result,ap.order_state_detail order_result_detail, pur.charge_tel, pg_id, ap.order_amount, order_arrive_time,charge_tel_detail, 
     charge_tel_city,  channel_id 
   </sql>
   <sql id="VO_Column_List"><!-- 订单页面 -->
