@@ -12,6 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
@@ -206,5 +207,10 @@ public class PurchaseAOImplTest {
 ////		}
 //
 //	}
+	@Test
+	public void testAjaxCommit(){
+		String res = purchaseAO.ajaxCommitOrder(729886956942528512l, 4, "广东移动", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+		System.out.println(res);
+	}
 	
 }

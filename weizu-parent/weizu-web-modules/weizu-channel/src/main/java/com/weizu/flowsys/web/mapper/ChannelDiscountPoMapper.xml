@@ -3,6 +3,8 @@
 <mapper namespace="com.weizu.flowsys.web.channel.dao.ChannelDiscountDao" >
   <sql id="t_cDiscount">channel_discount</sql>
   <sql id="t_channel">channel_channel</sql>
+  <sql id="t_rte">rate_discount</sql>
+  <sql id="t_ap">agency_purchase</sql>
   
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo" >
     <result column="id" property="id" jdbcType="BIGINT" />
@@ -43,8 +45,27 @@
   
   
   <sql id="base_list">
-  	discount.id,channel_id, service_type, scope_city_code, channel_discount,discount.channel_name,operator_type, discount_type,discount.bill_type
+  	discount.id,discount.channel_id, service_type, scope_city_code, channel_discount,discount.channel_name,operator_type, discount_type,discount.bill_type
   </sql>
+  
+  <!-- 通过代理商和订单号得到走的通道折扣实体 -->
+  <select id="getCDbyAP" parameterType="map" resultMap="BaseResultMap">
+  		SELECT <include refid="base_list"></include> 
+  		FROM <include refid="t_cDiscount"></include> discount
+		INNER JOIN <include refid="t_rte"></include> rte
+		on discount.id=rte.channel_discount_id
+		INNER JOIN <include refid="t_ap"></include> ap
+		on ap.rate_discount_id=rte.id
+		<where>
+			<if test="purchaseId != null">
+				AND ap.purchase_id = #{purchaseId}
+			</if>
+			<if test="agencyId != null">
+				AND ap.agency_id = #{agencyId}
+			</if>
+		</where>
+  </select>
+  
   <!-- 通道折扣批量添加 -->
   <insert id="discount_addList" useGeneratedKeys="true" parameterType="java.util.List">
   	insert into <include refid="t_cDiscount"></include>
@@ -86,7 +107,7 @@
   
   <sql id="condition_sql">
   		<if test="channelId != null">
-  			AND channel_id = #{channelId}
+  			AND discount.channel_id = #{channelId}
   		</if>
   		<if test="channelState != null">
   			AND channel.channel_state = #{channelState}

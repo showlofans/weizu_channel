@@ -41,7 +41,7 @@
 					<li class="dropDown dropDown_hover"><a href="javascript:;" class="dropDown_A"><i class="Hui-iconfont">&#xe600;</i> 新增 <i class="Hui-iconfont">&#xe6d5;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
 							<li><a href="javascript:;"  onclick="Hui_admin_tab(this)"  data-title="通道添加" data-href="/flowsys/channel/channel_add_page.do" ><i class="Hui-iconfont">&#xe616;</i> 通道</a></li>
-							<li><a href="javascript:;" onclick="Hui_admin_tab(this)"  data-title="费率添加" data-href="/flowsys/rate/rate_add_page.do" ><i class="Hui-iconfont">&#xe613;</i> 费率</a></li>
+							<!-- <li><a href="javascript:;" onclick="Hui_admin_tab(this)"  data-title="费率添加" data-href="/flowsys/rate/rate_add_page.do" ><i class="Hui-iconfont">&#xe613;</i> 费率</a></li> -->
 							<li><a href="javascript:;" onclick="Hui_admin_tab(this)"  data-title="流量包添加" data-href="/flowsys/operatorPg/pg_add_page.do" ><i class="Hui-iconfont">&#xe620;</i> 标准包</a></li>
 							<li><a href="javascript:;" onclick="Hui_admin_tab(this)"  data-title="平台添加" data-href="/flowsys/platform/platform_add_page.do" ><i class="Hui-iconfont">&#xe60d;</i> 平台添加</a></li>
 						</ul>

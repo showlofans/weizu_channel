@@ -14,8 +14,11 @@ import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
+import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
+import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
+import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.dao.AgencyActiveRateDTODao;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
@@ -540,18 +543,27 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	 */
 	@Override
 	public RateDiscountPo getRateForCharge(int serviceType,
-			String carrier, int loginAgencyId,int billTypeRate) {
+			String carrier, int loginAgencyId,int billTypeRate, Boolean judgeChannelState) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("billTypeRate", billTypeRate);//用不带票的账户去获得价格
 		params.put("agencyId", loginAgencyId);
+		params.put("bindState", BindStateEnum.BIND.getValue());
+		params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
 		params.put("serviceType", serviceType);
 		int sLength = carrier.length();
 		String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动
-		String scopeCityName = carrier.substring(0,sLength-2);
-		int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
-		params.put("operatorType", opType);
-		String scopeCityCode = ScopeCityEnum.getValueByDesc(scopeCityName);
-		params.put("scopeCityCode", scopeCityCode);
+		if(ServiceTypeEnum.NATION_WIDE.getValue() != serviceType){
+			String scopeCityName = carrier.substring(0,sLength-2);
+			int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
+			params.put("operatorType", opType);
+			String scopeCityCode = ScopeCityEnum.getValueByDesc(scopeCityName);
+			params.put("scopeCityCode", scopeCityCode);
+		}else{
+			params.put("scopeCityCode", ScopeCityEnum.QG.getValue());//使用全国的地区
+		}
+		if(judgeChannelState){//需要判断通道状态:比如再次提交获得的费率，比如测试通道的时候
+			params.put("channelState", ChannelStateEnum.OPEN.getValue());
+		}
 		return rateDiscountDao.getRateForCharge(params);
 	}
 }

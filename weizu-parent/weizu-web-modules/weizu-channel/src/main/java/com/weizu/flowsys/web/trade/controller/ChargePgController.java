@@ -30,29 +30,24 @@ import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
-import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
-import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.ClassUtil;
 import com.weizu.flowsys.util.Pagination;
-import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
-import com.weizu.flowsys.web.channel.ao.ChannelForwardAO;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
+import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
+import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
-import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.ao.AgencyPurchaseAO;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
-import com.weizu.flowsys.web.trade.dao.AgencyPurchaseDao;
-import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 import com.weizu.flowsys.web.trade.pojo.TotalResult;
@@ -85,6 +80,9 @@ public class ChargePgController {
 	private RateDiscountAO rateDiscountAO;
 	@Resource
 	private AgencyPurchaseAO agencyPurchaseAO;
+	
+//	@Resource
+//	private ChannelDiscountDao channelDiscountDao;
 	
 	
 	/**
@@ -129,11 +127,11 @@ public class ChargePgController {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月26日 下午5:49:56
 	 */
-	@RequestMapping(value = ChargePgURL.AJAX_PURCHASE_PG)
-	public ModelAndView ajaxGetPurchasePg(String tel){
-		
-		return null;
-	}
+//	@RequestMapping(value = ChargePgURL.AJAX_PURCHASE_PG)
+//	public ModelAndView ajaxGetPurchasePg(String tel){
+//		
+//		return null;
+//	}
 	/**
 	 * @description:获得流量包购买列表
 	 * @param response
@@ -168,7 +166,7 @@ public class ChargePgController {
 //					oppo.setOperatorType(opType);
 //					oppo.setOperatorName(carrier);
 					int sType = Integer.parseInt(serviceType.trim());
-					RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(sType, carrier, contextId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());//获得对私的充值费率
+					RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(sType, carrier, contextId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue(),false);//获得对私的充值费率
 //					oppo.setServiceType(sType);
 					
 					List<OperatorPgDataPo> chargeList = purchaseAO.ajaxChargePg(new ChargeChannelParamsPo(carrier, sType, ratePo.getChannelId()));
@@ -356,7 +354,7 @@ public class ChargePgController {
 //			}
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 			if(agencyVO != null){
-				RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(serviceType, carrier, agencyVO.getId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());//获得对私的充值费率
+				RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(serviceType, carrier, agencyVO.getId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue(), false);//获得对私的充值费率
 				if(pgPrice != null && ratePo != null){//判断余额
 					Double purchasePrice = NumberTool.mul(pgPrice, ratePo.getActiveDiscount());//利率后的价格
 					ChargeAccountPo account1 = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
@@ -638,4 +636,17 @@ public class ChargePgController {
 //		returnMap.put("refererURL", InvoiceAccountURL.MODEL_NAME + InvoiceAccountURL.INVOICE_ACCOUNT_LIST);
 //		return new ModelAndView("success", "map", returnMap);
 	}
+	@ResponseBody
+	@RequestMapping(value=ChargePgURL.AJAX_COMMIT_ORDER)
+	public String ajaxCommitOrder(HttpServletRequest request,Long orderId,Integer agencyId,String chargeTelDetail,Integer billTypeRate){
+//		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession() .getAttribute("loginContext");
+//		ChannelDiscountPo cd = channelDiscountDao.getCDbyAP(orderId, agencyId);
+//		
+//		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(cd.getServiceType(), chargeTelDetail, agencyId, billTypeRate);
+		String ajaxRes = purchaseAO.ajaxCommitOrder(orderId, agencyId, chargeTelDetail, billTypeRate);
+		
+		return ajaxRes;
+	}
+	
+	
 }

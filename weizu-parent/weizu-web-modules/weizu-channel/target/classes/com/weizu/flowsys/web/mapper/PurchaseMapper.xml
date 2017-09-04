@@ -44,7 +44,8 @@
     <result column="charge_tel_detail" property="chargeTelDetail" jdbcType="VARCHAR" />
     <result column="charge_tel_city" property="chargeTelCity" jdbcType="VARCHAR" />
     <result column="order_platform_path" property="orderPlatformPath" jdbcType="INTEGER" />
-    <result column="from_agency_name" property="agencyName" jdbcType="INTEGER" />
+    <result column="from_agency_name" property="agencyName" jdbcType="VARCHAR" />
+    <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
     <result column="order_state" property="orderState" jdbcType="INTEGER" />
     <result column="order_state_detail" property="orderStateDetail" jdbcType="VARCHAR" />
     <result column="ap_order_amount" property="orderAmount" jdbcType="DOUBLE" />
@@ -77,7 +78,7 @@
     charge_tel_city,  channel_id 
   </sql>
   <sql id="VO_Column_List"><!-- 订单页面 -->
-  	ep.*,ap.from_agency_name, pur.order_id, pur.order_id_api, pur.order_id_from, pur.charge_tel, pg.pg_size, pg.operator_type, pg.pg_price, pur.order_arrive_time,
+  	ep.*,ap.from_agency_name,pur.agency_id, pur.order_id, pur.order_id_api, pur.order_id_from, pur.charge_tel, pg.pg_size, pg.operator_type, pg.pg_price, pur.order_arrive_time,
   	pur.order_back_time, pur.charge_tel_detail, pur.charge_tel_city,ap.order_amount ap_order_amount,ap.order_price,pur.order_result,ap.order_state,ap.order_state_Detail,ap.order_platform_path,
   	 pur.order_result_detail,channel.channel_name,pur.channel_id,ap.bill_type apBill_type
   </sql>

@@ -11,28 +11,28 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.weizu.api.outter.enums.ChargeStatusEnum;
 
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.api.singleton.BaseInterface;
 import com.weizu.flowsys.api.singleton.BaseP;
-import com.weizu.flowsys.api.singleton.OrderDTO;
-import com.weizu.flowsys.api.singleton.OrderIn;
 import com.weizu.flowsys.api.singleton.SingletonFactory;
 import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
-import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
+import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.OrderUril;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
@@ -97,8 +97,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 	private OperatorPgDaoInterface operatorPgDao;
 	@Resource
 	private ProductCodeAO productCodeAO;
-//	@Resource
-//	private RateDiscountAO rateDiscountAO;
+	@Resource
+	private RateDiscountAO rateDiscountAO;
 	@Resource
 	private RateDiscountDao rateDiscountDao; 
 //	@Resource
@@ -279,7 +279,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 			if(aarAdd > 0){
 				return chargeByBI(epPo, orderId, pcVO, dataPo.getProductCode());
 			}
-		}else{//通过费率折扣充值
+		}else{//页面通过费率折扣充值
+//			RateDiscountPo ratePo2 = rateDiscountAO.getRateForCharge(pcVO.getServiceType(), pcVO.getChargeTelDetail(), agencyId);
 			RateDiscountPo ratePo = rateDiscountDao.get(pcVO.getRateId());
 			if(ratePo != null){
 				int billType = ratePo.getBillType();//票务全部使用费率配置的票务
@@ -292,9 +293,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 				boolean isSecondAgency = agencyVODao.getSecondAgency(agencyId) == null ;
 				//在二级代理商的情况下才去判断余额
 				boolean ifLackBalance = isSecondAgency && pcVO.getOrderAmount() > accountPo.getAccountBalance();
-				
 				if(ifLackBalance){//订单价格大于余额
-					return "余额不足，下单失败";
+					return "余额不足或者不是接口用户，下单失败";
 //				resultMap.put("referURL", "/flowsys/chargePg/purchase_list.do?orderResult=2");
 				}else{
 					/**充值前余额*/
@@ -482,6 +482,110 @@ public class PurchaseAOImpl implements PurchaseAO {
 		}
 		return null;
 	}
+	
+	@Override
+	public String ajaxCommitOrder(Long orderId,Integer agencyId,String chargeTelDetail,Integer billTypeRate) {
+		ChannelDiscountPo cd = channelDiscountDao.getCDbyAP(orderId, agencyId);
+		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(cd.getServiceType(), chargeTelDetail, agencyId, billTypeRate,true);
+		PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
+		if(ratePo != null){
+			int billType = ratePo.getBillType();//票务全部使用费率配置的票务
+			//更新消费记录表（先更新账户余额，再更新订单，最后更新记录）
+			ChargeAccountPo accountPo = chargeAccountAO.getAccountByAgencyId(agencyId, billType);
+			
+			/**账户信息的更新结果*/
+			int recordRes = 0;
+			
+			boolean isSecondAgency = agencyVODao.getSecondAgency(agencyId) == null ;
+			/**充值额（）*/
+			Double orderAmount = purchasePo.getOrderAmount();
+			//在二级代理商的情况下才去判断余额
+			boolean ifLackBalance = isSecondAgency && orderAmount > accountPo.getAccountBalance();
+			Long currentTime = System.currentTimeMillis();
+			int orderPath = OrderPathEnum.CHARGE_SOCKET.getValue();
+			int orderResult = OrderStateEnum.CHARGING.getValue();
+			if(ifLackBalance){//订单价格大于余额
+				logger.config("余额不足，下单失败");
+				return "余额不足，下单失败";
+//			resultMap.put("referURL", "/flowsys/chargePg/purchase_list.do?orderResult=2");
+			}else{
+				if(ChargeStatusEnum.LACK_OF_BALANCE.getDesc().equals(purchasePo.getOrderResultDetail())){
+					/**充值前余额*/
+					Double agencyBeforeBalance = accountPo.getAccountBalance();
+					
+					accountPo.addBalance(orderAmount,-1);
+					/** 更新登录用户账户信息**/
+					recordRes = chargeAccountAO.updateAccount(accountPo);
+					if(recordRes > 0){
+						Long rateDiscountId = ratePo.getId();			//折扣id
+						
+						//开始把第一个消费记录，连接加上，
+						/** 向消费记录表插入登陆用户数据 */
+//						Long nextIdRecord = chargeRecordDao.nextId();
+						chargeRecordDao.add(new ChargeRecordPo(currentTime, orderAmount,
+								agencyBeforeBalance, accountPo.getAccountBalance(), 
+								billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), agencyId, 1 , orderId));
+						/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
+					}
+					
+				}else{//其他原因导致充值等待
+					AgencyBackwardPo agnecyPo = agencyVODao.get(agencyId);
+					int superAgencyId = agnecyPo.getRootAgencyId();
+					AgencyPurchasePo superApPo = agencyPurchaseDao.get(new WherePrams("agency_id", "=", superAgencyId).and("purchase_id", "=", orderId));
+					ChargeAccountPo superAccountPo = chargeAccountAO.getAccountByAgencyId(superAgencyId, cd.getBillType());
+					Double superOrderAmount = superApPo.getOrderAmount();//超管的成本
+					Double superAgencyBeforeBalance = superAccountPo.getAccountBalance();
+					/** 更新超管账户信息**/
+					superAccountPo.addBalance(superOrderAmount, -1);
+					int superAccountRes = chargeAccountAO.updateAccount(superAccountPo);
+					if(superAccountRes > 0){
+						//添加消费记录
+						chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), superOrderAmount,
+								superAgencyBeforeBalance, superAccountPo.getAccountBalance(), 
+								cd.getBillType(),AccountTypeEnum.DECREASE.getValue(), superAccountPo.getId(), superAgencyId, 1 , orderId));
+					}
+//					charge = getChargeByDTO(chargeDTO,chargeParams,purchasePo);
+//					if(charge!= null){
+//						orderResultDetail = charge.getTipMsg();
+//					}
+					superApPo.setRateDiscountId(cd.getId());
+					superApPo.setBillType(cd.getBillType());
+					superApPo.setOrderState(orderResult);
+					agencyPurchaseDao.update(superApPo);
+					logger.config("通道暂停后，再次提交");
+				}
+			}
+			AgencyPurchasePo apPo = agencyPurchaseDao.get(new WherePrams("agency_id", "=", agencyId).and("purchase_id", "=", orderId));
+			 apPo.setRateDiscountId(ratePo.getId());
+			 apPo.setBillType(billType);
+			 int aapUpdRes = agencyPurchaseDao.update(apPo);
+			 
+			 
+			
+			
+			ExchangePlatformPo epPo = channelChannelDao.getEpByChannelId(ratePo.getChannelId());
+			String scopeCityCode = PurchaseUtil.getScopeCityByCarrier(chargeTelDetail).get("scopeCityCode").toString();
+			ProductCodePo pc = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, epPo.getId(), purchasePo.getPgId()));
+//			if(!channelPo.getChannelState() == ChannelStateEnum.CLOSE.getValue()){
+			BaseInterface bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(pc.getProductCode(),orderId,purchasePo.getChargeTel(),cd.getServiceType(),epPo));
+			ChargeDTO chargeDTO = bi.charge();
+			String orderIdApi = chargeDTO.getChargeOrder().getOrderIdApi();
+			logger.config("上游返回的订单号："+ orderIdApi);//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
+			purchasePo.setOrderIdApi(orderIdApi);
+			purchaseDAO.update(purchasePo);
+		}//费率存在
+		else{
+			return "error";
+		}
+		return "success";
+	}
+	
+//	@Override
+//	public void purchaseByRate(Long rateId, Integer agencyId,
+//			String fromAgencyName) {
+//		// TODO Auto-generated method stub
+//		
+//	}
 	
 	/**
 	 * @description: 根据上游返回的状态结果更新订单表信息
@@ -899,6 +1003,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 		int operatorType = OperatorTypeEnum.getValueByDesc(carrier.substring(carrier.length()-2,carrier.length()-2));
 		objMap.put("operatorType", operatorType);
 		objMap.put("cnelId", ccpp.getChannelId());
+		if(ServiceTypeEnum.NATION_WIDE.getValue() != ccpp.getServiceType()){
+			objMap.put("scopeCityCode", ccpp.getScopeCityCode());
+		}
 		objMap.put("serviceType", ccpp.getServiceType());
 		List<OperatorPgDataPo> pgList = operatorPgDao.getPgByChanel(objMap);
 //		for (OperatorPgDataPo operatorPgDataPo : pgList) {
@@ -906,6 +1013,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 //		}
 		return pgList;
 	}
+
+	
+
+	
 
 	
 

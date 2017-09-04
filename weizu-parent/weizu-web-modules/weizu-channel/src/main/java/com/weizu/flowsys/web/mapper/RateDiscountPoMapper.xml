@@ -5,6 +5,7 @@
 <sql id="t_cDiscount">channel_discount</sql>
    <!--  <sql id="t_aac_join">aac_join_rd</sql> -->
   <sql id="t_active">agency_active_rate</sql> 
+  <sql id="t_cnel">channel_channel</sql> 
   
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.activity.pojo.RateDiscountPo" >
     <id column="id" property="id" jdbcType="BIGINT" />
@@ -78,6 +79,8 @@
   	ON active.rate_discount_id=rate.id
   	INNER JOIN <include refid="t_cDiscount"></include> cd
  	on rate.channel_discount_id=cd.id
+  	INNER JOIN <include refid="t_cnel"></include> cnel
+ 	on cnel.id=cd.channel_id
  	<where>
  		<include refid="tripple_table_sql"></include>
  	</where>
@@ -91,6 +94,8 @@
   	ON active.rate_discount_id=rate.id
   	INNER JOIN <include refid="t_cDiscount"></include> cd
  	on rate.channel_discount_id=cd.id
+ 	INNER JOIN <include refid="t_cnel"></include> cnel
+ 	on cnel.id=cd.channel_id
  	<where>
  		<include refid="tripple_table_sql"></include>
  	</where>
@@ -117,6 +122,12 @@
  	</if>
  	<if test="serviceType != null">
  		AND cd.service_type = #{serviceType}
+ 	</if>
+ 	<if test="channelUseState != null">
+ 		AND cnel.channel_use_state = #{channelUseState}
+ 	</if>
+ 	<if test="channelState != null">
+ 		AND cnel.channel_state = #{channelState}
  	</if>
   </sql>
   <!-- 费率配置列表 -->

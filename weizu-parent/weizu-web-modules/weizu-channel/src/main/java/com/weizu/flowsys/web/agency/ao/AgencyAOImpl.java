@@ -97,6 +97,7 @@ public class AgencyAOImpl implements AgencyAO {
 				agencyBackward.getAgencyTel(), agencyBackward.getUserEmail(), 
 				agencyBackward.getAgencyIp(), 0.0d, 0.0d, agencyBackward.getCreateTime(), 
 				agencyBackward.getVerifyCode());
+		agencyVO.setCallBackIp(agencyBackward.getCallBackIp());
 		if(agencyBackward.getRootAgencyId() != 0){
 			String qq = agencyVODao.get(agencyBackward.getRootAgencyId()).getOtherContact();//富代理商的qq
 			agencyVO.setOtherContact(qq);

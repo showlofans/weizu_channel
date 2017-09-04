@@ -89,7 +89,7 @@
 					<!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
 					<!-- <th width="80">流量包Id</th> -->
 					<th width="100">所属代理商</th>
-					<th width="130">订单号</th>
+					<th width="150">订单号</th>
 					<th width="120">手机号</th>
 					<th width="80">流量大小</th>
 					<th width="70">面值</th>

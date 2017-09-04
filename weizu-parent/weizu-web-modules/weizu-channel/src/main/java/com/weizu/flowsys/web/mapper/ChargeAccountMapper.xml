@@ -14,6 +14,7 @@
 	    <result column="remittance_bank_account" jdbcType="VARCHAR" property="remittanceBankAccount" />
 	    <result column="account_credit" jdbcType="DOUBLE" property="accountCredit" />
 	    <result column="agency_id" jdbcType="INTEGER" property="agencyId" />
+	    <result column="agency_name" jdbcType="VARCHAR" property="agencyName" />
 	    <result column="create_time" jdbcType="INTEGER" property="createTime" />
 	 </resultMap>
 	 <sql id="Base_Column_List">
@@ -91,6 +92,4 @@
 		</if>
 	</where>
   </select>
-  
-	
 </mapper>

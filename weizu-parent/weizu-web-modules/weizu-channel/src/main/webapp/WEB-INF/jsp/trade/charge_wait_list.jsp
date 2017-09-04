@@ -28,7 +28,14 @@
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
+<style type="text/css">
+/* .Hui-iconfont:hover {
+	font-size: 25px
+} */
+	
+</style>
 <title>充值列表</title>
+
 </head>
 <body>
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 订单管理 <span class="c-gray en">&gt;</span> 订单列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
@@ -89,7 +96,7 @@
 					<!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
 					<!-- <th width="80">流量包Id</th> -->
 					<th width="100">所属代理商</th>
-					<th width="130">订单号</th>
+					<th width="150">订单号</th>
 					<th width="100">手机号</th>
 					<th width="80">流量大小</th>
 					<th width="70">面值</th>
@@ -148,6 +155,10 @@
 							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeState(this,'0')" href="javascript:;" title="失败">
 								<input type="hidden" value="${purchase.orderId }" >
 								<i class="Hui-iconfont">&#xe6e5;</i>
+							</a> 
+							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="ajaxCommit(this,'${purchase.orderId }','${purchase.chargeTelDetail }','${purchase.agencyId }','${purchase.billType }')" href="javascript:;" title="提交">
+								<input type="hidden" value="${purchase.orderId }" >
+								<i class="Hui-iconfont">&#xe6dc;</i>
 							</a> 
 						</td>
 						<c:if test="${loginContext.rootAgencyId == 0 }"><td>${purchase.channelName }</td> 
@@ -212,72 +223,76 @@ $(document).ready(function() {
         "fnServerData": retrieveData // 获取数据的处理函数
 	});*/
 }); 
+/**手动提交订单*/
+function ajaxCommit(vart,orderId,chargeTelDetail,agencyId,billType){
+	alert(orderId +'<br>' + chargeTelDetail + "<br>" + agencyId + "<br>" + billType );
+	
+	var msg='确认提交订单吗？';
+	var msgStr = '手动提交';
+	
+	layer.confirm(msg,function(index){
+		$.ajax({
+			type: 'POST',
+			url: '/flowsys/chargePg/ajax_commit_order.do',
+			//dataType: 'json',
+			data: {orderId:orderId, chargeTelDetail:chargeTelDetail, agencyId:agencyId, billTypeRate:billType},
+			async: false,
+			success: function(data){
+				//tag = data;
+				 //alert(data);
+				if(data=="success")
+				{
+					layer.msg('手动提交成功',{icon:1,time:1000});
+					location.reload();
+				}else{
+					layer.msg('手动提交失败',{icon:1,time:1000});
+				}
+			},
+			error:function(data) {
+				console.log(data.msg);
+			},
+		});	
+	});
+}
+
 function changeState(vart,state){
 	var orderId = $(vart).children().eq(0).val();
 	var tag = "";
 	var msg='确认设置成功吗？';
 	var msgStr = '手动成功';
-	if(state == 2){//手动提交（）
-		
-		var msg='确认提交订单吗？';
-		var msgStr = '手动提交';
-		layer.confirm(msg,function(index){
-			$.ajax({
-				type: 'POST',
-				url: '/flowsys/chargePg/update_purchase_state.do',
-				//dataType: 'json',
-				data: {orderId:orderId, orderResult:state,orderResultDetail:msgStr},
-				async: false,
-				success: function(data){
-					//tag = data;
-					 //alert(data);
-					if(data=="success")
-					{
-						layer.msg('手动提交成功',{icon:1,time:1000});
-						location.reload();
-					}else{
-						layer.msg('手动提交失败',{icon:1,time:1000});
-					}
-				},
-				error:function(data) {
-					console.log(data.msg);
-				},
-			});	
-		});
-	}else{//成功和失败
-		if(state==0){
-			var msgStr = '手动失败';
-			msg='确认设置失败吗？';
-		}
-		layer.confirm(msg,function(index){
-			$.ajax({
-				type: 'POST',
-				url: '/flowsys/chargePg/update_purchase_state.do',
-				//dataType: 'json',
-				data: {orderId:orderId, orderResult:state,orderResultDetail:msgStr},
-				async: false,
-				success: function(data){
-					//tag = data;
-					 //alert(data);
-					if(data=="success")
-					{
-						layer.msg('手动修改成功',{icon:1,time:1000});
-						location.reload();
-					}else{
-						layer.msg('手动修改失败',{icon:1,time:1000});
-					}
-				},
-				error:function(data) {
-					console.log(data.msg);
-				},
-			});		
-			/* if(tag == "success"){
-				layer.msg('删除成功', {icon:5,time:1000});
-			}
-			layer.close(index);
-			location.reload(); */
-		});
+	//成功和失败
+	if(state==0){
+		var msgStr = '手动失败';
+		msg='确认设置失败吗？';
 	}
+	layer.confirm(msg,function(index){
+		$.ajax({
+			type: 'POST',
+			url: '/flowsys/chargePg/update_purchase_state.do',
+			//dataType: 'json',
+			data: {orderId:orderId, orderResult:state,orderResultDetail:msgStr},
+			async: false,
+			success: function(data){
+				//tag = data;
+				 //alert(data);
+				if(data=="success")
+				{
+					layer.msg('手动修改成功',{icon:1,time:1000});
+					location.reload();
+				}else{
+					layer.msg('手动修改失败',{icon:1,time:1000});
+				}
+			},
+			error:function(data) {
+				console.log(data.msg);
+			},
+		});		
+		/* if(tag == "success"){
+			layer.msg('删除成功', {icon:5,time:1000});
+		}
+		layer.close(index);
+		location.reload(); */
+	});
 	
 }	
 	

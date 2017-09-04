@@ -85,6 +85,10 @@ public class ChargePgURL extends BaseURL {
 	 * 获得通道充值包体
 	 */
 	public static final String AJAX_CHARGE_PG = "/ajax_charge_pg" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 充值等待异步提交订单
+	 */
+	public static final String AJAX_COMMIT_ORDER = "/ajax_commit_order" + DYNAMIC_WEB_SUFFIX;
 	
 	
 	

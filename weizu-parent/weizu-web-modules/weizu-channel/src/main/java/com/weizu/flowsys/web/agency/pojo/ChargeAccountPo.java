@@ -31,6 +31,8 @@ public class ChargeAccountPo extends Po {
     private String certificationImg;		//认证图片	
     
     private Long createTime;				//账户创建时间
+    
+    private String agencyName;				//所属代理商名称
 
     
     public ChargeAccountPo(Integer agencyId, Double accountBalance,
@@ -41,12 +43,10 @@ public class ChargeAccountPo extends Po {
 		this.accountCredit = accountCredit;
 	}
 
-
 	public ChargeAccountPo() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
 
 	/**
      * @description:实例化加款后的账户
@@ -64,7 +64,15 @@ public class ChargeAccountPo extends Po {
     	return this.accountBalance;
     }
     
-    public Long getCreateTime() {
+    public String getAgencyName() {
+		return agencyName;
+	}
+
+	public void setAgencyName(String agencyName) {
+		this.agencyName = agencyName;
+	}
+
+	public Long getCreateTime() {
 		return createTime;
 	}
 

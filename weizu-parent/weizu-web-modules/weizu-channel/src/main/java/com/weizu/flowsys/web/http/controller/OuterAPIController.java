@@ -81,8 +81,8 @@ public class OuterAPIController {
 		if(billType == null){//默认对私
 			billType = BillTypeEnum.BUSINESS_INDIVIDUAL.getValue();
 		}
-		if(scope == null){//默认全国类型
-			scope = ServiceTypeEnum.NATION_WIDE.getValue();
+		if(scope == null){//默认省漫游类型
+			scope = ServiceTypeEnum.PROVINCE_ROAMING.getValue();
 		}
 		Charge charge = null;
 		try {

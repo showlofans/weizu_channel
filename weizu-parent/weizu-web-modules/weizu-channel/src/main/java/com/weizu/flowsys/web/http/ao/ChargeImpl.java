@@ -162,8 +162,8 @@ public class ChargeImpl implements IChargeFacet {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			String scopeCityCode = PurchaseUtil.getScopeCityByCarrier(chargeTelDetail).get("scopeCityCode").toString();
 			ExchangePlatformPo epPo = exchangePlatformDao.get(channelPo.getEpId());
+			String scopeCityCode = PurchaseUtil.getScopeCityByCarrier(chargeTelDetail).get("scopeCityCode").toString();
 			ProductCodePo pc = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, epPo.getId(), pgData.getId()));
 			Charge charge = null;
 			if(canCharge && pc != null){//可以通过接口充值
@@ -301,7 +301,7 @@ public class ChargeImpl implements IChargeFacet {
 					sqlMap.put("backPo", backPo);
 					String chargeTelDetail = resMap.get("chargeTelDetail").toString();
 					//折扣是忽略包体大小的
-					RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(chargeParams.getScope(), chargeTelDetail, backPo.getId(), billType);
+					RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(chargeParams.getScope(), chargeTelDetail, backPo.getId(), billType,false);
 					if(ratePo == null){
 						chargeEnum = ChargeStatusEnum.SCOPE_RATE_UNDEFINED;
 						charge = new Charge(chargeEnum.getValue(),chargeEnum.getDesc(), null);

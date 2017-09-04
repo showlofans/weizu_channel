@@ -3,6 +3,7 @@ package com.weizu.flowsys.web.trade.ao;
 import java.util.List;
 import java.util.Map;
 
+
 //import org.weizu.api.facet.orderState.PageOrder;
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
@@ -102,5 +103,25 @@ public interface PurchaseAO {
 	 * @createTime:2017年8月29日 上午9:15:57
 	 */
 	List<OperatorPgDataPo> ajaxChargePg(ChargeChannelParamsPo ccpp);
+	
+	/**
+	 * @description: 通过费率充值 
+	 * @param rateId
+	 * @param agencyId
+	 * @param fromAgencyName
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月4日 上午9:51:28
+	 */
+//	void purchaseByRate(Long rateId,Integer agencyId,String fromAgencyName);
+	
+	/**
+	 * @description: 充值等待异步提交订单
+	 * @param orderId
+	 * @param agencyId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月4日 上午10:18:03
+	 */
+	String ajaxCommitOrder(Long orderId,Integer agencyId,String chargeTelDetail,Integer billTypeRate);
 	
 }

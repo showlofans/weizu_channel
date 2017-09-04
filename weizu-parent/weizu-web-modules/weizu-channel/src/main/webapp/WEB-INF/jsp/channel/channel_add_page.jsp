@@ -117,7 +117,7 @@
 </head>
 <body>
 <article class="page-container">
-	<form action="/flowsys/channel/channel_add.do" method="post" class="form form-horizontal" id="form-member-add" onsubmit="return changeName()">
+	<form action="" method="" class="form form-horizontal" id="form-channel-add">
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>平台搜索：</label>
 			<div class="formControls col-xs-8 col-sm-9">
@@ -280,8 +280,10 @@
 <script type="text/javascript" src="/view/lib/layer/2.4/layer.js"></script>
 <script type="text/javascript" src="/view/static/h-ui/js/H-ui.min.js"></script> 
 <script type="text/javascript" src="/view/static/h-ui.admin/js/H-ui.admin.js"></script>
-<script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
-<script type="text/javascript" src="/view/iCheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="/view/iCheck/jquery.icheck.min.js"></script>
+<script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
+<script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script> 
 <script type="text/javascript">
 $(function(){
 	$('.skin-minimal input').iCheck({
@@ -315,7 +317,39 @@ $(".radioItem").change(
  	 });
 });
 $(document).ready(function(){
-	
+	$("#form-channel-add").validate({
+    	submitHandler : function(form) {
+    		//var tag = changeName();
+    		//alert(Object.prototype.toString.apply(tag))
+    		
+    		//var tagTrim = $.trim(tag);
+    		//alert(Object.prototype.toString.apply(tagTrim));//String
+    		 //alert(tag);
+    		//alert(!tag);alert(tag==false); 
+    		
+    		if(changeName()){
+    			 $.ajax({
+ 	               type:"post",
+ 	               url:"/flowsys/channel/channel_add.do",
+ 	               data: $('form').serialize(),//表单数据
+ 	               async : false,
+ 	               success:function(d){
+ 	            	   //alert(d);
+ 	                   if(d=="success"){
+ 	                        layer.msg('保存成功！');//保存成功提示
+ 	                       removeIframe();
+ 	                   }
+ 	                   if(d=="error"){
+ 	                       layer.msg('保存异常!');
+ 	                   }
+ 	               },
+    			 "error":function(msg){
+ 		        	alert(msg);
+ 		         }
+ 	           });
+    		}
+    	}
+    });
 	
 	/* if($("input[type='checkbox']").is(':checked')){
 		$("input[type='checkbox']").next().hide();

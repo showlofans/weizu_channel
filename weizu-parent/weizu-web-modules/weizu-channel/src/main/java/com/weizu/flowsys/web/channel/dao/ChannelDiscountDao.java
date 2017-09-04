@@ -44,4 +44,14 @@ public interface ChannelDiscountDao extends Dao<ChannelDiscountPo, Long> {
 	 */
 	List<ChannelDiscountPo> listSimpleChannel(Map<String,Object> paramsMap);
 	
+	/**
+	 * @description: 通过代理商和订单号得到走的通道折扣实体 
+	 * @param purchaseId
+	 * @param agencyId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月4日 下午3:17:33
+	 */
+	ChannelDiscountPo getCDbyAP(Long purchaseId, Integer agencyId);
+	
 }
