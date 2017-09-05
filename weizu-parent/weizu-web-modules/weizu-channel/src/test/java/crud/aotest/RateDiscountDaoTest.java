@@ -1,6 +1,6 @@
 package crud.aotest;
 
-import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -9,12 +9,11 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.aiyi.base.pojo.PageParam;
-import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.AgencyActiveChannelAO;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
+import com.weizu.flowsys.web.activity.pojo.RateDiscountShowDTO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -72,20 +71,24 @@ public class RateDiscountDaoTest {
 //		System.out.println(t);
 //	}
 	
-//	@Test
-//	public void testGetShowRate(){
-//		Map<String,Object>  dtoMap = rateDiscountAO.getShowRate(27);
-//		RateDiscountShowDTO dto = (RateDiscountShowDTO) dtoMap.get("billDTO");
-//		RateDiscountShowDTO dto1 = (RateDiscountShowDTO) dtoMap.get("noDTO");
-//		System.out.println(dto.getBillType());;
-//		System.out.println(dto.getDiscountPo().getDiscount0());;
-//		System.out.println(dto.getDiscountPo().getDiscount1());;
-//		System.out.println(dto.getDiscountPo().getDiscount2());;
-//		System.out.println(dto1.getBillType());;
-//		System.out.println(dto1.getDiscountPo().getDiscount0());;
-//		System.out.println(dto1.getDiscountPo().getDiscount1());;
-//		System.out.println(dto1.getDiscountPo().getDiscount2());;
-//	}
+	@Test
+	public void testGetShowRate(){
+		Map<String,Object>  dtoMap = rateDiscountAO.getShowRate(4);
+		RateDiscountShowDTO dto = (RateDiscountShowDTO) dtoMap.get("billDTO");
+		RateDiscountShowDTO dto1 = (RateDiscountShowDTO) dtoMap.get("noDTO");
+		if(dto != null){
+			System.out.println(dto.getBillType());;
+			System.out.println(dto.getDiscountPo().getDiscount0());;
+			System.out.println(dto.getDiscountPo().getDiscount1());;
+			System.out.println(dto.getDiscountPo().getDiscount2());;
+		}
+		if(dto1 != null){
+			System.out.println(dto1.getBillType());;
+			System.out.println(dto1.getDiscountPo().getDiscount0());;
+			System.out.println(dto1.getDiscountPo().getDiscount1());;
+			System.out.println(dto1.getDiscountPo().getDiscount2());;
+		}
+	}
 //	@Test
 //	public void testAddMyRate(){
 //		RateDiscountPo ratePo = new RateDiscountPo();
@@ -125,7 +128,8 @@ public class RateDiscountDaoTest {
 //	}
 //	@Test
 //	public void testGetRateForCharge(){
-//		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(0, "广东移动", 4, 0, true);
+//		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(1, "广东移动", 4, 0, true);
+//		//{operatorType=0, channelState=0, billTypeRate=0, channelUseState=0, bindState=0, scopeCityCode=19, serviceType=1, agencyId=4}
 //		if(ratePo != null){
 //			
 //			System.out.println("success");

@@ -104,7 +104,10 @@ public class AgencyAOTest {
 //		AgencyBackwardPo agencyPo = agencyVODao.getRootAgencyById(21);
 //		System.out.println(agencyPo.getId()+":"+agencyPo.getUserName());
 //	}
-
-
+//	@Test
+//	public void testGetSecondAgency(){
+//		AgencyBackwardPo abPo = agencyVODao.getSecondAgency(4);
+//		System.out.println(abPo == null);
+//	}
 
 }

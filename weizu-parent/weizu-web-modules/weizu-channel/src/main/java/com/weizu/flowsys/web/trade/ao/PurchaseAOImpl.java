@@ -32,6 +32,7 @@ import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.OrderUril;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
@@ -67,6 +68,7 @@ import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 import com.weizu.flowsys.web.trade.pojo.TotalResult;
 import com.weizu.web.foundation.DateUtil;
+import com.weizu.web.foundation.StringUtil;
 import com.weizu.web.foundation.String.StringHelper;
 import com.weizu.web.foundation.http.HttpRequest;
 
@@ -91,8 +93,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 	private ChannelDiscountDao channelDiscountDao;
 	@Resource
 	private ExchangePlatformAO exchangePlatformAO;
-	@Resource
-	private OperatorPgAO operatorPgAO;
+//	@Resource
+//	private OperatorPgAO operatorPgAO;
 	@Resource
 	private OperatorPgDaoInterface operatorPgDao;
 	@Resource
@@ -186,6 +188,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 			OrderUril ou1 = new OrderUril(1);
 			orderId = ou1.nextId();
 			purchasePo.setOrderId(orderId);//设置订单号
+			purchasePo.setOrderAmount(pcVO.getOrderAmount());
 			purchasePo.setAgencyId(pcVO.getAgencyId());
 			purchasePo.setOrderArriveTime(currentTime);
 			purchasePo.setOrderResult(orderResult);
@@ -480,9 +483,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 				}
 			}//费率存在
 		}
-		return null;
+		return "添加成功";
 	}
 	
+	@Transactional
 	@Override
 	public String ajaxCommitOrder(Long orderId,Integer agencyId,String chargeTelDetail,Integer billTypeRate) {
 		ChannelDiscountPo cd = channelDiscountDao.getCDbyAP(orderId, agencyId);
@@ -496,16 +500,16 @@ public class PurchaseAOImpl implements PurchaseAO {
 			/**账户信息的更新结果*/
 			int recordRes = 0;
 			
-			boolean isSecondAgency = agencyVODao.getSecondAgency(agencyId) == null ;
+			boolean isSecondAgency = agencyVODao.getSecondAgency(agencyId) != null ;
 			/**充值额（）*/
 			Double orderAmount = purchasePo.getOrderAmount();
 			//在二级代理商的情况下才去判断余额
-			boolean ifLackBalance = isSecondAgency && orderAmount > accountPo.getAccountBalance();
+			boolean ifLackBalance = isSecondAgency && orderAmount < accountPo.getAccountBalance();
 			Long currentTime = System.currentTimeMillis();
 			int orderPath = OrderPathEnum.CHARGE_SOCKET.getValue();
 			int orderResult = OrderStateEnum.CHARGING.getValue();
-			if(ifLackBalance){//订单价格大于余额
-				logger.config("余额不足，下单失败");
+			if(!ifLackBalance){//订单价格大于余额
+				logger.config("余额不足或者不是接口用户，下单失败");
 				return "余额不足，下单失败";
 //			resultMap.put("referURL", "/flowsys/chargePg/purchase_list.do?orderResult=2");
 			}else{
@@ -551,18 +555,18 @@ public class PurchaseAOImpl implements PurchaseAO {
 					superApPo.setRateDiscountId(cd.getId());
 					superApPo.setBillType(cd.getBillType());
 					superApPo.setOrderState(orderResult);
+					superApPo.setOrderStateDetail(OrderStateEnum.CHARGING.getDesc());
 					agencyPurchaseDao.update(superApPo);
 					logger.config("通道暂停后，再次提交");
 				}
 			}
-			AgencyPurchasePo apPo = agencyPurchaseDao.get(new WherePrams("agency_id", "=", agencyId).and("purchase_id", "=", orderId));
+//			AgencyPurchasePo apPo = agencyPurchaseDao.get(new WherePrams("agency_id", "=", agencyId).and("purchase_id", "=", orderId));
+			AgencyPurchasePo apPo = new AgencyPurchasePo();
 			 apPo.setRateDiscountId(ratePo.getId());
 			 apPo.setBillType(billType);
-			 int aapUpdRes = agencyPurchaseDao.update(apPo);
+//			 int aapUpdRes = agencyPurchaseDao.update(apPo);
+			 int aapUpdRes = agencyPurchaseDao.updateLocal(apPo, new WherePrams("agency_id", "=", agencyId).and("purchase_id", "=", orderId));
 			 
-			 
-			
-			
 			ExchangePlatformPo epPo = channelChannelDao.getEpByChannelId(ratePo.getChannelId());
 			String scopeCityCode = PurchaseUtil.getScopeCityByCarrier(chargeTelDetail).get("scopeCityCode").toString();
 			ProductCodePo pc = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, epPo.getId(), purchasePo.getPgId()));
@@ -572,7 +576,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 			String orderIdApi = chargeDTO.getChargeOrder().getOrderIdApi();
 			logger.config("上游返回的订单号："+ orderIdApi);//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
 			purchasePo.setOrderIdApi(orderIdApi);
-			purchaseDAO.update(purchasePo);
+			purchasePo.setOrderArriveTime(currentTime);
+			int upResPur = purchaseDAO.updateLocal(purchasePo,new WherePrams("order_id", "=", orderId));
 		}//费率存在
 		else{
 			return "error";
@@ -600,7 +605,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 			purchase.setOrderIdApi(chargeDTO.getChargeOrder().getOrderIdApi());
 			purchase.setOrderResult(OrderStateEnum.CHARGING.getValue());
 			purchase.setOrderResultDetail(OrderStateEnum.CHARGING.getDesc());
-			return purchaseDAO.update(purchase);
+			return purchaseDAO.updateLocal(purchase, new WherePrams("order_id", "=", orderId));
 		}
 		return 0;
 	}
@@ -1000,17 +1005,17 @@ public class PurchaseAOImpl implements PurchaseAO {
 	public List<OperatorPgDataPo> ajaxChargePg(ChargeChannelParamsPo ccpp) {
 		Map<String, Object> objMap = new HashMap<String, Object>();
 		String carrier = ccpp.getCarrier();
-		int operatorType = OperatorTypeEnum.getValueByDesc(carrier.substring(carrier.length()-2,carrier.length()-2));
+		int operatorType = OperatorTypeEnum.getValueByDesc(carrier.substring(carrier.length()-2));
 		objMap.put("operatorType", operatorType);
 		objMap.put("cnelId", ccpp.getChannelId());
 		if(ServiceTypeEnum.NATION_WIDE.getValue() != ccpp.getServiceType()){
-			objMap.put("scopeCityCode", ccpp.getScopeCityCode());
+			Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(carrier);
+			if(scopeMap.get("scopeCityCode") != null){
+				objMap.put("scopeCityCode", scopeMap.get("scopeCityCode").toString());
+			}
 		}
 		objMap.put("serviceType", ccpp.getServiceType());
 		List<OperatorPgDataPo> pgList = operatorPgDao.getPgByChanel(objMap);
-//		for (OperatorPgDataPo operatorPgDataPo : pgList) {
-//		//设置包体折扣价格	
-//		}
 		return pgList;
 	}
 

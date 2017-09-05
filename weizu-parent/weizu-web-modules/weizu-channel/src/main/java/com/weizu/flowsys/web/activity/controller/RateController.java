@@ -722,13 +722,13 @@ public class RateController {
 //				RateDiscountPo ratePP = new RateDiscountPo();
 				AgencyActiveRatePo aarp1 = new AgencyActiveRatePo();			//搜索参数
 				if(discountList != null && discountList.size() > 0){
-					if(aarp.getRateDiscountId()==null){
+//					if(aarp.getRateDiscountId()==null){
 						Long rateId = discountList.get(0).getId();//第一个折扣id
 						aarp1.setRateDiscountId(rateId);
-					}else
-					{
-						aarp1.setRateDiscountId(aarp.getRateDiscountId());
-					}
+//					}else
+//					{
+//						aarp1.setRateDiscountId(aarp.getRateDiscountId());
+//					}
 					aarp1.setAgencyName(aarp.getAgencyName());
 					Pagination<AgencyActiveRatePo> pagination = agencyActiveChannelAO.listActiveRate(pageParam, aarp1);
 					resultMap.put("pagination", pagination);

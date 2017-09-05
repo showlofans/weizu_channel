@@ -38,7 +38,7 @@
 
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 订单管理 <span class="c-gray en">&gt;</span> 订单列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 订单管理 <span class="c-gray en">&gt;</span> 订单列表-充值等待 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
 		<form class="form form-horizontal" action="/flowsys/chargePg/purchase_list.do?orderState=3" method="post" id="formD" name="dataListForm">
@@ -245,7 +245,7 @@ function ajaxCommit(vart,orderId,chargeTelDetail,agencyId,billType){
 					layer.msg('手动提交成功',{icon:1,time:1000});
 					location.reload();
 				}else{
-					layer.msg('手动提交失败',{icon:1,time:1000});
+					layer.msg('手动提交失败',{icon:2,time:1000});
 				}
 			},
 			error:function(data) {

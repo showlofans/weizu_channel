@@ -265,6 +265,9 @@
 		<if test="serviceType != null">
 			AND pg.service_type = #{serviceType}
 		</if>
+		<if test="scopeCityCode != null">
+			AND pc.scope_city_code = #{scopeCityCode}
+		</if>
 	</where> 
  </select>
  	

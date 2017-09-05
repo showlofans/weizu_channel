@@ -127,4 +127,8 @@ public class OperatorPgAOImplTest {
 //			}
 //		}
 //	}
+//	@Test
+//	public void testGetPgByChannel(){
+//		operatorPgDao.getPgByChanel(map);
+//	}
 }

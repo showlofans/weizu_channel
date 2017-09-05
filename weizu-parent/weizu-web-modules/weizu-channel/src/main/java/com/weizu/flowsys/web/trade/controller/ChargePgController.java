@@ -142,7 +142,7 @@ public class ChargePgController {
 	 */
 	@ResponseBody
 	@RequestMapping(value=ChargePgURL.PGLIST_FORPURCHASE)
-	public String pgList_forPurchase(HttpServletRequest request, HttpServletResponse response,String operatorName,String serviceType) throws UnsupportedEncodingException{
+	public String pgList_forPurchase(HttpServletRequest request, HttpServletResponse response,String operatorName,Integer serviceType) throws UnsupportedEncodingException{
 //		OperatorPgDataPo oppo = new OperatorPgDataPo();
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 //		for (OperatorTypeEnum typeEnum : OperatorTypeEnum.values()) {
@@ -165,22 +165,28 @@ public class ChargePgController {
 //					int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
 //					oppo.setOperatorType(opType);
 //					oppo.setOperatorName(carrier);
-					int sType = Integer.parseInt(serviceType.trim());
-					RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(sType, carrier, contextId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue(),false);//获得对私的充值费率
+//					if(StringHelper.isEmpty(serviceType)){
+//						
+//					}
+//					int sType = Integer.parseInt(serviceType.trim());
+					RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(serviceType, carrier, contextId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue(),false);//获得对私的充值费率
 //					oppo.setServiceType(sType);
-					
-					List<OperatorPgDataPo> chargeList = purchaseAO.ajaxChargePg(new ChargeChannelParamsPo(carrier, sType, ratePo.getChannelId()));
-					Double activeDiscount = ratePo.getActiveDiscount();
-					Long channelId = ratePo.getChannelId();
-					for (OperatorPgDataPo operatorPgDataPo : chargeList) {//初始化第一个折扣，折扣id和包体价格
-						operatorPgDataPo.setRteId(ratePo.getId());
-						operatorPgDataPo.setRteDis(activeDiscount);
-						operatorPgDataPo.setChannelId(channelId);
-						operatorPgDataPo.setPgDiscountPrice(NumberTool.mul(activeDiscount, operatorPgDataPo.getPgPrice()));
+					if(ratePo != null){
+						List<OperatorPgDataPo> chargeList = purchaseAO.ajaxChargePg(new ChargeChannelParamsPo(carrier, serviceType, ratePo.getChannelId()));
+						Double activeDiscount = ratePo.getActiveDiscount();
+						Long channelId = ratePo.getChannelId();
+						for (OperatorPgDataPo operatorPgDataPo : chargeList) {//初始化第一个折扣，折扣id和包体价格
+							operatorPgDataPo.setRteId(ratePo.getId());
+							operatorPgDataPo.setRteDis(activeDiscount);
+							operatorPgDataPo.setChannelId(channelId);
+							operatorPgDataPo.setPgDiscountPrice(NumberTool.mul(activeDiscount, operatorPgDataPo.getPgPrice()));
+						}
+						String listJsonStr = JSON.toJSONString(chargeList);
+						System.out.println(listJsonStr);
+						return listJsonStr;
+					}else{
+						System.out.println("没有找到该地区费率");
 					}
-					String listJsonStr = JSON.toJSONString(chargeList);
-					System.out.println(listJsonStr);
-					return listJsonStr;
 //					list = operatorPgAO.pgList_forPurchase(oppo,ScopeCityEnum.getValueByDesc(scopeCityName), contextId);
 				}
 			}

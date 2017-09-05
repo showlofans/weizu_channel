@@ -366,13 +366,22 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		Map<String,Object> dtoMap = new HashMap<String, Object>();
 		params.put("agencyId", agencyId);
 		
-		params.put("billType", BillTypeEnum.CORPORATE_BUSINESS.getValue());
-		List<RateDiscountPo> rateListBill = rateDiscountDao.getShowRate(params);
-		initRateList(rateListBill, dtoMap, BillTypeEnum.CORPORATE_BUSINESS.getValue());
+		BillTypeEnum[] bTypeEnums = BillTypeEnum.values();	
+		ServiceTypeEnum [] sTypeEnums = ServiceTypeEnum.values();
+		for (ServiceTypeEnum serviceTypeEnum : sTypeEnums) {
+			for (BillTypeEnum billTypeEnum : bTypeEnums) {
+				params.put("billType", billTypeEnum.getValue());
+				params.put("serviceType", serviceTypeEnum.getValue());
+				params.put("bindState", BindStateEnum.BIND.getValue());
+				params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+				List<RateDiscountPo> rateListBill = rateDiscountDao.getShowRate(params);
+				initRateList(rateListBill, dtoMap, billTypeEnum.getValue(), serviceTypeEnum.getValue());
+			}
+		}
 		
-		params.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-		List<RateDiscountPo> rateList = rateDiscountDao.getShowRate(params);
-		initRateList(rateList, dtoMap, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+//		params.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+//		List<RateDiscountPo> rateList = rateDiscountDao.getShowRate(params);
+//		initRateList(rateList, dtoMap, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 		
 //		if(rateListBill != null && rateListBill.size()>0){//有对公的费率
 ////			DiscountPo dpo = null;
@@ -441,9 +450,9 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年9月1日 下午4:41:56
 	 */
-	private void initRateList(List<RateDiscountPo> rateList,Map<String,Object> dtoMap,int billType) {
+	private void initRateList(List<RateDiscountPo> rateList,Map<String,Object> dtoMap,int billType,int serviceType) {
 //		List<RateDiscountShowDTO> dtoList = new ArrayList<RateDiscountShowDTO>();
-		
+		String key = "";
 		if(rateList != null && rateList.size()>0){//有对公的费率
 //			DiscountPo dpo = null;
 			StringBuffer discount0 = new StringBuffer("{");
@@ -468,11 +477,20 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 			String dis1Str = discount1.append("}").toString();
 			String dis2Str = discount2.append("}").toString();
 			DiscountPo dpo = new DiscountPo(dis0Str, dis1Str, dis2Str);
-			if(billType == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()){
-				dtoMap.put("noDTO", new RateDiscountShowDTO(dpo, 1));
+			Map<String,Object> bMap = new HashMap<String, Object>();
+			if(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue() == billType){
+				bMap.put("noDTO", new RateDiscountShowDTO(dpo, 1));
 			}else{
-				dtoMap.put("billDTO", new RateDiscountShowDTO(dpo, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
+				bMap.put("billDTO", new RateDiscountShowDTO(dpo, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
 			}
+			if(ServiceTypeEnum.NATION_WIDE.getValue() == serviceType){
+				key = "nationWide";
+			}else if(ServiceTypeEnum.PROVINCE_ROAMING.getValue() == serviceType){
+				key = "provinceRoaming";
+			}else{
+				key = "province";
+			}
+			dtoMap.put(key, bMap);
 		}
 //		if(rateList != null && rateList.size()>0){
 ////			DiscountPo dpo = null;

@@ -93,17 +93,50 @@
 		</tbody>
 	</table> -->
 	<%-- <c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vst"></c:forEach> --%>
-	<h3>带费率：</h3>
-	<c:if test="${not empty resultMap.map.billDTO }">
-		移动：${resultMap.map.billDTO.discountPo.discount0 } <br>
-		联通：${resultMap.map.billDTO.discountPo.discount1 }<br>
-		电信：${resultMap.map.billDTO.discountPo.discount2 }<br>
+	<c:if test="${not empty resultMap.map.nationWide }">
+		<h3>全国</h3>
+		<c:if test="${not empty resultMap.map.nationWide.billDTO }">
+		<h4>带费率：</h4>
+			移动：${resultMap.map.nationWide.billDTO.discountPo.discount0 } <br>
+			联通：${resultMap.map.nationWide.billDTO.discountPo.discount1 }<br>
+			电信：${resultMap.map.nationWide.billDTO.discountPo.discount2 }<br>
+		</c:if>
+		<c:if test="${not empty resultMap.map.nationWide.noDTO }">
+		<h4>不带费率：</h4>
+			移动：${resultMap.map.nationWide.noDTO.discountPo.discount0 } <br>
+			联通：${resultMap.map.nationWide.noDTO.discountPo.discount1 }<br>
+			电信：${resultMap.map.nationWide.noDTO.discountPo.discount2 }<br>
+		</c:if>
 	</c:if>
-	<h3>不带费率：</h3>
-	<c:if test="${not empty resultMap.map.noDTO }">
-		移动：${resultMap.map.noDTO.discountPo.discount0 } <br>
-		联通：${resultMap.map.noDTO.discountPo.discount1 }<br>
-		电信：${resultMap.map.noDTO.discountPo.discount2 }<br>
+	<c:if test="${not empty resultMap.map.provinceRoaming }">
+		<h3>省漫游</h3>
+		<c:if test="${not empty resultMap.map.provinceRoaming.billDTO }">
+		<h4>带费率：</h4>
+			移动：${resultMap.map.provinceRoaming.billDTO.discountPo.discount0 } <br>
+			联通：${resultMap.map.provinceRoaming.billDTO.discountPo.discount1 }<br>
+			电信：${resultMap.map.provinceRoaming.billDTO.discountPo.discount2 }<br>
+		</c:if>
+		<c:if test="${not empty resultMap.map.provinceRoaming.noDTO }">
+		<h4>不带费率：</h4>
+			移动：${resultMap.map.provinceRoaming.noDTO.discountPo.discount0 } <br>
+			联通：${resultMap.map.provinceRoaming.noDTO.discountPo.discount1 }<br>
+			电信：${resultMap.map.provinceRoaming.noDTO.discountPo.discount2 }<br>
+		</c:if>
+	</c:if>
+	<c:if test="${not empty resultMap.map.province }">
+		<h3>省内</h3>
+		<c:if test="${not empty resultMap.map.province.billDTO }">
+			<h4>带费率：</h4>
+			移动：${resultMap.map.province.billDTO.discountPo.discount0 } <br>
+			联通：${resultMap.map.province.billDTO.discountPo.discount1 }<br>
+			电信：${resultMap.map.province.billDTO.discountPo.discount2 }<br>
+		</c:if>
+		<c:if test="${not empty resultMap.map.province.noDTO }">
+			<h4>不带费率：</h4>
+			移动：${resultMap.map.province.noDTO.discountPo.discount0 } <br>
+			联通：${resultMap.map.province.noDTO.discountPo.discount1 }<br>
+			电信：${resultMap.map.province.noDTO.discountPo.discount2 }<br>
+		</c:if>
 	</c:if>
 	<!-- <table class="table table-border table-bordered table-bg mt-20">
 		<thead>
