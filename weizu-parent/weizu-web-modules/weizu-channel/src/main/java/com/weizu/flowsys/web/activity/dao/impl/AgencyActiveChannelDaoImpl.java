@@ -10,6 +10,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
+import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.web.activity.dao.AgencyActiveChannelDao;
 import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
@@ -72,6 +73,11 @@ public class AgencyActiveChannelDaoImpl extends DaoImpl<AgencyActiveRatePo, Long
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("id", activeId);
 		paramsMap.put("bindState", bindState);
+		if(BindStateEnum.UNBIND.getValue() == bindState){
+			paramsMap.put("activeTime", 0);//解绑设置活动时间为0
+		}else{
+			paramsMap.put("activeTime", System.currentTimeMillis());//解绑设置活动时间为0
+		}
 		return sqlSessionTemplate.update("updateBindState", paramsMap);
 	}
 
@@ -113,6 +119,12 @@ public class AgencyActiveChannelDaoImpl extends DaoImpl<AgencyActiveRatePo, Long
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("rateDiscountId", rateDiscountId);
 		paramsMap.put("bindState", bindState);
+		paramsMap.put("agencyIds", agencyIds);
+		if(BindStateEnum.UNBIND.getValue() == bindState){
+			paramsMap.put("activeTime", 0);//解绑设置活动时间为0
+		}else{
+			paramsMap.put("activeTime", System.currentTimeMillis());//解绑设置活动时间为0
+		}
 		paramsMap.put("agencyIds", agencyIds);
 		return sqlSessionTemplate.update("updateBindState", paramsMap);
 	}

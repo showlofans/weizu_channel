@@ -47,17 +47,6 @@
 			</c:if>
 				<span>一般账户</span>
 			</div>
-			<!-- <a href="tencent://message/?uin=1575326411&Site=qq&Menu=yes">
-			   <i class="Hui-iconfont">&#xe67b;</i> <img src="/view/logo.psd"/>
-			</a> -->
-			<!-- <div style="position:absolute; top:110px; right:220px; z-index:2;">
-	        <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2860144252&site=在线客服&menu=yes"><img src="images/qq_01.png" alt="点击这里给我发消息" title="点击这里给我发消息"></a>
-	            <a target='_blank' href='tencent://message/?uin=1439990843&amp;Site=在线客服&Menu=yes' title='在线即时交谈'><img src="images/qq_01.png"/></a>
-	        </div>
-	        <div style="position:absolute; top:230px; right:220px; z-index:2;">
-	            <a target='_blank' href='http://wpa.qq.com/msgrd?V=1&Uin=1575326411&Site=在线咨询&Menu=yes' title='在线即时交谈'><img src="images/qq_02.png"/></a>
-	        </div> -->
-	        <!-- <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=1575326411&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:1575326411:52" alt="点击这里给我发消息" title="点击这里给我发消息"/></a> -->
 			<c:if test="${chargeAccount1 != null }">
 			<form class="form form-horizontal" id="form-account1-edit">
 				<div class="tabCon">
@@ -201,12 +190,12 @@ $().ready(function() {
 
 
 $(function(){
-	$('.skin-minimal input').iCheck({
+	/* $('.skin-minimal input').iCheck({
 		checkboxClass: 'icheckbox-blue',
 		radioClass: 'iradio-blue',
 		increaseArea: '20%'
 	});
-	$.Huitab("#tab-system .tabBar span","#tab-system .tabCon","current","click","0");
+	$.Huitab("#tab-system .tabBar span","#tab-system .tabCon","current","click","0"); */
 });
 </script>
 <!--/请在上方写此页面业务相关的脚本-->

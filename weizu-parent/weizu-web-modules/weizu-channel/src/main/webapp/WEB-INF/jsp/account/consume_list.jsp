@@ -96,12 +96,6 @@
 						</c:forEach></td>
 						<td>${consumeRec.remittanceTimeStr }</td>
 						<%-- <fmt:formatDate value="${chargeRec.remittanceTime }" pattern="yyyy-MM-dd HH:mm:ss"/> ${chargeRec.remittanceTime }</td> --%>
-						<%-- <td class="td-status"><c:forEach items="${resultMap.pgInEnums }" var="pgIn" varStatus="vs1">
-						
-						<c:if test="${pg.pgInService == pgIn.value }"> ${pgIn.desc }</c:if>
-						</c:forEach></td> --%>
-					<!-- 	<td class="td-status"><span class="label label-success radius">已发布</span></td> -->
-						
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -118,7 +112,6 @@
 	</div>
 <!--_footer 作为公共模版分离出去-->
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
-<script type="text/javascript" src="/view/lib/layer/2.4/layer.js"></script>
 <script type="text/javascript" src="/view/static/h-ui/js/H-ui.min.js"></script> 
 <script type="text/javascript" src="/view/static/h-ui.admin/js/H-ui.admin.js"></script>
 <!--/_footer 作为公共模版分离出去-->
@@ -126,14 +119,15 @@
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript" src="/view/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
 <!-- jQuery -->
-<script type="text/javascript" charset="utf8" src="/view/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="/view/lib/laypage/1.2/laypage.js"></script>
+<!-- <script type="text/javascript" src="/view/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="/view/lib/laypage/1.2/laypage.js"></script> -->
+<!-- <script type="text/javascript" charset="utf8" src="/view/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> -->
 <script type="text/javascript">
 function getConsume(){
 	$('form').submit();
 }
 /*资讯-删除*/
-function article_del(obj,id){
+/* function article_del(obj,id){
 	layer.confirm('确认要删除吗？',function(index){
 		$.ajax({
 			type: 'POST',
@@ -148,7 +142,7 @@ function article_del(obj,id){
 			},
 		});		
 	});
-}
+} */
 
 </script> 
 </body>

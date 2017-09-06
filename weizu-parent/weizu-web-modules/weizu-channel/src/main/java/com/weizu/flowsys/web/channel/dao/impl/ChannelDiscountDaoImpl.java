@@ -1,5 +1,6 @@
 package com.weizu.flowsys.web.channel.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,6 +62,14 @@ public class ChannelDiscountDaoImpl extends DaoImpl<ChannelDiscountPo, Long> imp
 	public List<ChannelDiscountPo> listSimpleChannel(Map<String,Object> paramsMap) {
 		
 		return sqlSessionTemplate.selectList("listSimpleChannel",paramsMap);
+	}
+
+	@Override
+	public ChannelDiscountPo getCDbyAP(Long purchaseId, Integer agencyId) {
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("purchaseId", purchaseId);
+		paramsMap.put("agencyId", agencyId);
+		return sqlSessionTemplate.selectOne("getCDbyAP", paramsMap);
 	}
 
 }

@@ -123,7 +123,7 @@
   
   
   <!--  通过通道ID找到所属平台 -->
-  <select id="getEpByChannelId" parameterType="java.lang.Integer" resultMap="com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface.BaseResultMap">
+  <select id="getEpByChannelId" parameterType="java.lang.Long" resultMap="com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface.BaseResultMap">
   	SELECT ep.* 
   	FROM <include refid="t_ep"></include> ep 
   	WHERE ep.id = (SELECT ep_id from <include refid="t_channel"></include>

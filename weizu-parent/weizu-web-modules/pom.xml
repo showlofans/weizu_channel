@@ -10,8 +10,8 @@
   <packaging>pom</packaging>
   <modules>
     <module>weizu-channel</module>
-    <module>weizu-web-forward</module>
-    <module>weizu-web-domain</module>
+    <!-- <module>weizu-web-forward</module>
+    <module>weizu-web-domain</module> -->
   </modules>
   
   <dependencies>

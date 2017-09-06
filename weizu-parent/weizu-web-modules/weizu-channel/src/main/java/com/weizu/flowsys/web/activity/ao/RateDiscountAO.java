@@ -125,7 +125,7 @@ public interface RateDiscountAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年8月2日 上午11:54:07
 	 */
-	RateDiscountPo getRateForCharge(int serviceType,String carrier, int loginAgencyId,int billTypeRate);
+	RateDiscountPo getRateForCharge(int serviceType,String carrier, int loginAgencyId,int billTypeRate, Boolean judgeChannelState);
 	
 	/**
 	 * @description:

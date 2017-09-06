@@ -203,7 +203,10 @@
   	update <include refid="t_active"></include>
   	<set>
   		<if test="bindState != null">
-  			bind_state = #{bindState}
+  			bind_state = #{bindState},
+  		</if>
+  		<if test="activeTime != null">
+  			active_time = #{activeTime}
   		</if>
   	</set>
   	<where>

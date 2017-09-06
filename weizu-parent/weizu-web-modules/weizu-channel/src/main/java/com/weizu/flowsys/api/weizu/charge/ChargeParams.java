@@ -29,6 +29,13 @@ public class ChargeParams {
 		this.billType = billType;
 		this.orderIdFrom = orderIdFrom;
 	}
+	
+	public ChargeParams(String number, Integer flowsize, Integer billType) {
+		super();
+		this.number = number;
+		this.flowsize = flowsize;
+		this.billType = billType;
+	}
 
 	public String getOrderIdFrom() {
 		return orderIdFrom;

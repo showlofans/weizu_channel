@@ -1,7 +1,7 @@
 package com.weizu.flowsys.api.singleton;
 
 /**
- * @description: 接口订单状态统一返回实体
+ * @description: 接口订单状态封装实体
  * @projectName:weizu-channel
  * @className:OrderDTO.java
  * @author:微族通道代码设计人 宁强

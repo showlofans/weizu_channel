@@ -30,6 +30,8 @@ public class AgencyBackwardVO extends Po {
 	private String userEmail;
 
 	private String agencyIp;
+	
+	private String callBackIp;
 
 	@TempField
 	private Double accountBalance; // 账户余额
@@ -82,6 +84,13 @@ public class AgencyBackwardVO extends Po {
 		this.verifyCode = verifyCode;
 	}
 	
+	public String getCallBackIp() {
+		return callBackIp;
+	}
+
+	public void setCallBackIp(String callBackIp) {
+		this.callBackIp = callBackIp;
+	}
 	public String getOtherContact() {
 		return otherContact;
 	}

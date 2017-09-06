@@ -23,11 +23,11 @@ public class ExchangePlatformPo extends Po {
 
     private String productListIp;		//产品列表地址
 
-    private String pgdataCheckIp;		//流量查询地址
+    private String pgdataCheckIp;		//订单状态查询地址
 
     private String epBalanceIp;			//余额查询地址
     
-    private String epOrderStateIp;			//订单状态查询地址
+//    private String epOrderStateIp;			//订单状态查询地址
 
     private String epUserName;			//账号
 
@@ -43,18 +43,28 @@ public class ExchangePlatformPo extends Po {
     
     private Long lastAccess;			//最后更新时间
     
+    private Integer epCallBack;			//是否支持回调（1-不支持，0-支持）
+    
     private String epOtherParams;		//平台其他参数
     
     @TempField
     private String lastAccessStr;		//页面展示时间
     
-    public String getEpOrderStateIp() {
-		return epOrderStateIp;
+    public Integer getEpCallBack() {
+		return epCallBack;
 	}
 
-	public void setEpOrderStateIp(String epOrderStateIp) {
-		this.epOrderStateIp = epOrderStateIp;
+	public void setEpCallBack(Integer epCallBack) {
+		this.epCallBack = epCallBack;
 	}
+
+//	public String getEpOrderStateIp() {
+//		return epOrderStateIp;
+//	}
+//
+//	public void setEpOrderStateIp(String epOrderStateIp) {
+//		this.epOrderStateIp = epOrderStateIp;
+//	}
 
 	public String getEpOtherParams() {
 		return epOtherParams;

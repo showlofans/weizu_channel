@@ -22,6 +22,7 @@ public class ChargeDTO {
 		this.tipMsg = tipMsg;
 		this.chargeOrder = chargeOrder;
 	}
+	
 	public int getTipCode() {
 		return tipCode;
 	}

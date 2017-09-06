@@ -12,7 +12,7 @@
     <result column="product_list_ip" jdbcType="VARCHAR" property="productListIp" />
     <result column="pgdata_check_ip" jdbcType="VARCHAR" property="pgdataCheckIp" />
     <result column="ep_balance_ip" jdbcType="VARCHAR" property="epBalanceIp" />
-    <result column="ep_order_state_ip" jdbcType="VARCHAR" property="epOrderStateIp" />
+    <!-- <result column="ep_order_state_ip" jdbcType="VARCHAR" property="epOrderStateIp" /> -->
     <result column="ep_user_name" jdbcType="VARCHAR" property="epUserName" />
     <result column="ep_user_pass" jdbcType="VARCHAR" property="epUserPass" />
     <result column="ep_balance" jdbcType="DOUBLE" property="epBalance" />
@@ -20,11 +20,12 @@
     <result column="ep_ip" jdbcType="VARCHAR" property="epIp" />
     <result column="ep_eng_id" jdbcType="VARCHAR" property="epEngId" />
     <result column="ep_other_params" jdbcType="VARCHAR" property="epOtherParams" />
+    <result column="ep_call_back" jdbcType="INTEGER" property="epCallBack" />
     <result column="last_access" jdbcType="BIGINT" property="lastAccess" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, ep_name, ep_purchase_ip, product_list_ip, pgdata_check_ip, ep_balance_ip, ep_order_state_ip,
-    ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip, ep_eng_id,ep_other_params, last_access
+    id, ep_name, ep_purchase_ip, product_list_ip, pgdata_check_ip, ep_balance_ip, <!-- ep_order_state_ip, -->
+    ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip, ep_eng_id,ep_other_params, ep_call_back, last_access
   </sql>
   <!-- <sql id="Other_Column_List">
     ep.id, ep.ep_name, ep_purchase_ip, product_list_ip, pgdata_check_ip, ep_balance_ip, 

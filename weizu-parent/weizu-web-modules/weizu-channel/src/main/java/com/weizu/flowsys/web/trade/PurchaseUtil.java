@@ -13,6 +13,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
+import com.weizu.web.foundation.String.StringHelper;
 
 public class PurchaseUtil {
 	
@@ -37,7 +38,7 @@ public class PurchaseUtil {
 		return null;
 	}
 	/**
-	 * @description: 通过手机号查运营商归属地
+	 * @description: 通过手机号查运营商归属地（NOW api）
 	 * @param telphone
 	 * @return
 	 * @author:POP产品研发部 宁强
@@ -69,6 +70,9 @@ public class PurchaseUtil {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		if(StringHelper.isEmpty(res)){
+			return null;
 		}
 		JSONObject jsonObj = JSON.parseObject(res);
         

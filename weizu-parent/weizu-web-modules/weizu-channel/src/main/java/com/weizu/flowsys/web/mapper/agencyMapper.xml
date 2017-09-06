@@ -24,10 +24,11 @@
     <result column="verify_code" property="verifyCode" />
     <result column="user_api_key" property="userApiKey" />
     <result column="create_time" property="createTime" />
+    <result column="call_back_ip" property="callBackIp" />
   </resultMap>
   <sql id="Base_Column_List">
     id, root_agency_id, user_name, user_pass, user_real_name, agency_tel, other_contact, user_email, 
-    agency_ip, rate_id, agency_tag
+    agency_ip, rate_id, agency_tag, call_back_ip
   </sql>
   
 
@@ -60,10 +61,11 @@
     <result column="verify_code" property="verifyCode" />
     <result column="bill_type" property="billType" />
     <result column="cacId" property="accountId" />
+    <result column="call_back_ip" property="callBackIp" />
   </resultMap>
   <sql id="other_Column_List">
     agb.id,agb.agency_tag, root_agency_id, user_name, user_real_name, agency_tel, user_email, 
-    agency_ip, rate_id, account_credit, account_balance, cac.create_time, cac.bill_type,cac.id cacId
+    agency_ip, rate_id, account_credit, account_balance, cac.create_time, cac.bill_type,cac.id cacId,call_back_ip
   </sql>
   <!-- 查询没有绑定的代理商 -->
   <resultMap id="UnbindMap" type="com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO">

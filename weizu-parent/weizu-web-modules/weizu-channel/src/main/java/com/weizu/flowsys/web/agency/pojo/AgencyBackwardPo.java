@@ -37,6 +37,8 @@ public class AgencyBackwardPo extends Po{
     
     private Integer agencyTag;				//代理商类型（0-平台用户，1,-接口用户）
     
+    private String callBackIp;				//代理商绑定的回调地址
+    
     @TempField
     private Double accountCredit;
     @TempField
@@ -72,6 +74,14 @@ public class AgencyBackwardPo extends Po{
 		this.verifyCode = verifyCode;
 	}
 	
+	public String getCallBackIp() {
+		return callBackIp;
+	}
+
+	public void setCallBackIp(String callBackIp) {
+		this.callBackIp = callBackIp;
+	}
+
 	public String getOtherContact() {
 		return otherContact;
 	}

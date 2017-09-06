@@ -28,6 +28,8 @@
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
 <!--/meta 作为公共模版分离出去-->
+
+<title>添加通道</title>
 <style type="text/css">
 	.demo{padding: 1em 0;}
 	a:hover,a:focus{
@@ -110,14 +112,12 @@
 		}
 	}
 </style>
-
-<title>添加通道</title>
-<meta name="keywords" content="H-ui.admin 3.0,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
-<meta name="description" content="H-ui.admin 3.0，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
+<meta name="keywords" content="">
+<meta name="description" content="">
 </head>
 <body>
 <article class="page-container">
-	<form action="/flowsys/channel/channel_add.do" method="post" class="form form-horizontal" id="form-member-add" onsubmit="return changeName()">
+	<form action="" method="" class="form form-horizontal" id="form-channel-add">
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>平台搜索：</label>
 			<div class="formControls col-xs-8 col-sm-9">
@@ -180,11 +180,6 @@
 							</div>
 						</c:otherwise>
 					</c:choose>
-					<%-- <div class="radio-box">
-						<input name="billType" class="radioItem" type="radio" disabled value="${billEnum.value }" <c:if test="${vs.index==0 }">checked</c:if>>
-						${billEnum.desc }
-						<label for="operatorType-${vs.index }"></label>
-					</div> --%>
 				</c:forEach>
 			</div>
 		</div>
@@ -222,7 +217,7 @@
 							<div class="check-box">
 								<input class="cbox" onClick="checkBoxes(this)" type="checkbox" id="scopeCityCode-${vs.index }" value="${scopeCityEnum.value }">
 								${scopeCityEnum.desc }
-								<%-- <label for="operatorType-${vs.index }"></label> --%>
+								<%-- <label for="scopeCityCode-${vs.index }"></label> --%> 
 								<!-- 输入两位折扣数字 -->
 								<input class="disscount" style="display: none; width:50px;" type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
 							</div>
@@ -280,8 +275,10 @@
 <script type="text/javascript" src="/view/lib/layer/2.4/layer.js"></script>
 <script type="text/javascript" src="/view/static/h-ui/js/H-ui.min.js"></script> 
 <script type="text/javascript" src="/view/static/h-ui.admin/js/H-ui.admin.js"></script>
-<script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
-<script type="text/javascript" src="/view/iCheck/jquery.icheck.min.js"></script> 
+<script type="text/javascript" src="/view/iCheck/jquery.icheck.min.js"></script>
+<script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
+<script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script> 
 <script type="text/javascript">
 $(function(){
 	$('.skin-minimal input').iCheck({
@@ -315,24 +312,31 @@ $(".radioItem").change(
  	 });
 });
 $(document).ready(function(){
-	
-	
-	/* if($("input[type='checkbox']").is(':checked')){
-		$("input[type='checkbox']").next().hide();
-	} */
-	/*  $(".cbox").each(function(){
-	    	//alert($(this).prop("checked"));
-	    	 // alert($(this).attr("checked"));
-	    	 $(this).next().hide();
-	})  */
-	//alert("checked");
-	/*  $("[type='checkbox']").each(function(){
-	     
-		   
-	     if($(this).attr("checked"))
-	   {
-	    alert("checked");
-	   } */
+	$("#form-channel-add").validate({
+    	submitHandler : function(form) {
+    		if(changeName()){
+    			 $.ajax({
+ 	               type:"post",
+ 	               url:"/flowsys/channel/channel_add.do",
+ 	               data: $('form').serialize(),//表单数据
+ 	               async : false,
+ 	               success:function(d){
+ 	            	   //alert(d);
+ 	                   if(d=="success"){
+ 	                        layer.msg('保存成功！');//保存成功提示
+ 	                       removeIframe();
+ 	                   }
+ 	                   if(d=="error"){
+ 	                       layer.msg('保存异常!');
+ 	                   }
+ 	               },
+    			 "error":function(msg){
+ 		        	alert(msg);
+ 		         }
+ 	           });
+    		}
+    	}
+    });
 })
 /**表单提交前的验证*/
 function changeName(){
@@ -364,15 +368,6 @@ function changeName(){
 		alert("没有配置地区折扣")	;
 		return false;
 	}
-	/* $(".disscount").each(function(){
-		var i = 0;	
-		alert(i);
-    	if($(this).is(':visible')){
-    		$(this).prev.attr("name", "discountList["+i+"].scopeCityName" );
-    		$(this).prop.attr("name", "discountList["+i+"].channelDiscount" );
-    		i++;
-		}
-	}) */
 }
 
 /**checkBox的点击事件*/

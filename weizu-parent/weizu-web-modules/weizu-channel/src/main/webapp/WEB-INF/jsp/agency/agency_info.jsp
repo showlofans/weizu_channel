@@ -10,7 +10,7 @@
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/skin/default/skin.css" id="skin" />
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/style.css" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>个人信息查看</title>
 </head>
 <body>
 	<form action="" method="" class="form form-horizontal" id="form-article-add">
@@ -22,25 +22,25 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>用户账户：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="${loginContext.userName }" placeholder="" id="userName" name="userName">
+				<input type="text" class="input-text" style="width:200px" value="${loginContext.userName }" placeholder="" id="userName" name="userName">
 			</div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">真实姓名：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="${loginContext.userRealName }" placeholder="" id="userRealname" name="userRealName">
+				<input type="text" class="input-text" style="width:200px" value="${loginContext.userRealName }" placeholder="" id="userRealname" name="userRealName">
 			</div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>联系电话：</label>
 			<div class="formControls col-xs-8 col-sm-9"> 
-				 <input type="text" class="input-text" value="${loginContext.agencyTel }" placeholder="" id="agencyTel" name="agencyTel">
+				 <input type="text" class="input-text" style="width:200px" value="${loginContext.agencyTel }" placeholder="" id="agencyTel" name="agencyTel">
 		 	</div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">电子邮箱：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="${loginContext.userEmail }" placeholder="" id="userEmail" name="userEmail">
+				<input type="text" class="input-text" style="width:200px" value="${loginContext.userEmail }" placeholder="" id="userEmail" name="userEmail">
 			</div>
 		</div>
 		<div class="row cl">
@@ -53,6 +53,12 @@
 			<label class="form-label col-xs-4 col-sm-2">用户其他联系方式：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" style="width:200px" class="input-text"  value="${loginContext.otherContact }" placeholder="" id="otherContact" name="otherContact">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">回调地址：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" style="width:200px" class="input-text"  value="${loginContext.callBackIp }" placeholder="" id="callBackIp" name="callBackIp">
 			</div>
 		</div>
 		

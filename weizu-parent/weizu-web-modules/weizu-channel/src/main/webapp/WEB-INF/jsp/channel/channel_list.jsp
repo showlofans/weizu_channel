@@ -116,23 +116,6 @@
 						<td>${channel.discountPo.discount0 }</td>
 						<td>${channel.discountPo.discount1 }</td>
 						<td>${channel.discountPo.discount2 }</td>
-						<%-- <td>${channel.channelTotalProfit }</td>
-						<td>${channel.channelBalance }</td>  --%>
-						
-						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
-						<%-- <td>
-							<c:forEach items="${resultMap.operatorTypeEnums }" var="operatorType" varStatus="vs1">
-							<c:if test="${channel.operatorType == operatorType.value }"> ${operatorType.desc }</c:if>
-							</c:forEach>
-						</td>
-						<td>
-							<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
-								<c:if test="${channel.serviceType == serviceTypeEnum.value }"> ${serviceTypeEnum.desc }</c:if>
-							</c:forEach>
-						</td>
-						<td>"${channel.scopeCityName }" : "${channel.channelDiscount}"</td>  --%>
-						
-						
 						<td class="td-status">
 							<c:forEach items="${resultMap.channelStateEnums }" var="cState" varStatus="vs1">
 								<c:if test="${channel.channelState == cState.value && channel.channelState==0  }"> <span class="label label-success radius">${cState.desc }</span></c:if>
@@ -180,9 +163,7 @@
 							</a> 
 						</c:if>
 						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="channel_stop('/flowsys/channel/channel_delete.do',${channel.id})" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
-						<!-- <a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5"  href="javascript:;" title="折扣编辑"><i class="Hui-iconfont">&#xe6df;</i></a> --> 
 						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="javascript:;" onclick="channel_edit('/flowsys/rate/bind_rate_list.do',this)" data-title="费率列表"><i class="Hui-iconfont">&#xe6df;</i></a>
-						<!-- <a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a> /flowsys/rate/bind_rate_list.do?channelId= ${channel.id }-->
 						</td>
 					</tr>
 				</c:forEach>
@@ -214,108 +195,13 @@ function channel_edit(url,objt){
 	$("#channelId").val(channelId);
 	 $(objt).attr('data-href',url+'?'+'channelId='+Number(channelId)+'&serviceType='+ serviceType+'&operatorType='+ operatorType); //+$('form').serialize()
 		Hui_admin_tab(objt);
-	/* $.ajax({
-		type: 'POST',
-		url: url,
-		//dataType: 'json',
-		data: $('form').serialize(),//jQuery-serialize()
-		async: false,
-		success: function(data){
-			tag = data;
-			/* alert(data);
-			if(data=="success")
-			{
-				location.reload();
-			}else{
-				layer.msg('更新通道失败!',{icon:1,time:1000});
-			} 
-		},
-		error:function(data) {
-			console.log(data.msg);
-		},
-	});	 */
-	/* var index = layer.open({  
-        type: 2,  
-        content: url+'?'+$('form').serialize(),  
-        area: ['300px', '195px'],   
-        title: false,  
-        maxmin: true,   
-        closeBtn: 1 
-    });  */ 
-   
-	//layer.full(index);  
 }
-/* $(document).ready(function() {
-	$('.table-sort').dataTable({
-        "bServerSide": true,//这个用来指明是通过服务端来取数据
-        "sAjaxSource": "testAoData",//这个是请求的地址
-        'bPaginate':true, 
-        "sPaginationType": "full_numbers", //分页风格，full_number会把所有页码显示出来（大概是，自己尝试）
-        "bDestroy" : true,
-        "bLengthChange": true, //改变每页显示数据数量
-        "bAutoWidth": true,//自动宽度  
-        
-        "fnServerData": retrieveData // 获取数据的处理函数
-	});
-}); */
-
 /*onchange通道状态*/
 function getChannelList(){
 	//alert($(vart).val());
 	$('form').submit();
 }
 
-/*资讯-添加*/
-function article_add(title,url,w,h){
-	var index = layer.open({
-		type: 2,
-		title: title,
-		content: url
-	});
-	layer.full(index);
-}
-/*包体-添加*/
-function pg_add(title,url){
-	//alert("sd");
-	layer.open({
-        type: 2,
-        title: false,
-        area: ['430px', '500px'],
-        maxmin: false,
-        closeBtn: 1,
-        content: url+'?pageTitle=' + title,
-         end: function () {
-            location.reload();
-        }
-    });
-}
-/*资讯-编辑*/
-function article_edit(title,url,id,w,h){
-	var index = layer.open({
-		type: 2,
-		title: title,
-		content: url
-	});
-	//layer.full(index);
-}
-/*资讯-删除*/
-function article_del(obj,id){
-	var tag = "";
-	layer.confirm('确认要删除吗？',function(index){
-		$.ajax({
-			type: 'POST',
-			url: '',
-			dataType: 'json',
-			success: function(data){
-				$(obj).parents("tr").remove();
-				layer.msg('已删除!',{icon:1,time:1000});
-			},
-			error:function(data) {
-				console.log(data.msg);
-			},
-		});		
-	});
-}
 /*通道状态-修改*/
 function changeCState(obj,state){
 	var id = $(obj).children().eq(0).val();
@@ -331,13 +217,6 @@ function changeCState(obj,state){
 				async: false,
 				success: function(data){
 					tag = data;
-					/* alert(data);
-					if(data=="success")
-					{
-						location.reload();
-					}else{
-						layer.msg('更新通道失败!',{icon:1,time:1000});
-					} */
 				},
 				error:function(data) {
 					console.log(data.msg);
@@ -434,26 +313,6 @@ function changeUseState(obj,useState){
 	}
 }
 
-/*资讯-审核*/
-function article_shenhe(obj,id){
-	layer.confirm('审核文章？', {
-		btn: ['通过','不通过','取消'], 
-		shade: false,
-		closeBtn: 0
-	},
-	function(){
-		$(obj).parents("tr").find(".td-manage").prepend('<a class="c-primary" onClick="article_start(this,id)" href="javascript:;" title="申请上线">申请上线</a>');
-		$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已发布</span>');
-		$(obj).remove();
-		layer.msg('已发布', {icon:6,time:1000});
-	},
-	function(){
-		$(obj).parents("tr").find(".td-manage").prepend('<a class="c-primary" onClick="article_shenqing(this,id)" href="javascript:;" title="申请上线">申请上线</a>');
-		$(obj).parents("tr").find(".td-status").html('<span class="label label-danger radius">未通过</span>');
-		$(obj).remove();
-    	layer.msg('未通过', {icon:5,time:1000});
-	});	
-}
 /*通道-下架*/
 function channel_stop(url,channelId){
 	layer.confirm('确认要下架吗？',function(index){
@@ -475,45 +334,7 @@ function channel_stop(url,channelId){
 			}
 		});		
 	});
-	
-	/* var isStop = confirm("确认要下架吗？");
-	$.ajax({
-		type: 'POST',
-		async: false,
-		url: url,
-		//dataType: 'json',
-		data: {channelId:channelId},
-		success: function(data){
-			if(data=="success")
-			{
-				layer.msg('删除通道成功!',{icon:1,time:1000});
-				location.reload();
-			}else{
-				layer.msg('删除通道失败!',{icon:1,time:1000});
-			}
-		},
-		error:function(data) {
-			console.log(data.msg);
-		}
-	});	 */
 }
-
-/*资讯-发布*/
-function article_start(obj,id){
-	layer.confirm('确认要发布吗？',function(index){
-		$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="article_stop(this,id)" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>');
-		$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已发布</span>');
-		$(obj).remove();
-		layer.msg('已发布!',{icon: 6,time:1000});
-	});
-}
-/*资讯-申请上线*/
-function article_shenqing(obj,id){
-	$(obj).parents("tr").find(".td-status").html('<span class="label label-default radius">待审核</span>');
-	$(obj).parents("tr").find(".td-manage").html("");
-	layer.msg('已提交申请，耐心等待审核!', {icon: 1,time:2000});
-}
-
 </script> 
 </body>
 </html>

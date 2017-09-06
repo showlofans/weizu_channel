@@ -66,20 +66,8 @@
 				</div>
 			</c:otherwise>
 		</c:choose>
-		<%-- <c:if test="${not empty resultMap.chargeAccount1 }">
-			<div class="row cl">
-				<label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>高配账户余额</label>
-				<c:choose>
-					<c:when test="${resultMap.chargeAccount1.accountBalance > 0 }">
-						<div class="formControls col-xs-8 col-sm-9"> ${resultMap.chargeAccount1.accountBalance } </div>
-					</c:when>
-					<c:otherwise>
-						<div class="formControls col-xs-8 col-sm-9 c-red"> ${resultMap.chargeAccount1.accountBalance } </div>
-					</c:otherwise>
-				</c:choose>
-			</div> 
-		</c:if> --%>
-		<div class="row cl">
+		<!-- 信用额度 -->
+		<%-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>信用额度</label>
 			<c:choose>
 				<c:when test="${resultMap.chargeAccount.accountCredit > 0 }">
@@ -89,7 +77,7 @@
 					<div class="formControls col-xs-8 col-sm-9 c-red"> ${resultMap.chargeAccount.accountCredit } </div>
 				</c:otherwise>
 			</c:choose>
-		</div> 
+		</div>  --%>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">充值额：</label>
 			<div class="formControls col-xs-8 col-sm-9">
@@ -117,24 +105,6 @@
 						<input type="hidden" name="billType" value="${billTypeE.value }">
 					</c:if>
 				</c:forEach>
-			
-				<%-- <span class="select-box inline">
-						<select name="billType" class="select" style="width:80px;" readonly>
-						<c:forEach items="${resultMap.billTypeEnum }" var="billTypeE" varStatus="vs">
-							<c:choose>
-								<c:when test="${resultMap.billType == billTypeE.value }">
-									<option value="${billTypeE.value }" selected="selected">${billTypeE.desc }</option>
-								</c:when>
-								<c:otherwise>
-									<option value="${billTypeE.value }">${billTypeE.desc }</option>
-								</c:otherwise>
-							</c:choose>
-						</c:forEach>
-							<c:forEach items="${resultMap.pgInEnums }" var="pgIn" varStatus="vs1">
-								<option value="${pgIn.value }" <c:if test="${pgIn.value == resultMap.params.pgInService }"> selected</c:if>>${pgIn.desc }</option>
-							</c:forEach>
-						</select>
-				</span> --%>
 			</div>
 		</div>
 		<input type="hidden" value="${resultMap.accountId }" name="accountId"><!-- 充值账户id -->
@@ -212,52 +182,6 @@ $().ready(function() {
 	});
 	
 })
-function save(){
-	/* $("#rechargeAmount").focus();
-	var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
-	$.ajax({
-        type:"post",
-        url:"add_charge.do",
-        data: $('form').serialize(),//表单数据
-        async : false,
-        success:function(d){
-            if(d=="success"){
-                layer.msg('保存成功！');//保存成功提示
-            }
-            if(d=="error"){
-                layer.msg('保存异常!');
-            }
-            parent.layer.close(index); //执行关闭
-        }
-    });  */
-}
-
-/* $(function(){
-	$("#form-change-password").validate({
-		rules:{
-			newpassword:{
-				required:true,
-				minlength:6,
-				maxlength:16
-			},
-			newpassword2:{
-				required:true,
-				minlength:6,
-				maxlength:16,
-				equalTo: "#newpassword"
-			},
-		},
-		onkeyup:false,
-		focusCleanup:true,
-		success:"valid",
-		submitHandler:function(form){
-			$(form).ajaxSubmit();
-			var index = parent.layer.getFrameIndex(window.name);
-			parent.$('.btn-refresh').click();
-			parent.layer.close(index);
-		}
-	});
-}); */
 </script>
 <!--/请在上方写此页面业务相关的脚本-->
 </body>

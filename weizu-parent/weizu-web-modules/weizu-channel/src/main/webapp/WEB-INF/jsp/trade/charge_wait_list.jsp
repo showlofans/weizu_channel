@@ -28,14 +28,20 @@
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
+<style type="text/css">
+/* .Hui-iconfont:hover {
+	font-size: 25px
+} */
+	
+</style>
 <title>充值列表</title>
+
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 订单管理 <span class="c-gray en">&gt;</span> 订单列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 订单管理 <span class="c-gray en">&gt;</span> 订单列表-充值等待 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
 		<form class="form form-horizontal" action="/flowsys/chargePg/purchase_list.do?orderState=3" method="post" id="formD" name="dataListForm">
-				<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
 				<div class="row cl formControls">
 					手机号:<input type="text"  value="${resultMap.searchParams.chargeTel }" name="chargeTel" id="" placeholder=" 手机号" style="width:150px" class="input-text">
 					所属代理商:<input type="text"  value="${resultMap.searchParams.agencyName }" name="agencyName" id="" placeholder=" 代理商名称" style="width:100px" class="input-text">
@@ -86,10 +92,8 @@
 		<table class="table table-border table-bordered table-bg table-hover table-sort">
 			<thead>
 				<tr class="text-c">
-					<!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
-					<!-- <th width="80">流量包Id</th> -->
 					<th width="100">所属代理商</th>
-					<th width="130">订单号</th>
+					<th width="150">订单号</th>
 					<th width="100">手机号</th>
 					<th width="80">流量大小</th>
 					<th width="70">面值</th>
@@ -101,6 +105,7 @@
 					<th width="80">结果</th>
 					<th width="80">结果描述</th>
 					<th width="60">扣款</th>
+					<th width="60">操作</th>
 					<c:if test="${loginContext.rootAgencyId == 0 }">
 						<th width="120">通道名称</th>
 					</c:if>
@@ -112,7 +117,6 @@
 					<tr class="text-c">
 						<td>${purchase.agencyName }</td>
 						<td>${purchase.orderId }</td>
-						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
 						<td>${purchase.chargeTel }</td>
 						 <td>${purchase.pgSize }</td>
 						<td>${purchase.pgPrice }</td>
@@ -139,6 +143,20 @@
 						
 						<td>${purchase.orderStateDetail }</td>
 						<td>${purchase.orderPrice }</td>
+						<td class="f-14 td-manage">
+							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeState(this,'1')" href="javascript:;" title="成功">
+								<input type="hidden" value="${purchase.orderId }" >
+								<i class="Hui-iconfont">&#xe6e6;</i>
+							</a>
+							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeState(this,'0')" href="javascript:;" title="失败">
+								<input type="hidden" value="${purchase.orderId }" >
+								<i class="Hui-iconfont">&#xe6e5;</i>
+							</a> 
+							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="ajaxCommit(this,'${purchase.orderId }','${purchase.chargeTelDetail }','${purchase.agencyId }','${purchase.billType }')" href="javascript:;" title="提交">
+								<input type="hidden" value="${purchase.orderId }" >
+								<i class="Hui-iconfont">&#xe6dc;</i>
+							</a> 
+						</td>
 						<c:if test="${loginContext.rootAgencyId == 0 }"><td>${purchase.channelName }</td> 
 						</c:if>
 						<td>
@@ -189,125 +207,80 @@ $(document).ready(function() {
 		//$('form').submit();
 		formSub();
 	})
-	/* $('.table-sort').dataTable({
-        "bServerSide": true,//这个用来指明是通过服务端来取数据
-        "sAjaxSource": "testAoData",//这个是请求的地址
-        'bPaginate':true, 
-        "sPaginationType": "full_numbers", //分页风格，full_number会把所有页码显示出来（大概是，自己尝试）
-        "bDestroy" : true,
-        "bLengthChange": true, //改变每页显示数据数量
-        "bAutoWidth": true,//自动宽度  
-        
-        "fnServerData": retrieveData // 获取数据的处理函数
-	});*/
 }); 
-
-//3个参数的名字可以随便命名,但必须是3个参数,少一个都不行
-function retrieveData( sSource111,aoData, fnCallback111) {
-	alert(aoData[0].name);  
-    // alert(JSON.stringify(aoData));  
-    $.ajax( {    
-        "type": "get",     
-        "contentType": "application/json",    
-        "url": sSource111,     
-        "dataType": "json",    
-        "data": { aoData: JSON.stringify(aoData) }, // 以json格式传递  
-        "success": function(resp) {    
-        	fnCallback111(resp.aaData); 
-        },
-        "error":function(msg){
-        	alert(msg);
-        }
-    }); 
-}  
-
-/*资讯-添加*/
-function article_add(title,url,w,h){
-	var index = layer.open({
-		type: 2,
-		title: title,
-		content: url
-	});
-	layer.full(index);
-}
-/**账户-充值 */
-function account_charge(title,purchaseUserName,id){
-	/* layer.open({
-		area: [w+'px', h +'px'],
-		type: 1,
-		title: title,
-		content: '<form action="add_charge" class="page-container">代理客户名称：'+addstr+'<br>冲值金额:<input type="text" class="input-text"></input>元<br><input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;充值&nbsp;&nbsp;"></input></form>'
-	}); */
-	//layer_show(title,url,w,h);
-	layer.open({
-        type: 2,
-        title: false,
-        area: ['430px', '500px'],
-        maxmin: false,
-        closeBtn: 1,
-        content: '/flowsys/account/add_charge_page.do?purchaseId=' + id + '&userName=' + purchaseUserName,
-        end: function () {
-            location.reload();
-        }
-    });
-	/* layer.full(index); */
-}
-/*资讯-删除*/
-function article_del(obj,id){
-	layer.confirm('确认要删除吗？',function(index){
+/**手动提交订单*/
+function ajaxCommit(vart,orderId,chargeTelDetail,agencyId,billType){
+	alert(orderId +'<br>' + chargeTelDetail + "<br>" + agencyId + "<br>" + billType );
+	
+	var msg='确认提交订单吗？';
+	var msgStr = '手动提交';
+	
+	layer.confirm(msg,function(index){
 		$.ajax({
 			type: 'POST',
-			url: '',
-			dataType: 'json',
+			url: '/flowsys/chargePg/ajax_commit_order.do',
+			//dataType: 'json',
+			data: {orderId:orderId, chargeTelDetail:chargeTelDetail, agencyId:agencyId, billTypeRate:billType},
+			async: false,
 			success: function(data){
-				$(obj).parents("tr").remove();
-				layer.msg('已删除!',{icon:1,time:1000});
+				//tag = data;
+				 //alert(data);
+				if(data=="success")
+				{
+					layer.msg('手动提交成功',{icon:1,time:1000});
+					location.reload();
+				}else{
+					layer.msg('手动提交失败',{icon:2,time:1000});
+				}
+			},
+			error:function(data) {
+				console.log(data.msg);
+			},
+		});	
+	});
+}
+/**设置状态*/
+function changeState(vart,state){
+	var orderId = $(vart).children().eq(0).val();
+	var tag = "";
+	var msg='确认设置成功吗？';
+	var msgStr = '手动成功';
+	//成功和失败
+	if(state==0){
+		var msgStr = '手动失败';
+		msg='确认设置失败吗？';
+	}
+	layer.confirm(msg,function(index){
+		$.ajax({
+			type: 'POST',
+			url: '/flowsys/chargePg/update_purchase_state.do',
+			//dataType: 'json',
+			data: {orderId:orderId, orderResult:state,orderResultDetail:msgStr},
+			async: false,
+			success: function(data){
+				//tag = data;
+				 //alert(data);
+				if(data=="success")
+				{
+					layer.msg('手动修改成功',{icon:1,time:1000});
+					location.reload();
+				}else{
+					layer.msg('手动修改失败',{icon:1,time:1000});
+				}
 			},
 			error:function(data) {
 				console.log(data.msg);
 			},
 		});		
+		/* if(tag == "success"){
+			layer.msg('删除成功', {icon:5,time:1000});
+		}
+		layer.close(index);
+		location.reload(); */
 	});
-}
-
-/*资讯-审核*/
-function article_shenhe(obj,id){
-	layer.confirm('审核文章？', {
-		btn: ['通过','不通过','取消'], 
-		shade: false,
-		closeBtn: 0
-	},
-	function(){
-		$(obj).parents("tr").find(".td-manage").prepend('<a class="c-primary" onClick="article_start(this,id)" href="javascript:;" title="申请上线">申请上线</a>');
-		$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已发布</span>');
-		$(obj).remove();
-		layer.msg('已发布', {icon:6,time:1000});
-	},
-	function(){
-		$(obj).parents("tr").find(".td-manage").prepend('<a class="c-primary" onClick="article_shenqing(this,id)" href="javascript:;" title="申请上线">申请上线</a>');
-		$(obj).parents("tr").find(".td-status").html('<span class="label label-danger radius">未通过</span>');
-		$(obj).remove();
-    	layer.msg('未通过', {icon:5,time:1000});
-	});	
-}
-
-
-/*资讯-发布*/
-function article_start(obj,id){
-	layer.confirm('确认要发布吗？',function(index){
-		$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="article_stop(this,id)" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>');
-		$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已发布</span>');
-		$(obj).remove();
-		layer.msg('已发布!',{icon: 6,time:1000});
-	});
-}
-/*资讯-申请上线*/
-function article_shenqing(obj,id){
-	$(obj).parents("tr").find(".td-status").html('<span class="label label-default radius">待审核</span>');
-	$(obj).parents("tr").find(".td-manage").html("");
-	layer.msg('已提交申请，耐心等待审核!', {icon: 1,time:2000});
-}
-
+	
+}	
+	
 </script> 
 </body>
 </html>

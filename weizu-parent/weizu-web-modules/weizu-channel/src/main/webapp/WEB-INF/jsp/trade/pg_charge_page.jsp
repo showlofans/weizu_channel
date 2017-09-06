@@ -56,25 +56,12 @@
 			<div class="formControls col-xs-8 col-sm-9">
 			<!--  onfocus="ajaxPg()" -->
 				<input type="text" id="epEngId" name="epEngId" class="input-text" required style="width:400px" autocomplete="off"  placeholder="请输入英文标识" >
-				<!-- <div>
-					<span class="pgName"></span>
-					<span style="display:none;" class="pgName"></span>
-					<span style="display:none;" class="pgPrice"></span>
-					<span style="display:none;"  class="pgName"></span>
-				</div> -->
-				<!-- <input type="password" class="input-text" autocomplete="off"  placeholder="确认新密码" id="password2" name="password2"> -->
 			</div>
 		</div>
 	</c:if>
 	<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>业务类型：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
-				<%-- <c:forEach items="${resultMap.serviceTypeEnum }" var="serviceType" varStatus="vs">
-					<div class="radio-box">
-						<input onclick="ajaxPg(this)" name=serviceType type="radio" value="${serviceType.value }" id="serviceType-${vs.index+1 }" checked>
-						<label for="serviceType-${vs.index+1 }">${serviceType.desc }</label>
-					</div> 				</c:forEach>
-					--%>
 					<span class="select-box inline">
 						<select id="select-servce-type" name="serviceType" onchange="ifAjaxPg()" style="width:150px;" class="select">
 							<option value="">请选择</option>
@@ -83,15 +70,6 @@
 							</c:forEach>
 						</select>
 					</span>
-				
-				<!-- <div class="radio-box">
-					<input type="radio" id="sex-2" name="sex">
-					<label for="sex-2">女</label>
-				</div>
-				<div class="radio-box">
-					<input type="radio" id="sex-3" name="sex">
-					<label for="sex-3">保密</label>
-				</div> -->
 			</div>
 		</div>
 		
@@ -100,13 +78,6 @@
 		<div class="formControls col-xs-8 col-sm-9">
 		<!--  onfocus="ajaxPg()" -->
 			<input type="text" id="pgPrice" readonly name="pgPrice" class="input-text" required style="width:400px" autocomplete="off"  placeholder="请选择购买包体" >
-			<!-- <div>
-				<span class="pgName"></span>
-				<span style="display:none;" class="pgName"></span>
-				<span style="display:none;" class="pgPrice"></span>
-				<span style="display:none;"  class="pgName"></span>
-			</div> -->
-			<!-- <input type="password" class="input-text" autocomplete="off"  placeholder="确认新密码" id="password2" name="password2"> -->
 		</div>
 	</div>
 	<div id="pgInsert" class="row cl">
@@ -179,42 +150,6 @@
    	 }
 	// $('#form-charge')[0].reset();
  }
- /* function submitPur(){
-	 var tel = $('input[name=chargeTel]').val();
-	 var chargeTelDetail = $('#chargeTelDetail').val();
-	 var orderAmount = $("#orderAmount").val();
- 	 var channelId = $("#channelId").val();
- 	 var pgId = $("#pgId").val();
-	 var purchasePo = {
-			 chargeTel : tel,
-			 channelId : channelId,
-			 pgId : pgId,
-			 chargeTelDetail : chargeTelDetail,
-			 orderAmount : orderAmount
-         };//拼装成json格式
-    alert(JSON.stringify(purchasePo));
-	 $.ajax({
-         type : "POST",
-         url : "/flowsys/chargePg/pg_charge.do",
-         data : JSON.stringify(purchasePo),
-         contentType : 'application/json;charset=utf-8',
-         dataType : 'json',
-         /* success : function(data) {
-               if (data.code == '0') {
-                 window.location.href = "/iswust2hand/index.jsp";
-                 alert("欢迎使用西科二手平台！");
-             }else{
-                 alert("密码错误，请确认后重新登录！");
-             }  
-
-         },
-
-         error : function(data) {
-             alert("出错：" + data.code);
-         } 
-     });
- } */
- 
  /**通过用户手机号获得基本信息*/
  	var tel;
  	var carrier;

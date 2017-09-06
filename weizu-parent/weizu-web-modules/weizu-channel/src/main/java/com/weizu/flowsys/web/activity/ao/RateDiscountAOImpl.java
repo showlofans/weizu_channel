@@ -14,8 +14,11 @@ import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
+import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
+import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
+import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.dao.AgencyActiveRateDTODao;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
@@ -62,6 +65,8 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		for (RateDiscountPo ratePo1 : records) {
 			//初始化子费率
 			Map<String,Object> pMap = new HashMap<String, Object>();
+//			pMap.put("bindState", BindStateEnum.BIND.getValue());
+//			pMap.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
 			pMap.put("activeId", ratePo1.getId());
 			pMap.put("agencyId", childAgencyId);
 			List<RateDiscountPo> list = rateDiscountDao.getMyChildRate(pMap);
@@ -320,8 +325,8 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		{
 			resultMap.put("id", ratePo.getId());
 		}
-		
-		
+		resultMap.put("bindState", BindStateEnum.BIND.getValue());
+		resultMap.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
 		return resultMap;
 	}
 
@@ -363,13 +368,22 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		Map<String,Object> dtoMap = new HashMap<String, Object>();
 		params.put("agencyId", agencyId);
 		
-		params.put("billType", BillTypeEnum.CORPORATE_BUSINESS.getValue());
-		List<RateDiscountPo> rateListBill = rateDiscountDao.getShowRate(params);
-		initRateList(rateListBill, dtoMap, BillTypeEnum.CORPORATE_BUSINESS.getValue());
+		BillTypeEnum[] bTypeEnums = BillTypeEnum.values();	
+		ServiceTypeEnum [] sTypeEnums = ServiceTypeEnum.values();
+		for (ServiceTypeEnum serviceTypeEnum : sTypeEnums) {
+			for (BillTypeEnum billTypeEnum : bTypeEnums) {
+				params.put("billType", billTypeEnum.getValue());
+				params.put("serviceType", serviceTypeEnum.getValue());
+				params.put("bindState", BindStateEnum.BIND.getValue());
+				params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+				List<RateDiscountPo> rateListBill = rateDiscountDao.getShowRate(params);
+				initRateList(rateListBill, dtoMap, billTypeEnum.getValue(), serviceTypeEnum.getValue());
+			}
+		}
 		
-		params.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-		List<RateDiscountPo> rateList = rateDiscountDao.getShowRate(params);
-		initRateList(rateList, dtoMap, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+//		params.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+//		List<RateDiscountPo> rateList = rateDiscountDao.getShowRate(params);
+//		initRateList(rateList, dtoMap, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 		
 //		if(rateListBill != null && rateListBill.size()>0){//有对公的费率
 ////			DiscountPo dpo = null;
@@ -438,9 +452,9 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年9月1日 下午4:41:56
 	 */
-	private void initRateList(List<RateDiscountPo> rateList,Map<String,Object> dtoMap,int billType) {
+	private void initRateList(List<RateDiscountPo> rateList,Map<String,Object> dtoMap,int billType,int serviceType) {
 //		List<RateDiscountShowDTO> dtoList = new ArrayList<RateDiscountShowDTO>();
-		
+		String key = "";
 		if(rateList != null && rateList.size()>0){//有对公的费率
 //			DiscountPo dpo = null;
 			StringBuffer discount0 = new StringBuffer("{");
@@ -465,11 +479,20 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 			String dis1Str = discount1.append("}").toString();
 			String dis2Str = discount2.append("}").toString();
 			DiscountPo dpo = new DiscountPo(dis0Str, dis1Str, dis2Str);
-			if(billType == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()){
-				dtoMap.put("noDTO", new RateDiscountShowDTO(dpo, 1));
+			Map<String,Object> bMap = new HashMap<String, Object>();
+			if(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue() == billType){
+				bMap.put("noDTO", new RateDiscountShowDTO(dpo, 1));
 			}else{
-				dtoMap.put("billDTO", new RateDiscountShowDTO(dpo, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
+				bMap.put("billDTO", new RateDiscountShowDTO(dpo, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
 			}
+			if(ServiceTypeEnum.NATION_WIDE.getValue() == serviceType){
+				key = "nationWide";
+			}else if(ServiceTypeEnum.PROVINCE_ROAMING.getValue() == serviceType){
+				key = "provinceRoaming";
+			}else{
+				key = "province";
+			}
+			dtoMap.put(key, bMap);
 		}
 //		if(rateList != null && rateList.size()>0){
 ////			DiscountPo dpo = null;
@@ -540,18 +563,27 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	 */
 	@Override
 	public RateDiscountPo getRateForCharge(int serviceType,
-			String carrier, int loginAgencyId,int billTypeRate) {
+			String carrier, int loginAgencyId,int billTypeRate, Boolean judgeChannelState) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("billTypeRate", billTypeRate);//用不带票的账户去获得价格
 		params.put("agencyId", loginAgencyId);
+		params.put("bindState", BindStateEnum.BIND.getValue());
+		params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
 		params.put("serviceType", serviceType);
 		int sLength = carrier.length();
 		String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动
-		String scopeCityName = carrier.substring(0,sLength-2);
-		int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
-		params.put("operatorType", opType);
-		String scopeCityCode = ScopeCityEnum.getValueByDesc(scopeCityName);
-		params.put("scopeCityCode", scopeCityCode);
+		if(ServiceTypeEnum.NATION_WIDE.getValue() != serviceType){
+			String scopeCityName = carrier.substring(0,sLength-2);
+			int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
+			params.put("operatorType", opType);
+			String scopeCityCode = ScopeCityEnum.getValueByDesc(scopeCityName);
+			params.put("scopeCityCode", scopeCityCode);
+		}else{
+			params.put("scopeCityCode", ScopeCityEnum.QG.getValue());//使用全国的地区
+		}
+		if(judgeChannelState){//需要判断通道状态:比如再次提交获得的费率，比如测试通道的时候
+			params.put("channelState", ChannelStateEnum.OPEN.getValue());
+		}
 		return rateDiscountDao.getRateForCharge(params);
 	}
 }

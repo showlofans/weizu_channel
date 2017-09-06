@@ -117,36 +117,13 @@
 				<input type="text" class="input-text" readonly="readonly" value="信息服务费" placeholder="信息服务费" id="" name="billingContent">
 			</div>
 		</div>
-		
-		<!-- <div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>分类栏目：</label>
-			<div class="formControls col-xs-7 col-sm-9"> <span class="select-box">
-				<select name="" class="select">
-					<option value="0">一级分类</option>
-					<option value="1">一级分类</option>
-					<option value="11">├二级分类</option>
-					<option value="12">├二级分类</option>
-					<option value="13">├二级分类</option>
-				</select>
-				</span> </div>
-		</div> -->
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">企业现居地址：</label>
 			<div class="formControls col-xs-7 col-sm-9">
 				<input type="text" class="input-text" value="${resultMap.ccpo.companyAddress }" placeholder="企业现居地址" id="" name="companyAddress">
 			</div>
 		</div>
-		
-		<!-- <div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">产品规格：</label>
-			<div class="formControls col-xs-7 col-sm-9">
-				<input type="text" name="" id="" placeholder="输入长度" value="" class="input-text" style=" width:25%">
-				MM
-				<input type="text" name="" id="" placeholder="输入宽度" value="" class="input-text" style=" width:25%">
-				MM
-				<input type="text" name="" id="" placeholder="输入高度" value="" class="input-text" style=" width:25%">
-				MM </div>
-		</div> -->
+		<!-- style=" width:25%" -->
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">发票收件人：</label>
 			<div class="formControls col-xs-7 col-sm-9">

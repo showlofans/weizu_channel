@@ -4,11 +4,11 @@ import java.util.Random;
 
 import org.junit.Test;
 
-import com.weizu.flowsys.util.ClassUtil;
-import com.weizu.flowsys.util.StringUtil2;
-import com.weizu.flowsys.util.UUIDGenerator;
-import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
-import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
+//import com.weizu.flowsys.util.ClassUtil;
+//import com.weizu.flowsys.util.StringUtil2;
+//import com.weizu.flowsys.util.UUIDGenerator;
+//import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
+//import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.MD5;
 import com.weizu.web.foundation.MD5Util;

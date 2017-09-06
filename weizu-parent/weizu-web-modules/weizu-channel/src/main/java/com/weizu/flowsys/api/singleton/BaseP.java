@@ -12,7 +12,8 @@ import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
  */
 public class BaseP {
 	private String productCode;		//产品编码
-	private  String orderId;			//订单号
+	private  Long orderId;			//订单号
+	private String orderIdApi;		//订单查询订单好
 	private  String chargeTel;		//手机号
 	private  Integer serviceType;		//业务类型
 	private ExchangePlatformPo epo;		//平台信息
@@ -20,7 +21,17 @@ public class BaseP {
 	public BaseP() {
 		super();
 	}
-	public BaseP(String productCode,String orderId,String chargeTel,Integer serviceType,ExchangePlatformPo epo) {
+	
+	public BaseP(String productCode, String orderIdApi, String chargeTel,
+			Integer serviceType, ExchangePlatformPo epo) {
+		super();
+		this.productCode = productCode;
+		this.orderIdApi = orderIdApi;
+		this.chargeTel = chargeTel;
+		this.serviceType = serviceType;
+		this.epo = epo;
+	}
+	public BaseP(String productCode,Long orderId,String chargeTel,Integer serviceType,ExchangePlatformPo epo) {
 //		this.epDTO = epDTO;
 		this.epo = epo;
 		this.productCode = productCode;
@@ -28,7 +39,9 @@ public class BaseP {
 		this.chargeTel = chargeTel;
 		this.serviceType = serviceType;
 	}
-	
+	public String getOrderIdApi() {
+		return orderIdApi;
+	}
 //	public String getAddParams() {
 //		return addParams;
 //	}
@@ -38,7 +51,7 @@ public class BaseP {
 	public  String getProductCode() {
 		return productCode;
 	}
-	public  String getOrderId() {
+	public  Long getOrderId() {
 		return orderId;
 	}
 	public  String getChargeTel() {

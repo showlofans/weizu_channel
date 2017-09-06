@@ -33,9 +33,12 @@ public class AgencyPurchaseAOImpl implements AgencyPurchaseAO {
 	
 	@Override
 	public String updatePurchaseState(Long orderId, Integer orderResult,
-			String orderResultDetail) {
+			String orderResultDetail, Long realBackTime) {
 		int ap = 0;
 		int pur = 0;
+		if(realBackTime == null){
+			realBackTime = System.currentTimeMillis();
+		}
 		if(orderResult == OrderStateEnum.UNCHARGE.getValue()){//手动失败，要返款
 			List<AgencyPurchasePo> list = agencyPurchaseDao.list(new WherePrams("purchase_id", "=", orderId));
 			int billType = -1;
@@ -54,7 +57,7 @@ public class AgencyPurchaseAOImpl implements AgencyPurchaseAO {
 					accountPo = chargeAccountDao.get(new WherePrams("agency_id", "=", agencyId).and("bill_type", "=", billType));
 					agencyBeforeBalance = accountPo.getAccountBalance();
 					accountPo.addBalance(orderAmount, 1);
-					recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
+					recordPoList.add(new ChargeRecordPo(realBackTime, orderAmount,
 							agencyBeforeBalance, accountPo.getAccountBalance(), 
 							billType,AccountTypeEnum.Replenishment.getValue(), accountPo.getId(), agencyId, 1 , orderId));
 					chargeAccountDao.updateLocal(accountPo, new WherePrams("id","=",accountPo.getId()));

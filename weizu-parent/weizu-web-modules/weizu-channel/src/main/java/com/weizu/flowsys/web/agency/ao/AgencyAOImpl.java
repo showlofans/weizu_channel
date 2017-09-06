@@ -69,6 +69,7 @@ public class AgencyAOImpl implements AgencyAO {
 			chargePo.setBillType(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());//默认开通对私账户
 			chargePo.setAgencyId(agencyId);
 			chargePo.setCreateTime(agencyBackward.getCreateTime());
+			chargePo.setAgencyName(agencyBackward.getUserName());
 			int addCharge = chargeAccountDao.add(chargePo);
 			
 			int result = addAgency + addCharge;//要求一定要大于2
@@ -97,6 +98,7 @@ public class AgencyAOImpl implements AgencyAO {
 				agencyBackward.getAgencyTel(), agencyBackward.getUserEmail(), 
 				agencyBackward.getAgencyIp(), 0.0d, 0.0d, agencyBackward.getCreateTime(), 
 				agencyBackward.getVerifyCode());
+		agencyVO.setCallBackIp(agencyBackward.getCallBackIp());
 		if(agencyBackward.getRootAgencyId() != 0){
 			String qq = agencyVODao.get(agencyBackward.getRootAgencyId()).getOtherContact();//富代理商的qq
 			agencyVO.setOtherContact(qq);

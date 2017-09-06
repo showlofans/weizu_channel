@@ -27,92 +27,15 @@
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
-<title>通道列表</title>
+<title>配置折扣</title>
 </head>
 <body>
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 代理商管理 <span class="c-gray en">&gt;</span> 配置折扣 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
 	<form action="" method="" id="formD" name="dataListForm">
-		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
-		<%-- 通道状态
-		<span class="select-box inline">
-			<select name="channelState" class="select" onchange="getChannelList()">
-			<option value="">请选择</option>
-			<c:forEach items="${resultMap.channelStateEnums }" var="cstate" varStatus="vs1">
-				<option value="${cstate.value }" <c:if test="${cstate.value == resultMap.searchParam.channelState }"> selected</c:if>>${cstate.desc }</option>
-			</c:forEach>
-		</select>
-		</span> --%>
-		<%-- 费率选择：<span class="select-box inline">
-		<select name="active_id" class="select" onchange="getChannelList()">
-			<option value="">请选择</option>
-			<c:forEach items="${resultMap.pagination.records }" var="ratePo" varStatus="vs">
-				<option value="${ratePo.id }" <c:if test="${ratePo.id == resultMap.searchParam.id }"> selected</c:if>>
-					<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum" varStatus="vs1">
-						<c:if test="${ratePo.scopeCityCode == scopeCityEnum.value }">
-							${scopeCityEnum.desc }
-						</c:if>
-					</c:forEach>
-					<c:forEach items="${resultMap.operatorTypes }" var="operatorTypeEnum" varStatus="vs1">
-						<c:if test="${ratePo.operatorType == operatorTypeEnum.value }">
-							${operatorTypeEnum.desc }
-						</c:if>
-					</c:forEach>
-					<c:forEach items="${resultMap.serviceTypeEnums }" var="serTypeEnum" varStatus="vs1">
-						<c:if test="${ratePo.serviceType == serTypeEnum.value }">
-							<span>${serTypeEnum.desc }</span>
-						</c:if>
-					</c:forEach>
-					${ratePo.activeDiscount }
-					<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
-						<c:if test="${billTypeEnum.value == ratePo.billType }">
-							${billTypeEnum.desc }
-						</c:if>
-					</c:forEach>
-				</option>
-			</c:forEach>
-		</select>
-		</span> --%>
 		代理商名称：<input type="text" value="${childAgencyName}" name="agencyName" readonly="readonly" id="agencyName" placeholder=" " style="width:80px" class="input-text">
-		<%-- <input type="hidden" id="childAgencyId" value="${childAgencyId }">
-		设置折扣：<input type="text" value="" name="activeDiscount" id="" placeholder=" 费率折扣" style="width:80px" class="input-text">
-		折扣类型：<span class="select-box inline">
-		<select name="billType"  id="billType" class="select" onchange="getBillType(this)">
-			<option value="">请选择</option>
-			<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
-				<option value="${billTypeEnum.value }" <c:if test="${billTypeEnum.value == resultMap.searchParam.billType }"> selected</c:if>>
-					${billTypeEnum.desc }-${billTypeEnum.value }
-				</option>
-			</c:forEach>
-				<input type="hidden" value="${billTypeEnum.value }" >
-		</select>
-		</span> --%>
-		<%-- <c:forEach items="${resultMap.pagination.records }" var="ratePo" varStatus="vs">
-			<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum" varStatus="vs1">
-				<c:if test="${ratePo.scopeCityCode == scopeCityEnum.value }">
-					<span>${scopeCityEnum.desc }</span>
-				</c:if>
-			</c:forEach>
-		</c:forEach> --%>
-		
-		<%-- 业务类型：
-		<span class="select-box inline">
-			<select name="serviceType"  id="serviceType" class="select" onchange="getChannelList()">
-			<option value="">请选择</option>
-			<c:forEach items="${resultMap.serviceTypeEnums }" var="sTypeEnum" varStatus="vs1">
-				<option value="${sTypeEnum.value }" <c:if test="${sTypeEnum.value == resultMap.searchParam.serviceType }"> selected</c:if>>${sTypeEnum.desc }</option>
-			</c:forEach>
-		</select>
-		</span>
-		
-		费率省份：<input type="text" value="${resultMap.searchParam.scopeCityName }" name="scopeCityName" id="" placeholder=" 费率省份" style="width:250px" class="input-text"> --%>
-		
-		<!-- <input type="hidden" value="" name="channelId" id="channelId"> -->
-		
-		<!-- <button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button> -->
 		<input value="添加" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
-		
 		<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 		</form>
 	</div>
@@ -160,12 +83,6 @@
 								</c:if>
 							</c:forEach>
 						</td> 
-						<%-- <td><c:forEach items="${resultMap.serviceTypeEnums }" var="serTypeEnum" varStatus="vs1">
-								<c:if test="${ratePo.serviceType == serTypeEnum.value }">
-									<span>${serTypeEnum.desc }</span>
-								</c:if>
-							</c:forEach>
-						</td>  --%>
 						<td class="c-blue">${ratePo.activeDiscount }</td>
 						<td style="display:none;" class="channelDiscountId">${ratePo.channelDiscountId }</td><!-- 通道折扣id -->
 						<td style="display:none;" class="id">${ratePo.id }</td><!-- 通道折扣id -->
@@ -267,9 +184,9 @@ function getBillType(vart){
 	}
 	//alert(arr[1]);
 }
-$().ready(function() {
+/* $().ready(function() {
 	
-})
+}) */
 //添加或者修改代理商的折扣
 function addUp(vart){//vart是提交按钮
 	var optionIn = $(vart).parents('td').prev().children('.billType').find('option:selected').text().trim();

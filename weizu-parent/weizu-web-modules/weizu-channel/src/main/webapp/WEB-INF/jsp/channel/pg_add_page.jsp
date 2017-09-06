@@ -26,9 +26,9 @@
 <![endif]-->
 <!--/meta 作为公共模版分离出去-->
 
-<title>新增流量包 - 流量包体管理 - H-ui.admin 3.0</title>
-<meta name="keywords" content="H-ui.admin 3.0,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
-<meta name="description" content="H-ui.admin 3.0，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
+<title>新增流量包 - 流量包体管理 </title>
+<meta name="keywords" content="">
+<meta name="description" content="">
 </head>
 <body>
 <article class="page-container">
@@ -92,9 +92,7 @@
 		</div>
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
-				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
-				<!-- <button onClick="article_save();" class="btn btn-secondary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 保存草稿</button>
-				<button onClick="removeIframe();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button> -->
+				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button><!-- btn-secondary -->
 			</div>
 		</div>
 	</form>
@@ -150,26 +148,6 @@ function btnChange(values){
 	}
 	$("#operatorName").val(operatorName);
 }
-
-/* function save(){
-	//$("#rechargeAmount").focus();
-	var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
-	$.ajax({
-        type:"post",
-        url:"/flowsys/operatorPg/pg_add.do",
-        data: $('form').serialize(),//表单数据
-        async : false,
-        success:function(d){
-            if(d=="success"){
-                layer.msg('保存成功！');//保存成功提示
-            parent.layer.close(index); //执行关闭
-            }
-            if(d=="error"){
-                layer.msg('保存异常!');
-            }
-        }
-    });
-} */
 
 /* $(function(){
 	$('.skin-minimal input').iCheck({
