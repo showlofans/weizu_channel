@@ -10,7 +10,7 @@
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/skin/default/skin.css" id="skin" />
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/style.css" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>重置密码</title>
 </head>
 <body>
 	<form action="" method="" class="form form-horizontal" id="form-article-add">
@@ -74,12 +74,6 @@ $().ready(function() {
          	}
     	 },
     	submitHandler : function(form) {
-    		/* alert($('#tag').val());
-   			alert($('#agencyId').val()); */
-    		/* var url = "";
-    		if($('#tag').val() == '1'){
-    			
-    		} */
     		if($('#userPass').val() != $("#enterPass").val()){
 	    		$.ajax({
 	                type:"post",
@@ -96,9 +90,6 @@ $().ready(function() {
 	                    if(d=="error"){
 	                        layer.msg('保存异常!');
 	                    }
-	                    /* if(d=="errorEp"){
-	                        alert('保存异常,已经添加过该平台了!');
-	                    } */
 	                }
 	            });
     		}else{
@@ -107,25 +98,5 @@ $().ready(function() {
     	}
     });
 })
-///更新信息
-function save(){
-	
-	//alert("1");
-	/* var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
-	$.ajax({
-        type:"post",
-        url:"/flowsys/agency/reset_pass.do",
-        data: $('form').serialize(),//表单数据
-        async : false,
-        success:function(d){
-            if(d>0){
-                layer.msg('保存成功！');//保存成功提示
-            }else{
-                layer.msg('保存异常!');
-            }
-            parent.layer.close(index); ////执行关闭
-        }
-    }); */
-} 
 </script>
 </html>

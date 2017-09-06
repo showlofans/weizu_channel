@@ -45,6 +45,15 @@ public interface OperatorPgDaoInterface extends Dao<PgDataPo, Integer> {
 	 * @createTime:2017年8月1日 下午6:24:24
 	 */
 	List<OperatorPgDataPo> pgList_forPurchase(OperatorPgDataPo operatorPgPo,String scopeCityCode,Integer agencyId);
+	
+	/**
+	 * @description: 查询购买包体list
+	 * @param params
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月6日 上午11:42:02
+	 */
+	List<OperatorPgDataPo> pgList_forPurchase(Map<String, Object> params);
 	/**
 	 * @description: 得到添加编码的包体列表
 	 * @param operatorPgPo

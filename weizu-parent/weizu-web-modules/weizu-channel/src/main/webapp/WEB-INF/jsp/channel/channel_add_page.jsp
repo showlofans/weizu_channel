@@ -28,6 +28,8 @@
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
 <!--/meta 作为公共模版分离出去-->
+
+<title>添加通道</title>
 <style type="text/css">
 	.demo{padding: 1em 0;}
 	a:hover,a:focus{
@@ -110,10 +112,8 @@
 		}
 	}
 </style>
-
-<title>添加通道</title>
-<meta name="keywords" content="H-ui.admin 3.0,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
-<meta name="description" content="H-ui.admin 3.0，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
+<meta name="keywords" content="">
+<meta name="description" content="">
 </head>
 <body>
 <article class="page-container">
@@ -180,11 +180,6 @@
 							</div>
 						</c:otherwise>
 					</c:choose>
-					<%-- <div class="radio-box">
-						<input name="billType" class="radioItem" type="radio" disabled value="${billEnum.value }" <c:if test="${vs.index==0 }">checked</c:if>>
-						${billEnum.desc }
-						<label for="operatorType-${vs.index }"></label>
-					</div> --%>
 				</c:forEach>
 			</div>
 		</div>
@@ -222,7 +217,7 @@
 							<div class="check-box">
 								<input class="cbox" onClick="checkBoxes(this)" type="checkbox" id="scopeCityCode-${vs.index }" value="${scopeCityEnum.value }">
 								${scopeCityEnum.desc }
-								<%-- <label for="operatorType-${vs.index }"></label> --%>
+								<%-- <label for="scopeCityCode-${vs.index }"></label> --%> 
 								<!-- 输入两位折扣数字 -->
 								<input class="disscount" style="display: none; width:50px;" type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
 							</div>
@@ -319,14 +314,6 @@ $(".radioItem").change(
 $(document).ready(function(){
 	$("#form-channel-add").validate({
     	submitHandler : function(form) {
-    		//var tag = changeName();
-    		//alert(Object.prototype.toString.apply(tag))
-    		
-    		//var tagTrim = $.trim(tag);
-    		//alert(Object.prototype.toString.apply(tagTrim));//String
-    		 //alert(tag);
-    		//alert(!tag);alert(tag==false); 
-    		
     		if(changeName()){
     			 $.ajax({
  	               type:"post",
@@ -350,23 +337,6 @@ $(document).ready(function(){
     		}
     	}
     });
-	
-	/* if($("input[type='checkbox']").is(':checked')){
-		$("input[type='checkbox']").next().hide();
-	} */
-	/*  $(".cbox").each(function(){
-	    	//alert($(this).prop("checked"));
-	    	 // alert($(this).attr("checked"));
-	    	 $(this).next().hide();
-	})  */
-	//alert("checked");
-	/*  $("[type='checkbox']").each(function(){
-	     
-		   
-	     if($(this).attr("checked"))
-	   {
-	    alert("checked");
-	   } */
 })
 /**表单提交前的验证*/
 function changeName(){
@@ -398,15 +368,6 @@ function changeName(){
 		alert("没有配置地区折扣")	;
 		return false;
 	}
-	/* $(".disscount").each(function(){
-		var i = 0;	
-		alert(i);
-    	if($(this).is(':visible')){
-    		$(this).prev.attr("name", "discountList["+i+"].scopeCityName" );
-    		$(this).prop.attr("name", "discountList["+i+"].channelDiscount" );
-    		i++;
-		}
-	}) */
 }
 
 /**checkBox的点击事件*/

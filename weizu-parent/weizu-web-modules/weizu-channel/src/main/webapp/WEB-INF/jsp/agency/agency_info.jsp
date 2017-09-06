@@ -10,7 +10,7 @@
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/skin/default/skin.css" id="skin" />
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/style.css" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>个人信息查看</title>
 </head>
 <body>
 	<form action="" method="" class="form form-horizontal" id="form-article-add">

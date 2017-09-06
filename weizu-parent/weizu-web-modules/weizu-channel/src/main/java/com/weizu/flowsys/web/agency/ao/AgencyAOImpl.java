@@ -69,6 +69,7 @@ public class AgencyAOImpl implements AgencyAO {
 			chargePo.setBillType(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());//默认开通对私账户
 			chargePo.setAgencyId(agencyId);
 			chargePo.setCreateTime(agencyBackward.getCreateTime());
+			chargePo.setAgencyName(agencyBackward.getUserName());
 			int addCharge = chargeAccountDao.add(chargePo);
 			
 			int result = addAgency + addCharge;//要求一定要大于2

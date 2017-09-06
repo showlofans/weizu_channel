@@ -65,6 +65,8 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		for (RateDiscountPo ratePo1 : records) {
 			//初始化子费率
 			Map<String,Object> pMap = new HashMap<String, Object>();
+//			pMap.put("bindState", BindStateEnum.BIND.getValue());
+//			pMap.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
 			pMap.put("activeId", ratePo1.getId());
 			pMap.put("agencyId", childAgencyId);
 			List<RateDiscountPo> list = rateDiscountDao.getMyChildRate(pMap);
@@ -323,8 +325,8 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		{
 			resultMap.put("id", ratePo.getId());
 		}
-		
-		
+		resultMap.put("bindState", BindStateEnum.BIND.getValue());
+		resultMap.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
 		return resultMap;
 	}
 

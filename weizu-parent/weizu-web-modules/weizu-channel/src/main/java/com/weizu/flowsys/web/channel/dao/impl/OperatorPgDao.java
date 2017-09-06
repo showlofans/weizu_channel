@@ -125,6 +125,11 @@ public class OperatorPgDao extends DaoImpl<PgDataPo, Integer> implements Operato
 		return sqlSessionTemplateASS.selectList("pgList_forPurchase_po", params);
 	}
 	
+	@Override
+	public List<OperatorPgDataPo> pgList_forPurchase(Map<String, Object> params) {
+		return sqlSessionTemplateASS.selectList("pgList_forPurchase_po", params);
+	}
+	
 	private Map<String,Object> getParamsMap(OperatorPgDataPo operatorPgPo){
 		Map<String, Object> params = new HashMap<String, Object>();
 //		if(StringHelper.isNotEmpty(operatorPgPo.getOperatorName()))
@@ -138,6 +143,10 @@ public class OperatorPgDao extends DaoImpl<PgDataPo, Integer> implements Operato
 		if(operatorPgPo.getOperatorType() != null)
 		{
 			params.put("operatorType", operatorPgPo.getOperatorType());
+		}
+		if(operatorPgPo.getChannelId() != null)
+		{
+			params.put("channelId", operatorPgPo.getChannelId());
 		}
 		return params;
 	}
@@ -173,5 +182,7 @@ public class OperatorPgDao extends DaoImpl<PgDataPo, Integer> implements Operato
 		
 		return sqlSessionTemplateASS.selectList("getPgByChanel", map);
 	}
+
+	
 
 }

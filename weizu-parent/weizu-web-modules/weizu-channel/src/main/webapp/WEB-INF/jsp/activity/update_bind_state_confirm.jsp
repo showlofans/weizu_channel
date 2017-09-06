@@ -10,7 +10,7 @@
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/skin/default/skin.css" id="skin" />
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/style.css" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>更新绑定状态提示页面</title>
 </head>
 <body>
 	<article class="page-container">

@@ -131,6 +131,9 @@
 			<if test="scopeCityCode != null">
 				AND cd.scope_city_code = #{scopeCityCode}
 			</if>
+			<if test="channelId != null">
+				AND cd.channel_id = #{channelId}
+			</if>
 		</where>
 	</select>
 	<!-- 通过流量包参数查询 -->

@@ -61,93 +61,12 @@
     </div>
 
 </div>
-<!-- <input type="hidden" id="TenantId" name="TenantId" value="" /> -->
-<!-- <div class="header"></div> -->
-<%-- <div class="loginWraper">
-  <div id="registerform" class="loginBox">
-    <form class="form form-horizontal" id="regForm" action="register.do" method="post">
-      <div class="row cl">
-        <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i>账户</label>
-        <div class="formControls col-xs-8">
-          <input id="userName" name="userName" required type="text" autocomplete="off"  placeholder="账户" class="input-text size-L">
-        </div>
-      </div>
-      <!-- 用户密码 -->
-      <div class="row cl">
-        <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60e;</i>密码</label>
-        <div class="formControls col-xs-8">
-          <input id="userPass" name="userPass" required  autocomplete="off" style="width:300px;" type="text" onfocus="this.type='password'"placeholder="密码" class="input-text size-L">
-        </div>
-      </div>
-      <!-- 真实姓名 -->
-      <div class="row cl">
-        <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60e;</i> 真实姓名</label>
-        <div class="formControls col-xs-8">
-          <input id="userRealname" name="userRealname" required  autocomplete="off" style="width:300px;" type="text"placeholder=" 真实姓名" class="input-text size-L">
-        </div>
-      </div>
-      <!-- 联系电话 -->
-      <div class="row cl">
-        <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60e;</i>联系电话</label>
-        <div class="formControls col-xs-8">
-          <input id="agencyTel" name="agencyTel" required  autocomplete="off" style="width:300px;" type="text"placeholder="联系电话" class="input-text size-L">
-        </div>
-      </div>
-      <!-- 电子邮箱 -->
-      <div class="row cl">
-        <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60e;</i>电子邮箱</label>
-        <div class="formControls col-xs-8">
-          <input id="userEmail" name="userEmail" required  autocomplete="off" style="width:300px;" type="text"placeholder="电子邮箱" class="input-text size-L">
-        </div>
-      </div>
-      <!-- 用户地址-->
-      <div class="row cl">
-        <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60e;</i> 用户地址</label>
-        <div class="formControls col-xs-8">
-          <input id="agencyIp" name="agencyIp" required  autocomplete="off" style="width:300px;" type="text"placeholder=" 用户地址" class="input-text size-L">
-        </div>
-      </div>
-      <!-- 注册邀请码-->
-      <div class="row cl">
-        <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60e;</i>注册邀请码</label>
-        <div class="formControls col-xs-8">
-          <input id="verifyCode" name="verifyCode" required  autocomplete="off" style="width:300px;" type="text"placeholder="注册邀请码" class="input-text size-L">
-        </div>
-      </div>
-      <input type="hidden" name="rootAgencyId" value="#{rootAgencyId }">
-      <!-- <div class="row cl">
-        <div class="formControls col-xs-8 col-xs-offset-3">
-          <input class="input-text size-L" type="text" placeholder="验证码" onblur="if(this.value==''){this.value='验证码:'}" onclick="if(this.value=='验证码:'){this.value='';}" value="验证码:" style="width:150px;">
-          <img src=""> <a id="kanbuq" href="javascript:;">看不清，换一张</a> </div>
-      </div> -->
-      <div class="row cl">
-        <div class="formControls col-xs-8 col-xs-offset-3">
-        </div>
-      </div>
-      <div class="row cl">
-        <div class="formControls col-xs-8 col-xs-offset-3">
-       		<a href="loginPage.do" class="btn btn-success radius size-L"> 登陆</a>
-          	<input id="goRegist" class="btn btn-success radius size-L" type="submit" value="&nbsp;注册&nbsp;">
-        </div>
-      </div>
-    </form>
-  </div>
-</div> --%>
 <div class="footer">Copyright 维族科技<!--  by <a href="http://www.mycodes.net/" target="_blank">源码之家</a> --></div>
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
 <script type="text/javascript" src="/view/static/h-ui/js/H-ui.min.js"></script>
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 <script type="text/javascript">
-	/* $.validator.setDefaults({
-	    submitHandler: function() {
-	      $("#regForm").submit();
-	    }
-	}); */
-/* function formVali(){
-		alert($("#errorMsg").is(":visible"));
-	return $("#errorMsg").is(":visible");
-} */
 	$().ready(function() {
 	    $("#regForm").validate({
 	    	rules:{

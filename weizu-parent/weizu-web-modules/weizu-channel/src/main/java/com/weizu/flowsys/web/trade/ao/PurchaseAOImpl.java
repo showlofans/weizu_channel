@@ -1006,8 +1006,11 @@ public class PurchaseAOImpl implements PurchaseAO {
 		Map<String, Object> objMap = new HashMap<String, Object>();
 		String carrier = ccpp.getCarrier();
 		int operatorType = OperatorTypeEnum.getValueByDesc(carrier.substring(carrier.length()-2));
+		OperatorPgDataPo operatorPgPo = new OperatorPgDataPo();
+		operatorPgPo.setOperatorType(operatorType);
+		
 		objMap.put("operatorType", operatorType);
-		objMap.put("cnelId", ccpp.getChannelId());
+		objMap.put("channelId", ccpp.getChannelId());
 		if(ServiceTypeEnum.NATION_WIDE.getValue() != ccpp.getServiceType()){
 			Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(carrier);
 			if(scopeMap.get("scopeCityCode") != null){
@@ -1015,7 +1018,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 			}
 		}
 		objMap.put("serviceType", ccpp.getServiceType());
-		List<OperatorPgDataPo> pgList = operatorPgDao.getPgByChanel(objMap);
+		
+		List<OperatorPgDataPo> pgList = operatorPgDao.pgList_forPurchase(objMap);
+//		List<OperatorPgDataPo> pgList = operatorPgDao.getPgByChanel(objMap);
 		return pgList;
 	}
 

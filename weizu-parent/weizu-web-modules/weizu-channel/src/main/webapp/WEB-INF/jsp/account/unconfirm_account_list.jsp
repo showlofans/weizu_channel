@@ -87,14 +87,15 @@
 						 <td>${unconfirm.commitTimeStr }</td>
 						 <td>${unconfirm.confirmTimeStr }</td>
 						<td><c:forEach items="${resultMap.confirmStateEnums }" var="confirmStateE" varStatus="vs1">
+						<!-- <td class="td-status"><span class="label label-success radius">已发布</span></td> -->
 						<c:if test="${unconfirm.confirmState == confirmStateE.value }"> <span class="label label-defaunt radius">${confirmStateE.desc }</span></c:if>
 						</c:forEach></td>
 						<td>
 							<c:choose>
 								<c:when test="${unconfirm.confirmState != 1}">
 									<%-- ${unconfirm.confirmState} --%>
-									<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="confirmState(${unconfirm.id },1)" href="javascript:;" title="审核通过"><i class="Hui-iconfont">&#xe6e1;</i></a>
-									<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="confirmState(${unconfirm.id },0)" href="javascript:;" title="审核不通过"><i class="Hui-iconfont">&#xe6e0;</i></a>
+									<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="confirmState(${unconfirm.id },${unconfirm.agencyId },1)" href="javascript:;" title="审核通过"><i class="Hui-iconfont">&#xe6e1;</i></a>
+									<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="confirmState(${unconfirm.id },${unconfirm.agencyId },0)" href="javascript:;" title="审核不通过"><i class="Hui-iconfont">&#xe6e0;</i></a>
 								</c:when>
 								<c:otherwise>
 									
@@ -132,7 +133,7 @@
 <script type="text/javascript" charset="utf8" src="/view/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="/view/lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript">
-function confirmState(id,state){
+function confirmState(id,agencyId,state){
 	var tips = '确认通过认证吗？';
 	//alert(state);
 	if(state=='0'){
@@ -141,7 +142,7 @@ function confirmState(id,state){
 	layer.confirm(tips,function(index){
 		$.ajax({
 			type: 'POST',
-			url: '/flowsys/account/verify_credentials.do?id='+id +'&confirmState='+state,
+			url: '/flowsys/account/verify_credentials.do?id='+id +'&agencyId='+agencyId+'&confirmState='+state,
 			//dataType: 'json',
 			success: function(data){
 				//$(obj).parents("tr").remove();
@@ -188,7 +189,7 @@ function confirmState(id,state){
 	//$("#time").val(new Date($("#time").val()).format("yyyy-MM-dd hh:mm:ss"));
 })  */
 /*资讯-删除*/
-function article_del(obj,id){
+/* function article_del(obj,id){
 	layer.confirm('确认要删除吗？',function(index){
 		$.ajax({
 			type: 'POST',
@@ -203,7 +204,7 @@ function article_del(obj,id){
 			},
 		});		
 	});
-}
+} */
 
 </script> 
 </body>

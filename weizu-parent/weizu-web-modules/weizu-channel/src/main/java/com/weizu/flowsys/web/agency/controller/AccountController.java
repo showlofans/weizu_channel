@@ -443,15 +443,11 @@ public class AccountController {
 	 */
 	@ResponseBody
 	@RequestMapping(value=AccountURL.VERIFY_CREDENTIALS)
-	public void verifyCredentials(String id, String confirmState, HttpServletResponse response, HttpServletRequest request){
-		CompanyCredentialsPo ccpo = new CompanyCredentialsPo();
-		String res = "error";
-		if(StringHelper.isNotEmpty(confirmState) && StringHelper.isNotEmpty(id)){
-			ccpo.setId(Integer.parseInt(id));
-			ccpo.setConfirmState(Integer.parseInt(confirmState));
+	public void verifyCredentials(CompanyCredentialsPo ccpo, HttpServletResponse response, HttpServletRequest request){
+//		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//		ccpo.setConfirmAgencyId(agencyVo.getId());
 			ccpo.setConfirmTime(System.currentTimeMillis());
-			res = companyCredentialsAO.updateCompanyCredential(ccpo);
-		}
+			String res = companyCredentialsAO.updateCompanyCredential(ccpo);
 		try {
 			response.getWriter().print(res);
 		} catch (IOException e) {
