@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.channel.ao.ExchangePlatformAO;
@@ -133,6 +134,7 @@ public class PlatformController {
 //			resultMap.put("pgTypeEnums", OperatorTypeEnum.toList());
 //			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 			resultMap.put("searchParam", exchangePlatformPo);
+			resultMap.put("callBackEnums", CallBackEnum.toList());
 			resultMap.put("pagination", pagination);
 		}
 		return new ModelAndView("/channel/platform_list", "resultMap", resultMap);
@@ -148,7 +150,9 @@ public class PlatformController {
 	public ModelAndView addPlatformPage(@RequestParam(value = "pageTitle", required = false)String pageTitle)
 	{
 //		try {
-			if(StringHelper.isNotEmpty(pageTitle)){
+//		Map<String,Object> resultMap = new HashMap<String, Object>();
+//		resultMap.put("", CallBackEnum.toList().)
+		if(StringHelper.isNotEmpty(pageTitle)){
 //				pageTitle = new String(pageTitle.getBytes("iso-8859-1"), "utf-8");
 				return new ModelAndView("/channel/platform_add_page","pageTitle",pageTitle);
 			}else{

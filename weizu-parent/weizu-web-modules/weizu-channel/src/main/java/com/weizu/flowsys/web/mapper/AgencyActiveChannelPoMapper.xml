@@ -4,7 +4,6 @@
 
 <sql id="t_active">agency_active_rate</sql>
 <sql id="t_rate">rate_discount</sql>
-<!-- <sql id="t_aac_join">aac_join_rd</sql> -->
 <sql id="t_channel">channel_discount</sql>
 
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo" >

@@ -41,7 +41,7 @@ public class Weizu implements BaseInterface {
 	
     private Weizu (){}  
     public static Weizu getInstance(String epEngId,BaseP baseParams) {  
-    	Weizu.epEngId = epEngId;
+    	Weizu.setEpEngId(epEngId);
 //    	baseParams = baseParams;
     	Weizu.baseParams=baseParams;
     	ExchangePlatformPo epPo = baseParams.getEpo();
@@ -207,23 +207,23 @@ public class Weizu implements BaseInterface {
 	}
 
 	
-	@Override
-	public void initSpecialP(Object... objs) {
-		//顺序和加入位置，都是可以随时调的
-		String [] paramsNames = new String [] {"serviceCode","interVersion","callBackWay"};
-		StringBuffer sBuffer = new StringBuffer();
-		for (int i = 0; i < objs.length; i++) {
-			sBuffer.append(paramsNames[i]);
-			sBuffer.append("=");
-			sBuffer.append(objs[i].toString());
-			sBuffer.append("&");
-		}
-//		Weizu.baseParams.setAddParams(sBuffer.toString());
-	}
-	@Override
-	public void initSpecialP(String addParams) {
-//		Weizu.baseParams.setAddParams(addParams);
-	}
+//	@Override
+//	public void initSpecialP(Object... objs) {
+//		//顺序和加入位置，都是可以随时调的
+//		String [] paramsNames = new String [] {"serviceCode","interVersion","callBackWay"};
+//		StringBuffer sBuffer = new StringBuffer();
+//		for (int i = 0; i < objs.length; i++) {
+//			sBuffer.append(paramsNames[i]);
+//			sBuffer.append("=");
+//			sBuffer.append(objs[i].toString());
+//			sBuffer.append("&");
+//		}
+////		Weizu.baseParams.setAddParams(sBuffer.toString());
+//	}
+//	@Override
+//	public void initSpecialP(String addParams) {
+////		Weizu.baseParams.setAddParams(addParams);
+//	}
 	@Override
 	public String toBalanceParams() {
 		ExchangePlatformPo epPo = baseParams.getEpo();
@@ -250,5 +250,11 @@ public class Weizu implements BaseInterface {
 	
 	public static String getSign() {
 		return sign;
+	}
+	public static String getEpEngId() {
+		return epEngId;
+	}
+	public static void setEpEngId(String epEngId) {
+		Weizu.epEngId = epEngId;
 	}
 }

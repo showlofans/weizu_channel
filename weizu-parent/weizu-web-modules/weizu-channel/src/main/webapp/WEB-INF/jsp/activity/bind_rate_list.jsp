@@ -31,7 +31,7 @@
 <title>费率列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 代理商管理 <span class="c-gray en">&gt;</span> 费率列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 代理商管理 <span class="c-gray en">&gt;</span> 折扣信息 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
 	<div class="text-c">
@@ -125,8 +125,8 @@
 				联通省份:<input type="text" value="${resultMap.params.ratePrice1 }" name="ratePrice1" id="" placeholder=" 联通省份" style="width:150px" class="input-text">
 				电信省份:<input type="text" value="${resultMap.params.ratePrice2 }" name="ratePrice2" id="" placeholder=" 电信省份" style="width:150px" class="input-text"> --%>
 				<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="addRate('/flowsys/rate/bind_rate_add_page.do','折扣添加')" href="javascript:;" > 添加折扣</a>
-				<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="delRateDiscount()" href="javascript:;" > 删除折扣</a>
 				<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="editRate('/flowsys/rate/bind_rate_add_page.do','折扣编辑')" href="javascript:;" > 修改折扣</a>
+				<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="delRateDiscount()" href="javascript:;" > 删除折扣</a>
 				<br><br>
 				代理商名称： <input type="text" style="width:150px;" class="input-text ac_input" value="${resultMap.searchParams.agencyName }" autocomplete="off" id="agencyName" name="agencyName">
 				
@@ -147,7 +147,7 @@
 		<table class="table table-border table-bordered table-bg table-hover table-sort">
 			<thead>
 				<tr class="text-c">
-					<th width="25"><input type="checkbox" name="" value=""></th>
+					<!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
 					<th>代理商名称</th>
 					<!-- <th>通道折扣</th>
 					<th>移动折率</th>
@@ -161,7 +161,7 @@
 			<tbody>
 				<c:forEach items="${resultMap.pagination.records }" var="activePo" varStatus="vs">
 					<tr class="text-c">
-						<td><input type="checkbox" value="" name=""></td>
+						<!-- <td><input type="checkbox" value="" name=""></td> -->
 						<td>${activePo.agencyName }</td>
 						<td><c:forEach items="${resultMap.bindStateEnums }" var="bindStateEnum" varStatus="vs1">
 							<c:if test="${activePo.bindState == bindStateEnum.value }"> ${bindStateEnum.desc }</c:if>
@@ -343,25 +343,29 @@ function setDiscount(){
 	//alert(scopeCityCode);
 	$.ajax({
 		type: 'POST',
+		contentType: "application/x-www-form-urlencoded; charset=utf-8",
 		url: '/flowsys/rate/get_discount.do?scopeCityCode='+scopeCityCode+'&serviceType='+serviceType+'&operatorType='+operatorType+'&billType='+billType,
 		dataType: 'json',
 		success: function(resp){
 			//$(obj).parents("tr").remove();
 			$("#rateDiscountId").empty();
+			//alert(resp);
+			//alert(resp.length);
    		 if(resp.length == 0){ //如果没有通道信息，就设置折扣为不可编辑
    			 $("#rateDiscountId").append("<option value=''>没有添加折扣</option>");
+   		 }else{
+	   		 //如果resp没有值，下面函数也不会执行
+	       	 $.each(resp, function(i, item) {
+	            	 $("#rateDiscountId").append("<option class='activeDiscount' value='"+item.id+"'>" + item.activeDiscount + "</option>");//"+ operatorType +"
+	            	 $('#rateId').val(item.id);
+	            	 $('#channelDiscountId').val(item.channelDiscountId);
+	       		 //alert(i);//从0开始
+	   				//alert(item.channelName);
+	       		 ///不管有没有通道
+	       		 
+	          });
+	       	$('#formD').submit();
    		 }
-   		 //如果resp没有值，下面函数也不会执行
-       	 $.each(resp, function(i, item) {
-            	 $("#rateDiscountId").append("<option class='activeDiscount' value='"+item.id+"'>" + item.activeDiscount + "</option>");//"+ operatorType +"
-            	 $('#rateId').val(item.id);
-            	 $('#channelDiscountId').val(item.channelDiscountId);
-       		 //alert(i);//从0开始
-   				//alert(item.channelName);
-       		 ///不管有没有通道
-       		 
-          });
-       	$('#formD').submit();
        	//location.reload();//重新加载最新折扣的数据
    		 
 			//layer.msg('添加成功!',{icon:1,time:1000});

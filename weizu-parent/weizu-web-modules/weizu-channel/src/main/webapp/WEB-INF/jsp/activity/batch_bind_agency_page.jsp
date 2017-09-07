@@ -182,15 +182,15 @@ function changeBState(url,bindState){
 				//$(obj).parents("tr").remove();
 				//alert
 				if(resp=="success"){
-           		 	location.reload();
+					//layer.msg('更新绑定成功',{icon:1,time:1000});
+					location.reload();
                	 }else{
-               		 
+					layer.msg('更新绑定失败',{icon:1,time:1000});
                	 }
-				layer.msg('已删除!',{icon:1,time:1000});
 			},
 			error:function(resp) {
 				console.log(resp.msg);
-			},
+			}
 		});
     }else{
     	alert("未选中");

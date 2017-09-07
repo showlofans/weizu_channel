@@ -10,6 +10,7 @@ import org.apache.ibatis.ognl.Token;
 
 import com.weizu.flowsys.web.base.ATT;
 import com.weizu.web.foundation.StringUtil;
+import com.weizu.web.foundation.String.StringHelper;
 
 /**
  * @description: 字符串操作工具类整理
@@ -165,14 +166,18 @@ public class StringUtil2 {
 	 * @createTime:2017年8月30日 上午11:59:41
 	 */
 	public static String getParamsByCharSeq(String referStr, String charSeq) {
-		int charSeqInd = referStr.indexOf(charSeq); // 字段索引
-		if(charSeqInd == -1){
-			return null;
+		if(StringHelper.isNotEmpty(referStr)){
+			int charSeqInd = referStr.indexOf(charSeq); // 字段索引
+			if(charSeqInd == -1){
+				return null;
+			}
+			String seperatorRefer = referStr.substring(charSeqInd);// 以便找到这个字段后面的第一个&
+			String params = seperatorRefer
+					.substring(0, seperatorRefer.indexOf("&"));
+			return params;
+		}else{
+			return referStr;
 		}
-		String seperatorRefer = referStr.substring(charSeqInd);// 以便找到这个字段后面的第一个&
-		String params = seperatorRefer
-				.substring(0, seperatorRefer.indexOf("&"));
-		return params;
 	}
 
 //	public boolean validateSign(Map<String, Object> map, String sign)

@@ -163,7 +163,7 @@
 							</a> 
 						</c:if>
 						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="channel_stop('/flowsys/channel/channel_delete.do',${channel.id})" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
-						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="javascript:;" onclick="channel_edit('/flowsys/rate/bind_rate_list.do',this)" data-title="费率列表"><i class="Hui-iconfont">&#xe6df;</i></a>
+						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="javascript:;" onclick="channel_edit('/flowsys/rate/bind_rate_list.do',this)" data-title="折扣信息"><i class="Hui-iconfont">&#xe6df;</i></a>
 						</td>
 					</tr>
 				</c:forEach>

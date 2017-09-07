@@ -81,8 +81,7 @@
 			<label class="form-label col-xs-4 col-sm-3">是否具备增值税一般纳税人资格：</label>
 			<div class="formControls col-xs-7 col-sm-9 skin-minimal">
 				<div class="check-box">
-					
-					<input name="taxpayerIsQualification" <c:if test="${resultMap.ccpo.taxpayerIsQualification ==1 }">checked</c:if> value="1" type="checkbox" id="checkbox-1">
+					<input name="taxpayerIsQualification" <c:if test="${resultMap.ccpo.taxpayerIsQualification ==1 }"> checked </c:if> value="1" type="checkbox" id="checkbox-1">
 					<label for="checkbox-1">&nbsp;</label>
 				</div>
 			</div>

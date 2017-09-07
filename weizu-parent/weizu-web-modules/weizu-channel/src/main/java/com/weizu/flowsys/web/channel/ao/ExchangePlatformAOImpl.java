@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.util.ClassUtil;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.util.StringUtil2;
@@ -78,7 +79,9 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 		String epEngId = StringUtil2.toUpperClass(exchangePlatformPo.getEpEngId());
 		exchangePlatformPo.setEpEngId(epEngId);
 		exchangePlatformPo.setLastAccess(System.currentTimeMillis());
-		
+		if(exchangePlatformPo.getEpCallBack() == null){
+			exchangePlatformPo.setEpCallBack(CallBackEnum.NEGATIVE.getValue());
+		}
 		int res = exchangePlatformDao.add(exchangePlatformPo);
 		if(res > 0){
 			return "success";

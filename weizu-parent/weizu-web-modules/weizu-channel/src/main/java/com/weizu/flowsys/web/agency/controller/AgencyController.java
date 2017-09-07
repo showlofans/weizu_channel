@@ -152,7 +152,7 @@ public class AgencyController {
 			}
 			session.setAttribute("msgNum", msgNum);
 			
-			return new ModelAndView("/index");// 返回登录人主要账户信息（余额，透支额）
+			return new ModelAndView("redirect:/jsp/index.jsp");// 返回登录人主要账户信息（余额，透支额）
 		} else {
 			return new ModelAndView("/agency/login_page", "msg", resultMsg);
 		}

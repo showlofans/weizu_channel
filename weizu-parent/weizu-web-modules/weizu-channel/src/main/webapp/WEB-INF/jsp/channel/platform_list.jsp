@@ -61,6 +61,7 @@
 					<th width="60">平台官网地址</th>
 					<th width="80">平台其他参数</th>
 					<th width="60">最后更新</th>
+					<th width="60">回调支持</th>
 					<th width="60">操作</th>
 				</tr>
 			</thead>
@@ -93,6 +94,13 @@
 							${platform.epOtherParams }
 						</td>
 						<td class="f-14 td-manage">${platform.lastAccessStr }</td>
+						<td class="f-14 td-manage">
+							<c:forEach items="${resultMap.callBackEnums }" varStatus="vs" var="cbEnum">
+								<c:if test="${cbEnum.value == platform.epCallBack }">
+									${cbEnum.desc }
+								</c:if>
+							</c:forEach>
+						</td>
 						<td class="f-14 td-manage"> <a style="text-decoration:none" onClick="platform_del('/flowsys/platform/platform_del.do','${platform.id}','${platform.epName }')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> <a style="text-decoration:none" class="ml-5" onClick="platform_edit('平台信息编辑','/flowsys/platform/platform_edit_page.do?epId=${platform.id}','10001')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> <!-- <a style="text-decoration:none" class="ml-5" onClick="platform_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a> --></td>
 					</tr>
 				</c:forEach>

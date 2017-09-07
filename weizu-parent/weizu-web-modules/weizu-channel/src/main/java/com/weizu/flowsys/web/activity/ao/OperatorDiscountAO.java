@@ -40,5 +40,5 @@ public interface OperatorDiscountAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月27日 下午3:42:05
 	 */
-	List<OperatorDiscountPo> listDiscountByPo(OperatorDiscountPo operatorDiscountPo);
+//	List<OperatorDiscountPo> listDiscountByPo(OperatorDiscountPo operatorDiscountPo);
 }

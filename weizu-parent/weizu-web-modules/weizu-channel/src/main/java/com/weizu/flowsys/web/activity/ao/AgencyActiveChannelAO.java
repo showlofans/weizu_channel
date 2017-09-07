@@ -12,6 +12,17 @@ import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 public interface AgencyActiveChannelAO {
 	
 	/**
+	 * @description: 跳转到折扣代理商列表页面
+	 * @param resultMap
+	 * @param pageParam
+	 * @param activePo
+	 * @param channelId
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月7日 下午12:33:52
+	 */
+	void getBindRateList(Map<String,Object> resultMap,PageParam pageParam,AgencyActiveRatePo activePo,Long channelId);
+	
+	/**
 	 * @description:查询代理商参与的活动通道
 	 * @param pageParam
 	 * @param activePo
@@ -41,7 +52,7 @@ public interface AgencyActiveChannelAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月13日 上午11:22:20
 	 */
-	Pagination<AgencyActiveRatePo> listActiveRate(PageParam pageParam,RateDiscountPo ratePo);
+//	Pagination<AgencyActiveRatePo> listActiveRate(PageParam pageParam,RateDiscountPo ratePo);
 	
 	
 	/**
