@@ -125,8 +125,10 @@ public class AccountController {
 					chargeRecordPo.setUserName(agencyPO.getUserName());
 				}
 			}
+			return new ModelAndView("/account/charge_list", "resultMap", resultMap);
+		}else{
+			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 		}
-		return new ModelAndView("/account/charge_list", "resultMap", resultMap);
 	}
 	/**
 	 * @description: 消费记录
@@ -161,8 +163,10 @@ public class AccountController {
 					consumeRecordPo.setUserName(agencyPO.getUserName());
 				}
 			}
+			return new ModelAndView("/account/charge_list", "resultMap", resultMap);
+		}else{
+			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 		}
-		return new ModelAndView("/account/consume_list", "resultMap", resultMap);
 	}
 	
 	/**
@@ -384,6 +388,9 @@ public class AccountController {
 	public ModelAndView accountInfo(HttpServletRequest request){
 		//重新根据当前登陆id获取一遍账户信息
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		if(agencyVo == null){
+			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+		}
 		ChargeAccountPo chargeAccount = chargeAccountAO.getAccountByAgencyId(agencyVo.getId(), BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 		ChargeAccountPo chargeAccount1 = chargeAccountAO.getAccountByAgencyId(agencyVo.getId(), BillTypeEnum.CORPORATE_BUSINESS.getValue());
 		request.getSession().setAttribute("chargeAccount",chargeAccount);
@@ -403,32 +410,34 @@ public class AccountController {
 	public void editAccountInfo(HttpServletRequest request,ChargeAccountPo chargeAccount,HttpServletResponse response){
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 //		Map<String,Object> resultMap = new HashMap<String, Object>();
-		chargeAccount.setAgencyId(agencyVo.getId());
-		int res = chargeAccountAO.updateAccount(chargeAccount);
-		try {
-			if(res > 0 )
-			{
-				//更新session中相关账户信息
-				if(chargeAccount.getBillType() == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())
+		if(agencyVo != null){
+			chargeAccount.setAgencyId(agencyVo.getId());
+			int res = chargeAccountAO.updateAccount(chargeAccount);
+			try {
+				if(res > 0 )
 				{
+					//更新session中相关账户信息
+					if(chargeAccount.getBillType() == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())
+					{
 //					ChargeAccountPo chargeAccount0 =  (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
 //					chargeAccount0.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());
-					request.getSession().setAttribute("chargeAccount", chargeAccount);
-				}else if(chargeAccount.getBillType() == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())
-				{
+						request.getSession().setAttribute("chargeAccount", chargeAccount);
+					}else if(chargeAccount.getBillType() == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())
+					{
 //					ChargeAccountPo chargeAccount1 =  (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
 //					chargeAccount1.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());
-					request.getSession().setAttribute("chargeAccount1", chargeAccount);
+						request.getSession().setAttribute("chargeAccount1", chargeAccount);
+					}
+					
+					response.getWriter().print("success");
 				}
-				
-				response.getWriter().print("success");
+				else
+				{
+					response.getWriter().print("error");
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			else
-			{
-				response.getWriter().print("error");
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		
 //		return new ModelAndView("/account/account_info","resultMap",resultMap);

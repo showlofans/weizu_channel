@@ -69,16 +69,18 @@ public class ProductCodeController {
 			}
 			List<OperatorPgDataPo> pgList = productCodeAO.initPgList(epId,0, 0);//默认移动全国流量
 			resultMap.put("pgList", pgList);
-		}
-		resultMap.put("operatorType", 0);
-		resultMap.put("serviceType", 0);
-		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
-		resultMap.put("pgTypeEnums", OperatorTypeEnum.toList());
-		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
-		resultMap.put("epId", epId);
+			resultMap.put("operatorType", 0);
+			resultMap.put("serviceType", 0);
+			resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
+			resultMap.put("pgTypeEnums", OperatorTypeEnum.toList());
+			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
+			resultMap.put("epId", epId);
 //		resultMap.put("epId", Integer.parseInt(epId));
 //		operatorPgAO.l
-		return new ModelAndView("/channel/productCode_add_page", "resultMap", resultMap);
+			return new ModelAndView("/channel/productCode_add_page", "resultMap", resultMap);
+		}else{
+			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+		}
 	}
 	
 	/**
@@ -186,15 +188,16 @@ public class ProductCodeController {
 				pagination = new Pagination<ProductCodePo>(null, 0, 1, 10);
 				resultMap.put("pagination", pagination);
 			}
+			//List<ExchangePlatformPo> epList = 
+			resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
+			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
+			resultMap.put("searchParam", productCodePo);
+			resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
+			return new ModelAndView("/channel/product_code_list", "resultMap", resultMap);
+		}else{
+			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 		}
-		//List<ExchangePlatformPo> epList = 
 		
-		resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
-		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
-		resultMap.put("searchParam", productCodePo);
-		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
-		
-		return new ModelAndView("/channel/product_code_list", "resultMap", resultMap);
 	}
 	
 	/**

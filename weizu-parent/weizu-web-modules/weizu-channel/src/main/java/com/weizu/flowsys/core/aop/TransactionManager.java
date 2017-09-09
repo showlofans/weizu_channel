@@ -22,7 +22,7 @@ public class TransactionManager {
 	@Resource(name = "sqlSessionTemplateASS")
 	private SqlSessionTemplate sqlSessionTemplateASS;
 	
-	@Pointcut("@annotation(com.weizu.web.foundation.core.annotation.po.TraMethod)")
+	@Pointcut("@annotation(com.weizu.flowsys.core.annotation.po.TraMethod)")
 	public void transactionMethod(){}
 	
 	@Before("transactionMethod()")

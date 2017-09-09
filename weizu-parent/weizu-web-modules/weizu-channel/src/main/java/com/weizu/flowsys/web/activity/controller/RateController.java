@@ -830,6 +830,9 @@ public class RateController {
 	public ModelAndView batchBindAgencyPage(@RequestParam(value = "pageNo", required = false) String pageNo,AgencyActiveRateDTO aardto,RateDiscountPo ratePo, HttpServletRequest request){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		Map<String, Object> resultMap = new HashMap<String, Object>();
+		if(agencyVO == null){
+			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+		}
 		int rootAgencyId = agencyVO.getId();
 		PageParam pageParam = null;
 		if(StringHelper.isNotEmpty(pageNo)){
@@ -871,6 +874,9 @@ public class RateController {
 	@RequestMapping(value=RateURL.BATCH_BIND_AGENCY)
 	public String batchBindAgency(AgencyActiveRateDTO aardto,HttpServletRequest request){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		if(agencyVO == null){
+			return "error";
+		}
 		aardto.setBindAgencyId(agencyVO.getId());
 		int res = agencyActiveChannelAO.batchBindAgency(aardto);
 		String msg = "";
@@ -902,6 +908,9 @@ public class RateController {
 	public ModelAndView welcome(HttpServletRequest request){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		if(agencyVO == null){
+			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+		}
 		Map<String,Object> map = rateDiscountAO.getShowRate(agencyVO.getId());
 		resultMap.put("map", map);
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());

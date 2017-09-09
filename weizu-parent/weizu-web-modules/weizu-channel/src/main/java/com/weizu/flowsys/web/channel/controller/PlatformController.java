@@ -136,9 +136,10 @@ public class PlatformController {
 			resultMap.put("searchParam", exchangePlatformPo);
 			resultMap.put("callBackEnums", CallBackEnum.toList());
 			resultMap.put("pagination", pagination);
+			return new ModelAndView("/channel/platform_list", "resultMap", resultMap);
+		}else{
+			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 		}
-		return new ModelAndView("/channel/platform_list", "resultMap", resultMap);
-		
 	}
 	/**
 	 * @description:添加平台页面

@@ -120,25 +120,29 @@ public class ChannelController {
 //		
 		//添加代理商账户Id
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		channelChannelPo.setBelongAgencyId(agencyVO.getId());
-		
+		if(agencyVO == null){
+			return "error";
+		}else{
+			channelChannelPo.setBelongAgencyId(agencyVO.getId());
+			
 //		List<ChannelForwardPo> list = channelForwardAO.initAddListByPo(channelForwardPo);	//初始化list
-		int result = channelChannelAO.channel_addList(channelChannelPo);
-		//System.out.println(result);
-		
+			int result = channelChannelAO.channel_addList(channelChannelPo);
+			//System.out.println(result);
+			
 //		System.out.println(channelForwardPo.getScopeCityName());
-		
-		if(result > 0){
+			
+			if(result > 0){
 //			ChannelForwardPo channelForwardPoParam = new ChannelForwardPo();
 //			channelForwardPoParam.setAgencyId(agencyVO.getId());
 //			return list_channel(null, request, null);
-			return "success";
-		}else{
+				return "success";
+			}else{
 //			Map<String, Object> resultMap = new HashMap<String, Object>();
 //			resultMap.put("pgSizeStr", channelChannelPo.getPgSize());
 //			resultMap.put("channelName", channelChannelPo.getChannelName());
-			return "error";
+				return "error";
 //			return new ModelAndView("/channel/channel_add_page","resultMap",resultMap);
+			}
 		}
 	}
 	
