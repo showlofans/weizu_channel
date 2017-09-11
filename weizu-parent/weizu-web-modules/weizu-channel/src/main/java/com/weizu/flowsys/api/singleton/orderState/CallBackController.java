@@ -19,7 +19,6 @@ import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.trade.ao.AgencyPurchaseAO;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
-import com.weizu.web.foundation.http.HttpRequest;
 
 /**
  * @description: 回调控制层

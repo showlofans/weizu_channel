@@ -163,7 +163,7 @@ public class AccountController {
 					consumeRecordPo.setUserName(agencyPO.getUserName());
 				}
 			}
-			return new ModelAndView("/account/charge_list", "resultMap", resultMap);
+			return new ModelAndView("/account/consume_list", "resultMap", resultMap);
 		}else{
 			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 		}

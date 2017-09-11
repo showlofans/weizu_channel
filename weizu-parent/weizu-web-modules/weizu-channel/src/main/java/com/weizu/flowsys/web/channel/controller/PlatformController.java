@@ -121,15 +121,15 @@ public class PlatformController {
 	public ModelAndView PlatformSearch(@RequestParam(value = "pageNo", required = false)String pageNo,ExchangePlatformPo exchangePlatformPo,HttpServletRequest request)
 	{
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		if(agencyVO != null){
+//		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//		if(agencyVO != null){
 			PageParam pageParam = null;
 			if(StringHelper.isNotEmpty(pageNo)){
 				pageParam = new PageParam(Integer.parseInt(pageNo), 10);
 			}else{
 				pageParam = new PageParam(1, 10);
 			}
-			Pagination<ExchangePlatformPo> pagination = exchangePlatformAO.getEp(agencyVO.getId(), exchangePlatformPo, pageParam);
+			Pagination<ExchangePlatformPo> pagination = exchangePlatformAO.getEp(exchangePlatformPo, pageParam);
 //			resultMap.put("pgInEnums", PgInServiceEnum.toList());
 //			resultMap.put("pgTypeEnums", OperatorTypeEnum.toList());
 //			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
@@ -137,9 +137,9 @@ public class PlatformController {
 			resultMap.put("callBackEnums", CallBackEnum.toList());
 			resultMap.put("pagination", pagination);
 			return new ModelAndView("/channel/platform_list", "resultMap", resultMap);
-		}else{
-			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
-		}
+//		}else{
+//			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+//		}
 	}
 	/**
 	 * @description:添加平台页面

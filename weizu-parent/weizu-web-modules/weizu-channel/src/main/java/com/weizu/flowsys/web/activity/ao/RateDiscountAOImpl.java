@@ -362,10 +362,63 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月19日 下午12:08:07
 	 */
+//	@Override
+//	public Map<String,Object> getShowRate(Integer agencyId) {
+//		Map<String, Object> params = new HashMap<String, Object>();
+//		Map<String,Object> dtoMap = new HashMap<String, Object>();
+//		params.put("agencyId", agencyId);
+//		
+//		BillTypeEnum[] bTypeEnums = BillTypeEnum.values();	
+//		ServiceTypeEnum [] sTypeEnums = ServiceTypeEnum.values();
+//		for (ServiceTypeEnum serviceTypeEnum : sTypeEnums) {
+//			for (BillTypeEnum billTypeEnum : bTypeEnums) {
+//				params.put("billType", billTypeEnum.getValue());
+//				params.put("serviceType", serviceTypeEnum.getValue());
+//				params.put("bindState", BindStateEnum.BIND.getValue());
+//				params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+//				List<RateDiscountPo> rateListBill = rateDiscountDao.getShowRate(params);
+//				initRateList(rateListBill, dtoMap, billTypeEnum.getValue(), serviceTypeEnum.getValue());
+//			}
+//		}
+//		
+////		params.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+////		List<RateDiscountPo> rateList = rateDiscountDao.getShowRate(params);
+////		initRateList(rateList, dtoMap, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+//		
+////		if(rateListBill != null && rateListBill.size()>0){//有对公的费率
+//////			DiscountPo dpo = null;
+////			StringBuffer discount0 = new StringBuffer("{");
+////			StringBuffer discount1 = new StringBuffer("{");
+////			StringBuffer discount2 = new StringBuffer("{");
+////			for (RateDiscountPo rateDiscountPo2 : rateListBill) {
+////				String code = rateDiscountPo2.getScopeCityCode();
+////				String ScopeCityName = ScopeCityEnum.getEnum(code).getDesc();	//城市名
+////				int operatorType = rateDiscountPo2.getOperatorType();
+////				if(operatorType == OperatorTypeEnum.MOBILE.getValue())
+////				{
+////					discount0.append("\""+ScopeCityName+"\":\""+rateDiscountPo2.getActiveDiscount()+"\",");
+////				}else if(operatorType == OperatorTypeEnum.TELECOME.getValue())
+////				{
+////					discount2.append("\""+ScopeCityName+"\":\""+rateDiscountPo2.getActiveDiscount()+"\",");
+////				}else//联通
+////				{
+////					discount1.append("\""+ScopeCityName+"\":\""+rateDiscountPo2.getActiveDiscount()+"\",");
+////				}
+////			}
+////			String dis0Str = discount0.append("}").toString();
+////			String dis1Str = discount1.append("}").toString();
+////			String dis2Str = discount2.append("}").toString();
+////			DiscountPo dpo = new DiscountPo(dis0Str, dis1Str, dis2Str);
+////			dtoMap.put("billDTO", new RateDiscountShowDTO(dpo, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
+////		}
+//		
+//		return dtoMap;
+//	}
 	@Override
-	public Map<String,Object> getShowRate(Integer agencyId) {
+	public List<RateDiscountShowDTO> getIndexShowRate(Integer agencyId) {
 		Map<String, Object> params = new HashMap<String, Object>();
-		Map<String,Object> dtoMap = new HashMap<String, Object>();
+//		Map<String,Object> dtoMap = new HashMap<String, Object>();
+		List<RateDiscountShowDTO> dtoList = new LinkedList<RateDiscountShowDTO>();
 		params.put("agencyId", agencyId);
 		
 		BillTypeEnum[] bTypeEnums = BillTypeEnum.values();	
@@ -377,42 +430,10 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 				params.put("bindState", BindStateEnum.BIND.getValue());
 				params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
 				List<RateDiscountPo> rateListBill = rateDiscountDao.getShowRate(params);
-				initRateList(rateListBill, dtoMap, billTypeEnum.getValue(), serviceTypeEnum.getValue());
+				initRateList(rateListBill, dtoList, billTypeEnum.getValue(), serviceTypeEnum.getValue());
 			}
 		}
-		
-//		params.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-//		List<RateDiscountPo> rateList = rateDiscountDao.getShowRate(params);
-//		initRateList(rateList, dtoMap, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-		
-//		if(rateListBill != null && rateListBill.size()>0){//有对公的费率
-////			DiscountPo dpo = null;
-//			StringBuffer discount0 = new StringBuffer("{");
-//			StringBuffer discount1 = new StringBuffer("{");
-//			StringBuffer discount2 = new StringBuffer("{");
-//			for (RateDiscountPo rateDiscountPo2 : rateListBill) {
-//				String code = rateDiscountPo2.getScopeCityCode();
-//				String ScopeCityName = ScopeCityEnum.getEnum(code).getDesc();	//城市名
-//				int operatorType = rateDiscountPo2.getOperatorType();
-//				if(operatorType == OperatorTypeEnum.MOBILE.getValue())
-//				{
-//					discount0.append("\""+ScopeCityName+"\":\""+rateDiscountPo2.getActiveDiscount()+"\",");
-//				}else if(operatorType == OperatorTypeEnum.TELECOME.getValue())
-//				{
-//					discount2.append("\""+ScopeCityName+"\":\""+rateDiscountPo2.getActiveDiscount()+"\",");
-//				}else//联通
-//				{
-//					discount1.append("\""+ScopeCityName+"\":\""+rateDiscountPo2.getActiveDiscount()+"\",");
-//				}
-//			}
-//			String dis0Str = discount0.append("}").toString();
-//			String dis1Str = discount1.append("}").toString();
-//			String dis2Str = discount2.append("}").toString();
-//			DiscountPo dpo = new DiscountPo(dis0Str, dis1Str, dis2Str);
-//			dtoMap.put("billDTO", new RateDiscountShowDTO(dpo, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
-//		}
-		
-		return dtoMap;
+		return dtoList;
 	}
 	
 	/**
@@ -452,8 +473,7 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年9月1日 下午4:41:56
 	 */
-	private void initRateList(List<RateDiscountPo> rateList,Map<String,Object> dtoMap,int billType,int serviceType) {
-//		List<RateDiscountShowDTO> dtoList = new ArrayList<RateDiscountShowDTO>();
+	private void initRateList(List<RateDiscountPo> rateList,List<RateDiscountShowDTO> showList,int billType,int serviceType) {
 		String key = "";
 		if(rateList != null && rateList.size()>0){//有对公的费率
 //			DiscountPo dpo = null;
@@ -479,20 +499,21 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 			String dis1Str = discount1.append("}").toString();
 			String dis2Str = discount2.append("}").toString();
 			DiscountPo dpo = new DiscountPo(dis0Str, dis1Str, dis2Str);
-			Map<String,Object> bMap = new HashMap<String, Object>();
-			if(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue() == billType){
-				bMap.put("noDTO", new RateDiscountShowDTO(dpo, 1));
-			}else{
-				bMap.put("billDTO", new RateDiscountShowDTO(dpo, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
-			}
-			if(ServiceTypeEnum.NATION_WIDE.getValue() == serviceType){
-				key = "nationWide";
-			}else if(ServiceTypeEnum.PROVINCE_ROAMING.getValue() == serviceType){
-				key = "provinceRoaming";
-			}else{
-				key = "province";
-			}
-			dtoMap.put(key, bMap);
+			showList.add(new RateDiscountShowDTO(dpo, billType,serviceType));
+//			Map<String,Object> bMap = new HashMap<String, Object>();
+//			if(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue() == billType){
+//				bMap.put("noDTO", new RateDiscountShowDTO(dpo, 1,serviceType));
+//			}else{
+//				bMap.put("billDTO", new RateDiscountShowDTO(dpo, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
+//			}
+//			if(ServiceTypeEnum.NATION_WIDE.getValue() == serviceType){
+//				key = "nationWide";
+//			}else if(ServiceTypeEnum.PROVINCE_ROAMING.getValue() == serviceType){
+//				key = "provinceRoaming";
+//			}else{
+//				key = "province";
+//			}
+//			dtoMap.put(key, bMap);
 		}
 //		if(rateList != null && rateList.size()>0){
 ////			DiscountPo dpo = null;

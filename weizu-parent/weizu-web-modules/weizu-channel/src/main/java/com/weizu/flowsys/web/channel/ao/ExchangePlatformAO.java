@@ -42,13 +42,23 @@ public interface ExchangePlatformAO {
 	 */
 	List<ExchangePlatformPo> getSimpleEp();
 	/**
-	 * @description:获得所有平台
+	 * @description:获得所有平台(agencyEp)
 	 * @param name
 	 * @return
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月11日 下午12:50:57
 	 */
-	Pagination<ExchangePlatformPo> getEp(int agencyId,ExchangePlatformPo ep,PageParam pageParam);
+//	Pagination<ExchangePlatformPo> getEp(int agencyId,ExchangePlatformPo ep,PageParam pageParam);
+	
+	/**
+	 * @description: 获得所有平台
+	 * @param ep
+	 * @param pageParam
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月11日 上午11:58:28
+	 */
+	Pagination<ExchangePlatformPo> getEp(ExchangePlatformPo ep,PageParam pageParam);
 	/**
 	 * @description:平台添加（单系统）
 	 * @param exchangePlatformPo

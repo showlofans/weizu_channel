@@ -72,7 +72,7 @@
 			<thead>
 				<tr class="text-c">
 					<!-- <th width="80">流量包Id</th> -->
-					<th >ID</th>
+					 <th >ID</th>
 					<th >平台名称</th>
 					<th >通道名称</th>
 					<th >业务类型</th>
@@ -99,7 +99,7 @@
 			<tbody>
 				<c:forEach items="${resultMap.pagination.records }" var="channel" varStatus="vs">
 					<tr class="text-c">
-						<td>${channel.id }</td> 
+						<td>${channel.id }</td>
 						<td>${channel.epName }</td>
 						<td>${channel.channelName }</td>
 						<td><c:forEach items="${resultMap.serviceTypeEnums }" var="serTypeEnum" varStatus="vs1">

@@ -41,14 +41,15 @@
 				<span class="select-box inline">
 					<select id="selectEpId" name="epId" onchange="ajaxGetPg()"  class="select">
 						<c:forEach items="${resultMap.epList }" var="ep" varStatus="vs1">
-							<c:choose>
+							<option value="${ep.id }" >${ep.epName }</option>
+							<%-- <c:choose>
 								<c:when test="${ep.epId==resultMap.epId }">
 									<option value="${ep.epId }" selected="selected" >${ep.epName }</option>
 								</c:when>
 								<c:otherwise>
 									<option value="${ep.epId }" >${ep.epName }</option>
 								</c:otherwise>
-							</c:choose>
+							</c:choose> --%>
 						</c:forEach>
 					</select>
 				</span>
@@ -210,7 +211,7 @@ function changePg(){
         dataType: "json",
         async : false,
         success:function(data){
-        	alert(data.length);
+        	//alert(data.length);
             $("#pgId").empty();//清空原有收据 
         	if(data.length > 0){
                 var appendData;

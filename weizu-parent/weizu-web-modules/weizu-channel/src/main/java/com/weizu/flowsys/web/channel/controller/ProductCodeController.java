@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
+import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
@@ -23,7 +24,8 @@ import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.channel.ao.AgencyEpAO;
 import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
-import com.weizu.flowsys.web.channel.pojo.AgencyEpPo;
+import com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface;
+import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.channel.url.ProductCodeURL;
@@ -46,6 +48,9 @@ public class ProductCodeController {
 	@Resource
 	private AgencyEpAO agencyEpAO;
 	
+	@Resource
+	private ExchangePlatformDaoInterface exchangePlatformDao;
+	
 	
 	/**
 	 * @description:跳转到产品列表添加页面
@@ -55,28 +60,30 @@ public class ProductCodeController {
 	 * @createTime:2017年6月9日 上午9:49:00
 	 */
 	@RequestMapping(value = ProductCodeURL.PRODUCTCODE_ADD_PAGE)
-	public ModelAndView addProdouctCodePage(String pageTitle,Integer epId, HttpServletRequest request){
+	public ModelAndView addProdouctCodePage(String pageTitle,String epName, HttpServletRequest request){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 			resultMap.put("pageTitle", pageTitle);
 		//查询所有平台名称
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO != null){
-			List<AgencyEpPo> epList = agencyEpAO.getAgencyEpByAgencyId(agencyVO.getId());
+//			List<AgencyEpPo> epList = agencyEpAO.getAgencyEpByAgencyId(agencyVO.getId());
+			List<ExchangePlatformPo> epList = exchangePlatformDao.list(new WherePrams("ep_name", "like", epName));
 			resultMap.put("epList", epList);
 			//判断前台是否穿了平台id过来，没有就默认取第一个
-			if(epId == null && epList != null && epList.size() > 0){
-				epId = epList.get(0).getEpId();
+//			if(epId == null && epList != null && epList.size() > 0){
+//				epId = epList.get(0).getEpId();
+//			}
+			if( epList != null && epList.size() > 0){
+				Integer epId = epList.get(0).getId();
+				List<OperatorPgDataPo> pgList = productCodeAO.initPgList(epId,0, 0);//默认移动全国流量
+				resultMap.put("pgList", pgList);
+				resultMap.put("epId", epList.get(0).getId());
 			}
-			List<OperatorPgDataPo> pgList = productCodeAO.initPgList(epId,0, 0);//默认移动全国流量
-			resultMap.put("pgList", pgList);
 			resultMap.put("operatorType", 0);
 			resultMap.put("serviceType", 0);
 			resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 			resultMap.put("pgTypeEnums", OperatorTypeEnum.toList());
 			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
-			resultMap.put("epId", epId);
-//		resultMap.put("epId", Integer.parseInt(epId));
-//		operatorPgAO.l
 			return new ModelAndView("/channel/productCode_add_page", "resultMap", resultMap);
 		}else{
 			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
@@ -157,46 +164,55 @@ public class ProductCodeController {
 	public ModelAndView getProductCode(ProductCodePo productCodePo,HttpServletRequest request,@RequestParam(value = "pageNo", required = false)String pageNo)
 	{
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		if(agencyVO != null){
-			List<AgencyEpPo> epList = agencyEpAO.getAgencyEpByAgencyId(agencyVO.getId());
-			resultMap.put("epList", epList);
-			//提交表单，对接平台参数绝对不为空；为空说明第一次加载
-			Pagination<ProductCodePo> pagination = null;
-			if(epList.size() != 0){
-				if(productCodePo == null || productCodePo.getEpId() == null){
-					productCodePo = new ProductCodePo();
-					Object sessionEpId = request.getSession().getAttribute("epId");
-					if(sessionEpId != null){
-						productCodePo.setEpId(Integer.parseInt(sessionEpId.toString()));
-					}else{
-						productCodePo.setEpId(epList.get(0).getEpId());//默认加载第一个平台的编码
-					}
-	//				if(productCodePo.getOperatorType() == null){
-	//					productCodePo.setOperatorType(0);//默认加载移动
-	//				}
-				}
-				PageParam pageParam = null;
-				if(StringHelper.isNotEmpty(pageNo)){
-					pageParam  = new PageParam(Integer.parseInt(pageNo), 10);
-				}else{
-					pageParam = new PageParam(1, 10);
-				}
-				pagination = productCodeAO.getProductCode(productCodePo, pageParam);
-				resultMap.put("pagination", pagination);
+//		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//		if(agencyVO != null){
+//			List<AgencyEpPo> epList = agencyEpAO.getAgencyEpByAgencyId(agencyVO.getId());
+//			resultMap.put("epList", epList);
+//			//提交表单，对接平台参数绝对不为空；为空说明第一次加载
+//			Pagination<ProductCodePo> pagination = null;
+//			if(epList.size() != 0){
+//				if(productCodePo == null || productCodePo.getEpId() == null){
+//					productCodePo = new ProductCodePo();
+//					Object sessionEpId = request.getSession().getAttribute("epId");
+//					if(sessionEpId != null){
+//						productCodePo.setEpId(Integer.parseInt(sessionEpId.toString()));
+//					}else{
+//						productCodePo.setEpId(epList.get(0).getEpId());//默认加载第一个平台的编码
+//					}
+//	//				if(productCodePo.getOperatorType() == null){
+//	//					productCodePo.setOperatorType(0);//默认加载移动
+//	//				}
+//				}
+//				PageParam pageParam = null;
+//				if(StringHelper.isNotEmpty(pageNo)){
+//					pageParam  = new PageParam(Integer.parseInt(pageNo), 10);
+//				}else{
+//					pageParam = new PageParam(1, 10);
+//				}
+//				pagination = productCodeAO.getProductCode(productCodePo, pageParam);
+//				resultMap.put("pagination", pagination);
+//			}else{
+//				pagination = new Pagination<ProductCodePo>(null, 0, 1, 10);
+//				resultMap.put("pagination", pagination);
+//			}
+			
+			PageParam pageParam = null;
+			if(StringHelper.isNotEmpty(pageNo)){
+				pageParam  = new PageParam(Integer.parseInt(pageNo), 10);
 			}else{
-				pagination = new Pagination<ProductCodePo>(null, 0, 1, 10);
-				resultMap.put("pagination", pagination);
+				pageParam = new PageParam(1, 10);
 			}
+			Pagination<ProductCodePo> pagination = productCodeAO.getProductCode(productCodePo, pageParam);
+			resultMap.put("pagination", pagination);
 			//List<ExchangePlatformPo> epList = 
 			resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
 			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 			resultMap.put("searchParam", productCodePo);
 			resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 			return new ModelAndView("/channel/product_code_list", "resultMap", resultMap);
-		}else{
-			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
-		}
+//		}else{
+//			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+//		}
 		
 	}
 	

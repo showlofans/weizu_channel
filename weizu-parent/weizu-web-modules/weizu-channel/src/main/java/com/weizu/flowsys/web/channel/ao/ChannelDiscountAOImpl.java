@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
@@ -195,12 +196,16 @@ public class ChannelDiscountAOImpl implements ChannelDiscountAO {
 	@Override
 	public List<ChannelDiscountPo> listOpenChannel(ChannelDiscountPo discountPo) {
 		Map<String,Object> paramsMap = new HashMap<String, Object>(5);
-		paramsMap.put("belongAgencyId", discountPo.getBelongAgencyId());
 //		paramsMap.put("billType", channelPo.getBillType());
 		paramsMap.put("channelState", ChannelStateEnum.OPEN.getValue());//查找开通的通道
 		paramsMap.put("operatorType", discountPo.getOperatorType());
 		paramsMap.put("serviceType", discountPo.getServiceType());
 		paramsMap.put("scopeCityCode", discountPo.getScopeCityCode());
+		
+		paramsMap.put("agencyId", discountPo.getBelongAgencyId());
+		paramsMap.put("bindState", BindStateEnum.BIND.getValue());
+		paramsMap.put("billTypeRate", discountPo.getBillType());
+		
 		return channelDiscountDao.listSimpleChannel(paramsMap);
 	}
 

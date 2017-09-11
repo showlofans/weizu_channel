@@ -30,21 +30,20 @@
 <div class="zhuce_body">
     <div class="zhuce_kong">
     	<div class="zc">
+        	
         	<div class="bj_bai">
             <h3>欢迎注册</h3>
        	  	  <form class="form form-horizontal" id="regForm" action="/flowsys/agency/register.do" method="post">
-       	  	  	<input id="userName" name="userName" required type="text" autocomplete="off"  placeholder="账户" class="kuang_txt phone input-text size-L"">
-       	  	  	<c:if test="${not empty resultMap.msg}">
-       	  	  		<br><span id="errorMsg" style="color:red;">${resultMap.msg}</span>
-       	  	  	</c:if>
-                <input name="userPass"  value="${resultMap.reg.userPass }" type="text" class="kuang_txt possword input-text size-L"" placeholder="密码" >
+       	  	  	<input id="userName" name="userName" value="${resultMap.reg.userName }" required type="text" autocomplete="off"  placeholder="账户" class="kuang_txt phone input-text size-L"">
+                <input id="userPass" name="userPass"  value="${resultMap.reg.userPass }" type="text" class="kuang_txt possword input-text size-L"" placeholder="密码" >
                 <input id="userRealName" value="${resultMap.reg.userRealName }" name="userRealName" required  autocomplete="off" type="text" placeholder=" 真实姓名" class="kuang_txt phone input-text size-L">
                <input id="agencyTel" name="agencyTel" value="${resultMap.reg.agencyTel }" required  autocomplete="off" type="text" placeholder="联系电话" class="kuang_txt phone input-text size-L">
                <input id="otherContact" name="otherContact" value="${resultMap.reg.otherContact }" required  autocomplete="off" type="text" placeholder="其他联系方式：qq号" class="kuang_txt phone input-text size-L">
                 <input id="userEmail" name="userEmail" value="${resultMap.reg.userEmail }" required  autocomplete="off" type="email" placeholder="电子邮箱" class="kuang_txt emailt input-text size-L">
-                <input id="agencyIp" name="agencyIp" value="${resultMap.reg.agencyIp }" required  autocomplete="off" type="text"  placeholder=" 用户地址" class="kuang_txt input-text size-L">
-                <input id="verifyCode" name="verifyCode" value="${resultMap.reg.verifyCode }" required  autocomplete="off" type="text" placeholder="注册邀请码" class="kuang_txt	 yanzm input-text size-L">
-                
+                <input id="agencyIp" name="agencyIp" value="${resultMap.reg.agencyIp }" required  autocomplete="off" type="text"  placeholder=" 用户地址" class="kuang_txt phone input-text size-L">
+                <input id="verifyCode" name="verifyCode" value="${resultMap.reg.verifyCode }" required  autocomplete="off" type="text" placeholder="注册邀请码" class="kuang_txt	 yanzm input-text size-L"><c:if test="${not empty resultMap.msg}">
+       	  	  		<span id="errorMsg" style="color:red;" >${resultMap.msg}</span>
+       	  	  	</c:if>
                 <!-- <input name="" type="text" class="kuang_txt yanzm" placeholder="验证码"> -->
                <!--  <div>
                 	<div class="hui_kuang"><img src="/view/static/h-ui.admin/images/zc_22.jpg" width="92" height="31"></div>
@@ -54,7 +53,9 @@
                		<input name="" type="checkbox" value=""><span>已阅读并同意<a href="#" target="_blank"><span class="lan">《XXXXX使用协议》</span></a></span>
                 </div> -->
               		 <input id="goRegist" class="btn_zhuce" type="submit" value="&nbsp;注册&nbsp;">
-              		 <a href="/flowsys/agency/login_page.do"><input id="goRegist" class="btn_login" type="button" value="&nbsp;登陆&nbsp;"></a>
+              		 <!-- <a href="/flowsys/agency/login_page.do"> -->
+              		 <input id="goRegist" onclick="startLogin()" class="btn_login" type="button" value="&nbsp;登陆&nbsp;">
+              		 <!-- </a> -->
                 </form>
             </div>
         </div>
@@ -67,6 +68,12 @@
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 <script type="text/javascript">
+/**跳转登陆页面*/
+function startLogin(){
+	var userName = $('#userName').val();
+	var userPass = $('#userPass').val();
+	window.location.href = "/flowsys/agency/login_page.do?userName="+userName+"&userPass="+userPass;
+}
 	$().ready(function() {
 	    $("#regForm").validate({
 	    	rules:{

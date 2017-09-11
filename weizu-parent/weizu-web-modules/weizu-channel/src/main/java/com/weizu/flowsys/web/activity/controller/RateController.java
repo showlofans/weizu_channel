@@ -37,6 +37,7 @@ import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
 import com.weizu.flowsys.web.activity.pojo.RateBackwardPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
+import com.weizu.flowsys.web.activity.pojo.RateDiscountShowDTO;
 import com.weizu.flowsys.web.activity.url.RateURL;
 import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
@@ -321,13 +322,16 @@ public class RateController {
 	{
 //		ChargeAccountPo chargeAccount1 = (ChargeAccountPo) request.getSession().getAttribute("chargeAccount1");
 //		ChargeAccountPo chargeAccount = (ChargeAccountPo) request.getSession().getAttribute("chargeAccount");
-		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 //		String agencyName = request.getSession().getAttribute("childAgencyName").toString();
-		if(agencyVO == null){//未登录用户
-			System.out.println("no login");
-//			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+//		if(agencyVO == null){//未登录用户
+//			System.out.println("no login");
+////			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+//		}
+		Object childAgencyId = request.getSession().getAttribute("childAgencyId");
+		if(childAgencyId != null){
+			discountPo.setBelongAgencyId(Integer.parseInt(childAgencyId.toString()));//当前登录用户的通道的
 		}
-		discountPo.setBelongAgencyId(agencyVO.getId());//当前登录用户的通道的
 		
 		//设置票务筛选
 //		String childAgencyIdStr = request.getSession().getAttribute("childAgencyId").toString();
@@ -564,6 +568,10 @@ public class RateController {
 		aacp.setBindAgencyId(agencyVO.getId());
 		aacp.setAgencyId(Integer.parseInt(agencyId));
 		aacp.setAgencyName(agencyName);
+		if(ServiceTypeEnum.NATION_WIDE.getValue() == rateDiscountPo.getServiceType() && !ScopeCityEnum.QG.getValue().equals(rateDiscountPo.getScopeCityCode())){
+			//全国业务，必须匹配全国的折扣
+			return "disMatch";
+		}
 		int bindRes = agencyActiveChannelAO.bindChannel(aacp,rateDiscountPo);
 		if(bindRes == -1){
 			return "hasScope";
@@ -911,9 +919,11 @@ public class RateController {
 		if(agencyVO == null){
 			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 		}
-		Map<String,Object> map = rateDiscountAO.getShowRate(agencyVO.getId());
-		resultMap.put("map", map);
+		List<RateDiscountShowDTO> rateList = rateDiscountAO.getIndexShowRate(agencyVO.getId());
+//		resultMap.put("map", map);
+		resultMap.put("rateList", rateList);
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
+		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 		return new ModelAndView("/welcome", "resultMap", resultMap);
 	}
 	/**

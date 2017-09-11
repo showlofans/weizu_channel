@@ -1,5 +1,7 @@
 //package crud.aotest;
 //
+//import java.util.List;
+//
 //import javax.annotation.Resource;
 //
 //import org.junit.Test;
@@ -7,8 +9,6 @@
 //import org.springframework.test.context.ContextConfiguration;
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
-//import com.aiyi.base.pojo.PageParam;
-//import com.weizu.flowsys.util.Pagination;
 //import com.weizu.flowsys.web.channel.ao.ChannelDiscountAO;
 //import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 //import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
@@ -36,4 +36,15 @@
 ////		ChannelDiscountPo cd = channelDiscountDao.getCDbyAP(726614433270337536l, 21);
 ////		System.out.println(cd.getServiceType());
 ////	}
+//	@Test
+//	public void listOpenChannel(){
+//		ChannelDiscountPo cpo = new ChannelDiscountPo();
+//		cpo.setBillType(0);
+//		cpo.setBelongAgencyId(2);
+//		List<ChannelDiscountPo> list =channelDiscountAO.listOpenChannel(cpo);
+//		if(list != null && list.size() > 0){
+//			System.out.println(list.size());
+//		}
+//		System.out.println(list.size());
+//	}
 //}

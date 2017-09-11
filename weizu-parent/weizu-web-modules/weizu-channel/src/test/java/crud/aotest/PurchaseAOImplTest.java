@@ -9,8 +9,10 @@
 //import org.springframework.test.context.ContextConfiguration;
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
+//import com.alibaba.fastjson.JSON;
 //import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 //import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
+//import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
 //import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 //import com.weizu.flowsys.web.trade.ao.PurchaseAO;
 //import com.weizu.flowsys.web.trade.dao.PurchaseDao;
@@ -208,11 +210,11 @@
 ////		String res = purchaseAO.ajaxCommitOrder(729886956942528512l, 4, "广东移动", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 ////		System.out.println(res);
 ////	}
-//	@Test
-//	public void ajaxChageList(){
-//		List<OperatorPgDataPo> pgList = purchaseAO.ajaxChargePg(new ChargeChannelParamsPo("广东移动", ServiceTypeEnum.PROVINCE_ROAMING.getValue(), 21l));
-//		if(pgList != null){
-//			System.out.println(pgList.size());
-//		}
-//	}
+////	@Test
+////	public void ajaxChageList(){
+////		List<OperatorPgDataPo> pgList = purchaseAO.ajaxChargePg(new ChargeChannelParamsPo("广东移动", ServiceTypeEnum.PROVINCE.getValue(), 4l));
+////		if(pgList != null){
+////			System.out.println(pgList.size());
+////		}
+////	}
 //}

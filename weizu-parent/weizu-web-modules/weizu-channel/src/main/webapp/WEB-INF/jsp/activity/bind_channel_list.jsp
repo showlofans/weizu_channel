@@ -90,7 +90,7 @@
 						<td  class="text-l">${activePo.discountPo.discount0 }</td>
 						 <td class="text-l">${activePo.discountPo.discount1 }</td>
 						<td class="text-l">${activePo.discountPo.discount2 }</td>
-						<td class="text-l">
+						<td>
 							<c:choose>
 								<c:when test="${activePo.billTypeRate == activePo.billTypeChannel}">
 									<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">

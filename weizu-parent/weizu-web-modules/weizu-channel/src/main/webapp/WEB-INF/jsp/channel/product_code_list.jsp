@@ -37,14 +37,15 @@
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
 		包体编码名称：<input type="text" value="${resultMap.searchParam.productName }" name="productName" id="" placeholder="包体编码名称" style="width:250px" class="input-text">
 		产品编码：<input type="text" value="${resultMap.searchParam.productCode }" name="productCode" id="" placeholder=" 产品编码" style="width:250px" class="input-text">
-		对接平台：
+		平台名称：<input type="text" value="${resultMap.searchParam.epName }" name="epName" id="epName" placeholder=" 平台名称" style="width:250px" class="input-text">
+		<%-- 对接平台：
 		<span class="select-box inline">
 			<select id="epId" name="epId" class="select" onchange="submitForm()">
 			<c:forEach items="${resultMap.epList }" var="ep" varStatus="vs2">
 				<option value="${ep.epId }" <c:if test="${ep.epId == resultMap.searchParam.epId }"> selected</c:if>>${ep.epName }</option>
 			</c:forEach>
 		</select>
-		</span> 
+		</span>  --%>
 		运营商类型：
 		<span class="select-box inline">
 			<select name="operatorType" onchange="submitForm()" class="select">
@@ -69,6 +70,7 @@
 					<!-- <th width="80">流量包Id</th> -->
 					<th width="80">ID</th>
 					<th width="200">包体编码名称</th>
+					<th width="80">平台名称</th>
 					<th width="80">包大小</th>
 					<th width="80">产品编码</th>
 					<!-- <th width="120">支持城市</th> -->
@@ -85,6 +87,7 @@
 					<tr class="text-c">
 						<td>${product.id }</td> 
 						<td>${product.productName }</td>
+						<td>${product.epName }</td>
 						<td>${product.pgSize }</td>
 						<td>${product.productCode }</td>
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
@@ -165,7 +168,8 @@ function submitForm(){
 /*产品编码-添加*/
 function pCode_add(title,url){
 	//alert("sd");
-	var epId = $('#epId').val();//选中的平台
+	//var epId = $('#epId').val();//选中的平台
+	var epName = $('#epName').val();//选中的平台
 	//alert(epId);
 	layer.open({
         type: 2,
@@ -173,7 +177,7 @@ function pCode_add(title,url){
         area: ['430px', '500px'],
         maxmin: false,
         closeBtn: 1,
-        content: url+'?pageTitle=' + title + '&epId='+ epId,
+        content: url+'?pageTitle=' + title + '&epName='+ epName,
          end: function () {
             location.reload();
         }

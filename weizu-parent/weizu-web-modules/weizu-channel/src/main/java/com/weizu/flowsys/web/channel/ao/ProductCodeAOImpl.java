@@ -72,14 +72,17 @@ public class ProductCodeAOImpl implements ProductCodeAO {
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
 				
 		if(productCodePo != null){
-			if(productCodePo.getEpId() != null){
+			/*if(productCodePo.getEpId() != null){
 				paramsMap.put("epId", productCodePo.getEpId());
-			}
+			}*/
 			if(productCodePo.getOperatorType() != null){
 				paramsMap.put("operatorType", productCodePo.getOperatorType());
 			}
 			if(productCodePo.getPgSize() != null){
 				paramsMap.put("pgSize", productCodePo.getPgSize());
+			}
+			if(StringHelper.isNotEmpty(productCodePo.getEpName())){
+				paramsMap.put("epName", productCodePo.getEpName());
 			}
 			if(StringHelper.isNotEmpty(productCodePo.getProductName())){
 				paramsMap.put("productName", productCodePo.getProductName());

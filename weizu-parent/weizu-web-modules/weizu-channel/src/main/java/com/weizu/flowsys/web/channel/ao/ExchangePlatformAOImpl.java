@@ -15,11 +15,10 @@ import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.util.ClassUtil;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.util.StringUtil2;
+import com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface;
 import com.weizu.flowsys.web.channel.dao.impl.AgencyEpDAOImpl;
-import com.weizu.flowsys.web.channel.dao.impl.ExchangePlatformDao;
 import com.weizu.flowsys.web.channel.pojo.AgencyEpPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
-import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
 
@@ -35,7 +34,7 @@ import com.weizu.web.foundation.String.StringHelper;
 public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 
 	@Resource
-	private ExchangePlatformDao exchangePlatformDao;
+	private ExchangePlatformDaoInterface exchangePlatformDao;
 	@Resource
 	private AgencyEpDAOImpl agencyEpDAO;
 	
@@ -125,12 +124,35 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月8日 下午4:38:32
 	 */
+//	@Override
+//	public Pagination<ExchangePlatformPo> getEp(int agencyId,
+//			ExchangePlatformPo ep, PageParam pageParam) {
+////		Map<String, Object> paramsMap = getMapByEntity(channelForwardPo);
+//		Map<String, Object> paramsMap = new HashMap<String, Object>();
+//		paramsMap.put("agencyId", agencyId);
+//		paramsMap.put("epName", ep.getEpName());
+//		int toatalRecord = exchangePlatformDao.countEp(paramsMap);
+//		int pageSize = 10;
+//		int pageNo = 1;
+//		if(pageParam != null){
+//			pageSize = pageParam.getPageSize();
+//			pageNo = pageParam.getPageNo();
+//			paramsMap.put("start", (pageNo-1)*pageSize);
+//			paramsMap.put("end", pageSize);
+//		}
+//		List<ExchangePlatformPo> records = exchangePlatformDao.getEp(paramsMap);
+//		for (ExchangePlatformPo exchangePlatformPo : records) {//动态设置平台余额
+////			exchangePlatformPo.setEpBalance(epBalance);
+//			String lastAccessStr = DateUtil.formatPramm(exchangePlatformPo.getLastAccess(),"yyyy-MM-dd");
+//			exchangePlatformPo.setLastAccessStr(lastAccessStr);
+//		}
+//		return new Pagination<ExchangePlatformPo>(records, toatalRecord, pageNo, pageSize);
+//	}
 	@Override
-	public Pagination<ExchangePlatformPo> getEp(int agencyId,
+	public Pagination<ExchangePlatformPo> getEp(
 			ExchangePlatformPo ep, PageParam pageParam) {
 //		Map<String, Object> paramsMap = getMapByEntity(channelForwardPo);
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("agencyId", agencyId);
 		paramsMap.put("epName", ep.getEpName());
 		int toatalRecord = exchangePlatformDao.countEp(paramsMap);
 		int pageSize = 10;

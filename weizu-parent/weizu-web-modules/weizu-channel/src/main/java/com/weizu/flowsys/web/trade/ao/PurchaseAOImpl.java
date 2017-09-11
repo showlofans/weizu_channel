@@ -538,18 +538,18 @@ public class PurchaseAOImpl implements PurchaseAO {
 					AgencyBackwardPo agnecyPo = agencyVODao.get(agencyId);
 					int superAgencyId = agnecyPo.getRootAgencyId();
 					AgencyPurchasePo superApPo = agencyPurchaseDao.get(new WherePrams("agency_id", "=", superAgencyId).and("purchase_id", "=", orderId));
-					ChargeAccountPo superAccountPo = chargeAccountAO.getAccountByAgencyId(superAgencyId, cd.getBillType());
-					Double superOrderAmount = superApPo.getOrderAmount();//超管的成本
-					Double superAgencyBeforeBalance = superAccountPo.getAccountBalance();
-					/** 更新超管账户信息**/
-					superAccountPo.addBalance(superOrderAmount, -1);
-					int superAccountRes = chargeAccountAO.updateAccount(superAccountPo);
-					if(superAccountRes > 0){
-						//添加消费记录
-						chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), superOrderAmount,
-								superAgencyBeforeBalance, superAccountPo.getAccountBalance(), 
-								cd.getBillType(),AccountTypeEnum.DECREASE.getValue(), superAccountPo.getId(), superAgencyId, 1 , orderId));
-					}
+//					ChargeAccountPo superAccountPo = chargeAccountAO.getAccountByAgencyId(superAgencyId, cd.getBillType());
+//					Double superOrderAmount = superApPo.getOrderAmount();//超管的成本
+//					Double superAgencyBeforeBalance = superAccountPo.getAccountBalance();
+//					/** 更新超管账户信息**/
+//					superAccountPo.addBalance(superOrderAmount, -1);
+//					int superAccountRes = chargeAccountAO.updateAccount(superAccountPo);
+//					if(superAccountRes > 0){
+//						//添加消费记录
+//						chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), superOrderAmount,
+//								superAgencyBeforeBalance, superAccountPo.getAccountBalance(), 
+//								cd.getBillType(),AccountTypeEnum.DECREASE.getValue(), superAccountPo.getId(), superAgencyId, 1 , orderId));
+//					}
 //					charge = getChargeByDTO(chargeDTO,chargeParams,purchasePo);
 //					if(charge!= null){
 //						orderResultDetail = charge.getTipMsg();
@@ -1036,11 +1036,5 @@ public class PurchaseAOImpl implements PurchaseAO {
 //		List<OperatorPgDataPo> pgList = operatorPgDao.getPgByChanel(objMap);
 		return pgList;
 	}
-
-	
-
-	
-
-	
 
 }

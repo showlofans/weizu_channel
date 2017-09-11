@@ -14,7 +14,6 @@ import com.weizu.flowsys.api.singleton.BaseInterface;
 import com.weizu.flowsys.api.singleton.BaseP;
 import com.weizu.flowsys.api.singleton.SingletonFactory;
 import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
-import com.weizu.flowsys.api.weizu.charge.ChargeOrder;
 import com.weizu.flowsys.api.weizu.charge.ChargeParams;
 import com.weizu.flowsys.api.weizu.facet.IChargeFacet;
 import com.weizu.flowsys.core.beans.WherePrams;
@@ -38,7 +37,7 @@ import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
 import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
-import com.weizu.flowsys.web.channel.dao.impl.ExchangePlatformDao;
+import com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
@@ -48,7 +47,6 @@ import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.http.entity.Charge;
 import com.weizu.flowsys.web.http.entity.ChargePo;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
-import com.weizu.flowsys.web.trade.ao.AgencyPurchaseAO;
 import com.weizu.flowsys.web.trade.dao.AgencyPurchaseDao;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.AgencyPurchasePo;
@@ -73,7 +71,7 @@ public class ChargeImpl implements IChargeFacet {
 	private ProductCodeAO productCodeAO;
 	
 	@Resource
-	private ExchangePlatformDao exchangePlatformDao;
+	private ExchangePlatformDaoInterface exchangePlatformDao;
 	@Resource
 	private PurchaseDao purchaseDAO;
 	

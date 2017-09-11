@@ -75,8 +75,8 @@
 ////		System.out.println(t);
 ////	}
 //	
-////	@Test
-////	public void testGetShowRate(){
+//	@Test
+//	public void testGetShowRate(){
 ////		Map<String,Object>  dtoMap = rateDiscountAO.getShowRate(4);
 ////		RateDiscountShowDTO dto = (RateDiscountShowDTO) dtoMap.get("billDTO");
 ////		RateDiscountShowDTO dto1 = (RateDiscountShowDTO) dtoMap.get("noDTO");
@@ -92,7 +92,14 @@
 ////			System.out.println(dto1.getDiscountPo().getDiscount1());;
 ////			System.out.println(dto1.getDiscountPo().getDiscount2());;
 ////		}
-////	}
+//		
+//		List<RateDiscountShowDTO> dtoList = rateDiscountAO.getIndexShowRate(2);
+//		if(dtoList != null && dtoList.size() > 0){
+//			for (RateDiscountShowDTO rateDiscountShowDTO : dtoList) {
+//				System.out.println("serviceType:"+rateDiscountShowDTO.getServiceType()+"\tbillType:"+rateDiscountShowDTO.getBillType());
+//			}
+//		}
+//	}
 ////	@Test
 ////	public void testAddMyRate(){
 ////		RateDiscountPo ratePo = new RateDiscountPo();

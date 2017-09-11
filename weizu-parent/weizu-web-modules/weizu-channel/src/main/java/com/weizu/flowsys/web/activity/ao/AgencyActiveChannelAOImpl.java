@@ -105,13 +105,13 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 //				RateDiscountPo ratePP = new RateDiscountPo();
 				AgencyActiveRatePo aarp1 = new AgencyActiveRatePo();			//搜索参数
 				if(discountList != null && discountList.size() > 0){
-//					if(aarp.getRateDiscountId()==null){
+					if(activePo.getRateDiscountId()==null){
 						Long rateId = discountList.get(0).getId();//第一个折扣id
 						aarp1.setRateDiscountId(rateId);
-//					}else
-//					{
-//						aarp1.setRateDiscountId(aarp.getRateDiscountId());
-//					}
+					}else
+					{
+						aarp1.setRateDiscountId(activePo.getRateDiscountId());
+					}
 					aarp1.setAgencyName(activePo.getAgencyName());
 					Pagination<AgencyActiveRatePo> pagination = listActiveRate(pageParam, aarp1);
 					resultMap.put("pagination", pagination);
@@ -384,7 +384,7 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 		
 		params.put("agencyId", aacp.getAgencyId());
 		params.put("bindState", 0);//绑定的状态
-		params.put("billType", rateDiscountPo.getBillType());
+		params.put("billTypeRate", rateDiscountPo.getBillType());
 		params.put("channelId", rateDiscountPo.getChannelId());
 		params.put("operatorType", rateDiscountPo.getOperatorType());
 		params.put("serviceType", rateDiscountPo.getServiceType());

@@ -82,7 +82,7 @@ public class OperatorDiscountAOImpl implements OperatorDiscountAO {
 		if(rateBackwardVo.getAgencyId() != null){//判断是否是自动绑定到代理商
 			Long id = rateBackwardDao.nextId()-1;//费率列表id
 			AgencyBackwardPo agencyPo = new AgencyBackwardPo();
-			agencyPo.setRateId(id);
+//			agencyPo.setRateId(id);
 			agencyPo.setId(rateBackwardVo.getAgencyId());
 			agencyVODao.updateByAgencyPO(agencyPo);
 		}

@@ -141,7 +141,7 @@ public enum PgSizeEnum {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月16日 下午12:17:40
 	 */
-	public static String initPgSizeList(List pgSizes){
+	public static String initPgSizeList(List<Integer> pgSizes){
 		StringBuffer pgBuffer = new StringBuffer();
 //		List<Map<String, Object>> list = toList();
 //		for(int i = 0; i < pgSizes.size(); i++){
@@ -157,14 +157,17 @@ public enum PgSizeEnum {
 //				}
 //			}
 //		}
-		
-		for (int i = 0; i < pgSizes.size(); i++) {
-			pgBuffer.append(pgSizes.get(i).toString());
-			if(i != (pgSizes.size()-1)){
-				pgBuffer.append("& ");
+		if(pgSizes != null && pgSizes.size() > 0){
+			for (int i = 0; i < pgSizes.size(); i++) {
+				pgBuffer.append(pgSizes.get(i));
+				if(i != (pgSizes.size()-1)){
+					pgBuffer.append("& ");
+				}
 			}
+			return pgBuffer.toString();
+		}else{
+			return "";
 		}
-		return pgBuffer.toString();
 	}
 	public String getDesc() {
 		return desc;

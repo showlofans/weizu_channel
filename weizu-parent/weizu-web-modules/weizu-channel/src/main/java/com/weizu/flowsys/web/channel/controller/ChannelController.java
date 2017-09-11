@@ -30,7 +30,7 @@ import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.channel.ao.ChannelChannelAO;
 import com.weizu.flowsys.web.channel.ao.ExchangePlatformAO;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
-import com.weizu.flowsys.web.channel.dao.impl.ExchangePlatformDao;
+import com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.url.ChannelURL;
@@ -49,7 +49,7 @@ import com.weizu.web.foundation.String.StringHelper;
 public class ChannelController {
 	
 	@Resource
-	private ExchangePlatformDao exchangePlatformDao;
+	private ExchangePlatformDaoInterface exchangePlatformDao;
 	
 	@Resource
 	private ExchangePlatformAO exchangePlatformAO;
@@ -230,8 +230,8 @@ public class ChannelController {
 	 */
 	@RequestMapping(value= ChannelURL.CHANGE_CHANNEL_PGSIZE)
 	@ResponseBody
-	public void changePgSizeList(String operatorType,String serviceType,HttpServletResponse response) throws IOException{
-		response.getWriter().print(operatorPgAO.pgSizeStr(Integer.parseInt(operatorType),Integer.parseInt(serviceType)));
+	public void changePgSizeList(Integer operatorType,Integer serviceType,HttpServletResponse response) throws IOException{
+		response.getWriter().print(operatorPgAO.pgSizeStr(operatorType,serviceType));
 	}
 	
 	/**

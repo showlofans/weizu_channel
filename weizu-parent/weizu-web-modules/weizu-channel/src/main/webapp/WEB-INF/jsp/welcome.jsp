@@ -93,7 +93,19 @@
 		</tbody>
 	</table> -->
 	<%-- <c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vst"></c:forEach> --%>
-	<c:if test="${not empty resultMap.map.nationWide }">
+	<c:forEach items="${resultMap.rateList }" var="ratePo" varStatus="vst">
+		<c:forEach items="${resultMap.billTypeEnums }" var="billTypeE" varStatus="vst1">
+			<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeE" varStatus="vst2">
+				<c:if test="${ratePo.serviceType == serviceTypeE.value && ratePo.billType == billTypeE.value }">
+					<h3>${serviceTypeE.desc }:${billTypeE.desc }:</h3>
+					移动：${ratePo.discountPo.discount0 }<br>
+					联通：${ratePo.discountPo.discount1 }<br>
+					电信：${ratePo.discountPo.discount2 }<br>
+				</c:if>
+			</c:forEach>
+		</c:forEach>
+	</c:forEach>
+	<%-- <c:if test="${not empty resultMap.map.nationWide }">
 		<h3>全国</h3>
 		<c:if test="${not empty resultMap.map.nationWide.billDTO }">
 		<h4>带费率：</h4>
@@ -137,7 +149,7 @@
 			联通：${resultMap.map.province.noDTO.discountPo.discount1 }<br>
 			电信：${resultMap.map.province.noDTO.discountPo.discount2 }<br>
 		</c:if>
-	</c:if>
+	</c:if> --%>
 	<!-- <table class="table table-border table-bordered table-bg mt-20">
 		<thead>
 			<tr>

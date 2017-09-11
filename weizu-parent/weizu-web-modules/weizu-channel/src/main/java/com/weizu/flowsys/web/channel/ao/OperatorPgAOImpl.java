@@ -521,7 +521,7 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 	 * @createTime:2017年5月27日 上午11:38:19
 	 */
 	@Override
-	public List pgSizeList(Integer operatorType,Integer serviceType) {
+	public List<Integer> pgSizeList(Integer operatorType,Integer serviceType) {
 		return operatorPgDao.pgSizeList(operatorType,serviceType);
 	}
 

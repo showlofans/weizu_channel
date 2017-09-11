@@ -19,7 +19,7 @@
     <result column="other_contact" jdbcType="VARCHAR" property="otherContact" />
     <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
     <result column="agency_ip" jdbcType="VARCHAR" property="agencyIp" />
-    <result column="rate_id" jdbcType="BIGINT" property="rateId" />
+    <!-- <result column="rate_id" jdbcType="BIGINT" property="rateId" /> -->
     <result column="agency_tag" jdbcType="INTEGER" property="agencyTag" />
     <result column="verify_code" property="verifyCode" />
     <result column="user_api_key" property="userApiKey" />
@@ -28,7 +28,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     id, root_agency_id, user_name, user_pass, user_real_name, agency_tel, other_contact, user_email, 
-    agency_ip, rate_id, agency_tag, call_back_ip
+    agency_ip, agency_tag, call_back_ip
   </sql>
   
 
@@ -51,7 +51,7 @@
     <result column="agency_tel" jdbcType="VARCHAR" property="agencyTel" />
     <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
     <result column="agency_ip" jdbcType="VARCHAR" property="agencyIp" />
-    <result column="rate_id" jdbcType="BIGINT" property="rateId" />
+    <!-- <result column="rate_id" jdbcType="BIGINT" property="rateId" /> -->
     <!-- <result column="bill_rate_id" jdbcType="BIGINT" property="billRateId" /> -->
     <result column="account_credit" jdbcType="DOUBLE" property="accountCredit" />
     <result column="agency_tag" jdbcType="INTEGER" property="agencyTag" />
@@ -65,7 +65,7 @@
   </resultMap>
   <sql id="other_Column_List">
     agb.id,agb.agency_tag, root_agency_id, user_name, user_real_name, agency_tel, user_email, 
-    agency_ip, rate_id, account_credit, account_balance, cac.create_time, cac.bill_type,cac.id cacId,call_back_ip
+    agency_ip, account_credit, account_balance, cac.create_time, cac.bill_type,cac.id cacId,call_back_ip
   </sql>
   <!-- 查询没有绑定的代理商 -->
   <resultMap id="UnbindMap" type="com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO">
@@ -230,9 +230,9 @@ WHERE a2.root_agency_id=4 and active1.rate_discount_id=22 and active1.bind_state
   		<if test="agencyIp != null">
   			agency_ip = #{agencyIp},
   		</if>
-  		<if test="rateId != null">
+  		<!-- <if test="rateId != null">
   			rate_id = #{rateId},
-  		</if>
+  		</if> -->
   	</set>
   </sql>
   <!-- 查询代理商列表 -->

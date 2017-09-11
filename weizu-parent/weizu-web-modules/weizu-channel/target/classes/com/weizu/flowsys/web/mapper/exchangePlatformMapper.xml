@@ -128,7 +128,8 @@
    	</select>
    	<sql id="byEpName_sql">
    		<if test="_parameter != null">
-   			AND ep_name like CONCAT('%', TRIM(#{_parameter}), '%')
+   			<!-- AND ep_name like CONCAT('%', TRIM(#{_parameter}), '%') -->
+   			AND ep_name = #{_parameter}
    		</if>
    	</sql>
   

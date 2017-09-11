@@ -5,8 +5,8 @@ import java.util.Map;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
-import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
+import com.weizu.flowsys.web.activity.pojo.RateDiscountShowDTO;
 
 public interface RateDiscountAO {
 	/**
@@ -104,7 +104,16 @@ public interface RateDiscountAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月19日 下午12:05:15
 	 */
-	Map<String,Object> getShowRate (Integer agencyId);
+//	Map<String,Object> getShowRate (Integer agencyId);
+	
+	/**
+	 * @description: 获得首页折扣信息
+	 * @param agencyId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月11日 下午3:46:10
+	 */
+	List<RateDiscountShowDTO> getIndexShowRate (Integer agencyId);
 	
 	/**
 	 * @description: 看传入的地区参数是否符合折扣信息
