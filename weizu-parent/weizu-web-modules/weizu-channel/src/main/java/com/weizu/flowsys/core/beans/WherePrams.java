@@ -37,8 +37,8 @@ public class WherePrams {
 //			}
 //			this.pram = " where " + file + where + "null";
 		}else{
-			if ("like".equals(where)) {
-				this.pram = " where " + file + where + " '%" + value + "%'";
+			if ("like".equals(where.trim())) {
+				this.pram = " where " + file + " " + where + " '%" + value + "%'";
 			}else{
 				if(value instanceof Integer){
 					this.pram = " where " + file + where + value;

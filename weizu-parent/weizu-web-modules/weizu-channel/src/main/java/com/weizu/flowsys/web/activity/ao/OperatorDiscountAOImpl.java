@@ -82,7 +82,7 @@ public class OperatorDiscountAOImpl implements OperatorDiscountAO {
 		if(rateBackwardVo.getAgencyId() != null){//判断是否是自动绑定到代理商
 			Long id = rateBackwardDao.nextId()-1;//费率列表id
 			AgencyBackwardPo agencyPo = new AgencyBackwardPo();
-			agencyPo.setRateId(id);
+//			agencyPo.setRateId(id);
 			agencyPo.setId(rateBackwardVo.getAgencyId());
 			agencyVODao.updateByAgencyPO(agencyPo);
 		}
@@ -120,10 +120,10 @@ public class OperatorDiscountAOImpl implements OperatorDiscountAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月27日 下午3:42:34
 	 */
-	@Override
-	public List<OperatorDiscountPo> listDiscountByPo(
-			OperatorDiscountPo operatorDiscountPo) {
-		
-		return operatorDiscountDao.selectDiscountByPo(operatorDiscountPo);
-	}
+//	@Override
+//	public List<OperatorDiscountPo> listDiscountByPo(
+//			OperatorDiscountPo operatorDiscountPo) {
+//		
+//		return operatorDiscountDao.selectDiscountByPo(operatorDiscountPo);
+//	}
 }

@@ -1,0 +1,10 @@
+home 82端口
+home1 81端口
+
+tomcat base home   8082
+
+tomcat1 base2 home2	8081
+
+localhost
+
+windows杀死nginx进程命令： taskkill /fi "imagename eq nginx.exe" /f

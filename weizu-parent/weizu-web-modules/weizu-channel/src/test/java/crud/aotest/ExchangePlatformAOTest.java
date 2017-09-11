@@ -1,14 +1,19 @@
 //package crud.aotest;
 //
+//import java.util.List;
+//
 //import javax.annotation.Resource;
 //
+//import org.junit.Test;
 //import org.junit.runner.RunWith;
 //import org.springframework.test.context.ContextConfiguration;
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
+//import com.weizu.flowsys.core.beans.WherePrams;
 //import com.weizu.flowsys.web.channel.ao.AgencyEpAO;
 //import com.weizu.flowsys.web.channel.ao.ExchangePlatformAO;
-//import com.weizu.flowsys.web.channel.dao.impl.ExchangePlatformDao;
+//import com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface;
+//import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -19,7 +24,7 @@
 //	@Resource
 //	private AgencyEpAO agencyEpAO;
 //	@Resource
-//	private ExchangePlatformDao exchangePlatformDao;
+//	private ExchangePlatformDaoInterface exchangePlatformDao;
 //	
 ////	 @Test
 ////	 public void testListAgencyByRoot(){
@@ -41,8 +46,10 @@
 ////	}
 ////	@Test
 ////	public void testGetEp(){
-////		Pagination<ExchangePlatformPo>  pagination = exchangePlatformAO.getEp(4, null, null);
-////		System.out.println(pagination.getRecords().size());
+//////		Pagination<ExchangePlatformPo>  pagination = exchangePlatformAO.getEp(4, null, null);
+//////		System.out.println(pagination.getRecords().size());
+////		List<ExchangePlatformPo> list = exchangePlatformDao.list(new WherePrams("ep_name", "like", "对私"));
+////		System.out.println(list!= null? list.size():"空");
 ////	}
 ////	@Test
 ////	public void testAddEp(){
@@ -56,7 +63,5 @@
 ////	public void testCheckEpEngId(){
 ////		System.out.println(exchangePlatformAO.checkEpEngId("weizu"));
 ////	}
-//
-//
 //
 //}

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weizu.flowsys.web.channel.dao.ChannelForwardDaoInterface" >
+ 	<sql id="t_channel">channel_forward</sql>
+ 	<sql id="t_scope">service_scope</sql>
+ 	<sql id="t_ep">exchange_platform</sql>
+ 	
+ 	
+  <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.ChannelForwardPo" >
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="channel_name" jdbcType="VARCHAR" property="channelName" />
+    <result column="agency_id" jdbcType="INTEGER" property="agencyId" />
+    <result column="pg_size" jdbcType="VARCHAR" property="pgSize" />
+    <result column="scope_city_name" jdbcType="VARCHAR" property="scopeCityName" />
+    <result column="operator_type" jdbcType="INTEGER" property="operatorType" />
+    <result column="service_id" jdbcType="INTEGER" property="serviceId" />
+    <result column="channel_discount" jdbcType="DOUBLE" property="channelDiscount" />
+    <result column="ep_id" jdbcType="INTEGER" property="epId" />
+    <result column="channel_total_use" jdbcType="INTEGER" property="channelTotalUse" />
+    <result column="channel_total_amount" jdbcType="DOUBLE" property="channelTotalAmount" />
+    <result column="channel_balance" jdbcType="DOUBLE" property="channelBalance" />
+    <result column="channel_state" jdbcType="INTEGER" property="channelState" />
+    <result column="channel_use_state" jdbcType="INTEGER" property="channelUseState" />
+    <result column="last_access" jdbcType="BIGINT" property="lastAccess" />
+    <result column="bill_type" jdbcType="INTEGER" property="billType" />
+  </resultMap>
+  
+  <resultMap id="BestChannelMap" type="com.weizu.flowsys.web.channel.pojo.BestChannelPO" >
+    <result column="ep_name" jdbcType="VARCHAR" property="epName" />
+    <result column="channeld" jdbcType="INTEGER" property="channeld" />
+    <result column="discount" jdbcType="DOUBLE" property="channelDiscount" />
+    <result column="epd" jdbcType="INTEGER" property="epd" />
+    <result column="bill_type" jdbcType="INTEGER" property="billType" />
+  </resultMap>
+  
+  <!--  通过通道ID找到所属平台 -->
+  <!-- <select id="getEpByChannelId" parameterType="java.lang.Integer" resultMap="com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface.BaseResultMap">
+  	SELECT ep.* 
+  	FROM <include refid="t_ep"></include> ep 
+  	WHERE ep.id = (SELECT ep_id from <include refid="t_channel"></include>
+  	channel where channel.id = #{_parameter})
+  </select> -->
+  
+  <!-- 连表查询字段 -->
+  <sql id="Base_Column_List" >
+    channel.id, channel_name, agency_id, pg_size, scope_city_name, channel.operator_type, service_id, channel_discount, ep_id, channel_total_use, 
+    channel_total_amount, channel_balance, channel_state, channel_use_state, channel.last_access,channel.bill_type
+  </sql>
+  
+  
+  <insert id="channel_addList" useGeneratedKeys="true" parameterType="java.util.List">
+  	insert into <include refid="t_channel"></include>
+  	(channel_name, agency_id, pg_size,operator_type, service_id, channel_discount, ep_id, channel_total_use,
+  	channel_total_amount, channel_balance, channel_state, channel_use_state, last_access,bill_type)
+  	values
+  	<foreach collection="list" separator="," item="channel" index="index">
+  		(#{channel.channelName},#{channel.agencyId},#{channel.pgSize},#{channel.operatorType},#{channel.serviceId},#{channel.channelDiscount},#{channel.epId},
+  		#{channel.channelTotalUse},#{channel.channelTotalAmount},#{channel.channelBalance},#{channel.channelState},#{channel.channelUseState},#{channel.lastAccess}
+  		,#{channel.billType})
+  	</foreach>
+  </insert>
+  
+<!--   <select id="count_channel" resultType="java.lang.Integer">
+  	select count(*) from <include refid="t_channel"></include> channel
+  	inner join <include refid="t_scope"></include> scope
+  	on channel.service_id = scope.id
+  	<where>
+  		<include refid="condition_sql"></include>
+  	</where>
+  </select> -->
+   <!-- 获取最优通道 -->
+  <sql id="best_channel_list">
+  	channel.channel_discount discount,channel.id channeld,ep.id epd,ep.ep_name,channel.bill_type 
+  </sql>
+  <!-- 获取最优通道 -->
+  <select id="getBestChannel" resultMap="BestChannelMap" parameterType="com.weizu.flowsys.web.activity.pojo.OperatorScopeVO">
+  		SELECT <include refid="best_channel_list"></include> 
+  		FROM <include refid="t_channel"></include> channel 
+  		inner join <include refid="t_scope"></include> scope 
+  		on channel.service_id=scope.id 
+  		INNER join <include refid="t_ep"></include> ep 
+  		ON channel.ep_id=ep.id 
+  		WHERE channel.operator_type = #{otype} 
+  		and scope_city_name like CONCAT('%', #{scopeCityName}, '%')
+  		and channel_state =0 
+  		and agency_id = #{aid} 
+  		ORDER BY channel_discount ASC 
+  		LIMIT 0,1
+  </select>
+  
+  <!-- 通过参数查询通道列表表连接 -->
+  <!-- <select id="list_channel" parameterType="com.weizu.flowsys.web.channel.pojo.ChannelForwardPo" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"></include> 
+  	from <include refid="t_channel"></include> channel
+  	inner join <include refid="t_scope"></include> scope
+  	on channel.service_id = scope.id
+  	<where>
+  		<include refid="condition_sql"></include>
+  	</where>
+  	order by channel.last_access desc
+  	<if test="start != null">
+	 	limit #{start}
+	 </if>
+	 <if test="end != null">
+	 	, #{end}
+	 </if>
+	 <if test="start == null &amp; end == null">
+	 	limit 0,10
+	 </if> 
+  </select> -->
+  
+  <!-- 查询通道列表参数 -->
+  <sql id="condition_sql">
+  	<if test="channelName != null">
+  		AND channel_name like CONCAT('%', TRIM(#{channelName}), '%')
+  	</if>
+  	<if test="channelState != null">
+  		AND channel_state = #{channelState}
+  	</if>
+  	<if test="scopeCityName != null">
+  		AND scope.scope_city_name like CONCAT('%', TRIM(#{scopeCityName}), '%')
+  	</if>
+  	<if test="agencyId != null">
+  		AND agency_id = #{agencyId}
+  	</if>
+  	<if test="billType != null">
+  		AND bill_type = #{billType}
+  	</if>
+  </sql>
+  
+  <!-- 更新通道使用状态 -->
+ <!--  <update id="updateChannelUseState" parameterType="map">
+  	update <include refid="t_channel"></include>
+  	<set>
+  		channel_use_state = #{channelUseState}
+  		<if test="lastAccess != null">
+  			,last_access = #{lastAccess}
+  		</if>
+  	</set>
+  	<where>
+  		id = #{id}
+  	</where>
+  </update> -->
+  
+  <!-- 更新通道状态 -->
+  <!-- <update id="updateChannelState" parameterType="map">
+  	update <include refid="t_channel"></include>
+  	<set>
+  		channel_state = #{channelState}
+  		<if test="lastAccess != null">
+  			,last_access = #{lastAccess}
+  		</if>
+  	</set>
+  	<where>
+  		id = #{id}
+  	</where>
+  </update> -->
+  
+  
+</mapper>

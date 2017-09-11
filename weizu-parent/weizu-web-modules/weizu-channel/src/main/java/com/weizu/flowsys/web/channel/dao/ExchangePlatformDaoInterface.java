@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 
 /**
@@ -15,7 +16,7 @@ import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
  * @createTime:2017年5月10日 上午10:45:38
  * @version 1.0
  */
-public interface ExchangePlatformDaoInterface {
+public interface ExchangePlatformDaoInterface extends Dao<ExchangePlatformPo, Integer> {
 	/**
 	 * @description:通过平台名查找平台对象
 	 * @param name

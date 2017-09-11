@@ -44,7 +44,7 @@ public interface BaseInterface {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年8月26日 上午9:50:57
 	 */
-	void initSpecialP(Object...objs);
+//	void initSpecialP(Object...objs);
 	
 	/**
 	 * @description: 根据表中信息添加到参数当中
@@ -52,7 +52,7 @@ public interface BaseInterface {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年8月30日 上午9:25:22
 	 */
-	void initSpecialP(String addParams);
+//	void initSpecialP(String addParams);
 	
 	/**
 	 * @description: 封装参数

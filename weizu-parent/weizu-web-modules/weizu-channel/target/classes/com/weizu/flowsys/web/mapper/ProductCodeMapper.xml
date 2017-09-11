@@ -165,6 +165,9 @@
   	<if test="epId != null">
   		AND pc.ep_id = #{epId}
   	</if>
+  	<if test="epName != null">
+  		AND ep.ep_name like concat("%",trim(#{epName}),"%")
+  	</if>
   	<!-- <if test="epId != null">
   		AND ep_id = #{epId}
   	</if>

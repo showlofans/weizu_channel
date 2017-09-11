@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -28,12 +29,17 @@
     <div class="zhuce_kong">
     	<div class="zctwo">
         	<div class="bj_bai">
-            <h3>欢迎登陆 xiao</h3> 
+            <h3>欢迎登陆</h3> 
+            <c:if test="${not empty loginMap.msg}">
+       	  	  		<br><span id="errorMsg" style="color:red;">${loginMap.msg}</span>
+       	  	  	</c:if>
        	  	  <form class="form form-horizontal" id="lgForm" action="/flowsys/agency/login.do" method="post">
-                <input id="userName" value="${userName }" required name="userName"  autocomplete="off" type="text" placeholder="xiao" class="kuang_txt phone input-text size-L">
-                <input id="" name="userPass" value="${userPass }" required autocomplete="off" type="text" placeholder="xiao" class="kuang_txt possword input-text size-L">
+                <input id="userName" value="${loginMap.userName }" required name="userName"  autocomplete="off" type="text" placeholder="用户名" class="kuang_txt phone input-text size-L">
+                <input id="userPass" name="userPass" value="${loginMap.userPass }" required autocomplete="off" type="text" placeholder="密码" class="kuang_txt possword input-text size-L">
               		 <input class="btn_zhuce" type="submit" value="&nbsp;登陆&nbsp;">
-              		 <a href="/flowsys/agency/register_page.do"><input class="btn_login" type="button" value="&nbsp;注册&nbsp;"></a>
+              		 <!-- <a href="/flowsys/agency/register_page.do"> -->
+              		 <input class="btn_login" onclick="startRegister()" type="button" value="&nbsp;注册&nbsp;">
+              		 <!-- </a> -->
                 </form>
             </div>
         </div>
@@ -45,6 +51,11 @@
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 <script type="text/javascript">
+function startRegister(){
+	var userName = $('#userName').val();
+	var userPass = $('#userPass').val();
+	window.location.href = "/flowsys/agency/register_page.do?userName="+userName+"&userPass="+userPass;
+}
 /* 	$.validator.setDefaults({
 	    submitHandler: function() {
 	    	$("#lgForm").submit();

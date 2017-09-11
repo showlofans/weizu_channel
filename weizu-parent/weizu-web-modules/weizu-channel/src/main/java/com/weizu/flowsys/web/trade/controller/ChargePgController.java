@@ -115,9 +115,9 @@ public class ChargePgController {
 			resultMap.put("referURL", referURL);
 			resultMap.put("pageMsg", pageMsg);
 			return new ModelAndView("/trade/charge_result_page", "resultMap", resultMap);
+		}else{
+			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 		}
-		
-		return null;
 	}
 	
 	/**
@@ -456,6 +456,8 @@ public class ChargePgController {
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)httpSession.getAttribute("loginContext");
 		if(agencyVO != null){
 			purchaseVO.setAgencyId(agencyVO.getId());//设置为当前登陆用户的订单
+		}else{
+			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 		}
 		PageParam pageParam = null;
 		Pagination<PurchaseVO> pagination = null;

@@ -99,7 +99,7 @@
    		 	<include refid="pg_for_purchase_type"></include>
    		 </where>
 	</select>
-	<!-- 通过费率查询购买包体list -->
+	<!-- 通过参数查询购买包体list -->
 	<select id="pgList_forPurchase_po" resultMap="OtherMap" parameterType="map" >
 		SELECT <include refid="myPg_Column_List"></include> 
 		FROM <include refid="t_pg"></include> pg

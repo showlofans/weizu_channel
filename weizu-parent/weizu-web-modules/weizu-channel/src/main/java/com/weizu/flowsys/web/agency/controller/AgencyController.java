@@ -154,7 +154,11 @@ public class AgencyController {
 			
 			return new ModelAndView("/index");// 返回登录人主要账户信息（余额，透支额）
 		} else {
-			return new ModelAndView("/agency/login_page", "msg", resultMsg);
+			Map<String,Object> loginMap = new HashMap<String, Object>();
+			loginMap.put("userName", agencyBackward.getUserName());
+			loginMap.put("userPass", agencyBackward.getUserPass());
+			loginMap.put("msg", resultMsg);
+			return new ModelAndView("/agency/login_page", "loginMap", loginMap);
 		}
 	}
 
@@ -167,12 +171,14 @@ public class AgencyController {
 	 * @createTime:2017年6月3日 上午11:35:33
 	 */
 	@RequestMapping(value = AgencyURL.REGISTER_PAGE)
-	public ModelAndView registerPage(HttpServletRequest request,@RequestParam(value="rootAgencyId",required=false)String rootAgencyId) {
+	public ModelAndView registerPage(AgencyBackwardPo agencyBackward,HttpServletRequest request,@RequestParam(value="rootAgencyId",required=false)String rootAgencyId) {
 		
 		if(StringHelper.isNotEmpty(rootAgencyId)){//适用于自动生成的页面
 			request.getSession().setAttribute("rootAgencyId", rootAgencyId);
 		}
-		return new ModelAndView("/agency/register_page");
+		Map<String,Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("reg", agencyBackward);
+		return new ModelAndView("/agency/register_page","resultMap",resultMap);
 	}
 	
 	/**
@@ -308,8 +314,11 @@ public class AgencyController {
 	}
 	
 	@RequestMapping(value = AgencyURL.LOGIN_PAGE)
-	public ModelAndView loginPage() {
-		return new ModelAndView("/agency/login_page");
+	public ModelAndView loginPage(String userName,String userPass) {
+		Map<String,Object> loginMap = new HashMap<String, Object>();
+		loginMap.put("userName", userName);
+		loginMap.put("userPass", userPass);
+		return new ModelAndView("/agency/login_page", "loginMap", loginMap);
 	}
 
 	/**
@@ -348,7 +357,10 @@ public class AgencyController {
 				httpSession.setAttribute("loginContext", agencyVO);
 				return new ModelAndView("index");
 			} else {
-				return new ModelAndView("/agency/register_page");
+				Map<String, Object> resultMap = new HashMap<String, Object>();
+				resultMap.put("msg", "邀请码不存在");
+				resultMap.put("reg", agencyBackward);
+				return new ModelAndView("/agency/register_page","resultMap",resultMap);
 			}
 		}
 	}

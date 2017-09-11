@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.channel.ao.ExchangePlatformAO;
@@ -120,23 +121,25 @@ public class PlatformController {
 	public ModelAndView PlatformSearch(@RequestParam(value = "pageNo", required = false)String pageNo,ExchangePlatformPo exchangePlatformPo,HttpServletRequest request)
 	{
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		if(agencyVO != null){
+//		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//		if(agencyVO != null){
 			PageParam pageParam = null;
 			if(StringHelper.isNotEmpty(pageNo)){
 				pageParam = new PageParam(Integer.parseInt(pageNo), 10);
 			}else{
 				pageParam = new PageParam(1, 10);
 			}
-			Pagination<ExchangePlatformPo> pagination = exchangePlatformAO.getEp(agencyVO.getId(), exchangePlatformPo, pageParam);
+			Pagination<ExchangePlatformPo> pagination = exchangePlatformAO.getEp(exchangePlatformPo, pageParam);
 //			resultMap.put("pgInEnums", PgInServiceEnum.toList());
 //			resultMap.put("pgTypeEnums", OperatorTypeEnum.toList());
 //			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 			resultMap.put("searchParam", exchangePlatformPo);
+			resultMap.put("callBackEnums", CallBackEnum.toList());
 			resultMap.put("pagination", pagination);
-		}
-		return new ModelAndView("/channel/platform_list", "resultMap", resultMap);
-		
+			return new ModelAndView("/channel/platform_list", "resultMap", resultMap);
+//		}else{
+//			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+//		}
 	}
 	/**
 	 * @description:添加平台页面
@@ -148,7 +151,9 @@ public class PlatformController {
 	public ModelAndView addPlatformPage(@RequestParam(value = "pageTitle", required = false)String pageTitle)
 	{
 //		try {
-			if(StringHelper.isNotEmpty(pageTitle)){
+//		Map<String,Object> resultMap = new HashMap<String, Object>();
+//		resultMap.put("", CallBackEnum.toList().)
+		if(StringHelper.isNotEmpty(pageTitle)){
 //				pageTitle = new String(pageTitle.getBytes("iso-8859-1"), "utf-8");
 				return new ModelAndView("/channel/platform_add_page","pageTitle",pageTitle);
 			}else{

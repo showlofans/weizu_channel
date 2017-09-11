@@ -342,7 +342,8 @@ $(document).ready(function(){
 function changeName(){
 	var i = 0;
 	$(".disscount").each(function(){
-    	if($(this).is(':visible')){ 
+		//alert($(this).val() == "");
+    	if($(this).is(':visible') && $(this).val() != ""){ 
     		$('<input />', {
     	        name: 'discountList['+ i +'].channelDiscount',
     	        id: 'channelDiscount-'+ i,
@@ -359,8 +360,15 @@ function changeName(){
     	      }).appendTo($('#ep_id'));
     		i++;
     		//alert('discountList['+ i +'].scopeCityName');
+    	}else{
+    		$(this).focus();
     	}
 	})
+	if(!$('#ep_info').is(':visible')){
+		alert("没有选定平台")	;
+		$('#channel_search').focus();
+		return false;
+	}
 	if(i > 0){
 		//alert(i);
 		return true;

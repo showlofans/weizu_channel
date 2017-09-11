@@ -15,6 +15,8 @@ public class RateDiscountShowDTO {
     private DiscountPo discountPo;			//折扣
 	
 	private Integer billType;				//是否带票（0-一般不带票，1-带票高级）
+	
+	private Integer serviceType;			//业务范围
 	@TempField
 	private String discount;				//简化折扣
 	
@@ -24,10 +26,27 @@ public class RateDiscountShowDTO {
 		this.billType = billType;
 	}
 	
+	public RateDiscountShowDTO(DiscountPo discountPo, Integer billType,
+			Integer serviceType) {
+		super();
+		this.discountPo = discountPo;
+		this.billType = billType;
+		this.serviceType = serviceType;
+	}
+
+
 	public RateDiscountShowDTO(Integer billType, String discount) {
 		super();
 		this.billType = billType;
 		this.discount = discount;
+	}
+
+	public Integer getServiceType() {
+		return serviceType;
+	}
+
+	public void setServiceType(Integer serviceType) {
+		this.serviceType = serviceType;
 	}
 
 	public RateDiscountShowDTO() {

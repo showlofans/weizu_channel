@@ -152,9 +152,9 @@ $().ready(function() {
 			var rechargeAmount = parseFloat($('#rechargeAmount').val());
 			var accountAmount = parseFloat($('#accountBalance').html());
 			var contextRootId = $('#contextRootId').val();
-			alert(contextRootId);
-			alert(rechargeAmount);
-			alert(accountAmount);
+			//alert(contextRootId);
+			//alert(rechargeAmount);
+			//alert(accountAmount);
 			if(rechargeAmount > accountAmount && contextRootId != 0){
 				layer.msg('余额不足，请重新输入充值额！');
 				$('#rechargeAmount').val('');

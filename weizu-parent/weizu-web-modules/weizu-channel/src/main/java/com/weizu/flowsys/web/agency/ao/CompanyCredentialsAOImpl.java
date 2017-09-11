@@ -9,11 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ConfirmStateEnum;
 import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
 import com.weizu.flowsys.web.agency.dao.CompanyCredentialsDao;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
+import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.CompanyCredentialsPo;
@@ -145,17 +147,23 @@ public class CompanyCredentialsAOImpl implements CompanyCredentialsAO {
 	public String updateCompanyCredential(CompanyCredentialsPo ccpo) {
 		int res = companyCredentialsDao.updateLocal(ccpo, new WherePrams("id", "=", ccpo.getId()));//更新这个代理商的认证信息
 		
-		//如果确认就，给代理商增加代理商对公账户
+		//如果确认就，给代理商增加代理商对公账户,同时把用户的等级换成认证用户
 		if(ConfirmStateEnum.CONFIRM_PASS.getValue() == ccpo.getConfirmState()){
 			ChargeAccountPo chargePo = new ChargeAccountPo();
 			chargePo.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());//增加一个对公账户
-			chargePo.setAgencyId(ccpo.getAgencyId());
-			String userName = agencyVODao.get(ccpo.getAgencyId()).getUserName();
+			int agencyId = ccpo.getAgencyId();
+			chargePo.setAgencyId(agencyId);
+			AgencyBackwardPo agencyPo = agencyVODao.get(ccpo.getAgencyId());
+			//认证通过后，设置代理商为认证用户
+			agencyPo.setAgencyTag(AgencyTagEnum.DATA_USER.getValue());
+			int popTag = agencyVODao.update(agencyPo);
+			
+			String userName = agencyPo.getUserName();
 			chargePo.setAgencyName(userName);
 			chargePo.setCreateTime(ccpo.getConfirmTime());
 			chargePo.setRemittanceBankAccount(ccpo.getBankAccount());
 			int addCharge = chargeAccountDao.add(chargePo);
-			if(res + addCharge > 1){
+			if(res + addCharge + popTag > 2){
 				return "success";
 			}
 		}

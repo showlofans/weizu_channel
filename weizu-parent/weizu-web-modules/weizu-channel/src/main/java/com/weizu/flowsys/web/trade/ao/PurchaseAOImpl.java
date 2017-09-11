@@ -17,12 +17,17 @@ import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.api.singleton.BaseInterface;
 import com.weizu.flowsys.api.singleton.BaseP;
+import com.weizu.flowsys.api.singleton.OrderDTO;
+import com.weizu.flowsys.api.singleton.OrderIn;
 import com.weizu.flowsys.api.singleton.SingletonFactory;
+import com.weizu.flowsys.api.singleton.orderState.ResponseJsonDTO;
+import com.weizu.flowsys.api.singleton.orderState.SendCallBackUtil;
 import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
@@ -32,7 +37,6 @@ import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.OrderUril;
 import com.weizu.flowsys.util.Pagination;
-import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
@@ -44,7 +48,6 @@ import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.channel.ao.ExchangePlatformAO;
-import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
 import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
@@ -68,7 +71,6 @@ import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 import com.weizu.flowsys.web.trade.pojo.TotalResult;
 import com.weizu.web.foundation.DateUtil;
-import com.weizu.web.foundation.StringUtil;
 import com.weizu.web.foundation.String.StringHelper;
 import com.weizu.web.foundation.http.HttpRequest;
 
@@ -536,18 +538,18 @@ public class PurchaseAOImpl implements PurchaseAO {
 					AgencyBackwardPo agnecyPo = agencyVODao.get(agencyId);
 					int superAgencyId = agnecyPo.getRootAgencyId();
 					AgencyPurchasePo superApPo = agencyPurchaseDao.get(new WherePrams("agency_id", "=", superAgencyId).and("purchase_id", "=", orderId));
-					ChargeAccountPo superAccountPo = chargeAccountAO.getAccountByAgencyId(superAgencyId, cd.getBillType());
-					Double superOrderAmount = superApPo.getOrderAmount();//超管的成本
-					Double superAgencyBeforeBalance = superAccountPo.getAccountBalance();
-					/** 更新超管账户信息**/
-					superAccountPo.addBalance(superOrderAmount, -1);
-					int superAccountRes = chargeAccountAO.updateAccount(superAccountPo);
-					if(superAccountRes > 0){
-						//添加消费记录
-						chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), superOrderAmount,
-								superAgencyBeforeBalance, superAccountPo.getAccountBalance(), 
-								cd.getBillType(),AccountTypeEnum.DECREASE.getValue(), superAccountPo.getId(), superAgencyId, 1 , orderId));
-					}
+//					ChargeAccountPo superAccountPo = chargeAccountAO.getAccountByAgencyId(superAgencyId, cd.getBillType());
+//					Double superOrderAmount = superApPo.getOrderAmount();//超管的成本
+//					Double superAgencyBeforeBalance = superAccountPo.getAccountBalance();
+//					/** 更新超管账户信息**/
+//					superAccountPo.addBalance(superOrderAmount, -1);
+//					int superAccountRes = chargeAccountAO.updateAccount(superAccountPo);
+//					if(superAccountRes > 0){
+//						//添加消费记录
+//						chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), superOrderAmount,
+//								superAgencyBeforeBalance, superAccountPo.getAccountBalance(), 
+//								cd.getBillType(),AccountTypeEnum.DECREASE.getValue(), superAccountPo.getId(), superAgencyId, 1 , orderId));
+//					}
 //					charge = getChargeByDTO(chargeDTO,chargeParams,purchasePo);
 //					if(charge!= null){
 //						orderResultDetail = charge.getTipMsg();
@@ -740,30 +742,41 @@ public class PurchaseAOImpl implements PurchaseAO {
 		paramsMap.put("end", pageSize);
 		
 		List<PurchaseVO> records = purchaseDAO.getPurchase(paramsMap);
+		Boolean isPurchaseList = purchaseVO.getOrderState() == null;//订单列表判定
 		//遍历每一个订单，查看它的订单状态
 		for (PurchaseVO purchaseVO2 : records) {//格式化展示时间
-//				ExchangePlatformPo purchaseEp = purchaseVO2.getEp();
-//				boolean negCallBack = purchaseEp.getEpCallBack() != null && purchaseEp.getEpCallBack() == CallBackEnum.NEGATIVE.getValue();
-//				if(negCallBack){//不支持回调就用主动查询，查询订单状态
-//					BaseInterface bi = SingletonFactory.getSingleton(purchaseEp.getEpEngId(), new BaseP(null,purchaseVO2.getOrderIdApi(),purchaseVO2.getChargeTel(),null,purchaseEp));//查订单状态用api订单号对象去查
-//					OrderDTO orderDTO = bi.getOrderState();
-//					if(orderDTO == null){
-//						logger.config("接口查询订单状态有误");
-//						continue;
-//					}
-//					OrderIn orderIn = orderDTO.getOrderIn();
-//					if(orderIn != null){
-//						//更新订单状态
-//						if(orderIn.getStatus() != purchaseVO2.getOrderState()){
-//							purchaseVO2.setOrderBackTimeStr(DateUtil.formatAll(orderIn.getCreated_at_time()));
-//							purchaseVO2.setOrderState(orderIn.getStatus());
-//							purchaseVO2.setOrderStateDetail(orderIn.getMsg());
-//							agencyPurchaseAO.updatePurchaseState(purchaseVO2.getOrderId(), orderIn.getStatus(), orderIn.getMsg(),orderIn.getCreated_at_time());
-//						}
-//					}else{
-//						logger.config(orderDTO.getRspCode() + ":" + orderDTO.getRspMsg());
-//					}
-//				}
+			/**订单列表，订单又不支持回调的时候**/
+			if(isPurchaseList){
+				ExchangePlatformPo purchaseEp = purchaseVO2.getEp();
+				boolean negCallBack = purchaseEp.getEpCallBack() != null && purchaseEp.getEpCallBack() == CallBackEnum.NEGATIVE.getValue();
+				if(negCallBack){//不支持回调就用主动查询，查询订单状态
+					BaseInterface bi = SingletonFactory.getSingleton(purchaseEp.getEpEngId(), new BaseP(null,purchaseVO2.getOrderIdApi(),purchaseVO2.getChargeTel(),null,purchaseEp));//查订单状态用api订单号对象去查
+					OrderDTO orderDTO = bi.getOrderState();
+					if(orderDTO == null){
+						logger.config("接口查询订单状态有误");
+						continue;
+					}
+					OrderIn orderIn = orderDTO.getOrderIn();
+					if(orderIn != null){
+						//更新订单状态
+						if(orderIn.getStatus() != purchaseVO2.getOrderState()){//返回状态和原先数据库状态不相符
+							Long ts = orderIn.getCreated_at_time();
+							purchaseVO2.setOrderBackTimeStr(DateUtil.formatAll(ts));
+							purchaseVO2.setOrderState(orderIn.getStatus());
+							purchaseVO2.setOrderStateDetail(orderIn.getMsg());
+							agencyPurchaseAO.updatePurchaseState(purchaseVO2.getOrderId(), orderIn.getStatus(), orderIn.getMsg(),ts);
+							//把查询的结果利用接口推给下游
+							AgencyBackwardPo agencyPo = agencyVODao.get(purchaseVO2.getAgencyId());
+							if(StringHelper.isNotEmpty(agencyPo.getCallBackIp())){//有回调地址的情况下，按照回调地址推送
+								String callBackRes = SendCallBackUtil.sendCallBack(new ResponseJsonDTO(purchaseVO2.getOrderId(), purchaseVO2.getOrderIdFrom(), orderIn.getStatus(), orderIn.getMsg(), ts), agencyPo);
+								System.out.println(agencyPo.getUserName() + "：" +purchaseVO2.getOrderId() + "：" +  callBackRes);
+							}
+						}
+					}else{
+						logger.config(orderDTO.getRspCode() + ":" + orderDTO.getRspMsg());
+					}
+				}
+			}
 				
 //					
 //					OrderStateBase orderStatePage = OrderStateFactory.getOrderStateBase(purchaseEp.getEpName());
@@ -1023,11 +1036,5 @@ public class PurchaseAOImpl implements PurchaseAO {
 //		List<OperatorPgDataPo> pgList = operatorPgDao.getPgByChanel(objMap);
 		return pgList;
 	}
-
-	
-
-	
-
-	
 
 }

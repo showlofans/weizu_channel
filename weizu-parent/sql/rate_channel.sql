@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50626
 File Encoding         : 65001
 
-Date: 2017-09-06 18:07:41
+Date: 2017-09-07 17:08:40
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -33,15 +33,14 @@ CREATE TABLE `agency_active_rate` (
   CONSTRAINT `agency_agency` FOREIGN KEY (`agency_id`) REFERENCES `agency_backward` (`id`),
   CONSTRAINT `bind_agency_fk` FOREIGN KEY (`bind_agency_id`) REFERENCES `agency_backward` (`id`),
   CONSTRAINT `channel_agency_fk` FOREIGN KEY (`rate_discount_id`) REFERENCES `rate_discount` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of agency_active_rate
 -- ----------------------------
-INSERT INTO `agency_active_rate` VALUES ('71', '25', '1', '58', '0', 'lexin', '1504257992220');
-INSERT INTO `agency_active_rate` VALUES ('72', '4', '1', '58', '1', '123', '1504258025996');
 INSERT INTO `agency_active_rate` VALUES ('75', '4', '1', '75', '0', '123', '1504602330259');
-INSERT INTO `agency_active_rate` VALUES ('76', '4', '1', '76', '0', '123', '1504602462106');
+INSERT INTO `agency_active_rate` VALUES ('77', '4', '1', '77', '0', '123', '1504754423493');
+INSERT INTO `agency_active_rate` VALUES ('79', '25', '1', '77', '0', 'lexin', '1504774635683');
 
 -- ----------------------------
 -- Table structure for `agency_backward`
@@ -69,12 +68,12 @@ CREATE TABLE `agency_backward` (
 -- ----------------------------
 -- Records of agency_backward
 -- ----------------------------
-INSERT INTO `agency_backward` VALUES ('1', '0', 'xiao', 'xiao', 'xiaoqiang', '', '1575326411', '', '', null, '1495689716779', 'FV', null, '0', null);
+INSERT INTO `agency_backward` VALUES ('1', '0', 'xiao', 'xiao', 'xiaoqiang', '', '1575326411', '', '', null, '1495689716779', 'FV', null, '1', null);
 INSERT INTO `agency_backward` VALUES ('4', '1', '123', '123', '木头人', '15858343638', '1727661035', '22222', '22', '3', '1499736896474', 'VEPX', '402881e85de51dec015de51dec180000', '1', null);
 INSERT INTO `agency_backward` VALUES ('21', '4', '456', '123', '123', '123', '1575326411', '123@123.com', '1233', null, '1500523402299', 'H769', '402880ef5cd2b925015cd2b925b90000', '1', null);
 INSERT INTO `agency_backward` VALUES ('23', '4', 'w', 'w', 'w', 'w', '1575326411', 'w@d.com', 'f', null, '1500519015597', 'H65M', '402880ef5cd2b925015cd2bc11d70001', '1', null);
 INSERT INTO `agency_backward` VALUES ('24', '4', 'kkk', 'kkk', 'kkk', 'kkk', '1575326411', 'kkk@qq.com', 'kkk', '7', '1498617873998', '7L4T', '402880ef5cd2b925015cd2bc5d130002', '1', null);
-INSERT INTO `agency_backward` VALUES ('25', '1', 'lexin', 'lexin', '乐信', '13699562589', '1575326411', '13699562589@qq.com', 'http://127.0.0.1:8080', null, '1496479483371', '', '', '0', null);
+INSERT INTO `agency_backward` VALUES ('25', '1', 'lexin', 'lexin', '乐信', '13699562589', '1575326411', '13699562589@qq.com', 'http://127.0.0.1:8080', null, '1496479483371', '', '', '1', null);
 INSERT INTO `agency_backward` VALUES ('26', '23', 'wt', 'wt', 'wt', 'wt', '1575326411', 'wt@qq', 'wt', null, '1497231635832', 'LG3G', '402880ef5cec6811015cec6811ed0000', '1', null);
 INSERT INTO `agency_backward` VALUES ('27', '4', 'company', '123', 'xiaozhu', '1', '1575326411', '16@163', '1', null, '1500458238239', 'T4P6', '402881e85d5a47ed015d5a47edfe0000', '1', null);
 INSERT INTO `agency_backward` VALUES ('28', '21', '789', '123', '123', '123', '820267814  ', '123@dd', 'fd', null, '1501055624169', 'BU6D', null, null, null);
@@ -199,14 +198,8 @@ CREATE TABLE `channel_channel` (
 -- ----------------------------
 -- Records of channel_channel
 -- ----------------------------
-INSERT INTO `channel_channel` VALUES ('7', 'wz本地', '1000', '32', null, null, null, null, '0', '0', '1499233574741', '1');
-INSERT INTO `channel_channel` VALUES ('8', '省内-wz江西省', '500& 500', '32', null, null, null, null, '1', '0', '1499236841669', '1');
 INSERT INTO `channel_channel` VALUES ('9', '全国-wz福建', '100', null, null, null, null, null, '0', '0', null, '1');
 INSERT INTO `channel_channel` VALUES ('10', '省内-wz广东', '200', '32', null, null, null, null, '0', '0', '1503978140431', '1');
-INSERT INTO `channel_channel` VALUES ('11', '全国-wz广东移动95', '6144& 3072& 500', '32', null, null, null, null, '0', '0', null, '1');
-INSERT INTO `channel_channel` VALUES ('12', '省漫游-wz广东移动75', '500, 6144', '32', null, null, null, null, '0', '0', '1504518292801', '1');
-INSERT INTO `channel_channel` VALUES ('13', '省漫游-江西', '1000', '32', null, null, null, null, '0', '1', '1499680372499', '1');
-INSERT INTO `channel_channel` VALUES ('14', '全国-', '6144& 3072& 500', '32', null, null, null, null, '0', '0', '1500862266556', '1');
 INSERT INTO `channel_channel` VALUES ('15', '全国-1w', '100,500', '32', null, null, null, null, '0', '0', '1500862263126', '1');
 INSERT INTO `channel_channel` VALUES ('20', '省内-wzkj省内', '500,,100', '32', null, null, null, null, '1', '0', '1504579062428', '1');
 INSERT INTO `channel_channel` VALUES ('21', '省内-wzkj省内2', '500, 100', '32', null, null, null, null, '0', '0', null, '1');
@@ -235,15 +228,8 @@ CREATE TABLE `channel_discount` (
 -- ----------------------------
 INSERT INTO `channel_discount` VALUES ('3', null, '01', '0.8', 'wz江西', null, '0', '0', '0');
 INSERT INTO `channel_discount` VALUES ('4', null, '14', '0.6', 'wz江西', null, '0', '0', '0');
-INSERT INTO `channel_discount` VALUES ('7', '7', '09', '0.85', 'wz本地', '1', '0', '0', '0');
-INSERT INTO `channel_discount` VALUES ('8', '7', '14', '0.7', 'wz本地', '1', '0', '0', '0');
-INSERT INTO `channel_discount` VALUES ('9', '8', '13', '0.56', '省内-wz江西省', '0', '0', '0', '0');
 INSERT INTO `channel_discount` VALUES ('10', '9', '13', '0.9', '全国-wz福建', '1', '0', '0', '0');
 INSERT INTO `channel_discount` VALUES ('11', '10', '19', '0.85', '省内-wz广东', '1', '0', '0', '0');
-INSERT INTO `channel_discount` VALUES ('12', '11', '15', '0.95', '全国-wz广东移动95', '0', '0', '0', '0');
-INSERT INTO `channel_discount` VALUES ('13', '12', '19', '0.75', '省漫游-wz广东移动75', '0', '0', '0', '0');
-INSERT INTO `channel_discount` VALUES ('14', '13', '14', '0.65', '省漫游-省漫游-江西', '1', '0', null, '0');
-INSERT INTO `channel_discount` VALUES ('15', '14', '06', '0.58', '全国-全国-', '0', '0', '0', '0');
 INSERT INTO `channel_discount` VALUES ('16', '15', '05', '0.76', '全国-全国-1w', '1', '0', '0', '0');
 INSERT INTO `channel_discount` VALUES ('21', '20', '19', '0.67', '省内-省内-wzkj省内', '0', '0', '1', '0');
 INSERT INTO `channel_discount` VALUES ('22', '21', '19', '0.602', '省内-省内-wzkj省内2', '0', '0', '1', '0');
@@ -377,14 +363,16 @@ CREATE TABLE `exchange_platform` (
   `ep_call_back` int(11) DEFAULT NULL COMMENT '是否支持回调（1-不支持，0-支持）',
   `last_access` bigint(20) DEFAULT NULL COMMENT '平台更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of exchange_platform
 -- ----------------------------
 INSERT INTO `exchange_platform` VALUES ('32', 'wzkj', 'Weizu', 'http://139.224.70.161:32001/api/v1/sendOrder', 'http://139.224.70.161:32001/api/v1/sendOrder', 'http://139.224.70.161:32001/api/v1/orderState', 'http://139.224.70.161:32001/api/v1/getBalance', 'CS111111', '123456', null, '722c16de0a83e5bd2f988e3c7bc9fee8', 'http://139.224.70.161/', null, '0', '1503369178973');
-INSERT INTO `exchange_platform` VALUES ('42', '行云', 'Lljypt', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/query.order', 'http://api.lljypt.com/capi/query.balance', 'cncwz', '249636', '0', 'KKIGoAFUTxoIFfC', 'http://customer.lljypt.com/a', 'merchant=10210&clientId=10000&version=V100&', null, '1504000807525');
-INSERT INTO `exchange_platform` VALUES ('43', '行云对私', 'Lljypt0', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/query.order', 'http://api.lljypt.com/capi/query.balance', 'cncwz', '249636', '0', 'AoYIuPLXMmpTwTw', 'http://customer.lljypt.com/a', 'merchant=10304&clientId=10000&version=V100& ', null, '1504000740478');
+INSERT INTO `exchange_platform` VALUES ('42', '行云', 'Lljypt', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/query.order', 'http://api.lljypt.com/capi/query.balance', 'cncwz', '249636', '0', 'KKIGoAFUTxoIFfC', 'http://customer.lljypt.com/a', 'merchant=10210&clientId=10000&version=V100&', '1', '1504000807525');
+INSERT INTO `exchange_platform` VALUES ('43', '行云对私', 'Lljypt0', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/query.order', 'http://api.lljypt.com/capi/query.balance', 'cncwz', '249636', '0', 'AoYIuPLXMmpTwTw', 'http://customer.lljypt.com/a', 'merchant=10304&clientId=10000&version=V100& ', '1', '1504000740478');
+INSERT INTO `exchange_platform` VALUES ('44', '', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', null, '1', '1504769707416');
+INSERT INTO `exchange_platform` VALUES ('45', '2', '2', '21', '2', '2', '2', '2', '2', '2', '2', '2', null, null, '1504769745656');
 
 -- ----------------------------
 -- Table structure for `operator_discount`
@@ -622,24 +610,15 @@ CREATE TABLE `rate_discount` (
   KEY `active_discount_fk` (`active_id`),
   KEY `fk_channel_dis_rate` (`channel_discount_id`),
   CONSTRAINT `fk_channel_dis_rate` FOREIGN KEY (`channel_discount_id`) REFERENCES `channel_discount` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of rate_discount
 -- ----------------------------
-INSERT INTO `rate_discount` VALUES ('49', '0.9', '46', '13', '1', '12');
-INSERT INTO `rate_discount` VALUES ('51', '0.93', '46', '13', '0', '12');
-INSERT INTO `rate_discount` VALUES ('52', '0.9', '46', '13', '1', '12');
-INSERT INTO `rate_discount` VALUES ('53', '0.99', '46', '13', '1', '12');
-INSERT INTO `rate_discount` VALUES ('54', '0.9', '46', '13', '1', '12');
-INSERT INTO `rate_discount` VALUES ('58', '0.95', null, '13', '1', null);
-INSERT INTO `rate_discount` VALUES ('65', '0.84', null, '13', '1', '12');
-INSERT INTO `rate_discount` VALUES ('66', '0.98', null, '13', '1', null);
-INSERT INTO `rate_discount` VALUES ('70', '0.96', null, '12', '0', '11');
-INSERT INTO `rate_discount` VALUES ('71', '0.32', null, '12', '0', '11');
 INSERT INTO `rate_discount` VALUES ('72', '56', null, '16', '1', '15');
 INSERT INTO `rate_discount` VALUES ('75', '0.7', null, '21', '0', '20');
-INSERT INTO `rate_discount` VALUES ('76', '0.7', null, '22', '0', '21');
+INSERT INTO `rate_discount` VALUES ('77', '0.7', null, '22', '0', '21');
+INSERT INTO `rate_discount` VALUES ('78', '0.8', null, '22', '1', '21');
 
 -- ----------------------------
 -- Table structure for `service_scope`

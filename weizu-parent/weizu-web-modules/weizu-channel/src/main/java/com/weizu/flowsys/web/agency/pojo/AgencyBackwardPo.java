@@ -33,7 +33,7 @@ public class AgencyBackwardPo extends Po{
 
     private String agencyIp;				//代理商系统主页地址
 
-    private Long rateId;					//不带票费率id
+//    private Long rateId;					//不带票费率id
     
     private Integer agencyTag;				//代理商类型（0-平台用户，1,-接口用户）
     
@@ -41,8 +41,8 @@ public class AgencyBackwardPo extends Po{
     
     @TempField
     private Double accountCredit;
-    @TempField
-    private String rateName;
+//    @TempField
+//    private String rateName;
     
     
 	private Long createTime;				//账户创建时间
@@ -55,8 +55,8 @@ public class AgencyBackwardPo extends Po{
 	
 	public AgencyBackwardPo(Integer id, Integer rootAgencyId, String userName,
 			String userPass, String userRealName, String agencyTel,
-			String userEmail, String agencyIp, Long rateId,
-			Double accountCredit, String rateName, Long createTime,
+			String userEmail, String agencyIp,
+			Double accountCredit, Long createTime,
 			String verifyCode) {
 		super();
 		this.id = id;
@@ -67,9 +67,7 @@ public class AgencyBackwardPo extends Po{
 		this.agencyTel = agencyTel;
 		this.userEmail = userEmail;
 		this.agencyIp = agencyIp;
-		this.rateId = rateId;
 		this.accountCredit = accountCredit;
-		this.rateName = rateName;
 		this.createTime = createTime;
 		this.verifyCode = verifyCode;
 	}
@@ -122,14 +120,6 @@ public class AgencyBackwardPo extends Po{
 
 	public void setVerifyCode(String verifyCode) {
 		this.verifyCode = verifyCode;
-	}
-
-	public String getRateName() {
-		return rateName;
-	}
-
-	public void setRateName(String rateName) {
-		this.rateName = rateName;
 	}
 
 	public Double getAccountCredit() {
@@ -211,13 +201,4 @@ public class AgencyBackwardPo extends Po{
     public void setAgencyIp(String agencyIp) {
         this.agencyIp = agencyIp == null ? null : agencyIp.trim();
     }
-
-    public Long getRateId() {
-        return rateId;
-    }
-
-    public void setRateId(Long rateId) {
-        this.rateId = rateId;
-    }
-
 }

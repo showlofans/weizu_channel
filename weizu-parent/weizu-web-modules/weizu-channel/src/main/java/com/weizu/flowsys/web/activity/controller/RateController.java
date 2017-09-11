@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.HttpServletBean;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.aiyi.base.pojo.PageParam;
@@ -36,6 +37,7 @@ import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
 import com.weizu.flowsys.web.activity.pojo.RateBackwardPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
+import com.weizu.flowsys.web.activity.pojo.RateDiscountShowDTO;
 import com.weizu.flowsys.web.activity.url.RateURL;
 import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
@@ -74,8 +76,6 @@ public class RateController {
 	private ChargeAccountAo chargeAccountAO;
 	@Resource
 	private AgencyActiveChannelAO agencyActiveChannelAO;
-//	@Resource
-//	private ChannelDiscountDao channelDiscountDao;
 	@Resource
 	private ChannelDiscountAO channelDiscountAO;
 	
@@ -243,34 +243,34 @@ public class RateController {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月19日 下午3:34:48
 	 */
-	@RequestMapping(value= RateURL.RATE_LIST)
-	public ModelAndView selectByPo(HttpServletRequest request,@RequestParam(value="pageNo",required=false)String pageNo,RateBackwardPo rateBackwardPo)
-	{
-		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		if(agencyVO == null){//未登录用户
-			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
-		}else{
-			if(rateBackwardPo == null){
-				rateBackwardPo = new RateBackwardPo();
-			}
-			rateBackwardPo.setRootAgencyId(agencyVO.getId());
-			PageParam pageParam = null;
-			if(StringHelper.isNotEmpty(pageNo)){
-				pageParam = new PageParam(Integer.parseInt(pageNo), 10) ;
-			}else{
-				pageParam = new PageParam(1, 10);
-			}
-			Pagination<RateBackwardPo> pagination = rateBackwardAO.selectByPo(rateBackwardPo, pageParam);
-			Map<String, Object> resultMap = new HashMap<String, Object>();
-			resultMap.put("params",rateBackwardPo);
-			resultMap.put("rateStateEnums", BindStateEnum.toList());
-			resultMap.put("billTypeEnums", BillTypeEnum.toList());
-			
-			resultMap.put("pagination", pagination);
-			
-			return new ModelAndView("/rate/rate_list","resultMap",resultMap);
-		}
-	}
+//	@RequestMapping(value= RateURL.RATE_LIST)
+//	public ModelAndView doRateList(HttpServletRequest request,@RequestParam(value="pageNo",required=false)String pageNo,RateBackwardPo rateBackwardPo)
+//	{
+//		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//		if(agencyVO == null){//未登录用户
+//			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+//		}else{
+//			if(rateBackwardPo == null){
+//				rateBackwardPo = new RateBackwardPo();
+//			}
+//			rateBackwardPo.setRootAgencyId(agencyVO.getId());
+//			PageParam pageParam = null;
+//			if(StringHelper.isNotEmpty(pageNo)){
+//				pageParam = new PageParam(Integer.parseInt(pageNo), 10) ;
+//			}else{
+//				pageParam = new PageParam(1, 10);
+//			}
+//			Pagination<RateBackwardPo> pagination = rateBackwardAO.selectByPo(rateBackwardPo, pageParam);
+//			Map<String, Object> resultMap = new HashMap<String, Object>();
+//			resultMap.put("params",rateBackwardPo);
+//			resultMap.put("rateStateEnums", BindStateEnum.toList());
+//			resultMap.put("billTypeEnums", BillTypeEnum.toList());
+//			
+//			resultMap.put("pagination", pagination);
+//			
+//			return new ModelAndView("/rate/rate_list","resultMap",resultMap);
+//		}
+//	}
 	
 	/**
 	 * @description:获得最优通道信息
@@ -322,13 +322,16 @@ public class RateController {
 	{
 //		ChargeAccountPo chargeAccount1 = (ChargeAccountPo) request.getSession().getAttribute("chargeAccount1");
 //		ChargeAccountPo chargeAccount = (ChargeAccountPo) request.getSession().getAttribute("chargeAccount");
-		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 //		String agencyName = request.getSession().getAttribute("childAgencyName").toString();
-		if(agencyVO == null){//未登录用户
-			System.out.println("no login");
-//			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+//		if(agencyVO == null){//未登录用户
+//			System.out.println("no login");
+////			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+//		}
+		Object childAgencyId = request.getSession().getAttribute("childAgencyId");
+		if(childAgencyId != null){
+			discountPo.setBelongAgencyId(Integer.parseInt(childAgencyId.toString()));//当前登录用户的通道的
 		}
-		discountPo.setBelongAgencyId(agencyVO.getId());//当前登录用户的通道的
 		
 		//设置票务筛选
 //		String childAgencyIdStr = request.getSession().getAttribute("childAgencyId").toString();
@@ -373,6 +376,7 @@ public class RateController {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月1日 上午11:43:53
 	 */
+	@SuppressWarnings("restriction")
 	@RequestMapping(value=RateURL.BIND_CHANNEL_LIST)
 	public ModelAndView bindChannelList(@RequestParam(value = "pageNo", required = false) String pageNo,
 			HttpServletRequest request,AgencyActiveRatePo activePo)
@@ -388,7 +392,6 @@ public class RateController {
 		}else{
 			pageParam = new PageParam(1, 10);
 		}
-//		AgencyActiveChannelPo activePo = new 
 		Pagination<AgencyActiveRatePo> pagination = agencyActiveChannelAO.listActive(pageParam, activePo);
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -419,12 +422,13 @@ public class RateController {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月8日 下午5:23:10
 	 */
-	@RequestMapping(value=RateURL.BIND_AGENCY_LIST)
-	public ModelAndView bindAgencyList(@RequestParam(value = "pageNo", required = false) String pageNo,
-			HttpServletRequest request,AgencyActiveRatePo activePo){
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		return new ModelAndView("/activity/bind_agency_list","resultMap",resultMap);
-	}
+//	@SuppressWarnings("restriction")
+//	@RequestMapping(value=RateURL.BIND_AGENCY_LIST)
+//	public ModelAndView bindAgencyList(@RequestParam(value = "pageNo", required = false) String pageNo,
+//			HttpServletRequest request,AgencyActiveRatePo activePo){
+//		Map<String, Object> resultMap = new HashMap<String, Object>();
+//		return new ModelAndView("/activity/bind_agency_list","resultMap",resultMap);
+//	}
 	
 	/**
 	 * @description: 费率配置列表
@@ -434,6 +438,7 @@ public class RateController {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月28日 下午5:38:02
 	 */
+	@SuppressWarnings("restriction")
 	@RequestMapping(value=RateURL.MY_RATE_LIST)
 	public ModelAndView myRateList(@RequestParam(value = "pageNo", required = false) String pageNo,
 			HttpServletRequest request,RateDiscountPo ratePo,String agencyName){
@@ -495,11 +500,12 @@ public class RateController {
 	}
 	
 	/**
-	 * @description: 绑定代理商
+	 * @description: 给代理商配置通道（费率）
 	 * @return
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月1日 下午12:26:09
 	 */
+	@SuppressWarnings("restriction")
 	@RequestMapping(value=RateURL.BIND_CHANNEL_PAGE)
 	public ModelAndView rateJoinChannelPage(@RequestParam(value="pageTitle",required=false)String pageTitle,HttpServletRequest request)//,ChannelChannelPo channelPo
 	{
@@ -562,6 +568,10 @@ public class RateController {
 		aacp.setBindAgencyId(agencyVO.getId());
 		aacp.setAgencyId(Integer.parseInt(agencyId));
 		aacp.setAgencyName(agencyName);
+		if(ServiceTypeEnum.NATION_WIDE.getValue() == rateDiscountPo.getServiceType() && !ScopeCityEnum.QG.getValue().equals(rateDiscountPo.getScopeCityCode())){
+			//全国业务，必须匹配全国的折扣
+			return "disMatch";
+		}
 		int bindRes = agencyActiveChannelAO.bindChannel(aacp,rateDiscountPo);
 		if(bindRes == -1){
 			return "hasScope";
@@ -607,14 +617,20 @@ public class RateController {
 	 */
 	@RequestMapping(value=RateURL.BATCH_UPDATE_BIND_STATE)
 	@ResponseBody
-	public void batchUpdateBindState(AgencyActiveRateDTO aardto, HttpServletResponse response)
+	public String batchUpdateBindState(AgencyActiveRateDTO aardto, HttpServletResponse response)
 	{
-		try {
-			agencyActiveChannelAO.batchUpdateBindState(aardto);
-			response.getWriter().print("success");
-		} catch (Exception e) {
-			e.printStackTrace();
+		int res = agencyActiveChannelAO.batchUpdateBindState(aardto);
+		if(res > 0){
+			return "success";
+		}else{
+			return "error";
+			
 		}
+//		try {
+//			response.getWriter().print("success");
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 	/**
 	 * @description: 更新绑定的折扣
@@ -642,145 +658,23 @@ public class RateController {
 	}
 	
 	/**
-	 * @description:查询统一配置的费率列表
+	 * @description:来源：channel_list.jsp channel_edit函数<br>查询统一配置的费率列表
 	 * @return
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月10日 上午11:53:39
 	 */
 	@RequestMapping(value=RateURL.BIND_RATE_LIST)
-	public ModelAndView getBindRate(AgencyActiveRatePo aarp,String channelId, @RequestParam(value = "pageNo", required = false) String pageNo,HttpServletRequest request){
+	public ModelAndView getBindRateList(AgencyActiveRatePo aarp,Long channelId, @RequestParam(value = "pageNo", required = false) String pageNo,HttpServletRequest request){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		PageParam pageParam = null;
 		if(StringHelper.isNotEmpty(pageNo)){
 			pageParam = new PageParam(Integer.parseInt(pageNo), 10) ;
 		}else{
 			pageParam = new PageParam(1, 10);
 		}
-		
-//		Long channelId = ratePo.getChannelId();
-		//channelDiscountDao.get(new WherePrams(file, where, value))
-		
-		
-////		cdp.setDiscountType(ChannelDiscountTypeEnum.RATE.getValue());
-		//得到地区和折扣列表
-//		List<RateDiscountPo> rateList = rateDiscountDao.getRateDiscountList(ratePo);
-		
-		ChannelDiscountPo cdp = new ChannelDiscountPo();
-		cdp.setChannelId(Long.parseLong(channelId));
-		resultMap.put("channelId", channelId);
-		List<ChannelDiscountPo> channelList = channelDiscountAO.getDiscountList(cdp);
-		
-		if(	channelList!= null && channelList.size() > 0){
-			resultMap.put("channelBillType", channelList.get(0).getBillType());
-			String scopeCityCodeSim = "100";
-			List<String> scopeList = new LinkedList<String>();
-			//初始化地区列表
-			for (ChannelDiscountPo channelPo : channelList) {
-				//在排好序的情况下
-				String scopeCityCode =channelPo.getScopeCityCode();
-				if(!scopeCityCodeSim.equals(scopeCityCode)){//地区不相等（第一个一定）
-//					rateDisPo = new RateDiscountPo();
-//					rateDisPo.setScopeCityCode(channelPo.getScopeCityCode());
-//					rateDisPo.setScopeCityName(ScopeCityEnum.getEnum(channelPo.getScopeCityCode()).getDesc());
-					scopeList.add(scopeCityCode);
-					scopeCityCodeSim = scopeCityCode;//生成新的key
-				}
-//				rateDiscountPo.setScopeCityName(ScopeCityEnum.getEnum(rateDiscountPo.getScopeCityCode()).getDesc());
-			}
-			resultMap.put("scopeList", scopeList);//取地区和地区编码
-			
-			resultMap.put("channelName", channelList.get(0).getChannelName());//设置通道名称
-			
-			if(StringHelper.isEmpty(aarp.getScopeCityCode())){//如果为空，就取第一个
-				String scopeCityCode = channelList.get(0).getScopeCityCode();//默认选第一个城市
-				aarp.setScopeCityCode(scopeCityCode);
-				cdp.setScopeCityCode(scopeCityCode);//设置第一个城市
-			}else{
-				//再去找一遍折扣,通道折扣
-				cdp.setScopeCityCode(aarp.getScopeCityCode());
-			}
-			cdp.setOperatorType(aarp.getOperatorType());//不为空
-			cdp.setServiceType(aarp.getServiceType());//不为空
-			List<ChannelDiscountPo> channelList1 = channelDiscountAO.getDiscountList(cdp);
-			if(channelList1 != null && channelList1.size()==1){//一般一个地区只有一个通道折扣
-				ChannelDiscountPo cdp1 = channelList1.get(0);
-				Double singleDiscount = cdp1.getChannelDiscount();
-				resultMap.put("channelDiscount", singleDiscount);//设置第一个地区的通道折扣
-				Long channelDiscountId = cdp1.getId();
-				resultMap.put("channelDiscountId", channelDiscountId);//设置第一个地区的通道折扣
-				int billType = -1;
-				if(aarp.getBillTypeRate() != null){//有查询参数，就用查询参数
-					billType = aarp.getBillTypeRate();
-				}else{//没有查询参数，就用第一个通道折扣类型，作为费率折扣类型
-					billType = cdp1.getBillType();
-				}
-				List<RateDiscountPo> discountList = rateDiscountDao.getListByCDiscountId(channelDiscountId,billType);//折扣列表
-				
-				resultMap.put("discountList", discountList);//取折扣和折扣id
-				//根据第一个折扣id去找连接
-//				RateDiscountPo ratePP = new RateDiscountPo();
-				AgencyActiveRatePo aarp1 = new AgencyActiveRatePo();			//搜索参数
-				if(discountList != null && discountList.size() > 0){
-//					if(aarp.getRateDiscountId()==null){
-						Long rateId = discountList.get(0).getId();//第一个折扣id
-						aarp1.setRateDiscountId(rateId);
-//					}else
-//					{
-//						aarp1.setRateDiscountId(aarp.getRateDiscountId());
-//					}
-					aarp1.setAgencyName(aarp.getAgencyName());
-					Pagination<AgencyActiveRatePo> pagination = agencyActiveChannelAO.listActiveRate(pageParam, aarp1);
-					resultMap.put("pagination", pagination);
-				}else{//显示没有记录
-					List<AgencyActiveRatePo> nullList = new ArrayList<AgencyActiveRatePo>();
-					Pagination<AgencyActiveRatePo> pagination = new Pagination<AgencyActiveRatePo>(nullList, 0, 1, 10);
-					resultMap.put("pagination", pagination);
-				}
-			}else{//显示没有记录
-				List<AgencyActiveRatePo> nullList = new ArrayList<AgencyActiveRatePo>();
-				Pagination<AgencyActiveRatePo> pagination = new Pagination<AgencyActiveRatePo>(nullList, 0, 1, 10);
-				resultMap.put("pagination", pagination);
-			}
-			
-//			List<Double> disList = new LinkedList<Double>(); 
-//			for (RateDiscountPo rateDiscountPo : discountList) {
-//				disList.add(rateDiscountPo.getActiveDiscount());
-//			}
-			
-			
-		}
-//		for (RateDiscountPo rateDiscountPo : rateList) {
-//			rateDiscountPo.setScopeCityName(ScopeCityEnum.getEnum(rateDiscountPo.getScopeCityCode()).getDesc());
-//		}
-//		
-//		//初始化开头字段
-//		
-////		List<ChannelDiscountPo> discountList = channelDiscountAO.getDiscountList(cdp);
-//		
-//		
-//		ChannelDiscountPo cdp = new ChannelDiscountPo();
-////		cdp.setDiscountType(ChannelDiscountTypeEnum.CHANNEL.getValue());
-//		cdp.setChannelId(ratePo.getChannelId());
-//		
-//		
-//		
-////		Pagination<ChannelDiscountPo> pagination = channelDiscountAO.getDiscountList(cdp, pageParam);//
-////		AgencyActiveChannelPo activePo = new AgencyActiveChannelPo();
-////		activePo.setOperatorType(ratePo.getOperatorType());
-//		Pagination<AgencyActiveChannelPo> pagination = agencyActiveChannelAO.listActiveRate(pageParam, ratePo);
-//		
-////		Map<String,Object> prefixMap = channelDiscountAO.getOperatorList(cdp);//获得对上通道相关信息
-////		prefixList = channelDiscountAO
-//		
-//		resultMap.put("pagination", pagination);
-////		request.getSession().setAttribute("prefixMap", prefixMap);//通道折扣选项
-////		resultMap.put("prefixMap", ratePo);	//通道折扣选项
-//		resultMap.put("rateList", rateList);	//费率折扣选项
-//		if(rateList.size() > 0){//默认设置为第一个rateId
-//			resultMap.put("rateId", rateList.get(0).getId());
-//		}
-		
+		//初始化resultMap集合
+		agencyActiveChannelAO.getBindRateList(resultMap, pageParam, aarp, channelId);
 		resultMap.put("otypeEnums", OperatorTypeEnum.toList());
 		resultMap.put("stypeEnums", ServiceTypeEnum.toList());
 		resultMap.put("bindStateEnums", BindStateEnum.toList());
@@ -788,28 +682,25 @@ public class RateController {
 		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 		resultMap.put("searchParams", aarp);
 		
-		
-//		channelDis
-//		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
-//		resultMap.put("operatorTypes", OperatorTypeEnum.toList());
-//		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
-//		resultMap.put("channelListStr", channelListStr);
-//		resultMap.put("channelList", channelList);
 		return new ModelAndView("/activity/bind_rate_list","resultMap",resultMap);
 	}
 	/**
-	 * @description: js/json通过参数获得折扣列表
+	 * @description: 发送ajax请求的位置：bind_rate_list.jsp setDiscount函数
+	 * <br>js/json通过参数获得折扣列表
+	 * @see
 	 * @param request
 	 * @param oType
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月12日 上午10:49:23
 	 */
+	@SuppressWarnings("restriction")
 	@RequestMapping(value = RateURL.GET_DISCOUNT)
 	@ResponseBody
 	public void getDiscount(HttpServletRequest request,RateDiscountPo ratePo,HttpServletResponse response){
 //		Map<String,Object> resMap = (Map<String, Object>) request.getSession().getAttribute("prefixMap");
 		List<RateDiscountPo> list = rateDiscountDao.getRateDiscountList(ratePo);
 		String jsonStr = JSON.toJSONString(list);
+//		return jsonStr;
 		try {
 			response.getWriter().print(jsonStr);
 		} catch (IOException e) {
@@ -819,6 +710,7 @@ public class RateController {
 	
 	/**
 	 * @description: 绑定折扣添加页面
+	 * <br>来源： bind_rate_list 添加或者编辑折扣按钮
 	 * @param ratePo
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月14日 下午2:48:58
@@ -831,7 +723,6 @@ public class RateController {
 			resultMap.put("rateDiscountId", rateDiscountId);
 			Double rateDiscount = rateDiscountDao.get(Long.parseLong(rateDiscountId)).getActiveDiscount();
 			resultMap.put("rateDiscount", rateDiscount);//费率折扣
-			
 		}
 		
 		resultMap.put("fromTag", fromTag);
@@ -847,7 +738,7 @@ public class RateController {
 		return new ModelAndView("/activity/bind_rate_add_page", "resultMap", resultMap);
 	}
 	/**
-	 * @description: 绑定折扣添加
+	 * @description: 来源： bind_rate_add_page.jsp<br>绑定折扣添加
 	 * @param ratePo
 	 * @return
 	 * @author:POP产品研发部 宁强
@@ -869,7 +760,7 @@ public class RateController {
 	}
 	
 	/**
-	 * @description: 编辑折扣
+	 * @description: 来源： bind_rate_add_page.jsp<br>编辑折扣
 	 * @param ratePo
 	 * @param response
 	 * @author:POP产品研发部 宁强
@@ -897,21 +788,21 @@ public class RateController {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月15日 上午11:44:58
 	 */
-	@RequestMapping(value= RateURL.BIND_AGENCY_PAGE)
-	public ModelAndView bindAgencyPage(String channelDiscountId,String activeDiscount, String rateDiscountId){
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		long cId = Long.parseLong(channelDiscountId.trim());
-		ChannelDiscountPo cDPo = channelDiscountDao.get(new WherePrams("id", "=", cId));
-		resultMap.put("cDPo",cDPo);//显示参数
-		resultMap.put("otypeEnums", OperatorTypeEnum.toList());//显示参数
-		resultMap.put("stypeEnums", ServiceTypeEnum.toList());//显示参数
-		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());//显示参数
-		resultMap.put("activeDiscount", activeDiscount);//折扣：显示参数
-		resultMap.put("rateDiscountId", rateDiscountId);//折扣id：hidden
-		return new ModelAndView("/activity/bind_agency_page", "resultMap", resultMap);
-	}
+//	@RequestMapping(value= RateURL.BIND_AGENCY_PAGE)
+//	public ModelAndView bindAgencyPage(String channelDiscountId,String activeDiscount, String rateDiscountId){
+//		Map<String, Object> resultMap = new HashMap<String, Object>();
+//		long cId = Long.parseLong(channelDiscountId.trim());
+//		ChannelDiscountPo cDPo = channelDiscountDao.get(new WherePrams("id", "=", cId));
+//		resultMap.put("cDPo",cDPo);//显示参数
+//		resultMap.put("otypeEnums", OperatorTypeEnum.toList());//显示参数
+//		resultMap.put("stypeEnums", ServiceTypeEnum.toList());//显示参数
+//		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());//显示参数
+//		resultMap.put("activeDiscount", activeDiscount);//折扣：显示参数
+//		resultMap.put("rateDiscountId", rateDiscountId);//折扣id：hidden
+//		return new ModelAndView("/activity/bind_agency_page", "resultMap", resultMap);
+//	}
 	/**
-	 * @description: 更新绑定状态提示页面
+	 * @description: 来源：bind_rate_list.jsp  changeBState函数 <br>更新绑定状态提示页面
 	 * @param channelDiscountId
 	 * @param activeDiscount
 	 * @return
@@ -935,7 +826,7 @@ public class RateController {
 		return new ModelAndView("/activity/update_bind_state_confirm", "resultMap", resultMap);
 	}
 	/**
-	 * @description: 通道批量绑定代理商页面 /flowsys/rate/batch_bind_agency_page
+	 * @description: 来源：bind_rate_list.jsp  batch_bind函数 <br>通道批量绑定代理商页面 /flowsys/rate/batch_bind_agency_page
 	 * @param pageNo
 	 * @param request
 	 * @return
@@ -947,6 +838,9 @@ public class RateController {
 	public ModelAndView batchBindAgencyPage(@RequestParam(value = "pageNo", required = false) String pageNo,AgencyActiveRateDTO aardto,RateDiscountPo ratePo, HttpServletRequest request){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		Map<String, Object> resultMap = new HashMap<String, Object>();
+		if(agencyVO == null){
+			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+		}
 		int rootAgencyId = agencyVO.getId();
 		PageParam pageParam = null;
 		if(StringHelper.isNotEmpty(pageNo)){
@@ -975,50 +869,45 @@ public class RateController {
 		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 		
 		return new ModelAndView("/activity/batch_bind_agency_page", "resultMap", resultMap);
-//		agencyActiveChannelAO.
-//		int addRes = rateDiscountDao.add(ratePo);
-//		try {
-//			if(addRes > 0)
-//			{
-//				response.getWriter().print("success");
-//			}
-//			else
-//			{
-//				response.getWriter().print("error");
-//			}
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		Map<String, Object> resultMap = new HashMap<String, Object>();
-//		resultMap.put("ratePo",ratePo);
 	}
 	/**
-	 * @description: 通道批量绑定代理商 
+	 * @description: 来源：batch_bind_agency_page.jsp changeBState函数<br>通道批量绑定（解绑）代理商 
 	 * @param aardto
 	 * @param response
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月18日 下午3:37:56
 	 */
+	@SuppressWarnings("restriction")
 	@ResponseBody
 	@RequestMapping(value=RateURL.BATCH_BIND_AGENCY)
-	public void batchBindAgency(AgencyActiveRateDTO aardto,HttpServletResponse response,HttpServletRequest request){
+	public String batchBindAgency(AgencyActiveRateDTO aardto,HttpServletRequest request){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		if(agencyVO == null){
+			return "error";
+		}
 		aardto.setBindAgencyId(agencyVO.getId());
 		int res = agencyActiveChannelAO.batchBindAgency(aardto);
-		try {
-			if(res>0){
-				response.getWriter().print("success"); 
-			}else{
-				response.getWriter().print("error"); 
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		String msg = "";
+		if(res>0){
+			msg = "success"; 
+		}else{
+			msg = "error"; 
 		}
+//		try {
+//			if(res>0){
+//				response.getWriter().print("success"); 
+//			}else{
+//				response.getWriter().print("error"); 
+//			}
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		return msg;
 	}
 	
 	/**
-	 * @description: 欢迎界面 /flowsys/rate/welcome.do
+	 * @description: 来源：index.jsp <br>欢迎界面 /flowsys/rate/welcome.do
 	 * @return
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月19日 下午2:24:34
@@ -1027,13 +916,18 @@ public class RateController {
 	public ModelAndView welcome(HttpServletRequest request){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		Map<String,Object> map = rateDiscountAO.getShowRate(agencyVO.getId());
-		resultMap.put("map", map);
+		if(agencyVO == null){
+			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+		}
+		List<RateDiscountShowDTO> rateList = rateDiscountAO.getIndexShowRate(agencyVO.getId());
+//		resultMap.put("map", map);
+		resultMap.put("rateList", rateList);
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
+		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 		return new ModelAndView("/welcome", "resultMap", resultMap);
 	}
 	/**
-	 * @description: 删除代理商和通道的绑定
+	 * @description: 来源：bind_channel_list.jsp bind_del函数<br> 删除代理商和通道的绑定
 	 * @param id
 	 * @return
 	 * @author:微族通道代码设计人 宁强
@@ -1046,7 +940,7 @@ public class RateController {
 		return res;
 	}
 	/**
-	 * @description: 删除折扣
+	 * @description: 来源：rate_list.jsp delRateDiscount函数<br>删除折扣
 	 * @param rateDiscountId
 	 * @return
 	 * @author:微族通道代码设计人 宁强

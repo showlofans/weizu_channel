@@ -38,8 +38,8 @@ public class AgencyBackwardVO extends Po {
 	@TempField
 	private Double accountCredit; // 透支额
 
-	private Long rateId;
-	private String rateName;
+//	private Long rateId;
+//	private String rateName;
 	
 //	private Long billRateId;
 	private Integer agencyTag;			//代理商类型（0-平台用户，1,-接口用户）
@@ -157,17 +157,6 @@ public class AgencyBackwardVO extends Po {
 		this.createTimeStr = createTimeStr;//createTimeStr不为空
 	}
 
-	public String getRateName() {
-		return rateName;
-	}
-
-
-	public void setRateName(String rateName) {
-		this.rateName = rateName;
-	}
-
-
-
 	public AgencyBackwardVO() {
 		super();
 	}
@@ -266,14 +255,6 @@ public class AgencyBackwardVO extends Po {
 
 	public void setAgencyIp(String agencyIp) {
 		this.agencyIp = agencyIp == null ? null : agencyIp.trim();
-	}
-
-	public Long getRateId() {
-		return rateId;
-	}
-
-	public void setRateId(Long rateId) {
-		this.rateId = rateId;
 	}
 
 }

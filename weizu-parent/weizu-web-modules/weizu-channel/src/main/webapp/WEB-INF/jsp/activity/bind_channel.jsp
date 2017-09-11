@@ -91,7 +91,7 @@
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 				<c:forEach items="${resultMap.operatorTypes }" var="operatorEnum" varStatus="vs">
 					<div class="radio-box">
-						<input name="operatorType" class="radioItem" type="radio" id="operatorType-${vs.index }" value="${operatorEnum.value }" <c:if test="${vs.index==0 }">checked</c:if> >
+						<input name="operatorType"  class="radioItem" type="radio" id="operatorType-${vs.index }" value="${operatorEnum.value }" <c:if test="${vs.index==0 }">checked</c:if> >
 						<%-- ${operatorEnum.desc } --%>
 						<label for="operatorType-${vs.index }">${operatorEnum.desc }</label> 
 					</div>
@@ -103,7 +103,7 @@
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 				<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceEnum" varStatus="vs">
 					<div class="radio-box">
-						<input class="radioItem" id="serviceType-${vs.index }" name="serviceType"  <c:if test="${vs.index==0 }">checked</c:if> type="radio"  value="${serviceEnum.value }" ><!-- <c:if test="${vs.index==0 }">checked</c:if> -->
+						<input class="radioItem"   id="serviceType-${vs.index }" name="serviceType"  <c:if test="${vs.index==0 }">checked</c:if> type="radio"  value="${serviceEnum.value }" ><!-- <c:if test="${vs.index==0 }">checked</c:if> -->
 						<%-- ${serviceEnum.desc } --%>
 						<label for="serviceType-${vs.index }">${serviceEnum.desc }</label>
 					</div>
@@ -249,6 +249,7 @@
 		<!-- channelName:通过js代码填充隐藏域的值 -->
 		<input type="hidden" id="channelName" name="channelName" value="" >
 		<input type="hidden" value="" name="channelId" id="channelId" />
+		<%-- <input type="hidden" value="${childAgencyId }" id="childAgencyId" /> --%>
 				
 		<!-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">备注：</label>
@@ -321,6 +322,10 @@ $(document).ready(function(){
  	                   }
  	                   if(d=="hasScope"){
  	                	  layer.msg('保存异常,已经添加过该地区折扣了!');
+ 	                	 //removeIframe();
+ 	                   }
+ 	                   if(d=="disMatch"){
+ 	                	  layer.msg('业务类型与地区不匹配');
  	                	 //removeIframe();
  	                   }
  	               },
@@ -487,66 +492,7 @@ function changeName(){
 /**checkBox的点击事件*/
 $(".radioItem").change( //都会发送ajax请求
 	function(){	
-		 var operatorType = $("input[name='operatorType']:checked").val();
-		 var serviceType = $("input[name='serviceType']:checked").val();
-		//alert(serviceType);
-		//var $price = $("input[name='scopeCityCode']:checked").next().next();		//最优通道显示区
-		//alert(operatorType);
-		//if($("input[name='scopeCityCode']:checked").next().is(':hidden')){
-			var url = "";
-			if($("input[name='scopeCityCode']:checked").length < 1){
-				//alert('不存在');
-				var scopeCityCode = '';
-				url = "/flowsys/rate/get_simple_channel.do?operatorType="+operatorType+"&serviceType="+serviceType;
-				//alert($("input[name='scopeCityCode']:checked"));
-			}else{
-				var scopeCityCode = $("input[name='scopeCityCode']:checked").val();
-				url = "/flowsys/rate/get_simple_channel.do?operatorType="+operatorType+"&scopeCityCode="+scopeCityCode+"&serviceType="+serviceType;
-			}
-			
-			
-			
-			//alert(cityCode);
-			 $.ajax( {    
-		        "type": "get",     
-		        "contentType": "application/x-www-form-urlencoded; charset=utf-8",    
-		        "url": url,     
-		        "dataType": "json",  
-		        "async": false,  
-		        "success": function(resp) { 
-		        	//alert(resp);
-		        	//alert(resp.length);
-	        		$("#selectC").empty();
-	        		 if(resp.length == 0){ //如果没有通道信息，就设置折扣为不可编辑
-	        			 $("#selectC").append("<option value=''>没有通道</option>");
-	        			 $("input[name='scopeCityCode']:checked").next().val("没有通道，不可设置");
-	        			 $("input[name='scopeCityCode']:checked").next().attr("readonly","readonly");
-	        			 $("#channelCount").html(0);
-	        		 }else{
-	        			 $("input[name='scopeCityCode']:checked").next().val("");
-	        			 $("input[name='scopeCityCode']:checked").next().removeAttr("readonly");
-	        		 }
-	        		// var appendData = "";
-	        		 //如果resp没有值，下面函数也不会执行
-		        	 $.each(resp, function(i, item) {
-		        		 
-        				$("#channelId").val(item.channelId);
-        				$("#channelName").val(item.channelName);
-		             	 $("#selectC").append("<option class='rate' value='"+item.id+"'>" + item.channelName + "</option>");//"+ operatorType +"
-		             	 $("#channelCount").html(resp.length)
-		             	 $("input[name='scopeCityCode']:checked").next().attr("placeholder",item.channelDiscount);
-		        		 //alert(i);//从0开始
-	        				//alert(item.channelName);
-		        		 ///不管有没有通道
-		        		 
-		             });
-		        	//$price.show();
-		        	//alert("success");
-		        },
-		        "error":function(msg){
-		        	///alert(msg);
-		        }
-		    });  
+		getChannel(); 
 			 /* $(".disscount").hide();
 			$("input[name='scopeCityCode']:checked").next().show();	
 		}else{
@@ -558,7 +504,69 @@ $(".radioItem").change( //都会发送ajax请求
 			 $("#channelCount").html(0);
 		} */
 	});
-
+	/**获得可选通道*/
+function getChannel(){
+	var operatorType = $("input[name='operatorType']:checked").val();
+	 var serviceType = $("input[name='serviceType']:checked").val();
+	 var billType = $("input[name='billType']:checked").val();
+	 // alert(billType);
+	 //var childAgencyId = $('#childAgencyId').val();
+	//alert(serviceType);
+	//var $price = $("input[name='scopeCityCode']:checked").next().next();		//最优通道显示区
+	//alert(operatorType);
+	//if($("input[name='scopeCityCode']:checked").next().is(':hidden')){
+		var url = "";
+		if($("input[name='scopeCityCode']:checked").length < 1){
+			//alert('不存在');
+			var scopeCityCode = '';
+			url = "/flowsys/rate/get_simple_channel.do?operatorType="+operatorType+"&serviceType="+serviceType+"&billType="+billType;
+			//alert($("input[name='scopeCityCode']:checked"));
+		}else{
+			var scopeCityCode = $("input[name='scopeCityCode']:checked").val();
+			url = "/flowsys/rate/get_simple_channel.do?operatorType="+operatorType+"&scopeCityCode="+scopeCityCode+"&serviceType="+serviceType+"&billType="+billType;
+		}
+		//alert(cityCode);
+		 $.ajax( {    
+	        "type": "get",     
+	        "contentType": "application/x-www-form-urlencoded; charset=utf-8",    
+	        "url": url,     
+	        "dataType": "json",  
+	        "async": false,  
+	        "success": function(resp) { 
+	        	//alert(resp);
+	        	//alert(resp.length);
+       		$("#selectC").empty();
+       		 if(resp.length == 0){ //如果没有通道信息，就设置折扣为不可编辑
+       			 $("#selectC").append("<option value=''>没有通道</option>");
+       			 $("input[name='scopeCityCode']:checked").next().val("没有通道，不可设置");
+       			 $("input[name='scopeCityCode']:checked").next().attr("readonly","readonly");
+       			 $("#channelCount").html(0);
+       		 }else{
+       			 $("input[name='scopeCityCode']:checked").next().val("");
+       			 $("input[name='scopeCityCode']:checked").next().removeAttr("readonly");
+       		 }
+       		// var appendData = "";
+       		 //如果resp没有值，下面函数也不会执行
+	        	 $.each(resp, function(i, item) {
+	        		 
+   				$("#channelId").val(item.channelId);
+   				$("#channelName").val(item.channelName);
+	             	 $("#selectC").append("<option class='rate' value='"+item.id+"'>" + item.channelName + "</option>");//"+ operatorType +"
+	             	 $("#channelCount").html(resp.length)
+	             	 $("input[name='scopeCityCode']:checked").next().attr("placeholder",item.channelDiscount);
+	        		 //alert(i);//从0开始
+       				//alert(item.channelName);
+	        		 ///不管有没有通道
+	        		 
+	             });
+	        	//$price.show();
+	        	//alert("success");
+	        },
+	        "error":function(msg){
+	        	///alert(msg);
+	        }
+	    }); 
+}
 
 
 </script>

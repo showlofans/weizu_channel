@@ -72,7 +72,7 @@
 			<thead>
 				<tr class="text-c">
 					<!-- <th width="80">流量包Id</th> -->
-					<th >ID</th>
+					 <th >ID</th>
 					<th >平台名称</th>
 					<th >通道名称</th>
 					<th >业务类型</th>
@@ -99,7 +99,7 @@
 			<tbody>
 				<c:forEach items="${resultMap.pagination.records }" var="channel" varStatus="vs">
 					<tr class="text-c">
-						<td>${channel.id }</td> 
+						<td>${channel.id }</td>
 						<td>${channel.epName }</td>
 						<td>${channel.channelName }</td>
 						<td><c:forEach items="${resultMap.serviceTypeEnums }" var="serTypeEnum" varStatus="vs1">
@@ -163,7 +163,7 @@
 							</a> 
 						</c:if>
 						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="channel_stop('/flowsys/channel/channel_delete.do',${channel.id})" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
-						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="javascript:;" onclick="channel_edit('/flowsys/rate/bind_rate_list.do',this)" data-title="费率列表"><i class="Hui-iconfont">&#xe6df;</i></a>
+						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="javascript:;" onclick="channel_edit('/flowsys/rate/bind_rate_list.do',this)" data-title="折扣信息"><i class="Hui-iconfont">&#xe6df;</i></a>
 						</td>
 					</tr>
 				</c:forEach>

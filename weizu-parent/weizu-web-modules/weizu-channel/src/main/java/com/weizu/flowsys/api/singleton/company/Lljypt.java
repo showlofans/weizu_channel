@@ -25,16 +25,15 @@ public class Lljypt implements BaseInterface {
 	private static Lljypt instance = new Lljypt();  
 	private static String epEngId;
 	private static BaseP baseParams;
-//	private static StringBuffer sbParams = new StringBuffer();			//构建sign密钥组合字符串
+	private static String [] specialKeys = new String[]{"clientId","merchant","version"};
 	private Lljypt() {
 	}
 	
 	 public static Lljypt getInstance(String epEngId,BaseP baseParams) {  
-		 Lljypt.epEngId = epEngId;
-//	    	baseParams = baseParams;
+		 Lljypt.setEpEngId(epEngId);
 		 Lljypt.baseParams=baseParams;
-	    	return instance;  
-	    }
+    	return instance;  
+    }
 	
 	@Override
 	public ChargeDTO charge() {
@@ -105,12 +104,6 @@ public class Lljypt implements BaseInterface {
 	}
 
 	@Override
-	public void initSpecialP(Object... objs) {
-		
-
-	}
-
-	@Override
 	public String toBalanceParams() {
 		String otherParams = baseParams.getEpo().getEpOtherParams();
 		Long timeStamp = System.currentTimeMillis();		//对外统一的时间戳
@@ -136,36 +129,7 @@ public class Lljypt implements BaseInterface {
 		return param.toString();
 	}
 	
-	/**
-	 * @description: 获得余额签名
-	 * @param otherParams
-	 * @return
-	 * @author:微族通道代码设计人 宁强
-	 * @param specialKeys 
-	 * @createTime:2017年8月30日 下午12:22:59
-	 */
-	private String getBalanceSign(String otherParams,Long ts, String[] specialKeys){
-		Arrays.sort(specialKeys);//按升序排列
-		StringBuffer sbKeyValue = new StringBuffer();
-		for (String key : specialKeys) {
-			String valueSample = StringUtil2.getParamsByCharSeq(otherParams, key);
-			if(valueSample != null){
-				valueSample =  valueSample.substring(valueSample.indexOf("=") +1);
-				sbKeyValue.append(key).append(valueSample);
-			}else{//不再特殊参数里，就单独添加到签名当中,只有一个当前时间
-//				System.out.println(key);//key一定只有当前时间
-				if("ts".equals(key)){
-					sbKeyValue.append(key).append(ts);
-				}
-			}
-		}
-		//最后加上一个apikey
-		sbKeyValue.append(baseParams.getEpo().getEpApikey().trim());
-		System.out.println("balanceParams:"+sbKeyValue.toString());
-		String sign = getSignBySignStr(sbKeyValue.toString());
-		return sign;
-	}
-	
+
 	@Override
 	public String toParams() {
 		String otherParams = baseParams.getEpo().getEpOtherParams(); 
@@ -176,7 +140,7 @@ public class Lljypt implements BaseInterface {
 		Boolean hasOther = StringHelper.isNotEmpty(otherParams);
 		if(hasOther){//对于行云流水来讲保证其他参数不为空
 			//添加其他参数
-			String [] specialKeys = new String[]{"clientId","merchant","version"};
+//			String [] specialKeys = new String[]{"clientId","merchant","version"};
 			String sign = getSign(otherParams,timeStamp);
 			for (String key : specialKeys) {
 				String valueSample = StringUtil2.getParamsByCharSeq(otherParams, key);
@@ -189,6 +153,23 @@ public class Lljypt implements BaseInterface {
 			param.put("ts", timeStamp);
 			param.put("sign", sign);
 		}
+		return param.toString();
+	}
+	
+	@Override
+	public String toOrderParams() {
+		JSONObject param = new JSONObject();
+		String otherParams = baseParams.getEpo().getEpOtherParams();
+		Long timeStamp = System.currentTimeMillis();		//对外统一的时间戳
+		String sign = getSign(otherParams,timeStamp);
+		for (String key : specialKeys) {
+			String valueSample = StringUtil2.getParamsByCharSeq(otherParams, key);
+			String value = valueSample.substring(valueSample.indexOf("=") +1);
+			param.put(key, value);
+		}
+		param.put("outTradeNo", baseParams.getOrderId());
+		param.put("ts", timeStamp);
+		param.put("sign", sign);
 		return param.toString();
 	}
 	
@@ -230,6 +211,36 @@ public class Lljypt implements BaseInterface {
 		String sign = getSignBySignStr(sbKeyValue.toString());
 		return sign;
 	}
+	/**
+	 * @description: 获得余额签名
+	 * @param otherParams
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @param specialKeys 
+	 * @createTime:2017年8月30日 下午12:22:59
+	 */
+	private String getBalanceSign(String otherParams,Long ts, String[] specialKeys){
+		Arrays.sort(specialKeys);//按升序排列
+		StringBuffer sbKeyValue = new StringBuffer();
+		for (String key : specialKeys) {
+			String valueSample = StringUtil2.getParamsByCharSeq(otherParams, key);
+			if(valueSample != null){
+				valueSample =  valueSample.substring(valueSample.indexOf("=") +1);
+				sbKeyValue.append(key).append(valueSample);
+			}else{//不再特殊参数里，就单独添加到签名当中,只有一个当前时间
+//				System.out.println(key);//key一定只有当前时间
+				if("ts".equals(key)){
+					sbKeyValue.append(key).append(ts);
+				}
+			}
+		}
+		//最后加上一个apikey
+		sbKeyValue.append(baseParams.getEpo().getEpApikey().trim());
+		System.out.println("balanceParams:"+sbKeyValue.toString());
+		String sign = getSignBySignStr(sbKeyValue.toString());
+		return sign;
+	}
+	
 		
 //		//添加sign
 //		StringBuffer sbKeyValue = new StringBuffer();
@@ -292,15 +303,17 @@ public class Lljypt implements BaseInterface {
 		return sign;
 	}
 
-	@Override
-	public void initSpecialP(String addParams) {
-//		Lljypt.baseParams.setAddParams(addParams);
+//	@Override
+//	public void initSpecialP(String addParams) {
+////		Lljypt.baseParams.setAddParams(addParams);
+//	}
+
+	public static String getEpEngId() {
+		return epEngId;
 	}
 
-	@Override
-	public String toOrderParams() {
-		// TODO Auto-generated method stub
-		return null;
+	public static void setEpEngId(String epEngId) {
+		Lljypt.epEngId = epEngId;
 	}
 
 	

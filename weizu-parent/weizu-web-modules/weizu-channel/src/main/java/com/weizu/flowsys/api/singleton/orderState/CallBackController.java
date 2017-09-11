@@ -19,7 +19,6 @@ import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.trade.ao.AgencyPurchaseAO;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
-import com.weizu.web.foundation.http.HttpRequest;
 
 /**
  * @description: 回调控制层
@@ -41,8 +40,6 @@ public class CallBackController {
 	
 	@Resource
 	private AgencyBackwardDao agencyBackwardDao;
-	
-	private final static int CALL_BACK_TIME = 6;			//回调次数
 	
 	private Logger logger = Logger.getLogger("CallBackController");
 	
@@ -88,6 +85,7 @@ public class CallBackController {
             int status = obj.getIntValue("status");
             long ts = obj.getLongValue("ts");
             String sign = obj.getString("sign");
+            System.out.println(sign);
             String failReason = obj.getString("failReason");
             String outTradeNo = obj.getString("outTradeNo");//本地订单号
             long orderId = Long.parseLong(outTradeNo.trim());
@@ -96,8 +94,8 @@ public class CallBackController {
             PurchasePo purchasePo = purchaseDAO.get(new WherePrams("order_id_api", "=", outTradeNo.trim()).and("order_id", "=", orderId));
             //找到这个订单绑定的代理商，然后按照代理商的回调地址，推送json结果
             if (purchasePo  == null) {
-            	logger.config("回调订单号不存在");
-            	System.out.println("回调订单号不存在");
+            	logger.config("回调订单号不存在或者不匹配");
+            	System.out.println("回调订单号不存在或者不匹配");
 				return "回调订单号不存在";//
 			}else{
 				String orderIdFrom = purchasePo.getOrderIdFrom();
@@ -117,12 +115,13 @@ public class CallBackController {
 					rjdto.setStatus(myStatus);
 					rjdto.setStatusDetail(statusDetail);
 				}
+				agencyPurchaseAO.updatePurchaseState(purchasePo.getOrderId(), myStatus, statusDetail, ts);
+				AgencyBackwardPo agencyPo = agencyBackwardDao.get(purchasePo.getAgencyId());
 				//把rjdto按照代理商返回
-				if("success".equals(sendCallBack(rjdto, purchasePo.getAgencyId()))){//回调成功，更新数据库回调状态
-					agencyPurchaseAO.updatePurchaseState(purchasePo.getOrderId(), myStatus, statusDetail, ts);
-				}else{
-					logger.config("回调失败");
-					return "回调失败";
+				if(!"success".equals(SendCallBackUtil.sendCallBack(rjdto, agencyPo))){//回调成功，更新数据库回调状态
+					logger.config("向下返回调失败");
+					System.out.println("向下返回调失败");
+//					return "回调失败";
 				}
 			}
             
@@ -135,30 +134,5 @@ public class CallBackController {
 		//String failReason,String outTradeNo,String sign,int status,Long ts
 		return "ok";
 	}
-	/**
-	 * @description: 向下游返回结果方法
-	 * @param rjdto
-	 * @param status
-	 * @param statusDetail
-	 * @param url
-	 * @return
-	 * @author:微族通道代码设计人 宁强
-	 * @createTime:2017年9月4日 下午1:08:42
-	 */
-	private String sendCallBack(ResponseJsonDTO rjdto,Integer agencyId){
-		AgencyBackwardPo agencyPo = agencyBackwardDao.get(agencyId);
-		String requestUrl = agencyPo.getCallBackIp();
-		String resMsg = "";
-		int i = 0;
-		do{
-			i++;
-			String backJson = JSONObject.toJSONString(rjdto);
-			resMsg = HttpRequest.sendPost(requestUrl, backJson);
-			if(i== CALL_BACK_TIME){
-				return "error";
-			}
-		}while(!"ok".equals(resMsg));
-		
-		return "success";
-	}
+	
 }

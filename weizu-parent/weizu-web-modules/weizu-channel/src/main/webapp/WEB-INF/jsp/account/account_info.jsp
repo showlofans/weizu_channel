@@ -68,7 +68,7 @@
 							<input name="remittanceBankAccount" required value="${chargeAccount1.remittanceBankAccount }" type="text" class="input-text"  id=""  >
 						</div>
 					</div>
-					<div class="row cl">
+					<%-- <div class="row cl">
 						<label class="form-label col-xs-4 col-sm-2">账户信用额：</label>
 						<div class="formControls col-xs-8 col-sm-9">
 							<input type="text"  name="accountCredit" readonly="readonly" value="${chargeAccount.accountCredit }"  class="input-text" value="5" id="emailName">
@@ -81,7 +81,7 @@
 						<div class="formControls col-xs-8 col-sm-9">
 							<input type="text" id="website-static" placeholder="默认为空，为相对路径" value="" class="input-text">
 						</div>
-					</div>
+					</div> --%>
 					
 					<div class="row cl">
 						<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
@@ -113,12 +113,12 @@
 						<input name="remittanceBankAccount" required value="${chargeAccount.remittanceBankAccount }" type="text" class="input-text"  id=""  >
 					</div>
 				</div>
-				<div class="row cl">
+				<%-- <div class="row cl">
 					<label class="form-label col-xs-4 col-sm-2">账户信用额：</label>
 					<div class="formControls col-xs-8 col-sm-9">
 						<input type="text"  name="accountCredit" readonly="readonly" value="${chargeAccount.accountCredit }"  class="input-text" value="5" id="emailName">
 					</div>
-				</div>
+				</div> --%>
 				<div class="row cl">
 					<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
 						<button onClick="account_save_submit();" class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
@@ -194,8 +194,8 @@ $(function(){
 		checkboxClass: 'icheckbox-blue',
 		radioClass: 'iradio-blue',
 		increaseArea: '20%'
-	});
-	$.Huitab("#tab-system .tabBar span","#tab-system .tabCon","current","click","0"); */
+	}); */
+	$.Huitab("#tab-system .tabBar span","#tab-system .tabCon","current","click","0");
 });
 </script>
 <!--/请在上方写此页面业务相关的脚本-->

@@ -20,7 +20,7 @@ import com.weizu.flowsys.util.UUIDGenerator;
 import com.weizu.flowsys.web.activity.dao.impl.RateBackwardDaoImpl;
 import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.RateBackwardPo;
-import com.weizu.flowsys.web.agency.dao.impl.AgencyBackwardDao;
+import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
 import com.weizu.flowsys.web.agency.dao.impl.AgencyVODao;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
@@ -34,9 +34,9 @@ import com.weizu.web.foundation.String.StringHelper;
 public class AgencyAOImpl implements AgencyAO {
 
 	@Resource
-	private AgencyBackwardDao agencyBackwardDao;
-	@Resource
-	private AgencyVODao agencyVODao;
+	private AgencyVODaoInterface agencyVODao;
+//	@Resource
+//	private AgencyVODao agencyVODao;
 	@Resource
 	private RateBackwardDaoImpl rateBackwardDao;
 	@Resource
@@ -62,9 +62,9 @@ public class AgencyAOImpl implements AgencyAO {
 			agencyBackward.setVerifyCode("");//置空邀请码
 			agencyBackward.setCreateTime(System.currentTimeMillis());
 			agencyBackward.setAgencyTag(0);
-			int addAgency = agencyBackwardDao.add(agencyBackward);
+			int addAgency = agencyVODao.add(agencyBackward);
 			//利用nextId函数获得当前注册代理商id,同时注册一个账户
-			int agencyId = (int) (agencyBackwardDao.nextId()-1);//适用于自动增长
+			int agencyId = (int) (agencyVODao.nextId()-1);//适用于自动增长
 			ChargeAccountPo chargePo = new ChargeAccountPo();
 			chargePo.setBillType(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());//默认开通对私账户
 			chargePo.setAgencyId(agencyId);
@@ -134,8 +134,8 @@ public class AgencyAOImpl implements AgencyAO {
 				agencyBackward.getRootAgencyId(), agencyBackward.getUserName(), 
 				agencyBackward.getUserPass(), agencyBackward.getUserRealName(), 
 				agencyBackward.getAgencyTel(), agencyBackward.getUserEmail(), 
-				agencyBackward.getAgencyIp(), agencyBackward.getRateId(), 
-				agencyBackward.getAccountCredit(), agencyBackward.getRateName(),
+				agencyBackward.getAgencyIp(), 
+				agencyBackward.getAccountCredit(), 
 				System.currentTimeMillis(), agencyBackward.getVerifyCode());
 	}
 
@@ -150,7 +150,7 @@ public class AgencyAOImpl implements AgencyAO {
 	public Map<String,Object> login(AgencyBackwardPo agencyBackward) {
 		String userPass = agencyBackward.getUserPass(); 
 		Map<String,Object> resultMap = new HashMap<String, Object>();
-		AgencyBackwardPo resultAgency = agencyBackwardDao.get(new WherePrams("user_name", " like", agencyBackward
+		AgencyBackwardPo resultAgency = agencyVODao.get(new WherePrams("user_name", "=", agencyBackward
 				.getUserName()));
 		if(resultAgency != null)
 		{
@@ -183,7 +183,7 @@ public class AgencyAOImpl implements AgencyAO {
 	 */
 	@Override
 	public List<AgencyBackwardPo> ListAgencyByRoot(int rootAgencyId) {
-		return agencyBackwardDao.list(new WherePrams("root_agency_id", "=", rootAgencyId));
+		return agencyVODao.list(new WherePrams("root_agency_id", "=", rootAgencyId));
 	}
 
 	/**
@@ -260,7 +260,7 @@ public class AgencyAOImpl implements AgencyAO {
 //				}
 //			}
 		}
-//		List<AgencyBackwardPo> records = agencyBackwardDao.list(whereParams);
+//		List<AgencyBackwardPo> records = agencyVODao.list(whereParams);
 		
 		return new Pagination<AgencyBackwardVO>(records, totalRecord, pageNo, pageSize);
 	}
@@ -314,31 +314,31 @@ public class AgencyAOImpl implements AgencyAO {
 	public Map<String, Object> prepareParam(String id) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		if(StringHelper.isNotEmpty(id)){
-			AgencyBackwardPo agBackwardPo = agencyBackwardDao.get(Integer.parseInt(id));
-			if(StringHelper.isEmpty(agBackwardPo.getUserApiKey()) && agBackwardPo.getAgencyTag() == AgencyTagEnum.DATA_USER.getValue())
-			{
-				UUIDGenerator generator = new UUIDGenerator();
-				String uuid = generator.generate().toString();
-//				String md5ApiKey = MD5.getMd5(agBackwardPo.getUserName())
-				agBackwardPo.setUserApiKey(uuid);
-				int res = agencyBackwardDao.update(agBackwardPo);//更新代理商apikey信息
-				if(res < 1)//没有更新成功也不展示出来
-				{
-					agBackwardPo.setUserApiKey("");//不能让页面提交过来
-				}
-			}
-			//取随便一家的信用值，因为对公对私的信用额统一了
-			ChargeAccountPo chargeAccountPo = chargeAccountAO.getAccountByAgencyId(Integer.parseInt(id),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+			AgencyBackwardPo agBackwardPo = agencyVODao.get(Integer.parseInt(id));
 			if(agBackwardPo != null){
-				if(StringHelper.isNotEmpty(agBackwardPo.getUserRealName())){
-					agBackwardPo.setUserRealName(agBackwardPo.getUserRealName());
+				if(StringHelper.isEmpty(agBackwardPo.getUserApiKey()) && agBackwardPo.getAgencyTag() == AgencyTagEnum.DATA_USER.getValue())
+				{
+					UUIDGenerator generator = new UUIDGenerator();
+					String uuid = generator.generate().toString();
+	//				String md5ApiKey = MD5.getMd5(agBackwardPo.getUserName())
+					agBackwardPo.setUserApiKey(uuid);
+					int res = agencyVODao.update(agBackwardPo);//更新代理商apikey信息
+					if(res < 1)//没有更新成功也不展示出来
+					{
+						agBackwardPo.setUserApiKey("");//不能让页面提交过来
+					}
+				}else if(agBackwardPo.getAgencyTag() == AgencyTagEnum.PLATFORM_USER.getValue()){
+					agBackwardPo.setUserApiKey("没有");
 				}
-				agBackwardPo.setAccountCredit(chargeAccountPo.getAccountCredit());//设置信用值
+				//取随便一家的信用值，因为对公对私的信用额统一了
+//				ChargeAccountPo chargeAccountPo = chargeAccountAO.getAccountByAgencyId(Integer.parseInt(id),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+			
+//				agBackwardPo.setAccountCredit(chargeAccountPo.getAccountCredit());//设置信用值
 				
-				List<RateBackwardPo> list = rateBackwardDao.selectByRootId(agBackwardPo.getRootAgencyId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-				List<RateBackwardPo> billList = rateBackwardDao.selectByRootId(agBackwardPo.getRootAgencyId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
-				resultMap.put("rateList", list);//费率列表
-				resultMap.put("billRateList", billList);//带票费率列表
+//				List<RateBackwardPo> list = rateBackwardDao.selectByRootId(agBackwardPo.getRootAgencyId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+//				List<RateBackwardPo> billList = rateBackwardDao.selectByRootId(agBackwardPo.getRootAgencyId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
+//				resultMap.put("rateList", list);//费率列表
+//				resultMap.put("billRateList", billList);//带票费率列表
 				resultMap.put("agencyPo", agBackwardPo);
 			}
 		}
@@ -355,7 +355,7 @@ public class AgencyAOImpl implements AgencyAO {
 	 */
 	@Override
 	public String getVerifyCodeById(int id) {
-		return agencyBackwardDao.get(id).getVerifyCode();//返回数据库里面的邀请码
+		return agencyVODao.get(id).getVerifyCode();//返回数据库里面的邀请码
 	}
 
 	/**
@@ -369,7 +369,7 @@ public class AgencyAOImpl implements AgencyAO {
 	public AgencyBackwardPo getAgencyById(String id) {
 		if(StringHelper.isNotEmpty(id)){
 			int intId = Integer.parseInt(id);
-			return agencyBackwardDao.get(intId);
+			return agencyVODao.get(intId);
 		}
 		return null;
 	}
@@ -472,11 +472,11 @@ public class AgencyAOImpl implements AgencyAO {
 
 	@Override
 	public boolean checkName(String name) {
-		long res = agencyBackwardDao.count(new WherePrams("user_name", "=", name));
+		long res = agencyVODao.count(new WherePrams("user_name", "=", name));
 		if(res > 0){
-			return true;
+			return false;//已经存在，不允许再次注册,显示提示错误信息
 		}
-		return false;
+		return true;
 	}
 
 	@Override

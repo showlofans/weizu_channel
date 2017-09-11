@@ -30,7 +30,7 @@ import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.channel.ao.ChannelChannelAO;
 import com.weizu.flowsys.web.channel.ao.ExchangePlatformAO;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
-import com.weizu.flowsys.web.channel.dao.impl.ExchangePlatformDao;
+import com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.url.ChannelURL;
@@ -49,7 +49,7 @@ import com.weizu.web.foundation.String.StringHelper;
 public class ChannelController {
 	
 	@Resource
-	private ExchangePlatformDao exchangePlatformDao;
+	private ExchangePlatformDaoInterface exchangePlatformDao;
 	
 	@Resource
 	private ExchangePlatformAO exchangePlatformAO;
@@ -120,25 +120,29 @@ public class ChannelController {
 //		
 		//添加代理商账户Id
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		channelChannelPo.setBelongAgencyId(agencyVO.getId());
-		
+		if(agencyVO == null){
+			return "error";
+		}else{
+			channelChannelPo.setBelongAgencyId(agencyVO.getId());
+			
 //		List<ChannelForwardPo> list = channelForwardAO.initAddListByPo(channelForwardPo);	//初始化list
-		int result = channelChannelAO.channel_addList(channelChannelPo);
-		//System.out.println(result);
-		
+			int result = channelChannelAO.channel_addList(channelChannelPo);
+			//System.out.println(result);
+			
 //		System.out.println(channelForwardPo.getScopeCityName());
-		
-		if(result > 0){
+			
+			if(result > 0){
 //			ChannelForwardPo channelForwardPoParam = new ChannelForwardPo();
 //			channelForwardPoParam.setAgencyId(agencyVO.getId());
 //			return list_channel(null, request, null);
-			return "success";
-		}else{
+				return "success";
+			}else{
 //			Map<String, Object> resultMap = new HashMap<String, Object>();
 //			resultMap.put("pgSizeStr", channelChannelPo.getPgSize());
 //			resultMap.put("channelName", channelChannelPo.getChannelName());
-			return "error";
+				return "error";
 //			return new ModelAndView("/channel/channel_add_page","resultMap",resultMap);
+			}
 		}
 	}
 	
@@ -226,8 +230,8 @@ public class ChannelController {
 	 */
 	@RequestMapping(value= ChannelURL.CHANGE_CHANNEL_PGSIZE)
 	@ResponseBody
-	public void changePgSizeList(String operatorType,String serviceType,HttpServletResponse response) throws IOException{
-		response.getWriter().print(operatorPgAO.pgSizeStr(Integer.parseInt(operatorType),Integer.parseInt(serviceType)));
+	public void changePgSizeList(Integer operatorType,Integer serviceType,HttpServletResponse response) throws IOException{
+		response.getWriter().print(operatorPgAO.pgSizeStr(operatorType,serviceType));
 	}
 	
 	/**
