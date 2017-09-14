@@ -104,7 +104,7 @@
 						<c:if test="${pg.serviceType == serviceType.value }"> ${serviceType.desc }</c:if>
 						</c:forEach>
 						</td>
-						<td>${pg.pgSize }</td>
+						<td>${pg.pgSize }M</td>
 						<td><c:forEach items="${resultMap.pgTypeEnums }" var="pgType" varStatus="vs1">
 						<c:if test="${pg.operatorType == pgType.value }"> ${pgType.desc }</c:if>
 						</c:forEach>
