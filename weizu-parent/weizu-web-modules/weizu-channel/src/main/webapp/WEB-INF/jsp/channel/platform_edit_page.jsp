@@ -73,12 +73,12 @@
 				<input type="text" class="input-text" required  value="${exchangePlatformPo.epBalanceIp }" placeholder="" id="epBalanceIp" name="epBalanceIp">
 			</div>
 		</div>
-		<div class="row cl">
+		<%-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">订单状态地址：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" class="input-text" required  value="${exchangePlatformPo.epOrderStateIp }" placeholder="" id="epOrderStateIp" name="epOrderStateIp">
 			</div>
-		</div>
+		</div> --%>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">账号：</label>
 			<div class="formControls col-xs-8 col-sm-9">

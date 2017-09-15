@@ -14,8 +14,8 @@
 <script type="text/javascript" src="lib/respond.min.js"></script>
 <![endif]-->
 <link href="/view/static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
-<link href="/view/static/h-ui.admin/css/H-ui.login.css" rel="stylesheet" type="text/css" />
-<link href="/view/static/h-ui.admin/css/style.css" rel="stylesheet" type="text/css" />
+<!-- <link href="/view/static/h-ui.admin/css/register.css" rel="stylesheet" type="text/css" /> -->
+ <link href="/view/static/h-ui.admin/css/H-ui.login.css" rel="stylesheet" type="text/css" />
 <link href="/view/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
 <!--[if IE 6]>
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
@@ -25,9 +25,85 @@
 <meta name="keywords" content="">
 <meta name="description" content="">
 </head>
-<body class="login_bj">
-
-<div class="zhuce_body">
+<!-- <body class="login_bj"> -->
+<body  class="login_bj">
+<%-- <div class="loginWraper">
+  <div id="loginform" class="loginBox">
+  <h3 class="title">欢迎注册</h3> 
+    <form class="form form-horizontal" id="lgForm" action="/flowsys/agency/login.do" method="post">
+      <div class="row cl">
+        <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
+        <div class="formControls col-xs-8">
+        	<input id="userName" value="${loginMap.userName }" required name="userName"  autocomplete="off" type="text" placeholder="账户" class="input-text size-L">
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
+        <div class="formControls col-xs-8">
+        	<input id="userPass" name="userPass"  value="${resultMap.reg.userPass }" type="text" class="input-text size-L"" placeholder="密码" >
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
+        <div class="formControls col-xs-8">
+        	<input id="userRealName" value="${resultMap.reg.userRealName }" name="userRealName" required  autocomplete="off" type="text" placeholder=" 真实姓名" class="input-text size-L">
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
+        <div class="formControls col-xs-8">
+               <input id="agencyTel" name="agencyTel" value="${resultMap.reg.agencyTel }" required  autocomplete="off" type="text" placeholder="联系电话" class="input-text size-L">
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
+        <div class="formControls col-xs-8">
+               <input id="otherContact" name="otherContact" value="${resultMap.reg.otherContact }" required  autocomplete="off" type="text" placeholder="其他联系方式：qq号" class="input-text size-L">
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
+        <div class="formControls col-xs-8">
+                <input id="userEmail" name="userEmail" value="${resultMap.reg.userEmail }" required  autocomplete="off" type="email" placeholder="电子邮箱" class="input-text size-L">
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
+        <div class="formControls col-xs-8">
+                <input id="agencyIp" name="agencyIp" value="${resultMap.reg.agencyIp }" required  autocomplete="off" type="text"  placeholder=" 用户地址" class="input-text size-L">
+        </div>
+      </div>
+      <div class="row cl">
+        <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
+        <div class="formControls col-xs-8">
+                <input id="verifyCode" name="verifyCode" value="${resultMap.reg.verifyCode }" required  autocomplete="off" type="text" placeholder="注册邀请码" class="input-text size-L">
+                <c:if test="${not empty resultMap.msg}">
+       	  	  		<span id="errorMsg" style="color:red;" >${resultMap.msg}</span>
+       	  	  	</c:if>
+        </div>
+      </div>
+               
+                
+      <div class="row cl">
+        <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60e;</i></label>
+        <div class="formControls col-xs-8">
+          <input id="userPass" value="${loginMap.userPass }" required name="userPass"  style="width:350px;"  autocomplete="off" type="password" placeholder="密码" class="input-text size-L">
+        </div>
+      </div>
+      <div class="row cl">
+        <div class="formControls col-xs-8 col-xs-offset-3">
+          <input id="goLogin" onclick="startLogin()" class="btn btn-default radius size-L" type="button" value="&nbsp;登陆&nbsp;">
+          <input id="goRegist" class="btn btn-success radius size-L" type="submit" value="&nbsp;注册&nbsp;">
+          <!-- <input name="" type="submit" class="btn btn-default radius size-L" value="&nbsp;登&nbsp;&nbsp;&nbsp;&nbsp;录&nbsp;">
+          <input id="goRegist" onclick="startLogin()" class="btn_login" type="button" value="&nbsp;登陆&nbsp;">
+          <input name="" type="button" onclick="startRegister()"  class="btn btn-success radius size-L" value="&nbsp;注&nbsp;&nbsp;&nbsp;&nbsp;册&nbsp;"> -->
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="footer">Copyright 南昌微族 by 南昌微族<!-- <a href="http://www.mycodes.net/" target="_blank">源码之家</a> --></div> --%>
+ <div class="zhuce_body">
     <div class="zhuce_kong">
     	<div class="zc">
         	
