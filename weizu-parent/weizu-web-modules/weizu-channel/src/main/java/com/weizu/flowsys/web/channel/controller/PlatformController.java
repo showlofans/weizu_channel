@@ -170,10 +170,10 @@ public class PlatformController {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年8月17日 下午3:08:41
 	 */
-	@RequestMapping(value = PlatformURL.CHECK_EP_ENGID)
+	@RequestMapping(value = PlatformURL.CHECK_EP_NAME)
 	@ResponseBody
-	public String checkEpEngId(String epEngId){
-		boolean isExist = exchangePlatformAO.checkEpEngId(epEngId);
+	public String checkEpEngId(String epName){
+		boolean isExist = exchangePlatformAO.checkEpName(epName);
 		if(isExist){
 			return "exist";
 		}

@@ -104,6 +104,6 @@ public interface ExchangePlatformAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年8月17日 上午11:38:20
 	 */
-	boolean checkEpEngId(String epEngId);
+	boolean checkEpName(String epName);
 	
 }

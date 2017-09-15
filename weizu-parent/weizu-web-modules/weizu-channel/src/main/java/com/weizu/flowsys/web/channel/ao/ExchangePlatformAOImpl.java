@@ -198,7 +198,7 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 		epPo.setEpEngId(StringUtil2.toUpperClass(epPo.getEpEngId()));
 		if(ClassUtil.contrastObj(ep, epPo)){
 			flag = "success";
-		}else if(!engId.equals(epPo.getEpEngId()) && checkEpEngId(epPo.getEpEngId()) ){
+		}else if(!engId.equals(epPo.getEpEngId()) && checkEpName(epPo.getEpName()) ){
 			flag = "exist";
 		}else{//两个对象值不一样，并且英文标识不存在，或者和原来的不一样 就更新
 			epPo.setLastAccess(System.currentTimeMillis());
@@ -229,9 +229,9 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 		return "error";
 	}
 	@Override
-	public boolean checkEpEngId(String epEngId) {
+	public boolean checkEpName(String epName) {
 		Map<String,Object> paramsMap = new HashMap<String, Object>();
-		paramsMap.put("epEngId", epEngId);
+		paramsMap.put("epNameEqual", epName);
 		int res = exchangePlatformDao.countEp(paramsMap);
 		if(res > 0 ){
 			return true;

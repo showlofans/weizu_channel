@@ -55,7 +55,7 @@
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>测试平台：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 			<!--  onfocus="ajaxPg()" -->
-				<input type="text" id="epEngId" name="epEngId" class="input-text" required style="width:400px" autocomplete="off"  placeholder="请输入英文标识" >
+				<input type="text" id="epName" name="epName" class="input-text" required style="width:400px" autocomplete="off"  placeholder="请输入平台名称" >
 			</div>
 		</div>
 	</c:if>
@@ -398,10 +398,10 @@
 		// alert(cnelId);
 		 var carrier = $("#chargeTelDetail").val();
     	 var serviceType = $("#select-servce-type").val();
-    	 var epEngId = $('#epEngId').val();
+    	 //var epName = $('#epName').val();
     	 $.ajax({
              type: "post",
-             url: '/flowsys/chargePg/ajax_charge_pg.do?carrier='+ carrier + '&serviceType=' + serviceType + '&epEngId=' + epEngId+ '&channelId=' + cnelId,
+             url: '/flowsys/chargePg/ajax_charge_pg.do?carrier='+ carrier + '&serviceType=' + serviceType + '&channelId=' + cnelId,
              dataType: "json",
              async: false,
              contentType: "application/x-www-form-urlencoded; charset=utf-8", 
@@ -464,12 +464,12 @@
             	 	//ajax2();
            	 
        	   if(rootAgencyId == 0){
-	       	  var epEngId = $('#epEngId').val();
+	       	  var epName = $('#epName').val();
 	       	
 	       	 // alert(epEngId);
 	       	  $.ajax({
 	                type: "post",
-	                url: '/flowsys/chargePg/ajax_charge_channel.do?carrier='+ carrier + '&serviceType=' + serviceType + '&epEngId=' + epEngId,
+	                url: '/flowsys/chargePg/ajax_charge_channel.do?carrier='+ carrier + '&serviceType=' + serviceType + '&epName=' + epName,
 	                dataType: "json",
 	                async: false,
 	                contentType: "application/x-www-form-urlencoded; charset=utf-8", 

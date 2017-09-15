@@ -134,6 +134,12 @@
 			<if test="channelId != null">
 				AND cd.channel_id = #{channelId}
 			</if>
+			<!-- <if test="billType != null">
+				AND rte.bill_type = #{billType}
+			</if> -->
+			<if test="bindState != null">
+				AND aar.bind_state = #{bindState}
+			</if>
 		</where>
 	</select>
 	<!-- 通过流量包参数查询 -->
@@ -231,8 +237,8 @@
 	INNER join <include refid="t_cd"></include> cd
 	ON cnel.id = cd.channel_id
  	<where>
- 		 <if test="epEngId != null">
-			AND ep.ep_eng_id = #{epEngId}
+ 		 <if test="epName != null">
+			AND ep.ep_name = #{epName}
 		</if> 
 		<if test="operatorType != null">
 			AND cd.operator_type = #{operatorType}
@@ -255,7 +261,7 @@
  </select>
  
  <!-- 通过通道id和包体其他参数得到超管的充值包体参数 -->
- <select id="getPgByChanel" parameterType="map" resultMap="OtherMap">
+ <!-- <select id="getPgByChanel" parameterType="map" resultMap="OtherMap">
  	select <include refid="myCnelPg_Column_List"></include>
  	from <include refid="t_pg"></include> pg
 	INNER JOIN <include refid="t_pc"></include> pc
@@ -272,6 +278,6 @@
 			AND pc.scope_city_code = #{scopeCityCode}
 		</if>
 	</where> 
- </select>
+ </select> -->
  	
 </mapper>

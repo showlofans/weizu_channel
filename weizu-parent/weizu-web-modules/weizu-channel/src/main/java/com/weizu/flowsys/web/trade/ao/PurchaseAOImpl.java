@@ -27,6 +27,7 @@ import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
@@ -980,7 +981,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 			objMap.put("cnelId", cId);
 			objMap.put("operatorType", ccpp.getOperatorType());
 			objMap.put("serviceType", ccpp.getServiceType());
-			List<OperatorPgDataPo> pgList = operatorPgDao.getPgByChanel(objMap);
+			List<OperatorPgDataPo> pgList = operatorPgDao.listPgListInPcode(objMap);
 			channelList.get(0).setList(pgList);
 		}
 		return channelList;
@@ -1008,8 +1009,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 		if(ccpp.getServiceType() != null){
 			searchMap.put("serviceType", ccpp.getServiceType());
 		}
-		if(ccpp.getEpEngId() != null){
-			searchMap.put("epEngId", ccpp.getEpEngId());
+		if(ccpp.getEpName() != null){
+			searchMap.put("epName", ccpp.getEpName());
 		}
 		return searchMap;
 	}
@@ -1019,11 +1020,12 @@ public class PurchaseAOImpl implements PurchaseAO {
 		Map<String, Object> objMap = new HashMap<String, Object>();
 		String carrier = ccpp.getCarrier();
 		int operatorType = OperatorTypeEnum.getValueByDesc(carrier.substring(carrier.length()-2));
-		OperatorPgDataPo operatorPgPo = new OperatorPgDataPo();
-		operatorPgPo.setOperatorType(operatorType);
+//		OperatorPgDataPo operatorPgPo = new OperatorPgDataPo();
+//		operatorPgPo.setOperatorType(operatorType);
 		
 		objMap.put("operatorType", operatorType);
-		objMap.put("channelId", ccpp.getChannelId());
+//		objMap.put("channelId", ccpp.getChannelId());
+		
 		if(ServiceTypeEnum.NATION_WIDE.getValue() != ccpp.getServiceType()){
 			Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(carrier);
 			if(scopeMap.get("scopeCityCode") != null){
@@ -1031,6 +1033,16 @@ public class PurchaseAOImpl implements PurchaseAO {
 			}
 		}
 		objMap.put("serviceType", ccpp.getServiceType());
+//		if(ccpp.getBillType() != null){
+//			objMap.put("billType", ccpp.getBillType());
+//		}
+		if(ccpp.getAgencyId() != null){
+			objMap.put("agencyId", ccpp.getAgencyId());
+		}
+		if(ccpp.getChannelId() != null){
+			objMap.put("channelId", ccpp.getChannelId());
+		}
+		objMap.put("bindState", BindStateEnum.BIND.getValue());
 		
 		List<OperatorPgDataPo> pgList = operatorPgDao.pgList_forPurchase(objMap);
 //		List<OperatorPgDataPo> pgList = operatorPgDao.getPgByChanel(objMap);
