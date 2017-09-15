@@ -3,6 +3,7 @@ encoding//src/main/java=UTF-8
 encoding//src/main/java/com/weizu/flowsys/core/dao/Dao.java=UTF-8
 encoding//src/main/resources=UTF-8
 encoding//src/main/resources/jdbc.properties=UTF-8
+encoding//src/main/webapp/WEB-INF/jsp/index.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/jsp/trade/charge_result_page.jsp=UTF-8
 encoding//src/main/webapp/view/static/h-ui.admin/skin/default/Thumbs.db=UTF-8
 encoding//src/test/java=UTF-8

@@ -171,7 +171,7 @@
 			</c:otherwise>
 		</c:choose>
 	</form>
-		<form action="" method="" class="form form-horizontal">
+		<%-- <form action="" method="" class="form form-horizontal">
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">营业执照：</label>
 			<div class="formControls col-xs-7 col-sm-9">
@@ -280,7 +280,7 @@
 				</div>
 			</div>
 		</div>
-	</form>
+	</form> --%>
 		<!-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">法定人身份证(反面)：</label>
 			<div class="formControls col-xs-7 col-sm-9">
