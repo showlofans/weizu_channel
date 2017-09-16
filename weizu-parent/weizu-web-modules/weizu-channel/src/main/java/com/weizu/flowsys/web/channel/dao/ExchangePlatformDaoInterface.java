@@ -25,6 +25,15 @@ public interface ExchangePlatformDaoInterface extends Dao<ExchangePlatformPo, In
 	 * @createTime:2017年5月11日 下午12:50:57
 	 */
 	ExchangePlatformPo getEpByEpName(@Param("epName")String epName);
+	
+	/**
+	 * @description: 根据费率id获得平台信息
+	 * @param rateId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月16日 下午5:08:00
+	 */
+	ExchangePlatformPo getEpByRateId(Long rateId);
 	/**
 	 * @description:获得所有平台名称
 	 * @param name
@@ -49,4 +58,6 @@ public interface ExchangePlatformDaoInterface extends Dao<ExchangePlatformPo, In
 	 * @createTime:2017年5月11日 下午12:50:57
 	 */
 	int countEp(Map<String,Object> paramsMap);
+	
+	
 }

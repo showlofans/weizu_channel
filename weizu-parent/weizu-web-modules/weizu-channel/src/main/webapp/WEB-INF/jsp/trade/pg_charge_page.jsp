@@ -409,7 +409,7 @@
            	  //alert(data.pgList.length);
            	  var dataRole1 = eval(data);
            	  //alert(dataRole1.length);
-           	  if($(".pgNameType") == undefined || $(".pgNameType").length <= 0){
+           	  //if($(".pgNameType") == undefined || $(".pgNameType").length <= 0){
                var appendData1 = "<label class='form-label col-xs-4 col-sm-3'>包体大小：</label><div class='formControls col-xs-8 col-sm-9 skin-minimal'>"; 
                if(dataRole1.length > 0){
                    for(var i=0; i < dataRole1.length; i++){
@@ -430,12 +430,12 @@
              	  appendData1 += "没有配置该业务类型，或者号码不符合充值条件！！";
              	  $("#pgPrice").val("");//重置参数
              	  $("#orderAmount").val("");
-             	  
+		           	appendData1 += "</div>";
            	  }
-           	appendData1 += "</div>";
+               $("#pgInsert").empty();
          	$("#pgInsert").prepend(appendData1);
          	$("#pgInsert").show();
-           	  }
+           	  //}
            	  }
          })
 	}
@@ -498,7 +498,7 @@
 	                 					+name+"</label></div><input type='hidden' class='price' value='"+pgSize+"'></input>"
 	                 					+"<input type='hidden' value='"+productCode+"'></input><input type='text' value='"+price +"'></input><br>";
 		                    	  } */
-		                    	  appendData += "</div>";
+		                    	  //appendData += "</div>";
 		                      }
 		                }
 	                	appendData += "</div>";
@@ -587,9 +587,9 @@
 		                	  appendData += "没有配置该业务类型，或者号码不符合充值条件！！";
 		                	  $("#pgPrice").val("");//重置参数
 		                	  $("#orderAmount").val("");
-		                	  
 		              	  }
 		              	appendData += "</div>";
+		              	$("#pgInsert").empty();
 		            	$("#pgInsert").prepend(appendData);
 		            	$("#pgInsert").show();
 		              	  }

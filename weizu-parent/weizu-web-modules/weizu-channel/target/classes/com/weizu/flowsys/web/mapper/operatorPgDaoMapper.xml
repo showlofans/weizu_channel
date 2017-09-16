@@ -12,6 +12,7 @@
 	<sql id="t_cd">channel_discount</sql>
 	<sql id="t_pCode">product_code</sql>
 	<sql id="t_ep">exchange_platform</sql>
+	<sql id="t_cbp">cnel_bind_pg</sql>
 	<!-- <sql id="t_scope">service_scope</sql> -->
 	
 	<resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo">
@@ -21,8 +22,17 @@
 	    <result column="pg_size" jdbcType="INTEGER" property="pgSize" />
 	    <result column="pg_price" jdbcType="DOUBLE" property="pgPrice" />
 	    <result column="pg_name" jdbcType="VARCHAR" property="pgName" />
-	    <result column="pg_service_id" jdbcType="VARCHAR" property="pgServiceId" />
 	    <result column="pg_in_service" jdbcType="INTEGER" property="pgInService" />
+	 </resultMap>
+	<resultMap id="PurchasePgMap" type="com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo">
+	    <id column="id" jdbcType="INTEGER" property="id" />
+	    <result column="operator_type" jdbcType="INTEGER" property="operatorType" />
+	    <result column="operator_name" jdbcType="VARCHAR" property="operatorName" />
+	    <result column="pg_size" jdbcType="INTEGER" property="pgSize" />
+	    <result column="pg_price" jdbcType="DOUBLE" property="pgPrice" />
+	    <result column="pg_name" jdbcType="VARCHAR" property="pgName" />
+	    <result column="pg_in_service" jdbcType="INTEGER" property="pgInService" />
+	    <result column="product_code" jdbcType="VARCHAR" property="productCode" />
 	 </resultMap>
 	<resultMap id="OtherMap" type="com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo">
 	   <id column="id" jdbcType="INTEGER" property="id" />
@@ -44,7 +54,10 @@
 	    <result column="rte_id" property="rteId" />
 	 </resultMap>
   <sql id="Base_Column_List">
-    pg.id,operator_type,operator_name,pg_in_service,pg_name,pg_price,pg_size,service_type
+    pg.id,operator_type,operator_name,pg_in_service,pg.pg_name,pg_price,pg_size,service_type
+  </sql>
+  <sql id="Purchase_Column_List">
+    pg.id,pg.operator_type,pg.operator_name,pg_in_service,pg.pg_name,pg_price,pg_size,pg.service_type,pc.product_code
   </sql>
   <!-- 通过通道查询购买包体list -->
   <sql id="myCnelPg_Column_List">
@@ -100,7 +113,27 @@
    		 </where>
 	</select>
 	<!-- 通过参数查询购买包体list -->
-	<select id="pgList_forPurchase_po" resultMap="OtherMap" parameterType="map" >
+	<select id="pgList_super" parameterType="map" resultMap="PurchasePgMap">
+		select <include refid="Purchase_Column_List"></include> 
+		from <include refid="t_pg"></include>pg
+		inner JOIN <include refid="t_cbp"></include> cbp
+		on pg.id=cbp.pg_id
+		INNER JOIN <include refid="t_cd"></include> cd
+		on cd.channel_id=cbp.channel_id
+		INNER JOIN <include refid="t_pc"></include> pc
+		on pc.pg_id=pg.id
+		<where>
+			<if test="channelId != null">
+				AND cbp.channel_id = #{channelId}
+			</if>
+			<include refid="pg_for_purchase_po">
+			</include>
+			<if test="scopeCityCode != null">
+				AND cd.scope_city_code = #{scopeCityCode}
+			</if>
+		</where>
+	</select>
+	<!-- <select id="pgList_forPurchase_po" resultMap="OtherMap" parameterType="map" >
 		SELECT <include refid="myPg_Column_List"></include> 
 		FROM <include refid="t_pg"></include> pg
 		INNER JOIN <include refid="t_pc"></include> pc
@@ -116,7 +149,7 @@
 		INNER JOIN <include refid="t_aar"></include> aar
 		on aar.rate_discount_id = rte.id
 		<where>
-			AND rte.bill_type=0<!-- 默认用对私账户进行页面充值 -->
+			AND rte.bill_type=0默认用对私账户进行页面充值
 			<if test="agencyId != null">
 				AND aar.agency_id= #{agencyId}
 			</if>
@@ -134,14 +167,14 @@
 			<if test="channelId != null">
 				AND cd.channel_id = #{channelId}
 			</if>
-			<!-- <if test="billType != null">
+			<if test="billType != null">
 				AND rte.bill_type = #{billType}
-			</if> -->
+			</if>
 			<if test="bindState != null">
 				AND aar.bind_state = #{bindState}
 			</if>
 		</where>
-	</select>
+	</select> -->
 	<!-- 通过流量包参数查询 -->
 	<sql id="pg_for_purchase_po">
 		AND pg_in_service = 1
@@ -171,12 +204,25 @@
    		 </where>
 	</select>
 	<!-- 根据运营商类型查询通道规格列表 -->
-	<select id="pgSizeList" parameterType="com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo" resultType="java.lang.Integer">
+	<select id="getPgInCode" parameterType="map" resultType="java.lang.Integer">
 		select pg_size from <include refid="t_pg"></include> pg
+		inner join <include refid="t_pCode"></include> pc
+		on pg.id = pc.pg_id
 		<where>
-			<include refid="condition_sql"></include>
+			<include refid="getPgInCode_sql"></include>
 		</where>
 	</select>
+	<sql id="getPgInCode_sql">
+		<if test="operatorType != null">
+			AND pg.operator_type = #{operatorType}
+		</if>
+		<if test="serviceType != null">
+			AND pg.service_type = #{serviceType}
+		</if>
+		<if test="epId != null">
+			AND pc.ep_id = #{epId}
+		</if>
+	</sql>
 	
 	<!-- 查询where语句块 -->
 	<sql id="condition_sql">

@@ -33,7 +33,7 @@
   	b.active_discount,b.id,b.active_time,b.operator_type,b.service_type,b.scope_city_code,b.channel_id,b.channel_discount_id,b.bill_type,b.active_id
   </sql>
   <sql id="Get_My_Rate">
-  	rate.id, rate.active_id,active.active_time, channel_discount_id,rate.active_discount,rate.bill_type,cd.operator_type,cd.service_type,scope_city_code,rate.channel_id 
+  	rate.id, rate.active_id,active.active_time, channel_discount_id,rate.active_discount,rate.bill_type,cd.operator_type,cd.service_type,cd.scope_city_code,rate.channel_id 
   </sql>
   <sql id="My_Rate_List">
   	rate.id, rate.active_id, active_discount,channel_discount_id,rate.bill_type 

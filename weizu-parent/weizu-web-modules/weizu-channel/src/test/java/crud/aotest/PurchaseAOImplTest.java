@@ -1,6 +1,8 @@
 //package crud.aotest;
 //
+//import java.util.HashMap;
 //import java.util.List;
+//import java.util.Map;
 //
 //import javax.annotation.Resource;
 //
@@ -9,13 +11,12 @@
 //import org.springframework.test.context.ContextConfiguration;
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
-//import com.alibaba.fastjson.JSON;
-//import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
-//import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
-//import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
-//import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
+//import com.aiyi.base.pojo.PageParam;
+//import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
+//import com.weizu.flowsys.util.Pagination;
 //import com.weizu.flowsys.web.trade.ao.PurchaseAO;
 //import com.weizu.flowsys.web.trade.dao.PurchaseDao;
+//import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -42,7 +43,7 @@
 ////		Pagination<PurchaseVO> pagination = purchaseAO.getPurchase(params,purchaseVO, new PageParam(1, 10));
 ////		List<PurchaseVO> records = pagination.getRecords();
 ////		for (PurchaseVO purchaseVO2 : records) {
-////			System.out.println(purchaseVO2.getEp().getEpName());
+//////			System.out.println(purchaseVO2.getEp().getEpName());
 ////		}
 ////		
 ////		System.out.println(pagination.getTotalRecord());		
@@ -212,7 +213,10 @@
 ////	}
 ////	@Test
 ////	public void ajaxChageList(){
-////		List<OperatorPgDataPo> pgList = purchaseAO.ajaxChargePg(new ChargeChannelParamsPo("广东移动", ServiceTypeEnum.PROVINCE.getValue(), 4l));
+////		ChargeChannelParamsPo ccp = new ChargeChannelParamsPo();
+////		ccp.setChannelId(4l);
+////		ccp.setCarrier("广东移动");
+////		List<OperatorPgDataPo> pgList = purchaseAO.ajaxChargePg(ccp);
 ////		if(pgList != null){
 ////			System.out.println(pgList.size());
 ////		}

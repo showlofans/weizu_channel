@@ -20,7 +20,7 @@
 <!-- DataTables CSS -->
 <link rel="stylesheet" type="text/css" href="/view/lib/Hui-iconfont/1.0.8/iconfont.css" />
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/skin/default/skin.css" id="skin" />
-<link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/style.css" />
+<!-- <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/style.css" /> -->
 <link rel="stylesheet" type="text/css" href="/view/mine/paging.css" />
 <link rel="stylesheet" href="/view/mine/bootstrap-datetimepicker.css">
 
@@ -53,7 +53,15 @@
 						</c:forEach>
 					</select>
 					</span> 
-					通道类型：
+					<c:choose>
+					<c:when test="${loginContext.rootAgencyId == 0 }">
+						通道类型：
+					</c:when>
+					<c:otherwise>
+						扣款类型：
+					</c:otherwise>
+					</c:choose>
+					
 					<span class="select-box inline">
 						<select name="billType" class="select">
 						<option value="">请选择</option>

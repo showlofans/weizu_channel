@@ -37,7 +37,8 @@ public class PurchasePo extends Po {
     
     private Integer orderResult;				//结果（超管enum:）(0-失败，1-成功，3-待充，4-为充)
 
-    private Long channelId;						//通道id（外键）
+//    private Long channelId;						//通道id（外键）
+    private String channelName;					//通道名称
 
     private String orderResultDetail;			//结果描述(超管失败原因)
     
@@ -86,7 +87,8 @@ public PurchasePo(String chargeTel, Integer pgId,
 public PurchasePo(Long orderId, String orderIdFrom, Integer agencyId,
 		String chargeTel, Integer pgId, Long orderArriveTime,
 		String chargeTelDetail, String chargeTelCity, Integer orderResult,
-		Long channelId, String orderResultDetail, Double orderAmount,
+		String channelName,
+		String orderResultDetail, Double orderAmount,
 		Integer billType) {
 	super();
 	this.orderId = orderId;
@@ -98,7 +100,7 @@ public PurchasePo(Long orderId, String orderIdFrom, Integer agencyId,
 	this.chargeTelDetail = chargeTelDetail;
 	this.chargeTelCity = chargeTelCity;
 	this.orderResult = orderResult;
-	this.channelId = channelId;
+	this.channelName = channelName;
 	this.orderResultDetail = orderResultDetail;
 	this.orderAmount = orderAmount;
 	this.billType = billType;
@@ -108,7 +110,8 @@ public PurchasePo(Long orderId, String orderIdFrom, Integer agencyId,
 public PurchasePo(Long orderId, String orderIdApi, String orderIdFrom,
 		Integer agencyId, String chargeTel, Integer pgId, Long orderArriveTime,
 		Long orderBackTime, String chargeTelDetail, String chargeTelCity,
-		Long channelId, String orderResultDetail) {
+		String channelName,
+		String orderResultDetail) {
 	super();
 	this.orderId = orderId;
 	this.orderIdApi = orderIdApi;
@@ -120,7 +123,7 @@ public PurchasePo(Long orderId, String orderIdApi, String orderIdFrom,
 	this.orderBackTime = orderBackTime;
 	this.chargeTelDetail = chargeTelDetail;
 	this.chargeTelCity = chargeTelCity;
-	this.channelId = channelId;
+	this.channelName = channelName;
 	this.orderResultDetail = orderResultDetail;
 }
 
@@ -229,12 +232,11 @@ public PurchasePo(Long orderId, String orderIdApi, String orderIdFrom,
         this.orderResult = orderResult;
     }
 
-    public void setChannelId(Long channelId) {
-		this.channelId = channelId;
+	public String getChannelName() {
+		return channelName;
 	}
-
-    public Long getChannelId() {
-		return channelId;
+	public void setChannelName(String channelName) {
+		this.channelName = channelName;
 	}
 
 	public String getOrderResultDetail() {

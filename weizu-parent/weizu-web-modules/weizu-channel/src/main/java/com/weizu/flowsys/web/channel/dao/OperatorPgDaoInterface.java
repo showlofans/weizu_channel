@@ -79,7 +79,7 @@ public interface OperatorPgDaoInterface extends Dao<PgDataPo, Integer> {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月16日 上午11:59:00
 	 */
-	List pgSizeList(Integer operatorType,Integer serviceType);
+	List getPgInCode(Integer operatorType,Integer serviceType,Integer epId);
 	
 	/**
 	 * @description: 查询某个平台没有设置产品编码的包体
@@ -102,8 +102,6 @@ public interface OperatorPgDaoInterface extends Dao<PgDataPo, Integer> {
 	 * @createTime:2017年8月28日 下午5:26:36
 	 */
 	List<OperatorPgDataPo> getPgByChanel(Map<String,Object> map);
-	
-	
 	
 //	Pagination<OperatorPgDataPo> list();
 }

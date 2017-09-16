@@ -63,5 +63,12 @@
 ////	public void testCheckEpEngId(){
 ////		System.out.println(exchangePlatformAO.checkEpEngId("weizu"));
 ////	}
+////	@Test
+////	public void GetEpByRateId(){
+////		ExchangePlatformPo epPO = exchangePlatformAO.getEpByRateId(19l);
+////		if(epPO != null){
+////			System.out.println(epPO.getEpName());
+////		}
+////	}
 //
 //}

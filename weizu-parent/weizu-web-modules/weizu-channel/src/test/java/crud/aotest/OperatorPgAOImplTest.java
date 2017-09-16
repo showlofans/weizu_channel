@@ -1,5 +1,6 @@
 //package crud.aotest;
 //
+//import java.util.HashMap;
 //import java.util.List;
 //import java.util.Map;
 //
@@ -14,6 +15,7 @@
 //import com.weizu.flowsys.web.channel.dao.OperatorPgDaoInterface;
 //import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 //import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
+//import com.weizu.flowsys.web.trade.ao.PurchaseAO;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -81,22 +83,22 @@
 ////		System.out.println(pagination.getRecords().get(1).getOperatorName());
 ////		
 ////	}
-//	@Test
-//	public void testPgList_forPurchase(){
-//		OperatorPgDataPo operatorPgPo = new OperatorPgDataPo();
-//		operatorPgPo.setOperatorType(0);
-//		operatorPgPo.setServiceType(0);
-////		operatorPgPo.set
-//		List<OperatorPgDataPo> list = operatorPgAO.pgList_forPurchase(operatorPgPo,"19", 4);
-//		System.out.println(list == null ?"": list.size());
-//		if(list != null && list.size() > 0){
-//			for (OperatorPgDataPo operatorPgDataPo : list) {
-////				System.out.println(operatorPgDataPo.getRteId());
-////				System.out.println(operatorPgDataPo.getChannelId());
-//				System.out.println(operatorPgDataPo.getOperatorType());
-//			}
-//		}
-//	}
+////	@Test
+////	public void testPgList_forPurchase(){
+////		OperatorPgDataPo operatorPgPo = new OperatorPgDataPo();
+////		operatorPgPo.setOperatorType(0);
+////		operatorPgPo.setServiceType(0);
+//////		operatorPgPo.set
+////		List<OperatorPgDataPo> list = operatorPgAO.pgList_forPurchase(operatorPgPo,"19", 4);
+////		System.out.println(list == null ?"": list.size());
+////		if(list != null && list.size() > 0){
+////			for (OperatorPgDataPo operatorPgDataPo : list) {
+//////				System.out.println(operatorPgDataPo.getRteId());
+//////				System.out.println(operatorPgDataPo.getChannelId());
+////				System.out.println(operatorPgDataPo.getOperatorType());
+////			}
+////		}
+////	}
 //	
 //	/**
 //	 * @description:查询通道规格列表
@@ -129,6 +131,13 @@
 ////	}
 ////	@Test
 ////	public void testGetPgByChannel(){
-////		operatorPgDao.getPgByChanel(map);
+////		Map<String,Object> map= new HashMap<String, Object>();
+////		map.put("channelId", 16);
+////		List<OperatorPgDataPo> list = operatorPgDao.getPgByChanel(map);
+////		if(list!= null && list.size() > 0){
+////			for (OperatorPgDataPo operatorPgDataPo : list) {
+////				System.out.println(operatorPgDataPo.getPgName());
+////			}
+////		}
 ////	}
 //}

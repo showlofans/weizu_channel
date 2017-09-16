@@ -55,8 +55,8 @@ public class PurchaseVO implements Cloneable {
     
     private String channelName;					//通道名称
     
-    private Long channelId;					//通道ID
-
+//    private Long channelId;					//通道ID
+    
     private Integer orderResult;				//结果（管理员enum:）
 
     private String orderResultDetail;			//结果描述:管理员
@@ -69,9 +69,11 @@ public class PurchaseVO implements Cloneable {
     
     private String orderStateDetail;			//结果描述
     
-    private ExchangePlatformPo ep;				//平台信息
+//    private ExchangePlatformPo ep;				//平台信息
     
     private Integer billType;					//票务
+    
+    private Long rateId;						//费率id
     
     @Override
 	public PurchaseVO clone() {
@@ -84,6 +86,14 @@ public class PurchaseVO implements Cloneable {
 		return pvo;
 	}
     
+	public Long getRateId() {
+		return rateId;
+	}
+
+	public void setRateId(Long rateId) {
+		this.rateId = rateId;
+	}
+
 	public Integer getAgencyId() {
 		return agencyId;
 	}
@@ -151,21 +161,13 @@ public class PurchaseVO implements Cloneable {
 		this.orderIdFrom = orderIdFrom;
 	}
 
-	public Long getChannelId() {
-		return channelId;
-	}
-
-	public void setChannelId(Long channelId) {
-		this.channelId = channelId;
-	}
-
-	public ExchangePlatformPo getEp() {
-		return ep;
-	}
-
-	public void setEp(ExchangePlatformPo ep) {
-		this.ep = ep;
-	}
+//	public ExchangePlatformPo getEp() {
+//		return ep;
+//	}
+//
+//	public void setEp(ExchangePlatformPo ep) {
+//		this.ep = ep;
+//	}
 
 	public String getOrderIdApi() {
 		return orderIdApi;

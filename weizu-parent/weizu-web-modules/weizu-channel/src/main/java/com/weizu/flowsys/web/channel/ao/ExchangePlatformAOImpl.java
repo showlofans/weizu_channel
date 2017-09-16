@@ -238,5 +238,9 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 		}
 		return false;
 	}
+	@Override
+	public ExchangePlatformPo getEpByRateId(Long rateId) {
+		return exchangePlatformDao.getEpByRateId(rateId);
+	}
 
 }

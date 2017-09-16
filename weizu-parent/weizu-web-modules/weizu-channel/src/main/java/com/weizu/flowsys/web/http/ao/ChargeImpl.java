@@ -155,7 +155,7 @@ public class ChargeImpl implements IChargeFacet {
 				orderId = ou1.nextId();
 				String chargeTelCity = resMap.get("chargeTelCity").toString();
 				purchasePo = new PurchasePo(orderId, chargeParams.getOrderIdFrom(), agencyId, chargeTel, pgData.getId(), 
-						System.currentTimeMillis(), chargeTelDetail, chargeTelCity, orderResult, channelPo.getId(), 
+						System.currentTimeMillis(), chargeTelDetail, chargeTelCity, orderResult, channelPo.getChannelName(), 
 						orderResultDetail, orderAmount, billType);
 			} catch (Exception e) {
 				e.printStackTrace();

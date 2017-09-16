@@ -17,7 +17,7 @@ public class ChargeChannelParamsPo {
 //	private String epEngId;					//平台英文标志
     private String epName;					//平台名称
 	private Long channelId;					//通道id（再次通过通道查询包体的时候参数）
-	private Integer agencyId;				//代理商id
+//	private Integer agencyId;				//代理商id
 	private Integer billType;				//是否带票
 	
 	public ChargeChannelParamsPo(String carrier, String scopeCityCode,
@@ -35,11 +35,11 @@ public class ChargeChannelParamsPo {
 	 * @param channelId
 	 */
 	public ChargeChannelParamsPo(String carrier, Integer serviceType,
-			 Integer agencyId) {
+			 Long channelId) {
 		super();
 		this.carrier = carrier;
 		this.serviceType = serviceType;
-		this.agencyId = agencyId;
+		this.channelId = channelId;
 	}
 
 	public Long getChannelId() {
@@ -66,12 +66,12 @@ public class ChargeChannelParamsPo {
 		super();
 	}
 
-	public Integer getAgencyId() {
-		return agencyId;
-	}
-	public void setAgencyId(Integer agencyId) {
-		this.agencyId = agencyId;
-	}
+//	public Integer getAgencyId() {
+//		return agencyId;
+//	}
+//	public void setAgencyId(Integer agencyId) {
+//		this.agencyId = agencyId;
+//	}
 
 	public String getCarrier() {
 		return carrier;
