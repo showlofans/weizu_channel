@@ -64,5 +64,9 @@ public class ExchangePlatformDao extends DaoImpl<ExchangePlatformPo, Integer> im
 	public int countEp(Map<String, Object> paramsMap) {
 		return sqlSessionTemplate.selectOne("countEp",paramsMap);
 	}
+	@Override
+	public ExchangePlatformPo getEpByRateId(Long rateId) {
+		return sqlSessionTemplate.selectOne("getEpByRateId", rateId);
+	}
 
 }

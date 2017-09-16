@@ -2,6 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface">
   <sql id="t_ep">exchange_platform</sql>
+  <sql id="t_rateD">rate_discount</sql>
+  <sql id="t_cnel">channel_channel</sql>
   <!-- <sql id="t_agencyEp">agency_ep</sql> -->
   
   
@@ -27,6 +29,10 @@
     id, ep_name, ep_purchase_ip, product_list_ip, pgdata_check_ip, ep_balance_ip, <!-- ep_order_state_ip, -->
     ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip, ep_eng_id,ep_other_params, ep_call_back, last_access
   </sql>
+  <sql id="EpByRteId_Column_List">
+    ep.id, ep_name, ep_purchase_ip, product_list_ip, pgdata_check_ip, ep_balance_ip, <!-- ep_order_state_ip, -->
+    ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip, ep_eng_id,ep_other_params, ep_call_back, ep.last_access
+  </sql>
   <!-- <sql id="Other_Column_List">
     ep.id, ep.ep_name, ep_purchase_ip, product_list_ip, pgdata_check_ip, ep_balance_ip, 
     ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip, ep_eng_id
@@ -34,6 +40,18 @@
   <sql id="Simple_Column_List">
     id, ep_name
   </sql>
+  <!-- 根据费率id得到平台信息 -->
+  <select id="getEpByRateId" parameterType="long" resultMap="BaseResultMap">
+  	select <include refid="EpByRteId_Column_List"></include>
+  	from <include refid="t_ep"></include> ep
+  	inner join <include refid="t_cnel"></include> cnel
+  	on cnel.ep_id = ep.id
+  	inner join <include refid="t_rateD"></include> rate
+  	on rate.channel_id=cnel.id
+  	<where>
+  		rate.id=#{_parameter}
+  	</where>
+  </select>
   <!-- 获得所有平台名称(减少数据库负担) -->
   <select id="getSimpleEp" parameterType="String" resultMap="BaseResultMap">
    		select <include refid="Simple_Column_List"></include>

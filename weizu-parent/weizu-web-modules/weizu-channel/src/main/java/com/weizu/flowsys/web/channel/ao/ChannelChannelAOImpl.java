@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.channel.ao;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,9 +20,13 @@ import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.pojo.DiscountPo;
 import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
+import com.weizu.flowsys.web.channel.dao.ICnelBindPgDao;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
+import com.weizu.flowsys.web.channel.pojo.CnelBindPgPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
+import com.weizu.flowsys.web.channel.pojo.PgDataPo;
+import com.weizu.flowsys.web.http.ao.ValiUser;
 import com.weizu.web.foundation.String.StringHelper;
 
 @Service(value="channelChannelAO")
@@ -29,6 +34,10 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 
 	@Resource
 	private ChannelChannelDao channelChannelDao;
+	@Resource
+	private ICnelBindPgDao cnelBindPgDao; 
+	@Resource
+	private ValiUser valiUser;
 	
 	@Override
 	public ExchangePlatformPo getEpByChannelId(Long channelId) {
@@ -83,13 +92,40 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 	 */
 	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
-	public int channel_addList(ChannelChannelPo channelPo) {
+	public String channel_addList(ChannelChannelPo channelPo) {
 		//初始化通道状态和使用状态
 		channelPo.setChannelUseState(0);
 		channelPo.setChannelState(0);
-		String serviceType = ServiceTypeEnum.getEnum(channelPo.getServiceType()).getDesc();
-		channelPo.setChannelName(serviceType +"-"+channelPo.getChannelName());
-		return channelChannelDao.channel_addList(channelPo);
+//		String serviceType = ServiceTypeEnum.getEnum(channelPo.getServiceType()).getDesc();
+//		channelPo.setChannelName(serviceType +"-"+channelPo.getChannelName());
+		int cnelAddRes = channelChannelDao.channel_addList(channelPo);
+		String pgSizeStr = channelPo.getPgSize();
+		String [] pgSize = pgSizeStr.split("&");
+		List<CnelBindPgPo> cbpList = new LinkedList<CnelBindPgPo>();
+		String cnelName = channelPo.getChannelName();
+		for (String pgStr : pgSize) {
+			int sType = channelPo.getServiceType();
+			int oType = channelPo.getOperatorType();
+			int pgSizeInt = Integer.parseInt(pgStr.trim());
+			PgDataPo pgData = valiUser.findPg(sType, pgSizeInt, oType);
+			if(pgData == null){
+				System.out.println("通道添加，包体不存在");
+				return "error";
+			}
+			Long cnelId = channelChannelDao.nextId() - 1;
+			CnelBindPgPo cbp = new CnelBindPgPo(cnelId, pgData.getId(), cnelName, pgData.getPgName()) ;
+			cbpList.add(cbp);
+		}
+		/**批量添加通道包体绑定*/
+		int cbpd = 0;
+		if(cbpList.size() > 0){
+			cbpd = cnelBindPgDao.batchAddBind(cbpList);
+		}
+		
+		if(cnelAddRes + cbpd > 1){
+			return "success";
+		}
+		return "error";
 	}
 
 	@Override

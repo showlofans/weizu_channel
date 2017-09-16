@@ -461,7 +461,8 @@ public class RateController {
 			}
 			ratePo = new RateDiscountPo();
 		}else{
-			request.getSession().setAttribute("childAgencyId", ratePo.getAgencyId());
+			childAgencyId = ratePo.getAgencyId();
+			request.getSession().setAttribute("childAgencyId", childAgencyId);
 		}
 		ratePo.setAgencyId(agencyVO.getId());
 		Pagination<RateDiscountPo> pagination = rateDiscountAO.getMyRateList(ratePo,childAgencyId, pageParam);
@@ -488,11 +489,11 @@ public class RateController {
 	@RequestMapping(value=RateURL.ADD_MY_RATE)
 	public void addMyRate(HttpServletRequest request,RateDiscountPo ratePo,HttpServletResponse response){
 		String resAddDis = "error";
+		if(ratePo.getChannelDiscountId() != null){//根据通道折扣id设置通道id
+			ChannelDiscountPo cdPo = channelDiscountDao.get(ratePo.getChannelDiscountId());
+			ratePo.setChannelId(cdPo.getChannelId());
+		}
 		if(ratePo.getId() != null){//更新
-			if(ratePo.getChannelDiscountId() != null){//根据通道折扣id设置通道id
-				ChannelDiscountPo cdPo = channelDiscountDao.get(ratePo.getChannelDiscountId());
-				ratePo.setChannelId(cdPo.getChannelId());
-			}
 			resAddDis = rateDiscountAO.updateRateDiscount(ratePo);
 		}else{
 			AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");

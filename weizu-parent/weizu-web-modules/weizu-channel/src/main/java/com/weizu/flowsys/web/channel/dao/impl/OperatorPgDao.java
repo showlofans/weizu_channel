@@ -70,17 +70,19 @@ public class OperatorPgDao extends DaoImpl<PgDataPo, Integer> implements Operato
 	 * @createTime:2017年5月16日 上午11:59:23
 	 */
 	@Override
-	public List pgSizeList(Integer operatorType,Integer serviceType) {
+	public List getPgInCode(Integer operatorType,Integer serviceType, Integer epId) {
 		
-		OperatorPgDataPo opg = new OperatorPgDataPo();
+		Map<String,Object> params = new HashMap<String, Object>();
 		if(operatorType != null){
-			opg.setOperatorType(operatorType);
+			params.put("operatorType", operatorType);
 		}
 		if(serviceType != null){
-			opg.setServiceType(serviceType);
+			params.put("serviceType", serviceType);
 		}
-		
-		return sqlSessionTemplateASS.selectList("pgSizeList", opg);
+		if(epId != null){
+			params.put("epId", epId);
+		}
+		return sqlSessionTemplateASS.selectList("getPgInCode", params);
 	}
 
 	/**
@@ -179,8 +181,7 @@ public class OperatorPgDao extends DaoImpl<PgDataPo, Integer> implements Operato
 
 	@Override
 	public List<OperatorPgDataPo> getPgByChanel(Map<String, Object> map) {
-		
-		return sqlSessionTemplateASS.selectList("getPgByChanel", map);
+		return sqlSessionTemplateASS.selectList("pgList_super", map);
 	}
 
 	

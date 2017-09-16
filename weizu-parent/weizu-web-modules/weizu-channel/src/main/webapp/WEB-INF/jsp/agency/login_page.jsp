@@ -40,7 +40,7 @@ line-height:220px;
 <meta name="keywords" content="">
 <meta name="description" content="">
 </head>
-<body>
+<body style="overflow:hidden;">
 	<div class="loginWraper">
   <div id="loginform" class="loginBox">
   <h3 class="title">欢迎登陆</h3> 
@@ -48,13 +48,13 @@ line-height:220px;
       <div class="row cl">
         <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
         <div class="formControls col-xs-8">
-        	<input id="userName" value="${loginMap.userName }" required name="userName"  style="width:350px;"  autocomplete="off" type="text" placeholder="账户" class="input-text size-L">
+        	<input id="userName" value="${loginMap.userName }" required name="userName"   autocomplete="off" type="text" placeholder="账户" class="input-text size-L">
         </div>
       </div>
       <div class="row cl">
         <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60e;</i></label>
         <div class="formControls col-xs-8">
-          <input id="userPass" value="${loginMap.userPass }" required name="userPass"  style="width:350px;"  autocomplete="off" type="password" placeholder="密码" class="input-text size-L">
+          <input id="userPass" value="${loginMap.userPass }" required name="userPass"    autocomplete="off" type="password" placeholder="密码" class="input-text size-L">
         </div>
       </div>
       <div class="row cl">
@@ -66,7 +66,7 @@ line-height:220px;
     </form>
   </div>
 </div>
-<div class="footer">Copyright 你的公司名称 by 南昌微族<!-- <a href="http://www.mycodes.net/" target="_blank">源码之家</a> --></div>
+<div class="footer">Copyright by 南昌微族<!-- <a href="http://www.mycodes.net/" target="_blank">源码之家</a> --></div>
 	<%-- <div class="aa">
 	<div class="sorry">
 	<h3>欢迎登陆</h3> 

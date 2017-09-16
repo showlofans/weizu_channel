@@ -63,7 +63,7 @@ public interface ChannelChannelAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月5日 上午9:50:55
 	 */
-	int channel_addList(ChannelChannelPo channelPo);
+	String channel_addList(ChannelChannelPo channelPo);
 	
 	/**
 	 * @description: 查询通道列表

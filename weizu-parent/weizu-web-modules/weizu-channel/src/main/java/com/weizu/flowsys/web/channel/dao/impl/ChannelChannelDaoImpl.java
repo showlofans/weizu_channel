@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.operatorPg.enums.ChannelDiscountTypeEnum;
@@ -102,6 +103,7 @@ public class ChannelChannelDaoImpl extends DaoImpl<ChannelChannelPo, Long> imple
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月5日 上午9:55:28
 	 */
+	@Transactional
 	@Override
 	public int channel_addList(ChannelChannelPo channelPo) {
 		List<ChannelDiscountPo> disList = new LinkedList<ChannelDiscountPo>();

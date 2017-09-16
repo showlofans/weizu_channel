@@ -172,7 +172,9 @@ public class ChargePgController {
 					RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(serviceType, carrier, contextId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue(),false);//获得对私的充值费率
 //					oppo.setServiceType(sType);
 					if(ratePo != null){
-						List<OperatorPgDataPo> chargeList = purchaseAO.ajaxChargePg(new ChargeChannelParamsPo(carrier, serviceType, ratePo.getChannelId()));
+						ChargeChannelParamsPo ccpp = new ChargeChannelParamsPo(carrier, serviceType, ratePo.getChannelId());
+//						ccpp.setBillType(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+						List<OperatorPgDataPo> chargeList = purchaseAO.getPgByChanel(ccpp);
 						Double activeDiscount = ratePo.getActiveDiscount();
 						Long channelId = ratePo.getChannelId();
 						for (OperatorPgDataPo operatorPgDataPo : chargeList) {//初始化第一个折扣，折扣id和包体价格
@@ -433,7 +435,7 @@ public class ChargePgController {
 	@ResponseBody
 	@RequestMapping(value=ChargePgURL.AJAX_CHARGE_PG)
 	public String ajaxChargePg(ChargeChannelParamsPo ccpp){
-		List<OperatorPgDataPo> chargeList = purchaseAO.ajaxChargePg(ccpp);
+		List<OperatorPgDataPo> chargeList = purchaseAO.getPgByChanel(ccpp);
 		String listJsonStr = JSON.toJSONString(chargeList);
 		System.out.println(listJsonStr);
 		return listJsonStr;

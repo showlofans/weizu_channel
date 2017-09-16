@@ -194,6 +194,7 @@ function addUp(vart){//vart是提交按钮
 	//var billType = arr[0];
 	//var billType =  $(vart).parents('td').prev().children('.billType').find('option:selected').val();
 	var cDiscountId = $(vart).parents('tr').children('.channelDiscountId').html().trim();//通道折扣Id
+	alert(cDiscountId);
 	var agencyId = $('#childAgencyId').val();//代理商Id
 	//alert(agencyId);
 	var activeId = $(vart).parents('tr').children('.id').html().trim();//父级折扣Id

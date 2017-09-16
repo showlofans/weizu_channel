@@ -100,7 +100,7 @@ public class ChannelController {
 //		
 		resultMap.put("billTypes", BillTypeEnum.toList());
 		//默认用移动的包体
-		resultMap.put("pgSizeStr", operatorPgAO.pgSizeStr(0,0));
+		resultMap.put("pgSizeStr", operatorPgAO.pgSizeStr(0,0,null));
 		
 		return new ModelAndView("/channel/channel_add_page", "resultMap", resultMap);
 	}
@@ -126,23 +126,23 @@ public class ChannelController {
 			channelChannelPo.setBelongAgencyId(agencyVO.getId());
 			
 //		List<ChannelForwardPo> list = channelForwardAO.initAddListByPo(channelForwardPo);	//初始化list
-			int result = channelChannelAO.channel_addList(channelChannelPo);
+			String result = channelChannelAO.channel_addList(channelChannelPo);
 			//System.out.println(result);
 			
 //		System.out.println(channelForwardPo.getScopeCityName());
-			
-			if(result > 0){
+			return result;
+//			if(result > 0){
 //			ChannelForwardPo channelForwardPoParam = new ChannelForwardPo();
 //			channelForwardPoParam.setAgencyId(agencyVO.getId());
 //			return list_channel(null, request, null);
-				return "success";
-			}else{
+//				return "success";
+//			}else{
 //			Map<String, Object> resultMap = new HashMap<String, Object>();
 //			resultMap.put("pgSizeStr", channelChannelPo.getPgSize());
 //			resultMap.put("channelName", channelChannelPo.getChannelName());
-				return "error";
+//				return "error";
 //			return new ModelAndView("/channel/channel_add_page","resultMap",resultMap);
-			}
+//			}
 		}
 	}
 	
@@ -230,8 +230,8 @@ public class ChannelController {
 	 */
 	@RequestMapping(value= ChannelURL.CHANGE_CHANNEL_PGSIZE)
 	@ResponseBody
-	public void changePgSizeList(Integer operatorType,Integer serviceType,HttpServletResponse response) throws IOException{
-		response.getWriter().print(operatorPgAO.pgSizeStr(operatorType,serviceType));
+	public void changePgSizeList(Integer operatorType,Integer serviceType,Integer epId,HttpServletResponse response) throws IOException{
+		response.getWriter().print(operatorPgAO.pgSizeStr(operatorType,serviceType,epId));
 	}
 	
 	/**

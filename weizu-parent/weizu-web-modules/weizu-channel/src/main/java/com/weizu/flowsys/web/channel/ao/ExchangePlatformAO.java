@@ -34,6 +34,15 @@ public interface ExchangePlatformAO {
 	ExchangePlatformPo getEpById(Integer id);
 	
 	/**
+	 * @description: 根据费率id获得平台信息
+	 * @param rateId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月16日 下午4:54:06
+	 */
+	ExchangePlatformPo getEpByRateId(Long rateId);
+	
+	/**
 	 * @description:获得所有平台名称
 	 * @param name
 	 * @return
@@ -104,6 +113,6 @@ public interface ExchangePlatformAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年8月17日 上午11:38:20
 	 */
-	boolean checkEpEngId(String epEngId);
+	boolean checkEpName(String epName);
 	
 }

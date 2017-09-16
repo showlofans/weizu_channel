@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weizu.flowsys.web.channel.dao.ICnelBindPgDao">
+<sql id="t_cbp">cnel_bind_pg</sql>
+<resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.CnelBindPgPo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="channel_id" jdbcType="BIGINT" property="channelId" />
+    <result column="pg_id" jdbcType="INTEGER" property="pgId" />
+    <result column="channel_name" jdbcType="VARCHAR" property="channelName" />
+    <result column="pg_name" jdbcType="VARCHAR" property="pgName" />
+ </resultMap>
+
+<sql id="Base_Column_List">
+    id,channel_id,pg_id,channel_name,pg_name
+</sql>
+<!-- 批量添加需要的列名 -->
+<sql id="BatchAdd_Column_List">
+    channel_id,pg_id,channel_name,pg_name
+</sql>
+<insert id="batchAddBind" useGeneratedKeys="true" parameterType="java.util.List" >
+		insert into <include refid="t_cbp"></include> (<include refid="BatchAdd_Column_List"></include>)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.channelId},#{item.pgId},#{item.channelName},#{item.pgName})
+		</foreach>
+	</insert>
+</mapper>

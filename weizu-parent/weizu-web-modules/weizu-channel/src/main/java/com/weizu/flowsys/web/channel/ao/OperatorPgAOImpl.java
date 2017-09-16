@@ -495,10 +495,10 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月16日 下午12:02:54
 	 */
-	@Override
-	public List pgSizeList(int operatorType) {
-		return operatorPgDao.pgSizeList(operatorType,null);
-	}
+//	@Override
+//	public List pgSizeList(int operatorType) {
+//		return operatorPgDao.pgSizeList(operatorType,null,null);
+//	}
 	
 	/**
 	 * @description:通道规格列表变成Str
@@ -508,8 +508,8 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 	 * @createTime:2017年5月16日 下午12:38:12
 	 */
 	@Override
-	public String pgSizeStr(Integer operatorType,Integer serviceType){
-		return PgSizeEnum.initPgSizeList(pgSizeList(operatorType,serviceType));
+	public String pgSizeStr(Integer operatorType,Integer serviceType,Integer epId){
+		return PgSizeEnum.initPgSizeList(pgSizeList(operatorType,serviceType,epId));
 	}
 
 	/**
@@ -521,8 +521,8 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 	 * @createTime:2017年5月27日 上午11:38:19
 	 */
 	@Override
-	public List<Integer> pgSizeList(Integer operatorType,Integer serviceType) {
-		return operatorPgDao.pgSizeList(operatorType,serviceType);
+	public List<Integer> pgSizeList(Integer operatorType,Integer serviceType,Integer epId) {
+		return operatorPgDao.getPgInCode(operatorType,serviceType,epId);
 	}
 
 	/**

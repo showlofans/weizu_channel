@@ -88,7 +88,7 @@ public interface OperatorPgAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月16日 上午11:59:00
 	 */
-	List pgSizeList(int operatorType);
+//	List pgSizeList(int operatorType);
 	
 	/**
 	 * @description:通道规格列表变成Str
@@ -97,7 +97,7 @@ public interface OperatorPgAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月16日 下午12:38:59
 	 */
-	String pgSizeStr(Integer operatorType,Integer servict);
+	String pgSizeStr(Integer operatorType,Integer servict,Integer epId);
 	/**
 	 * @description:通道规格列表变成Str
 	 * @param operatorType
@@ -106,7 +106,7 @@ public interface OperatorPgAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月27日 上午11:37:57
 	 */
-	List pgSizeList(Integer operatorType,Integer serviceType);
+	List pgSizeList(Integer operatorType,Integer serviceType,Integer epId);
 	
 	/**
 	 * @description:通过运营商类型查询购买包体list

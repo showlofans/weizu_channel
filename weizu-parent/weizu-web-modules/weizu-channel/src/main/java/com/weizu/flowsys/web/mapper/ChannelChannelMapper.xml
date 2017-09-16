@@ -94,8 +94,8 @@
   	inner join <include refid="t_discount"></include> cd
   	on cnel.id = cd.channel_id
   	<where>
-	 	<if test="epEngId != null">
-	 		AND ep.ep_eng_id = #{epEngId}
+	 	<if test="epName != null">
+	 		AND ep.ep_name = #{epName}
 	 	</if>
 	 	<if test="operatorType != null">
   		AND cd.operator_type = #{operatorType}

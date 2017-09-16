@@ -26,7 +26,7 @@ public class PlatformURL extends BaseURL{
 	/**
 	 * 看平台英文标识是否存在
 	 */
-	public static final String CHECK_EP_ENGID = "/check_ep_engId" + DYNAMIC_WEB_SUFFIX;
+	public static final String CHECK_EP_NAME = "/check_ep_name" + DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 清除平台
 	 */

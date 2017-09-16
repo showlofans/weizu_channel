@@ -105,6 +105,26 @@ public interface PurchaseAO {
 	List<OperatorPgDataPo> ajaxChargePg(ChargeChannelParamsPo ccpp);
 	
 	/**
+	 * @description:充值页面异步获得充值包体（超级管理员）
+	 * @param ccpp
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月16日 下午2:32:22
+	 */
+	List<OperatorPgDataPo> getPgByChanel(ChargeChannelParamsPo ccpp);
+	
+	
+	
+	/**
+	 * @description:
+	 * @param ccpp
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月15日 下午6:08:24
+	 */
+//	List<OperatorPgDataPo> testChannel(ChargeChannelParamsPo ccpp);
+	
+	/**
 	 * @description: 通过费率充值 
 	 * @param rateId
 	 * @param agencyId

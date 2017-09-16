@@ -125,7 +125,11 @@
 			</div>
 		</div>
 		<!-- 平台ID -->
-		<input type="hidden" class="input-text" value="" placeholder="" id="ep_id" name="epId">
+		<input type="hidden" class="input-text" value="" placeholder="" id="epId" name="epId">
+		<!-- <input type="hidden" class="input-text" value="" placeholder="" id="ep_id"> -->
+		<!-- 批量添加的折扣 -->
+		<div id="channel_discount_list" style="display:none">
+		</div>
 		<div class="row cl" style="display:none" id="ep_info">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>平台密码：</label>
 			<div class="formControls col-xs-8 col-sm-9">
@@ -151,7 +155,7 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">通道规格：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="${resultMap.pgSizeStr }" placeholder="${resultMap.pgSizeStr }" id="pgSize" name="pgSize">
+				<input type="text" class="input-text" value="${resultMap.pgSizeStr }" required="required" placeholder="${resultMap.pgSizeStr }" id="pgSize" name="pgSize">
 			</div>
 		</div>
 		<div class="row cl">
@@ -301,15 +305,21 @@ $(".radioItem").change(
  function() { 
 	 var operatorType = $("input[name='operatorType']:checked").val();
 	 var serviceType = $("input[name='serviceType']:checked").val();
-	 //alert(operatorType);
-	 $.ajax( {    
-	        "type": "post",     
-	        "contentType": "application/x-www-form-urlencoded; charset=utf-8",    
-	        "url": "/flowsys/channel/change_channel_pgSize.do?operatorType="+ operatorType+"&serviceType=" + serviceType,
-	        "success": function(d){
-	            $("#pgSize").val(d);	//写入pgSize
-	        }
- 	 });
+	 var epId = $('#epId').val();
+	 if(!$('#ep_info').is(':visible')){
+		 alert('还没有选定平台');
+		 $('#epName').focus();
+	 }else{
+		 //alert(operatorType);
+		 $.ajax( {    
+		        "type": "post",     
+		        "contentType": "application/x-www-form-urlencoded; charset=utf-8",    
+		        "url": "/flowsys/channel/change_channel_pgSize.do?operatorType="+ operatorType+"&serviceType=" + serviceType+"&epId=" + epId,
+		        "success": function(d){
+		            $("#pgSize").val(d);	//写入pgSize
+		        }
+	 	 });
+	 }
 });
 $(document).ready(function(){
 	$("#form-channel-add").validate({
@@ -352,12 +362,12 @@ function changeName(){
     	        /* click: function() {
     	            alert("点我了~~");
     	          } */
-    	      }).appendTo($('#ep_id'));
+    	      }).appendTo($('#channel_discount_list'));
     		$('<input />', {
     	        name: 'discountList['+ i +'].scopeCityCode',
     	        type: 'hidden',
     	        value: $(this).prev().val()
-    	      }).appendTo($('#ep_id'));
+    	      }).appendTo($('#channel_discount_list'));
     		i++;
     		//alert('discountList['+ i +'].scopeCityName');
     	}else{
@@ -412,7 +422,7 @@ function ajaxGet(evt) {
 	        	$("#epApikey").val(resp.epApikey);
 	        	$("#epPurchaseIp").val(resp.epPurchaseIp);
 	        	$("#epName").val(resp.epName);
-	        	$("#ep_id").val(resp.id);
+	        	$("#epId").val(resp.id);
 	        	//alert(resp.id);
 	        },
 	        "error":function(msg){
