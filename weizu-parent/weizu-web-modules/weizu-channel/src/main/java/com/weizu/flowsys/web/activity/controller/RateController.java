@@ -677,14 +677,14 @@ public class RateController {
 	 * @createTime:2017年7月10日 上午11:53:39
 	 */
 	@RequestMapping(value=RateURL.BIND_RATE_LIST)
-	public ModelAndView getBindRateList(AgencyActiveRatePo aarp,Long channelId, @RequestParam(value = "pageNo", required = false) String pageNo,HttpServletRequest request){
+	public ModelAndView getBindRateList(AgencyActiveRatePo aarp,Long channelId, @RequestParam(value = "pageNoLong", required = false) String pageNoLong,HttpServletRequest request){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 //		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		PageParam pageParam = null;
-		if(StringHelper.isNotEmpty(pageNo)){
-			pageParam = new PageParam(Integer.parseInt(pageNo), 10) ;
+		if(StringHelper.isNotEmpty(pageNoLong)){
+			pageParam = new PageParam(Long.parseLong(pageNoLong), 10) ;
 		}else{
-			pageParam = new PageParam(1, 10);
+			pageParam = new PageParam(1l, 10);
 		}
 		//初始化resultMap集合
 		agencyActiveChannelAO.getBindRateList(resultMap, pageParam, aarp, channelId);

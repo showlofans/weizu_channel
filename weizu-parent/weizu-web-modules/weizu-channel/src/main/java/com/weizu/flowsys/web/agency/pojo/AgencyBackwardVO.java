@@ -66,8 +66,7 @@ public class AgencyBackwardVO extends Po {
 	/**生成VO实体*/
 	public AgencyBackwardVO(Integer id, Integer rootAgencyId, String userName,
 			String userRealname, String userPass, String agencyTel,
-			String userEmail, String agencyIp, Double accountBalance,
-			Double accountCredit, Long createTime,
+			String userEmail, String agencyIp, Long createTime,
 			String verifyCode) {
 		super();
 		this.id = id;
@@ -78,8 +77,6 @@ public class AgencyBackwardVO extends Po {
 		this.agencyTel = agencyTel;
 		this.userEmail = userEmail;
 		this.agencyIp = agencyIp;
-		this.accountBalance = accountBalance;
-		this.accountCredit = accountCredit;
 		this.createTime = createTime;
 		this.verifyCode = verifyCode;
 	}

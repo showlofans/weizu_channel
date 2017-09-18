@@ -66,7 +66,8 @@ line-height:220px;
     </form>
   </div>
 </div>
-<div class="footer">Copyright by 南昌微族<!-- <a href="http://www.mycodes.net/" target="_blank">源码之家</a> --></div>
+<div class="footer">Copyright &copy;2017-2018 南昌微族科技有限公司 All Rights Reserved.<br></div>
+<!-- <div class="footer">Copyright by 南昌微族<a href="http://www.mycodes.net/" target="_blank">源码之家</a></div> -->
 	<%-- <div class="aa">
 	<div class="sorry">
 	<h3>欢迎登陆</h3> 

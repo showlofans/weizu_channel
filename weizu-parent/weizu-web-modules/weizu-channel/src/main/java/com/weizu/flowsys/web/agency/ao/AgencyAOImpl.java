@@ -61,7 +61,7 @@ public class AgencyAOImpl implements AgencyAO {
 			agencyBackward.setRootAgencyId(code);
 			agencyBackward.setVerifyCode("");//置空邀请码
 			agencyBackward.setCreateTime(System.currentTimeMillis());
-			agencyBackward.setAgencyTag(0);
+			agencyBackward.setAgencyTag(AgencyTagEnum.PLATFORM_USER.getValue());
 			int addAgency = agencyVODao.add(agencyBackward);
 			//利用nextId函数获得当前注册代理商id,同时注册一个账户
 			int agencyId = (int) (agencyVODao.nextId()-1);//适用于自动增长
@@ -76,7 +76,11 @@ public class AgencyAOImpl implements AgencyAO {
 			if(result < 2){
 				return null;
 			}else{//返回VO实体
-				return getVOByPo(agencyBackward);
+				agencyBackward.setId(agencyId);
+				AgencyBackwardVO agencyVO = getVOByPo(agencyBackward);
+				agencyVO.setAccountBalance(0.00d);
+				agencyVO.setAccountCredit(0.00d);
+				return agencyVO;
 			}
 		}else{
 			return null;
@@ -92,22 +96,27 @@ public class AgencyAOImpl implements AgencyAO {
 	 */
 	@Override
 	public AgencyBackwardVO getVOByPo(AgencyBackwardPo agencyBackward) {
+		if(agencyBackward == null){
+			return null;
+		}
 		AgencyBackwardVO agencyVO = new AgencyBackwardVO(agencyBackward.getId(),
 				agencyBackward.getRootAgencyId(), agencyBackward.getUserName(), 
 				agencyBackward.getUserRealName(), agencyBackward.getUserPass(), 
 				agencyBackward.getAgencyTel(), agencyBackward.getUserEmail(), 
-				agencyBackward.getAgencyIp(), 0.0d, 0.0d, agencyBackward.getCreateTime(), 
+				agencyBackward.getAgencyIp(), agencyBackward.getCreateTime(), 
 				agencyBackward.getVerifyCode());
 		agencyVO.setCallBackIp(agencyBackward.getCallBackIp());
 		if(agencyBackward.getRootAgencyId() != 0){
 			String qq = agencyVODao.get(agencyBackward.getRootAgencyId()).getOtherContact();//富代理商的qq
 			agencyVO.setOtherContact(qq);
+		}else{
+			agencyVO.setOtherContact(agencyBackward.getOtherContact());
 		}
 		return agencyVO;
 	}
 
 	/**
-	 * @description:编辑下级代理商
+	 * @description:编辑代理商
 	 * @param agencyBackward
 	 * @return
 	 * @author:POP产品研发部 宁强
@@ -117,26 +126,29 @@ public class AgencyAOImpl implements AgencyAO {
 	@Override
 	public int updateAgency(AgencyBackwardVO agencyBackwardVO) {
 		//主要取信用值和代理商id
-		ChargeAccountPo chargeAccountPo =  chargeAccountAO.getAccountByAgencyId(agencyBackwardVO.getId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+//		ChargeAccountPo chargeAccountPo =  chargeAccountAO.getAccountByAgencyId(agencyBackwardVO.getId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 //		ChargeAccountPo chargeAccountPo1 =  chargeAccountAO.getAccountByAgencyId(agencyBackwardVO.getId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
-		chargeAccountPo.setAccountCredit(agencyBackwardVO.getAccountCredit());
+//		chargeAccountPo.setAccountCredit(agencyBackwardVO.getAccountCredit());
 //		chargeAccountPo1.setAccountCredit(agencyBackwardVO.getAccountCredit());
 		
-		chargeAccountDao.updateByAgencyId(chargeAccountPo);//更新信用值信息
+//		chargeAccountDao.updateByAgencyId(chargeAccountPo);//更新信用值信息
 //		chargeAccountDao.updateByAgencyId(chargeAccountPo1);//更新信用值信息
 		//取代理商的其他信息
-		int upresult = agencyVODao.updateByAgencyPO(getPoByVo(agencyBackwardVO));
+		int upresult = agencyVODao.updateLocal(getPoByVo(agencyBackwardVO),new WherePrams("id", "=", agencyBackwardVO.getId()));
+//		int upresult = agencyVODao.updateByAgencyPO(getPoByVo(agencyBackwardVO));
 		return upresult;
 	}
 
 	private AgencyBackwardPo getPoByVo(AgencyBackwardVO agencyBackward) {
-		return new AgencyBackwardPo(agencyBackward.getId(), 
+		AgencyBackwardPo agencyPo = new AgencyBackwardPo(agencyBackward.getId(), 
 				agencyBackward.getRootAgencyId(), agencyBackward.getUserName(), 
 				agencyBackward.getUserPass(), agencyBackward.getUserRealName(), 
 				agencyBackward.getAgencyTel(), agencyBackward.getUserEmail(), 
 				agencyBackward.getAgencyIp(), 
 				agencyBackward.getAccountCredit(), 
 				System.currentTimeMillis(), agencyBackward.getVerifyCode());
+		agencyPo.setOtherContact(agencyBackward.getOtherContact());
+		return agencyPo;
 	}
 
 	/**
@@ -366,12 +378,12 @@ public class AgencyAOImpl implements AgencyAO {
 	 * @createTime:2017年5月27日 上午10:24:34
 	 */
 	@Override
-	public AgencyBackwardPo getAgencyById(String id) {
-		if(StringHelper.isNotEmpty(id)){
-			int intId = Integer.parseInt(id);
-			return agencyVODao.get(intId);
-		}
-		return null;
+	public AgencyBackwardPo getAgencyById(Integer id) {
+//		if(StringHelper.isNotEmpty(id)){
+//			int intId = Integer.parseInt(id);
+			return agencyVODao.get(id);
+//		}
+//		return null;
 	}
 	/**
 	 * @description: 查询是否id属于二级代理商以下(限制登陆用户权限)
@@ -398,7 +410,9 @@ public class AgencyAOImpl implements AgencyAO {
 		AgencyBackwardPo agencyPo = new AgencyBackwardPo();
 		agencyPo.setUserPass(enterPass);
 		agencyPo.setId(agencyId);
-		return agencyVODao.updateByAgencyPO(agencyPo);
+		
+//		agencyVODao.updateLocal(agencyPo,new WherePrams("id", "=", agencyId));
+		return agencyVODao.updatePass(agencyId, enterPass);
 	}
 
 	/**

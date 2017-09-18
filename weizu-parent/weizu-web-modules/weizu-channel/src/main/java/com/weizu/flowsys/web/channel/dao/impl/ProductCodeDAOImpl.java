@@ -59,11 +59,15 @@ public class ProductCodeDAOImpl extends DaoImpl<ProductCodePo, Long> implements
 	 * @createTime:2017年6月9日 下午5:17:11
 	 */
 	@Override
-	public int existProductCode(Integer epId, String productCode) {
+	public int existProductCode(ProductCodePo productCodePo) {
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
-		if(epId != null && StringHelper.isNotEmpty(productCode) ){
-			paramsMap.put("epId", epId);
-			paramsMap.put("productCode", productCode);
+		if(productCodePo != null){
+			if(StringHelper.isNotEmpty(productCodePo.getProductCode()) && productCodePo.getEpId() != null){
+				paramsMap.put("epId", productCodePo.getEpId());
+				paramsMap.put("productCode", productCodePo.getProductCode());
+				paramsMap.put("serviceType", productCodePo.getServiceType());
+				paramsMap.put("scopeCityCode", productCodePo.getScopeCityCode());
+			}
 		}
 		return sqlSessionTemplate.selectOne("existProductCode", paramsMap);
 	}

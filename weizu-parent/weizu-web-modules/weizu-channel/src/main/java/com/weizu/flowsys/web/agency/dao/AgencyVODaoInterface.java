@@ -24,7 +24,7 @@ public interface AgencyVODaoInterface extends Dao<AgencyBackwardPo, Integer> {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月22日 下午5:29:42
 	 */
-	int updateByAgencyPO(AgencyBackwardPo agencyBackwardPo);
+//	int updateByAgencyPO(AgencyBackwardPo agencyBackwardPo);
 	
 	/**
 	 * @description:更新自己的账户信息
@@ -149,5 +149,25 @@ public interface AgencyVODaoInterface extends Dao<AgencyBackwardPo, Integer> {
 	 * @createTime:2017年8月19日 下午4:44:38
 	 */
 	AgencyBackwardPo getRootAgencyById(int agencyId);
+	
+	/**
+	 * @description: 更新密码
+	 * @param agencyId
+	 * @param userPass
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月18日 下午2:33:54
+	 */
+	int updatePass(Integer agencyId,String userPass);
+	
+	/**
+	 * @description:更新用户类型
+	 * @param agencyId
+	 * @param agencyTag
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月18日 下午6:02:51
+	 */
+	int updateAgencyTag(Integer agencyId,Integer agencyTag);
 	
 }

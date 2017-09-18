@@ -42,6 +42,27 @@ public class ChargeAccountPo extends Po {
 		this.accountBalance = accountBalance;
 		this.accountCredit = accountCredit;
 	}
+    
+    
+
+	/**  createCompanyAccount 创建一个默认的对公账户
+	 * @param agencyId
+	 * @param accountBalance
+	 * @param billType
+	 * @param createTime
+	 * @param agencyName
+	 */
+	public ChargeAccountPo(Integer agencyId, Double accountBalance,
+			Integer billType, Long createTime, String agencyName) {
+		super();
+		this.agencyId = agencyId;
+		this.accountBalance = accountBalance;
+		this.billType = billType;
+		this.createTime = createTime;
+		this.agencyName = agencyName;
+	}
+
+
 
 	public ChargeAccountPo() {
 		super();

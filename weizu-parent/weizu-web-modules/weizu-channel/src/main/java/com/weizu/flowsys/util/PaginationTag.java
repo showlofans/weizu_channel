@@ -46,7 +46,11 @@ public class PaginationTag extends SimpleTagSupport {
 		 * strBuf.append("paga_queryForm.appendChild(newInput);");
 		 */
 		strBuf.append("function paga_toPage(pageNo) {");
-		strBuf.append("paga_queryForm.pageNo.value=").append("pageNo;");
+		if(pagination.getTotalRecordLong() != 0){
+			strBuf.append("paga_queryForm.pageNoLong.value=").append("pageNo;");
+		}else{
+			strBuf.append("paga_queryForm.pageNo.value=").append("pageNo;");
+		}
 		strBuf.append("paga_queryForm.submit();");
 		strBuf.append("}");
 		strBuf.append("</script>");
@@ -58,17 +62,17 @@ public class PaginationTag extends SimpleTagSupport {
 			strBuf.append(" <span>").append(" 没有记录了！！</span> ");
 		}else if(pagination.getTotalRecordLong() != 0){
 			// 上一页
-			if (pagination.getPageNo() == 1) {
+			if (pagination.getPageNoLong() == 1) {
 				// strBuf.append(" <a href=\"#\"><span class=\"first_link\">首页</span></a> ");
 				strBuf.append(" <span class=\"disabled\">").append(" 上一页 </span> ");
 			} else {
 				// strBuf.append(" <a href=\"#\" onclick=\"paga_toPage(1);\"><span class=\"first_link\">首页</span></a> ");
 				strBuf.append(" <a href=\"#\" class=\"laypage_prev\" onclick=\"paga_toPage(")
-						.append(pagination.getPageNo() - 1).append(")\"> 上一页  </a> ");
+						.append(pagination.getPageNoLong() - 1).append(")\"> 上一页  </a> ");
 			}
 	
 			for (long i = pagination.getStartIndexLong(); i <= pagination.getEndIndexLong(); i++) {
-				if (pagination.getPageNo() == i) {
+				if (pagination.getPageNoLong() == i) {
 					strBuf.append("<span class=\"laypage_curr\">").append(i)
 							.append("</span>"); 
 				} else {
@@ -79,15 +83,15 @@ public class PaginationTag extends SimpleTagSupport {
 			}
 	
 			// 下一页
-			if (pagination.getPageNo() == pagination.getTotalPageLong()) {
+			if (pagination.getPageNoLong() == pagination.getTotalPageLong()) {
 				strBuf.append(" <span class=\"disabled\">").append(" 下一页 </span> ");
 				// strBuf.append(" <a href=\"#\"><span class=\"end_link\">末页</span></a> ");
 			} else {
 				strBuf.append(" <a href=\"#\" class=\"laypage_next\" onclick=\"paga_toPage(")
-						.append(pagination.getPageNo() + 1).append(")\"> 下一页 </a> ");
+						.append(pagination.getPageNoLong() + 1).append(")\"> 下一页 </a> ");
 				// strBuf.append(" <a href=\"#\" onclick=\"paga_toPage(").append(pagination.getTotalPage()).append(")\"><span class=\"end_link\">末页</span></a> ");
 			}
-			strBuf.append("<span class=\"info\">(第").append(pagination.getPageNo())
+			strBuf.append("<span class=\"info\">(第").append(pagination.getPageNoLong())
 					.append("/").append(pagination.getTotalPageLong()).append("页")
 					.append(" 共").append(pagination.getTotalRecordLong())
 					.append("条)</span>");

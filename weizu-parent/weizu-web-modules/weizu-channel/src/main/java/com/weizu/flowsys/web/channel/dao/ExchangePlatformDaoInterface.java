@@ -34,6 +34,15 @@ public interface ExchangePlatformDaoInterface extends Dao<ExchangePlatformPo, In
 	 * @createTime:2017年9月16日 下午5:08:00
 	 */
 	ExchangePlatformPo getEpByRateId(Long rateId);
+	
+	/**
+	 * @description:根据通道折扣id获得平台信息
+	 * @param channelId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月18日 上午9:07:50
+	 */
+	ExchangePlatformPo getEpByCDiscountId(Long CDiscountId);
 	/**
 	 * @description:获得所有平台名称
 	 * @param name

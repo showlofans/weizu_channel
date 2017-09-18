@@ -187,10 +187,10 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 		Map<String, Object> paramsMap = getMapByEntity(activePo);
 		long toatalRecord = agencyActiveChannelDao.countActiveRate(paramsMap);
 		int pageSize = 10;
-		int pageNo = 1;
+		long pageNo = 1l;
 		if(pageParam != null){
 			pageSize = pageParam.getPageSize();
-			pageNo = pageParam.getPageNo();
+			pageNo = pageParam.getPageNoLong();
 			paramsMap.put("start", (pageNo-1)*pageSize);
 			paramsMap.put("end", pageSize);
 		}

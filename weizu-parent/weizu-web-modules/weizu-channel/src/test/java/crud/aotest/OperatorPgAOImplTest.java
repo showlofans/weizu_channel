@@ -11,6 +11,7 @@
 //import org.springframework.test.context.ContextConfiguration;
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
+//import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 //import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 //import com.weizu.flowsys.web.channel.dao.OperatorPgDaoInterface;
 //import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
@@ -112,11 +113,11 @@
 ////			System.out.println(Integer.parseInt(object.toString()));
 ////		}
 ////	}
-////	@Test
-////	public void testPgListNoCode(){
-////		List<OperatorPgDataPo> list = operatorPgDao.listPgListNotInPcode(2, 0, 0);
-////		System.out.println(list.size());
-////	}
+//	@Test
+//	public void testPgListNoCode(){
+//		List<OperatorPgDataPo> list = operatorPgDao.listPgListNotInPcode(2, ServiceTypeEnum.PROVINCE_ROAMING.getValue(), 0,"19");
+//		System.out.println(list.size());
+//	}
 ////	@Test
 ////	public void testPgListCode(){
 ////		Map<String,Object> map = operatorPgAO.getBy(new SuperPurchaseParam("广东移动", "0", "Weizu"));

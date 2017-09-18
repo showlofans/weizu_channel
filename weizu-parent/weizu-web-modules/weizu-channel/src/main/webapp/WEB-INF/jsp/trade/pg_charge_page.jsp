@@ -293,7 +293,7 @@
 	   if(rootAgencyId == 0){
 		   var cdisId = $(vart).parent().next().next().next().next().next().next().next().val();
 		   $('#cdisId').val(cdisId);
-		   //alert(cdisId);
+		   alert(cdisId);
 	   }else{
 		   var rteId = $(vart).parent().next().next().next().next().next().next().next().val();
 		   $('#rateId').val(rteId);
@@ -395,6 +395,9 @@
 		var cdiscount = $(vart).parent().next().next().val();//通道折扣
 		$('#rateDiscount').html(cdiscount);//通道折扣
 		
+		var cdisId = $(vart).parent().next().next().next().next().val();//通道折扣id
+		$('#cdisId').val(cdisId);//初始化通道折扣id
+		
 		// alert(cnelId);
 		 var carrier = $("#chargeTelDetail").val();
     	 var serviceType = $("#select-servce-type").val();
@@ -480,13 +483,14 @@
 	                	if(dataRole.length > 0){
 		                      for(var i=0; i < dataRole.length; i++){
 		                    	  var cnel_id = dataRole[i].id;
+		                    	  var cdisId = dataRole[i].cdId;
 		                    	  var cnel_name = dataRole[i].channelName;
 		                    	  var ep_name = dataRole[i].epName;
 		                    	  var ep_id = dataRole[i].epId;
 		                    	  var cdiscount = dataRole[i].channelDiscount;
 		                    	  appendData += "<div class='radio-box'><input type='hidden' value='"+cnel_id+"'></input><input class='cNameRadio' type='radio' name='cNameRadio' id='cname-"+(i+1)+"' onclick='togglelePg(this)'><label for='cname-"+(i+1)+"'>"
                  					+cnel_name+"</label></div><input type='hidden' class='price' value='"+ep_id+"'></input>"
-                 					+"<input type='hidden' value='"+cdiscount+"'></input><input type='text' value='"+ep_name +"'></input><br>";
+                 					+"<input type='hidden' value='"+cdiscount+"'></input><input type='text' value='"+ep_name +"'></input><input type='hidden' value='"+cdisId+"'></input><br>";
                  					 /*appendData += "<label class='form-label col-xs-4 col-sm-3'><span class='c-red'>*</span>包体列表：</label><div class='formControls col-xs-8 col-sm-9 skin-minimal'>"
 		                    	 //alert(dataRole[i].list.length);
 		                    	  for(var j=0; j < dataRole[i].list.length; j++){

@@ -43,7 +43,7 @@ public interface ProductCodeAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月9日 上午10:11:56
 	 */
-	List<OperatorPgDataPo> initPgList(Integer epId, int serviceType, int operatorType);
+	List<OperatorPgDataPo> initPgList(Integer epId, int serviceType, int operatorType,String scopeCityCode);
 	
 	/**
 	 * @description: 该编码是否在该通道已经创建
@@ -53,7 +53,7 @@ public interface ProductCodeAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月9日 下午5:18:39
 	 */
-	boolean existProductCode(Integer epId, String productCode);
+	boolean existProductCode(ProductCodePo productCodePo);
 	/**
 	 * @description: 通过参数查询一个产品编码
 	 * @param map

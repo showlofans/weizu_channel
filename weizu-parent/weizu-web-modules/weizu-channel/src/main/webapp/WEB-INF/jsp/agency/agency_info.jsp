@@ -79,12 +79,15 @@
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
 				<button class="btn btn-primary radius" type="submit" onclick="save()"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+				<button class="btn btn-primary radius" onClick="cancelEdit()">取消</button>
 			</div>
 		</div>
 	</form>
 </body>
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
 <script type="text/javascript" src="/view/lib/layer/2.4/layer.js"></script>  
+<script type="text/javascript" src="/view/static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="/view/static/h-ui.admin/js/H-ui.admin.js"></script>
 <script type="text/javascript" src="/view/clipboard/ZeroClipboard.js"></script>  
 <script type="text/javascript">
 var client = new ZeroClipboard(document.getElementById("copy-button"));

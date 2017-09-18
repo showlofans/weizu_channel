@@ -75,7 +75,7 @@ public class ProductCodeController {
 //			}
 			if( epList != null && epList.size() > 0){
 				Integer epId = epList.get(0).getId();
-				List<OperatorPgDataPo> pgList = productCodeAO.initPgList(epId,0, 0);//默认移动全国流量
+				List<OperatorPgDataPo> pgList = productCodeAO.initPgList(epId,0, 0,ScopeCityEnum.QG.getValue());//默认移动全国流量
 				resultMap.put("pgList", pgList);
 				resultMap.put("epId", epList.get(0).getId());
 			}
@@ -117,13 +117,13 @@ public class ProductCodeController {
 	 * @createTime:2017年6月9日 上午10:51:09
 	 */
 	@RequestMapping(value = ProductCodeURL.AJAX_PG_LIST)
-	public void ajaxPgList(String operatorType, String serviceType, Integer epId,HttpServletResponse response){
+	public void ajaxPgList(String operatorType, String serviceType, Integer epId,String scopeCityCode,HttpServletResponse response){
 		if(StringHelper.isNotEmpty(serviceType) && StringHelper.isNotEmpty(operatorType)){
 			 //这句话的意思，是让浏览器用utf8来解析返回的数据  
 			response.setHeader("Content-type", "text/html;charset=UTF-8");  
 			//这句话的意思，是告诉servlet用UTF-8转码，而不是用默认的ISO8859  
 			response.setCharacterEncoding("UTF-8");
-			List<OperatorPgDataPo> pgList = productCodeAO.initPgList(epId,Integer.parseInt(serviceType), Integer.parseInt(operatorType));
+			List<OperatorPgDataPo> pgList = productCodeAO.initPgList(epId,Integer.parseInt(serviceType), Integer.parseInt(operatorType),scopeCityCode);
 			try {
 				response.getWriter().print(JSON.toJSONString(pgList));
 			} catch (IOException e) {
@@ -142,7 +142,7 @@ public class ProductCodeController {
 	@RequestMapping(value = ProductCodeURL.PRODUCT_CODE_EXIST)
 	public void ajaxPcExist(ProductCodePo productCodePo, HttpServletResponse response){
 		if(StringHelper.isNotEmpty(productCodePo.getProductCode()) && productCodePo.getEpId() != null){
-			boolean result = productCodeAO.existProductCode(productCodePo.getEpId(), productCodePo.getProductCode());
+			boolean result = productCodeAO.existProductCode(productCodePo);
 			try {
 				response.getWriter().print(result);
 			} catch (IOException e) {

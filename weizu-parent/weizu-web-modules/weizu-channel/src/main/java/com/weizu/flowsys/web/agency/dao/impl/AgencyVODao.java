@@ -38,11 +38,11 @@ public class AgencyVODao extends DaoImpl<AgencyBackwardPo, Integer> implements A
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月22日 下午5:29:07
 	 */
-	@Override
-	public int updateByAgencyPO(AgencyBackwardPo agencyBackwardPo) {
-		
-		return sqlSessionTemplateASS.update("updateByAgencyPO",agencyBackwardPo);
-	}
+//	@Override
+//	public int updateByAgencyPO(AgencyBackwardPo agencyBackwardPo) {
+//		
+//		return sqlSessionTemplateASS.update("updateByAgencyPO",agencyBackwardPo);
+//	}
 
 	/**
 	 * @description: 查询代理商个数 
@@ -185,6 +185,22 @@ public class AgencyVODao extends DaoImpl<AgencyBackwardPo, Integer> implements A
 	public AgencyBackwardPo getRootAgencyById(int agencyId) {
 		
 		return sqlSessionTemplateASS.selectOne("getRootAgencyById", agencyId);
+	}
+
+	@Override
+	public int updatePass(Integer agencyId, String userPass) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", agencyId);
+		params.put("userPass", userPass);
+		return sqlSessionTemplateASS.update("updatePass", params);
+	}
+
+	@Override
+	public int updateAgencyTag(Integer agencyId, Integer agencyTag) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", agencyId);
+		params.put("agencyTag", agencyTag);
+		return sqlSessionTemplateASS.update("updateAgencyTag", params);
 	}
 
 	/**

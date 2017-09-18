@@ -198,8 +198,31 @@ WHERE a2.root_agency_id=4 and active1.rate_discount_id=22 and active1.bind_state
   		</if>
   	</where>
   </select>
+  <update id="updatePass" parameterType="map">
+  	update <include refid="agency_backward"></include>
+  	<set>
+  		<if test="userPass != null">
+  			user_pass = #{userPass}
+  		</if>
+  	</set>
+  	<where>
+  		id = #{id}
+  	</where>
+  </update>
+  <update id="updateAgencyTag" parameterType="map">
+  	update <include refid="agency_backward"></include>
+  	<set>
+  		<if test="agencyTag != null">
+  			agency_tag = #{agencyTag}
+  		</if>
+  	</set>
+  	<where>
+  		id = #{id}
+  	</where>
+  </update>
+  
   <!-- 更新代理商信息 -->
-  <update id="updateByAgencyPO" parameterType="com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo">
+  <!-- <update id="updateByAgencyPO" parameterType="com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo">
   	update <include refid="agency_backward"></include>
   	<include refid="set_sql"></include>
   	<where>
@@ -230,11 +253,14 @@ WHERE a2.root_agency_id=4 and active1.rate_discount_id=22 and active1.bind_state
   		<if test="agencyIp != null">
   			agency_ip = #{agencyIp},
   		</if>
-  		<!-- <if test="rateId != null">
+  		<if test="agencyIp != null">
+  			agency_ip = #{agencyIp},
+  		</if>
+  		<if test="rateId != null">
   			rate_id = #{rateId},
-  		</if> -->
+  		</if>
   	</set>
-  </sql>
+  </sql> -->
   <!-- 查询代理商列表 -->
   <select id="selectByAgencyVO" parameterType="com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO" resultMap="OtherMap">
     select 

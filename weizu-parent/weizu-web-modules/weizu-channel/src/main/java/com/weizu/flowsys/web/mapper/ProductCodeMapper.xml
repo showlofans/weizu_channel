@@ -130,7 +130,9 @@
   
   <!-- 查询是否存在该编码 -->
   <select id="existProductCode" parameterType="map" resultType="java.lang.Integer">
-  	select count(id) from <include refid="t_pcode"></include>
+  	select count(*) from <include refid="t_pcode"></include> pc
+  	inner join <include refid="t_opd"></include> opd
+  	on opd.id = pc.pg_id
   	<where>
   		<include refid="exist_condition_sql"></include>
   	</where>
@@ -146,6 +148,12 @@
   	</if>
 	<if test="productCode != null">
   		AND product_code = #{productCode}
+  	</if>
+	<if test="scopeCityCode != null">
+  		AND scope_city_code = #{scopeCityCode}
+  	</if>
+	<if test="serviceType != null">
+  		AND opd.service_type = #{serviceType}
   	</if>
   </sql>
   

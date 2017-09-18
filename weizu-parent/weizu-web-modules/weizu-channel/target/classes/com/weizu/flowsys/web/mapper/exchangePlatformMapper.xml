@@ -4,6 +4,7 @@
   <sql id="t_ep">exchange_platform</sql>
   <sql id="t_rateD">rate_discount</sql>
   <sql id="t_cnel">channel_channel</sql>
+  <sql id="t_cdiscount">channel_discount</sql>
   <!-- <sql id="t_agencyEp">agency_ep</sql> -->
   
   
@@ -50,6 +51,18 @@
   	on rate.channel_id=cnel.id
   	<where>
   		rate.id=#{_parameter}
+  	</where>
+  </select>
+  <!-- 通过通道id获得平台信息 -->
+  <select id="getEpByCDiscountId" parameterType="long" resultMap="BaseResultMap">
+  	select <include refid="EpByRteId_Column_List"></include>
+  	from <include refid="t_ep"></include> ep
+  	inner join <include refid="t_cnel"></include> cnel
+  	on cnel.ep_id = ep.id
+  	inner join <include refid="t_cdiscount"></include> cd
+  	on cnel.id = cd.channel_id
+  	<where>
+  		cd.id=#{_parameter}
   	</where>
   </select>
   <!-- 获得所有平台名称(减少数据库负担) -->

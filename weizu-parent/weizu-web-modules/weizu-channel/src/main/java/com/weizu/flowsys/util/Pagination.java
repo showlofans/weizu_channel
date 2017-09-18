@@ -19,6 +19,7 @@ public class Pagination<T> {
 	private int totalPage;		// 总页数
 	
 	private long totalPageLong;	//总页数2
+	private long pageNoLong;		//当前页码,第几页
 	
 	private int startIndex;		// 开始索引
 	private long startIndexLong;		// 开始索引2
@@ -27,40 +28,42 @@ public class Pagination<T> {
 	
 	private int indexCount = 10;// 显示的索引数目,如:10的话， 则显示1-10， 2-11
 	
+	private long indexCountLong = 10L;
+	
 	// public Pagination() {}
 	
-	public Pagination(List<T> records, long totalRecordLong, int pageNo,
+	public Pagination(List<T> records, long totalRecordLong, long pageNoLong,
 			int pageSize) {
 		super();
 		this.records = records;
 		this.totalRecordLong = totalRecordLong;
-		this.pageNo = pageNo;
+		this.pageNoLong = pageNoLong;
 		this.pageSize = pageSize;
 // 根据总记录数和每页显示数计算总页数(totalRecordLong+pageSize->totalPage)
 		totalPageLong = this.totalRecordLong / this.pageSize;
 		//当总数小与pageSize的时候，将计算出来的0改为1
 		totalPageLong = (this.totalRecordLong % pageSize == 0) ? totalPageLong : (totalPageLong + 1);
 		// 根据索引数目，当前页，总页数计算开始索引和结束索引(indexCount+pageNo+totalPage->startIndex+endIndex)
-		startIndexLong = indexCount/2;
-		startIndexLong = pageNo - (indexCount%2 == 0 ? (startIndexLong - 1) : startIndexLong);
-		endIndexLong = pageNo + indexCount/2;
+		startIndexLong = indexCountLong/2;
+		startIndexLong = pageNoLong - (indexCountLong%2 == 0 ? (startIndexLong - 1) : startIndexLong);
+		endIndexLong = pageNoLong + indexCountLong/2;
 		// 1 <= startIndex < pageNo < endIndex <= totalPage
 		// startIndex = pageNo - indexCount/2
 		// endIndex = pageNo + indexCount/2
 		if(startIndexLong < 1) {
 			startIndexLong = 1;
-			if(totalRecordLong >= indexCount) {
-				endIndexLong = indexCount;
+			if(totalPageLong >= indexCountLong) {
+				endIndexLong = indexCountLong;
 			}  else {
 				endIndexLong = totalPageLong;
 			}
 		}
-		if(endIndexLong > totalRecordLong) {
-			endIndexLong = totalRecordLong;
-			if(endIndexLong > indexCount) {
-				startIndexLong = endIndexLong - indexCount + 1;
+		if(endIndexLong > totalPageLong) {
+			endIndexLong = totalPageLong;
+			if(endIndexLong > indexCountLong) {
+				startIndexLong = endIndexLong - indexCountLong + 1;
 			} else {
-				startIndexLong = 1;
+				startIndexLong = 1l;
 			}
 		}
 	}
@@ -99,6 +102,22 @@ public class Pagination<T> {
 		}
 	}
 	
+	public long getPageNoLong() {
+		return pageNoLong;
+	}
+
+	public void setPageNoLong(long pageNoLong) {
+		this.pageNoLong = pageNoLong;
+	}
+
+	public long getIndexCountLong() {
+		return indexCountLong;
+	}
+
+	public void setIndexCountLong(long indexCountLong) {
+		this.indexCountLong = indexCountLong;
+	}
+
 	public long getTotalRecordLong() {
 		return totalRecordLong;
 	}

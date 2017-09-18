@@ -30,8 +30,12 @@ public class ChargeAccountAoImpl implements ChargeAccountAo {
 	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
 	public int createAccount(ChargeAccountPo chargeAccountPo) {
-		chargeAccountPo.setBillType(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-		return chargeAccountDao.add(chargeAccountPo);
+		ChargeAccountPo accountPo = getAccountByAgencyId(chargeAccountPo.getAgencyId(), chargeAccountPo.getBillType());
+		if(accountPo == null){
+			return chargeAccountDao.add(chargeAccountPo);
+		}else{
+			return -1;
+		}
 	}
 	
 	/**

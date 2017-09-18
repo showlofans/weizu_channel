@@ -37,15 +37,22 @@
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
 				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+				<button class="btn btn-primary radius" onClick="cancelEdit()">取消</button>
 			</div>
 		</div>
 	</form>
 </body>
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="/view/static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="/view/static/h-ui.admin/js/H-ui.admin.js"></script>
 <script type="text/javascript" src="/view/lib/layer/2.4/layer.js"></script>  
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 <script type="text/javascript">
+/* function cancelEdit(){
+	var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+	parent.layer.close(index); // 执行关闭 
+} */
 $().ready(function() {
 	//alert($('#userPass').val());
     $("form").validate({

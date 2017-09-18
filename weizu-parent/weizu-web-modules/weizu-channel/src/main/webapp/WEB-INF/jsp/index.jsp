@@ -32,10 +32,10 @@
 <body>
 <header class="navbar-wrapper">
 	<div class="navbar navbar-fixed-top">
-		<div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" href="#">微族通道系统Beta</a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="#">H-ui</a> 
+		<div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" href="#">微族通道系统Beta</a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="#">微族通道系统Beta</a> 
 			<span class="logo navbar-slogan f-l mr-10 hidden-xs"></span> 
 			<a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:;">&#xe667;</a>
-			<c:if test="${loginContext.rootAgencyId == 0 }">
+			<%-- <c:if test="${loginContext.rootAgencyId == 0 }">
 			<nav class="nav navbar-nav">
 				<ul class="cl">
 					<li class="dropDown dropDown_hover"><a href="javascript:;" class="dropDown_A"><i class="Hui-iconfont">&#xe600;</i> 新增 <i class="Hui-iconfont">&#xe6d5;</i></a>
@@ -48,7 +48,7 @@
 					</li>
 				</ul>
 			</nav>
-			</c:if>
+			</c:if> --%>
 			<nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
 				<ul class="cl">
 					<!-- <li>超级管理员</li> -->
@@ -94,7 +94,7 @@
 <aside class="Hui-aside">
 	<div class="menu_dropdown bk_2">
 		<c:if test="${loginContext.rootAgencyId == 0 }">
-			<dl id="menu-picture"><!-- menu_dropdown-arrow -->
+			<dl id="menu-product"><!-- menu_dropdown-arrow -->
 				<dt><i class="Hui-iconfont">&#xe679;</i> 通道管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 				<dd>
 					<ul>
@@ -160,6 +160,9 @@
 			<ul>
 				<!-- <li><a data-href="/flowsys/account/open_company_account_page.do" data-title="认证信息" href="javascript:void(0)">认证信息</a></li> -->
 				<c:if test="${chargeAccount1 == null && (companyAccount == 'yes' || power == 'no' ) }">
+					<%-- <c:choose>
+						<c:when test="${loginContext.agencyTag != 1 }"></c:when>
+					</c:choose> --%>
 					<li><a data-href="/flowsys/account/open_company_account_page.do" data-title="开通对公账号" href="javascript:void(0)">开通对公账号</a></li>
 				</c:if>
 				<li><a data-href="/flowsys/account/consume_list.do" data-title="消费记录" href="javascript:void(0)">消费记录</a></li>

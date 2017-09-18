@@ -73,7 +73,7 @@ public class PurchaseVO implements Cloneable {
     
     private Integer billType;					//票务
     
-    private Long rateId;						//费率id
+    private Long rateDiscountId;						//费率折扣id
     
     @Override
 	public PurchaseVO clone() {
@@ -86,12 +86,12 @@ public class PurchaseVO implements Cloneable {
 		return pvo;
 	}
     
-	public Long getRateId() {
-		return rateId;
+	public Long getRateDiscountId() {
+		return rateDiscountId;
 	}
 
-	public void setRateId(Long rateId) {
-		this.rateId = rateId;
+	public void setRateDiscountId(Long rateDiscountId) {
+		this.rateDiscountId = rateDiscountId;
 	}
 
 	public Integer getAgencyId() {

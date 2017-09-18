@@ -102,7 +102,7 @@ public interface AgencyAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月27日 上午10:23:55
 	 */
-	AgencyBackwardPo getAgencyById(String id);
+	AgencyBackwardPo getAgencyById(Integer id);
 	
 	/**
 	 * @description: 获得父级代理商的实体

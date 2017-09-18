@@ -70,7 +70,7 @@ public class OperatorPgDao extends DaoImpl<PgDataPo, Integer> implements Operato
 	 * @createTime:2017年5月16日 上午11:59:23
 	 */
 	@Override
-	public List getPgInCode(Integer operatorType,Integer serviceType, Integer epId) {
+	public List getPgInCode(Integer operatorType,Integer serviceType, Integer epId,String scopeCityCode) {
 		
 		Map<String,Object> params = new HashMap<String, Object>();
 		if(operatorType != null){
@@ -81,6 +81,9 @@ public class OperatorPgDao extends DaoImpl<PgDataPo, Integer> implements Operato
 		}
 		if(epId != null){
 			params.put("epId", epId);
+		}
+		if(scopeCityCode != null){
+			params.put("scopeCityCode", scopeCityCode);
 		}
 		return sqlSessionTemplateASS.selectList("getPgInCode", params);
 	}
@@ -163,11 +166,12 @@ public class OperatorPgDao extends DaoImpl<PgDataPo, Integer> implements Operato
 	 */
 	@Override
 	public List<OperatorPgDataPo> listPgListNotInPcode(Integer epId,
-			Integer serviceType, Integer operatorType) {
+			Integer serviceType, Integer operatorType,String scopeCityCode) {
 		Map<String, Object> params = new HashMap<String, Object>();
 			params.put("serviceType", serviceType);
 			params.put("operatorType", operatorType);
 			params.put("epId", epId);
+			params.put("scopeCityCode", scopeCityCode);
 		return sqlSessionTemplateASS.selectList("listPgListNotInPcode", params);
 	}
 	@Override

@@ -31,6 +31,7 @@
   <!-- 通道充值页面返回实体 -->
   <resultMap id="ChargeResultMap" type="com.weizu.flowsys.web.channel.pojo.ChargeChannelPo" >
     <id column="id" property="id" jdbcType="BIGINT" />
+    <id column="cd_id" property="cdId" jdbcType="BIGINT" />
     <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
     <result column="pg_size" property="pgSize" jdbcType="VARCHAR" />
     <result column="ep_id" property="epId" jdbcType="INTEGER" />
@@ -38,7 +39,7 @@
     <result column="channel_discount" property="channelDiscount" jdbcType="DOUBLE" />
   </resultMap>
   <sql id="Charge_Colume_List">
-  	cnel.id,cnel.channel_name,cnel.pg_size,cnel.ep_id,ep.ep_name,cd.channel_discount
+  	cnel.id,cd.id cd_id,cnel.channel_name,cnel.pg_size,cnel.ep_id,ep.ep_name,cd.channel_discount
   </sql>
   
   <!-- <resultMap id="SimpleChannelMap" type="com.weizu.flowsys.web.channel.pojo.ChannelChannelPo" >

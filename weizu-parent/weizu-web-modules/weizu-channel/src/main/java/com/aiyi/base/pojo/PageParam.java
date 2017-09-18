@@ -10,11 +10,30 @@ package com.aiyi.base.pojo;
  */
 public class PageParam {
 	private int pageNo;			// 当前页码,第几页
+	private long pageNoLong;	//当前第几页
 	private int pageSize;		// 每页显示的记录数,每页显示多少条数据
 	public PageParam() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	public PageParam(long pageNoLong, int pageSize) {
+		super();
+		this.pageNoLong = pageNoLong;
+		this.pageSize = pageSize;
+	}
+
+
+	public long getPageNoLong() {
+		return pageNoLong;
+	}
+
+
+	public void setPageNoLong(long pageNoLong) {
+		this.pageNoLong = pageNoLong;
+	}
+
+
 	public PageParam(int pageNo, int pageSize) {
 		super();
 		this.pageNo = pageNo;

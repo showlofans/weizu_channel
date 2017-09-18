@@ -97,7 +97,7 @@ public interface OperatorPgAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月16日 下午12:38:59
 	 */
-	String pgSizeStr(Integer operatorType,Integer servict,Integer epId);
+	String pgSizeStr(Integer operatorType,Integer servict,Integer epId,String scopeCityCode);
 	/**
 	 * @description:通道规格列表变成Str
 	 * @param operatorType
@@ -106,7 +106,7 @@ public interface OperatorPgAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月27日 上午11:37:57
 	 */
-	List pgSizeList(Integer operatorType,Integer serviceType,Integer epId);
+	List pgSizeList(Integer operatorType,Integer serviceType,Integer epId,String scopeCityCode);
 	
 	/**
 	 * @description:通过运营商类型查询购买包体list
