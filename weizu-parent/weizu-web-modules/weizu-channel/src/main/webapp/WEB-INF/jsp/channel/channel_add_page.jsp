@@ -392,6 +392,25 @@ function changeName(){
 function checkBoxes(vart){
 	if($(vart).next().is(':hidden')){
 		$(vart).next().show();
+		var scopeCityCode = $(vart).val();
+		alert(scopeCityCode);
+		var operatorType = $("input[name='operatorType']:checked").val();
+		 var serviceType = $("input[name='serviceType']:checked").val();
+		 var epId = $('#epId').val();
+		 if(!$('#ep_info').is(':visible')){
+			 alert('还没有选定平台');
+			 $('#epName').focus();
+		 }else{
+			 //alert(operatorType);
+			 $.ajax( {    
+			        "type": "post",     
+			        "contentType": "application/x-www-form-urlencoded; charset=utf-8",    
+			        "url": "/flowsys/channel/change_channel_pgSize.do?operatorType="+ operatorType+"&serviceType=" + serviceType+"&scopeCityCode=" + scopeCityCode+"&epId=" + epId,
+			        "success": function(d){
+			            $("#pgSize").val(d);	//写入pgSize
+			        }
+		 	 });
+		 }
 	}else{
 		$(vart).next().hide();
 	}

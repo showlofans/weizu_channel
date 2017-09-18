@@ -508,8 +508,8 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 	 * @createTime:2017年5月16日 下午12:38:12
 	 */
 	@Override
-	public String pgSizeStr(Integer operatorType,Integer serviceType,Integer epId){
-		return PgSizeEnum.initPgSizeList(pgSizeList(operatorType,serviceType,epId));
+	public String pgSizeStr(Integer operatorType,Integer serviceType,Integer epId,String scopeCityCode){
+		return PgSizeEnum.initPgSizeList(pgSizeList(operatorType,serviceType,epId,scopeCityCode));
 	}
 
 	/**
@@ -521,8 +521,8 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 	 * @createTime:2017年5月27日 上午11:38:19
 	 */
 	@Override
-	public List<Integer> pgSizeList(Integer operatorType,Integer serviceType,Integer epId) {
-		return operatorPgDao.getPgInCode(operatorType,serviceType,epId);
+	public List<Integer> pgSizeList(Integer operatorType,Integer serviceType,Integer epId,String scopeCityCode) {
+		return operatorPgDao.getPgInCode(operatorType,serviceType,epId,scopeCityCode);
 	}
 
 	/**

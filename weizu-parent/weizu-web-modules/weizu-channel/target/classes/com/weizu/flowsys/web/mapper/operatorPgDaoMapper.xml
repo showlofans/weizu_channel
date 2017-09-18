@@ -130,6 +130,8 @@
 			</include>
 			<if test="scopeCityCode != null">
 				AND cd.scope_city_code = #{scopeCityCode}
+				<!-- 产品编码的地区也要吻合 -->
+				AND pc.scope_city_code = #{scopeCityCode}
 			</if>
 		</where>
 	</select>
@@ -222,6 +224,9 @@
 		<if test="epId != null">
 			AND pc.ep_id = #{epId}
 		</if>
+		<if test="scopeCityCode != null">
+			AND pc.scope_city_code = #{scopeCityCode}
+		</if>
 	</sql>
 	
 	<!-- 查询where语句块 -->
@@ -260,6 +265,9 @@
 		<where>
 			<if test="epId != null">
 				ep_id = #{epId}
+			</if>
+			<if test="scopeCityCode != null">
+				AND scope_city_code = #{scopeCityCode}
 			</if>
 		</where>)
 		<if test="operatorType != null">

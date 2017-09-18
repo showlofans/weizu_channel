@@ -35,7 +35,7 @@
 <div class="page-container">
 	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
 	<div class="text-c">
-		<form action="/flowsys/rate/bind_rate_list.do" method="post" id="formD" name="dataListForm">
+		<form action="/flowsys/rate/bind_rate_list.do" method="post" id="formD" name="formD">
 				通道名称：<sapn class="c-red">${resultMap.channelName }</sapn>
 			通道类型
 			<c:forEach items="${resultMap.billTypeEnums }" var="billEnum" varStatus="vs">
@@ -133,7 +133,7 @@
 				<!-- <button class="btn btn-success" type="reset"  value="重置">重置</button> -->
 				<button name="" id="" class="btn btn-success"  type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 				<%-- <input type="hidden" id="rateId" name="id" value="${resultMap.discountList[0].id }">  --%>
-				<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
+				<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
 				<input type="hidden" id="channelId" name="channelId" value="${resultMap.channelId }"> 
 				<input type="hidden" name="" value="${resultMap.channelDiscountId }" id="channelDiscountId"> 
 				
@@ -183,10 +183,10 @@
 				</c:forEach>
 			</tbody>
 		</table>
-		<c:if test="${empty pagination }">
+		<%-- <c:if test="${empty pagination }">
 			
-		</c:if>
-		<mytag:Pagination pagination="${resultMap.pagination}" queryForm="queryForm" divId="rateId" />
+		</c:if> --%>
+		<mytag:Pagination pagination="${resultMap.pagination}" queryForm="formD" divId="rateId" />
 	</div>
 </div>
 <!--_footer 作为公共模版分离出去-->

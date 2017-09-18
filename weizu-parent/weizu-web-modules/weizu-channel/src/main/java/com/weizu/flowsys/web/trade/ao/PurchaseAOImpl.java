@@ -52,6 +52,7 @@ import com.weizu.flowsys.web.channel.ao.ExchangePlatformAO;
 import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
 import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
+import com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface;
 import com.weizu.flowsys.web.channel.dao.OperatorPgDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
@@ -96,6 +97,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 	private ChannelDiscountDao channelDiscountDao;
 	@Resource
 	private ExchangePlatformAO exchangePlatformAO;
+	@Resource
+	private ExchangePlatformDaoInterface exchangePlatformDao;
 //	@Resource
 //	private OperatorPgAO operatorPgAO;
 	@Resource
@@ -208,34 +211,35 @@ public class PurchaseAOImpl implements PurchaseAO {
 			e.printStackTrace();
 			return "订单添加异常";
 		}
-		if(pcVO.getRateId() == null && pcVO.getCdisId() == null){
-			//在测试通道页面上，充值通道暂停，就直接返回通道暂停
-			if(channel.getChannelState() == ChannelStateEnum.CLOSE.getValue()){
-//				orderResult = OrderStateEnum.DAICHONG.getValue();
-//				orderStateDetail = "通道暂停等待";
-				return "充值失败，通道暂停";
-			}
-			//通过通道折扣充值
-			String fromAgencyName = pcVO.getFromAgencyName();
-			/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
-			int orderPath = OrderPathEnum.WEB_PAGE.getValue();
-			int billType = BillTypeEnum.BUSINESS_INDIVIDUAL.getValue();//默认对私
-			ChargeAccountPo accountPo = chargeAccountAO.getAccountByAgencyId(agencyId, billType);
-			agencyBeforeBalance = accountPo.getAccountBalance();
-			orderAmount = pcVO.getOrderAmount();//成本
-			agencyAfterBalance = NumberTool.sub(agencyBeforeBalance, orderAmount);
-			accountPo.setAccountBalance(agencyAfterBalance);
-			chargeAccountAO.updateAccount(accountPo);
-			chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
-				agencyBeforeBalance, agencyAfterBalance, 
-				billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), agencyId, 1 , orderId));
-			
-			AgencyPurchasePo app = new AgencyPurchasePo(agencyId, orderId,null, orderAmount, billType, orderAmount, fromAgencyName, orderPath, orderResult);
-			int aarAdd = agencyPurchaseDao.add(app);
-			if(aarAdd > 0){
-				return chargeByBI(epPo, orderId, pcVO, dataPo.getProductCode());
-			}
-		}else if(pcVO.getRateId() == null && pcVO.getCdisId() != null){//通过通道折扣充值
+//		if(pcVO.getRateId() == null && pcVO.getCdisId() == null){
+//			//在测试通道页面上，充值通道暂停，就直接返回通道暂停
+//			if(channel.getChannelState() == ChannelStateEnum.CLOSE.getValue()){
+////				orderResult = OrderStateEnum.DAICHONG.getValue();
+////				orderStateDetail = "通道暂停等待";
+//				return "充值失败，通道暂停";
+//			}
+//			//通过通道折扣充值
+//			String fromAgencyName = pcVO.getFromAgencyName();
+//			/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
+//			int orderPath = OrderPathEnum.WEB_PAGE.getValue();
+//			int billType = BillTypeEnum.BUSINESS_INDIVIDUAL.getValue();//默认对私
+//			ChargeAccountPo accountPo = chargeAccountAO.getAccountByAgencyId(agencyId, billType);
+//			agencyBeforeBalance = accountPo.getAccountBalance();
+//			orderAmount = pcVO.getOrderAmount();//成本
+//			agencyAfterBalance = NumberTool.sub(agencyBeforeBalance, orderAmount);
+//			accountPo.setAccountBalance(agencyAfterBalance);
+//			chargeAccountAO.updateAccount(accountPo);
+//			chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
+//				agencyBeforeBalance, agencyAfterBalance, 
+//				billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), agencyId, 1 , orderId));
+//			
+//			AgencyPurchasePo app = new AgencyPurchasePo(agencyId, orderId,null, orderAmount, billType, orderAmount, fromAgencyName, orderPath, orderResult);
+//			int aarAdd = agencyPurchaseDao.add(app);
+//			if(aarAdd > 0){
+//				return chargeByBI(epPo, orderId, pcVO, dataPo.getProductCode());
+//			}
+//		}else 
+			if(pcVO.getRateId() == null && pcVO.getCdisId() != null){//通过通道折扣充值
 			String fromAgencyName = pcVO.getFromAgencyName();
 			ChannelDiscountPo cdisPo = null;
 			if(pcVO.getCdisId() != null){
@@ -296,11 +300,11 @@ public class PurchaseAOImpl implements PurchaseAO {
 				/**账户信息的更新结果*/
 				int recordRes = 0;
 				
-				boolean isSecondAgency = agencyVODao.getSecondAgency(agencyId) == null ;
+				boolean isSupperAgency = agencyVODao.getRootAgencyById(agencyId) != null ;//不是超管
 				//在二级代理商的情况下才去判断余额
-				boolean ifLackBalance = isSecondAgency && pcVO.getOrderAmount() > accountPo.getAccountBalance();
+				boolean ifLackBalance = isSupperAgency && pcVO.getOrderAmount() > accountPo.getAccountBalance();
 				if(ifLackBalance){//订单价格大于余额
-					return "余额不足或者不是接口用户，下单失败";
+					return "余额不足，下单失败";
 //				resultMap.put("referURL", "/flowsys/chargePg/purchase_list.do?orderResult=2");
 				}else{
 					/**充值前余额*/
@@ -748,35 +752,42 @@ public class PurchaseAOImpl implements PurchaseAO {
 			//遍历每一个订单，查看它的订单状态
 			for (PurchaseVO purchaseVO2 : records) {//格式化展示时间
 				/**订单列表，订单又不支持回调的时候**/
-				if(isPurchaseList && purchaseVO.getRateId() != null){//只能通过费率id，如果通道或者费率被删除，就得不到最新的订单状态
-					ExchangePlatformPo purchaseEp = exchangePlatformAO.getEpByRateId(purchaseVO.getRateId());
-					boolean negCallBack = purchaseEp.getEpCallBack() != null && purchaseEp.getEpCallBack() == CallBackEnum.NEGATIVE.getValue();
-					if(negCallBack){//不支持回调就用主动查询，查询订单状态
-						BaseInterface bi = SingletonFactory.getSingleton(purchaseEp.getEpEngId(), new BaseP(null,purchaseVO2.getOrderIdApi(),purchaseVO2.getChargeTel(),null,purchaseEp));//查订单状态用api订单号对象去查
-						OrderDTO orderDTO = bi.getOrderState();
-						if(orderDTO == null){
-							logger.config("接口查询订单状态有误");
-							continue;
-						}
-						OrderIn orderIn = orderDTO.getOrderIn();
-						if(orderIn != null){
-							//更新订单状态
-							if(orderIn.getStatus() != purchaseVO2.getOrderState()){//返回状态和原先数据库状态不相符
-								Long ts = orderIn.getCreated_at_time();
-								purchaseVO2.setOrderBackTimeStr(DateUtil.formatAll(ts));
-								purchaseVO2.setOrderState(orderIn.getStatus());
-								purchaseVO2.setOrderStateDetail(orderIn.getMsg());
-								agencyPurchaseAO.updatePurchaseState(purchaseVO2.getOrderId(), orderIn.getStatus(), orderIn.getMsg(),ts);
-								//把查询的结果利用接口推给下游
-								AgencyBackwardPo agencyPo = agencyVODao.get(purchaseVO2.getAgencyId());
-								if(StringHelper.isNotEmpty(agencyPo.getCallBackIp())){//有回调地址的情况下，按照回调地址推送
-									String callBackRes = SendCallBackUtil.sendCallBack(new ResponseJsonDTO(purchaseVO2.getOrderId(), purchaseVO2.getOrderIdFrom(), orderIn.getStatus(), orderIn.getMsg(), ts), agencyPo);
-									System.out.println(agencyPo.getUserName() + "：" +purchaseVO2.getOrderId() + "：" +  callBackRes);
-								}
+				if(isPurchaseList && purchaseVO2.getRateDiscountId() != null){//只能通过费率id，如果通道或者费率被删除，就得不到最新的订单状态
+					ExchangePlatformPo purchaseEp = exchangePlatformDao.getEpByRateId(purchaseVO2.getRateDiscountId());
+					if(purchaseEp == null){
+						purchaseEp = exchangePlatformDao.getEpByCDiscountId(purchaseVO2.getRateDiscountId());
+					}
+					if(purchaseEp != null){
+						boolean negCallBack = purchaseEp.getEpCallBack() != null && purchaseEp.getEpCallBack() == CallBackEnum.NEGATIVE.getValue();
+						if(negCallBack){//不支持回调就用主动查询，查询订单状态
+							BaseInterface bi = SingletonFactory.getSingleton(purchaseEp.getEpEngId(), new BaseP(null,purchaseVO2.getOrderIdApi(),purchaseVO2.getChargeTel(),null,purchaseEp));//查订单状态用api订单号对象去查
+							OrderDTO orderDTO = bi.getOrderState();
+							if(orderDTO == null){
+								logger.config("接口查询订单状态有误");
+								continue;
 							}
-						}else{
-							logger.config(orderDTO.getRspCode() + ":" + orderDTO.getRspMsg());
+							OrderIn orderIn = orderDTO.getOrderIn();
+							if(orderIn != null){
+								//更新订单状态
+								if(orderIn.getStatus() != purchaseVO2.getOrderState()){//返回状态和原先数据库状态不相符
+									Long ts = orderIn.getCreated_at_time();
+									purchaseVO2.setOrderBackTimeStr(DateUtil.formatAll(ts));
+									purchaseVO2.setOrderState(orderIn.getStatus());
+									purchaseVO2.setOrderStateDetail(orderIn.getMsg());
+									agencyPurchaseAO.updatePurchaseState(purchaseVO2.getOrderId(), orderIn.getStatus(), orderIn.getMsg(),ts);
+									//把查询的结果利用接口推给下游
+									AgencyBackwardPo agencyPo = agencyVODao.get(purchaseVO2.getAgencyId());
+									if(StringHelper.isNotEmpty(agencyPo.getCallBackIp())){//有回调地址的情况下，按照回调地址推送
+										String callBackRes = SendCallBackUtil.sendCallBack(new ResponseJsonDTO(purchaseVO2.getOrderId(), purchaseVO2.getOrderIdFrom(), orderIn.getStatus(), orderIn.getMsg(), ts), agencyPo);
+										System.out.println(agencyPo.getUserName() + "：" +purchaseVO2.getOrderId() + "：" +  callBackRes);
+									}
+								}
+							}else{
+								logger.config(orderDTO.getRspCode() + ":" + orderDTO.getRspMsg());
+							}
 						}
+					}else{
+						System.out.println("未找到相关平台信息");
 					}
 				}
 					

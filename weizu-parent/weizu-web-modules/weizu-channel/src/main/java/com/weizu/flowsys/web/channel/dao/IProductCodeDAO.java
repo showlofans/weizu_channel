@@ -32,15 +32,17 @@ public interface IProductCodeDAO extends Dao<ProductCodePo, Long> {
 	 * @createTime:2017年6月8日 上午11:07:32
 	 */
 	int countProductCode(Map<String,Object> map);//findByParms
-
+	
 	/**
-	 * @description: 该编码是否在该通道已经创建 
-	 * @param map
+	 * @description:该编码是否在该通道已经创建 
+	 * @param epId
+	 * @param productCode
+	 * @param serviceType
 	 * @return
-	 * @author:POP产品研发部 宁强
-	 * @createTime:2017年6月9日 下午5:16:29
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月18日 下午12:05:28
 	 */
-	int existProductCode(Integer epId, String productCode);
+	int existProductCode(ProductCodePo productCodePo);
 	
 	/**
 	 * @description: 通过参数查询一个产品编码

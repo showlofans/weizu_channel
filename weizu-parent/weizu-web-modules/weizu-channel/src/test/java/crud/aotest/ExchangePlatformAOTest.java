@@ -65,7 +65,7 @@
 ////	}
 ////	@Test
 ////	public void GetEpByRateId(){
-////		ExchangePlatformPo epPO = exchangePlatformAO.getEpByRateId(19l);
+////		ExchangePlatformPo epPO = exchangePlatformAO.getEpByRateId(21l);
 ////		if(epPO != null){
 ////			System.out.println(epPO.getEpName());
 ////		}

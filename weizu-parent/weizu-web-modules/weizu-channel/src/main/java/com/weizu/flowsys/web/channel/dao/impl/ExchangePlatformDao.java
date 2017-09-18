@@ -68,5 +68,9 @@ public class ExchangePlatformDao extends DaoImpl<ExchangePlatformPo, Integer> im
 	public ExchangePlatformPo getEpByRateId(Long rateId) {
 		return sqlSessionTemplate.selectOne("getEpByRateId", rateId);
 	}
+	@Override
+	public ExchangePlatformPo getEpByCDiscountId(Long CDiscountId) {
+		return sqlSessionTemplate.selectOne("getEpByCDiscountId", CDiscountId);
+	}
 
 }

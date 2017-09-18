@@ -115,6 +115,10 @@ public class AgencyController {
 		if (resultPo != null && "success".equals(resultMsg)) {
 			ChargeAccountPo chargeAccountPo1 = chargeAccountAO
 					.getAccountByAgencyId(resultPo.getId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
+			if(chargeAccountPo1 == null && resultPo.getRootAgencyId() == 0){//超管登陆的时候，默认如果没有对公账户，就给他创建一个对公账户
+				chargeAccountPo1 = new ChargeAccountPo(resultPo.getId(), 0.00d, BillTypeEnum.CORPORATE_BUSINESS.getValue(), System.currentTimeMillis(), agencyBackward.getUserName());
+				chargeAccountAO.createAccount(chargeAccountPo1);//给超管创建一个
+			}
 			//对私账户
 			ChargeAccountPo chargeAccountPo = chargeAccountAO
 					.getAccountByAgencyId(resultPo.getId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
@@ -331,7 +335,7 @@ public class AgencyController {
 	 */
 	@RequestMapping(value = AgencyURL.REGISTER)
 	public ModelAndView register(AgencyBackwardPo agencyBackward,
-			HttpSession httpSession) {
+			HttpServletRequest request) {
 		if (null == agencyBackward) {
 			System.out.println("执行goRegister");
 			return new ModelAndView("/agency/register_page");
@@ -349,12 +353,12 @@ public class AgencyController {
 			if (agencyVO != null) {
 				if(agencyAO.checkSecondAgency(agencyVO.getId()) == 1){
 					//设置访问权限为限制
-					httpSession.setAttribute("power", "limited");
+					request.getSession().setAttribute("power", "limited");
 				}
 				else{
-					httpSession.setAttribute("power", "no");
+					request.getSession().setAttribute("power", "no");
 				}
-				httpSession.setAttribute("loginContext", agencyVO);
+				request.getSession().setAttribute("loginContext", agencyVO);
 				return new ModelAndView("index");
 			} else {
 				Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -496,7 +500,8 @@ public class AgencyController {
 //		ChargeAccountPo chargeAccountPo1 = (ChargeAccountPo) request.getSession().getAttribute("chargeAccount1");//对公
 		int result = agencyAO.updateAgency(vo);
 		if(result > 0){
-			request.getSession().setAttribute("loginContext", vo);
+			AgencyBackwardVO agencyVO = agencyAO.getVOByPo(agencyAO.getAgencyById(vo.getId()));
+			request.getSession().setAttribute("loginContext", agencyVO);
 			response.getWriter().print("success");
 		}else{
 			response.getWriter().print("error");

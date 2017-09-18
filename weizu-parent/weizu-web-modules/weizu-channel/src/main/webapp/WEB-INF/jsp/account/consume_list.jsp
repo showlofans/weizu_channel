@@ -72,7 +72,14 @@
 					<th width="80">交易费用</th>
 					<th width="80">余额</th>
 					<th width="75">交易类型</th>
-					<th width="75">通道类型</th>
+					<c:choose>
+						<c:when test="${loginContext.rootAgencyId == 0 }">
+							<th width="75">通道类型</th>
+						</c:when>
+						<c:otherwise>
+							<th width="75">扣款类型</th>
+						</c:otherwise>
+					</c:choose>
 					<th width="60">交易时间</th>
 				</tr>
 			</thead>

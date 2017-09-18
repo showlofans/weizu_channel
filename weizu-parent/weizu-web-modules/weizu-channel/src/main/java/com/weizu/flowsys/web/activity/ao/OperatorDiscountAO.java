@@ -21,7 +21,7 @@ public interface OperatorDiscountAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月18日 下午4:36:46
 	 */
-	int disccount_addList(RateBackwardVo rateBackwardVo,Integer rootAgencyId);
+//	int disccount_addList(RateBackwardVo rateBackwardVo,Integer rootAgencyId);
 	
 	/**
 	 * @description:查询登录用户是否有该费率名称(添加费率时)

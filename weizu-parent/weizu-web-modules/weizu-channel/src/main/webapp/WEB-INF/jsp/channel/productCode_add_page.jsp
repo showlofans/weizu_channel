@@ -73,13 +73,25 @@
 				 <span class="select-box inline">
 					<select name="serviceType" id="serviceType" class="select" onchange="ajaxGetPg()">
 						<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
-							<c:if test="${serviceTypeEnum.value == resultMap.product_add.operatorType }">
+							<c:if test="${serviceTypeEnum.value == resultMap.product_add.serviceType }">
 								<option value="${serviceTypeEnum.value }" selected="selected" >${serviceTypeEnum.desc }</option>
 							</c:if>
 							<option value="${serviceTypeEnum.value }" >${serviceTypeEnum.desc }</option>
 						</c:forEach>
 					</select>
 				</span> 
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">省份名称</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<span class="select-box inline">
+					<select id="scopeCityCode" name="scopeCityCode" class="select" onchange="ajaxGetPg()">
+						<c:forEach items="${resultMap.scopeCityEnums }" var="cityEnum" varStatus="vs1">
+							<option value="${cityEnum.value }" selected="selected" >${cityEnum.desc }</option>
+						</c:forEach>
+					</select>
+				</span>
 			</div>
 		</div>
 		<div class="row cl">
@@ -95,18 +107,7 @@
 				</span>
 			</div>
 		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">省份名称</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<span class="select-box inline">
-					<select name="scopeCityCode" class="select">
-						<c:forEach items="${resultMap.scopeCityEnums }" var="cityEnum" varStatus="vs1">
-							<option value="${cityEnum.value }" selected="selected" >${cityEnum.desc }</option>
-						</c:forEach>
-					</select>
-				</span>
-			</div>
-		</div>
+		
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">包体编码：</label>
 			<div class="formControls col-xs-8 col-sm-9">
@@ -116,6 +117,7 @@
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
 				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+				<button class="btn btn-primary radius" onClick="cancelEdit()">取消</button>
 			</div>
 		</div>
 	<input id="pgPrice"  type="hidden" value="" name="pgPrice"></input>
@@ -135,6 +137,7 @@
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/validate-methods.js"></script> 
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 <script type="text/javascript">
+
 $().ready(function() {
     $("#product_form").validate({
     	submitHandler: function(){
@@ -147,6 +150,8 @@ $().ready(function() {
 	    	               url:"/flowsys/productCode/product_code_exist.do",             //servlet
 	    	               data:{
 	    	            	  epId :function(){return $("#selectEpId").val().trim();},
+	    	            	  serviceType :function(){return $("#serviceType").val().trim();},
+	    	            	  scopeCityCode :function(){return $("#scopeCityCode").val().trim();},
 	    	               	  productCode :function(){return $("#productCode").val().trim();}
 	    					}
     				},
@@ -203,11 +208,12 @@ function changePg(){
 	var stype = $("#serviceType").val();
 	var otype = $("#operatorType").val();
 	var epId = $('#selectEpId').val();
+	var scopeCityCode = $('#scopeCityCode').val();
 	//alert(stype + "  " + otype);
 	$.ajax({
         type:"post",
         url:"/flowsys/productCode/productCode_add_page/ajax_pg_list.do",
-        data: {operatorType:otype,serviceType:stype,epId:epId},//表单数据
+        data: {operatorType:otype,serviceType:stype,epId:epId,scopeCityCode:scopeCityCode},//表单数据
         dataType: "json",
         async : false,
         success:function(data){

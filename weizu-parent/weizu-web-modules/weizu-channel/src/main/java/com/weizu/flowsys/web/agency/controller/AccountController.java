@@ -120,7 +120,7 @@ public class AccountController {
 			resultMap.put("accountTypeEnum", AccountTypeEnum.toList());
 			//点击金额进入连接，自动填充代理商名称
 			if(chargeRecordPo.getUserName() == null && chargeRecordPo.getAgencyId() != null){
-				AgencyBackwardPo agencyPO = agencyAO.getAgencyById(chargeRecordPo.getAgencyId()+"");
+				AgencyBackwardPo agencyPO = agencyAO.getAgencyById(chargeRecordPo.getAgencyId());
 				if(agencyPO != null){
 					chargeRecordPo.setUserName(agencyPO.getUserName());
 				}
@@ -158,7 +158,7 @@ public class AccountController {
 			resultMap.put("accountTypeEnum", AccountTypeEnum.toList());
 			//点击金额进入连接，自动填充代理商名称
 			if(consumeRecordPo.getUserName() == null && consumeRecordPo.getAgencyId() != null){
-				AgencyBackwardPo agencyPO = agencyAO.getAgencyById(consumeRecordPo.getAgencyId()+"");
+				AgencyBackwardPo agencyPO = agencyAO.getAgencyById(consumeRecordPo.getAgencyId());
 				if(agencyPO != null){
 					consumeRecordPo.setUserName(agencyPO.getUserName());
 				}

@@ -47,52 +47,52 @@ public class OperatorDiscountAOImpl implements OperatorDiscountAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月18日 下午4:42:41
 	 */
-	@Transactional
-	@Override
-	public int disccount_addList(RateBackwardVo rateBackwardVo,Integer rootAgencyId) {
-		List<OperatorDiscountPo> list = new LinkedList<OperatorDiscountPo>();
-		String rateName = rateBackwardVo.getRateName();
-		List<OperatorDiscount> discounts = rateBackwardVo.getOperatorDiscount();//
-		
-		String[] ratePrice = new String[3];
-		for (int i = 0 ; i < discounts.size(); i++) {
-			int operatorType = Integer.parseInt(discounts.get(i).getOperatorType()) ;
-			
-			List<ScopeDiscount> scopeList = discounts.get(i).getList();
-			
-			for (ScopeDiscount scopeDiscount : scopeList) {
-				String scopeName = scopeDiscount.getScopeCityName();
-				double discount = StringUtil2.getDiscount(scopeDiscount.getChannelDiscount());
-				OperatorDiscountPo addPo = new OperatorDiscountPo(operatorType, scopeName, discount, rateName, rootAgencyId);
-				list.add(addPo);
-			}
-			Map<String,Object> map = new HashMap<String,Object>();
-			for (ScopeDiscount scopeDiscount : scopeList) {
-				map.put(scopeDiscount.getScopeCityName(), StringUtil2.getDiscount(scopeDiscount.getChannelDiscount()));
-			}
-			ratePrice[operatorType] = JSONArray.toJSONString(map).toString();
-		}
-		RateBackwardPo rateBackwardPo = new RateBackwardPo(rateName, rootAgencyId, ratePrice[0], ratePrice[1], ratePrice[2], 0,rateBackwardVo.getBillType());
-		Long rateId = rateBackwardDao.nextId();
-		int res = rateBackwardDao.add(rateBackwardPo);
-		for (OperatorDiscountPo odp : list) {
-			odp.setRateId(rateId);//设置费率Id
-		}
-		
-		if(rateBackwardVo.getAgencyId() != null){//判断是否是自动绑定到代理商
-			Long id = rateBackwardDao.nextId()-1;//费率列表id
-			AgencyBackwardPo agencyPo = new AgencyBackwardPo();
-//			agencyPo.setRateId(id);
-			agencyPo.setId(rateBackwardVo.getAgencyId());
-			agencyVODao.updateByAgencyPO(agencyPo);
-		}
-		
-		if(res > 0 ){
-			return operatorDiscountDao.disccount_addList(list);
-		}
-		
-		return 0;
-	}
+//	@Transactional
+//	@Override
+//	public int disccount_addList(RateBackwardVo rateBackwardVo,Integer rootAgencyId) {
+//		List<OperatorDiscountPo> list = new LinkedList<OperatorDiscountPo>();
+//		String rateName = rateBackwardVo.getRateName();
+//		List<OperatorDiscount> discounts = rateBackwardVo.getOperatorDiscount();//
+//		
+//		String[] ratePrice = new String[3];
+//		for (int i = 0 ; i < discounts.size(); i++) {
+//			int operatorType = Integer.parseInt(discounts.get(i).getOperatorType()) ;
+//			
+//			List<ScopeDiscount> scopeList = discounts.get(i).getList();
+//			
+//			for (ScopeDiscount scopeDiscount : scopeList) {
+//				String scopeName = scopeDiscount.getScopeCityName();
+//				double discount = StringUtil2.getDiscount(scopeDiscount.getChannelDiscount());
+//				OperatorDiscountPo addPo = new OperatorDiscountPo(operatorType, scopeName, discount, rateName, rootAgencyId);
+//				list.add(addPo);
+//			}
+//			Map<String,Object> map = new HashMap<String,Object>();
+//			for (ScopeDiscount scopeDiscount : scopeList) {
+//				map.put(scopeDiscount.getScopeCityName(), StringUtil2.getDiscount(scopeDiscount.getChannelDiscount()));
+//			}
+//			ratePrice[operatorType] = JSONArray.toJSONString(map).toString();
+//		}
+//		RateBackwardPo rateBackwardPo = new RateBackwardPo(rateName, rootAgencyId, ratePrice[0], ratePrice[1], ratePrice[2], 0,rateBackwardVo.getBillType());
+//		Long rateId = rateBackwardDao.nextId();
+//		int res = rateBackwardDao.add(rateBackwardPo);
+//		for (OperatorDiscountPo odp : list) {
+//			odp.setRateId(rateId);//设置费率Id
+//		}
+//		
+//		if(rateBackwardVo.getAgencyId() != null){//判断是否是自动绑定到代理商
+//			Long id = rateBackwardDao.nextId()-1;//费率列表id
+//			AgencyBackwardPo agencyPo = new AgencyBackwardPo();
+////			agencyPo.setRateId(id);
+//			agencyPo.setId(rateBackwardVo.getAgencyId());
+//			agencyVODao.updateByAgencyPO(agencyPo);
+//		}
+//		
+//		if(res > 0 ){
+//			return operatorDiscountDao.disccount_addList(list);
+//		}
+//		
+//		return 0;
+//	}
 	/**
 	 * @description:查询登录用户是否有该费率名称(添加费率时)
 	 * @param operatorDiscountPo

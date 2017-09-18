@@ -103,11 +103,11 @@ public class ProductCodeAOImpl implements ProductCodeAO {
 	 * @createTime:2017年6月9日 上午10:13:31
 	 */
 	@Override
-	public List<OperatorPgDataPo> initPgList(Integer epId, int serviceType,int operatorType) {
+	public List<OperatorPgDataPo> initPgList(Integer epId, int serviceType,int operatorType,String scopeCityCode) {
 //		OperatorPgDataPo operatorPgPo = new OperatorPgDataPo();
 //		operatorPgPo.setOperatorType(operatorType);
 //		operatorPgPo.setServiceType(serviceType);
-		List<OperatorPgDataPo> pgList = operatorPgDao.listPgListNotInPcode(epId, serviceType, operatorType);
+		List<OperatorPgDataPo> pgList = operatorPgDao.listPgListNotInPcode(epId, serviceType, operatorType,scopeCityCode);
 		return pgList;
 	}
 
@@ -168,8 +168,8 @@ public class ProductCodeAOImpl implements ProductCodeAO {
 	 * @createTime:2017年6月9日 下午5:19:17
 	 */
 	@Override
-	public boolean existProductCode(Integer epId, String productCode) {
-		if(productCodeDAO.existProductCode(epId, productCode) > 0){
+	public boolean existProductCode(ProductCodePo productCodePo) {
+		if(productCodeDAO.existProductCode(productCodePo) > 0){
 			return false;
 		}
 		return true;

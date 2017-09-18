@@ -52,6 +52,9 @@ public class CompanyCredentialsAOImpl implements CompanyCredentialsAO {
 		CompanyCredentialsPo ccpoC = companyCredentialsDao.checkCraatedByAgencyId(agencyId);
 		int res = 0;
 		if(ccpoC != null){//已经创建了账户认证
+//			if(ccpo.getConfirmState() == ConfirmStateEnum.CONFIRM_PASS.getValue()){
+//				agencyVODao.updateLocal(po)
+//			}
 			res = companyCredentialsDao.updateLocal(ccpo, new WherePrams("agency_id", "=", agencyId));//更新这个代理商的认证信息
 		}else{
 			ccpo.setCommitTime(System.currentTimeMillis());
@@ -150,14 +153,13 @@ public class CompanyCredentialsAOImpl implements CompanyCredentialsAO {
 		//如果确认就，给代理商增加代理商对公账户,同时把用户的等级换成认证用户
 		if(ConfirmStateEnum.CONFIRM_PASS.getValue() == ccpo.getConfirmState()){
 			ChargeAccountPo chargePo = new ChargeAccountPo();
-			chargePo.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());//增加一个对公账户
-			int agencyId = ccpo.getAgencyId();
-			chargePo.setAgencyId(agencyId);
-			AgencyBackwardPo agencyPo = agencyVODao.get(ccpo.getAgencyId());
 			//认证通过后，设置代理商为认证用户
-			agencyPo.setAgencyTag(AgencyTagEnum.DATA_USER.getValue());
-			int popTag = agencyVODao.update(agencyPo);
+			int agencyId = ccpo.getAgencyId();
+			 int popTag = agencyVODao.updateAgencyTag(agencyId, AgencyTagEnum.DATA_USER.getValue());
 			
+			chargePo.setAgencyId(agencyId);
+			chargePo.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());//增加一个对公账户
+			AgencyBackwardPo agencyPo = agencyVODao.get(agencyId);
 			String userName = agencyPo.getUserName();
 			chargePo.setAgencyName(userName);
 			chargePo.setCreateTime(ccpo.getConfirmTime());

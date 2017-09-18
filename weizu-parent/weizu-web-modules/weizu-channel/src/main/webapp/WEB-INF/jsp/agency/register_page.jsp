@@ -30,7 +30,7 @@
 <div class="loginWraper">
   <div id="loginform" class="loginBox">
   <h3 class="title">欢迎注册</h3> 
-    <form class="form form-horizontal" id="lgForm" action="/flowsys/agency/login.do" method="post">
+    <form class="form form-horizontal" id="lgForm" action="/flowsys/agency/register.do" method="post">
       <div class="row cl" >
         <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
         <div class="formControls col-xs-8">
@@ -40,7 +40,7 @@
       <div class="row cl">
         <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60e;</i></label>
         <div class="formControls col-xs-8">
-        	<input id="userPass" name="userPass"  value="${resultMap.reg.userPass }" type="text" class="input-text size-L"" placeholder="密码" >
+        	<input id="userPass" name="userPass"  value="${resultMap.reg.userPass }" type="text" class="input-text size-L" placeholder="密码" >
         </div>
       </div>
       <div class="row cl">
@@ -96,11 +96,12 @@
           <!-- <input name="" type="submit" class="btn btn-default radius size-L" value="&nbsp;登&nbsp;&nbsp;&nbsp;&nbsp;录&nbsp;">
           <input id="goRegist" onclick="startLogin()" class="btn_login" type="button" value="&nbsp;登陆&nbsp;">
           <input name="" type="button" onclick="startRegister()"  class="btn btn-success radius size-L" value="&nbsp;注&nbsp;&nbsp;&nbsp;&nbsp;册&nbsp;"> -->
-          <br>Copyright 南昌微族 by 南昌微族
+         <!--  <br>Copyright 南昌微族 by 南昌微族 -->
         </div>
       </div>
     </form>
   </div>
+  
 </div>
 <!-- <a href="http://www.mycodes.net/" target="_blank">源码之家</a> -->
  <%-- <div class="zhuce_body">

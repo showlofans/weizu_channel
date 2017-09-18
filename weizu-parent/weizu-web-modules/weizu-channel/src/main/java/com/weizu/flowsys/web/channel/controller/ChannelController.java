@@ -100,7 +100,7 @@ public class ChannelController {
 //		
 		resultMap.put("billTypes", BillTypeEnum.toList());
 		//默认用移动的包体
-		resultMap.put("pgSizeStr", operatorPgAO.pgSizeStr(0,0,null));
+		resultMap.put("pgSizeStr", operatorPgAO.pgSizeStr(0,0,null,null));
 		
 		return new ModelAndView("/channel/channel_add_page", "resultMap", resultMap);
 	}
@@ -230,8 +230,8 @@ public class ChannelController {
 	 */
 	@RequestMapping(value= ChannelURL.CHANGE_CHANNEL_PGSIZE)
 	@ResponseBody
-	public void changePgSizeList(Integer operatorType,Integer serviceType,Integer epId,HttpServletResponse response) throws IOException{
-		response.getWriter().print(operatorPgAO.pgSizeStr(operatorType,serviceType,epId));
+	public void changePgSizeList(String scopeCityCode,Integer operatorType,Integer serviceType,Integer epId,HttpServletResponse response) throws IOException{
+		response.getWriter().print(operatorPgAO.pgSizeStr(operatorType,serviceType,epId,scopeCityCode));
 	}
 	
 	/**

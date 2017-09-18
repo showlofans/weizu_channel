@@ -17,8 +17,15 @@ public class ChargeChannelPo {
 	private Integer epId;
 	private String epName;					//平台名字
 	private Double channelDiscount;			//通道折扣
+	private Long cdId;						//通道折扣id
 	private List<OperatorPgDataPo> list;	//包体列表
 	
+	public Long getCdId() {
+		return cdId;
+	}
+	public void setCdId(Long cdId) {
+		this.cdId = cdId;
+	}
 	public List<OperatorPgDataPo> getList() {
 		return list;
 	}
