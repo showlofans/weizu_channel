@@ -26,14 +26,16 @@
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
 <title>微族通道系统</title>
-<meta name="keywords" content="H-ui.admin 3.0,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
-<meta name="description" content="H-ui.admin 3.0，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
+<meta name="keywords" content="">
+<meta name="description" content="">
 </head>
 <body>
 <header class="navbar-wrapper">
 	<div class="navbar navbar-fixed-top">
 		<div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" href="#">微族通道系统Beta</a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="#">微族通道系统Beta</a> 
-			<span class="logo navbar-slogan f-l mr-10 hidden-xs"></span> 
+				<a href="javascript:void(0);" onclick="AddFavorite('微族流量','120.55.162.224:8082')">收 藏 本 站</a>
+			<span class="logo navbar-slogan f-l mr-10 hidden-xs">
+			</span> 
 			<a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:;">&#xe667;</a>
 			<%-- <c:if test="${loginContext.rootAgencyId == 0 }">
 			<nav class="nav navbar-nav">
@@ -259,6 +261,21 @@
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript" src="/view/lib/jquery.contextmenu/jquery.contextmenu.r2.js"></script>
 <script type="text/javascript">
+//收藏本站 www.jb51.net
+function AddFavorite(title, url) {
+ try {
+   window.external.addFavorite(url, title);
+ }
+catch (e) {
+   try {
+    window.sidebar.addPanel(title, url, "");
+  }
+   catch (e) {
+     alert("抱歉，您所使用的浏览器无法完成此操作。\n\n加入收藏失败，请进入新网站后使用Ctrl+D进行添加");
+   }
+ }
+}
+
 $(function(){
 	$("#min_title_list li").contextMenu('Huiadminmenu', {
 		bindings: {

@@ -161,7 +161,7 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">通道名称：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="${resultMap.channelName }" placeholder="例如：wzkj江西移动省内" id="channelName" name="channelName">
+				<input type="text" class="input-text" required="required" value="${resultMap.channelName }" placeholder="例如：wzkj江西移动省内" id="channelName" name="channelName">
 			</div>
 		</div>
 		<input type="hidden" id="billTypeId" value="${resultMap.billType }">
@@ -393,7 +393,7 @@ function checkBoxes(vart){
 	if($(vart).next().is(':hidden')){
 		$(vart).next().show();
 		var scopeCityCode = $(vart).val();
-		alert(scopeCityCode);
+		//alert(scopeCityCode);
 		var operatorType = $("input[name='operatorType']:checked").val();
 		 var serviceType = $("input[name='serviceType']:checked").val();
 		 var epId = $('#epId').val();

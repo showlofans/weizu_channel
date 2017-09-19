@@ -239,7 +239,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 //				return chargeByBI(epPo, orderId, pcVO, dataPo.getProductCode());
 //			}
 //		}else 
-			if(pcVO.getRateId() == null && pcVO.getCdisId() != null){//通过通道折扣充值
+		if(pcVO.getRateId() == null && pcVO.getCdisId() != null){//通过通道折扣充值
 			String fromAgencyName = pcVO.getFromAgencyName();
 			ChannelDiscountPo cdisPo = null;
 			if(pcVO.getCdisId() != null){

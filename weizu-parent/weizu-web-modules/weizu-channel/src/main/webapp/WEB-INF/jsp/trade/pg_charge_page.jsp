@@ -28,7 +28,7 @@
  </head>
  <body>
  <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 在线充值 <span class="c-gray en">&gt;</span> 单号充值<!--  <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> --></nav>
- <article class="page-container">
+<article class="page-container">
  	<form class="form form-horizontal" action="/flowsys/chargePg/pg_charge.do" method="post"  id="form-charge">
  	<input type="hidden" name="channelId" id="channelId">
  	<input type="hidden" name="billType" id="billType">
@@ -70,8 +70,12 @@
 							</c:forEach>
 						</select>
 					</span>
+						<!-- <span style="width: 300;" onclick="showNext(this)" title="提示信息"><i class="Hui-iconfont">&#xe6cd;</i></span>
+						<span class="select-box inline" style="display:none;" >
+						</span> -->
 			</div>
 		</div>
+		
 		
 	<div class="row cl" id="pg">
 		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流量面值：</label>
@@ -100,9 +104,32 @@
 			<br>折扣：<span id="rateDiscount" class="c-red"></span>
 		</div>
 	</div>
+	
 	<div class="row cl">
 		<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
 			<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+		</div>
+	</div>
+	<div class="row cl" id="pg">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>充值提示：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+		<!--  onfocus="ajaxPg()" -->
+			<textarea readonly="readonly" style="height:350px;  " name="" cols="30" rows="" class="textarea"  placeholder="介绍属性介绍，
+省内流量  （使用范围-本省——只限本省号码充值）
+省漫游流量（使用范围-全国——只限本省号码充值）
+全国流量  （使用范围-全国——全国号码均可充值）
+
+温馨提示!
+流量充值到账以查询官方为准。
+充值结果可在，订单列表查看，
+充值成功后（1-10分钟查询）
+如长时间订单号显示结果（充值等待）-（结果显示失败）
+可直接联系您的上游（在平台个人信息里面有您上游的QQ）
+
+本司上班时间（9:00-00:00）
+如不在上班时间出现问题，亲耐心等待。
+我司承若如遇卡单24小时内返回结果。
+给您带来不便敬请谅解！"></textarea>
 		</div>
 	</div>
 	</form>
@@ -115,6 +142,13 @@
   <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
   <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
  <script type="text/javascript">
+/*  function showNext(vart){
+	 if($(vart).next().is(':hidden')){
+		 $(vart).next().show();
+	 }else{
+		 $(vart).next().hide();
+	 }
+ } */
  $().ready(function() {
 	 if($('#pageMsg').val() != ''){
 		 alert($('#pageMsg').val());
