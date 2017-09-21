@@ -151,6 +151,15 @@ public interface AgencyVODaoInterface extends Dao<AgencyBackwardPo, Integer> {
 	AgencyBackwardPo getRootAgencyById(int agencyId);
 	
 	/**
+	 * @description:通过账户id获得代理商信息
+	 * @param accountId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月21日 下午2:50:19
+	 */
+//	AgencyBackwardPo getAgencyByAccountId(int accountId);
+	
+	/**
 	 * @description: 更新密码
 	 * @param agencyId
 	 * @param userPass

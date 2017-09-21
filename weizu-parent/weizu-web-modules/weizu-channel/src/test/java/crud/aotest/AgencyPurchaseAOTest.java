@@ -38,4 +38,9 @@
 ////		int res = agencyPurchaseDao.ap_addList(list);
 //////		System.out.println(res);
 ////	}
+//	@Test
+//	public void getOrderAmount(){
+//		Double orderAmount = agencyPurchaseDao.getOrderAmount(735696780196319232l, 1);
+//		System.out.println(orderAmount);
+//	}
 //}

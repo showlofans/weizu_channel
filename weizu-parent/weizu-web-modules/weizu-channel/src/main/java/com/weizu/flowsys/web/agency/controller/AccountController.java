@@ -114,13 +114,14 @@ public class AccountController {
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVo != null){
 			chargeRecordPo.setAccountType(AccountTypeEnum.INCREASE.getValue());
+//			chargeRecordPo.setAgencyId(agencyVo.getId());
 			Pagination<ChargeRecordPo> pagination =  chargeRecordAO.listChargeRecord(resultMap, agencyVo.getId(), chargeRecordPo, pageParam);
 			resultMap.put("pagination", pagination);
 			resultMap.put("billTypeEnum", BillTypeEnum.toList());
 			resultMap.put("accountTypeEnum", AccountTypeEnum.toList());
 			//点击金额进入连接，自动填充代理商名称
-			if(chargeRecordPo.getUserName() == null && chargeRecordPo.getAgencyId() != null){
-				AgencyBackwardPo agencyPO = agencyAO.getAgencyById(chargeRecordPo.getAgencyId());
+			if(chargeRecordPo.getUserName() == null && chargeRecordPo.getAccountId() != null){
+				AgencyBackwardPo agencyPO = agencyAO.getAgencyByAccountId(chargeRecordPo.getAccountId());
 				if(agencyPO != null){
 					chargeRecordPo.setUserName(agencyPO.getUserName());
 				}
@@ -149,13 +150,15 @@ public class AccountController {
 			pageParam = new PageParam(1, 10);
 		}
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		if(agencyVo != null){
-			consumeRecordPo.setAgencyId(agencyVo.getId());
-			Pagination<ConsumeRecordPo> pagination =  chargeRecordAO.listConsumeRecord(resultMap,agencyVo.getId(),consumeRecordPo, pageParam);
+			Integer contextId = agencyVo.getId();
+//			consumeRecordPo.setAgencyId(contextId);
+			Pagination<ConsumeRecordPo> pagination =  chargeRecordAO.listConsumeRecord(resultMap,contextId,consumeRecordPo, pageParam);
 			resultMap.put("pagination", pagination);
 			resultMap.put("billTypeEnum", BillTypeEnum.toList());
-			resultMap.put("accountTypeEnum", AccountTypeEnum.toList());
+			resultMap.put("accountTypeEnum", AccountTypeEnum.toConsumeList());
 			//点击金额进入连接，自动填充代理商名称
 			if(consumeRecordPo.getUserName() == null && consumeRecordPo.getAgencyId() != null){
 				AgencyBackwardPo agencyPO = agencyAO.getAgencyById(consumeRecordPo.getAgencyId());
@@ -288,7 +291,7 @@ public class AccountController {
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVo != null)
 		{
-			ccpo.initBase(agencyVo.getId(), agencyVo.getRootAgencyId(), ccpo.getConfirmState());
+			ccpo.initBase(agencyVo.getId(),agencyVo.getUserName(), agencyVo.getRootAgencyId(), ccpo.getConfirmState());
 			String res = companyCredentialsAO.addCompanyCredential(ccpo);
 //			chargeAccountPo.setAgencyId(agencyVo.getId());
 //			String realPath=request.getSession().getServletContext().getRealPath("/");

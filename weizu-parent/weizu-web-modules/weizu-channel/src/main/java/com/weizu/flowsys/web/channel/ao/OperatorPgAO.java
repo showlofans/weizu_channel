@@ -143,5 +143,13 @@ public interface OperatorPgAO {
 	 */
 	Map<String,Object> getBy(SuperPurchaseParam spp);
 	
+	/**
+	 * @description: 是否存在该包体
+	 * @param pg
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月20日 上午9:47:58
+	 */
+//	String exitsPg(OperatorPgDataPo pg);
 //	boolean checkScopeIsAccept(Integer loginAgencyId, String scopeCityName);
 }

@@ -114,6 +114,35 @@ public enum AccountTypeEnum {
 
 		return operatorNameMapList;
 	}
+	/**
+	 * @description:订单消费账户类型枚举
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月21日 上午11:48:21
+	 */
+	public static List<Map<String, Object>> toConsumeList()
+	{
+		// 获取附件类型枚举数组
+		AccountTypeEnum[] enumArray = AccountTypeEnum.values();
+		
+		// 定义枚举list
+		List<Map<String, Object>> operatorNameMapList = new ArrayList<Map<String, Object>>(enumArray.length);
+		
+		for (AccountTypeEnum accountTypeEnum : enumArray)
+		{
+			if(accountTypeEnum.getValue() == INCREASE.getValue()){
+				continue;
+			}
+			Map<String, Object> accountTypeMap = new HashMap<String, Object>(2);
+			accountTypeMap.put("desc", accountTypeEnum.getDesc());
+			accountTypeMap.put("value", accountTypeEnum.getValue());
+			
+			operatorNameMapList.add(accountTypeMap);
+		}
+		
+		return operatorNameMapList;
+	}
+	
 	
 	private AccountTypeEnum(String desc, Integer value) {
 		this.desc = desc;

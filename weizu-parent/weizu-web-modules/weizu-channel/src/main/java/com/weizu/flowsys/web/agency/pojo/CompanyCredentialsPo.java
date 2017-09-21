@@ -69,6 +69,8 @@ public class CompanyCredentialsPo extends Po{
     private String commitTimeStr;						//提交时间str
     @TempField
     private String confirmTimeStr;						//审核时间str
+
+    private String agencyName;							//待验证代理商名字
     
     private Long confirmTime;							//审核时间
 
@@ -86,13 +88,22 @@ public class CompanyCredentialsPo extends Po{
 		this.confirmState = confirmState;
 	}
     
-    public void initBase(Integer agencyId, Integer confirmAgencyId,
+    public void initBase(Integer agencyId,String agencyName, Integer confirmAgencyId,
 			Integer confirmState){
     	this.agencyId = agencyId;
 		this.confirmAgencyId = confirmAgencyId;
 		this.confirmState = confirmState;
+		this.agencyName = agencyName;
     }
     
+	public String getAgencyName() {
+		return agencyName;
+	}
+
+	public void setAgencyName(String agencyName) {
+		this.agencyName = agencyName;
+	}
+
 	public String getCommitTimeStr() {
 		return commitTimeStr;
 	}

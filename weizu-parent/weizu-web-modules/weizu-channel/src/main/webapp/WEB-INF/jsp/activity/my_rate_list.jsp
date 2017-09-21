@@ -49,9 +49,9 @@
 					<th>运营商类型</th>
 					<th >业务类型</th>
 					<th>折扣</th>
-					<th>费率类型</th>
+					<th>折扣类型</th>
 					<th>设置折扣</th>
-					<th>是否带票</th>
+					<th>是否带</th>
 					<!-- <th>修改时间</th> -->
 					<!-- <th>通道规格</th> -->
 					
@@ -83,7 +83,7 @@
 								</c:if>
 							</c:forEach>
 						</td> 
-						<td class="c-blue">${ratePo.activeDiscount }</td>
+						<td class="c-blue myDiscount">${ratePo.activeDiscount }</td>
 						<td style="display:none;" class="channelDiscountId">${ratePo.channelDiscountId }</td><!-- 通道折扣id -->
 						<td style="display:none;" class="id">${ratePo.id }</td><!-- 通道折扣id -->
 						<td style="display:none;" class="agencyId">${ratePo.agencyId }</td><!-- 通道折扣id -->
@@ -97,7 +97,7 @@
 							<c:when test="${empty ratePo.discountList }">
 								<td><input type="text" value="" class="activeDiscount input-text" name="activeDiscount" id="" placeholder=" 费率折扣" style="width:80px"></td>
 								<td>
-									<select name="billType"  class="billType select" onchange="getBillType(this)">
+									<select name="billType"  class=" billType select" onchange="getBillType(this)">
 										<!-- <option value="">请选择</option> -->
 										<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
 											<option value="${billTypeEnum.value }" >${billTypeEnum.desc }</option>
@@ -108,7 +108,7 @@
 							<c:otherwise>
 								<td><input type="text" value="${ratePo.discountList[0].activeDiscount }" class="activeDiscount input-text" name="activeDiscount" id="" placeholder=" 费率折扣" style="width:80px"></td>
 								<td><!-- <span class="select-box inline"> -->
-									<select class="select-box inline billType select" onchange="getBillType(this)">
+									<select class=" billType select" onchange="getBillType(this)">
 										<!-- <option value="">请选择</option> -->
 											<!-- 选中列表第一个费率 -->
 										<c:forEach items="${ratePo.discountList }" var="disPo" varStatus="vs1">
@@ -194,11 +194,13 @@ function addUp(vart){//vart是提交按钮
 	//var billType = arr[0];
 	//var billType =  $(vart).parents('td').prev().children('.billType').find('option:selected').val();
 	var cDiscountId = $(vart).parents('tr').children('.channelDiscountId').html().trim();//通道折扣Id
-	alert(cDiscountId);
+	//alert(cDiscountId);
 	var agencyId = $('#childAgencyId').val();//代理商Id
 	//alert(agencyId);
 	var activeId = $(vart).parents('tr').children('.id').html().trim();//父级折扣Id
-	var activeDiscount = $(vart).parents('td').prev().prev().children('.activeDiscount').val().trim();
+	var $ad = $(vart).parents('td').prev().prev().children('.activeDiscount');
+	//var activeDiscount = $(vart).parents('td').prev().prev().children('.activeDiscount').val().trim();
+	var activeDiscount = $ad.val().trim();
 	var agencyName = $('#agencyName').val();
 	
 	/* alert(activeId);
@@ -207,60 +209,86 @@ function addUp(vart){//vart是提交按钮
 	if(activeDiscount != "" && activeDiscount != null){
 		//alert(optionIn);
 		//alert(optionIn.indexOf('-'));
-	if(optionIn.indexOf('-') == -1){//没有自己的折扣
-		billType = $(vart).parents('td').prev().children('.billType').find('option:selected').val();
-		layer.confirm('确认给'+agencyName+'增加费率吗？',function(index){
-			$.ajax({
-				type: 'POST',
-				async: false,
-				url: '/flowsys/rate/add_my_rate.do',
-				//dataType: 'json',
-				data: { activeDiscount:activeDiscount, activeId:activeId, channelDiscountId:cDiscountId, billType:billType},
-				success: function(data){
-					layer.close(index);
-					layer.msg('更新成功', {icon:5,time:1000});
-					location.reload();
-				},
-				error:function(data) {
-					console.log(data.msg);
-				},
-			});	
-		});
-		
-		//$(vart).removeAttr('disabled');
-		//$(vart).attr("disabled",'disabled');
-	}else{//有自己的折扣
-		var id = $(vart).parents('td').prev().children('.billType').find('option:selected').val();//自己折扣id
-		var arr = optionIn.split('-');
-		//var nowActiveDis = arr[2];
-		if(arr[1] != activeDiscount ){//发送ajax请求
-			layer.confirm('确认给'+agencyName+'修改费率吗？',function(index){
-				$.ajax({
-					type: 'POST',
-					async: false,
-					url: '/flowsys/rate/add_my_rate.do',
-					//dataType: 'json',
-					data: {id:id, activeDiscount:activeDiscount},
-					success: function(data){
-						layer.close(index);
-						layer.msg('更新成功', {icon:5,time:1000});
-						location.reload();
-					},
-					error:function(data) {
-						console.log(data.msg);
-					},
-				});	
-				
-			});
-			
+		var myDiscount = $(vart).parents('tr').children('.myDiscount').html().trim();
+		if(parseFloat(myDiscount) > parseFloat(activeDiscount)){
+			layer.confirm('设置的折扣不能小于自己的折扣!<br>', {
+				  btn: ['确定'] //按钮
+				}, function(){
+					$ad.val('');
+					layer.msg('请重新设置折扣', {icon: 5});
+					$ad.focus();
+				  /* layer.msg('也可以这样', {
+				    time: 20000, //20s后自动关闭
+				    btn: ['明白了', '知道了']
+				  }); */
+				});
 		}else{
-			alert('已经设置了该折扣');
-			//alert(1);
-			//$(vart).attr("disabled",'disabled');
-		}
-	}
+			if(optionIn.indexOf('-') == -1){//没有自己的折扣
+				billType = $(vart).parents('td').prev().children('.billType').find('option:selected').val();
+				layer.confirm('确认给'+agencyName+'增加费率吗？',function(index){
+					$.ajax({
+						type: 'POST',
+						async: false,
+						url: '/flowsys/rate/add_my_rate.do',
+						//dataType: 'json',
+						data: { activeDiscount:activeDiscount, activeId:activeId, channelDiscountId:cDiscountId, billType:billType},
+						success: function(data){
+							layer.close(index);
+							layer.msg('更新成功', {icon:1,time:1000});
+							location.reload();
+						},
+						error:function(data) {
+							console.log(data.msg);
+						},
+					});	
+				});
+				
+				//$(vart).removeAttr('disabled');
+				//$(vart).attr("disabled",'disabled');
+			}else{//有自己的折扣
+				var id = $(vart).parents('td').prev().children('.billType').find('option:selected').val();//自己折扣id
+				var arr = optionIn.split('-');
+				//var nowActiveDis = arr[2];
+				if(arr[1] != activeDiscount ){//发送ajax请求
+					layer.confirm('确认给'+agencyName+'修改费率吗？',function(index){
+						$.ajax({
+							type: 'POST',
+							async: false,
+							url: '/flowsys/rate/add_my_rate.do',
+							//dataType: 'json',
+							data: {id:id, activeDiscount:activeDiscount},
+							success: function(data){
+								layer.close(index);
+								layer.msg('更新成功', {icon:1,time:1000});
+								location.reload();
+							},
+							error:function(data) {
+								console.log(data.msg);
+							},
+						});	
+						
+					});
+					
+				}else{
+					layer.alert('已经设置了该折扣', {
+					    skin: 'layui-layer-lan'
+					    ,closeBtn: 0
+					    ,anim: 4 //动画类型
+				    });
+					//alert('已经设置了该折扣');
+					//alert(1);
+					//$(vart).attr("disabled",'disabled');
+				}
+			}
+		} 
+			
 	}else{
-		alert('折扣不能为空');
+		layer.alert('折扣不能为空', {
+		    skin: 'layui-layer-lan'
+		    ,closeBtn: 0
+		    ,anim: 4 //动画类型
+	    });
+		//alert('折扣不能为空');
 	} 
 	
 	//alert(optionIn);

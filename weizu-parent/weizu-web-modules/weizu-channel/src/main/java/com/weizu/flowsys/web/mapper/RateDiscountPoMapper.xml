@@ -38,6 +38,22 @@
   <sql id="My_Rate_List">
   	rate.id, rate.active_id, active_discount,channel_discount_id,rate.bill_type 
   </sql>
+  
+  <!-- 根据通道折扣差额修改费率折扣 -->
+  <update id="updateRateDiscountByCDId" parameterType="map">
+  	update <include refid="t_rateD"></include>
+  	<set>
+  		<if test="editDiscount != null">
+	  		active_discount = active_discount + #{editDiscount}
+  		</if>
+  	</set>
+  	<where>
+  		<if test="channelDiscountId != null">
+  			channel_discount_id = #{channelDiscountId}
+  		</if>
+  	</where>
+  </update>
+  
   <!-- 获得子费率列表 -->
    <select id="getMyChildRate" parameterType="map" resultMap="MyRateResultMap">
   	select <include refid="My_Rate_List"></include>

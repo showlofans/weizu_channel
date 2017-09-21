@@ -273,6 +273,7 @@ function batch_bind(title,url,id,w,h){
 
 //onchange获得折扣
 function dischange(){
+	//alert(1);
 	$('#formD').submit();
 }
 //更新绑定状态
@@ -362,10 +363,9 @@ function setDiscount(){
 	       		 //alert(i);//从0开始
 	   				//alert(item.channelName);
 	       		 ///不管有没有通道
-	       		 
 	          });
-	       	$('#formD').submit();
    		 }
+	      $('#formD').submit();
        	//location.reload();//重新加载最新折扣的数据
    		 
 			//layer.msg('添加成功!',{icon:1,time:1000});
@@ -380,7 +380,7 @@ function setDiscount(){
 function addRate(url,title){
 	//alert("sd");
 	var cDId = $("#channelDiscountId").val();
-	var billType = $("#billTypeRate").val();
+	//var billType = $("#billTypeRate").val();
 	//var cId = $('channelId').val();
 	//layer_show(title,url+'?channelDiscountId=' + cDId,'','510');
 	//location.reload();
@@ -390,7 +390,7 @@ function addRate(url,title){
         area: ['530px', '510px'],
         maxmin: false,
         closeBtn: 1,
-        content: url+'?channelDiscountId=' + cDId + '&billType=' + billType+ '&fromTag=add',
+        content: url+'?channelDiscountId=' + cDId + '&fromTag=add',
          end: function () {
             location.reload();
         }

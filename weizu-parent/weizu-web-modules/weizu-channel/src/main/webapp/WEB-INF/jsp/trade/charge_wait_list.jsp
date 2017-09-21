@@ -85,7 +85,7 @@
 		            <input style="width:150px" type="text" class="input-text" id="arriveEndTimeStr" name="arriveEndTimeStr"   value="${resultMap.searchParams.arriveEndTimeStr }"  onfocus="WdatePicker({startDate:'%y-%M-%d 23:59:59',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'arriveStartTimeStr\')}',onpicked:function(){formSub();}})"/>
 					
 					<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
-					<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+					<button class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 					<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 					<input type="hidden" name="orderResult" value="${resultMap.searchParams.orderResult }">
 				</div>
@@ -93,12 +93,17 @@
 				<div class="input-group" style="width:150px"><span class="input-group-addon"><i class="fa fa-calendar ft13em"></i></span> <input type="text" placeholder="结束时间" data-date-format="YYYY-MM-DD HH:mm:ss" name="created_end" id="created_end"></div>
 				</div>  -->
 		</form>
+		<div class="cl pd-5 bg-1 bk-gray mt-20">
+			 <span class="l"><a href="javascript:;" onclick="batchCommit()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe603;</i> 批量提交</a></span>
+		</div>
+					
 	</div>
 	<!-- <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加资讯" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加资讯</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div> -->
 	<div class="mt-20">
 		<table class="table table-border table-bordered table-bg table-hover table-sort">
 			<thead>
 				<tr class="text-c">
+					<th width="25"><input type="checkbox" name="" value=""></th>
 					<th width="100">所属代理商</th>
 					<th width="150">订单号</th>
 					<th width="100">手机号</th>
@@ -122,6 +127,7 @@
 			<tbody>
 				<c:forEach items="${resultMap.pagination.records }" var="purchase" varStatus="vs">
 					<tr class="text-c">
+						<td><input type="checkbox" class="ckpur" value="" name=""></td>
 						<td>${purchase.agencyName }</td>
 						<td>${purchase.orderId }</td>
 						<td>${purchase.chargeTel }</td>
@@ -206,6 +212,13 @@
 <script src="/view/lib/bootstrap-datetimepicker.min.js"></script>
 <script src="/view/lib/bootstrap-datetimepicker.zh-CN.js"></script> -->
 <script type="text/javascript">
+/**批量提交*/
+function batchCommit(){
+	$(".ckpur:checked").each(function(){
+		//alert(1);
+		
+	})
+}
 function formSub(){
 	$('form').submit();
 }

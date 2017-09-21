@@ -29,7 +29,7 @@ public class ChargeRecordDao extends DaoImpl<ChargeRecordPo, Long> implements Ch
 	 */
 	@Override
 	public List<ChargeRecordPo> listChargeRecord(Map<String, Object> paramsMap) {
-		return sqlSessionTemplate.selectList("selectChargeList", paramsMap);
+		return sqlSessionTemplate.selectList("listChargeRecord", paramsMap);
 	}
 
 

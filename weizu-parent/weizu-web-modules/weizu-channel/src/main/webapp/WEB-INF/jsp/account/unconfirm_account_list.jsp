@@ -53,6 +53,7 @@
 			<thead>
 				<tr class="text-c">
 					<!-- <th width="80">流量包Id</th> -->
+					<th width="80">代理商名称</th>
 					<th width="80">公司名称</th>
 					<th width="60">银行账号</th>
 					<th width="80">发票收件人</th>
@@ -73,6 +74,7 @@
 				<c:forEach items="${resultMap.unconfirmList }" var="unconfirm" varStatus="vs">
 					<tr class="text-c">
 						<%-- <td>${pg.pgId }</td> --%>
+						<td>${unconfirm.agencyName }</td>
 						<td>${unconfirm.companyName }</td>
 						<td>${unconfirm.bankAccount }</td><!-- 代理名称 -->
 						<td>${unconfirm.billRecipientsName }</td>

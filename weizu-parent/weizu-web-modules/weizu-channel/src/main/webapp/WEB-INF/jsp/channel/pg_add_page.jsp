@@ -41,15 +41,9 @@
 			</div>
 		</div>
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2">流量大小：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" required="required"  style="width:100px" value="" placeholder="" id="pgSize" name="pgSize">M
-			</div>
-		</div>
-		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>运营商类型：</label>
 			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select name="operatorType" class="select" onchange="btnChange(this[selectedIndex].value);">
+				<select name="operatorType" class="select" id="operatorType" onchange="btnChange(this[selectedIndex].value);">
 					<option value="">运营商类型</option>
 					<c:forEach items="${resultMap.pgTypeEnums }" var="pgType" varStatus="vs1">
 						<option value="${pgType.value }">${pgType.desc }</option>
@@ -64,6 +58,24 @@
 			</div>
 		</div>
 		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>业务类型：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select id="serviceType" name="serviceType" class="select">
+					<!-- <option value="">业务类型</option> -->
+					<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceType" varStatus="vs1">
+						<option value="${serviceType.value }">${serviceType.desc }</option>
+					</c:forEach>
+				</select>
+				</span> </div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">流量大小：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" required="required"  style="width:100px" value="" placeholder="" id="pgSize" name="pgSize">M
+			</div>
+		</div>
+		
+		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">原价：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" style="width:100px" required="required" class="input-text"  value="" placeholder="" id="pgPrice" name="pgPrice">元
@@ -75,17 +87,6 @@
 				<select name="pgInService" class="select">
 					<c:forEach items="${resultMap.pgInServiceEnums }" var="pgInService" varStatus="vs1">
 						<option value="${pgInService.value }">${pgInService.desc }</option>
-					</c:forEach>
-				</select>
-				</span> </div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>业务类型：</label>
-			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select name="serviceType" class="select">
-					<!-- <option value="">业务类型</option> -->
-					<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceType" varStatus="vs1">
-						<option value="${serviceType.value }">${serviceType.desc }</option>
 					</c:forEach>
 				</select>
 				</span> </div>
@@ -115,6 +116,23 @@
 <script type="text/javascript">
 $().ready(function() {
     $("#form-pg-add").validate({
+    	rules:{
+    		pgSize : {
+    			remote:{//验证用户名是否存在
+    				  type:"get",
+    	               url:"/flowsys/operatorPg/pg_exist.do",             //servlet
+    	               data:{
+    	            	   pgSize :function(){return $("#pgSize").val().trim();},
+    	            	   serviceType :function(){return $("#serviceType").val().trim();},
+    	            	   operatorType :function(){return $("#operatorType").val().trim();}
+	    			}
+    			}
+    		}
+    	},
+    	messages:{
+    		pgSize:{ remote:jQuery.format("该包体已添加")}
+    	},
+    	
     	submitHandler : function(form) {
     		$.ajax({
 		        type:"post",

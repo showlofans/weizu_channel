@@ -3,6 +3,7 @@ package com.weizu.flowsys.web.channel.controller;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSONObject;
+import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
@@ -25,13 +27,17 @@ import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.ServiceScopeAO;
+import com.weizu.flowsys.web.activity.url.RateURL;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.channel.ao.ChannelChannelAO;
+import com.weizu.flowsys.web.channel.ao.ChannelDiscountAO;
 import com.weizu.flowsys.web.channel.ao.ExchangePlatformAO;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
+import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 import com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
+import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.url.ChannelURL;
 import com.weizu.web.foundation.String.StringHelper;
@@ -67,6 +73,10 @@ public class ChannelController {
 	
 	@Resource
 	private ChargeAccountAo chargeAccountAO;
+	@Resource
+	private ChannelDiscountDao channelDiscountDao;
+//	@Resource
+//	private ChannelDiscountAO channelDiscountAO;
 	
 	/**
 	 * @description:通道添加页面
@@ -353,6 +363,40 @@ public class ChannelController {
 			e.printStackTrace();
 		}
 //		return new ModelAndView("/channel/activity_channel_list");
+	}
+	/**
+	 * @description: 编辑修改通道
+	 * @param cdPo
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月20日 下午4:18:41
+	 */
+	@ResponseBody
+	@RequestMapping(value= ChannelURL.EDIT_CHANNEL_DISCOUNT)
+	public String editChannelD(ChannelChannelPo channelPo){
+		channelPo.setLastAccess(System.currentTimeMillis());
+		String res = channelChannelAO.editChannel(channelPo);
+		return res;
+	} 
+	
+	@RequestMapping(value= ChannelURL.CHANNEL_EDIT_PAGE)
+	public ModelAndView addBindRatePage(Long channelId){
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		List<ChannelDiscountPo> cdList = channelDiscountDao.list(new WherePrams("channel_id", "=", channelId));
+		resultMap.put("cdList",cdList);
+		if(cdList != null && cdList.size() > 0){
+			ChannelDiscountPo cdPo = cdList.get(0);
+			resultMap.put("billType",cdPo.getBillType());
+			resultMap.put("operatorType",cdPo.getOperatorType());
+			resultMap.put("serviceType",cdPo.getServiceType());
+			resultMap.put("channelName",cdPo.getChannelName());
+		}
+		resultMap.put("channelId",channelId);
+		resultMap.put("otypeEnums", OperatorTypeEnum.toList());
+		resultMap.put("stypeEnums", ServiceTypeEnum.toList());
+		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
+		resultMap.put("billTypeEnums", BillTypeEnum.toList());
+		return new ModelAndView("/channel/channel_edit_page", "resultMap", resultMap);
 	}
 	
 }

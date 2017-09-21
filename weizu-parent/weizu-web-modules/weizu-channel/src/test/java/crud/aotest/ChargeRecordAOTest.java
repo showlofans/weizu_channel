@@ -68,22 +68,24 @@
 //	 * @author:POP产品研发部 宁强
 //	 * @createTime:2017年8月4日 下午4:08:26
 //	 */
-////	@Test
-////	public void testListConsumeRecord(){
+//	@Test
+//	public void testListConsumeRecord(){
 ////		ConsumeRecordPo crp = new ConsumeRecordPo();
 //////		crp.setAgencyId(4);
-////		Map<String,Object> parmasMap = new HashMap<String,Object>();
+//		Map<String,Object> parmasMap = new HashMap<String,Object>();
+//		parmasMap.put("agencyId", 1);
 ////		Pagination<ConsumeRecordPo> pagination = chargeRecordAO.listConsumeRecord(parmasMap,4, crp, new PageParam(1, 10));
 ////		List<ConsumeRecordPo> list = pagination.getRecords();	
 //////		 System.out.println(list.size());
 ////		 System.out.println(list.get(0).getRemittanceTimeStr());
 ////		 System.out.println(list.get(0).getRemittanceTime());
 ////		 System.out.println(list.get(0).getPurchaseId());
-//////		 for (ConsumeRecordPo po : list) {
-//////			 System.out.println(po.getRemittanceTimeStr());
-////////			System.out.println("username:"+chargeRecordPo.getUserName());
-//////		}
-////	}
+//		System.out.println(chargeRecordDao.countConsume(parmasMap));
+////		 for (ConsumeRecordPo po : list) {
+////			 System.out.println(po.getRemittanceTimeStr());
+//////			System.out.println("username:"+chargeRecordPo.getUserName());
+////		}
+//	}
 //	
 //	/**
 //	 * @description: 批量添加

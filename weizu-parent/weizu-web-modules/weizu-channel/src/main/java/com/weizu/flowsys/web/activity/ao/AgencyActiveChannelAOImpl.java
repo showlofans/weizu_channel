@@ -473,7 +473,7 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 				}
 				return agencyActiveChannelDao.batchUpdateBindState(aardto.getRateDiscountId(), aardto.getBindState(), agencyIds);
 			}else{
-				return 0;
+				return -1;
 			}
 		}else{//解绑
 			return agencyActiveChannelDao.batchUpdateBindState(aardto.getRateDiscountId(), aardto.getBindState());

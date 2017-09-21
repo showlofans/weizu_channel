@@ -26,14 +26,16 @@
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
 <title>微族通道系统</title>
-<meta name="keywords" content="H-ui.admin 3.0,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
-<meta name="description" content="H-ui.admin 3.0，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
+<meta name="keywords" content="">
+<meta name="description" content="">
 </head>
 <body>
 <header class="navbar-wrapper">
 	<div class="navbar navbar-fixed-top">
 		<div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" href="#">微族通道系统Beta</a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="#">微族通道系统Beta</a> 
-			<span class="logo navbar-slogan f-l mr-10 hidden-xs"></span> 
+				<a href="javascript:void(0);" onclick="AddFavorite('微族流量','120.55.162.224:8082')">收 藏 本 站</a>
+			<span class="logo navbar-slogan f-l mr-10 hidden-xs">
+			</span> 
 			<a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:;">&#xe667;</a>
 			<%-- <c:if test="${loginContext.rootAgencyId == 0 }">
 			<nav class="nav navbar-nav">
@@ -165,12 +167,25 @@
 					</c:choose> --%>
 					<li><a data-href="/flowsys/account/open_company_account_page.do" data-title="开通对公账号" href="javascript:void(0)">开通对公账号</a></li>
 				</c:if>
-				<li><a data-href="/flowsys/account/consume_list.do" data-title="消费记录" href="javascript:void(0)">消费记录</a></li>
-				<li><a data-href="/flowsys/account/charge_list.do" data-title="充值记录" href="javascript:void(0)">充值记录</a></li>
+				<li><a data-href="/flowsys/account/consume_list.do" data-title="订单消费" href="javascript:void(0)">订单消费</a></li>
+				<li><a data-href="/flowsys/account/charge_list.do" data-title="充值明细" href="javascript:void(0)">充值明细</a></li>
 				<li><a data-href="/flowsys/account/account_info.do" data-title="账户信息" href="javascript:void(0)">账户信息</a></li>
 			</ul>
 		</dd>
 	</dl>
+	<!-- http://htmlify.wps.cn/doc/index.html?ksyun=UD4oMeA6/word.html&theme=clear -->
+	<!-- <dl id="menu-member">
+		<dt><i class="Hui-iconfont">&#xe6c6;</i> 平台操作指南<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+		<dd>
+			<ul>
+					<li><a data-href="http://htmlify.wps.cn/doc/index.html?ksyun=UD4oMeA6/word.html&theme=clear" target="_blank" data-title="平台操作指南" href="javascript:void(0)">平台操作指南</a></li>
+			</ul>
+		</dd>
+	</dl> -->
+	<ul>
+					<li><a data-href="http://htmlify.wps.cn/doc/index.html?ksyun=UD4oMeA6/word.html&theme=clear" data-title="平台操作指南" href="javascript:void(0)">平台操作指南</a></li>
+			</ul>
+	
 		<!-- <dl id="menu-member">
 			<dt><i class="Hui-iconfont">&#xe60d;</i> 会员管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
@@ -259,6 +274,21 @@
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript" src="/view/lib/jquery.contextmenu/jquery.contextmenu.r2.js"></script>
 <script type="text/javascript">
+//收藏本站 www.jb51.net
+function AddFavorite(title, url) {
+ try {
+   window.external.addFavorite(url, title);
+ }
+catch (e) {
+   try {
+    window.sidebar.addPanel(title, url, "");
+  }
+   catch (e) {
+     alert("抱歉，您所使用的浏览器无法完成此操作。\n\n加入收藏失败，请进入新网站后使用Ctrl+D进行添加");
+   }
+ }
+}
+
 $(function(){
 	$("#min_title_list li").contextMenu('Huiadminmenu', {
 		bindings: {

@@ -497,4 +497,14 @@ public class AgencyAOImpl implements AgencyAO {
 	public AgencyBackwardPo getRootAgencyById(Integer agencyId) {
 		return agencyVODao.getRootAgencyById(agencyId);
 	}
+
+	@Override
+	public AgencyBackwardPo getAgencyByAccountId(Integer accountId) {
+		ChargeAccountPo accountPo = chargeAccountDao.get(accountId);
+		if(accountPo != null){
+			AgencyBackwardPo agencyPo = agencyVODao.get(accountPo.getAgencyId());
+			return agencyPo;
+		}
+		return null;
+	}
 }

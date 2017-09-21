@@ -28,6 +28,16 @@ public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	int updateRateDiscount(long activeId,double activeDiscount);
 	
 	/**
+	 * @description:根据通道折扣差额修改费率折扣
+	 * @param cdId
+	 * @param editDiscount
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月20日 下午2:53:32
+	 */
+	int updateRateDiscountByCDId(Long cdId, double editDiscount);
+	
+	/**
 	 * @description: 获得所有的折扣
 	 * @param rateDiscountPo
 	 * @return
@@ -54,7 +64,7 @@ public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月13日 上午10:32:43
 	 */
-	List<RateDiscountPo> getDiscountList(Map<String, Object> params);
+//	List<RateDiscountPo> getDiscountList(Map<String, Object> params);
 	
 	/**
 	 * @description: 费率列表长度

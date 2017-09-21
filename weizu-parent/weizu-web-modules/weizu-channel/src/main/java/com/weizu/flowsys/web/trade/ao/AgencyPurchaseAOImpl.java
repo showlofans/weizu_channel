@@ -1,7 +1,9 @@
 package com.weizu.flowsys.web.trade.ao;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -17,6 +19,7 @@ import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.trade.dao.AgencyPurchaseDao;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.AgencyPurchasePo;
+import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseStateParams;
 
 @Service(value="agencyPurchaseAO")
@@ -40,36 +43,36 @@ public class AgencyPurchaseAOImpl implements AgencyPurchaseAO {
 			realBackTime = System.currentTimeMillis();
 		}
 		if(orderResult == OrderStateEnum.UNCHARGE.getValue()){//手动失败，要返款
-			List<AgencyPurchasePo> list = agencyPurchaseDao.list(new WherePrams("purchase_id", "=", orderId));
-			int billType = -1;
-			Integer agencyId = null;
-			ChargeAccountPo accountPo = null;
-			Double orderAmount = 0d;
-			Double agencyBeforeBalance = 0.0d;
-//		Double agencyAfterBalance = 0.0d;
-			int batchAddCrt = 0;
-			if(list != null && list.size() > 0){
-				List<ChargeRecordPo> recordPoList = new LinkedList<ChargeRecordPo>();
-				for (AgencyPurchasePo agencyPurchasePo : list) {
-					agencyId = agencyPurchasePo.getAgencyId();
-					billType = agencyPurchasePo.getBillType();
-					orderAmount = agencyPurchasePo.getOrderAmount();
-					accountPo = chargeAccountDao.get(new WherePrams("agency_id", "=", agencyId).and("bill_type", "=", billType));
-					agencyBeforeBalance = accountPo.getAccountBalance();
-					accountPo.addBalance(orderAmount, 1);
-					recordPoList.add(new ChargeRecordPo(realBackTime, orderAmount,
-							agencyBeforeBalance, accountPo.getAccountBalance(), 
-							billType,AccountTypeEnum.Replenishment.getValue(), accountPo.getId(), agencyId, 1 , orderId));
-					chargeAccountDao.updateLocal(accountPo, new WherePrams("id","=",accountPo.getId()));
-				}
-				batchAddCrt = chargeRecordDao.crt_addList(recordPoList);		//批量添加扣款记录信息
+			PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
+			if(purchasePo != null && purchasePo.getOrderResult() != null && OrderStateEnum.UNCHARGE.getValue() !=  purchasePo.getOrderResult()){
+				List<AgencyPurchasePo> list = agencyPurchaseDao.list(new WherePrams("purchase_id", "=", orderId));
+//				Double agencyAfterBalance = 0.0d;
+					int batchAddCrt = 0;
+					if(list != null && list.size() > 0){
+						List<ChargeRecordPo> recordPoList = new LinkedList<ChargeRecordPo>();
+						for (AgencyPurchasePo agencyPurchasePo : list) {
+							Integer agencyId = agencyPurchasePo.getAgencyId();
+							int billType = agencyPurchasePo.getBillType();
+							Double orderAmount = agencyPurchasePo.getOrderAmount();
+							ChargeAccountPo accountPo = chargeAccountDao.get(new WherePrams("agency_id", "=", agencyId).and("bill_type", "=", billType));
+							Double agencyBeforeBalance = accountPo.getAccountBalance();
+							accountPo.addBalance(orderAmount, 1);
+							recordPoList.add(new ChargeRecordPo(realBackTime, orderAmount,
+									agencyBeforeBalance, accountPo.getAccountBalance(), 
+									billType,AccountTypeEnum.Replenishment.getValue(), accountPo.getId(), agencyId, 1 , orderId));
+							chargeAccountDao.updateLocal(accountPo, new WherePrams("id","=",accountPo.getId()));
+						}
+						batchAddCrt = chargeRecordDao.crt_addList(recordPoList);		//批量添加扣款记录信息
+						//更新连接表
+						ap = agencyPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
+						//更新订单表
+						pur = purchaseDAO.updatePurchaseState(new PurchaseStateParams(orderId, System.currentTimeMillis(), orderResult, orderResultDetail, null));
+					}
+			}else{
+				System.out.println("订单不存在");
+				return "error";
 			}
-			if(batchAddCrt > 0){
-				//更新连接表
-				ap = agencyPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
-				//更新订单表
-				pur = purchaseDAO.updatePurchaseState(new PurchaseStateParams(orderId, System.currentTimeMillis(), orderResult, orderResultDetail, null));
-			}
+			
 		}else{
 			//更新连接表
 			ap = agencyPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);

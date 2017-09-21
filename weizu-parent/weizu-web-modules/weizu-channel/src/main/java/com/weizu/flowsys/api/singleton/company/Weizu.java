@@ -18,6 +18,7 @@ import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 import com.weizu.flowsys.api.weizu.charge.ChargeOrder;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
+import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.MD5;
@@ -128,10 +129,31 @@ public class Weizu implements BaseInterface {
             		myStatus = OrderStateEnum.CHARGED.getValue();
             		break;
             	case 8://充值失败
-//				myStatus = OrderStateEnum.UNCHARGE.getValue();
+				myStatus = OrderStateEnum.UNCHARGE.getValue();
             		break;
             	default:
             		break;
+            	}
+            	if(StringHelper.isEmpty(msg)){
+            		switch (status) {
+                	case 0://未充值
+                		msg ="系统：" + OrderStateEnum.WEICHONG.getDesc();
+                		break;
+                	case 1://等待充值
+                		msg = "系统：" +OrderStateEnum.DAICHONG.getDesc();
+                		break;
+                	case 2://正在充值
+                		msg = "系统：" +OrderStateEnum.CHARGING.getDesc();
+                		break;
+                	case 4://充值成功
+                		msg = "系统：" + OrderStateEnum.CHARGED.getDesc();
+                		break;
+                	case 8://充值失败
+                		msg = "系统：" + OrderStateEnum.UNCHARGE.getDesc();
+                		break;
+                	default:
+                		break;
+                	}
             	}
             	OrderIn orderId = new OrderIn(orderIdApi, user_order_id, number, flowsize, charge_fee, created_at, myStatus, msg);
             	orderId.setCreated_at_time(created_at_time);
@@ -196,6 +218,8 @@ public class Weizu implements BaseInterface {
 		sbParams.append("&number=").append(baseParams.getChargeTel());
 		sbParams.append("&flowsize=").append(baseParams.getProductCode());
 		sbParams.append("&user_order_id=").append(baseParams.getOrderId());
+		sbParams.append("&scope=").append(getScope(baseParams.getServiceType()));
+		
 		sbParams.append("&sign=").append(sign);
 		
 		return sbParams.toString();
@@ -204,6 +228,23 @@ public class Weizu implements BaseInterface {
 //		return "username=" + epPo.getEpUserName() + "&number=" + baseParams.getChargeTel()
 //				+ "&flowsize=" + baseParams.getProductCode() + "&user_order_id=" + baseParams.getOrderId()
 //				+ "&sign=" + sign;
+	}
+	/**
+	 * @description:设置业务范围
+	 * @param serviceType
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月19日 上午9:44:04
+	 */
+	private int getScope(int serviceType){
+		int scope = 0;	//默认全国漫游
+		switch (serviceType) {
+		case 1://非全国漫游
+			scope = 1;
+			break;
+		default:
+			break;
+		}
+		return scope;
 	}
 
 	

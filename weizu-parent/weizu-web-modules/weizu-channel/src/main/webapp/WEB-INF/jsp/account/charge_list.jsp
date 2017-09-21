@@ -53,7 +53,7 @@
 			<thead>
 				<tr class="text-c">
 					<!-- <th width="80">流量包Id</th> -->
-					<th width="80">记录Id</th>
+					<!-- <th width="80">记录Id</th> -->
 					<th width="80">代理名称</th>
 					<th width="80">交易前余额</th>
 					<th width="80">交易金额</th>
@@ -67,8 +67,17 @@
 				<c:forEach items="${resultMap.pagination.records }" var="chargeRec" varStatus="vs">
 					<tr class="text-c">
 						<%-- <td>${pg.pgId }</td> --%>
-						<td>${chargeRec.id }</td>
-						<td>${chargeRec.userName }</td><!-- 代理名称 -->
+						<%-- <td>${chargeRec.id }</td> --%>
+						<td>
+						<c:choose>
+							<c:when test="${chargeRec.userName == loginContext.userName }">
+								<span class="c-green">${chargeRec.userName }</span>
+							</c:when>
+							<c:otherwise>
+								<span class="c-red">${chargeRec.userName }</span>
+							</c:otherwise>
+						</c:choose>
+						</td><!-- 代理名称 -->
 						<td>${chargeRec.chargeBefore }</td>
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
 						<td>${chargeRec.rechargeAmount }</td>
