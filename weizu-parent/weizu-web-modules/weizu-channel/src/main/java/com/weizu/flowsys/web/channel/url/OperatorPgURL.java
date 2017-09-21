@@ -32,4 +32,8 @@ public class OperatorPgURL extends BaseURL {
 	 * 流量包删除
 	 */
 	public static final String PG_DELETE = "/pg_delete" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 流量包是否存在
+	 */
+	public static final String PG_EXIST = "/pg_exist" + DYNAMIC_WEB_SUFFIX;
 }

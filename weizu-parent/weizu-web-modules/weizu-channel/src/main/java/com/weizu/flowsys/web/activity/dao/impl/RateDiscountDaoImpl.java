@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
@@ -76,11 +77,11 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月13日 上午10:34:01
 	 */
-	@Override
-	public List<RateDiscountPo> getDiscountList(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	@Override
+//	public List<RateDiscountPo> getDiscountList(Map<String, Object> params) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 	/**
 	 * @description: 费率列表长度
@@ -188,6 +189,21 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 	@Override
 	public int getScopeExceptionForRate(Map<String, Object> params) {
 		return sqlSessionTemplate.selectOne("getScopeExceptionForRate", params);
+	}
+
+	@Override
+	public int updateRateDiscountByCDId(Long cdId, double editDiscount) {
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("channelDiscountId", cdId);
+		paramsMap.put("editDiscount", editDiscount);
+		int updateRes = sqlSessionTemplate.update("updateRateDiscountByCDId", paramsMap);
+		if(updateRes == 0){//没有更细记录，
+			List<RateDiscountPo> rateList = getListByCDiscountId(cdId, null);
+			if(rateList == null || rateList.size() == 0){//并且费率列表为0，也可以表示成功
+				return updateRes+1;
+			}
+		}
+		return sqlSessionTemplate.update("updateRateDiscountByCDId", paramsMap);
 	}
 
 }

@@ -105,6 +105,15 @@ public interface AgencyAO {
 	AgencyBackwardPo getAgencyById(Integer id);
 	
 	/**
+	 * @description: 通过账户id获得代理商信息
+	 * @param accountId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月21日 下午2:47:08
+	 */
+	AgencyBackwardPo getAgencyByAccountId(Integer accountId);
+	
+	/**
 	 * @description: 获得父级代理商的实体
 	 * @param id
 	 * @return

@@ -49,9 +49,9 @@
 					<th>运营商类型</th>
 					<th >业务类型</th>
 					<th>折扣</th>
-					<th>费率类型</th>
+					<th>折扣类型</th>
 					<th>设置折扣</th>
-					<th>是否带票</th>
+					<th>是否带</th>
 					<!-- <th>修改时间</th> -->
 					<!-- <th>通道规格</th> -->
 					
@@ -97,7 +97,7 @@
 							<c:when test="${empty ratePo.discountList }">
 								<td><input type="text" value="" class="activeDiscount input-text" name="activeDiscount" id="" placeholder=" 费率折扣" style="width:80px"></td>
 								<td>
-									<select name="billType"  class="billType select" onchange="getBillType(this)">
+									<select name="billType"  class=" billType select" onchange="getBillType(this)">
 										<!-- <option value="">请选择</option> -->
 										<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
 											<option value="${billTypeEnum.value }" >${billTypeEnum.desc }</option>
@@ -108,7 +108,7 @@
 							<c:otherwise>
 								<td><input type="text" value="${ratePo.discountList[0].activeDiscount }" class="activeDiscount input-text" name="activeDiscount" id="" placeholder=" 费率折扣" style="width:80px"></td>
 								<td><!-- <span class="select-box inline"> -->
-									<select class="select-box inline billType select" onchange="getBillType(this)">
+									<select class=" billType select" onchange="getBillType(this)">
 										<!-- <option value="">请选择</option> -->
 											<!-- 选中列表第一个费率 -->
 										<c:forEach items="${ratePo.discountList }" var="disPo" varStatus="vs1">
@@ -194,7 +194,7 @@ function addUp(vart){//vart是提交按钮
 	//var billType = arr[0];
 	//var billType =  $(vart).parents('td').prev().children('.billType').find('option:selected').val();
 	var cDiscountId = $(vart).parents('tr').children('.channelDiscountId').html().trim();//通道折扣Id
-	alert(cDiscountId);
+	//alert(cDiscountId);
 	var agencyId = $('#childAgencyId').val();//代理商Id
 	//alert(agencyId);
 	var activeId = $(vart).parents('tr').children('.id').html().trim();//父级折扣Id

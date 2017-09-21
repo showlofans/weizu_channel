@@ -1,5 +1,7 @@
 package com.weizu.flowsys.api.singleton;
 
+import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
+
 /**
  * @description: 接口返回订单明细
  * @projectName:weizu-channel
@@ -8,7 +10,7 @@ package com.weizu.flowsys.api.singleton;
  * @createTime:2017年8月31日 下午5:18:23
  * @version 1.0
  */
-public class OrderIn {
+public class OrderIn implements Cloneable {
 	private String transaction_id;				//上级订单号(接口订单号)(或者下游提单就是系统的订单号)
 	private String user_order_id;				//下级订单号(接口订单号)(或者下游提单就是用户的订单号)
 	private String number;
@@ -60,6 +62,19 @@ public class OrderIn {
 	public OrderIn() {
 		super();
 	}
+	
+	@Override
+	public OrderIn clone() {
+		// TODO Auto-generated method stub
+		OrderIn orderIn = null;
+    	try{  
+    		orderIn = (OrderIn)super.clone();  
+        }catch(CloneNotSupportedException e) {  
+            e.printStackTrace();  
+        }  
+		return orderIn;
+	}
+
 	public String getTransaction_id() {
 		return transaction_id;
 	}

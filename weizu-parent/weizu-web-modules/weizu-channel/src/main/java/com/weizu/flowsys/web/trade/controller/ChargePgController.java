@@ -503,8 +503,14 @@ public class ChargePgController {
 				}
 				List<PurchaseVO> records = pagination.getRecords();
 				if(callTag == 1 && records != null && records.size() > 0){
-					System.out.println(callTag +"-开始统计");
+					System.out.println(callTag +"-开始统计总扣款");
 					TotalResult tot = purchaseAO.getTotalResultFromSuccess(purchaseVO);
+					Double totalCost = 0.00d;
+					for (PurchaseVO purchaseVO2 : records) {
+						totalCost = NumberTool.add(totalCost, purchaseVO2.getOrderAmount());
+					}
+					tot.setTotalCost(totalCost);
+					System.out.println("总成本："+totalCost);
 					httpSession.setAttribute("tot", tot);
 				}
 //				else{

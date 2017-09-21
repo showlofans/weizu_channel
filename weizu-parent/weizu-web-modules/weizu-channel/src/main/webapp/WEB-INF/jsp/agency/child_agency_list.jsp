@@ -97,11 +97,11 @@
 						<td>
 						<c:choose>
 							<c:when test="${agency.accountBalance <=0  }">
-								<a class="c-error" data-href="/flowsys/account/charge_list.do?accountId=${agency.accountId }" data-toggle="tooltip" data-placement="top" title="点击查看记录" data-title="充值扣款记录" style="text-decoration:none"  onclick="Hui_admin_tab(this)">
+								<a class="c-error" data-href="/flowsys/account/charge_list.do?accountId=${agency.accountId }" data-toggle="tooltip" data-placement="top" title="点击查看记录" data-title="充值记录" style="text-decoration:none"  onclick="Hui_admin_tab(this)">
 							${agency.accountBalance }</a>
 							</c:when>
 							<c:otherwise>
-								<a data-href="/flowsys/account/charge_list.do?accountId=${agency.accountId }" data-toggle="tooltip" data-placement="top" title="点击查看记录" data-title="充值扣款记录" style="text-decoration:none"  onclick="Hui_admin_tab(this)">
+								<a data-href="/flowsys/account/charge_list.do?accountId=${agency.accountId }" data-toggle="tooltip" data-placement="top" title="点击查看记录" data-title="充值记录" style="text-decoration:none"  onclick="Hui_admin_tab(this)">
 							${agency.accountBalance }</a>
 							</c:otherwise>
 						</c:choose>

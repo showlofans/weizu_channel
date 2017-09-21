@@ -750,7 +750,15 @@ public class PurchaseAOImpl implements PurchaseAO {
 		Boolean isPurchaseList = purchaseVO.getOrderState() == null;//订单列表判定
 		if(records != null && records.size() > 0){
 			//遍历每一个订单，查看它的订单状态
-			for (PurchaseVO purchaseVO2 : records) {//格式化展示时间
+			for (PurchaseVO purchaseVO2 : records) {
+				/**查询订单成本*/
+				if(purchaseVO.getAgencyId() == purchaseVO2.getAgencyId()){//如果不是当前代理商的订单，就重新查一遍这个订单的成本
+					Double orderAmount = agencyPurchaseDao.getOrderAmount(purchaseVO2.getOrderId(), purchaseVO.getAgencyId());
+					if(orderAmount != null){
+						purchaseVO2.setOrderAmount(orderAmount);
+					}
+				}
+				
 				/**订单列表，订单又不支持回调的时候**/
 				if(isPurchaseList && purchaseVO2.getRateDiscountId() != null){//只能通过费率id，如果通道或者费率被删除，就得不到最新的订单状态
 					ExchangePlatformPo purchaseEp = exchangePlatformDao.getEpByRateId(purchaseVO2.getRateDiscountId());
@@ -771,14 +779,23 @@ public class PurchaseAOImpl implements PurchaseAO {
 								//更新订单状态
 								if(orderIn.getStatus() != purchaseVO2.getOrderState()){//返回状态和原先数据库状态不相符
 									Long ts = orderIn.getCreated_at_time();
+									
+									int orderState = orderIn.getStatus();
+									String orderStateDetail = orderIn.getMsg();
+									if(agencyVODao.getRootAgencyById(purchaseVO.getAgencyId()) != null){//不是超管,重置订单状态
+										OrderIn cloneOrderIn = orderIn.clone();
+										resetPurchaseState(cloneOrderIn);
+										orderState = cloneOrderIn.getStatus();
+										orderStateDetail = cloneOrderIn.getMsg();
+									}
 									purchaseVO2.setOrderBackTimeStr(DateUtil.formatAll(ts));
-									purchaseVO2.setOrderState(orderIn.getStatus());
-									purchaseVO2.setOrderStateDetail(orderIn.getMsg());
-									agencyPurchaseAO.updatePurchaseState(purchaseVO2.getOrderId(), orderIn.getStatus(), orderIn.getMsg(),ts);
+									purchaseVO2.setOrderState(orderState);
+									purchaseVO2.setOrderStateDetail(orderStateDetail);
+									agencyPurchaseAO.updatePurchaseState(purchaseVO2.getOrderId(), orderState, orderStateDetail,ts);
 									//把查询的结果利用接口推给下游
 									AgencyBackwardPo agencyPo = agencyVODao.get(purchaseVO2.getAgencyId());
-									if(StringHelper.isNotEmpty(agencyPo.getCallBackIp())){//有回调地址的情况下，按照回调地址推送
-										String callBackRes = SendCallBackUtil.sendCallBack(new ResponseJsonDTO(purchaseVO2.getOrderId(), purchaseVO2.getOrderIdFrom(), orderIn.getStatus(), orderIn.getMsg(), ts), agencyPo);
+									if(StringHelper.isNotEmpty(agencyPo.getCallBackIp())){//下游有回调地址的情况下，按照回调地址推送
+										String callBackRes = SendCallBackUtil.sendCallBack(new ResponseJsonDTO(purchaseVO2.getOrderId(), purchaseVO2.getOrderIdFrom(), orderState, orderStateDetail, ts), agencyPo);
 										System.out.println(agencyPo.getUserName() + "：" +purchaseVO2.getOrderId() + "：" +  callBackRes);
 									}
 								}
@@ -803,6 +820,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 	//					
 	//					//更新查看订单状态
 	//					checkOrderState(pageOrder, purchaseVO2);
+				//格式化展示时间
 				if(purchaseVO2.getOrderBackTime() != null)
 				{
 					purchaseVO2.setOrderBackTimeStr(DateUtil.formatAll(purchaseVO2.getOrderBackTime()));
@@ -817,6 +835,34 @@ public class PurchaseAOImpl implements PurchaseAO {
 	}
 
 	
+	/**
+	 * @description: 重置下级代理商的订单状态和订单详情
+	 * @param orderIn
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月21日 下午12:05:52
+	 */
+	private void resetPurchaseState(OrderIn orderIn) {
+		int orderState = orderIn.getStatus();
+		String msg = orderIn.getMsg();
+		switch (orderState) {
+    	case 0://未充值
+//    		orderState = OrderStateEnum.WEICHONG.getValue();
+//    		break;
+    	case 1://等待充值
+    		orderState = OrderStateEnum.CHARGING.getValue();
+    		msg = OrderStateEnum.CHARGING.getDesc();
+//    		orderState = OrderStateEnum.DAICHONG.getValue();
+//    		break;
+//    	case 8://充值失败
+//    		orderState = OrderStateEnum.UNCHARGE.getValue();
+//    		break;
+    	default:
+    		break;
+    	}
+		orderIn.setStatus(orderState);
+		orderIn.setMsg(msg);
+	}
+
 	/** 设置总记录数和页面参数和查询参数
 	 * @param purchaseVO
 	 * @param paramsMap

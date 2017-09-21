@@ -76,18 +76,18 @@
     <result column="agency_id" jdbcType="INTEGER" property="agencyId" />
     <result column="charge_for" jdbcType="INTEGER" property="chargeFor" />
     <result column="purchase_id" jdbcType="BIGINT" property="purchaseId" />
-    <result column="user_name" property="userName" />
+    <result column="from_agency_name" property="userName" />
     <result column="charge_tel" property="chargeTel" />
   </resultMap>
   <sql id="Consume_Column_List">
-    crt.*,pc.charge_tel,agb.user_name
+    crt.*,pc.charge_tel,ap.from_agency_name
   </sql>
   
   <!-- 查询充值列表 -->
-  <select id="selectChargeList" parameterType="com.weizu.flowsys.web.agency.pojo.ChargeRecordPo" resultMap="OtherMap">
+  <select id="listChargeRecord" parameterType="com.weizu.flowsys.web.agency.pojo.ChargeRecordPo" resultMap="OtherMap">
   	select <include refid="other_Column_List"></include> 
-  	from <include refid="t_agency"></include> agency
-  	inner join <include refid="t_record"></include> record
+  	from<include refid="t_record"></include> record
+  	inner join <include refid="t_agency"></include> agency
   	on record.agency_id = agency.id
   	<where>
   		<include refid="condition_sql"></include>
@@ -124,9 +124,12 @@
 		<if test="accountId != null">
 			AND record.account_id = #{accountId}
 		</if>
-		<if test="agencyId != null">
+		<!-- <if test="agencyId != null">
 			AND agency_id = #{agencyId}
 		</if>
+		<choose>
+			<when test=""></when>
+		</choose> -->
 		<if test="contextAgencyId != null">
 			AND (agency.id = #{contextAgencyId} OR agency.root_agency_id = #{contextAgencyId})
 		</if>
@@ -144,8 +147,10 @@
   	from <include refid="t_record"></include> crt
   	inner join <include refid="t_purchase"></include> pc
   	on pc.order_id = crt.purchase_id
+  	INNER JOIN <include refid="t_ap"></include> ap
+	on ap.purchase_id=pc.order_id
 	INNER join <include refid="t_agency"></include> agb
-	on crt.agency_id = agb.id
+	on ap.agency_id=agb.id
 	<where>
 		<include refid="consume_condition_sql"></include>
 	</where>
@@ -155,8 +160,10 @@
   	from <include refid="t_record"></include> crt
   	inner join <include refid="t_purchase"></include> pc
   	on pc.order_id = crt.purchase_id
-	INNER join <include refid="t_agency"></include> agb
-	on crt.agency_id = agb.id
+	INNER JOIN <include refid="t_ap"></include> ap
+	on ap.purchase_id=pc.order_id
+	<!-- INNER join <include refid="t_agency"></include> agb
+	on ap.agency_id=agb.id -->
 	<where>
 		<include refid="consume_condition_sql"></include>
 	</where>
@@ -173,25 +180,25 @@
 	 </if> 
   </select>
   <sql id="consume_condition_sql">
-		<!-- <if test="agencyId != null">
-			AND agb.id = #{agencyId}
+		<if test="agencyId != null">
+			crt.agency_id=#{agencyId} and ap.agency_id=#{agencyId}
 		</if>
-		<if test="agencyId == null &amp; contextAgencyId != null">
+		<!-- <if test="agencyId == null &amp; contextAgencyId != null">
 			AND (agb.id = #{contextAgencyId} OR agb.root_agency_id = #{contextAgencyId})
 		</if> -->
-		<choose>
+		<!-- <choose>
 			<when test="agencyId != null">AND agb.id = #{agencyId}</when>
 			<when test="agencyId == null &amp; contextAgencyId != null">
-				<!-- 获得当前登录用户的记录和登录用户的子代理商的记录 -->
-				AND (agb.id = #{contextAgencyId} OR agb.root_agency_id = #{contextAgencyId})
+				获得当前登录用户的记录和登录用户的子代理商的记录
+				AND (crt.id = #{contextAgencyId} OR agb.root_agency_id = #{contextAgencyId})
 			</when>
-		</choose>
+		</choose> -->
 		AND (account_type = 1 or account_type = 2)
 		<if test="userName != null">
-			AND user_name LIKE CONCAT('%', TRIM(#{userName}), '%')
+			AND ap.from_agency_name LIKE CONCAT('%', TRIM(#{userName}), '%')
 		</if>
 		<if test="purchaseId != null">
-			AND purchase_id = #{purchaseId}
+			AND pc.purchase_id = #{purchaseId}
 		</if>
 		<if test="accountType != null">
 			AND account_type = #{accountType}

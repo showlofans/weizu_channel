@@ -52,4 +52,14 @@ public class ChannelURL extends BaseURL{
 	 * 活动通道列表
 	 */
 	public static final String ACTIVITY_CHANNEL_LIST= "/activity_channel_list"+ DYNAMIC_WEB_SUFFIX;
+	
+	/**
+	 * 编辑通道折扣
+	 */
+	public static final String EDIT_CHANNEL_DISCOUNT= "/edit_channel_discount"+ DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 编辑通道折扣页面
+	 */
+	public static final String CHANNEL_EDIT_PAGE= "/channel_edit_page"+ DYNAMIC_WEB_SUFFIX;
+	
 }

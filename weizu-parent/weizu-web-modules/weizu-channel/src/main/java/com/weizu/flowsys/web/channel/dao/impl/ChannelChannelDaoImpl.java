@@ -114,8 +114,8 @@ public class ChannelChannelDaoImpl extends DaoImpl<ChannelChannelPo, Long> imple
 		int billType = channelPo.getBillType();
 		
 		//设置通道名称
-		String serviceTypeStr = ServiceTypeEnum.getEnum(serviceType).getDesc();
-		channelPo.setChannelName(serviceTypeStr +"-"+channelPo.getChannelName());
+//		String serviceTypeStr = ServiceTypeEnum.getEnum(serviceType).getDesc();
+//		channelPo.setChannelName(serviceTypeStr +"-"+channelPo.getChannelName());
 		String channelName = channelPo.getChannelName();
 		
 		for(ChannelDiscountPo cdp: channelPo.getDiscountList())

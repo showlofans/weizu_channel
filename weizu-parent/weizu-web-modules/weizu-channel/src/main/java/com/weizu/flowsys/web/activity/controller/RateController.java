@@ -633,7 +633,7 @@ public class RateController {
 	public String batchUpdateBindState(AgencyActiveRateDTO aardto, HttpServletResponse response)
 	{
 		int res = agencyActiveChannelAO.batchUpdateBindState(aardto);
-		if(res > 0){
+		if(res >= 0){
 			return "success";
 		}else{
 			return "error";
@@ -729,20 +729,24 @@ public class RateController {
 	 * @createTime:2017年7月14日 下午2:48:58
 	 */
 	@RequestMapping(value= RateURL.BIND_RATE_ADD_PAGE)
-	public ModelAndView addBindRatePage(String channelDiscountId,String billType,
-			String fromTag, @RequestParam(value="rateDiscountId",required=false)String rateDiscountId){
+	public ModelAndView addBindRatePage(Long channelDiscountId,
+			@RequestParam(value="billType",required=false)Integer billType,
+			String fromTag, @RequestParam(value="rateDiscountId",required=false)Long rateDiscountId){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		if(fromTag.equals("edit") && rateDiscountId != null){
 			resultMap.put("rateDiscountId", rateDiscountId);
-			Double rateDiscount = rateDiscountDao.get(Long.parseLong(rateDiscountId)).getActiveDiscount();
+			Double rateDiscount = rateDiscountDao.get(rateDiscountId).getActiveDiscount();
 			resultMap.put("rateDiscount", rateDiscount);//费率折扣
 		}
 		
 		resultMap.put("fromTag", fromTag);
-		resultMap.put("billType", billType);
 		
-		long cId = Long.parseLong(channelDiscountId.trim());
-		ChannelDiscountPo cDPo = channelDiscountDao.get(new WherePrams("id", "=", cId));
+		ChannelDiscountPo cDPo = channelDiscountDao.get(new WherePrams("id", "=", channelDiscountId));
+		if(billType != null){
+			resultMap.put("billType", billType);
+		}else if("add".equals(fromTag)){
+			resultMap.put("billType", cDPo.getBillType());
+		}
 		resultMap.put("cDPo",cDPo);
 		resultMap.put("otypeEnums", OperatorTypeEnum.toList());
 		resultMap.put("stypeEnums", ServiceTypeEnum.toList());

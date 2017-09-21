@@ -153,12 +153,6 @@
 			</div>
 		</div>
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">通道规格：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="${resultMap.pgSizeStr }" required="required" placeholder="${resultMap.pgSizeStr }" id="pgSize" name="pgSize">
-			</div>
-		</div>
-		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">通道名称：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" class="input-text" required="required" value="${resultMap.channelName }" placeholder="例如：wzkj江西移动省内" id="channelName" name="channelName">
@@ -234,7 +228,12 @@
 			</table>
 			</div>
 		</div>
-		
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">通道规格：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="${resultMap.pgSizeStr }" required="required" placeholder="${resultMap.pgSizeStr }" id="pgSize" name="pgSize">
+			</div>
+		</div>
 		<!-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>邮箱：</label>
 			<div class="formControls col-xs-8 col-sm-9">
@@ -301,7 +300,7 @@ function getMsg(){
 	}
 } */
 /**根据运营商改变通道规格 */
-$(".radioItem").change(  
+/* $(".radioItem").change(  
  function() { 
 	 var operatorType = $("input[name='operatorType']:checked").val();
 	 var serviceType = $("input[name='serviceType']:checked").val();
@@ -320,7 +319,7 @@ $(".radioItem").change(
 		        }
 	 	 });
 	 }
-});
+}); */
 $(document).ready(function(){
 	$("#form-channel-add").validate({
     	submitHandler : function(form) {
@@ -353,7 +352,8 @@ function changeName(){
 	var i = 0;
 	$(".disscount").each(function(){
 		//alert($(this).val() == "");
-    	if($(this).is(':visible') && $(this).val() != ""){ 
+		if($(this).is(':visible') && $(this).val() != ""){ 
+	    	$('#channel_discount_list').empty();
     		$('<input />', {
     	        name: 'discountList['+ i +'].channelDiscount',
     	        id: 'channelDiscount-'+ i,

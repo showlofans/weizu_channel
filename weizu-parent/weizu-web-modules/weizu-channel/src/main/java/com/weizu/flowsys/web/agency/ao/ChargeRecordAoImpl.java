@@ -107,6 +107,7 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		
 		Map<String, Object> params = getMapByEntity(chargeRecordPo);
 		params.put("contextAgencyId", contextAgencyId);
+		
 		int totalRecords = chargeRecordDao.countRecord(params);
 		
 		if(totalRecords == 0){
@@ -180,6 +181,9 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 			params.put("chargeTel", consumeRecordPo.getChargeTel());
 		}
 		
+		if(contextAgencyId != null){
+			params.put("agencyId", contextAgencyId);
+		}
 		if(consumeRecordPo.getAgencyId() != null){
 			params.put("agencyId", consumeRecordPo.getAgencyId());
 		}
@@ -279,8 +283,11 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 			params.put("accountType", chargeRecordPo.getAccountType());
 		}
 		
-		if(chargeRecordPo.getAgencyId() != null){
+		/*if(chargeRecordPo.getAgencyId() != null){
 			params.put("agencyId", chargeRecordPo.getAgencyId());
+		}*/
+		if(chargeRecordPo.getAccountId() != null){
+			params.put("accountId", chargeRecordPo.getAccountId());
 		}
 		
 		return params;

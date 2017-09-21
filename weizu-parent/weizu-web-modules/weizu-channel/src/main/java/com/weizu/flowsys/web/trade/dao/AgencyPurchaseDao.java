@@ -32,4 +32,14 @@ public interface AgencyPurchaseDao extends Dao<AgencyPurchasePo, Long> {
 	 * @createTime:2017年8月3日 上午10:45:46
 	 */
 	int batchUpdateState(Long purchaseId, Integer orderResult, String orderResultDettail);
+	
+	/**
+	 * @description:根据代理商和订单号获得订单的成本
+	 * @param purchaseId
+	 * @param agencyId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月20日 上午10:41:37
+	 */
+	Double getOrderAmount(Long purchaseId, Integer agencyId);
 }

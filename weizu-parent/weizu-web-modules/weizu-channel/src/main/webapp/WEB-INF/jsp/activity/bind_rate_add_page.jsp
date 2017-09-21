@@ -15,18 +15,30 @@
 <body>
 	<article class="page-container">
 	<form action="" method="" class="form form-horizontal" id="bindRateForm">
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>通道名称：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" style="width:200px"  readonly="readonly" class="input-text" value="${resultMap.cDPo.channelName }" placeholder="">
-			</div>
-		</div>
+		<c:choose>
+			<c:when test="${resultMap.fromTag== 'editChannel' }">
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>通道名称：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" style="width:200px" name="channelName" readonly="readonly" class="input-text" value="${resultMap.cDPo.channelName }" placeholder="">
+					</div>
+				</div>
+			</c:when>
+			<c:otherwise>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>通道名称：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" style="width:200px" readonly="readonly" class="input-text" value="${resultMap.cDPo.channelName }" placeholder="">
+					</div>
+				</div>
+			</c:otherwise>
+		</c:choose>
 		
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>通道类型：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<c:forEach items="${resultMap.billTypeEnums }" var="billEnum" varStatus="vs">
-					<c:if test="${resultMap.billType==billEnum.value }">
+					<c:if test="${resultMap.cDPo.billType==billEnum.value }">
 						<input type="text" style="width:200px"  readonly="readonly" class="input-text" value="${billEnum.desc }" placeholder="">
 					</c:if>
 				</c:forEach>
@@ -53,38 +65,59 @@
 			</c:forEach>
 			</div>
 		</div>
-		<input type="hidden" name="channelDiscountId" value="${resultMap.cDPo.id }">
-		<input type="hidden" name="channelId" value="${resultMap.cDPo.channelId }">
-		
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">通道折扣：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" style="width:200px" class="input-text" readonly="readonly" value="${resultMap.cDPo.channelDiscount }" placeholder="">
-			</div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">设置折扣：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" style="width:200px" required class="input-text"  value="" placeholder='<c:if test='${empty resultMap.rateDiscount}'>按照上面格式填写</c:if>${resultMap.rateDiscount}' id="activeDiscount" name="activeDiscount">
-			</div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">折扣类型：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<c:forEach items="${resultMap.billTypeEnums }" var="billEnum" varStatus="vs">
-					<div class="radio-box">
-						<input name="billType" class="radioItem" <c:if test="${not empty rateDisocunt }">readonly</c:if> type="radio" value="${billEnum.value }" <c:if test="${resultMap.billType==billEnum.value }">checked</c:if>>
-						${billEnum.desc }
+		<c:choose>
+			<c:when test="${resultMap.fromTag== 'editChannel' }">
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">通道折扣：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" style="width:200px" id="channelDiscount" name="channelDiscount" class="input-text" readonly="readonly" value="${resultMap.cDPo.channelDiscount }" placeholder="">
 					</div>
-				</c:forEach>
-			</div>
-		</div>
+				</div>
+				<input type="hidden" name="channelDiscountId" value="${resultMap.cDPo.id }">
+			</c:when>
+			<c:otherwise>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">通道折扣：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" style="width:200px" class="input-text" readonly="readonly" value="${resultMap.cDPo.channelDiscount }" placeholder="">
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">设置折扣：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" style="width:200px" required class="input-text"  value="" placeholder='<c:if test='${empty resultMap.rateDiscount}'>按照上面格式填写</c:if>${resultMap.rateDiscount}' id="activeDiscount" name="activeDiscount">
+					</div>
+				</div>
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-3">折扣类型：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<c:forEach items="${resultMap.billTypeEnums }" var="billEnum" varStatus="vs">
+							<div class="radio-box">
+								<input name="billType" class="radioItem" <c:if test="${not empty rateDisocunt }">readonly</c:if> type="radio" value="${billEnum.value }" <c:if test="${resultMap.billType==billEnum.value }">checked</c:if>>
+								${billEnum.desc }
+							</div>
+						</c:forEach>
+					</div>
+				</div>
+				<c:choose>
+					<c:when test="${resultMap.fromTag== 'add' }">
+						<input type="hidden" name="channelDiscountId" value="${resultMap.cDPo.id }">
+					</c:when>
+					<c:when test="${resultMap.fromTag== 'edit' }">
+						<input type="hidden" name="channelDiscountId" value="${resultMap.cDPo.id }">
+					</c:when>
+					<c:otherwise>
+						<input type="hidden" name="id" value="${resultMap.cDPo.id }">
+					</c:otherwise>
+				</c:choose>
+			</c:otherwise>
+		</c:choose>
 		<!-- 费率折扣id -->
 		<c:if test="${not empty resultMap.rateDiscountId }">
 			<input name="id" type="hidden" value="${resultMap.rateDiscountId }" id="rateDiscountId">
 		</c:if>
 		<input type="hidden" value="${resultMap.fromTag }" id="fromTag">
-		
+		<input type="hidden" name="channelId" value="${resultMap.cDPo.channelId }">
 		
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
@@ -112,6 +145,8 @@ $().ready(function() {
     		//alert(fromTag)
     		if(fromTag == "edit"){
     			url = "/flowsys/rate/bind_rate_edit.do";
+    		}else if(fromTag == "editChannel"){
+    			url = "/flowsys/channel/edit_channel_discount.do"
     		}
     		$.ajax({
     	        type: "post",

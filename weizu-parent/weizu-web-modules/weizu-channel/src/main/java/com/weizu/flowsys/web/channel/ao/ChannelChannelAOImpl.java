@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
@@ -20,6 +21,7 @@ import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.pojo.DiscountPo;
 import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
+import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 import com.weizu.flowsys.web.channel.dao.ICnelBindPgDao;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
@@ -36,6 +38,10 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 	private ChannelChannelDao channelChannelDao;
 	@Resource
 	private ICnelBindPgDao cnelBindPgDao; 
+	@Resource
+	private ChannelDiscountDao channelDiscountDao;
+	@Resource
+	private ChannelDiscountAO channelDiscountAO;
 	@Resource
 	private ValiUser valiUser;
 	
@@ -268,6 +274,52 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 		}
 		
 		return paramsMap;
+	}
+
+	@Transactional
+	@Override
+	public String editChannel(ChannelChannelPo channelPo) {
+		List<ChannelDiscountPo> cdList = channelDiscountDao.list(new WherePrams("channel_id", "=", channelPo.getId()));//数据库绑定的折扣列表
+		List<ChannelDiscountPo> getCDList = channelPo.getDiscountList();	//获得页面折扣列表
+		String res = "";
+		
+		//设置通道折扣
+		for (ChannelDiscountPo oldCd : cdList) {
+			for (ChannelDiscountPo getCD : getCDList) {//最新折扣列表
+				if(oldCd.getScopeCityCode().equals(getCD.getScopeCityCode())){//找到一样地区的折扣
+					//更新这些地区的折扣
+					//地区一样，那么通道折扣id一定也一样。
+					getCD.setId(oldCd.getId());
+					if(oldCd.getChannelDiscount().doubleValue() != getCD.getChannelDiscount().doubleValue()){//看是否一样
+						initCDByChannelPo(channelPo,getCD);
+						res = channelDiscountAO.updateChannelDiscount(getCD);
+					}
+					break;//打破第一重循环，不再判断上一层的if
+				}
+			}
+		}
+		
+		//修改通道名称
+		int upCnel = channelChannelDao.updateLocal(channelPo, new WherePrams("id", "=", channelPo.getId()));
+		if(!"success".equals(res) || upCnel <= 0){
+			res = "error";
+		}
+		return res;
+	}
+
+	/**
+	 * @description: 根据页面通道信息初始化通道折扣信息
+	 * @param channelPo
+	 * @param getCD
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月21日 下午4:23:56
+	 */
+	private void initCDByChannelPo(ChannelChannelPo channelPo,
+			ChannelDiscountPo getCD) {
+		getCD.setBillType(channelPo.getBillType());
+		getCD.setServiceType(channelPo.getServiceType());
+		getCD.setOperatorType(channelPo.getOperatorType());
+		getCD.setChannelName(channelPo.getChannelName());
 	}
 
 	/**

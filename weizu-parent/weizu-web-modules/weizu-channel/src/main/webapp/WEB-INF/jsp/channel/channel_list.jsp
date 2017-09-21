@@ -163,7 +163,8 @@
 							</a> 
 						</c:if>
 						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="channel_stop('/flowsys/channel/channel_delete.do',${channel.id})" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
-						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="javascript:;" onclick="channel_edit('/flowsys/rate/bind_rate_list.do',this)" data-title="折扣信息"><i class="Hui-iconfont">&#xe6df;</i></a>
+						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="javascript:;" onclick="getRateList('/flowsys/rate/bind_rate_list.do',this)" data-title="折扣信息"><i class="Hui-iconfont">&#xe725;</i></a>
+						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="javascript:;" onclick="editChannel('/flowsys/channel/channel_edit_page.do?channelId=${channel.id}','编辑通道')" data-title="编辑通道"><i class="Hui-iconfont">&#xe6df;</i></a>
 						</td>
 					</tr>
 				</c:forEach>
@@ -185,7 +186,8 @@
 <script type="text/javascript" charset="utf8" src="/view/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="/view/lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript">
-function channel_edit(url,objt){
+/**获得费率列表**/
+function getRateList(url,objt){
 	var channelId = $(objt).parent().parent().children(":first").html();
 	var serviceType = $(objt).parent().parent().children(":eq(4)").html();
 	var operatorType = $(objt).parent().parent().children(":eq(5)").html();
@@ -195,6 +197,22 @@ function channel_edit(url,objt){
 	$("#channelId").val(channelId);
 	 $(objt).attr('data-href',url+'?'+'channelId='+Number(channelId)+'&serviceType='+ serviceType+'&operatorType='+ operatorType); //+$('form').serialize()
 		Hui_admin_tab(objt);
+}
+/**编辑通道页面*/
+function editChannel(url,title){
+	layer.open({
+        type: 2,
+        title: title,
+        area: ['530px', '510px'],
+        maxmin: false,
+        closeBtn: 1,
+        content: url,
+         end: function () {
+            location.reload();
+        }
+    });
+	//$(objt).attr('data-href',url); //+$('form').serialize()
+	//Hui_admin_tab(objt);
 }
 /*onchange通道状态*/
 function getChannelList(){

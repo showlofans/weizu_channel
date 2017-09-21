@@ -23,6 +23,7 @@ import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.channel.url.OperatorPgURL;
+import com.weizu.flowsys.web.http.ao.ValiUser;
 import com.weizu.web.foundation.String.StringHelper;
 
 @Controller
@@ -30,6 +31,9 @@ import com.weizu.web.foundation.String.StringHelper;
 public class OperatorPgController {
 	@Resource
 	private OperatorPgAO operatorPgAO;
+	@Resource
+	private ValiUser valiUser;
+	
 
 //	@RequestMapping(value = "initPg.do")
 //	public ModelAndView initPg() {
@@ -232,6 +236,22 @@ public class OperatorPgController {
 	public void pg_del(String pgId,HttpServletResponse response) throws IOException{
 		if(StringHelper.isNotEmpty(pgId)){
 			response.getWriter().print(operatorPgAO.delPg(Integer.parseInt(pgId)));
+		}
+	}
+	/**
+	 * @description: 验证流量包是否存在
+	 * @param pgData
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月20日 上午9:52:14
+	 */
+	@ResponseBody
+	@RequestMapping(value=OperatorPgURL.PG_EXIST)
+	public Boolean existPg(OperatorPgDataPo pgData){
+		if(valiUser.findPg(pgData.getServiceType(), pgData.getPgSize(), pgData.getOperatorType()) == null){
+			return true;
+		}else{
+			return false;
 		}
 	}
 	

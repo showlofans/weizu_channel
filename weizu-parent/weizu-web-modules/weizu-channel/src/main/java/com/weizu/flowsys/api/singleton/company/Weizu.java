@@ -129,10 +129,31 @@ public class Weizu implements BaseInterface {
             		myStatus = OrderStateEnum.CHARGED.getValue();
             		break;
             	case 8://充值失败
-//				myStatus = OrderStateEnum.UNCHARGE.getValue();
+				myStatus = OrderStateEnum.UNCHARGE.getValue();
             		break;
             	default:
             		break;
+            	}
+            	if(StringHelper.isEmpty(msg)){
+            		switch (status) {
+                	case 0://未充值
+                		msg ="系统：" + OrderStateEnum.WEICHONG.getDesc();
+                		break;
+                	case 1://等待充值
+                		msg = "系统：" +OrderStateEnum.DAICHONG.getDesc();
+                		break;
+                	case 2://正在充值
+                		msg = "系统：" +OrderStateEnum.CHARGING.getDesc();
+                		break;
+                	case 4://充值成功
+                		msg = "系统：" + OrderStateEnum.CHARGED.getDesc();
+                		break;
+                	case 8://充值失败
+                		msg = "系统：" + OrderStateEnum.UNCHARGE.getDesc();
+                		break;
+                	default:
+                		break;
+                	}
             	}
             	OrderIn orderId = new OrderIn(orderIdApi, user_order_id, number, flowsize, charge_fee, created_at, myStatus, msg);
             	orderId.setCreated_at_time(created_at_time);

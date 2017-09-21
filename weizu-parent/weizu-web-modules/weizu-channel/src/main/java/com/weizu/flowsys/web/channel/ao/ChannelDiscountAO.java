@@ -69,4 +69,13 @@ public interface ChannelDiscountAO {
 	 */
 	List<ChannelDiscountPo> listOpenChannel(ChannelDiscountPo discountPo);
 	
+	/**
+	 * @description: 更新通道折扣
+	 * @param discountPo
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月20日 下午3:59:50
+	 */
+	String updateChannelDiscount(ChannelDiscountPo discountPo);
+	
 }

@@ -30,6 +30,7 @@
   <!--  订单页面 -->
   <resultMap id="VOResultMap" type="com.weizu.flowsys.web.trade.pojo.PurchaseVO" >
     <id column="order_id" property="orderId" jdbcType="BIGINT" />
+    <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
     <result column="order_id_api" property="orderIdApi" jdbcType="VARCHAR" />
     <result column="order_id_from" property="orderIdFrom" jdbcType="VARCHAR" />
     <result column="charge_tel" property="chargeTel" jdbcType="VARCHAR" />
@@ -45,7 +46,6 @@
     <result column="charge_tel_city" property="chargeTelCity" jdbcType="VARCHAR" />
     <result column="order_platform_path" property="orderPlatformPath" jdbcType="INTEGER" />
     <result column="from_agency_name" property="agencyName" jdbcType="VARCHAR" />
-    <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
     <result column="order_state" property="orderState" jdbcType="INTEGER" />
     <result column="order_state_detail" property="orderStateDetail" jdbcType="VARCHAR" />
     <result column="ap_order_amount" property="orderAmount" jdbcType="DOUBLE" />
@@ -89,12 +89,12 @@
   <resultMap type="com.weizu.flowsys.web.trade.pojo.TotalResult" id="totalResultMap">
   	<result column="total_amount" jdbcType="DOUBLE" property="totalAmount"/>
   	<result column="total_price" jdbcType="DOUBLE" property="totalPrice"/>
-  	<result column="total_cost" jdbcType="DOUBLE" property="totalCost"/>
+  	<!-- <result column="total_cost" jdbcType="DOUBLE" property="totalCost"/> -->
   	<result column="total_records" jdbcType="DOUBLE" property="totalRecords"/>
   </resultMap>
   
   <sql id="Total_Result_Column_List">
-  	FORMAT(sum(pg.pg_price),2) total_price, FORMAT(sum(ap.order_price),4) total_amount,FORMAT(sum(ap.order_amount),4) total_cost, count(*) total_records
+  	round(sum(pg.pg_price),2) total_price, round(sum(ap.order_price),4) total_amount,<!-- FORMAT(sum(ap.order_amount),4) total_cost, --> count(*) total_records
   </sql>
   <!-- 查询统计信息 -->
   <select id="getTotalResultFromSuccess" parameterType="map" resultMap="totalResultMap">

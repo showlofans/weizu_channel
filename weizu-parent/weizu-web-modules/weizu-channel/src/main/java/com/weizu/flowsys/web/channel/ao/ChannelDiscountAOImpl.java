@@ -9,16 +9,22 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.OperatorDiscount;
 import com.weizu.flowsys.web.activity.pojo.ScopeDiscount;
+import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
+import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.web.foundation.String.StringHelper;
 
@@ -27,6 +33,10 @@ public class ChannelDiscountAOImpl implements ChannelDiscountAO {
 
 	@Resource
 	private ChannelDiscountDao channelDiscountDao;
+//	@Resource
+//	private ChannelChannelDao channelChannelDao;
+	@Resource
+	private RateDiscountDao rateDiscountDao;
 	
 	/**
 	 * @description: 获得分页折扣列表
@@ -207,6 +217,27 @@ public class ChannelDiscountAOImpl implements ChannelDiscountAO {
 		paramsMap.put("billTypeRate", discountPo.getBillType());
 		
 		return channelDiscountDao.listSimpleChannel(paramsMap);
+	}
+
+	@Transactional
+	@Override
+	public String updateChannelDiscount(ChannelDiscountPo discountPo) {
+		ChannelDiscountPo olCdPo = channelDiscountDao.get(discountPo.getId());
+		Integer cdUpRes = null; 
+		//更新费率和通道折扣
+		if(olCdPo != null && discountPo.getChannelDiscount() != null){
+			Double oldCd = olCdPo.getChannelDiscount();
+			Double editDiscount = NumberTool.sub(discountPo.getChannelDiscount(), oldCd);
+			int editRateRes = rateDiscountDao.updateRateDiscountByCDId(discountPo.getId(), editDiscount);
+			if(editRateRes > 0){
+				cdUpRes = channelDiscountDao.updateLocal(discountPo, new WherePrams("id", "=", discountPo.getId()).and("scope_city_code", "=", discountPo.getScopeCityCode()));
+			}
+		}
+		if(cdUpRes != null){//修改折扣成功
+			return "success";
+		}else{
+			return "error";
+		}
 	}
 
 }

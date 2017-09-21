@@ -1,6 +1,8 @@
 package com.weizu.flowsys.web.trade.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -49,12 +51,20 @@ public class AgencyPurchaseDaoImpl extends DaoImpl<AgencyPurchasePo, Long> imple
 	 */
 	@Override
 	public int batchUpdateState(Long purchaseId, Integer orderState, String orderStateDetail) {
-		AgencyPurchasePo apPo = new AgencyPurchasePo();
-		apPo.setOrderState(orderState);
-		apPo.setOrderStateDetail(orderStateDetail);
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("orderState", orderState);
+		params.put("orderStateDetail", orderStateDetail);
 		//apPo.setOrderBackTimeStr(DateUtil.formatAll(System.currentTimeMillis()));
 //		apPo.setOrderBackTime(System.currentTimeMillis());
-		return updateLocal(apPo, new WherePrams("purchase_id", "=", purchaseId));
+		return sqlSessionTemplate.update("batchUpdateState", params);
+	}
+
+	@Override
+	public Double getOrderAmount(Long purchaseId, Integer agencyId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("purchaseId", purchaseId);
+		params.put("agencyId", agencyId);
+		return sqlSessionTemplate.selectOne("getOrderAmount", params);
 	}
 
 }
