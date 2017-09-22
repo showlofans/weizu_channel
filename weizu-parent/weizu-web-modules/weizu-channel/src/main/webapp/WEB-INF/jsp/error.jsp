@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=utf-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -16,14 +17,15 @@
         </tr>
         <tr align="center">
           <td width="90%">
-	        <%
-	        	String errMsg=(String )request.getAttribute("errMsg");
-	        	if(errMsg!=null && errMsg.trim().length()>0){
-		        	out.println(errMsg);
-	      		}else{
-	      			out.println("未知错误!");
-	      		}
-	       %>
+	       <c:choose>
+	       	<c:when test="${not empty errorMsg }">
+	       		<font color="red">${errorMsg }</font>
+	       	</c:when>
+	       	<c:otherwise>
+	       		<font color="red">未知错误!</font>
+	       		
+	       	</c:otherwise>
+	       </c:choose>
 		  </td>
         </tr>
       </table>

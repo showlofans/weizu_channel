@@ -345,7 +345,7 @@ WHERE a2.root_agency_id=4 and active1.rate_discount_id=22 and active1.bind_state
 	
 	<!-- 查询是否属于二级代理商（接口用户）,是否可以通过接口传单 -->
 	<select id="getSecondAgency" parameterType="map" resultMap="BaseResultMap">
-		select * from <include refid="agency_backward"></include> 
+		select <include refid="Base_Column_List"></include> from <include refid="agency_backward"></include> 
 		<where>
 			 root_agency_id IN (select id from <include refid="agency_backward"></include>
 			<where>

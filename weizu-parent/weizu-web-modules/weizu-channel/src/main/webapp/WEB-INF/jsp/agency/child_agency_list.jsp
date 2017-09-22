@@ -74,7 +74,7 @@
 					<th width="75">地址</th>
 					<th width="60">余额</th>
 					<!-- <th width="60">信用</th> -->
-					<th width="60">费率类型</th>
+					<th width="60">账户类型</th>
 					<!-- <th width="60">费率</th>
 					<th width="60">带票费率</th> -->
 					
@@ -118,7 +118,7 @@
 							<%-- <a title="/flowsys/rate/rate_add_page.do?rateId=${agency.rateId }&agencyId=${agency.id}" data-href="/flowsys/rate/rate_add_page.do?rateId=${agency.rateId }&agencyId=${agency.id}" data-title="费率添加" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe6df;</i></a> --%>
 							<c:choose>
 								<c:when test="${loginContext.rootAgencyId == 0 }">
-									<a data-toggle="tooltip" data-placement="top" style="text-decoration:none"  title="配置通道" data-href="/flowsys/rate/bind_channel_list.do?agencyId=${agency.id }&agencyName=${agency.userName}" data-title="配置通道" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe604;</i></a>
+									<a data-toggle="tooltip" data-placement="top" style="text-decoration:none"  title="配置通道" data-href="/flowsys/rate/bind_channel_list.do?agencyId=${agency.id }&agencyName=${agency.userName}&billTypeRate=${agency.billType}" data-title="配置通道" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe604;</i></a>
 								</c:when>
 								<c:otherwise>
 									<a data-toggle="tooltip" data-placement="top" style="text-decoration:none"  title="配置折扣" data-href="/flowsys/rate/my_rate_list.do?agencyId=${agency.id }&agencyName=${agency.userName}" data-title="配置折扣" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe604;</i></a>

@@ -323,6 +323,9 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 		if(activePo.getServiceType() != null){
 			paramsMap.put("serviceType", activePo.getServiceType());
 		}
+		if(activePo.getBillTypeRate() != null){
+			paramsMap.put("billTypeRate", activePo.getBillTypeRate());
+		}
 		return paramsMap;
 	}
 	/**
@@ -527,7 +530,7 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 				agencyIds[i] = Integer.parseInt(agencyIdsi[i]);
 				agencyNames[i] = agencyVODao.get(agencyIds[i]).getUserName();
 				//判断是否已经添加了该绑定
-				AgencyActiveRatePo aarPo = agencyActiveChannelDao.get(new WherePrams("agency_id", "=", agencyIds[i]).and("rate_discount_id", "=", rateDiscountId));
+				AgencyActiveRatePo aarPo = agencyActiveChannelDao.get(new WherePrams("agency_id", "=", agencyIds[i]).and("rate_discount_id", "=", rateDiscountId).and("bind_state", "=", BindStateEnum.BIND.getValue()));
 				if(aarPo != null){//已经添加过，就不再往list中添加了
 					agencyIds[i] = agencyIds[agencyIds.length-1];//把最后一个元素替代指定的元素
 					agencyIds = Arrays.copyOf(agencyIds, agencyIds.length-1);//数组缩容

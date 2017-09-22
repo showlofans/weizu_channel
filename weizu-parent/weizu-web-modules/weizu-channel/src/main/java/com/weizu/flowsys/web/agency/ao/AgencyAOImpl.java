@@ -106,15 +106,27 @@ public class AgencyAOImpl implements AgencyAO {
 				agencyBackward.getAgencyIp(), agencyBackward.getCreateTime(), 
 				agencyBackward.getVerifyCode());
 		agencyVO.setCallBackIp(agencyBackward.getCallBackIp());
-		if(agencyBackward.getRootAgencyId() != 0){
-			String qq = agencyVODao.get(agencyBackward.getRootAgencyId()).getOtherContact();//富代理商的qq
-			agencyVO.setOtherContact(qq);
-		}else{
-			agencyVO.setOtherContact(agencyBackward.getOtherContact());
-		}
+		agencyVO.setOtherContact(agencyBackward.getOtherContact());
+//		setOtherContact(agencyBackward.getRootAgencyId(),agencyVO);
+		
+//		if(agencyBackward.getRootAgencyId() != 0){
+//			String qq = agencyVODao.get(agencyBackward.getRootAgencyId()).getOtherContact();//富代理商的qq
+//			agencyVO.setOtherContact(qq);
+//		}else{
+//			agencyVO.setOtherContact(agencyBackward.getOtherContact());
+//		}
 		return agencyVO;
 	}
 
+//	public void setOtherContact(Integer rootAgencyId,AgencyBackwardVO agencyVO){
+//		if(rootAgencyId != 0){
+//			String qq = agencyVODao.get(rootAgencyId).getOtherContact();//富代理商的qq
+//			agencyVO.setOtherContact(qq);
+//		}else{
+//			agencyVO.setOtherContact(agencyBackward.getOtherContact());
+//		}
+//	}
+	
 	/**
 	 * @description:编辑代理商
 	 * @param agencyBackward
@@ -393,7 +405,7 @@ public class AgencyAOImpl implements AgencyAO {
 	 * @createTime:2017年7月3日 上午10:25:19
 	 */
 	@Override
-	public int checkSecondAgency(int agencyId) {
+	public int checkNextSecondAgency(int agencyId) {
 		return agencyVODao.checkSecondAgency(agencyId);
 	}
 
@@ -506,5 +518,27 @@ public class AgencyAOImpl implements AgencyAO {
 			return agencyPo;
 		}
 		return null;
+	}
+
+	@Override
+	public Boolean checkIdByPass(int agencyId,String userPass) {
+		AgencyBackwardPo resultAgency = agencyVODao.get(agencyId);
+		if(resultAgency != null)
+		{
+			if(resultAgency.getUserPass().equals(userPass))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean checkSecondAgency(int agencyId) {
+		AgencyBackwardPo agency = agencyVODao.getSecondAgency(agencyId);
+		if(agency != null){
+			return true;
+		}
+		return false;
 	}
 }

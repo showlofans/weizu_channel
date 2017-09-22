@@ -36,12 +36,12 @@ import com.weizu.flowsys.util.ClassUtil;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
+import com.weizu.flowsys.web.agency.ao.AgencyAO;
+import com.weizu.flowsys.web.agency.dao.AgengcyBackwardDaoInterface;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
-import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
-import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
@@ -80,6 +80,8 @@ public class ChargePgController {
 	private RateDiscountAO rateDiscountAO;
 	@Resource
 	private AgencyPurchaseAO agencyPurchaseAO;
+	@Resource
+	private AgencyAO agencyAO;
 	
 //	@Resource
 //	private ChannelDiscountDao channelDiscountDao;
@@ -95,6 +97,10 @@ public class ChargePgController {
 	public ModelAndView pgCharge(HttpServletRequest request,PgChargeVO pcVO){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO != null){
+			boolean isAccess = agencyAO.checkIdByPass(agencyVO.getId(), agencyVO.getUserPass());
+			if(!isAccess){
+				return new ModelAndView("error", "errorMsg", "当前登陆用户不合法");
+			}
 			pcVO.setAgencyId(agencyVO.getId());
 			pcVO.setFromAgencyName(agencyVO.getUserName());
 //			purchasePo.setOrderArriveTime(System.currentTimeMillis());
@@ -501,7 +507,7 @@ public class ChargePgController {
 						httpSession.setAttribute("lastSearch", purchaseVO);
 					}
 				}
-				List<PurchaseVO> records = pagination.getRecords();
+				List<PurchaseVO> records = purchaseAO.getPurchase(purchaseVO);
 				if(callTag == 1 && records != null && records.size() > 0){
 					System.out.println(callTag +"-开始统计总扣款");
 					TotalResult tot = purchaseAO.getTotalResultFromSuccess(purchaseVO);
