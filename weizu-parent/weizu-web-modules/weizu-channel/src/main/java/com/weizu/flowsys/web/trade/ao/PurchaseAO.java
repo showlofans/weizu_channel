@@ -45,6 +45,14 @@ public interface PurchaseAO {
 	 * @createTime:2017年6月13日 下午12:52:58
 	 */
 	Pagination<PurchaseVO> getPurchase(Map<String, Object> resultMap,PurchaseVO purchaseVO,PageParam pageParam);
+	/**
+	 * @description: 获得不分页列表
+	 * @param purchaseVO
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月22日 上午9:53:53
+	 */
+	List<PurchaseVO> getPurchase(PurchaseVO purchaseVO);
 	
 	/**
 	 * @description:通过微族api充值
@@ -84,6 +92,8 @@ public interface PurchaseAO {
 	 * @createTime:2017年8月22日 下午2:18:36
 	 */
 	TotalResult getTotalResultFromSuccess(PurchaseVO purchaseVO);
+	
+	
 	
 	
 	/**

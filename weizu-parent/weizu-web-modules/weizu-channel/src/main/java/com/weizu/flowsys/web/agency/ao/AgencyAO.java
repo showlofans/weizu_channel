@@ -130,7 +130,16 @@ public interface AgencyAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月3日 上午10:20:20
 	 */
-	int checkSecondAgency(int agencyId);
+	int checkNextSecondAgency(int agencyId);
+	
+	/**
+	 * @description:查看是否是二级代理商
+	 * @param agencyId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月22日 下午1:12:24
+	 */
+	boolean checkSecondAgency(int agencyId);
 	
 	/**
 	 * @description: 修改密码
@@ -150,6 +159,15 @@ public interface AgencyAO {
 	 * @createTime:2017年8月17日 上午11:27:54
 	 */
 	boolean checkName(String name); 
+	
+	/**
+	 * @description: 查看登陆用户是否合法（密码是否正确）
+	 * @param agencyId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月22日 上午10:59:48
+	 */
+	Boolean checkIdByPass(int agencyId,String userPass);
 	
 	/**
 	 * @description: 查询没有绑定的代理商

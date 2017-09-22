@@ -55,7 +55,7 @@ public class ValiUser {
 		
 		String rightSign = null;
 		try {
-			rightSign = MD5.getMd5("username="+backPo.getUserName()+"&apikey="+backAPIKey,null,null);
+			rightSign = MD5.getMd5("userName="+backPo.getUserName()+"&userPass="+backPo.getUserPass()+"&apikey="+backAPIKey,null,null);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

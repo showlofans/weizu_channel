@@ -833,6 +833,18 @@ public class PurchaseAOImpl implements PurchaseAO {
 		resultMap.put("searchParams", purchaseVO);	//查询参数放入返回参数
 		return new Pagination<PurchaseVO>(records, totalRecord, pageNo, pageSize);
 	}
+	
+
+	@Override
+	public List<PurchaseVO> getPurchase(PurchaseVO purchaseVO) {
+		Boolean isCharged = purchaseVO.getOrderState() != null && (purchaseVO.getOrderState() == OrderStateEnum.CHARGED.getValue() ||purchaseVO.getOrderState() == OrderStateEnum.UNCHARGE.getValue());
+		Map<String, Object> paramsMap = getMapByPojo(purchaseVO,isCharged);
+		int totalRecord = purchaseDAO.countPurchase(paramsMap);//今天的订单数量
+		//设置总记录数和页面参数和查询参数
+		totalRecord = resetTotalRecord(purchaseVO,paramsMap,isCharged,totalRecord);
+		List<PurchaseVO> records = purchaseDAO.getPurchase(paramsMap);
+		return records;
+	}
 
 	
 	/**
@@ -845,10 +857,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 		int orderState = orderIn.getStatus();
 		String msg = orderIn.getMsg();
 		switch (orderState) {
-    	case 0://未充值
+    	case 4://未充值
 //    		orderState = OrderStateEnum.WEICHONG.getValue();
 //    		break;
-    	case 1://等待充值
+    	case 3://等待充值
     		orderState = OrderStateEnum.CHARGING.getValue();
     		msg = OrderStateEnum.CHARGING.getDesc();
 //    		orderState = OrderStateEnum.DAICHONG.getValue();
@@ -1121,5 +1133,6 @@ public class PurchaseAOImpl implements PurchaseAO {
 		List<OperatorPgDataPo> pgList = operatorPgDao.getPgByChanel(objMap);
 		return pgList;
 	}
+
 
 }

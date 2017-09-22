@@ -131,7 +131,7 @@ public class AgencyController {
 //			List<RateBackwardPo> rateList = rateBackwardDao.selectByRootId(resultPo.getId());
 			session.setAttribute("loginContext", agencyVO);// 保存登陆实体到session中
 			
-			if(agencyAO.checkSecondAgency(agencyVO.getId()) == 1){
+			if(agencyAO.checkNextSecondAgency(agencyVO.getId()) == 1){
 				//设置访问权限为限制(三级代理商)
 				session.setAttribute("power", "limited");
 				ChargeAccountPo parentChargeAccount = chargeAccountAO
@@ -351,7 +351,7 @@ public class AgencyController {
 			//注册用户
 			AgencyBackwardVO agencyVO = agencyAO.addAgency(agencyBackward);
 			if (agencyVO != null) {
-				if(agencyAO.checkSecondAgency(agencyVO.getId()) == 1){
+				if(agencyAO.checkNextSecondAgency(agencyVO.getId()) == 1){
 					//设置访问权限为限制
 					request.getSession().setAttribute("power", "limited");
 				}

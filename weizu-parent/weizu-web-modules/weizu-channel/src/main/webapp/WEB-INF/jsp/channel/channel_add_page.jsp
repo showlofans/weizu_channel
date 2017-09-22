@@ -350,6 +350,11 @@ $(document).ready(function(){
 /**表单提交前的验证*/
 function changeName(){
 	var i = 0;
+	if(!$('#ep_info').is(':visible')){
+		alert("没有选定平台")	;
+		$('#channel_search').focus();
+		return false;
+	}
 	$(".disscount").each(function(){
 		//alert($(this).val() == "");
 		if($(this).is(':visible') && $(this).val() != ""){ 
@@ -374,11 +379,6 @@ function changeName(){
     		$(this).focus();
     	}
 	})
-	if(!$('#ep_info').is(':visible')){
-		alert("没有选定平台")	;
-		$('#channel_search').focus();
-		return false;
-	}
 	if(i > 0){
 		//alert(i);
 		return true;
@@ -392,10 +392,15 @@ function changeName(){
 function checkBoxes(vart){
 	if($(vart).next().is(':hidden')){
 		$(vart).next().show();
+		var operatorType = $("input[name='operatorType']:checked").val();
 		var scopeCityCode = $(vart).val();
 		//alert(scopeCityCode);
-		var operatorType = $("input[name='operatorType']:checked").val();
 		 var serviceType = $("input[name='serviceType']:checked").val();
+		if(serviceType == 0 && scopeCityCode != '32'){
+			layer.msg('全国只能配置全国地区');
+		}else{
+			$(vart).next().val('');//置空编辑的折扣
+		}
 		 var epId = $('#epId').val();
 		 if(!$('#ep_info').is(':visible')){
 			 alert('还没有选定平台');

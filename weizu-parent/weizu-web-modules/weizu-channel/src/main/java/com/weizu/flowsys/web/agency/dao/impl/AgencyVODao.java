@@ -9,7 +9,9 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
+import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
@@ -171,7 +173,8 @@ public class AgencyVODao extends DaoImpl<AgencyBackwardPo, Integer> implements A
 	public AgencyBackwardPo getSecondAgency(String userName) {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("userName", userName);
-		paramMap.put("agencyTag", 1);
+		paramMap.put("agencyTag", AgencyTagEnum.DATA_USER.getValue());
+//		AgencyBackwardPo agencyPo = get(new WherePrams("user_name", "=", userName).and("agency_tag", "=", AgencyTagEnum.DATA_USER.getValue()));
 		return sqlSessionTemplateASS.selectOne("getSecondAgency", paramMap);
 	}
 	@Override

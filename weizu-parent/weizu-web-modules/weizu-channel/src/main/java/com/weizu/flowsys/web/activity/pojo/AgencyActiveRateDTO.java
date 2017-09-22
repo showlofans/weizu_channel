@@ -66,13 +66,13 @@ public class AgencyActiveRateDTO extends Po {
 		this.id = id;
 	}
 
-	public Integer getAgencyId() {
-		return agencyId;
-	}
+//	public Integer getAgencyId() {
+//		return agencyId;
+//	}
 
-	public void setAgencyId(Integer agencyId) {
-		this.agencyId = agencyId;
-	}
+//	public void setAgencyId(Integer agencyId) {
+//		this.agencyId = agencyId;
+//	}
 
 	public String getAgencyName() {
 		return agencyName;

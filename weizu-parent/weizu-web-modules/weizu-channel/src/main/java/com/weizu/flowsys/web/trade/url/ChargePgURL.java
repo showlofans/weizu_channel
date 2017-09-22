@@ -90,6 +90,11 @@ public class ChargePgURL extends BaseURL {
 	 */
 	public static final String AJAX_COMMIT_ORDER = "/ajax_commit_order" + DYNAMIC_WEB_SUFFIX;
 	
+	/**
+	 * 充值等待批量提交订单
+	 */
+	public static final String batch_COMMIT_ORDER = "/ajax_commit_order" + DYNAMIC_WEB_SUFFIX;
+	
 	
 	
 }

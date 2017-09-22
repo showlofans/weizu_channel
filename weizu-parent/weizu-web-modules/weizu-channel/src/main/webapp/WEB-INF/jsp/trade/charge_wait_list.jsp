@@ -128,6 +128,7 @@
 				<c:forEach items="${resultMap.pagination.records }" var="purchase" varStatus="vs">
 					<tr class="text-c">
 						<td><input type="checkbox" class="ckpur" value="" name=""></td>
+						<td style="display:none;">${purchase.agencyId }</td>
 						<td>${purchase.agencyName }</td>
 						<td>${purchase.orderId }</td>
 						<td>${purchase.chargeTel }</td>
@@ -214,10 +215,42 @@
 <script type="text/javascript">
 /**批量提交*/
 function batchCommit(){
-	$(".ckpur:checked").each(function(){
-		//alert(1);
-		
-	})
+	var purchaseIds = "";
+	var agencyIds = "";
+	$(".ckpur:checked").each(function(){ //遍历table里的全部checkbox
+       // allcheckbox += $(this).next().html() + ","; //获取所有checkbox的值
+        //alert($(this).is(':checked'));
+        	agencyIds += $(this).next().html() + ","; //获取被选中的代理商id
+        	purchaseIds +=  $(this).next().next().next().html() + ",";
+    });
+        	//alert(agencyIds);
+	if(agencyIds.length > 1) //如果获取到
+    {
+    	agencyIds = agencyIds.substring(0, agencyIds.length - 1);
+    	purchaseIds = purchaseIds.substring(0, purchaseIds.length - 1);
+    	alert(purchaseIds);
+    	$.ajax({
+			type: 'POST',
+			url: "",
+			//dataType: 'json',
+			data: {purchaseIds:purchaseIds,agencyIds:agencyIds},
+			success: function(resp){
+				//$(obj).parents("tr").remove();
+				//alert
+				if(resp=="success"){
+					//layer.msg('更新绑定成功',{icon:1,time:1000});
+					location.reload();
+               	 }else{
+					layer.msg('更新绑定失败',{icon:1,time:1000});
+               	 }
+			},
+			error:function(resp) {
+				console.log(resp.msg);
+			}
+		});
+    }else{
+    	alert("未选中");
+    } 
 }
 function formSub(){
 	$('form').submit();

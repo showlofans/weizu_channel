@@ -23,38 +23,38 @@
 			<label class="form-label col-xs-4 col-sm-3">用户账户：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<%-- <input type="text" readonly="readonly" class="input-text" value="${resultMap.agencyPo.userName }" placeholder="" id="userName" name="userName"> --%>
-				${resultMap.agencyPo.userName }
+				<span class="isEmpty">${resultMap.agencyPo.userName }</span>
 			</div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">真实姓名：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<%-- <input type="text" readonly="readonly" class="input-text" value="${resultMap.agencyPo.userRealName }" placeholder="" id="userRealname" name="userRealname"> --%>
-				${resultMap.agencyPo.userRealName }
+				<span class="isEmpty">${resultMap.agencyPo.userRealName }</span>
 			</div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">联系电话：</label>
 			<div class="formControls col-xs-8 col-sm-9"> 
 				 <%-- <input type="text" readonly="readonly" class="input-text" value="${resultMap.agencyPo.agencyTel }" placeholder="" id="agencyTel" name="agencyTel"> --%>
-				 ${resultMap.agencyPo.agencyTel }
+				 <span class="isEmpty">${resultMap.agencyPo.agencyTel }</span>
 		 	</div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">电子邮箱：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<%-- <input type="text" readonly="readonly" class="input-text" value="${resultMap.agencyPo.userEmail }" placeholder="" id="userEmail" name="userEmail"> --%>
-				${resultMap.agencyPo.userEmail }
+				<span class="isEmpty">${resultMap.agencyPo.userEmail }</span>
 			</div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">用户地址：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<%-- <input type="text" readonly="readonly" style="width:200px" class="input-text"  value="${resultMap.agencyPo.agencyIp }" placeholder="" id="agencyIp" name="agencyIp"> --%>
-				${resultMap.agencyPo.agencyIp }
+				<span class="isEmpty">${resultMap.agencyPo.agencyIp }</span>
 			</div>
 		</div>
-		<c:if test="${not empty resultMap.agencyPo.userApiKey}">
+		<c:if test="${not empty resultMap.agencyPo.userApiKey}"><!-- 对私账户会为空 -->
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">对接apikey：</label>
 			<div class="formControls col-xs-8 col-sm-9">
@@ -101,6 +101,24 @@
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
 <script type="text/javascript" src="/view/lib/layer/2.4/layer.js"></script>  
 <script type="text/javascript">
+/* function setInfo(){
+	$(".isEmpty").each(function(){
+		var info = $(this).html();
+		if(info == ' '){
+			$(this).html('没有填写');
+		}
+	})
+} */
+$(document).ready(function() {
+	$(".isEmpty").each(function(){
+		var info = $(this).html();
+		//alert(info == '');
+		if (info == null || info == undefined || info == '') {
+			$(this).html('没有填写');
+			$(this).addClass('c-red');
+		}
+	})
+})
 ///更新信息
 function save(){
 	var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
