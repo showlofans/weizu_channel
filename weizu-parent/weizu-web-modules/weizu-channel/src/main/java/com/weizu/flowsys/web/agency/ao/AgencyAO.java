@@ -3,9 +3,11 @@ package com.weizu.flowsys.web.agency.ao;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
-import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
+import com.weizu.flowsys.web.activity.pojo.AccountActiveRateDTO;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 
@@ -13,12 +15,12 @@ import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 public interface AgencyAO {
 
 	/**
-	 * @description:注册代理商
+	 * @description:注册代理商，把代理商相关信息放入session当中
 	 * @param agencyBackward
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年4月19日 下午4:42:07
 	 */
-	AgencyBackwardVO addAgency(AgencyBackwardPo agencyBackward);
+	Integer addAgency(HttpSession httpSession,AgencyBackwardPo agencyBackward);
 	/**
 	 * @description:修改代理商
 	 * @param agencyBackward
@@ -114,6 +116,17 @@ public interface AgencyAO {
 	AgencyBackwardPo getAgencyByAccountId(Integer accountId);
 	
 	/**
+	 * @description:通过账户id获得父级代理商信息
+	 * @param accountId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月25日 上午11:26:54
+	 */
+	AgencyBackwardPo getRootAgencyByAccountId(Integer accountId);
+	
+	
+	
+	/**
 	 * @description: 获得父级代理商的实体
 	 * @param id
 	 * @return
@@ -176,6 +189,15 @@ public interface AgencyAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月17日 下午3:21:21
 	 */
-	Pagination<AgencyBackwardVO> getUnbindAgency(int rootAgencyId, AgencyActiveRateDTO aardto, PageParam pageParam);
+	Pagination<AgencyBackwardVO> getUnbindAgency(int rootAgencyId, AccountActiveRateDTO aardto, PageParam pageParam);
+	
+	/**
+	 * @description:查看邀请码是否符合条件
+	 * @param verifyCode
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月23日 上午11:47:05
+	 */
+	Boolean checkVerifyCode(String verifyCode,String userName);
 	
 }

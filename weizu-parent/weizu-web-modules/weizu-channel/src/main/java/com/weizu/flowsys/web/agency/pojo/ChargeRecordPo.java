@@ -27,14 +27,14 @@ public class ChargeRecordPo extends Po implements Cloneable{
 	private Double chargeBefore; 		// 交易前余额
 
 	private Double chargeAfter; 		// 交易后余额
-
+	@TempField
 	private Integer billType; 			// 发票类型（1-对公，0-对私）
 
 	private Integer accountType; 		// 交易类型（1-给上家扣款，0-给下家充值)
 
 	private Integer accountId; 			// 账户id
 	
-	private Integer agencyId; 			// 代理商id
+//	private Integer agencyId; 			// 代理商id
 	
 	private Long purchaseId;			//订单号
 	
@@ -71,15 +71,18 @@ public class ChargeRecordPo extends Po implements Cloneable{
 	 * @param purchaseId
 	 */
 	public ChargeRecordPo(Long remittanceTime, Double rechargeAmount,
-			Double chargeBefore, Double chargeAfter, Integer billType,
-			Integer accountType, Integer accountId, Integer agencyId, Integer chargeFor, Long purchaseId) {
+			Double chargeBefore, Double chargeAfter,
+//			Integer billType,
+			Integer accountType, Integer accountId, 
+//			Integer agencyId, 
+			Integer chargeFor, Long purchaseId) {
 		super();
-		this.agencyId = agencyId;
+//		this.agencyId = agencyId;
 		this.remittanceTime = remittanceTime;
 		this.rechargeAmount = rechargeAmount;
 		this.chargeBefore = chargeBefore;
 		this.chargeAfter = chargeAfter;
-		this.billType = billType;
+//		this.billType = billType;
 		this.accountType = accountType;
 		this.accountId = accountId;
 		this.chargeFor = chargeFor;
@@ -155,13 +158,13 @@ public class ChargeRecordPo extends Po implements Cloneable{
 
 
 
-	public Integer getAgencyId() {
-		return agencyId;
-	}
-
-	public void setAgencyId(Integer agencyId) {
-		this.agencyId = agencyId;
-	}
+//	public Integer getAgencyId() {
+//		return agencyId;
+//	}
+//
+//	public void setAgencyId(Integer agencyId) {
+//		this.agencyId = agencyId;
+//	}
 
 	public Double getChargeBefore() {
 		return chargeBefore;

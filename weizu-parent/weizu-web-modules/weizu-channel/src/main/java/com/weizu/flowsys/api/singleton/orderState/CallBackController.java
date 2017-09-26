@@ -14,9 +14,10 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
+import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.dao.impl.AgencyBackwardDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
-import com.weizu.flowsys.web.trade.ao.AgencyPurchaseAO;
+import com.weizu.flowsys.web.trade.ao.AccountPurchaseAO;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 
@@ -31,15 +32,17 @@ import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 @Controller(value=CallBackURL.MODOE_NAME)
 public class CallBackController {
 	@Resource
-	private AgencyPurchaseAO agencyPurchaseAO;
+	private AccountPurchaseAO agencyPurchaseAO;
 //	@Resource
 //	private PurchaseAO purchaseAO;
 	
 	@Resource
 	private PurchaseDao purchaseDAO;
 	
+//	@Resource
+//	private AgencyBackwardDao agencyBackwardDao;
 	@Resource
-	private AgencyBackwardDao agencyBackwardDao;
+	private AgencyAO agencyAO;
 	
 	private Logger logger = Logger.getLogger("CallBackController");
 	
@@ -116,7 +119,7 @@ public class CallBackController {
 					rjdto.setStatusDetail(statusDetail);
 				}
 				agencyPurchaseAO.updatePurchaseState(purchasePo.getOrderId(), myStatus, statusDetail, ts);
-				AgencyBackwardPo agencyPo = agencyBackwardDao.get(purchasePo.getAgencyId());
+				AgencyBackwardPo agencyPo = agencyAO.getAgencyByAccountId(purchasePo.getAccountId());
 				//把rjdto按照代理商返回
 				if(!"success".equals(SendCallBackUtil.sendCallBack(rjdto, agencyPo))){//回调成功，更新数据库回调状态
 					logger.config("向下返回调失败");

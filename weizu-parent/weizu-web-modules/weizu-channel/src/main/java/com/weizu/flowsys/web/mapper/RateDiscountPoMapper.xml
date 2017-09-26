@@ -4,8 +4,9 @@
   <sql id="t_rateD">rate_discount</sql>
 <sql id="t_cDiscount">channel_discount</sql>
    <!--  <sql id="t_aac_join">aac_join_rd</sql> -->
-  <sql id="t_active">agency_active_rate</sql> 
+  <sql id="t_active">account_active_rate</sql> 
   <sql id="t_cnel">channel_channel</sql> 
+  <sql id="t_account">charge_account</sql>
   
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.activity.pojo.RateDiscountPo" >
     <id column="id" property="id" jdbcType="BIGINT" />
@@ -54,6 +55,9 @@
   	</where>
   </update>
   
+  
+  
+  <!-- 通过代理商id和通道折扣id获得绑定的费率id -->
   <!-- 获得子费率列表 -->
    <select id="getMyChildRate" parameterType="map" resultMap="MyRateResultMap">
   	select <include refid="My_Rate_List"></include>
@@ -61,11 +65,17 @@
   	inner join <include refid="t_rateD"></include> rate
   	ON active.rate_discount_id=rate.id
  	<where>
- 		<if test="agencyId != null">
- 			AND active.agency_id = #{agencyId}
+ 		<if test="accountId != null">
+ 			AND active.account_id = #{accountId}
  		</if>
  		<if test="activeId != null">
  			AND  rate.active_id = #{activeId}
+ 		</if>
+ 		<if test="bindState != null">
+ 			AND active.bind_state = #{bindState}
+ 		</if>
+ 		<if test="channelDiscountId != null">
+ 			AND  rate.channel_discount_id = #{channelDiscountId}
  		</if>
  	</where>
   </select>
@@ -76,6 +86,8 @@
   	select <include refid="Show_Rate_List"></include>
   	from (select <include refid="Get_My_Rate"></include>
 	  	from <include refid="t_active"></include> active
+	  	INNER join <include refid="t_account"></include> act
+		on active.account_id=act.id
 	  	inner join <include refid="t_rateD"></include> rate
 	  	ON active.rate_discount_id=rate.id
 	  	INNER JOIN <include refid="t_cDiscount"></include> cd
@@ -84,7 +96,7 @@
 	 	on cnel.id=cd.channel_id
 	 	<where>
 	 		<if test="agencyId != null">
-	 			AND active.agency_id = #{agencyId}
+	 			AND act.agency_id = #{agencyId}
 	 		</if>
 	 		<if test="billType != null">
 	 			AND rate.bill_type = #{billType}
@@ -108,6 +120,8 @@
   	select <include refid="Show_Rate_List"></include>
   	from (select <include refid="Get_My_Rate"></include>
 	  	from <include refid="t_active"></include> active
+	  	INNER join <include refid="t_account"></include> act
+		on active.account_id=act.id
 	  	inner join <include refid="t_rateD"></include> rate
 	  	ON active.rate_discount_id=rate.id
 	  	INNER JOIN <include refid="t_cDiscount"></include> cd
@@ -124,6 +138,8 @@
   <select id="getScopeExceptionForRate" parameterType="map" resultType="int">
   	select count(*)
   	from <include refid="t_active"></include> active
+  	INNER join <include refid="t_account"></include> act
+	on active.account_id=act.id
   	inner join <include refid="t_rateD"></include> rate
   	ON active.rate_discount_id=rate.id
   	INNER JOIN <include refid="t_cDiscount"></include> cd
@@ -136,15 +152,18 @@
   </select>
   <!-- 三表连接的查询条件 -->
   <sql id="tripple_table_sql">
+  	 <if test="accountId != null">
+		AND active.account_id = #{accountId}
+	</if>
   	 <if test="agencyId != null">
-		AND active.agency_id = #{agencyId}
+		AND act.agency_id = #{agencyId}
 	</if>
   	 <if test="bindState != null">
 		AND active.bind_state = #{bindState}
 	</if>
-	<if test="billTypeRate != null"><!-- 费率类型 -->
+	<!-- <if test="billTypeRate != null">费率类型
 		AND rate.bill_type = #{billTypeRate}
-	</if>
+	</if> -->
 	<if test="channelId != null"><!-- 费率类型 -->
 		AND rate.channel_id = #{channelId}
 	</if>
@@ -169,6 +188,8 @@
   	select <include refid="Show_Rate_List"></include>
   	from (select <include refid="Get_My_Rate"></include>
   	from <include refid="t_active"></include> active
+  	INNER join <include refid="t_account"></include> act
+	on active.account_id=act.id
   	inner join <include refid="t_rateD"></include> rate
   	ON active.rate_discount_id=rate.id
   	INNER JOIN <include refid="t_cDiscount"></include> cd
@@ -176,8 +197,11 @@
  	INNER JOIN <include refid="t_cnel"></include> cnel
  	on cnel.id=cd.channel_id
  	<where>
+ 		<if test="accountId != null">
+ 			AND active.account_id = #{accountId}
+ 		</if>
  		<if test="agencyId != null">
- 			AND active.agency_id = #{agencyId}
+ 			AND act.agency_id = #{agencyId}
  		</if>
  		<if test="bindState != null">
  			AND active.bind_state = #{bindState}
@@ -202,6 +226,8 @@
   	select count(*) from (select <include refid="Show_Rate_List"></include>
   	from (select <include refid="Get_My_Rate"></include>
   	from <include refid="t_active"></include> active
+  	INNER join <include refid="t_account"></include> act
+	on active.account_id=act.id
   	inner join <include refid="t_rateD"></include> rate
   	ON active.rate_discount_id=rate.id
   	INNER JOIN <include refid="t_cDiscount"></include> cd
@@ -210,7 +236,10 @@
  	on cnel.id=cd.channel_id
  	<where>
  		<if test="agencyId != null">
- 			AND active.agency_id = #{agencyId}
+ 			AND act.agency_id = #{agencyId}
+ 		</if>
+ 		<if test="accountId != null">
+ 			AND act.account_id = #{accountId}
  		</if>
  		<if test="bindState != null">
  			AND active.bind_state = #{bindState}

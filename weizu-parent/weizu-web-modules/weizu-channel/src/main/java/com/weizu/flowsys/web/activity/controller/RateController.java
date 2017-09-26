@@ -33,8 +33,8 @@ import com.weizu.flowsys.web.activity.ao.OperatorDiscountAO;
 import com.weizu.flowsys.web.activity.ao.RateBackwardAO;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
-import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
-import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
+import com.weizu.flowsys.web.activity.pojo.AccountActiveRateDTO;
+import com.weizu.flowsys.web.activity.pojo.AccountActiveRatePo;
 import com.weizu.flowsys.web.activity.pojo.RateBackwardPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountShowDTO;
@@ -42,6 +42,7 @@ import com.weizu.flowsys.web.activity.url.RateURL;
 import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
+import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.channel.ao.ChannelChannelAO;
@@ -74,6 +75,8 @@ public class RateController {
 	private ChannelChannelDao channelChannelDao;
 	@Resource
 	private ChargeAccountAo chargeAccountAO;
+	@Resource
+	private ChargeAccountDao chargeAccountDao;
 	@Resource
 	private AgencyActiveChannelAO agencyActiveChannelAO;
 	@Resource
@@ -379,9 +382,10 @@ public class RateController {
 	@SuppressWarnings("restriction")
 	@RequestMapping(value=RateURL.BIND_CHANNEL_LIST)
 	public ModelAndView bindChannelList(@RequestParam(value = "pageNo", required = false) String pageNo,
-			HttpServletRequest request,AgencyActiveRatePo activePo)
+			HttpServletRequest request,AccountActiveRatePo activePo)
 	{
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		
 		if(agencyVO == null){
 			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 		}
@@ -392,23 +396,24 @@ public class RateController {
 		}else{
 			pageParam = new PageParam(1, 10);
 		}
-		Pagination<AgencyActiveRatePo> pagination = agencyActiveChannelAO.listActive(pageParam, activePo);
+		Pagination<AccountActiveRatePo> pagination = agencyActiveChannelAO.listActive(pageParam, activePo);
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("pagination", pagination);
 		resultMap.put("bindStateEnums", BindStateEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		
-		if(activePo.getAgencyId() != null)
+		if(activePo.getAccountId() != null)
 		{
-			ChargeAccountPo chargeAccountPo1 = chargeAccountAO
-					.getAccountByAgencyId(activePo.getAgencyId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
-			if(chargeAccountPo1 != null)
+			ChargeAccountPo accountPo1 = chargeAccountDao.get(activePo.getAccountId());
+//			ChargeAccountPo chargeAccountPo1 = chargeAccountAO
+//					.getAccountByAgencyId(activePo.getAgencyId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
+			if(accountPo1 != null)
 			{
 				request.getSession().setAttribute("isOpen", 1);
 			}
 		}
-		request.getSession().setAttribute("childAgencyId", activePo.getAgencyId());
+		request.getSession().setAttribute("childAccountId", activePo.getAccountId());
 		request.getSession().setAttribute("childAgencyName", activePo.getAgencyName());
 		return new ModelAndView("/activity/bind_channel_list","resultMap",resultMap);
 	}
@@ -571,15 +576,15 @@ public class RateController {
 	 */
 	@RequestMapping(value=RateURL.BIND_CHANNEL)
 	@ResponseBody
-	public String rateJoinChannel(AgencyActiveRatePo aacp,RateDiscountPo rateDiscountPo,HttpServletResponse response, HttpServletRequest request)
+	public String rateJoinChannel(AccountActiveRatePo aacp,RateDiscountPo rateDiscountPo,HttpServletResponse response, HttpServletRequest request)
 	{
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		
-		String agencyId = request.getSession().getAttribute("childAgencyId").toString();
+		String accountId = request.getSession().getAttribute("childAccountId").toString();
 		String agencyName = request.getSession().getAttribute("childAgencyName").toString();
 		
 		aacp.setBindAgencyId(agencyVO.getId());
-		aacp.setAgencyId(Integer.parseInt(agencyId));
+		aacp.setAccountId(Integer.parseInt(accountId));
 		aacp.setAgencyName(agencyName);
 		if(ServiceTypeEnum.NATION_WIDE.getValue() == rateDiscountPo.getServiceType() && !ScopeCityEnum.QG.getValue().equals(rateDiscountPo.getScopeCityCode())){
 			//全国业务，必须匹配全国的折扣
@@ -630,7 +635,7 @@ public class RateController {
 	 */
 	@RequestMapping(value=RateURL.BATCH_UPDATE_BIND_STATE)
 	@ResponseBody
-	public String batchUpdateBindState(AgencyActiveRateDTO aardto, HttpServletResponse response)
+	public String batchUpdateBindState(AccountActiveRateDTO aardto, HttpServletResponse response)
 	{
 		int res = agencyActiveChannelAO.batchUpdateBindState(aardto);
 		if(res >= 0){
@@ -677,7 +682,7 @@ public class RateController {
 	 * @createTime:2017年7月10日 上午11:53:39
 	 */
 	@RequestMapping(value=RateURL.BIND_RATE_LIST)
-	public ModelAndView getBindRateList(AgencyActiveRatePo aarp,Long channelId, @RequestParam(value = "pageNoLong", required = false) String pageNoLong,HttpServletRequest request){
+	public ModelAndView getBindRateList(AccountActiveRatePo aarp,Long channelId, @RequestParam(value = "pageNoLong", required = false) String pageNoLong,HttpServletRequest request){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 //		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		PageParam pageParam = null;
@@ -852,7 +857,7 @@ public class RateController {
 	 */
 	@RequestMapping(value= RateURL.BATCH_BIND_AGENCY_PAGE)
 	@ResponseBody
-	public ModelAndView batchBindAgencyPage(@RequestParam(value = "pageNo", required = false) String pageNo,AgencyActiveRateDTO aardto,RateDiscountPo ratePo, HttpServletRequest request){
+	public ModelAndView batchBindAgencyPage(@RequestParam(value = "pageNo", required = false) String pageNo,AccountActiveRateDTO aardto,RateDiscountPo ratePo, HttpServletRequest request){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		if(agencyVO == null){
@@ -897,7 +902,7 @@ public class RateController {
 	@SuppressWarnings("restriction")
 	@ResponseBody
 	@RequestMapping(value=RateURL.BATCH_BIND_AGENCY)
-	public String batchBindAgency(AgencyActiveRateDTO aardto,HttpServletRequest request){
+	public String batchBindAgency(AccountActiveRateDTO aardto,HttpServletRequest request){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO == null){
 			return "error";

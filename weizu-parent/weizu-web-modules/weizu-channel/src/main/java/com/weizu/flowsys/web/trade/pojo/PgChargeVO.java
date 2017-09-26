@@ -28,7 +28,7 @@ public class PgChargeVO {
 	
 	private String fromAgencyName;		//提单来源代理名称
 	
-	private Integer agencyId;				//提单来源代理id
+	private Integer accountId;				//提单来源代理id
 	
 	private Long rateId;					//费率id
 	
@@ -42,12 +42,12 @@ public class PgChargeVO {
 		this.cdisId = cdisId;
 	}
 
-	public Integer getAgencyId() {
-		return agencyId;
+	public Integer getAccountId() {
+		return accountId;
 	}
 
-	public void setAgencyId(Integer agencyId) {
-		this.agencyId = agencyId;
+	public void setAccountId(Integer accountId) {
+		this.accountId = accountId;
 	}
 
 	public String getFromAgencyName() {

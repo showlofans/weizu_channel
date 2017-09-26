@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weizu.flowsys.web.activity.dao.AccountActiveRateDao" >
+
+<sql id="t_active">account_active_rate</sql>
+<sql id="t_rate">rate_discount</sql>
+<sql id="t_channel">channel_discount</sql>
+<sql id="t_account">charge_account</sql>
+
+  <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.activity.pojo.AccountActiveRatePo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="account_id" property="accountId" jdbcType="INTEGER" />
+    <result column="bind_state" property="bindState" jdbcType="INTEGER" />
+    <result column="bind_agency_id" property="bindAgencyId" jdbcType="INTEGER" />
+    <result column="agency_name" property="agencyName" jdbcType="VARCHAR" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="active_time" property="activeTime" jdbcType="BIGINT" />
+    <result column="rate_discount_id" property="rateDiscountId" jdbcType="BIGINT" />
+    <result column="rBill" property="billTypeRate"/>
+    <result column="cBill" property="billTypeChannel"/>
+    <result column="channel_discount" property="channelDiscount"/>
+    <!-- <result column="active_time" property="activeTime" jdbcType="BIGINT" /> -->
+    <collection property="rateList" resultMap="com.weizu.flowsys.web.activity.dao.RateDiscountDao.BaseResultMap"></collection>
+  </resultMap>
+  
+  <!-- 费率结果集 -->
+  <resultMap id="OtherResultMap" type="com.weizu.flowsys.web.activity.pojo.AccountActiveRatePo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="account_id" property="accountId" jdbcType="INTEGER" />
+    <result column="bind_state" property="bindState" jdbcType="INTEGER" />
+    <result column="bind_agency_id" property="bindAgencyId" jdbcType="INTEGER" />
+    <!-- <result column="channel_id" property="channelId" jdbcType="BIGINT" /> -->
+    <result column="agency_name" property="agencyName" jdbcType="VARCHAR" />
+    <!-- <result column="channel_name" property="channelName" jdbcType="VARCHAR" /> -->
+    <result column="active_time" property="activeTime" jdbcType="BIGINT" />
+    <result column="rate_discount_id" property="rateDiscountId" jdbcType="BIGINT" />
+    <result column="rate.active_discount" property="channelDiscount"/>
+  </resultMap>
+  
+  
+  <sql id="Other_Column_List" >
+    active.id, active.account_id,  active.agency_name, active.active_time,
+    rate.id,channel.operator_type,channel.scope_city_code,rate.active_discount,active.bind_agency_id,active.bind_state
+  </sql>
+  <sql id="Base_Column_List" >
+    active.id, account_id, agency_name, active_time,channel.channel_name,channel.bill_type cBill,
+    rate.id,channel.operator_type,channel.scope_city_code,active_discount,active_id,bind_agency_id,bind_state,channel_discount,rate.bill_type rBill
+  </sql>
+  
+  <!-- 查询给三级代理商的最新折扣 -->
+  <select id="listActiveDiscount" parameterType="map" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"></include>
+  	from <include refid="t_active"></include> active
+  	inner join <include refid="t_channel"></include> channel
+  	on active.channel_id = channel.id
+  	inner join <include refid="t_rate"></include> rate
+  	on active.id = rate.active_id
+  	<where>
+  		<include refid="condition_sql"></include>
+  	</where>
+  </select>
+  
+  <resultMap type="com.weizu.flowsys.web.activity.pojo.AccountActiveRatePo" id="simpleList">
+  	 <result column="account_id" property="accountId" jdbcType="INTEGER" />
+  	  <result column="agency_name" property="agencyName" jdbcType="VARCHAR" />
+  </resultMap>
+  <!-- 查询绑定了该折扣的代理商id列表 -->
+  <select id="listBindAgency" parameterType="long" resultMap="simpleList">
+  	select active.account_id, active.agency_name
+  	from  <include refid="t_active"></include> active 
+  	inner join <include refid="t_rate"></include> rate
+  	on rate.id=active.rate_discount_id
+  	<where>
+  		active.bind_state = 0
+  		and rate.id=#{_parameter}
+  	</where>
+  	</select>
+  
+  <!-- 查询分页费率列表 -->
+   <select id="listActiveRate" parameterType="map" resultMap="OtherResultMap">
+  	select <include refid="Other_Column_List"></include>
+  	from  <include refid="t_active"></include> active 
+  	inner join <include refid="t_rate"></include> rate
+  	on rate.id=active.rate_discount_id
+  	inner join <include refid="t_channel"></include> channel
+  	on channel.id = rate.channel_discount_id
+  	<where>
+  		AND active.bind_state = 0
+  		<include refid="condition_rate_sql"></include>
+  	</where>
+  	order by active.id desc
+  	<if test="start != null">
+	 	limit #{start}
+	 </if>
+	 <if test="end != null">
+	 	, #{end}
+	 </if>
+	 <if test="start == null &amp; end == null">
+	 	limit 0,10
+	 </if> 
+	 </select>
+	 <!-- 查询费率记录数 -->
+	 <select id="countActiveRate" parameterType="map" resultType="long">
+	  	select count(*) from <include refid="t_active"></include> active 
+	  	inner join <include refid="t_rate"></include> rate
+	  	on rate.id=active.rate_discount_id
+	  	inner join <include refid="t_channel"></include> channel
+	  	on channel.id = rate.channel_discount_id
+	  	<where>
+	  		AND active.bind_state = 0
+	  		<include refid="condition_rate_sql"></include>
+	  	</where>
+	  </select>
+	 
+	 
+  <!-- 查询分页列表 -->
+   <select id="listActive" parameterType="map" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"></include>
+  	 from <include refid="t_active"></include> active 
+  	inner join <include refid="t_rate"></include> rate
+  	on rate.id=active.rate_discount_id
+  	inner join <include refid="t_channel"></include> channel
+  	on channel.id = rate.channel_discount_id
+  	<where>
+  		active.bind_state = 0
+  		<include refid="condition_sql"></include>
+  	</where>
+  	order by active.id desc
+  	<if test="start != null">
+	 	limit #{start}
+	 </if>
+	 <if test="end != null">
+	 	, #{end}
+	 </if>
+	 <if test="start == null &amp; end == null">
+	 	limit 0,10
+	 </if> 
+  </select>
+  
+  <select id="countActive" parameterType="map" resultType="int">
+  	select count(*) from <include refid="t_active"></include> active
+  	inner join <include refid="t_rate"></include> rate
+  	on rate.id=active.rate_discount_id
+  	inner join <include refid="t_channel"></include> channel
+  	on channel.id = rate.channel_discount_id
+  	<where>
+  		active.bind_state = 0
+  		<include refid="condition_sql"></include>
+  	</where>
+  </select>
+  
+  <!-- 费率查询条件 -->
+  <sql id="condition_rate_sql">
+  	<!-- <if test="channelId != null">
+  		AND active.channel_id = #{channelId}
+  	</if> -->
+  	<if test="accountId != null">
+  		AND active.account_id = #{accountId}
+  	</if>
+  	<if test="agencyName != null">
+  		AND active.agency_name like concat('%',#{agencyName},'%')
+  	</if>
+  	<if test="bindAgencyId != null">
+  		AND active.bind_agency_id = #{bindAgencyId}
+  	</if>
+  	<if test="operatorType != null">
+  		AND channel.operator_type = #{operatorType}
+  	</if>
+  	<if test="scopeCityCode != null">
+  		AND channel.scope_city_code = #{scopeCityCode}
+  	</if>
+  	<if test="serviceType != null">
+  		AND channel.service_type = #{serviceType}
+  	</if>
+  	<if test="rateDiscountId != null">
+  		AND rate.id = #{rateDiscountId}
+  	</if>
+  	<if test="billTypeRate != null">
+  		AND rate.bill_type = #{billTypeRate}
+  	</if>
+  </sql>
+  
+  <sql id="condition_sql">
+  	<!-- <if test="channelId != null">
+  		AND active.channel_id = #{channelId}
+  	</if> -->
+  	<if test="accountId != null">
+  		AND active.account_id = #{accountId}
+  	</if>
+  	<if test="bindAgencyId != null">
+  		AND active.bind_agency_id = #{bindAgencyId}
+  	</if>
+  	<!-- <if test="channelName != null">江西的通道折扣
+  		AND active.channel_name like concat('%', #{channelName}, '%') 
+  	</if> -->
+  	<if test="scopeCityCode != null"><!-- 江西的通道折扣 -->
+  		AND channel.scope_city_code = #{scopeCityCode}
+  	</if>
+  	<if test="rateDiscountId != null">
+  		AND rate.id = #{rateDiscountId}
+  	</if>
+  </sql>
+  
+  <!-- 更新绑定状态 -->
+  <update id="updateBindState" parameterType="map">
+  	update <include refid="t_active"></include>
+  	<set>
+  		<if test="bindState != null">
+  			bind_state = #{bindState},
+  		</if>
+  		<if test="activeTime != null">
+  			active_time = #{activeTime}
+  		</if>
+  	</set>
+  	<where>
+  		<if test="id != null">
+  			AND id = #{id}
+  		</if>
+  		<if test="rateDiscountId != null">
+  			AND rate_discount_id = #{rateDiscountId}
+  		</if>
+  		<if test="accountIds != null">
+  			AND account_id in <foreach item="accountId" index="index" collection="accountIds" open="(" separator="," close=")">#{accountId}</foreach>
+  		</if>
+  	</where>
+  </update>
+  
+  <!-- 批量绑定 -->
+  <insert id="batch_bindList" useGeneratedKeys="true" parameterType="java.util.List">
+  	insert into <include refid="t_active"></include>
+  	(account_id, bind_agency_id, rate_discount_id, bind_state, agency_name, active_time)
+  	values
+  	<foreach collection="list" separator="," item="active" index="index">
+  		(#{active.accountId},#{active.bindAgencyId},#{active.rateDiscountId},#{active.bindState},#{active.agencyName},#{active.activeTime})
+  	</foreach>
+  </insert>
+  
+  
+</mapper>

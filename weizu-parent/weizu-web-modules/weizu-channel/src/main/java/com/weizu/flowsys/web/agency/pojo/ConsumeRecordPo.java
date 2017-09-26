@@ -28,13 +28,14 @@ public class ConsumeRecordPo extends Po implements Cloneable{
 
 	private Double chargeAfter; 		// 交易后余额
 
+	@TempField
 	private Integer billType; 			// 发票类型（1-对公，0-对私）
 
 	private Integer accountType; 		// 交易类型（1-给上家扣款，0-给下家充值)
 
 	private Integer accountId; 			// 账户id
 	
-	private Integer agencyId; 			// 代理商id
+//	private Integer agencyId; 			// 代理商id
 	
 	private String userName;			//代理商名称
 	
@@ -70,9 +71,11 @@ public class ConsumeRecordPo extends Po implements Cloneable{
 	 */
 	public ConsumeRecordPo(Long remittanceTime, Double rechargeAmount,
 			Double chargeBefore, Double chargeAfter, Integer billType,
-			Integer accountType, Integer accountId, Integer agencyId, Integer chargeFor) {
+			Integer accountType, Integer accountId, 
+//			Integer agencyId, 
+			Integer chargeFor) {
 		super();
-		this.agencyId = agencyId;
+//		this.agencyId = agencyId;
 		this.remittanceTime = remittanceTime;
 		this.rechargeAmount = rechargeAmount;
 		this.chargeBefore = chargeBefore;
@@ -144,13 +147,13 @@ public class ConsumeRecordPo extends Po implements Cloneable{
 		this.remittanceTimeStr = remittanceTimeStr;
 	}
 
-	public Integer getAgencyId() {
-		return agencyId;
-	}
-
-	public void setAgencyId(Integer agencyId) {
-		this.agencyId = agencyId;
-	}
+//	public Integer getAgencyId() {
+//		return agencyId;
+//	}
+//
+//	public void setAgencyId(Integer agencyId) {
+//		this.agencyId = agencyId;
+//	}
 
 	public Double getChargeBefore() {
 		return chargeBefore;

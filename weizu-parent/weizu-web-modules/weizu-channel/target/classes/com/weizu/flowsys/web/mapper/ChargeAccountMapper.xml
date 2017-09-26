@@ -18,7 +18,7 @@
 	    <result column="create_time" jdbcType="INTEGER" property="createTime" />
 	 </resultMap>
 	 <sql id="Base_Column_List">
-    	id, account_balance, remittance_way, remittance_bank_account, account_credit, agency_id, create_time
+    	act.id, account_balance, remittance_way, remittance_bank_account, account_credit, act.agency_id, act.create_time
  	 </sql>
 	 
 	 <!-- 只把账户余额和信用值查出来 -->
@@ -77,19 +77,39 @@
     and bill_type = #{billType}
   </select>
   
+  <!-- 根据当前账户获得相关父级账户信息 -->
+	<select id="getRootAccountById" parameterType="map" resultMap="OtherMap">
+    select 
+    <include refid="Balance_Account_List" />
+    from charge_account
+    <where>
+    	<if test="id != null">
+    		 agency_id = 
+			(SELECT root_agency_id from agency_backward agb
+			INNER JOIN charge_account cat
+			on cat.agency_id=agb.id
+			WHERE cat.id= #{id}) 
+    	</if>
+    	<if test="billType != null">
+    		 and bill_type= #{billType}
+    	</if>
+    </where>
+  </select>
+  
   <!-- 查询父级代理商的相关账户 -->
-  <select id="selectRootAccountByAgencyId" parameterType="map" resultMap="OtherMap">
-  	select <include refid="Root_Account_List"></include>
-  	FROM <include refid="t_account"></include> charge
+  <!-- 用父级代理商去连接账户信息，用子账户去查询 -->
+  <!-- <select id="getRootAccountById" parameterType="map" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"></include>
+  	FROM <include refid="t_account"></include> act
 	INNER JOIN <include refid="t_agency"></include> agency
-	on agency.root_agency_id = charge.agency_id
+	on agency.root_agency_id = act.agency_id
 	<where>
 		<if test="billType != null">
-			AND charge.bill_type = #{billType}
+			AND act.bill_type = #{billType}
 		</if>
-		<if test="agencyId != null">
-			AND agency.id = #{agencyId}
+		<if test="id != null">
+			AND act.id = #{id}
 		</if>
 	</where>
-  </select>
+  </select> -->
 </mapper>

@@ -14,6 +14,16 @@ public interface ChargeAccountDaoInterface extends Dao<ChargeAccountPo, Integer>
 	 * @createTime:2017年5月6日 上午11:40:01
 	 */
 	ChargeAccountPo selectByAgencyId(int agencyId, int billType);
+	
+	/**
+	 * @description: 根据当前账户获得相关父级账户信息
+	 * @param accountId
+	 * @param billType
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月26日 上午11:56:14
+	 */
+	ChargeAccountPo getRootAccountById(int accountId, int billType); 
 
 	/**
 	 * @description: 查询父级代理商的相关账户

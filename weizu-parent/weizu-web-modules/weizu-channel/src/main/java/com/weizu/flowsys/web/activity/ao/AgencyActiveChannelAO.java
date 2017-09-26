@@ -5,8 +5,8 @@ import java.util.Map;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
-import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
-import com.weizu.flowsys.web.activity.pojo.AgencyActiveRatePo;
+import com.weizu.flowsys.web.activity.pojo.AccountActiveRateDTO;
+import com.weizu.flowsys.web.activity.pojo.AccountActiveRatePo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 
 public interface AgencyActiveChannelAO {
@@ -20,7 +20,7 @@ public interface AgencyActiveChannelAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年9月7日 下午12:33:52
 	 */
-	void getBindRateList(Map<String,Object> resultMap,PageParam pageParam,AgencyActiveRatePo activePo,Long channelId);
+	void getBindRateList(Map<String,Object> resultMap,PageParam pageParam,AccountActiveRatePo activePo,Long channelId);
 	
 	/**
 	 * @description:查询代理商参与的活动通道
@@ -30,7 +30,7 @@ public interface AgencyActiveChannelAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月5日 下午6:15:57
 	 */
-	Pagination<AgencyActiveRatePo> listActive(PageParam pageParam,AgencyActiveRatePo activePo);
+	Pagination<AccountActiveRatePo> listActive(PageParam pageParam,AccountActiveRatePo activePo);
 	
 	
 	
@@ -42,7 +42,7 @@ public interface AgencyActiveChannelAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月13日 上午11:00:30
 	 */
-	Pagination<AgencyActiveRatePo> listActiveRate(PageParam pageParam,AgencyActiveRatePo activePo);
+	Pagination<AccountActiveRatePo> listActiveRate(PageParam pageParam,AccountActiveRatePo activePo);
 	
 	/**
 	 * @description:  查询分页费率列表
@@ -63,7 +63,7 @@ public interface AgencyActiveChannelAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月7日 下午7:10:11
 	 */
-	List<AgencyActiveRatePo> listActiveDiscount(PageParam pageParam,AgencyActiveRatePo activePo);
+	List<AccountActiveRatePo> listActiveDiscount(PageParam pageParam,AccountActiveRatePo activePo);
 
 	/**
 	 * @description: 通过实体封装参数
@@ -72,7 +72,7 @@ public interface AgencyActiveChannelAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月5日 下午6:16:28
 	 */
-	Map<String,Object> getMapByEntity(AgencyActiveRatePo activePo);
+	Map<String,Object> getMapByEntity(AccountActiveRatePo activePo);
 	
 	/**
 	 * @description: 通过实体封装参数
@@ -90,7 +90,7 @@ public interface AgencyActiveChannelAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月7日 上午9:34:30
 	 */
-	int bindChannel(AgencyActiveRatePo aacp,RateDiscountPo rateDiscountPo);
+	int bindChannel(AccountActiveRatePo aacp,RateDiscountPo rateDiscountPo);
 	
 	/**
 	 * @description: 更新绑定状态
@@ -110,7 +110,7 @@ public interface AgencyActiveChannelAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月17日 上午10:08:57
 	 */
-	int batchUpdateBindState(AgencyActiveRateDTO aardto);
+	int batchUpdateBindState(AccountActiveRateDTO aardto);
 	
 	/**
 	 * @description: 更新绑定的折扣
@@ -129,7 +129,7 @@ public interface AgencyActiveChannelAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月15日 上午11:52:53
 	 */
-	int add(AgencyActiveRatePo aacp);
+	int add(AccountActiveRatePo aacp);
 	
 	/**
 	 * @description: 通道批量绑定代理商 
@@ -138,7 +138,7 @@ public interface AgencyActiveChannelAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月18日 下午3:37:46
 	 */
-	int batchBindAgency(AgencyActiveRateDTO aardto);
+	int batchBindAgency(AccountActiveRateDTO aardto);
 	
 	/**
 	 * @description:删除代理商和通道的绑定

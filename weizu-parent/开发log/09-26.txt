@@ -1,0 +1,44 @@
+导出各自的订单列表和消费记录列表
+
+1的所有订单消费记录id
+
+一个订单可以对应多笔消费记录
+一个订单可以对应多个账户订单
+
+一笔消费记录对应一个账户订单，就可以找到每个账户每笔订单的消费记录
+
+734955636709658624 42id 123from
+
+更新订单账户表的消费记录id
+UPDATE account_purchase ap1
+ inner JOIN purchase ps
+on ap1.purchase_id=ps.order_id
+INNER JOIN
+(SELECT crt.id,purchase_id,crt.account_id FROM `charge_record` crt
+inner JOIN purchase ps
+ON ps.order_id=crt.purchase_id
+WHERE 
+-- crt.account_id=1 AND 
+crt.account_type=1 and purchase_id is NOT NULL
+ORDER BY purchase_id) crt1 
+on ps.order_id=crt1.purchase_id
+SET ap1.record_id = crt1.id
+WHERE crt1.account_id=ap1.account_id
+
+-- WHERE ap1.account_id=1
+
+#30笔订单记录
+SELECT crt1.purchase_id,crt1.id,ap1.from_agency_name from account_purchase ap1
+inner JOIN purchase ps
+on ap1.purchase_id=ps.order_id
+INNER JOIN
+(SELECT crt.id,purchase_id FROM `charge_record` crt
+inner JOIN purchase ps
+ON ps.order_id=crt.purchase_id
+WHERE crt.account_id=1 AND crt.account_type=1 and purchase_id is NOT NULL
+ORDER BY purchase_id) crt1 
+on ps.order_id=crt1.purchase_id
+WHERE ap1.account_id=1
+
+查询父级代理商账户
+先通过当前账户找到父级代理商

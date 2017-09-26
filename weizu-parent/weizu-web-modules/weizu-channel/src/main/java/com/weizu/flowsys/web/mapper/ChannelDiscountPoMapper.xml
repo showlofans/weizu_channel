@@ -4,7 +4,7 @@
   <sql id="t_cDiscount">channel_discount</sql>
   <sql id="t_channel">channel_channel</sql>
   <sql id="t_rte">rate_discount</sql>
-  <sql id="t_ap">agency_purchase</sql>
+  <sql id="t_ap">account_purchase</sql>
   <sql id="t_active">agency_active_rate</sql>
   
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo" >
@@ -45,8 +45,8 @@
 	INNER JOIN <include refid="t_cDiscount"></include> discount1
 	ON discount1.id = rte.channel_discount_id
   	<where>
-  		<if test="agencyId != null">
-  			AND aar.agency_id = #{agencyId}
+  		<if test="accountId != null">
+  			AND aar.account_id = #{accountId}
   		</if>
   		<if test="bindState != null">
   			AND aar.bind_state != #{bindState}
@@ -76,8 +76,8 @@
 			<if test="purchaseId != null">
 				AND ap.purchase_id = #{purchaseId}
 			</if>
-			<if test="agencyId != null">
-				AND ap.agency_id = #{agencyId}
+			<if test="accountId != null">
+				AND ap.account_id = #{accountId}
 			</if>
 		</where>
   </select>

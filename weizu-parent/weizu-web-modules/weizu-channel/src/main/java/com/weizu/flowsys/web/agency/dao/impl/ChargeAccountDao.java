@@ -32,6 +32,14 @@ public class ChargeAccountDao extends DaoImpl<ChargeAccountPo, Integer> implemen
 		map.put("billType", billType);
 		return sqlSessionTemplate.selectOne("selectByAgencyId", map);
 	}
+	
+	@Override
+	public ChargeAccountPo getRootAccountById(int id, int billType) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", id);
+		map.put("billType", billType);
+		return sqlSessionTemplate.selectOne("getRootAccountById", map);
+	}
 
 	/**
 	 * @description: 查询父级代理商的相关账户
@@ -61,6 +69,8 @@ public class ChargeAccountDao extends DaoImpl<ChargeAccountPo, Integer> implemen
 	public int updateByAgencyId(ChargeAccountPo chargeAccountPo) {
 		return sqlSessionTemplate.update("updateByAgencyId", chargeAccountPo);
 	}
+
+	
 
 
 }

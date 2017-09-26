@@ -65,10 +65,10 @@ public class ChannelDiscountDaoImpl extends DaoImpl<ChannelDiscountPo, Long> imp
 	}
 
 	@Override
-	public ChannelDiscountPo getCDbyAP(Long purchaseId, Integer agencyId) {
+	public ChannelDiscountPo getCDbyAP(Long purchaseId, Integer accountId) {
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("purchaseId", purchaseId);
-		paramsMap.put("agencyId", agencyId);
+		paramsMap.put("accountId", accountId);
 		return sqlSessionTemplate.selectOne("getCDbyAP", paramsMap);
 	}
 

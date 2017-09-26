@@ -83,6 +83,18 @@ public interface ChargeAccountAo {
 	 */
 	ChargeAccountPo getAccountByAgencyId(int agencyId, int billType);
 	
+	/**
+	 * @description: 获得父级代理商相关账户
+	 * @param accountId
+	 * @param billType
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月26日 上午11:38:37
+	 */
+	ChargeAccountPo getRootAccountById(int accountId, int billType);
+	
+	
+	
 //	ChargeAccountPo getAccountByAgencyId(int agencyId);
 	
 	/**

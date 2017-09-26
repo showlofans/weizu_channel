@@ -124,6 +124,7 @@ public class AccountController {
 				AgencyBackwardPo agencyPO = agencyAO.getAgencyByAccountId(chargeRecordPo.getAccountId());
 				if(agencyPO != null){
 					chargeRecordPo.setUserName(agencyPO.getUserName());
+//					chargeRecordPo.setUserRealName(agencyPO.getUserRealName());
 				}
 			}
 			return new ModelAndView("/account/charge_list", "resultMap", resultMap);
@@ -160,8 +161,8 @@ public class AccountController {
 			resultMap.put("billTypeEnum", BillTypeEnum.toList());
 			resultMap.put("accountTypeEnum", AccountTypeEnum.toConsumeList());
 			//点击金额进入连接，自动填充代理商名称
-			if(consumeRecordPo.getUserName() == null && consumeRecordPo.getAgencyId() != null){
-				AgencyBackwardPo agencyPO = agencyAO.getAgencyById(consumeRecordPo.getAgencyId());
+			if(consumeRecordPo.getUserName() == null && consumeRecordPo.getAccountId() != null){
+				AgencyBackwardPo agencyPO = agencyAO.getAgencyByAccountId(consumeRecordPo.getAccountId());
 				if(agencyPO != null){
 					consumeRecordPo.setUserName(agencyPO.getUserName());
 				}
@@ -185,22 +186,22 @@ public class AccountController {
 	public void goCharge(ChargeRecordPo chargeRecordPo,
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		ChargeAccountPo accountPo = null;
-		if(chargeRecordPo.getBillType() == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()){
-			accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
-		}else{
-			accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
-		}
-		int result = chargeRecordAO.updateAccount(chargeRecordPo,accountPo);
+//		ChargeAccountPo accountPo = null;
+//		if(chargeRecordPo.getBillType() == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()){
+//			accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
+//		}else{
+//			accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
+//		}
+		int result = chargeRecordAO.updateAccount(chargeRecordPo);
 		
 		if(result > 0){
-			ChargeAccountPo agencyAccountPo = null;
-			if(chargeRecordPo.getBillType() == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()){
-				agencyAccountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
-			}else{
-				agencyAccountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
-			}
-			agencyAccountPo.addBalance(chargeRecordPo.getRechargeAmount(),-1);//session中的引用变量
+//			ChargeAccountPo agencyAccountPo = null;
+//			if(chargeRecordPo.getBillType() == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()){
+//				agencyAccountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
+//			}else{
+//				agencyAccountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
+//			}
+//			agencyAccountPo.addBalance(chargeRecordPo.getRechargeAmount(),-1);//session中的引用变量
 			response.getWriter().print("success");
 		}else{
 			response.getWriter().print("error");

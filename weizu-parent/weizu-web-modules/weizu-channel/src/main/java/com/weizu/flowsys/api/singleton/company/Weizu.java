@@ -185,6 +185,7 @@ public class Weizu implements BaseInterface {
 			 	}
 	            JSONObject obj = JSON.parseObject(jsonStr);
 	            int tipCode = obj.getIntValue("errcode");
+	            
 	            String tipMsg = obj.getString("errmsg");
 	            
 	            JSONObject orderObj = obj.getJSONObject("order");

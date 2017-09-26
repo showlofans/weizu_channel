@@ -21,7 +21,7 @@ public class PurchasePo extends Po {
     
     private String orderIdFrom;					//下级代理商传过来的订单号
     
-    private Integer agencyId;					//订单来源代理id（外键）
+    private Integer accountId;					//订单来源代理商账户id（外键）
 
     private String chargeTel;					//手机号
 
@@ -84,7 +84,8 @@ public PurchasePo(String chargeTel, Integer pgId,
  * @param orderAmount
  * @param billType
  */
-public PurchasePo(Long orderId, String orderIdFrom, Integer agencyId,
+public PurchasePo(Long orderId, String orderIdFrom, 
+		Integer accountId,
 		String chargeTel, Integer pgId, Long orderArriveTime,
 		String chargeTelDetail, String chargeTelCity, Integer orderResult,
 		String channelName,
@@ -93,7 +94,7 @@ public PurchasePo(Long orderId, String orderIdFrom, Integer agencyId,
 	super();
 	this.orderId = orderId;
 	this.orderIdFrom = orderIdFrom;
-	this.agencyId = agencyId;
+	this.accountId = accountId;
 	this.chargeTel = chargeTel;
 	this.pgId = pgId;
 	this.orderArriveTime = orderArriveTime;
@@ -108,7 +109,8 @@ public PurchasePo(Long orderId, String orderIdFrom, Integer agencyId,
 
 
 public PurchasePo(Long orderId, String orderIdApi, String orderIdFrom,
-		Integer agencyId, String chargeTel, Integer pgId, Long orderArriveTime,
+		Integer accountId, 
+		String chargeTel, Integer pgId, Long orderArriveTime,
 		Long orderBackTime, String chargeTelDetail, String chargeTelCity,
 		String channelName,
 		String orderResultDetail) {
@@ -116,7 +118,7 @@ public PurchasePo(Long orderId, String orderIdApi, String orderIdFrom,
 	this.orderId = orderId;
 	this.orderIdApi = orderIdApi;
 	this.orderIdFrom = orderIdFrom;
-	this.agencyId = agencyId;
+	this.accountId = accountId;
 	this.chargeTel = chargeTel;
 	this.pgId = pgId;
 	this.orderArriveTime = orderArriveTime;
@@ -168,15 +170,13 @@ public PurchasePo(Long orderId, String orderIdApi, String orderIdFrom,
         this.orderId = orderId;
     }
 
-    public Integer getAgencyId() {
-        return agencyId;
-    }
-
-    public void setAgencyId(Integer agencyId) {
-        this.agencyId = agencyId;
-    }
-
-    public String getChargeTel() {
+	public Integer getAccountId() {
+		return accountId;
+	}
+	public void setAccountId(Integer accountId) {
+		this.accountId = accountId;
+	}
+	public String getChargeTel() {
         return chargeTel;
     }
 

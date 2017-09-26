@@ -41,7 +41,9 @@ public class PurchaseVO implements Cloneable {
     
     private String backStartTimeStr;			//充值结束时间字符串
     
-    private Integer agencyId;				//当前登陆id（外键）
+    private Integer accountId;				//当前登陆id（外键）：数据库返回参数
+    
+    private Integer agencyId;					//登陆代理商id（数据库查询参数）
 
     private Long orderBackTime;					//充值时间（本平台获得返回结果，或者返回给下游平台结果的时间戳）
     
@@ -86,6 +88,14 @@ public class PurchaseVO implements Cloneable {
 		return pvo;
 	}
     
+	public Integer getAgencyId() {
+		return agencyId;
+	}
+
+	public void setAgencyId(Integer agencyId) {
+		this.agencyId = agencyId;
+	}
+
 	public Long getRateDiscountId() {
 		return rateDiscountId;
 	}
@@ -94,12 +104,12 @@ public class PurchaseVO implements Cloneable {
 		this.rateDiscountId = rateDiscountId;
 	}
 
-	public Integer getAgencyId() {
-		return agencyId;
+	public Integer getAccountId() {
+		return accountId;
 	}
 
-	public void setAgencyId(Integer agencyId) {
-		this.agencyId = agencyId;
+	public void setAccountId(Integer accountId) {
+		this.accountId = accountId;
 	}
 
 	public Double getOrderPrice() {

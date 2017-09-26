@@ -55,12 +55,14 @@
 				<input type="text" style="width:200px" class="input-text"  value="${loginContext.otherContact }" placeholder="" id="otherContact" name="otherContact">
 			</div>
 		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2">回调地址：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" style="width:200px" class="input-text"  value="${loginContext.callBackIp }" placeholder="" id="callBackIp" name="callBackIp">
+		<c:if test="${loginContext.agencyTag == 1 }">
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-2">回调地址：</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" style="width:200px" class="input-text"  value="${loginContext.callBackIp }" placeholder="" id="callBackIp" name="callBackIp">
+				</div>
 			</div>
-		</div>
+		</c:if>
 		
 		<div class="row cl">
 			<span class="verifyCodeHidden" style="display:none">${loginContext.verifyCode }</span>
@@ -68,8 +70,15 @@
 			<div class="formControls col-xs-8 col-sm-9">
 				<!-- 重新生成 -->
 				<div class="verifyDiv"  style="display:none">
-					<input id="verifySize"  style="width:200px" maxlength="2" onkeyup='this.value=this.value.replace(/\D/gi,"")' class="input-text"  placeHolder="请输入要生成几位邀请码">
-					<a onclick="getVerifyCode()"><button class="btn btn-primary radius" >生成</button></a>
+					生成<select id="verifySize" class="select"  style="width:50px">
+					<c:forEach begin="4" end="10" var="verifySize">
+						<option value="${verifySize }">${verifySize }</option>
+					</c:forEach>
+					</select>邀请码
+					<!-- <input id="verifySize"  style="width:200px" maxlength="2" onkeyup='this.value=this.value.replace(/\D/gi,"")' class="input-text"  placeHolder="请输入要生成几位邀请码"> -->
+					<!-- <span  data-toggle="tooltip" data-placement="right" title="选择生成几位数的邀请码"><i class="Hui-iconfont">&#xe6cd;</i></span> -->
+					<a onclick="getVerifyCode(1)"><button class="btn btn-primary radius" >生成</button></a>
+					<a onclick="getVerifyCode(2)"><button class="btn btn-primary radius" >ID生成</button></a>
 				</div>
 				<!-- 直接获取 -->
 				<input type="text" style="width:200px" class="input-text" onkeyup="checkVerify()"  value="${loginContext.verifyCode }" placeholder="" id="verifyCode" name="verifyCode">
@@ -98,10 +107,11 @@ client.on("ready", function(readyEvent) {
 	});
 });
 ////看邀请码码是否改变
-function checkVerify(evt) {
-	var isVer = confirm("需要重新生成验证码？");
+function checkVerify() {
+	var isVer = confirm("需要重新生成邀请码？");
 	if(isVer){
 		$("#verifyCode").hide();
+		$("#copy-button").hide();
 		$(".verifyDiv").show(); 
 	}
 	else{
@@ -109,14 +119,33 @@ function checkVerify(evt) {
 	}
 }
 //生成按钮，发送获得邀请码的ajax请求
-function getVerifyCode(){
-	var verifySize = $("#verifySize").val();
-	if(verifySize <= 3){
-		alert("邀请码不能低于四位");
-	}else{
+function getVerifyCode(tagVer){
+	if(tagVer == 1){
+		var verifySize = $("#verifySize").val();
+		if(verifySize < 4){
+			alert("邀请码不能低于四位");
+		}else{
+			$.ajax({
+		        type:"get",
+		        url:"/flowsys/agency/get_verify_code.do?verifySize=" + verifySize,
+		        async : false,
+		        success:function(d){
+			        	//alert(d);
+			        	if(d != '初始化邀请码失败！'){
+				        	 $("#verifyCode").show();
+				        	$("#verifyCode").val(d);//将邀请码填进编辑框
+				        	layer.msg("修改成功！");
+			        	}
+			        	//var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+			        	//parent.layer.close(index); ////执行关闭
+			        	//$(".verifyDiv").hide(); 
+		        }
+		    });
+		}
+	}else if(tagVer == 2){
 		$.ajax({
 	        type:"get",
-	        url:"/flowsys/agency/get_verify_code.do?verifySize=" + verifySize,
+	        url:"/flowsys/agency/get_verify_code.do",
 	        async : false,
 	        success:function(d){
 		        	//alert(d);

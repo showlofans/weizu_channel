@@ -80,8 +80,18 @@
   <sql id="Unbind_Column_List">
    a2.id,a2.user_name,a2.user_email,a2.user_real_name,a2.create_time
   </sql>
-  
-  
+  <!-- 查看邀请码是否符合条件 -->
+  <select id="checkVerifyCode" parameterType="map" resultType = "int">
+  	select count(*) from <include refid="agency_backward"></include>
+  	<where>
+  		<if test="verifyCode != null">
+  			verify_code = #{verifyCode}
+  		</if>
+  		<if test="userName != null">
+  			or user_name = #{userName}
+  		</if>
+  	</where>
+  </select>
   
   <!-- 查询没有绑定的代理商 -->
   <select id="getNoBAgency" parameterType="map" resultMap="UnbindMap">

@@ -206,6 +206,14 @@ public class AgencyVODao extends DaoImpl<AgencyBackwardPo, Integer> implements A
 		return sqlSessionTemplateASS.update("updateAgencyTag", params);
 	}
 
+	@Override
+	public Integer checkVerifyCode(String verifyCode,String agencyName) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("verifyCode", verifyCode);
+		params.put("agencyName", agencyName);
+		return sqlSessionTemplateASS.selectOne("checkVerifyCode", params);
+	}
+
 	/**
 	 * @description:  更新密码
 	 * @param paramMap

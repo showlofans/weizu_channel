@@ -52,6 +52,6 @@ public interface ChannelDiscountDao extends Dao<ChannelDiscountPo, Long> {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年9月4日 下午3:17:33
 	 */
-	ChannelDiscountPo getCDbyAP(Long purchaseId, Integer agencyId);
+	ChannelDiscountPo getCDbyAP(Long purchaseId, Integer accountId);
 	
 }
