@@ -42,7 +42,7 @@
 	                  	<em class="inputto">至</em>
 	            <input style="width:150px" type="text" class="input-text" name="end_datetime"   value="2017-05-26 23:59:59"  onClick="WdatePicker({startDate:'%y-%M-%d 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/> -->
 				<c:if test="${resultMap.params.agencyTag == 1 }"><!-- 认证用户页面 -->
-				费率类型：<span class="select-box inline">
+				账户类型：<span class="select-box inline">
 							<select name="billType"  id="billType" class="select" onchange="formSub()">
 								<option value="">请选择</option>
 								<c:forEach items="${resultMap.billTypeEnums }" var="billEnum" varStatus="vs1">
@@ -114,7 +114,7 @@
 						<td class="td-manage">
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="editRate(this)" href="javascript:;" title="查看APIKey"><i class="Hui-iconfont">&#xe60c;</i></a>
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="resetPass('${agency.id}')" href="javascript:;" title="重置密码"><i class="Hui-iconfont">&#xe63f;</i></a>
-							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" onClick="account_charge('账户充值','${agency.userName }',${agency.id },${agency.accountId },${agency.billType })" href="javascript:;" title="账户充值"><i class="Hui-iconfont">&#xe726;</i></a> 
+							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" onClick="account_charge('账户充值',${agency.accountId })" href="javascript:;" title="账户充值"><i class="Hui-iconfont">&#xe726;</i></a> 
 							<%-- <a title="/flowsys/rate/rate_add_page.do?rateId=${agency.rateId }&agencyId=${agency.id}" data-href="/flowsys/rate/rate_add_page.do?rateId=${agency.rateId }&agencyId=${agency.id}" data-title="费率添加" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe6df;</i></a> --%>
 							<c:choose>
 								<c:when test="${loginContext.rootAgencyId == 0 }">
@@ -174,14 +174,14 @@ function resetPass(agencyId){
 }
 
 /**账户-充值 */
-function account_charge(title,agencyUserName,id,accountId,billType){
+function account_charge(title,accountId){
 	layer.open({
         type: 2,
         title: "账户充值",
         area: ['430px', '500px'],
         maxmin: false,
         closeBtn: 1,
-        content: '/flowsys/account/add_charge_page.do?agencyId=' + id + '&userName=' + agencyUserName+ '&accountId=' + accountId+ '&billType=' + billType,
+        content: '/flowsys/account/add_charge_page.do?accountId=' + accountId,
         end: function () {
             location.reload();
         }

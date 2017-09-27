@@ -189,7 +189,7 @@ public interface AgencyAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月17日 下午3:21:21
 	 */
-	Pagination<AgencyBackwardVO> getUnbindAgency(int rootAgencyId, AccountActiveRateDTO aardto, PageParam pageParam);
+	Pagination<AgencyBackwardVO> getUnbindAgency(int billTypeRate, int rootAgencyId, AccountActiveRateDTO aardto, PageParam pageParam);
 	
 	/**
 	 * @description:查看邀请码是否符合条件

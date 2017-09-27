@@ -27,13 +27,14 @@
 	    <result column="account_balance" jdbcType="DOUBLE" property="accountBalance" />
 	    <result column="account_credit" jdbcType="DOUBLE" property="accountCredit" />
 	    <result column="agency_id" jdbcType="INTEGER" property="agencyId" />
+	    <result column="agency_name" jdbcType="VARCHAR" property="agencyName" />
 	 </resultMap>
 	 <sql id="Balance_Account_List">
-    	id, account_balance, account_credit,agency_id
+    	id, account_balance, account_credit,agency_id, agency_name
  	 </sql>
-	 <sql id="Root_Account_List">
+	 <!-- <sql id="Root_Account_List">
     	charge.id, charge.account_balance, charge.account_credit,charge.agency_id
- 	 </sql>
+ 	 </sql> -->
 	 
 	 <!-- 通过代理商id更新代理商账户信息 -->
 	 <update id="updateByAgencyId" parameterType="com.weizu.flowsys.web.agency.pojo.ChargeAccountPo">

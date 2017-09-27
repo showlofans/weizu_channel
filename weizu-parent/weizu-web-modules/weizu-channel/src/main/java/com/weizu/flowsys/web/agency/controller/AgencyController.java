@@ -439,7 +439,7 @@ public class AgencyController {
 			@RequestParam(value = "pageNo", required = false) String pageNo,
 			AgencyBackwardVO searchAgencyVO, HttpServletRequest request) {
 		
-		AgencyBackwardVO agencyBackwardPo = (AgencyBackwardVO) request.getSession()
+		AgencyBackwardVO agencyBackwardVo = (AgencyBackwardVO) request.getSession()
 				.getAttribute("loginContext");
 
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -452,16 +452,15 @@ public class AgencyController {
 		}
 		
 		// agencyAO.ListAgencyByRoot(agencyBackwardPo.getId());
-		if(agencyBackwardPo == null){
+		if(agencyBackwardVo == null){
 			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 		}
-		Pagination<AgencyBackwardVO> pagination = agencyAO.ListAgencyByRoot(
-				agencyBackwardPo.getId(), searchAgencyVO, pageParam);
-
-		resultMap.put("params", searchAgencyVO);
-		resultMap.put("billTypeEnums", BillTypeEnum.toList());
-		resultMap.put("pagination", pagination);
-		return new ModelAndView("/agency/child_agency_list", "resultMap", resultMap);
+			Pagination<AgencyBackwardVO> pagination = agencyAO.ListAgencyByRoot(
+					agencyBackwardVo.getId(), searchAgencyVO, pageParam);
+			resultMap.put("pagination", pagination);
+			resultMap.put("params", searchAgencyVO);
+			resultMap.put("billTypeEnums", BillTypeEnum.toList());
+			return new ModelAndView("/agency/child_agency_list", "resultMap", resultMap);
 	}
 
 	/**

@@ -77,7 +77,7 @@ public interface AccountActiveRateDao extends Dao<AccountActiveRatePo, Long> {
 	int batchUpdateBindState(long rateDiscountId, int bindState, int[] agencyIds);
 	
 	/**
-	 * @description:  批量更新绑定状态（根据折扣id，批量解除绑定）
+	 * @description:  更新折扣（根据折扣id，批量解除绑定）
 	 * @param rateDiscountId
 	 * @param bindState
 	 * @return

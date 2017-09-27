@@ -393,6 +393,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 //						Long orderId = purchasePo.getOrderId();
 						Double balance = 0d;//差额:父费率减去子费率乘以价格
 //						Integer ap_agency_id = chargeAccountPo.getAgencyId();
+						long recordId = chargeRecordDao.nextId();//没添加的消费记录Id
 						while(ratePo1.getActiveId() != null){//没有找到第二级代理商，开始添加代理商和订单
 							
 							//重置ratePo为父级费率折扣;不为空
@@ -434,8 +435,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 										agencyBeforeBalance, agencyAfterBalance, 
 										AccountTypeEnum.DECREASE.getValue(), apAccountId,1, orderId));	
 								int orderPath = OrderPathEnum.CHILD_WEB_PAGE.getValue();
-								Long recordId = chargeRecordDao.nextId();//加一个就增加一个和上面先加的不一样
+//								long recordId = chargeRecordDao.nextId();//加一个就增加一个和上面先加的不一样
 								AccountPurchasePo app = new AccountPurchasePo(apAccountId, orderId, activeRatePo.getId(), minusAmount,from_accountPo.getId(), recordId, plusAmount, fromAgencyName, orderPath, orderState);
+								recordId++;
 								app.setOrderStateDetail(orderStateDetail);
 								apPoList.add(app);
 							}
@@ -490,7 +492,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 							orderStateDetail = "通道暂停等待";
 							logger.config("通道使用状态暂停");
 						}
-						Long recordId = chargeRecordDao.nextId();
+//						long recordId = chargeRecordDao.nextId();
 						
 						ChannelDiscountPo cdPo = channelDiscountDao.get(ratePo.getChannelDiscountId());
 						AccountPurchasePo app = new AccountPurchasePo(superAccountPo.getId(), orderId, cdPo.getId(), orderAmount,from_accountPo.getId(),recordId, orderPrice, fromAgencyName, orderPath, orderResult);
@@ -575,7 +577,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 //						Long nextIdRecord = chargeRecordDao.nextId();
 						chargeRecordDao.add(new ChargeRecordPo(currentTime, orderAmount,
 								agencyBeforeBalance, accountPo.getAccountBalance(), 
-								AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), 1 , orderId));
+								AccountTypeEnum.DECREASE.getValue(), accountId, 1 , orderId));
 						/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
 					}
 					

@@ -231,13 +231,20 @@ public class AgencyAOImpl implements AgencyAO {
 				resultMap.put("userName", agencyBackward.getUserName());
 			}
 			if(agencyBackward.getAgencyTag() != null){
-				resultMap.put("agencyTag", agencyBackward.getAgencyTag());
+				//认证代理商只查对公，平台代理商只查对私
+				if (AgencyTagEnum.DATA_USER.getValue().equals(agencyBackward.getAgencyTag())) {
+//					resultMap.put("billType", BillTypeEnum.CORPORATE_BUSINESS.getValue());
+					resultMap.put("agencyTag", agencyBackward.getAgencyTag());
+				}else if(AgencyTagEnum.PLATFORM_USER.getValue().equals(agencyBackward.getAgencyTag())){
+					resultMap.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+				}
 			}
-			if(agencyBackward.getBillType() != null){
-				resultMap.put("billType", agencyBackward.getBillType());
-			}else{//搜索平台用户列表中 不带票账户
-				resultMap.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-			}
+//			if(agencyBackward.getBillType() != null){
+//				resultMap.put("billType", agencyBackward.getBillType());
+//			}
+//			else{//搜索平台用户列表中 不带票账户
+//				resultMap.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+//			}
 		}
 		return resultMap;
 	}
@@ -443,8 +450,9 @@ public class AgencyAOImpl implements AgencyAO {
 	 * @createTime:2017年7月17日 下午3:20:44
 	 */
 	@Override
-	public Pagination<AgencyBackwardVO> getUnbindAgency(int rootAgencyId, AccountActiveRateDTO aardto, PageParam pageParam) {
+	public Pagination<AgencyBackwardVO> getUnbindAgency(int billTypeRate, int rootAgencyId, AccountActiveRateDTO aardto, PageParam pageParam) {
 		Map<String, Object> paramsMap = getUnbindMapByEntity(aardto);
+		paramsMap.put("billType", billTypeRate);
 		paramsMap.put("rootAgencyId", rootAgencyId);
 		List<AgencyBackwardVO> records = null;
 		int totalRecord = 0;

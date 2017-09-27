@@ -15,7 +15,7 @@ import com.weizu.flowsys.web.activity.dao.AccountActiveRateDao;
 import com.weizu.flowsys.web.activity.pojo.AccountActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.AccountActiveRatePo;
 
-@Repository(value="AccountActiveRateDao")
+@Repository(value="accountActiveRateDao")
 public class AccountActiveRateDaoImpl extends DaoImpl<AccountActiveRatePo, Long> implements
 		AccountActiveRateDao {
 
@@ -115,17 +115,16 @@ public class AccountActiveRateDaoImpl extends DaoImpl<AccountActiveRatePo, Long>
 	 * @createTime:2017年7月17日 上午10:12:07
 	 */
 	@Override
-	public int batchUpdateBindState(long rateDiscountId, int bindState, int[] agencyIds) {
+	public int batchUpdateBindState(long rateDiscountId, int bindState, int[] accountIds) {
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("rateDiscountId", rateDiscountId);
 		paramsMap.put("bindState", bindState);
-		paramsMap.put("agencyIds", agencyIds);
+		paramsMap.put("accountIds", accountIds);
 		if(BindStateEnum.UNBIND.getValue() == bindState){
 			paramsMap.put("activeTime", 0);//解绑设置活动时间为0
 		}else{
 			paramsMap.put("activeTime", System.currentTimeMillis());//解绑设置活动时间为0
 		}
-		paramsMap.put("agencyIds", agencyIds);
 		return sqlSessionTemplate.update("updateBindState", paramsMap);
 	}
 
@@ -154,7 +153,7 @@ public class AccountActiveRateDaoImpl extends DaoImpl<AccountActiveRatePo, Long>
 	}
 
 	/**
-	 * @description:  批量更新绑定状态（根据折扣id，批量解除绑定）
+	 * @description:  删除折扣（根据折扣id，批量解除绑定）
 	 * @param rateDiscountId
 	 * @param bindState
 	 * @return

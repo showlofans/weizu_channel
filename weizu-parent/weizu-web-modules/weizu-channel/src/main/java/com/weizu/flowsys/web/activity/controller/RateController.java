@@ -879,7 +879,7 @@ public class RateController {
 			aardto.setAgencyTag(AgencyTagEnum.PLATFORM_USER.getValue());
 		}
 		
-		Pagination<AgencyBackwardVO> pagination = agencyAO.getUnbindAgency(rootAgencyId,aardto, pageParam);
+		Pagination<AgencyBackwardVO> pagination = agencyAO.getUnbindAgency(ratePo.getBillType(), rootAgencyId,aardto, pageParam);
 		resultMap.put("ratePo", ratePo);
 		resultMap.put("aardto", aardto);
 		resultMap.put("pagination", pagination);

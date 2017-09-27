@@ -47,14 +47,14 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 	 */
 	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
-	public int updateAccount(ChargeRecordPo chargeRecordPo) {
+	public int updateAccount(ChargeRecordPo chargeRecordPo,Integer loginContextId) {
 		
 //		if(chargeRecordPo.getBillType() == BillTypeEnum.CORPORATE_BUSINESS.getValue()){
 //			
 //		}
 		
 //		int accountId = chargeRecordPo.getAccountId();
-		ChargeAccountPo loginAccountPo = chargeAccountDao.get(chargeRecordPo.getAccountId());
+		ChargeAccountPo loginAccountPo = chargeAccountDao.selectByAgencyId(loginContextId, chargeRecordPo.getBillType());
 		/****************修改登陆账户********************/
 		/**充值前余额*/
 		double agencyBeforeBalance = loginAccountPo.getAccountBalance();

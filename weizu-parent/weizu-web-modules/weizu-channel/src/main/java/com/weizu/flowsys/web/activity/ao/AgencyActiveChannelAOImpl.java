@@ -25,7 +25,7 @@ import com.weizu.flowsys.web.activity.pojo.AccountActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.AccountActiveRatePo;
 import com.weizu.flowsys.web.activity.pojo.DiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
-import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
+import com.weizu.flowsys.web.agency.dao.ChargeAccountDaoInterface;
 import com.weizu.flowsys.web.channel.ao.ChannelDiscountAO;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.web.foundation.DateUtil;
@@ -34,13 +34,15 @@ import com.weizu.web.foundation.String.StringHelper;
 public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 
 	@Resource
-	private AccountActiveRateDao agencyActiveChannelDao;
+	private AccountActiveRateDao accountActiveRateDao;
 	
 	@Resource
 	private RateDiscountDao rateDiscountDao;
 	
+//	@Resource
+//	private AgencyVODaoInterface agencyVODao;
 	@Resource
-	private AgencyVODaoInterface agencyVODao;
+	private ChargeAccountDaoInterface chargeAccountDao;
 	
 	@Resource
 	private ChannelDiscountAO channelDiscountAO;
@@ -141,7 +143,7 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 	public List<AccountActiveRatePo> listActiveDiscount(PageParam pageParam,
 			AccountActiveRatePo activePo) {
 		Map<String, Object> paramsMap = getMapByEntity(activePo);
-		List<AccountActiveRatePo> records = agencyActiveChannelDao.listActiveDiscount(paramsMap);
+		List<AccountActiveRatePo> records = accountActiveRateDao.listActiveDiscount(paramsMap);
 		initRateDiscountStr(records);
 		return records;
 	}
@@ -159,7 +161,7 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 			AccountActiveRatePo activePo) {
 		Map<String, Object> paramsMap = getMapByEntity(activePo);
 		
-		int toatalRecord = agencyActiveChannelDao.countActive(activePo);
+		int toatalRecord = accountActiveRateDao.countActive(activePo);
 		int pageSize = 10;
 		int pageNo = 1;
 		if(pageParam != null){
@@ -168,7 +170,7 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 			paramsMap.put("start", (pageNo-1)*pageSize);
 			paramsMap.put("end", pageSize);
 		}
-		List<AccountActiveRatePo> records = agencyActiveChannelDao.listActive(paramsMap);
+		List<AccountActiveRatePo> records = accountActiveRateDao.listActive(paramsMap);
 		initRateDiscountStr(records);
 		return new Pagination<AccountActiveRatePo>(records, toatalRecord, pageNo, pageSize);
 	}
@@ -185,7 +187,7 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 	public Pagination<AccountActiveRatePo> listActiveRate(
 			PageParam pageParam, AccountActiveRatePo activePo) {
 		Map<String, Object> paramsMap = getMapByEntity(activePo);
-		long toatalRecord = agencyActiveChannelDao.countActiveRate(paramsMap);
+		long toatalRecord = accountActiveRateDao.countActiveRate(paramsMap);
 		int pageSize = 10;
 		long pageNo = 1l;
 		if(pageParam != null){
@@ -194,7 +196,7 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 			paramsMap.put("start", (pageNo-1)*pageSize);
 			paramsMap.put("end", pageSize);
 		}
-		List<AccountActiveRatePo> records = agencyActiveChannelDao.listActiveRate(paramsMap);
+		List<AccountActiveRatePo> records = accountActiveRateDao.listActiveRate(paramsMap);
 		for (AccountActiveRatePo activePo1 : records) {
 			//初始化时间
 			if(activePo1.getActiveTime() != null){
@@ -216,7 +218,7 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 //	public Pagination<AgencyActiveRatePo> listActiveRate(
 //			PageParam pageParam, RateDiscountPo ratePo) {
 //		Map<String, Object> paramsMap = getMapByEntity(ratePo);
-//		long toatalRecord = agencyActiveChannelDao.countActiveRate(paramsMap);
+//		long toatalRecord = accountActiveRateDao.countActiveRate(paramsMap);
 //		int pageSize = 10;
 //		int pageNo = 1;
 //		if(pageParam != null){
@@ -225,7 +227,7 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 //			paramsMap.put("start", (pageNo-1)*pageSize);
 //			paramsMap.put("end", pageSize);
 //		}
-//		List<AgencyActiveRatePo> records = agencyActiveChannelDao.listActiveRate(paramsMap);
+//		List<AgencyActiveRatePo> records = accountActiveRateDao.listActiveRate(paramsMap);
 //		for (AgencyActiveRatePo activePo : records) {
 //			//初始化时间
 //			if(activePo.getActiveTime() != null){
@@ -401,11 +403,11 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 			rateDiscountDao.add(rateDiscountPo);
 			
 			
-//		Long nextActiveId = agencyActiveChannelDao.nextId();
+//		Long nextActiveId = accountActiveRateDao.nextId();
 			aacp.setActiveTime(System.currentTimeMillis());
 			aacp.setBindState(BindStateEnum.BIND.getValue());
 			aacp.setRateDiscountId(nextDiscountId);
-			bindRes = agencyActiveChannelDao.add(aacp);
+			bindRes = accountActiveRateDao.add(aacp);
 			return bindRes;
 		}else{
 			return -1;
@@ -451,7 +453,7 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 	public int updateBindState(String activeId, String bindState) {
 		long id = Long.parseLong(activeId);
 		int bindStateInt = Integer.parseInt(bindState);
-		return agencyActiveChannelDao.updateBindState(id, bindStateInt);
+		return accountActiveRateDao.updateBindState(id, bindStateInt);
 	}
 	/**
 	 * @description: 批量更新绑定状态（根据折扣id，批量解除绑定）
@@ -467,19 +469,19 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 //		long rateId = Long.parseLong(rateDiscountId);
 //		int bState = Integer.parseInt(bindState);
 		if(aardto.getBindState() == BindStateEnum.BIND.getValue()){//绑定
-			String agencyIdst = aardto.getAccountIds();
-			if(StringHelper.isNotEmpty(agencyIdst)){
-				String [] accountIdsi = agencyIdst.split(",");
-				int[] agencyIds = new int[accountIdsi.length];
-				for (int i = 0; i < agencyIds.length; i++) {
-					agencyIds[i] = Integer.parseInt(accountIdsi[i]);
+			String accountIdst = aardto.getAccountIds();
+			if(StringHelper.isNotEmpty(accountIdst)){
+				String [] accountIdsi = accountIdst.split(",");
+				int[] accountIds = new int[accountIdsi.length];
+				for (int i = 0; i < accountIds.length; i++) {
+					accountIds[i] = Integer.parseInt(accountIdsi[i]);
 				}
-				return agencyActiveChannelDao.batchUpdateBindState(aardto.getRateDiscountId(), aardto.getBindState(), agencyIds);
+				return accountActiveRateDao.batchUpdateBindState(aardto.getRateDiscountId(), aardto.getBindState(), accountIds);
 			}else{
 				return -1;
 			}
 		}else{//解绑
-			return agencyActiveChannelDao.batchUpdateBindState(aardto.getRateDiscountId(), aardto.getBindState());
+			return accountActiveRateDao.batchUpdateBindState(aardto.getRateDiscountId(), aardto.getBindState());
 		}
 	}
 
@@ -528,9 +530,9 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 			Long rateDiscountId = aardto.getRateDiscountId();
 			for (int i = 0; i < accountIdsi.length; i++) {
 				accountIds[i] = Integer.parseInt(accountIdsi[i]);
-				agencyNames[i] = agencyVODao.get(accountIds[i]).getUserName();
+				agencyNames[i] = chargeAccountDao.get(accountIds[i]).getAgencyName();
 				//判断是否已经添加了该绑定
-				AccountActiveRatePo aarPo = agencyActiveChannelDao.get(new WherePrams("agency_id", "=", accountIds[i]).and("rate_discount_id", "=", rateDiscountId).and("bind_state", "=", BindStateEnum.BIND.getValue()));
+				AccountActiveRatePo aarPo = accountActiveRateDao.get(new WherePrams("account_id", "=", accountIds[i]).and("rate_discount_id", "=", rateDiscountId).and("bind_state", "=", BindStateEnum.BIND.getValue()));
 				if(aarPo != null){//已经添加过，就不再往list中添加了
 					accountIds[i] = accountIds[accountIds.length-1];//把最后一个元素替代指定的元素
 					accountIds = Arrays.copyOf(accountIds, accountIds.length-1);//数组缩容
@@ -544,7 +546,7 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 				AccountActiveRateDTO aardtoq = new AccountActiveRateDTO(accountIds[i], agencyNames[i], rateDiscountId, System.currentTimeMillis(), 0, aardto.getBindAgencyId());
 				list.add(aardtoq);
 			}
-			return agencyActiveChannelDao.batch_bindList(list);
+			return accountActiveRateDao.batch_bindList(list);
 //			AgencyBackwardPo agencyPo = new AgencyBackwardPo();
 //			agencyPo.setAgencyIds(agencyIds);
 //			List<AgencyBackwardPo> list = agencyVODao.getBatchAgency(agencyPo);
@@ -555,7 +557,7 @@ public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
 	@Override
 	@Transactional
 	public String delAar(Long aarId) {
-		int res = agencyActiveChannelDao.del(aarId);
+		int res = accountActiveRateDao.del(aarId);
 		if(res > 0){
 			return "success";
 		}

@@ -196,4 +196,10 @@ public class ChargeAccountAoImpl implements ChargeAccountAo {
 		return chargeAccountDao.getRootAccountById(accountId, billType);
 	}
 
+	@Override
+	public ChargeAccountPo getAccountById(int accountId) {
+		
+		return chargeAccountDao.get(accountId);
+	}
+
 }

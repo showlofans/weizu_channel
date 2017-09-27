@@ -36,18 +36,18 @@
 	<form class="form form-horizontal" id="charge-form">
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>代理商名称</label>
-			<div class="formControls col-xs-8 col-sm-9 c-red"> ${resultMap.agencyUserName } </div>
+			<div class="formControls col-xs-8 col-sm-9 c-red"> ${resultMap.accountPo.agencyName } </div>
 		</div> 
 		<c:choose>
-			<c:when test="${resultMap.billType == 0 }">
+			<c:when test="${resultMap.accountPo.billType == 0 }">
 				<div class="row cl">
 					<label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>账户余额</label>
 					<c:choose>
-						<c:when test="${resultMap.chargeAccount.accountBalance > 0 }">
-							<div class="formControls col-xs-8 col-sm-9"> ${resultMap.chargeAccount.accountBalance } </div>
+						<c:when test="${resultMap.accountPo.accountBalance > 0 }">
+							<div class="formControls col-xs-8 col-sm-9"> ${resultMap.accountPo.accountBalance } </div>
 						</c:when>
 						<c:otherwise>
-							<div class="formControls col-xs-8 col-sm-9 c-red"> ${resultMap.chargeAccount.accountBalance } </div>
+							<div class="formControls col-xs-8 col-sm-9 c-red"> ${resultMap.accountPo.accountBalance } </div>
 						</c:otherwise>
 					</c:choose>
 				</div> 
@@ -56,11 +56,11 @@
 				<div class="row cl">
 					<label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>高配账户余额</label>
 					<c:choose>
-						<c:when test="${resultMap.chargeAccount1.accountBalance > 0 }">
-							<div class="formControls col-xs-8 col-sm-9"> ${resultMap.chargeAccount1.accountBalance } </div>
+						<c:when test="${resultMap.accountPo.accountBalance > 0 }">
+							<div class="formControls col-xs-8 col-sm-9"> ${resultMap.accountPo.accountBalance } </div>
 						</c:when>
 						<c:otherwise>
-							<div class="formControls col-xs-8 col-sm-9 c-red"> ${resultMap.chargeAccount1.accountBalance } </div>
+							<div class="formControls col-xs-8 col-sm-9 c-red"> ${resultMap.accountPo.accountBalance } </div>
 						</c:otherwise>
 					</c:choose>
 				</div>
@@ -83,16 +83,16 @@
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" class="input-text" required="required" style="width:100px;" autocomplete="off" placeholder="请输入double值" name="rechargeAmount" id="rechargeAmount">元
 				<c:choose>
-					<c:when test="${resultMap.billType == 0 }">
-						<span style="display:none;" id="accountBalance">${chargeAccount.accountBalance }</span>
+					<c:when test="${resultMap.accountPo.billType == 0 }">
+						<span style="display:none;" id="accountBalance">${resultMap.accountPo.accountBalance }</span>
 					</c:when>
 					<c:otherwise>
-						<span style="display:none;" id="accountBalance">${chargeAccount1.accountBalance }</span>
+						<span style="display:none;" id="accountBalance">${resultMap.accountPo.accountBalance }</span>
 					</c:otherwise>
 				</c:choose>
 				<input type="hidden" name="accountType" value="0"> <!-- 设置为充值 -->
-				<input type="hidden" name="agencyId" value="${resultMap.agencyId }"> <!-- 代理商id -->
-				<input type="hidden" id="contextRootId" value="${loginContext.rootAgencyId }"> <!-- 代理商id -->
+				<%-- <input type="hidden" name="agencyId" value="${resultMap.accountPo.agencyId }"> <!-- 代理商id -->
+				<input type="hidden" id="contextRootId" value="${loginContext.rootAgencyId }"> <!-- 代理商id --> --%>
 				<%-- ${resultMap.error_msg } --%>
 			</div>
 		</div>
@@ -100,14 +100,14 @@
 			<label class="form-label col-xs-4 col-sm-3">账户类型：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<c:forEach items="${resultMap.billTypeEnum }" var="billTypeE" varStatus="vs">
-					<c:if test="${resultMap.billType == billTypeE.value }">
+					<c:if test="${resultMap.accountPo.billType == billTypeE.value }">
 						<input type="text" class="input-text" readonly="readonly" value="${billTypeE.desc }" style="width:100px;"  id="billTypeDesc">
 						<input type="hidden" name="billType" value="${billTypeE.value }">
 					</c:if>
 				</c:forEach>
 			</div>
 		</div>
-		<input type="hidden" value="${resultMap.accountId }" name="accountId"><!-- 充值账户id -->
+		<input type="hidden" value="${resultMap.accountPo.id }" name="accountId"><!-- 充值账户id -->
 		<!-- <div class="row cl">
 			充值凭证：<br>
 			<span class="btn-upload form-group">
