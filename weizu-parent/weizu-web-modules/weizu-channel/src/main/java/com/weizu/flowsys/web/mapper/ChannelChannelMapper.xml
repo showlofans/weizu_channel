@@ -107,6 +107,12 @@
 	  	<if test="scopeCityCode != null">
 	  		AND cd.scope_city_code = #{scopeCityCode}
 	  	</if>
+	  	<if test="channelState != null">
+	  		AND cnel.channel_state = #{channelState}
+	  	</if>
+	  	<if test="channelUseState != null">
+	  		AND cnel.channel_use_state = #{channelUseState}
+	  	</if>
   	</where>
   	order by cnel.id desc
   </select>

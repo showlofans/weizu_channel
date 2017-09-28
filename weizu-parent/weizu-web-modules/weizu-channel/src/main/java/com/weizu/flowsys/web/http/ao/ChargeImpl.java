@@ -201,9 +201,7 @@ public class ChargeImpl implements IChargeFacet {
 					logger.config("上游返回的订单号："+ orderIdApi);//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
 					purchasePo.setOrderIdApi(orderIdApi);
 					charge = getChargeByDTO(chargeDTO,chargeParams,purchasePo);
-					if(charge!= null){
-						orderResultDetail = charge.getTipMsg();
-					}
+					orderResultDetail = charge.getTipMsg();
 				}else{
 					orderResult = OrderStateEnum.DAICHONG.getValue();
 					orderResultDetail = ChargeStatusEnum.CHANNEL_CLOSED.getDesc();
@@ -252,7 +250,10 @@ public class ChargeImpl implements IChargeFacet {
 			Charge charge = new Charge(chargeDTO.getTipCode(), chargeDTO.getTipMsg(), new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
 			return charge;
 		}
-		return null;
+		else{
+			Charge charge = new Charge(OrderStateEnum.UNCHARGE.getValue(), OrderStateEnum.UNCHARGE.getDesc(), new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
+			return charge;
+		}
 	}
 
 	/**

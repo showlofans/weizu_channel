@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.weizu.api.forward.weizu.OrderState;
 import org.weizu.api.util.HttpRequest;
 
 import com.alibaba.fastjson.JSON;
@@ -117,10 +118,10 @@ public class Weizu implements BaseInterface {
             	int myStatus = OrderStateEnum.UNCHARGE.getValue();
             	switch (status) {
             	case 0://未充值
-            		myStatus = OrderStateEnum.WEICHONG.getValue();
+            		myStatus = OrderStateEnum.CHARGING.getValue();
             		break;
             	case 1://等待充值
-            		myStatus = OrderStateEnum.DAICHONG.getValue();
+            		myStatus = OrderStateEnum.CHARGING.getValue();
             		break;
             	case 2://正在充值
             		myStatus = OrderStateEnum.CHARGING.getValue();
@@ -137,19 +138,19 @@ public class Weizu implements BaseInterface {
             	if(StringHelper.isEmpty(msg)){
             		switch (status) {
                 	case 0://未充值
-                		msg ="系统：" + OrderStateEnum.WEICHONG.getDesc();
+                		msg = "未冲";
                 		break;
                 	case 1://等待充值
-                		msg = "系统：" +OrderStateEnum.DAICHONG.getDesc();
+                		msg = "等待充值";
                 		break;
                 	case 2://正在充值
-                		msg = "系统：" +OrderStateEnum.CHARGING.getDesc();
+                		msg = OrderStateEnum.CHARGING.getDesc();
                 		break;
                 	case 4://充值成功
-                		msg = "系统：" + OrderStateEnum.CHARGED.getDesc();
+                		msg = OrderStateEnum.CHARGED.getDesc();
                 		break;
                 	case 8://充值失败
-                		msg = "系统：" + OrderStateEnum.UNCHARGE.getDesc();
+                		msg =  "充值失败";
                 		break;
                 	default:
                 		break;
@@ -193,9 +194,12 @@ public class Weizu implements BaseInterface {
 	            String number = orderObj.getString("number");
 	            String pgSize = orderObj.getString("flowsize");
 	            //用我这边默认的对私账户充值
-	            chargeDTO = new ChargeDTO(tipCode, tipMsg, new ChargeOrder(orderIdApi, number, pgSize, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
-			    // 最后输出到控制台  
-	            System.out.println(tipCode+"<--->"+tipMsg);  
+	            if(tipCode == 0 || tipCode == 50000 || tipCode == 50005 || tipCode == 50006 || tipCode == 50008 || tipCode == 50012 || tipCode == 50004 || tipCode == 55006){
+	            	chargeDTO = new ChargeDTO(OrderStateEnum.CHARGING.getValue(), tipMsg, new ChargeOrder(orderIdApi, number, pgSize, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
+	            }else{//返回失败,考虑退款
+	            	// 最后输出到控制台  
+	            	System.out.println(tipCode+"<--->"+tipMsg);  
+	            }
 	  
 	        } catch (JSONException e) {  
 	            e.printStackTrace();  

@@ -446,7 +446,7 @@ public class ChargePgController {
 	public String ajaxChargePg(ChargeChannelParamsPo ccpp){
 		List<OperatorPgDataPo> chargeList = purchaseAO.getPgByChanel(ccpp);
 		String listJsonStr = JSON.toJSONString(chargeList);
-		System.out.println(listJsonStr);
+//		System.out.println(listJsonStr);
 		return listJsonStr;
 	}
 	
@@ -578,11 +578,10 @@ public class ChargePgController {
 	@RequestMapping(value=ChargePgURL.UPDATE_PURCHASE_STATE)
 	@ResponseBody
 	public void updatePurchaseState(Long orderId,Integer orderResult, String orderResultDetail,HttpServletResponse response){
-		String updateRes = agencyPurchaseAO.updatePurchaseState(orderId, orderResult, orderResultDetail,null);
-		
+		String updateRes = agencyPurchaseAO.updatePurchaseStateByMe(orderId, orderResult, orderResultDetail,null);
 		response.setContentType("text/html;charset=utf-8");
 		try {
-				response.getWriter().print(updateRes);
+			response.getWriter().print(updateRes);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

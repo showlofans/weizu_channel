@@ -54,6 +54,7 @@ public class AccountPurchaseDaoImpl extends DaoImpl<AccountPurchasePo, Long> imp
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("orderState", orderState);
 		params.put("orderStateDetail", orderStateDetail);
+		params.put("purchaseId", purchaseId);
 		//apPo.setOrderBackTimeStr(DateUtil.formatAll(System.currentTimeMillis()));
 //		apPo.setOrderBackTime(System.currentTimeMillis());
 		return sqlSessionTemplate.update("batchUpdateState", params);

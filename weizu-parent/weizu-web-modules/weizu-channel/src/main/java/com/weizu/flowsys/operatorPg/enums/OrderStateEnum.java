@@ -10,23 +10,23 @@ public enum OrderStateEnum {
 	/**
 	 * 未充值
 	 */
-	WEICHONG("未充",4),
+	WEICHONG("系统：未充",4),
 	/**
 	 * 等待充值
 	 */
-	DAICHONG("待充",3),
+	DAICHONG("系统：待充",3),
 	/**
 	 * 正在充值
 	 */
-	CHARGING("正在充值",2),
+	CHARGING("系统：正在充值",2),
 	/**
 	 * 充值成功
 	 */
-	CHARGED("成功",1),
+	CHARGED("系统：成功",1),
 	/**
 	 * 充值失败
 	 */
-	UNCHARGE("失败",0);
+	UNCHARGE("系统：失败",0);
 	
 	private String desc;
 	private int value;

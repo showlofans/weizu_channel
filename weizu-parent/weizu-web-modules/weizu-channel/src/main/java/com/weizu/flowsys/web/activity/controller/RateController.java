@@ -28,7 +28,7 @@ import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
-import com.weizu.flowsys.web.activity.ao.AgencyActiveChannelAO;
+import com.weizu.flowsys.web.activity.ao.AccountActiveRateAO;
 import com.weizu.flowsys.web.activity.ao.OperatorDiscountAO;
 import com.weizu.flowsys.web.activity.ao.RateBackwardAO;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
@@ -50,6 +50,7 @@ import com.weizu.flowsys.web.channel.ao.ChannelDiscountAO;
 import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
+//import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.web.foundation.String.StringHelper;
 
 /**
@@ -78,7 +79,7 @@ public class RateController {
 	@Resource
 	private ChargeAccountDao chargeAccountDao;
 	@Resource
-	private AgencyActiveChannelAO agencyActiveChannelAO;
+	private AccountActiveRateAO accountActiveRateAO;
 	@Resource
 	private ChannelDiscountAO channelDiscountAO;
 	
@@ -95,6 +96,8 @@ public class RateController {
 	
 	@Resource
 	private AgencyAO agencyAO;
+//	@Resource
+//	private PurchaseDao purchaseDAO;
 	
 	/**
 	 * @description:跳转到费率添加页面
@@ -396,7 +399,7 @@ public class RateController {
 		}else{
 			pageParam = new PageParam(1, 10);
 		}
-		Pagination<AccountActiveRatePo> pagination = agencyActiveChannelAO.listActive(pageParam, activePo);
+		Pagination<AccountActiveRatePo> pagination = accountActiveRateAO.listActive(pageParam, activePo);
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("pagination", pagination);
@@ -590,7 +593,7 @@ public class RateController {
 			//全国业务，必须匹配全国的折扣
 			return "disMatch";
 		}
-		int bindRes = agencyActiveChannelAO.bindChannel(aacp,rateDiscountPo);
+		int bindRes = accountActiveRateAO.bindChannel(aacp,rateDiscountPo);
 		if(bindRes == -1){
 			return "hasScope";
 		}else if(bindRes > 0){
@@ -613,7 +616,7 @@ public class RateController {
 	@ResponseBody
 	public void updateBindState(String bindState, String activeId, HttpServletResponse response)
 	{
-		int updateRes = agencyActiveChannelAO.updateBindState(activeId, bindState);
+		int updateRes = accountActiveRateAO.updateBindState(activeId, bindState);
 		try {
 			if(updateRes > 0)
 			{
@@ -637,7 +640,7 @@ public class RateController {
 	@ResponseBody
 	public String batchUpdateBindState(AccountActiveRateDTO aardto, HttpServletResponse response)
 	{
-		int res = agencyActiveChannelAO.batchUpdateBindState(aardto);
+		int res = accountActiveRateAO.batchUpdateBindState(aardto);
 		if(res >= 0){
 			return "success";
 		}else{
@@ -662,7 +665,7 @@ public class RateController {
 	@ResponseBody
 	public void updateRateDiscount(String discount, String activeId, HttpServletResponse response)
 	{
-		int updateRes = agencyActiveChannelAO.updateRateDiscount(activeId, discount);
+		int updateRes = accountActiveRateAO.updateRateDiscount(activeId, discount);
 		try {
 			if(updateRes > 0)
 			{
@@ -692,7 +695,7 @@ public class RateController {
 			pageParam = new PageParam(1l, 10);
 		}
 		//初始化resultMap集合
-		agencyActiveChannelAO.getBindRateList(resultMap, pageParam, aarp, channelId);
+		accountActiveRateAO.getBindRateList(resultMap, pageParam, aarp, channelId);
 		resultMap.put("otypeEnums", OperatorTypeEnum.toList());
 		resultMap.put("stypeEnums", ServiceTypeEnum.toList());
 		resultMap.put("bindStateEnums", BindStateEnum.toList());
@@ -908,7 +911,7 @@ public class RateController {
 			return "error";
 		}
 		aardto.setBindAgencyId(agencyVO.getId());
-		int res = agencyActiveChannelAO.batchBindAgency(aardto);
+		int res = accountActiveRateAO.batchBindAgency(aardto);
 		String msg = "";
 		if(res>0){
 			msg = "success"; 
@@ -958,7 +961,7 @@ public class RateController {
 	@ResponseBody
 	@RequestMapping(value=RateURL.DEL_AGENCY_ACTIVE_RATE)
 	public String delAar(Long id){
-		String res = agencyActiveChannelAO.delAar(id);
+		String res = accountActiveRateAO.delAar(id);
 		return res;
 	}
 	/**
@@ -972,6 +975,7 @@ public class RateController {
 	@RequestMapping(value=RateURL.DEL_RATE)
 	public String delRateDiscount(Long rateDiscountId){
 		int res = rateDiscountDao.del(rateDiscountId);
+//		purchaseDAO.del(new WherePrams("", where, value))
 		if(res > 0){
 			return "success";
 		}

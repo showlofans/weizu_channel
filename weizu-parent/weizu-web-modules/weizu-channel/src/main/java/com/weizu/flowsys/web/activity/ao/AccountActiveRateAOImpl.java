@@ -30,8 +30,8 @@ import com.weizu.flowsys.web.channel.ao.ChannelDiscountAO;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
-@Service(value="agencyActiveChannelAO")
-public class AgencyActiveChannelAOImpl implements AgencyActiveChannelAO {
+@Service(value="accountActiveRateAO")
+public class AccountActiveRateAOImpl implements AccountActiveRateAO {
 
 	@Resource
 	private AccountActiveRateDao accountActiveRateDao;

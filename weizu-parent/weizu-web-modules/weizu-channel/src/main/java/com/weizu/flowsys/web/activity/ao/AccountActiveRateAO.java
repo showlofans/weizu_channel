@@ -9,7 +9,7 @@ import com.weizu.flowsys.web.activity.pojo.AccountActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.AccountActiveRatePo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 
-public interface AgencyActiveChannelAO {
+public interface AccountActiveRateAO {
 	
 	/**
 	 * @description: 跳转到折扣代理商列表页面
