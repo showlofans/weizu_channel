@@ -99,6 +99,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 		return "error";
 	}
 
+	@Transactional
 	@Override
 	public String updatePurchaseStateByMe(Long orderId, Integer orderResult,
 			String orderResultDetail, Long realBackTime) {
@@ -115,25 +116,37 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 					int batchAddCrt = 0;
 					if(list != null && list.size() > 0){
 						List<ChargeRecordPo> recordPoList = new LinkedList<ChargeRecordPo>();
-						for (AccountPurchasePo agencyPurchasePo : list) {
+						List<AccountPurchasePo> apList = new LinkedList<AccountPurchasePo>();
+						long recordId = chargeRecordDao.nextId();
+						for (AccountPurchasePo accountPurchasePo : list) {
 //							Integer agencyId = agencyPurchasePo.getAgencyId();
 //							int billType = agencyPurchasePo.getBillType();
 //							ChargeAccountPo accountPo = chargeAccountDao.get(new WherePrams("agency_id", "=", agencyId).and("bill_type", "=", billType));
-							Integer accountId = agencyPurchasePo.getAccountId();
+							Integer accountId = accountPurchasePo.getAccountId();
+							
 							if(accountId != null){
 								ChargeAccountPo accountPo = chargeAccountDao.get(accountId);
-								Double orderAmount = agencyPurchasePo.getOrderAmount();
+								Double orderAmount = accountPurchasePo.getOrderAmount();
 								Double agencyBeforeBalance = accountPo.getAccountBalance();
 								accountPo.addBalance(orderAmount, 1);
 								recordPoList.add(new ChargeRecordPo(realBackTime, orderAmount,
 										agencyBeforeBalance, accountPo.getAccountBalance(), 
 										AccountTypeEnum.Replenishment.getValue(), accountId,  1 , orderId));
 								chargeAccountDao.updateLocal(accountPo, new WherePrams("id","=",accountId));
+								//更新连接表
+//								ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
+//								Long appId = accountPurchaseDao.nextId();
+								//同样的订单消费再添加一笔消费记录
+								AccountPurchasePo appPo = accountPurchasePo.clone();
+								appPo.setRecordId(recordId);
+								appPo.setOrderState(orderResult);
+								appPo.setOrderStateDetail(orderResultDetail);
+								apList.add(appPo);
+								recordId++;
 							}
 						}
 						batchAddCrt = chargeRecordDao.crt_addList(recordPoList);		//批量添加补款记录信息
-						//更新连接表
-						ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
+						ap = accountPurchaseDao.ap_addList(apList);
 						//更新订单表(只更新超管的订单详情)
 						pur = purchaseDAO.updatePurchaseState(new PurchaseStateParams(orderId, System.currentTimeMillis(), orderResult, orderResultDetail, null));
 					}
@@ -146,7 +159,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 			//更新连接表
 			ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
 			//更新订单表
-			pur = purchaseDAO.updatePurchaseState(new PurchaseStateParams(orderId, System.currentTimeMillis(), null, orderResultDetail, null));
+			pur = purchaseDAO.updatePurchaseState(new PurchaseStateParams(orderId, System.currentTimeMillis(), orderResult, orderResultDetail, null));
 		}
 		if(pur + ap > 1){
 			return "success";

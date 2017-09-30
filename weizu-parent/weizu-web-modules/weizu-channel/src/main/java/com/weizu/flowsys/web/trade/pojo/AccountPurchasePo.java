@@ -13,7 +13,7 @@ import com.weizu.flowsys.core.beans.Po;
  * @version 1.0
  */
 @TableName(name="account_purchase")
-public class AccountPurchasePo extends Po{
+public class AccountPurchasePo extends Po implements Cloneable{
     private Long id;
 
     private Integer accountId;
@@ -66,6 +66,21 @@ public class AccountPurchasePo extends Po{
 		this.orderPlatformPath = orderPlatformPath;
 		this.orderState = orderState;
 	}
+	
+	
+
+	@Override
+	public AccountPurchasePo clone() {
+		AccountPurchasePo pvo = null;
+    	try{  
+    		pvo = (AccountPurchasePo)super.clone();  
+        }catch(CloneNotSupportedException e) {  
+            e.printStackTrace();  
+        }  
+		return pvo;
+	}
+
+
 
 	public Long getRecordId() {
 		return recordId;

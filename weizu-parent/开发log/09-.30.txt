@@ -1,0 +1,4 @@
+问题，批量提交，回调，热部署，手动成功失败，接口文档，
+热部署：
+查看nginx启动状态
+/usr/local/java/tomcat_cluster/tomcat7-8081/webapps

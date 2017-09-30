@@ -764,9 +764,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 													String callBackRes = SendCallBackUtil.sendCallBack(new ResponseJsonDTO(purchaseVO2.getOrderId(), purchaseVO2.getOrderIdFrom(), orderState, orderStateDetail, ts), agencyPo);
 													System.out.println(agencyPo.getUserName() + "：" +purchaseVO2.getOrderId() + "：" +  callBackRes);
 												}
-									}else if(orderDTO.getOrderIn().getStatus() != purchaseVO2.getOrderResult() && orderIn!= null){
+									}else if(orderIn.getStatus() != purchaseVO2.getOrderResult() && orderIn!= null){
+//										agencyPurchaseAO.updatePurchaseState(purchaseVO2.getOrderId(), orderIn.getStatus(), orderIn.getMsg(),System.currentTimeMillis());
 										//更新订单表
-										purchaseDAO.updatePurchaseState(new PurchaseStateParams(purchaseVO2.getOrderId(), System.currentTimeMillis(), orderDTO.getOrderIn().getStatus(), orderIn.getMsg(), null));
+										purchaseDAO.updatePurchaseState(new PurchaseStateParams(purchaseVO2.getOrderId(), System.currentTimeMillis(), orderIn.getStatus(), orderIn.getMsg(), null));
 									}
 								}
 							}
