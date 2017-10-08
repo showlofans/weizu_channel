@@ -84,7 +84,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 			}
 			
 		}else{
-			if(! orderResult.equals(OrderStateEnum.CHARGED.getValue())){
+			if(!orderResult.equals(OrderStateEnum.CHARGED.getValue())){
 				//更新连接表//不是成功和失败，就是进行
 				ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, OrderStateEnum.CHARGING.getDesc());
 			}else{

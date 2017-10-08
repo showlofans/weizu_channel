@@ -138,11 +138,11 @@
 ////		System.out.println(str);
 ////		System.out.println(System.currentTimeMillis());
 ////		System.out.println(DateUtil.formatPramm(System.currentTimeMillis(), "yyyy-MM-dd"));
-//		long ll = 1000l;
-//		int page = 10;
-//		long res = ll / page;
-//		System.out.println(res);
-//		
+////		long ll = 1000l;
+////		int page = 10;
+////		long res = ll / page;
+////		System.out.println(res);
+//		System.out.println(String.valueOf(742810868827295744l).length());
 //		
 ////		UUIDGenerator generator = new UUIDGenerator();
 ////		String userApiKey = generator.generate().toString();

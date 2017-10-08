@@ -88,7 +88,8 @@ public class Weizu implements BaseInterface {
 
 	@Override
 	public OrderDTO getOrderState() {
-		String jsonStr = HttpRequest.sendGet(baseParams.getEpo().getPgdataCheckIp(), toOrderParams());
+		String paramsStr =  toOrderParams();
+		String jsonStr = HttpRequest.sendGet(baseParams.getEpo().getPgdataCheckIp(),paramsStr);
 		OrderDTO orderDTO = null;
 		try {  
 			if(StringHelper.isEmpty(jsonStr)){

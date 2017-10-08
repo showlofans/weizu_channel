@@ -23,6 +23,7 @@ import com.weizu.flowsys.api.singleton.SingletonFactory;
 import com.weizu.flowsys.api.singleton.orderState.ResponseJsonDTO;
 import com.weizu.flowsys.api.singleton.orderState.SendCallBackUtil;
 import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
+import com.weizu.flowsys.api.weizu.charge.ChargeOrder;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
@@ -204,38 +205,46 @@ public class PurchaseAOImpl implements PurchaseAO {
 			OrderUril ou1 = new OrderUril(1);
 			orderId = ou1.nextId();
 			purchasePo.setOrderId(orderId);//设置订单号
-			
-			purchasePo.setOrderAmount(pcVO.getOrderAmount());
-			purchasePo.setAccountId(accountId);
-			purchasePo.setOrderArriveTime(currentTime);
-			Boolean isChannelStateCanceled = channel.getChannelState() == ChannelUseStateEnum.CLOSE.getValue();
-			if(isChannelStateCanceled){
-				orderResult = OrderStateEnum.DAICHONG.getValue();
-				orderResultDetail = "通道暂停等待";
-			}else{//通道没有暂停
-				chargeDTO = chargeByBI(epPo, orderId, pcVO.getChargeTel(),pcVO.getServiceType(), dataPo.getProductCode());
-				if(chargeDTO != null){
-					orderResult = OrderStateEnum.CHARGING.getValue();
-					orderResultDetail = OrderStateEnum.CHARGING.getDesc();
-				}else{
-					orderResult = OrderStateEnum.DAICHONG.getValue();
-					orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+"平台直接返失败";
-				}
-			}
-			purchasePo.setOrderResult(orderResult);
-			purchasePo.setOrderResultDetail(orderResultDetail);
-			purchasePo.setChannelName(channel.getChannelName());;
-			Map<String, Object> telMap = PurchaseUtil.getOperatorsByTel(purchasePo.getChargeTel());
-			 String chargeTelCity = null;
-			 if(telMap != null)
-			{
-				chargeTelCity = telMap.get("chargeTelCity").toString();
-			}
-			purchasePo.setChargeTelCity(chargeTelCity);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "订单添加异常";
 		}
+		
+		purchasePo.setOrderAmount(pcVO.getOrderAmount());
+		purchasePo.setAccountId(accountId);
+		purchasePo.setOrderArriveTime(currentTime);
+		Map<String, Object> telMap = PurchaseUtil.getOperatorsByTel(purchasePo.getChargeTel());
+		String chargeTelCity = null;
+		if(telMap != null)
+		{
+			chargeTelCity = telMap.get("chargeTelCity").toString();
+		}else{
+			return "调用接口异常";
+		}
+		purchasePo.setChargeTelCity(chargeTelCity);
+		Boolean isChannelStateCanceled = channel.getChannelState() == ChannelUseStateEnum.CLOSE.getValue();
+		if(isChannelStateCanceled){
+			orderResult = OrderStateEnum.DAICHONG.getValue();
+			orderResultDetail = "通道暂停等待";
+		}else{//通道没有暂停
+			
+			chargeDTO = chargeByBI(epPo, orderId, pcVO.getChargeTel(),pcVO.getServiceType(), dataPo.getProductCode());
+			if(chargeDTO != null){
+				orderResult = OrderStateEnum.CHARGING.getValue();
+				orderResultDetail = OrderStateEnum.CHARGING.getDesc();
+				ChargeOrder co = chargeDTO.getChargeOrder();
+				if(co != null){
+					purchasePo.setOrderIdApi(co.getOrderIdApi());
+				}
+			}else{
+				orderResult = OrderStateEnum.DAICHONG.getValue();
+				orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+"平台直接返失败";
+			}
+		}
+		purchasePo.setOrderResult(orderResult);
+		purchasePo.setOrderResultDetail(orderResultDetail);
+		purchasePo.setChannelName(channel.getChannelName());
+		
 		if(pcVO.getRateId() == null && pcVO.getCdisId() != null){//通过通道折扣充值
 			String fromAgencyName = pcVO.getFromAgencyName();
 			ChannelDiscountPo cdisPo = null;
@@ -734,14 +743,14 @@ public class PurchaseAOImpl implements PurchaseAO {
 							purchaseEp = exchangePlatformDao.getEpByCDiscountId(purchaseVO2.getRateDiscountId());
 						}
 						if(purchaseEp != null){
-							boolean negCallBack = purchaseEp.getEpCallBack() != null && purchaseEp.getEpCallBack() == CallBackEnum.NEGATIVE.getValue();
+							boolean negCallBack = CallBackEnum.NEGATIVE.getValue().equals(purchaseEp.getEpCallBack());
 							if(negCallBack){//不支持回调就用主动查询，查询订单状态
 								BaseInterface bi = SingletonFactory.getSingleton(purchaseEp.getEpEngId(), new BaseP(null,purchaseVO2.getOrderIdApi(),purchaseVO2.getChargeTel(),null,purchaseEp));//查订单状态用api订单号对象去查
 								OrderDTO orderDTO = bi.getOrderState();
 								//是否需要更新订单状态条件
 								if(orderDTO != null){
 									OrderIn orderIn = orderDTO.getOrderIn();
-									boolean updateCondition = orderIn!= null && orderIn.getStatus() != purchaseVO2.getOrderState();
+									boolean updateCondition = orderIn!= null && !purchaseVO2.getOrderResult().equals(orderIn.getStatus());
 									if(updateCondition){
 										//更新订单状态//返回状态和原先数据库状态不相符
 										Long ts = orderIn.getCreated_at_time();
@@ -775,19 +784,6 @@ public class PurchaseAOImpl implements PurchaseAO {
 							System.out.println("未找到相关平台信息");
 						}
 					}
-					
-					//					
-					//					OrderStateBase orderStatePage = OrderStateFactory.getOrderStateBase(purchaseEp.getEpName());
-					//					
-					//					OrderStateResultPage osrp = orderStatePage.getOrderState(new OrderStateParamsPage(purchaseEp.getPgdataCheckIp(), purchaseVO2.getOrderIdApi(), purchaseEp.getEpName(), purchaseEp.getEpUserName(), purchaseEp.getEpApikey()));
-					//					//更新加载的订单状态信息
-					//					//判断是否与数据库中的数据相等,如果不相等，就更新页面和数据库信息
-					//					PageOrder pageOrder = osrp.getPageOrder();
-					//					//如果失败，把等待状态转换成未充状态
-					//					pageOrder.setStatus(ChargeFacadeImpl.getStatusByStatus(pageOrder.getStatus())); 
-					//					
-					//					//更新查看订单状态
-					//					checkOrderState(pageOrder, purchaseVO2);
 					//格式化展示时间
 					if(purchaseVO2.getOrderBackTime() != null)
 					{

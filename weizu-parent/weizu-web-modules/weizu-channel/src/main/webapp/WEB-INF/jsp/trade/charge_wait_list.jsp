@@ -149,13 +149,13 @@
 						<!-- 结果 -->
 						<td>
 						<c:forEach items="${resultMap.orderStateEnums }" var="orderStateEnum" varStatus="vs">
-							<c:if test="${purchase.orderState == orderStateEnum.value }">
+							<c:if test="${purchase.orderResult == orderStateEnum.value }">
 								${orderStateEnum.desc }
 							</c:if>
 						</c:forEach>
 						</td>
 						
-						<td>${purchase.orderStateDetail }</td>
+						<td>${purchase.orderResultDetail }</td>
 						<td>${purchase.orderPrice }</td>
 						<td class="f-14 td-manage">
 							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeState(this,'1')" href="javascript:;" title="成功">

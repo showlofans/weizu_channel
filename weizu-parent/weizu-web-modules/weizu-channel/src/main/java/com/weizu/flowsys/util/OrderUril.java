@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.weizu.web.foundation.DateUtil;
 
 /**
- * 订单号生成工具类
+ * 18位订单号生成工具类
  * 
  * @description:
  * @projectName:crud
@@ -110,19 +110,19 @@ public class OrderUril implements Serializable {
 		return System.currentTimeMillis();
 	}
 
-	public static void main(String[] args) throws Exception {
-		OrderUril ou1 = new OrderUril(1);// 693930371141603328
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//		Long time = format.parse("2017-1-1 00:00:00").getTime();
-//		Long time2 = format.parse("2017-1-1 23:59:59").getTime();
-//		System.out.println(time);
-//		System.out.println(time2);
-		System.out.println(System.currentTimeMillis());
-		System.out.println(format.format(new Date(1330328109047L)));
-		for (int i = 0; i < 10; i++) {
-			System.out.println(ou1.nextId());
-		}
-	}
+//	public static void main(String[] args) throws Exception {
+//		OrderUril ou1 = new OrderUril(1);// 693930371141603328
+//		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+////		Long time = format.parse("2017-1-1 00:00:00").getTime();
+////		Long time2 = format.parse("2017-1-1 23:59:59").getTime();
+////		System.out.println(time);
+////		System.out.println(time2);
+//		System.out.println(System.currentTimeMillis());
+//		System.out.println(format.format(new Date(1330328109047L)));
+//		for (int i = 0; i < 10; i++) {
+//			System.out.println(ou1.nextId());
+//		}
+//	}
 
 	// // 693930428515487744
 	// // OrderUril ou2 = new OrderUril(2);
