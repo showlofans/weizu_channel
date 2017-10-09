@@ -91,8 +91,8 @@
 					</c:otherwise>
 				</c:choose>
 				<input type="hidden" name="accountType" value="0"> <!-- 设置为充值 -->
-				<%-- <input type="hidden" name="agencyId" value="${resultMap.accountPo.agencyId }"> <!-- 代理商id -->
-				<input type="hidden" id="contextRootId" value="${loginContext.rootAgencyId }"> <!-- 代理商id --> --%>
+				<%-- <input type="hidden" name="agencyId" value="${resultMap.accountPo.agencyId }"> <!-- 代理商id --> --%>
+				<input type="hidden" id="contextRootId" value="${loginContext.rootAgencyId }"> <!-- 代理商id -->
 				<%-- ${resultMap.error_msg } --%>
 			</div>
 		</div>

@@ -411,7 +411,7 @@ public class RateController {
 			ChargeAccountPo accountPo1 = chargeAccountDao.get(activePo.getAccountId());
 //			ChargeAccountPo chargeAccountPo1 = chargeAccountAO
 //					.getAccountByAgencyId(activePo.getAgencyId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
-			if(accountPo1 != null)
+			if(accountPo1 != null && BillTypeEnum.CORPORATE_BUSINESS.getValue().equals(accountPo1.getBillType()))
 			{
 				request.getSession().setAttribute("isOpen", 1);
 			}

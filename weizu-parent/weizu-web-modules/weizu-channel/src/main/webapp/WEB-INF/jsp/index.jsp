@@ -62,6 +62,7 @@
 							<li><a href="javascript:;" onClick="myselfinfo()">个人信息</a>
 							</li>
 							<li><a href="/flowsys/agency/logout.do">切换账户</a></li>
+							<!-- <li><a data-href="/flowsys/bankAccount/bank_list.do" data-title="银行卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">银行卡</a></li> -->
 							<li><a href="javascript:;" onClick="resetPass()">修改密码</a></li>
 							<li><a href="/flowsys/agency/logout.do">退出</a></li>
 					</ul>

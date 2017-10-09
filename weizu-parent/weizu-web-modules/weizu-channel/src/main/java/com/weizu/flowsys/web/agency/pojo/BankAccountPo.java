@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.agency.pojo;
 
 import com.weizu.flowsys.core.annotation.po.TableName;
+import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
 
 /**
@@ -20,13 +21,35 @@ public class BankAccountPo extends Po {
 	
 	private String remittanceWay;		//汇款方式 
 	
-	private String remittancBankAccount;	//汇款账号
+	private String remittanceBankAccount;	//汇款账号
 	
 	private String accountName;				//汇款账号真实姓名
 	
 	private Double referenceBalance;		//对账余额
 	
 	private Integer agencyId;			//待充值账户所属代理商id
+	
+	
+	@TempField
+	private Integer billType;			//页面参数：绑定账户带票类型
+	@TempField
+	private Double accountBalance;		//页面参数：绑定账户余额带票类型
+
+	public Integer getBillType() {
+		return billType;
+	}
+
+	public void setBillType(Integer billType) {
+		this.billType = billType;
+	}
+
+	public Double getAccountBalance() {
+		return accountBalance;
+	}
+
+	public void setAccountBalance(Double accountBalance) {
+		this.accountBalance = accountBalance;
+	}
 
 	public Long getId() {
 		return id;
@@ -52,12 +75,12 @@ public class BankAccountPo extends Po {
 		this.remittanceWay = remittanceWay;
 	}
 
-	public String getRemittancBankAccount() {
-		return remittancBankAccount;
+	public String getRemittanceBankAccount() {
+		return remittanceBankAccount;
 	}
 
-	public void setRemittancBankAccount(String remittancBankAccount) {
-		this.remittancBankAccount = remittancBankAccount;
+	public void setRemittanceBankAccount(String remittanceBankAccount) {
+		this.remittanceBankAccount = remittanceBankAccount;
 	}
 
 	public String getAccountName() {
