@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
+import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 
@@ -185,6 +186,16 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 	public List<RateDiscountPo> getMyChildRate(Map<String, Object> params) {
 		return sqlSessionTemplate.selectList("getMyChildRate", params);
 	}
+	
+	@Override
+	public List<RateDiscountPo> getRateByAcountIdAndCDId(
+			Long channelDiscountId, Integer accountId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("channelDiscountId", channelDiscountId);
+		params.put("accountId", accountId);
+		params.put("bindState", BindStateEnum.BIND.getValue());
+		return sqlSessionTemplate.selectList("getMyChildRate", params);
+	}
 
 	@Override
 	public int getScopeExceptionForRate(Map<String, Object> params) {
@@ -205,5 +216,7 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 		}
 		return sqlSessionTemplate.update("updateRateDiscountByCDId", paramsMap);
 	}
+
+	
 
 }

@@ -28,6 +28,7 @@ import com.weizu.flowsys.util.OrderUril;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
+import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.dao.impl.AgencyBackwardDao;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeRecordDao;
@@ -47,9 +48,9 @@ import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.http.entity.Charge;
 import com.weizu.flowsys.web.http.entity.ChargePo;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
-import com.weizu.flowsys.web.trade.dao.AgencyPurchaseDao;
+import com.weizu.flowsys.web.trade.dao.AccountPurchaseDao;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
-import com.weizu.flowsys.web.trade.pojo.AgencyPurchasePo;
+import com.weizu.flowsys.web.trade.pojo.AccountPurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 
 /**
@@ -65,8 +66,10 @@ public class ChargeImpl implements IChargeFacet {
 
 	@Resource
 	private ValiUser valiUser;
+//	@Resource
+//	private AgencyBackwardDao agencyBackwardDao;
 	@Resource
-	private AgencyBackwardDao agencyBackwardDao;
+	private AgencyAO agencyAO;
 	@Resource
 	private ProductCodeAO productCodeAO;
 	
@@ -87,7 +90,7 @@ public class ChargeImpl implements IChargeFacet {
 	@Resource
 	private ChannelChannelDao channelChannelDao;
 	@Resource
-	private AgencyPurchaseDao agencyPurchaseDao;
+	private AccountPurchaseDao accountPurchaseDao;
 	@Resource
 	private ChannelDiscountDao channelDiscountDao;
 	
@@ -103,11 +106,12 @@ public class ChargeImpl implements IChargeFacet {
 		if(sqlMap.get("exceptionDTO") == null){//说明sqlMap中的其他参数都不为空
 			
 			AgencyBackwardPo backPo = (AgencyBackwardPo)sqlMap.get("backPo");
+			ChargeAccountPo accountPo = (ChargeAccountPo)sqlMap.get("accountPo");
 			PgDataPo pgData = (PgDataPo)sqlMap.get("pgData");
 			RateDiscountPo ratePo = (RateDiscountPo)sqlMap.get("ratePo");
 			ChannelChannelPo channelPo = (ChannelChannelPo)sqlMap.get("channelPo");
 			boolean isChannelStateClose = channelPo.getChannelState() == ChannelStateEnum.CLOSE.getValue();//通道关闭
-			int agencyId = backPo.getId();
+			int accountId = accountPo.getId();
 			int orderPath = OrderPathEnum.CHARGE_SOCKET.getValue();
 			int billType = chargeParams.getBillType();
 			
@@ -116,7 +120,6 @@ public class ChargeImpl implements IChargeFacet {
 			int orderResult = OrderStateEnum.CHARGING.getValue();
 			String orderResultDetail = OrderStateEnum.CHARGING.getDesc(); 
 			Boolean canCharge = true;
-			ChargeAccountPo accountPo = chargeAccountAO.getAccountByAgencyId(agencyId, billType);
 			/**充值前余额*/
 			Double agencyBeforeBalance = accountPo.getAccountBalance();
 			/**充值额（）*/
@@ -139,12 +142,15 @@ public class ChargeImpl implements IChargeFacet {
 //			if(!isChannelStateClose){
 				/**更新超管的账户信息*/
 				cdPo = channelDiscountDao.get(ratePo.getChannelDiscountId());
-				superAgencyId = backPo.getRootAgencyId();
-				superAccountPo = chargeAccountAO.getAccountByAgencyId(superAgencyId, cdPo.getBillType());
-				/**超管充值前余额*/
-				superAgencyBeforeBalance = superAccountPo.getAccountBalance();
-				/**超管充值额（）*/
-				superOrderAmount = NumberTool.mul(cdPo.getChannelDiscount(), pgData.getPgPrice());
+				AgencyBackwardPo superAgencyPo = agencyAO.getRootAgencyById(backPo.getId());
+				if(superAgencyPo != null){
+					superAgencyId = superAgencyPo.getId();
+					superAccountPo = chargeAccountAO.getAccountByAgencyId(superAgencyId, cdPo.getBillType());
+					/**超管充值前余额*/
+					superAgencyBeforeBalance = superAccountPo.getAccountBalance();
+					/**超管充值额（）*/
+					superOrderAmount = NumberTool.mul(cdPo.getChannelDiscount(), pgData.getPgPrice());
+				}
 //			}
 //			Double superAgencyAfterBalance = NumberTool.sub(superAgencyBeforeBalance, superOrderAmount); //简单的结果运算
 			Long orderId = null;
@@ -154,7 +160,7 @@ public class ChargeImpl implements IChargeFacet {
 				OrderUril ou1 = new OrderUril(1);
 				orderId = ou1.nextId();
 				String chargeTelCity = resMap.get("chargeTelCity").toString();
-				purchasePo = new PurchasePo(orderId, chargeParams.getOrderIdFrom(), agencyId, chargeTel, pgData.getId(), 
+				purchasePo = new PurchasePo(orderId, chargeParams.getOrderIdFrom(), accountId, chargeTel, pgData.getId(), 
 						System.currentTimeMillis(), chargeTelDetail, chargeTelCity, orderResult, channelPo.getChannelName(), 
 						orderResultDetail, orderAmount, billType);
 			} catch (Exception e) {
@@ -164,6 +170,9 @@ public class ChargeImpl implements IChargeFacet {
 			String scopeCityCode = PurchaseUtil.getScopeCityByCarrier(chargeTelDetail).get("scopeCityCode").toString();
 			ProductCodePo pc = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, epPo.getId(), pgData.getId()));
 			Charge charge = null;
+			
+			long recordId = 0l;
+			long supperRecordId = 0l;
 			if(canCharge && pc != null){//可以通过接口充值
 				/** 更新登录用户账户信息**/
 				accountPo.addBalance(orderAmount,-1);
@@ -172,7 +181,8 @@ public class ChargeImpl implements IChargeFacet {
 					//添加消费记录
 					chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
 							agencyBeforeBalance, accountPo.getAccountBalance(), 
-							billType,AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), agencyId, 1 , orderId));
+							AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), 1 , orderId));
+					recordId = chargeRecordDao.nextId() -1;
 				}
 				if(!isChannelStateClose){
 					/** 更新超管账户信息**/
@@ -182,7 +192,8 @@ public class ChargeImpl implements IChargeFacet {
 						//添加消费记录
 						chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), superOrderAmount,
 								superAgencyBeforeBalance, superAccountPo.getAccountBalance(), 
-								cdPo.getBillType(),AccountTypeEnum.DECREASE.getValue(), superAccountPo.getId(), superAgencyId, 1 , orderId));
+								AccountTypeEnum.DECREASE.getValue(), superAccountPo.getId(), 1 , orderId));
+						supperRecordId = chargeRecordDao.nextId() -1 ;
 					}
 					BaseInterface bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(pc.getProductCode(),orderId,chargeTel,chargeParams.getScope(),epPo));
 					ChargeDTO chargeDTO = bi.charge();
@@ -190,9 +201,7 @@ public class ChargeImpl implements IChargeFacet {
 					logger.config("上游返回的订单号："+ orderIdApi);//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
 					purchasePo.setOrderIdApi(orderIdApi);
 					charge = getChargeByDTO(chargeDTO,chargeParams,purchasePo);
-					if(charge!= null){
-						orderResultDetail = charge.getTipMsg();
-					}
+					orderResultDetail = charge.getTipMsg();
 				}else{
 					orderResult = OrderStateEnum.DAICHONG.getValue();
 					orderResultDetail = ChargeStatusEnum.CHANNEL_CLOSED.getDesc();
@@ -206,14 +215,18 @@ public class ChargeImpl implements IChargeFacet {
 				throw new Exception("发送接口请求异常，接口调用失败");
 			}
 			purResult = purchaseDAO.addPurchase(purchasePo);
-			AgencyPurchasePo app = new AgencyPurchasePo(agencyId, orderId,ratePo.getId(), orderAmount, billType, orderAmount, backPo.getUserName(), orderPath, orderState);
-			app.setOrderStateDetail(orderStateDetail);
-			agencyPurchaseDao.add(app);
-//			if(!isChannelStateClose){
-				AgencyPurchasePo superApp = new AgencyPurchasePo(superAgencyId, orderId,cdPo.getId(), superOrderAmount, cdPo.getBillType(), orderAmount, backPo.getUserName(), orderPath, orderResult);
-				superApp.setOrderStateDetail(orderResultDetail);
-				agencyPurchaseDao.add(superApp);
-//			}
+			if(recordId != 0){
+				AccountPurchasePo app = new AccountPurchasePo(accountId, orderId,ratePo.getId(), orderAmount,accountPo.getId(),recordId, orderAmount, backPo.getUserName(), orderPath, orderState);
+				app.setOrderStateDetail(orderStateDetail);
+				accountPurchaseDao.add(app);
+			}
+			if(supperRecordId != 0){
+	//			if(!isChannelStateClose){
+					AccountPurchasePo superApp = new AccountPurchasePo(superAccountPo.getId(), orderId,cdPo.getId(), superOrderAmount, accountPo.getId(),supperRecordId, orderAmount, backPo.getUserName(), orderPath, orderResult);
+					superApp.setOrderStateDetail(orderResultDetail);
+					accountPurchaseDao.add(superApp);
+	//			}
+			}
 			return charge;
 		}else{
 			return (Charge) sqlMap.get("exceptionDTO");
@@ -237,7 +250,10 @@ public class ChargeImpl implements IChargeFacet {
 			Charge charge = new Charge(chargeDTO.getTipCode(), chargeDTO.getTipMsg(), new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
 			return charge;
 		}
-		return null;
+		else{
+			Charge charge = new Charge(OrderStateEnum.UNCHARGE.getValue(), OrderStateEnum.UNCHARGE.getDesc(), new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
+			return charge;
+		}
 	}
 
 	/**
@@ -285,21 +301,22 @@ public class ChargeImpl implements IChargeFacet {
 			if(backPo == null)
 			{
 				chargeEnum = ChargeStatusEnum.AUTHENTICATION_FAILURE;
-				charge = new Charge(chargeEnum.getValue(),chargeEnum.getDesc(), null);
+				charge = new Charge(chargeEnum.getValue(),chargeEnum.getDesc() , null);
 				sqlMap.put("exceptionDTO", charge);
 				return sqlMap;
 			}else{
+				sqlMap.put("backPo", backPo);
 				ChargeAccountPo accountPo =  chargeAccountAO.getAccountByAgencyId(backPo.getId(), billType);
 				if(accountPo == null){
 					chargeEnum = ChargeStatusEnum.INVALID_BILL_TYPE;
-					charge = new Charge(chargeEnum.getValue(),chargeEnum.getDesc()+":没有开通该业务", null);
+					charge = new Charge(chargeEnum.getValue(),backPo.getUserName() +":没有开通该业务", null);
 					sqlMap.put("exceptionDTO", charge);
 					return sqlMap;
 				}else{
-					sqlMap.put("backPo", backPo);
+					sqlMap.put("accountPo", accountPo);
 					String chargeTelDetail = resMap.get("chargeTelDetail").toString();
 					//折扣是忽略包体大小的
-					RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(chargeParams.getScope(), chargeTelDetail, backPo.getId(), billType,false);
+					RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(chargeParams.getScope(), chargeTelDetail, accountPo.getId(),false);
 					if(ratePo == null){
 						chargeEnum = ChargeStatusEnum.SCOPE_RATE_UNDEFINED;
 						charge = new Charge(chargeEnum.getValue(),chargeEnum.getDesc(), null);

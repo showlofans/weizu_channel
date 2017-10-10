@@ -52,5 +52,10 @@
 ////		ChargeAccountPo accouontPo = chargeAccountDao.selectRootAccountByAgencyId(21, 0);
 ////		System.out.println(accouontPo.getAccountBalance());
 ////	}
+//	@Test
+//	public void getRootAccountById(){
+//		ChargeAccountPo accouontPo = chargeAccountDao.getRootAccountById(2, 0);
+//		System.out.println(accouontPo.getAccountBalance());
+//	}
 //
 //}

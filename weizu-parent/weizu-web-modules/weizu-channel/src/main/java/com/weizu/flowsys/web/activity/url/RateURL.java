@@ -44,7 +44,7 @@ public class RateURL extends BaseURL {
 	/**
 	 * 获得可配置的简易通道信息
 	 */
-	public static final String GET_SIMPLE_CHANNEL = "/get_simple_channel" + DYNAMIC_WEB_SUFFIX;
+	public static final String GET_SIMPLE_CHANNEL = "/get_simple_channel7897489" + DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 费率配置通道列表<br>
 	 * /flowsys/rate/bind_channel_list.do

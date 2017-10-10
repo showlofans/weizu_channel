@@ -1,0 +1,125 @@
+其他账户有查看的权限，没有编辑的权限
+子账户可以查看其他汇款账号
+确认汇款成功后，设置为常用（代理商自己绑定的汇款账号）
+
+所有子代理商账号对父级代理商可见，
+
+实际上是完成两个账户之间的绑定。
+（添加自己的充值账户）也许可以加一个自己的虚拟款（引用账户余额），以便统计消费
+要完成充值，首先子代理商要在当前账户下创建属于自己的账户引用信息。
+
+
+在代理商有引用账户的前提下，向另外一个（父级代理商）引用账户进行转账
+转账有转账提交和确认记录。（对双方可见）在上一级确认转账后成功后，
+设置双方的引用账户余额，在上一级手动给代理商加款后，给两个系统账户设置余额
+
+功能需求：根据代理商id获得所有引用账户的转账消息
+
+bank_account (account_reference)
+id	
+account_id 充值账户id（外:当前登陆用户账户id）
+remittance_way 汇款方式（名称）
+remittance_bank_account 汇款账号
+account_name 账户真实姓名
+reference_balance 对账余额：（完成转账的逻辑）
+agency_id 账户信息（所属人）
+use_state 标记是否为默认
+
+
+
+transfer_account  转账记录
+
+from_bank_id 打款方引用账户id
+to_bank_id 收款方引用账户id
+commit_amount 提交金额(打款金额)
+commit_time  提交时间（系统生成）
+real_time 真实提交时间（手动设置不超过当前时间）
+confirm_time 审核时间（审核人负责确定）
+confirm_state 审核状态
+from_agency_id  
+to_agency_id		账户流向
+
+
+
+根据代理商id获得所有引用账户的转账消息
+select ta.*,agb.user from  transfer_account ta inner join agency_backward agb
+on ta.to_agency_id = agb.id
+where ta.to_agency_id= 
+
+select ta.*,
+agb1.userName from_agency_name,
+agb2.userName to_agency_name,
+from transfer_account ta 
+inner join charge_account act
+inner join agency_backward agb1 on agb1.id=ta.from_agency_id
+inner join agency_backward agb2 on agb2.id=ta.to_agency_id
+inner join bank_account bact1 on bact1.id = ta.from_bank_id
+inner join bank_account bact2 on bact2.id = ta.to_bank_id
+
+
+
+转账审核列表，
+代理商名字，
+代理商真实姓名，
+充值账户类型
+//我的真实姓名，
+//我的汇款方式，对方的汇款方式，
+对方使用的(我的)汇款方式，
+以及我的汇款账号
+对方的汇款账号
+审核状态
+
+对公费率扣对公账户的钱，
+对公银行卡只绑定对公账户
+
+个人银行卡信息，加款
+加款
+
+找到父级代理商的对公加款银行列表
+
+代理商id是上下级关系，两个银行卡绑定的票务类型相同
+
+agency_charge_bank
+子代理商开放银行卡表（下级通过这个表找到父级代理商的加款银行卡列表）
+
+bank_id
+agency_id
+bill_type
+
+4.通过连接银行卡表就能找到(父级代理商)所有银行卡信息列表
+
+/******
+2.注册成为代理商，就自动变成父级代理商默认对私银行卡的绑定者
+3,。认证通过后，自动变成父级代理商默认对公银行卡的绑定者
+******/
+
+这个注册的人看到的就是点击加款的时候，就会显示这个加款银行卡
+
+已经有了一个银行卡，再给这个代理商配置另外一个银行卡（添加一个显示）
+给他换张银行卡，就删除绑定就行了
+
+1.在转账记录里面找到上一次（最新转账）的加款账户
+
+批量显示，批量不显示
+
+一般来讲需要固定给某个代理商设置银行卡
+
+添加一张银行卡，就可以默认让所有子代理商都显示
+第二张银行卡，可以默认不添加，当设置为默认银行卡的时候，就可以
+
+默认银行卡只是注册的时候，
+更换默认银行卡，就是把原先的use_state的卡状态去掉，更新新的卡use_state
+更换银行卡，就需要把原先的删掉，并添加新的银行卡绑定
+
+给它添加一个加款卡号，代理商就能加载到一个加款卡号；没有默认银行卡，需要手动配置
+通过银行卡id找代理商列表， agency_charge_bank
+通过代理商找到自己的银行卡 bank_account 
+代理商列表找到绑定的银行卡信息 agency_charge_bank
+
+
+如果配置了绑定的银行卡，就不显示使用父级代理商默认的银行卡（一个代理商银行卡的use_state只能有一个在状态）锁更新use-state
+
+
+
+
+

@@ -17,9 +17,9 @@ import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.http.entity.Order;
 import com.weizu.flowsys.web.http.entity.OrderPo;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
-import com.weizu.flowsys.web.trade.dao.AgencyPurchaseDao;
+import com.weizu.flowsys.web.trade.dao.AccountPurchaseDao;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
-import com.weizu.flowsys.web.trade.pojo.AgencyPurchasePo;
+import com.weizu.flowsys.web.trade.pojo.AccountPurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
@@ -47,8 +47,8 @@ public class OrderFacadeImpl implements IOrderFacet {
 	private OperatorPgDao operatorPgDao;
 	@Resource
 	private ChannelForwardAO channelForwardAO;
-	@Resource
-	private AgencyPurchaseDao agencyPurchaseDao;
+//	@Resource
+//	private AccountPurchaseDao accountPurchaseDao;
 	
 	/**
 	 * @description:查询订单详情
@@ -92,7 +92,7 @@ public class OrderFacadeImpl implements IOrderFacet {
 			else{//通过api更新订单状态
 				oscEnum = OrderStateCheckEnum.PARAMS_SUCCESS;
 				PgDataPo pgPo = operatorPgDao.get(purchasePo.getPgId());
-//			AgencyPurchasePo agencyPurPo = agencyPurchaseDao.get(new WherePrams("agency_id", "=", agencyPo.getId()).and("purchase_id", "=", purchasePo.getOrderId()));
+//			AgencyPurchasePo agencyPurPo = accountPurchaseDao.get(new WherePrams("agency_id", "=", agencyPo.getId()).and("purchase_id", "=", purchasePo.getOrderId()));
 				if(pgPo != null){
 					String orderArriveTime = DateUtil.formatAll(purchasePo.getOrderArriveTime());
 					OrderPo orderPo = new OrderPo(purchasePo.getOrderId(), purchasePo.getOrderIdFrom(), purchasePo.getChargeTel(), pgPo.getPgSize(), purchasePo.getOrderAmount(), orderArriveTime, purchasePo.getOrderResult(), purchasePo.getOrderResultDetail());

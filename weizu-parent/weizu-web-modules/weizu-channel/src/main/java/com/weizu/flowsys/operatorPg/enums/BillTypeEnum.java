@@ -77,7 +77,7 @@ public enum BillTypeEnum {
 			Map<String, Object> billTypeMap = new HashMap<String, Object>(2);
 			billTypeMap.put("desc", billTypeEnum.getDesc());
 			billTypeMap.put("value", billTypeEnum.getValue());
-
+			
 			enumMap.put(key, billTypeMap);
 		}
 
@@ -109,8 +109,6 @@ public enum BillTypeEnum {
 
 		return attachmentTypeMapList;
 	}
-	
-	
 	
 	public String getDesc() {
 		return desc;

@@ -1,0 +1,42 @@
+因为账户数据比代理商id数据要大，所以更新外键比较方便
+数据列更新
+update table tableA set tableA.a = (select tableB.b from table tableB where tableA.id = tableB.id)
+insert account_active_rate (agency_id) values()
+
+把原表中的代理商id，替换为这个代理商对私账户的id
+
+找到代理商id和账户id不同的账户，利用这个账户里面的信息去核对代理商id是否正确替换成了对私账户id
+SELECT * FROM `charge_account` WHERE id != agency_id and bill_type=0;
+
+程序代码要和数据库一起更新
+
+先修改字段，再把字段的记录更新为相应代理商的对私账户id
+update account_active_rate acc inner join charge_account ca on acc.account_id=ca.agency_id set acc.account_id = ca.id where ca.bill_type=0;
+
+update account_purchase ap inner join charge_account ca on ap.account_id=ca.agency_id set ap.account_id = ca.id where ca.bill_type=0;
+
+查验是否相等
+SELECT * FROM account_active_rate aar INNER JOIN charge_account cat
+ON aar.account_id=cat.id WHERE cat.id=32
+
+SELECT * FROM account_purchase ap INNER JOIN charge_account cat
+ON ap.account_id=cat.id WHERE cat.id=32
+
+
+根据当前代理商id查询消费记录，
+
+当前代理商所有账户的消费记录
+
+一笔订单只有一笔消费记录，
+查询代理商所有账户的消费记录
+
+根据from_agency_name更新账户订单表的from_account_id
+
+ap
+我可以通过代理商的id找到这个代理商的所有账户的订单
+
+两个人之间，只添加一笔账户订单记录
+费率统一用子账户的费率，成本就用这个费率的父级费率计算
+带票类型根据账户id判定
+
+

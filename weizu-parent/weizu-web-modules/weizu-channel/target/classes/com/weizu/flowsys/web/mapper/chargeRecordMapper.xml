@@ -5,9 +5,10 @@
 
 <mapper namespace="com.weizu.flowsys.web.agency.dao.ChargeRecordDaoInterface">
 
-<sql id="t_agency">agency_backward</sql>
+<!-- <sql id="t_agency">agency_backward</sql> -->
+<sql id="t_account">charge_account</sql>
 <sql id="t_record">charge_record</sql>
-<sql id="t_ap">agency_purchase</sql>
+<sql id="t_ap">account_purchase</sql>
 <sql id="t_purchase">purchase</sql>
 
    <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.agency.pojo.ChargeRecordPo">
@@ -16,20 +17,20 @@
     <result column="recharge_amount" jdbcType="DOUBLE" property="rechargeAmount" />
     <result column="charge_before" jdbcType="DOUBLE" property="chargeBefore" />
     <result column="charge_after" jdbcType="DOUBLE" property="chargeAfter" />
-    <result column="bill_type" jdbcType="INTEGER" property="billType" />
+    <!-- <result column="bill_type" jdbcType="INTEGER" property="billType" /> -->
     <result column="account_type" jdbcType="INTEGER" property="accountType" />
     <result column="account_id" jdbcType="INTEGER" property="accountId" />
-    <result column="agency_id" jdbcType="INTEGER" property="agencyId" />
+    <!-- <result column="account_id" jdbcType="INTEGER" property="accountId" /> -->
     <result column="purchase_id" jdbcType="BIGINT" property="purchaseId" />
     <result column="charge_for" jdbcType="INTEGER" property="chargeFor" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, remittance_time, recharge_amount, charge_before, charge_after, bill_type, account_type, 
-    account_id, agency_id,purchase_id, charge_for
+    id, remittance_time, recharge_amount, charge_before, charge_after, account_type, 
+    account_id,purchase_id, charge_for
   </sql>
   <sql id="BatchAdd_Column_List">
-    remittance_time, recharge_amount, charge_before, charge_after, bill_type, account_type, 
-    account_id, agency_id,purchase_id, charge_for
+    remittance_time, recharge_amount, charge_before, charge_after,  account_type, 
+    account_id, purchase_id, charge_for
   </sql>
   
    <!-- 批量添加充值记录 -->
@@ -38,8 +39,8 @@
   	(<include refid="BatchAdd_Column_List"></include>)
   	values
   	<foreach collection="list" item="crt" index="index" separator=",">
-  		(#{crt.remittanceTime},#{crt.rechargeAmount},#{crt.chargeBefore},#{crt.chargeAfter},#{crt.billType},
-  		#{crt.accountType},#{crt.accountId},#{crt.agencyId},#{crt.purchaseId},#{crt.chargeFor})
+  		(#{crt.remittanceTime},#{crt.rechargeAmount},#{crt.chargeBefore},#{crt.chargeAfter},
+  		#{crt.accountType},#{crt.accountId},#{crt.purchaseId},#{crt.chargeFor})
   	</foreach>
   </insert>
   
@@ -52,15 +53,14 @@
     <result column="bill_type" jdbcType="INTEGER" property="billType" />
     <result column="account_type" jdbcType="INTEGER" property="accountType" />
     <result column="account_id" jdbcType="INTEGER" property="accountId" />
-    <result column="agency_id" jdbcType="INTEGER" property="agencyId" />
+    <!-- <result column="account_id" jdbcType="INTEGER" property="accountId" /> -->
     <result column="purchase_id" jdbcType="BIGINT" property="purchaseId" />
     <result column="charge_for" jdbcType="INTEGER" property="chargeFor" />
-    <result column="user_name" jdbcType="VARCHAR" property="userName" />
-    <result column="user_real_name" jdbcType="VARCHAR" property="userRealName" />
+    <result column="agency_name" jdbcType="VARCHAR" property="userName" />
   </resultMap>
   <sql id="other_Column_List">
-    record.id, remittance_time, recharge_amount, charge_before, charge_after, bill_type, account_type, 
-    account_id, agency_id, purchase_id, charge_for, user_name, user_real_name
+    record.id, remittance_time, recharge_amount, charge_before, charge_after,  account_type, 
+    account_id, account_id, purchase_id, charge_for, act.agency_name,act.bill_type
   </sql>
   
   <!-- 消费记录 -->
@@ -73,22 +73,22 @@
     <result column="bill_type" jdbcType="INTEGER" property="billType" />
     <result column="account_type" jdbcType="INTEGER" property="accountType" />
     <result column="account_id" jdbcType="INTEGER" property="accountId" />
-    <result column="agency_id" jdbcType="INTEGER" property="agencyId" />
+    <!-- <result column="account_id" jdbcType="INTEGER" property="accountId" /> -->
     <result column="charge_for" jdbcType="INTEGER" property="chargeFor" />
     <result column="purchase_id" jdbcType="BIGINT" property="purchaseId" />
     <result column="from_agency_name" property="userName" />
     <result column="charge_tel" property="chargeTel" />
   </resultMap>
   <sql id="Consume_Column_List">
-    crt.*,pc.charge_tel,ap.from_agency_name
+    crt.*,pc.charge_tel,act.bill_type,ap.from_agency_name
   </sql>
   
   <!-- 查询充值列表 -->
   <select id="listChargeRecord" parameterType="com.weizu.flowsys.web.agency.pojo.ChargeRecordPo" resultMap="OtherMap">
   	select <include refid="other_Column_List"></include> 
-  	from<include refid="t_record"></include> record
-  	inner join <include refid="t_agency"></include> agency
-  	on record.agency_id = agency.id
+  	from <include refid="t_record"></include> record
+  	inner join <include refid="t_account"></include> act
+  	on record.account_id = act.id
   	<where>
   		<include refid="condition_sql"></include>
   	</where>
@@ -104,11 +104,11 @@
    		 	limit 0,10
    		 </if> 
   </select>
-  <select id="countRecord" parameterType="com.weizu.flowsys.web.agency.pojo.ChargeRecordPo" resultType="int">
+  <select id="countRecord" parameterType="map" resultType="int">
   	select count(*)
-  	from <include refid="t_agency"></include> agency
-  	inner join <include refid="t_record"></include> record
-  	on record.agency_id = agency.id
+  	from   <include refid="t_record"></include> record
+  	inner join <include refid="t_account"></include> act
+  	on record.account_id = act.id
   	<where>
   		<include refid="condition_sql"></include>
   	</where>
@@ -116,7 +116,7 @@
   <!-- 查询where语句块 -->
 	<sql id="condition_sql">
 		<if test="userName != null">
-			AND user_name LIKE CONCAT('%', TRIM(#{userName}), '%')
+			AND act.agency_name LIKE CONCAT('%', TRIM(#{userName}), '%')
 		</if>
 		<if test="accountType != null">
 			AND account_type = #{accountType}
@@ -124,15 +124,15 @@
 		<if test="accountId != null">
 			AND record.account_id = #{accountId}
 		</if>
-		<!-- <if test="agencyId != null">
-			AND agency_id = #{agencyId}
+		<if test="agencyId != null">
+			AND act.agency_id = #{agencyId}
 		</if>
-		<choose>
+		<!-- <choose>
 			<when test=""></when>
 		</choose> -->
-		<if test="contextAgencyId != null">
-			AND (agency.id = #{contextAgencyId} OR agency.root_agency_id = #{contextAgencyId})
-		</if>
+		<!-- <if test="contextAgencyId != null">
+			AND (agency.id = #{contextAgencyId} OR agency.roott_accountid = #{contextAgencyId})
+		</if> -->
 		
 		<if test="startTime != null">
 			AND remittance_time &gt;= #{startTime}
@@ -145,12 +145,12 @@
   <select id="countConsume" parameterType="map" resultType="int">	
   	select count(*) 
   	from <include refid="t_record"></include> crt
+	INNER JOIN <include refid="t_ap"></include> ap
+	on ap.record_id=crt.id
   	inner join <include refid="t_purchase"></include> pc
-  	on pc.order_id = crt.purchase_id
-  	INNER JOIN <include refid="t_ap"></include> ap
-	on ap.purchase_id=pc.order_id
-	INNER join <include refid="t_agency"></include> agb
-	on ap.agency_id=agb.id
+  	on ap.purchase_id=pc.order_id
+	INNER join <include refid="t_account"></include> act
+	on crt.account_id=act.id
 	<where>
 		<include refid="consume_condition_sql"></include>
 	</where>
@@ -158,10 +158,12 @@
   <select id="getConsume" parameterType="map" resultMap="ConsumeRecordMap">	
   	select <include refid="Consume_Column_List"></include>
   	from <include refid="t_record"></include> crt
-  	inner join <include refid="t_purchase"></include> pc
-  	on pc.order_id = crt.purchase_id
 	INNER JOIN <include refid="t_ap"></include> ap
-	on ap.purchase_id=pc.order_id
+	on ap.record_id=crt.id
+  	inner join <include refid="t_purchase"></include> pc
+  	on ap.purchase_id=pc.order_id
+	INNER join <include refid="t_account"></include> act
+	on crt.account_id=act.id
 	<!-- INNER join <include refid="t_agency"></include> agb
 	on ap.agency_id=agb.id -->
 	<where>
@@ -181,7 +183,11 @@
   </select>
   <sql id="consume_condition_sql">
 		<if test="agencyId != null">
-			crt.agency_id=#{agencyId} and ap.agency_id=#{agencyId}
+			act.agency_id=#{agencyId}
+		</if>
+		<if test="accountId != null">
+			AND crt.account_id=#{accountId}
+			<!--  and ap.account_id=#{accountId} -->
 		</if>
 		<!-- <if test="agencyId == null &amp; contextAgencyId != null">
 			AND (agb.id = #{contextAgencyId} OR agb.root_agency_id = #{contextAgencyId})

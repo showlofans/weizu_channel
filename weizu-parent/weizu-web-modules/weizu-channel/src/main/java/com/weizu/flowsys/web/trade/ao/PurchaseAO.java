@@ -4,9 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 
+
+
 //import org.weizu.api.facet.orderState.PageOrder;
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
+import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
@@ -26,7 +30,7 @@ public interface PurchaseAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月12日 下午5:34:23
 	 */
-	String purchase(PgChargeVO pcVO, Integer ap_agency_id);
+	String purchase(PgChargeVO pcVO, ChargeAccountPo accoutPo);
 	
 	/**
 	 * @description:封装查询参数
@@ -152,6 +156,6 @@ public interface PurchaseAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年9月4日 上午10:18:03
 	 */
-	String ajaxCommitOrder(Long orderId,Integer agencyId,String chargeTelDetail,Integer billTypeRate);
+	String ajaxCommitOrder(Long orderId,Integer accountId,String chargeTelDetail);
 	
 }

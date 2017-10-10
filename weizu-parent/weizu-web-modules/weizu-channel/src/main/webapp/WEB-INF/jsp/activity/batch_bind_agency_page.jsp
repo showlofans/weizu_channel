@@ -114,14 +114,21 @@
 					<!-- <th width="60">费率</th>
 					<th width="60">带票费率</th> -->
 					<!-- <th width="120">操作</th> -->
-					<th width="120">创建时间</th>
+					<c:choose>
+						<c:when test="${resultMap.aardto.bindState==1  }"><%-- || resultMap.aardto.bindState==null --%>
+							<th width="120">解绑时间</th>
+						</c:when>
+						<c:otherwise>
+							<th width="120">创建时间</th>
+						</c:otherwise>
+					</c:choose>
 				</tr>
 			</thead>
 			<tbody>
 				<c:forEach items="${resultMap.pagination.records }" var="agency" varStatus="vs">
 					<tr class="text-c font-red">
-						<td><input type="checkbox" value="${agency.id }" name="agencyCheck"></td>
-						<td style="display:none">${agency.id }</td>
+						<td><input type="checkbox" value="${agency.accountId }" name="agencyCheck"></td>
+						<td style="display:none">${agency.accountId }</td>
 						<td>${agency.userName }</td>
 						<td>${agency.userRealName }</td>
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
@@ -161,23 +168,23 @@ function onSub(){
 /**批量更新绑定状态*/
 function changeBState(url,bindState){
 	var rateDiscountId = $('#rateDiscountId').val();
-	var agencyIds = "";
+	var accountIds = "";
 	$("input[name=agencyCheck]").each(function(){ //遍历table里的全部checkbox
        // allcheckbox += $(this).next().html() + ","; //获取所有checkbox的值
         //alert($(this).is(':checked'));
        if($(this).is(':checked')) //如果被选中
-        	agencyIds += $(this).parent().next().html() + ","; //获取被选中的值
-        	//alert(agencyIds);
+        	accountIds += $(this).parent().next().html() + ","; //获取被选中的值
+        	//alert(accountIds);
     });
-	if(agencyIds.length > 1) //如果获取到
+	if(accountIds.length > 1) //如果获取到
     {
-    	agencyIds = agencyIds.substring(0, agencyIds.length - 1);
-    	//alert(agencyIds);
+    	accountIds = accountIds.substring(0, accountIds.length - 1);
+    	//alert(accountIds);
     	$.ajax({
 			type: 'POST',
 			url: url,
 			//dataType: 'json',
-			data: {bindState: bindState,rateDiscountId:rateDiscountId,agencyIds:agencyIds},
+			data: {bindState: bindState,rateDiscountId:rateDiscountId,accountIds:accountIds},
 			success: function(resp){
 				//$(obj).parents("tr").remove();
 				//alert

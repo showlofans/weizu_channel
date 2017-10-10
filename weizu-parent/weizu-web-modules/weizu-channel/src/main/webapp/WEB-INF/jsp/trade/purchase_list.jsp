@@ -97,7 +97,7 @@
 					<th width="80">流量大小</th>
 					<th width="70">面值</th>
 					<th width="150">提交时间</th>
-					<th width="150">充值时间</th>
+					<!-- <th width="150">充值时间</th> -->
 					<th width="100">号码归属</th>
 					<th width="60">城市</th>
 					<th width="60">充值方式</th>
@@ -119,7 +119,7 @@
 						 <td>${purchase.pgSize }</td>
 						<td>${purchase.pgPrice }</td>
 						<td>${purchase.orderArriveTimeStr }</td>
-						 <td>${purchase.orderBackTimeStr }</td>
+						 <%-- <td>${purchase.orderBackTimeStr }</td> --%>
 						<td>${purchase.chargeTelDetail }</td>
 						<td>${purchase.chargeTelCity }</td>
 						<!-- 充值方式 -->
@@ -132,14 +132,23 @@
 						</td>
 						<!-- 结果 -->
 						<td>
-						<c:forEach items="${resultMap.orderStateEnums }" var="orderStateEnum" varStatus="vs">
-							<c:if test="${purchase.orderState == orderStateEnum.value }">
-								${orderStateEnum.desc }
-							</c:if>
-						</c:forEach>
+							<c:forEach items="${resultMap.orderStateEnums }" var="orderStateEnum" varStatus="vs">
+								<c:if test="${purchase.orderState == orderStateEnum.value }">
+									${orderStateEnum.desc }
+								</c:if>
+							</c:forEach>
 						</td>
 						
-						<td>${purchase.orderStateDetail }</td>
+						<td>
+							<c:choose>
+								<c:when test="${loginContext.rootAgencyId == 0 }">
+										${purchase.orderResultDetail}
+								</c:when>
+								<c:otherwise>
+										${purchase.orderStateDetail }
+								</c:otherwise>
+							</c:choose>
+						</td>
 						<td>${purchase.orderPrice }</td>
 						<c:if test="${loginContext.rootAgencyId == 0 }"><td>${purchase.channelName }</td> 
 						</c:if>

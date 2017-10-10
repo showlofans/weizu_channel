@@ -47,14 +47,14 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 	 */
 	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
-	public int updateAccount(ChargeRecordPo chargeRecordPo,ChargeAccountPo loginAccountPo) {
+	public int updateAccount(ChargeRecordPo chargeRecordPo,Integer loginContextId) {
 		
 //		if(chargeRecordPo.getBillType() == BillTypeEnum.CORPORATE_BUSINESS.getValue()){
 //			
 //		}
 		
 //		int accountId = chargeRecordPo.getAccountId();
-//		ChargeAccountPo accountPo = chargeAccountDao.get(accountId);
+		ChargeAccountPo loginAccountPo = chargeAccountDao.selectByAgencyId(loginContextId, chargeRecordPo.getBillType());
 		/****************修改登陆账户********************/
 		/**充值前余额*/
 		double agencyBeforeBalance = loginAccountPo.getAccountBalance();
@@ -64,7 +64,7 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		chargeRecordDao.add(new ChargeRecordPo(System
 				.currentTimeMillis(), chargeAmount,
 				agencyBeforeBalance, NumberTool.sub(agencyBeforeBalance, chargeAmount), 
-				chargeRecordPo.getBillType(),AccountTypeEnum.DECREASE.getValue(), loginAccountPo.getId(), loginAccountPo.getAgencyId(),1,null));
+				AccountTypeEnum.DECREASE.getValue(), loginAccountPo.getId(),1,null));
 		
 		/** 更新登录用户账户信息**/
 		loginAccountPo.addBalance(chargeAmount,-1);
@@ -85,7 +85,7 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		int resultMsg = chargeRecordDao.add(new ChargeRecordPo(System
 				.currentTimeMillis(), chargeAmount,
 				beforeBalance, NumberTool.add(beforeBalance, chargeAmount), 
-				chargeRecordPo.getBillType(),chargeRecordPo.getAccountType(), chargeAccountPo.getId(), chargeRecordPo.getAgencyId(),1,null));
+				chargeRecordPo.getAccountType(), chargeAccountPo.getId(),1,null));
 
 		/** 更新账户表的余额值 */
 		chargeAccountPo.addBalance(chargeAmount,0);
@@ -184,16 +184,15 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		if(contextAgencyId != null){
 			params.put("agencyId", contextAgencyId);
 		}
-		if(consumeRecordPo.getAgencyId() != null){
-			params.put("agencyId", consumeRecordPo.getAgencyId());
+		if(consumeRecordPo.getAccountId() != null){
+			params.put("accountId", consumeRecordPo.getAccountId());
 		}
 		if(consumeRecordPo.getPurchaseId() != null){
 			params.put("purchaseId", consumeRecordPo.getPurchaseId());
 		}
-//		else if(contextAgencyId != null){
-//			params.put("contextAgencyId", contextAgencyId);
-//			
-//		}
+		if(contextAgencyId != null){
+			params.put("agencyId", contextAgencyId);
+		}
 		return params;
 	}
 

@@ -21,6 +21,7 @@ import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ConfirmStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgInServiceEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.OperatorDiscountAO;
 import com.weizu.flowsys.web.activity.ao.RateBackwardAO;
@@ -266,10 +267,15 @@ public class AgencyController {
 		if(agencyVo != null){
 			//String verifyCode = agencyAO.getVerifyCodeById(agencyVo.getId());//邀请码
 			String verifyCode = null;
-			if(StringHelper.isNotEmpty(verifySize)){
-				verifyCode = VerifyCodeUtils.generateVerifyCode(Integer.parseInt(verifySize));
+			if(StringHelper.isEmpty(verifySize)){
+				verifyCode = agencyVo.getUserName();
 			}else{
-				verifyCode = VerifyCodeUtils.generateVerifyCode(VerifyCodeUtils.DEFAULT_SIZE);
+				boolean check = true;
+				do{
+					verifyCode = VerifyCodeUtils.generateVerifyCode(Integer.parseInt(verifySize));
+					//通过了代理商表中代理商名称和邀请码验证，就可以
+					check = agencyAO.checkVerifyCode(verifyCode, agencyVo.getUserName());
+				}while(!check);
 			}
 			agencyVo.setVerifyCode(verifyCode);//更新rootAgency的邀请码字段
 			if(agencyAO.updateAgency(agencyVo) <= 0){
@@ -295,16 +301,18 @@ public class AgencyController {
 	public ModelAndView myselfInfoPage(HttpServletRequest request) {
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVo != null){
-			if(StringHelper.isEmpty(agencyVo.getVerifyCode())){//数据库中没有邀请码信息（注册时的邀请码：已经被置空）
-				String verifyCode = "";
-				verifyCode = VerifyCodeUtils.generateVerifyCode(VerifyCodeUtils.DEFAULT_SIZE);
-				agencyVo.setVerifyCode(verifyCode);
-				if(agencyAO.updateAgency(agencyVo) <= 0){//更新数据库中邀请码信息
-					verifyCode = "初始化邀请码失败！";
-				}else{
-					request.getSession().setAttribute("loginContext", agencyVo);//重新设置session中loginContext
-				}
-			}
+//			if(StringHelper.isEmpty(agencyVo.getVerifyCode())){//数据库中没有邀请码信息（注册时的邀请码：已经被置空）
+//				String verifyCode = "";
+//				verifyCode = VerifyCodeUtils.generateVerifyCode(VerifyCodeUtils.DEFAULT_SIZE);
+//				agencyAO.checkVerifyCode(verifyCode, userName)
+//				
+//				agencyVo.setVerifyCode(verifyCode);
+//				if(agencyAO.updateAgency(agencyVo) <= 0){//更新数据库中邀请码信息
+//					verifyCode = "初始化邀请码失败！";
+//				}else{
+//					request.getSession().setAttribute("loginContext", agencyVo);//重新设置session中loginContext
+//				}
+//			}
 			return new ModelAndView("/agency/agency_info");
 		}else{
 			return new ModelAndView("/agency/login_page");
@@ -349,23 +357,54 @@ public class AgencyController {
 				return new ModelAndView("/agency/register_page","resultMap",resultMap);
 			}
 			//注册用户
-			AgencyBackwardVO agencyVO = agencyAO.addAgency(agencyBackward);
-			if (agencyVO != null) {
-				if(agencyAO.checkNextSecondAgency(agencyVO.getId()) == 1){
-					//设置访问权限为限制
-					request.getSession().setAttribute("power", "limited");
-				}
-				else{
-					request.getSession().setAttribute("power", "no");
-				}
-				request.getSession().setAttribute("loginContext", agencyVO);
+			HttpSession httpSession = request.getSession();
+			Integer regRes = agencyAO.addAgency(httpSession,agencyBackward);
+			
+			if(PgInServiceEnum.OPEN.getValue().equals(regRes) ){
+//				if(agencyAO.checkNextSecondAgency(agencyVO.getId()) == 1){
+//					//设置访问权限为限制
+//					httpSession.setAttribute("power", "limited");
+//				}
+//				else{
+//					httpSession.setAttribute("power", "no");
+//				}
+//				httpSession.setAttribute("loginContext", agencyVO);
 				return new ModelAndView("index");
-			} else {
+			}else{
 				Map<String, Object> resultMap = new HashMap<String, Object>();
-				resultMap.put("msg", "邀请码不存在");
+				String regMsg = ""; 
+				if(regRes == null){
+					regMsg = "邀请码不存在";
+				}else{
+					regMsg = "账户信息添加失败";
+				}
+				resultMap.put("msg", regMsg);
 				resultMap.put("reg", agencyBackward);
 				return new ModelAndView("/agency/register_page","resultMap",resultMap);
 			}
+			
+//			if (regRes != null) {
+////				if(agencyAO.checkNextSecondAgency(agencyVO.getId()) == 1){
+////					//设置访问权限为限制
+////					httpSession.setAttribute("power", "limited");
+////				}
+////				else{
+////					httpSession.setAttribute("power", "no");
+////				}
+////				httpSession.setAttribute("loginContext", agencyVO);
+//				return new ModelAndView("index");
+//			}else{
+//				Map<String, Object> resultMap = new HashMap<String, Object>();
+//				String regMsg = ""; 
+//				if(PgInServiceEnum.CLOSE.getValue().equals(regRes) ){
+//					regMsg = "邀请码不存在";
+//				} else {
+//					regMsg = "账户信息添加失败";
+//				}
+//				resultMap.put("msg", regMsg);
+//				resultMap.put("reg", agencyBackward);
+//				return new ModelAndView("/agency/register_page","resultMap",resultMap);
+//			}
 		}
 	}
 
@@ -400,7 +439,7 @@ public class AgencyController {
 			@RequestParam(value = "pageNo", required = false) String pageNo,
 			AgencyBackwardVO searchAgencyVO, HttpServletRequest request) {
 		
-		AgencyBackwardVO agencyBackwardPo = (AgencyBackwardVO) request.getSession()
+		AgencyBackwardVO agencyBackwardVo = (AgencyBackwardVO) request.getSession()
 				.getAttribute("loginContext");
 
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -413,16 +452,15 @@ public class AgencyController {
 		}
 		
 		// agencyAO.ListAgencyByRoot(agencyBackwardPo.getId());
-		if(agencyBackwardPo == null){
+		if(agencyBackwardVo == null){
 			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 		}
-		Pagination<AgencyBackwardVO> pagination = agencyAO.ListAgencyByRoot(
-				agencyBackwardPo.getId(), searchAgencyVO, pageParam);
-
-		resultMap.put("params", searchAgencyVO);
-		resultMap.put("billTypeEnums", BillTypeEnum.toList());
-		resultMap.put("pagination", pagination);
-		return new ModelAndView("/agency/child_agency_list", "resultMap", resultMap);
+			Pagination<AgencyBackwardVO> pagination = agencyAO.ListAgencyByRoot(
+					agencyBackwardVo.getId(), searchAgencyVO, pageParam);
+			resultMap.put("pagination", pagination);
+			resultMap.put("params", searchAgencyVO);
+			resultMap.put("billTypeEnums", BillTypeEnum.toList());
+			return new ModelAndView("/agency/child_agency_list", "resultMap", resultMap);
 	}
 
 	/**

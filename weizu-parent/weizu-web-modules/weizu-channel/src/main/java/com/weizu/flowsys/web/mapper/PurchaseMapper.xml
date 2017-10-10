@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.weizu.flowsys.web.trade.dao.PurchaseDao" >
   <sql id="t_purchase">purchase</sql>
-  <sql id="t_ap">agency_purchase</sql>
-  <sql id="t_agency">agency_backward</sql>
+  <sql id="t_ap">account_purchase</sql>
+  <sql id="t_account">charge_account</sql>
   <sql id="t_pg">operator_pg_data</sql>
   <!-- <sql id="t_channel">channel_channel</sql>
   <sql id="t_ep">exchange_platform</sql> -->
@@ -13,7 +13,7 @@
     <id column="order_id" property="orderId" jdbcType="BIGINT" />
     <result column="order_id_api" property="orderIdApi" jdbcType="VARCHAR" />
     <result column="order_id_from" property="orderIdFrom" jdbcType="VARCHAR" />
-    <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
+    <result column="account_id" property="accountId" jdbcType="INTEGER" />
     <result column="charge_tel" property="chargeTel" jdbcType="VARCHAR" />
     <result column="pg_id" property="pgId" jdbcType="INTEGER" />
     <result column="order_arrive_time" property="orderArriveTime" jdbcType="BIGINT" />
@@ -30,7 +30,7 @@
   <!--  订单页面 -->
   <resultMap id="VOResultMap" type="com.weizu.flowsys.web.trade.pojo.PurchaseVO" >
     <id column="order_id" property="orderId" jdbcType="BIGINT" />
-    <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
+    <result column="account_id" property="accountId" jdbcType="INTEGER" />
     <result column="order_id_api" property="orderIdApi" jdbcType="VARCHAR" />
     <result column="order_id_from" property="orderIdFrom" jdbcType="VARCHAR" />
     <result column="charge_tel" property="chargeTel" jdbcType="VARCHAR" />
@@ -51,7 +51,7 @@
     <result column="ap_order_amount" property="orderAmount" jdbcType="DOUBLE" />
     <result column="order_price" property="orderPrice" jdbcType="DOUBLE" />
     <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
-    <result column="apBill_type" property="billType" jdbcType="INTEGER" />
+    <result column="actBill_type" property="billType" jdbcType="INTEGER" />
     <result column="rate_discount_id" property="rateDiscountId" jdbcType="BIGINT" />
     
     <!-- 平台相关信息 -->
@@ -71,17 +71,17 @@
     
   </resultMap>
    <sql id="Base_Column_List" >
-    order_id,order_id_api, order_id_from, agency_id, charge_tel, pg_id, order_amount, order_arrive_time,charge_tel_detail, 
-    charge_tel_city,  channel_name 
+    order_id,order_id_api, order_id_from, account_id, charge_tel, pg_id, order_amount, order_arrive_time,charge_tel_detail, 
+    charge_tel_city, order_result, channel_name, order_result_detail 
   </sql>
    <sql id="get_base_Column_List" >
-    order_id,order_id_api, order_id_from, ap.agency_id,ap.order_state order_result,ap.order_state_detail order_result_detail, pur.charge_tel, pg_id, ap.order_amount, order_arrive_time,charge_tel_detail, 
+    order_id,order_id_api, order_id_from, ap.account_id,ap.order_state order_result,ap.order_state_detail order_result_detail, pur.charge_tel, pg_id, ap.order_amount, order_arrive_time,charge_tel_detail, 
     charge_tel_city,  channel_name 
   </sql>
   <sql id="VO_Column_List"><!-- 订单页面 -->
-  	ap.from_agency_name,ap.agency_id, pur.order_id, pur.order_id_api, pur.order_id_from, pur.charge_tel, pg.pg_size, pg.operator_type, pg.pg_price, pur.order_arrive_time,
+  	ap.from_agency_name,ap.account_id, pur.order_id, pur.order_id_api, pur.order_id_from, pur.charge_tel, pg.pg_size, pg.operator_type, pg.pg_price, pur.order_arrive_time,
   	pur.order_back_time, pur.charge_tel_detail, pur.charge_tel_city,ap.order_amount ap_order_amount,ap.order_price,pur.order_result,ap.order_state,ap.order_state_Detail,ap.order_platform_path,
-  	 pur.order_result_detail,pur.channel_name,ap.bill_type apBill_type,ap.rate_discount_id
+  	 pur.order_result_detail,pur.channel_name,act.bill_type actBill_type,ap.rate_discount_id
   </sql>
   
   
@@ -102,6 +102,8 @@
   	from <include refid="t_purchase"></include> pur
   	inner join <include refid="t_ap"></include> ap
   	ON pur.order_id = ap.purchase_id
+  	 INNER join <include refid="t_account"></include> act
+	on ap.account_id=act.id 
   	<!-- inner join <include refid="t_channel"></include> channel
 	on pur.channel_id = channel.id -->
   	inner join <include refid="t_pg"></include> pg
@@ -123,12 +125,17 @@
   	from <include refid="t_purchase"></include> pur
   	inner join <include refid="t_ap"></include> ap
      on pur.order_id = ap.purchase_id
+     INNER join <include refid="t_account"></include> act
+	on ap.account_id=act.id 
      <where>
      	<if test="purchaseId != null">
      		AND ap.purchase_id = #{purchaseId}
      	</if>
+     	<if test="accountId != null">
+     		AND ap.account_id = #{accountId}
+     	</if>
      	<if test="agencyId != null">
-     		AND ap.agency_id = #{agencyId}
+     		AND act.agency_id = #{agencyId}
      	</if>
      </where>
   </select>
@@ -140,8 +147,8 @@
      FROM <include refid="t_purchase"></include> pur
 	 inner join <include refid="t_ap"></include> ap
      on pur.order_id = ap.purchase_id
-	<!-- INNER join <include refid="t_agency"></include> agency
-	on ap.agency_id=agency.id -->
+	 INNER join <include refid="t_account"></include> act
+	on ap.account_id=act.id 
 	INNER join <include refid="t_pg"></include> pg
 	on pg.id = pur.pg_id
 	<!-- inner join <include refid="t_channel"></include> channel
@@ -198,8 +205,8 @@
      FROM <include refid="t_purchase"></include> pur
      inner join <include refid="t_ap"></include> ap
      on pur.order_id = ap.purchase_id
-	<!-- INNER join <include refid="t_agency"></include> agency
-	on ap.agency_id=agency.id -->
+	 INNER join <include refid="t_account"></include> act
+	on ap.account_id=act.id 
 	INNER join <include refid="t_pg"></include> pg
 	on pg.id = pur.pg_id
 	<!-- inner join <include refid="t_channel"></include> channel
@@ -215,14 +222,17 @@
   	<!-- <if test="rootAgencyId != null">
   		AND (pur.root_agency_id = #{rootAgencyId} OR pur.agency_id = #{rootAgencyId} ) 
   	</if> -->
+  	<if test="accountId != null">
+  		AND ap.account_id = #{accountId}
+  	</if>
   	<if test="agencyId != null">
-  		AND ap.agency_id = #{agencyId}
+  		AND act.agency_id = #{agencyId}
   	</if>
 <!--   	<if test="agencyId != null">
   		AND (agency.id = #{agencyId} OR agency.root_agency_id = #{agencyId}) 
   	</if> -->
   	<if test="billType != null">
-  		AND ap.bill_type = #{billType}
+  		AND act.bill_type = #{billType}
   	</if>
   	<if test="agencyName != null">
   		AND ap.from_agency_name LIKE concat("%",trim(#{agencyName}) ,"%") 
@@ -262,8 +272,8 @@
   <insert id="addPurchase" parameterType="com.weizu.flowsys.web.trade.pojo.PurchasePo">
   	insert into <include refid="t_purchase"></include>
   	( <include refid="Base_Column_List"></include> )
-  	values (#{orderId},#{orderIdApi},#{orderIdFrom},#{agencyId},#{chargeTel},#{pgId},#{orderAmount},#{orderArriveTime},
-  	#{chargeTelDetail},#{chargeTelCity},#{channelName})
+  	values (#{orderId},#{orderIdApi},#{orderIdFrom},#{accountId},#{chargeTel},#{pgId},#{orderAmount},#{orderArriveTime},
+  	#{chargeTelDetail},#{chargeTelCity},#{orderResult},#{channelName},#{orderResultDetail} ) 
   </insert>
   
 </mapper>

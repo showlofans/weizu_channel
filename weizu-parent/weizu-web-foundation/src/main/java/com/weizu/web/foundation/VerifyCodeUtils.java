@@ -2,6 +2,8 @@ package com.weizu.web.foundation;
 
 import java.util.Random;
 
+import org.springframework.stereotype.Service;
+
 /**
  * @description: (验证码生成)
  * @projectName:crud
@@ -15,7 +17,9 @@ public class VerifyCodeUtils {
     public static final String VERIFY_CODES = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
     public static final int DEFAULT_SIZE = 4;//默认字符数
     private static Random random = new Random();
- 
+    
+     
+    
  
     /**
      * 使用系统默认字符源生成验证码
@@ -23,6 +27,7 @@ public class VerifyCodeUtils {
      * @return
      */
     public static String generateVerifyCode(int verifySize){
+    	//通过了代理商表中代理商名称和邀请码验证，就可以
         return generateVerifyCode(verifySize, VERIFY_CODES);
     }
     /**

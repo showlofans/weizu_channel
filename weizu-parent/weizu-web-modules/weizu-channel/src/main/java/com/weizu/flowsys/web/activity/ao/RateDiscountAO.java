@@ -28,7 +28,15 @@ public interface RateDiscountAO {
 	 */
 	Pagination<RateDiscountPo> getMyRateList(RateDiscountPo ratePo,Integer childAgencyId,PageParam pageParam);
 	
-	
+	/**
+	 * @description: 通过通道折扣id和账户id找到绑定的简单费率实体
+	 * @param channelDiscountId
+	 * @param accountId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月23日 下午5:14:04
+	 */
+	public RateDiscountPo getRateByAcountIdAndCDId(Long channelDiscountId, Integer accountId);
 	
 	/**
 	 * @description: 获得费率总数
@@ -134,7 +142,7 @@ public interface RateDiscountAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年8月2日 上午11:54:07
 	 */
-	RateDiscountPo getRateForCharge(int serviceType,String carrier, int loginAgencyId,int billTypeRate, Boolean judgeChannelState);
+	RateDiscountPo getRateForCharge(int serviceType,String carrier, int accountId,Boolean judgeChannelState);
 	
 	/**
 	 * @description:

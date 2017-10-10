@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weizu.flowsys.web.agency.dao.BankAccountDaoInterface">
+   <sql id="t_bct">bank_account</sql>
+   <sql id="t_account">charge_account</sql>
+	
+  <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.agency.pojo.BankAccountPo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="account_id" property="accountId" jdbcType="INTEGER" />
+    <result column="remittance_way" property="remittanceWay" jdbcType="VARCHAR" />
+    <result column="remittance_bank_account" property="remittanceBankAccount" jdbcType="VARCHAR" />
+    <result column="account_name" property="accountName" jdbcType="VARCHAR" />
+    <!-- <result column="bill_type" property="billType" jdbcType="INTEGER" /> -->
+    <result column="reference_balance" property="referenceBalance" jdbcType="DOUBLE" />
+    <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
+    <result column="use_state" property="fromAccountId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, account_id, remittance_way, remittance_bank_account, account_name,reference_balance,agency_id,use_state 
+  </sql>
+  <resultMap id="OtherResultMap" type="com.weizu.flowsys.web.agency.pojo.BankAccountPo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="account_id" property="accountId" jdbcType="INTEGER" />
+    <result column="remittance_way" property="remittanceWay" jdbcType="VARCHAR" />
+    <result column="remittance_bank_account" property="remittanceBankAccount" jdbcType="VARCHAR" />
+    <result column="account_name" property="accountName" jdbcType="VARCHAR" />
+    <result column="reference_balance" property="referenceBalance" jdbcType="DOUBLE" />
+    <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
+    <result column="use_state" property="fromAccountId" jdbcType="INTEGER" />
+	<!-- 账户信息 -->
+    <result column="bill_type" property="billType" jdbcType="INTEGER" /> 
+    <result column="account_balance" property="accountBalance" jdbcType="DOUBLE" /> 
+  </resultMap>
+  <sql id="Other_Column_List" >
+    bct.id, bct.account_id, bct.remittance_way, bct.remittance_bank_account, bct.account_name,reference_balance,bct.agency_id,bct.use_state,act.bill_type,act.account_balance 
+  </sql>
+  <!-- 获得登录用户的银行卡列表 -->
+  <select id="getBankList" parameterType="int" resultMap="OtherResultMap">
+  	select <include refid="Other_Column_List"></include>
+  	 from <include refid="t_bct"></include> bct
+  	 inner join <include refid="t_account"></include> act
+  	 on bct.account_id=act.id
+  	<where>
+  		act.agency_id = #{_parameter}
+  		<!-- <if test="agencyId != null">
+  			AND act.agency_id = #{agencyId}
+  		</if> -->
+  	</where>
+  </select>
+  <!-- 批量添加 -->
+   <!-- <insert id="ap_addList" useGeneratedKeys="true" parameterType="java.util.List">
+  	insert into <include refid="t_ap"></include>
+  	(<include refid="Add_Column_List"></include>)
+  	values
+  	<foreach collection="list" item="ap" index="index" separator=",">
+  		(#{ap.accountId},#{ap.purchaseId},#{ap.rateDiscountId},#{ap.orderAmount},#{ap.orderState},#{ap.orderStateDetail},#{ap.orderPlatformPath},#{ap.orderPrice},#{ap.fromAgencyName},#{ap.fromAccountId},#{ap.recordId})
+  	</foreach>
+  </insert>
+  
+  <update id="batchUpdateState" parameterType="map">
+  	update <include refid="t_ap"></include>
+  	<set>
+  		<if test="orderState != null">
+  			order_state = #{orderState},
+  		</if>
+  		<if test="orderStateDetail != null">
+  			order_state_detail = #{orderStateDetail}
+  		</if>
+  	</set>
+  	<where>
+  		<if test="purchaseId != null">
+  			purchase_id = #{purchaseId}
+  		</if>
+  	</where>
+  </update> -->
+</mapper>

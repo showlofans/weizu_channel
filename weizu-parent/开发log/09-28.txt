@@ -1,0 +1,65 @@
+其他账户有查看的权限，没有编辑的权限
+子账户可以查看其他汇款账号
+确认汇款成功后，设置为常用（代理商自己绑定的汇款账号）
+
+所有子代理商账号对父级代理商可见，
+
+实际上是完成两个账户之间的绑定。
+（添加自己的充值账户）也许可以加一个自己的虚拟款（引用账户余额），以便统计消费
+要完成充值，首先子代理商要在当前账户下创建属于自己的账户引用信息。
+
+
+在代理商有引用账户的前提下，向另外一个（父级代理商）引用账户进行转账
+转账有转账提交和确认记录。（对双方可见）在上一级确认转账后成功后，
+设置双方的引用账户余额，在上一级手动给代理商加款后，给两个系统账户设置余额
+
+功能需求：根据代理商id获得所有引用账户的转账消息
+
+bank_account (account_reference)
+id	
+account_id 充值账户id（外:当前登陆用户账户id）
+remittance_way 汇款方式（名称）
+remittance_bank_account 汇款账号
+account_name 账户真实姓名
+reference_balance 对账余额：（完成转账的逻辑）
+agency_id 账户信息（所属人）
+
+bill_type 账户类型
+
+
+transfer_account  转账记录
+
+from_bank_id
+to_bank_id
+commit_amount 提交金额(打款金额)
+commit_time  提交时间（系统生成）
+real_time 真实提交时间（手动设置不超过当前时间）
+confirm_time 审核时间（审核人负责确定）
+confirm_state 审核状态
+from_agency_id  
+to_agency_id		账户流向
+
+
+
+根据代理商id获得所有引用账户的转账消息
+select ta.*,agb.user from  transfer_account ta inner join agency_backward agb
+on ta.to_agency_id = agb.id
+where ta.to_agency_id= 
+
+select ta.*,
+agb1.userName from_agency_name,
+agb2.userName to_agency_name,
+from transfer_account ta 
+inner join charge_account act
+inner join agency_backward agb1 on agb1.id=ta.from_agency_id
+inner join agency_backward agb2 on agb2.id=ta.to_agency_id
+inner join bank_account bact1 on bact1.id = ta.from_bank_id
+inner join bank_account bact2 on bact2.id = ta.to_bank_id
+
+
+
+转账审核列表，
+代理商名字，代理商真实姓名，我的真实姓名，我的汇款名称，对方的汇款名称，审核状态
+
+
+

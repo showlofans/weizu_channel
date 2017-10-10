@@ -94,9 +94,14 @@
 ////		AgencyBackwardPo resultPo = (AgencyBackwardPo) resultMap.get("entity");// 获得返回的登陆实体
 ////		System.out.println(resultPo.getAgencyTel());
 ////	}
+////	@Test
+////	public void testCheckName(){
+////		boolean isExist = agencyAO.checkName("xiao");
+////		System.out.println(isExist);
+////	}
 //	@Test
-//	public void testCheckName(){
-//		boolean isExist = agencyAO.checkName("xiao");
+//	public void checkVerifyCode(){
+//		boolean isExist = agencyAO.checkVerifyCode("123",null);
 //		System.out.println(isExist);
 //	}
 ////	@Test

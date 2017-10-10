@@ -22,7 +22,7 @@ import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.dao.AgencyActiveRateDTODao;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
-import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
+import com.weizu.flowsys.web.activity.pojo.AccountActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.DiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountShowDTO;
@@ -269,7 +269,7 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 			Integer bindAgencyId) {
 		long rateDiscountId = rateDiscountDao.nextId();
 		int addRes = rateDiscountDao.add(ratePo);
-		AgencyActiveRateDTO aardto = new AgencyActiveRateDTO(ratePo.getAgencyId(), agencyName, rateDiscountId, System.currentTimeMillis(), BindStateEnum.BIND.getValue(), bindAgencyId);
+		AccountActiveRateDTO aardto = new AccountActiveRateDTO(ratePo.getAgencyId(), agencyName, rateDiscountId, System.currentTimeMillis(), BindStateEnum.BIND.getValue(), bindAgencyId);
 		int addaardtoRes = agencyActiveRateDTODao.add(aardto);
 		if(addRes + addaardtoRes > 1){
 			return "success";
@@ -445,23 +445,30 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	 * @createTime:2017年8月1日 下午5:54:59
 	 */
 	@Override
-	public boolean checkScopeIsAccept(Integer loginAgencyId,
+	public boolean checkScopeIsAccept(Integer accountId,
 			String scopeCityName) {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("agencyId", loginAgencyId);
-		List<RateDiscountPo> rateList = rateDiscountDao.getShowRate(params);//参考地区
-		ScopeCityEnum[] enumAry = ScopeCityEnum.values();
-		//验证是否存在该地区的折扣
-		if(rateList == null || rateList.size()==0){
-			return false;
+		params.put("accountId", accountId);
+		String scopeCityCode = ScopeCityEnum.getValueByDesc(scopeCityName);
+		params.put("scopeCityCode", scopeCityCode);
+		RateDiscountPo ratePo = rateDiscountDao.getRateForCharge(params);
+		if(ratePo != null){
+			return true;
 		}
-		for (RateDiscountPo rateDiscountPo : rateList) {
-			for (ScopeCityEnum scopeCityEnum : enumAry) {
-				if(scopeCityEnum.getValue().equals(rateDiscountPo.getScopeCityCode()) && scopeCityEnum.getDesc().contains(scopeCityName) ){//得到参考地区
-					return true;
-				}
-			}
-		}
+		
+//		List<RateDiscountPo> rateList = rateDiscountDao.getShowRate(params);//参考地区
+//		ScopeCityEnum[] enumAry = ScopeCityEnum.values();
+//		//验证是否存在该地区的折扣
+//		if(rateList == null || rateList.size()==0){
+//			return false;
+//		}
+//		for (RateDiscountPo rateDiscountPo : rateList) {
+//			for (ScopeCityEnum scopeCityEnum : enumAry) {
+//				if(scopeCityEnum.getValue().equals(rateDiscountPo.getScopeCityCode()) && scopeCityEnum.getDesc().contains(scopeCityName) ){//得到参考地区
+//					return true;
+//				}
+//			}
+//		}
 		return false;
 	}
 
@@ -584,10 +591,10 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	 */
 	@Override
 	public RateDiscountPo getRateForCharge(int serviceType,
-			String carrier, int loginAgencyId,int billTypeRate, Boolean judgeChannelState) {
+			String carrier, int accountId, Boolean judgeChannelState) {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("billTypeRate", billTypeRate);//用不带票的账户去获得价格
-		params.put("agencyId", loginAgencyId);
+		//用不带票的账户去获得价格
+		params.put("accountId", accountId);
 		params.put("bindState", BindStateEnum.BIND.getValue());
 		params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
 		params.put("serviceType", serviceType);
@@ -606,5 +613,14 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 			params.put("channelState", ChannelStateEnum.OPEN.getValue());
 		}
 		return rateDiscountDao.getRateForCharge(params);
+	}
+	@Override
+	public RateDiscountPo getRateByAcountIdAndCDId(Long channelDiscountId,
+			Integer accountId) {
+		List<RateDiscountPo> rateList = rateDiscountDao.getRateByAcountIdAndCDId(channelDiscountId, accountId);
+		if(rateList != null && rateList.size()==1){
+			return rateList.get(0);
+		}
+		return null;
 	}
 }

@@ -46,7 +46,7 @@ public class AgencyBackwardVO extends Po {
 
 	private String otherContact;				//其他qq联系方式
 	
-	private String billRateName;
+//	private String billRateName;
 
 	private Long createTime;		//注册时间
 	@TempField
@@ -67,7 +67,7 @@ public class AgencyBackwardVO extends Po {
 	public AgencyBackwardVO(Integer id, Integer rootAgencyId, String userName,
 			String userRealname, String userPass, String agencyTel,
 			String userEmail, String agencyIp, Long createTime,
-			String verifyCode) {
+			String verifyCode, String callBackIp,String otherContact, int agencyTag) {
 		super();
 		this.id = id;
 		this.rootAgencyId = rootAgencyId;
@@ -79,6 +79,9 @@ public class AgencyBackwardVO extends Po {
 		this.agencyIp = agencyIp;
 		this.createTime = createTime;
 		this.verifyCode = verifyCode;
+		this.callBackIp = callBackIp;
+		this.otherContact = otherContact;
+		this.agencyTag = agencyTag;
 	}
 	
 	public String getCallBackIp() {
@@ -123,20 +126,6 @@ public class AgencyBackwardVO extends Po {
 	public void setAgencyTag(Integer agencyTag) {
 		this.agencyTag = agencyTag;
 	}
-
-
-
-	public String getBillRateName() {
-		return billRateName;
-	}
-
-
-
-	public void setBillRateName(String billRateName) {
-		this.billRateName = billRateName;
-	}
-
-
 
 	public String getUserApiKey() {
 		return userApiKey;

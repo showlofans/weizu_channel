@@ -6,8 +6,8 @@
 <mapper namespace="com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface">
 
 <sql id="agency_backward">agency_backward</sql>
-<sql id="charge_account">charge_account</sql>
-<sql id="t_active">agency_active_rate</sql>
+<sql id="t_account">charge_account</sql>
+<sql id="t_active">account_active_rate</sql>
 
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo">
     <id column="id" jdbcType="INTEGER" property="id" />
@@ -69,28 +69,47 @@
   </sql>
   <!-- 查询没有绑定的代理商 -->
   <resultMap id="UnbindMap" type="com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO">
-    <id column="id" jdbcType="INTEGER" property="id" />
+    <!-- <id column="id" jdbcType="INTEGER" property="id" /> -->
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="user_real_name" jdbcType="VARCHAR" property="userRealName" />
     <result column="agency_tel" jdbcType="VARCHAR" property="agencyTel" />
     <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
+    <result column="account_id" jdbcType="INTEGER" property="accountId" />
     <!-- <result column="agency_ip" jdbcType="VARCHAR" property="agencyIp" /> -->
     <result column="create_time" property="createTime" />
   </resultMap>
   <sql id="Unbind_Column_List">
-   a2.id,a2.user_name,a2.user_email,a2.user_real_name,a2.create_time
+   act.id account_id,a2.user_name,a2.user_email,a2.user_real_name,active1.active_time
   </sql>
-  
-  
+  <sql id="Nobind_Column_List">
+   act2.id account_id,a2.user_name,a2.user_email,a2.user_real_name,a2.create_time
+  </sql>
+  <!-- 查看邀请码是否符合条件 -->
+  <select id="checkVerifyCode" parameterType="map" resultType = "int">
+  	select count(*) from <include refid="agency_backward"></include>
+  	<where>
+  		<if test="verifyCode != null">
+  			verify_code = #{verifyCode}
+  		</if>
+  		<if test="userName != null">
+  			or user_name = #{userName}
+  		</if>
+  	</where>
+  </select>
   
   <!-- 查询没有绑定的代理商 -->
   <select id="getNoBAgency" parameterType="map" resultMap="UnbindMap">
-  	SELECT <include refid="Unbind_Column_List"></include> 
+  	SELECT <include refid="Nobind_Column_List"></include> 
   	 FROM <include refid="agency_backward"></include> a2
+  	 inner join <include refid="t_account"></include> act2
+  	on a2.id=act2.agency_id
   	 <where>
   	 	a2.root_agency_id = #{rootAgencyId}
   	 	AND a2.id not in (select a1.id from <include refid="t_active"></include> active
-  	 	inner join <include refid="agency_backward"></include> a1 on a1.id = active.agency_id
+  	 	inner join <include refid="t_account"></include> act
+  		on active.account_id=act.id
+  		INNER join <include refid="agency_backward"></include> a1
+   		on a1.id = act.agency_id
   	 	<where>
  			<if test="rateDiscountId != null">
  				 AND active.rate_discount_id= #{rateDiscountId}
@@ -101,6 +120,9 @@
  		</if>
  		<if test="agencyTag != null">
  			AND a2.agency_tag = #{agencyTag}
+ 		</if>
+ 		<if test="billType != null">
+ 			AND act2.bill_type = #{billType}
  		</if>
   	 	
   	 	<if test="start != null">
@@ -117,15 +139,23 @@
   <select id="countNoBAgency" parameterType="map" resultType="int">
   	SELECT count(*)
   	 FROM <include refid="agency_backward"></include> a2
+  	 inner join <include refid="t_account"></include> act2
+  	on a2.id=act2.agency_id
   	 <where>
   	 a2.root_agency_id = #{rootAgencyId}
   	 AND a2.id not in (select a1.id from <include refid="t_active"></include> active
-  	 	inner join <include refid="agency_backward"></include> a1 on a1.id = active.agency_id
+  	 	inner join <include refid="t_account"></include> act
+  		on active.account_id=act.id
+  		INNER join <include refid="agency_backward"></include> a1
+   		on a1.id = act.agency_id
   	 	<where>
  			<if test="rateDiscountId != null">
 				 AND active.rate_discount_id= #{rateDiscountId}
  			</if>
   	 	</where>)
+  	 	<if test="billType != null">
+ 			AND act2.bill_type = #{billType}
+ 		</if>
  		<if test="userName != null">
  			AND a2.user_name like concat('%',#{userName},'%') 
  		</if>
@@ -139,17 +169,22 @@
   <select id="getUnbindAgency" parameterType="map" resultMap="UnbindMap">
   	SELECT <include refid="Unbind_Column_List"></include>  
   	from  <include refid="t_active"></include> active1
+  	inner join <include refid="t_account"></include> act
+  	on active1.account_id=act.id
   	INNER join <include refid="agency_backward"></include> a2
-   	on a2.id = active1.agency_id
+   	on a2.id = act.agency_id
    	<where>
    		<if test="rootAgencyId != null">
-   			AND a2.root_agency_id = #{rootAgencyId}
+   			AND active1.bind_agency_id = #{rootAgencyId}
    		</if>
    		<if test="rateDiscountId != null">
    			AND active1.rate_discount_id = #{rateDiscountId}
    		</if>
    		<if test="userName != null">
-   			AND a2.user_name like concat('%',#{userName},'%')
+   			AND act.user_name like concat('%',#{userName},'%')
+   		</if>
+   		<if test="billType != null">
+   			AND act.bill_type = #{billType}
    		</if>
    		<if test="agencyTag != null">
  			AND a2.agency_tag = #{agencyTag}
@@ -162,11 +197,13 @@
   
    <select id="countUnbindAgency" parameterType="map" resultType="int">
    	SELECT count(*) from <include refid="t_active"></include> active1
-   	INNER join <include refid="agency_backward"></include> a2
-   	on a2.id = active1.agency_id
+   	inner join <include refid="t_account"></include> act
+  	on active1.account_id=act.id
+  	INNER join <include refid="agency_backward"></include> a2
+   	on a2.id = act.agency_id
    	<where>
    		<if test="rootAgencyId != null">
-   			AND a2.root_agency_id = #{rootAgencyId}
+   			AND active1.bind_agency_id = #{rootAgencyId}
    		</if>
    		<if test="rateDiscountId != null">
    			AND active1.rate_discount_id = #{rateDiscountId}
@@ -177,6 +214,9 @@
    		<if test="agencyTag != null">
  			AND a2.agency_tag = #{agencyTag}
  		</if>
+ 		<if test="billType != null">
+   			AND act.bill_type = #{billType}
+   		</if>
    			AND active1.bind_state = 1
    		<!-- <if test="bindState != null">
    		</if> -->
@@ -267,7 +307,7 @@ WHERE a2.root_agency_id=4 and active1.rate_discount_id=22 and active1.bind_state
     <include refid="other_Column_List" />
     from <include refid="agency_backward"></include> agb
     inner join
-    <include refid="charge_account"></include> cac
+    <include refid="t_account"></include> cac
     on agb.id=cac.agency_id
     <where>
    		 <include refid="condition_sql"></include>
@@ -289,7 +329,7 @@ WHERE a2.root_agency_id=4 and active1.rate_discount_id=22 and active1.bind_state
     <include refid="other_Column_List" />
     from <include refid="agency_backward"></include> agb
     inner join
-    <include refid="charge_account"></include> cac
+    <include refid="t_account"></include> cac
     on agb.id=cac.agency_id
     <where>
    		 <include refid="condition_sql"></include>
@@ -302,7 +342,7 @@ WHERE a2.root_agency_id=4 and active1.rate_discount_id=22 and active1.bind_state
     count(*)
     from <include refid="agency_backward"></include> agb
     inner join
-    <include refid="charge_account"></include> cac
+    <include refid="t_account"></include> cac
     on agb.id=cac.agency_id
     <where>
    		 <include refid="condition_sql"></include>
@@ -333,7 +373,7 @@ WHERE a2.root_agency_id=4 and active1.rate_discount_id=22 and active1.bind_state
 			AND cac.bill_type = #{billType}
 		</if>
 		<if test="id != null">
-			AND id = #{id}
+			AND cac.id = #{id}
 		</if>
 	</sql>
 	<!-- 查询是否id属于二级代理商以下(限制登陆用户权限) -->

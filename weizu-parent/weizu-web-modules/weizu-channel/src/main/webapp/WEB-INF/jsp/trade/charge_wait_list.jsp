@@ -149,13 +149,13 @@
 						<!-- 结果 -->
 						<td>
 						<c:forEach items="${resultMap.orderStateEnums }" var="orderStateEnum" varStatus="vs">
-							<c:if test="${purchase.orderState == orderStateEnum.value }">
+							<c:if test="${purchase.orderResult == orderStateEnum.value }">
 								${orderStateEnum.desc }
 							</c:if>
 						</c:forEach>
 						</td>
 						
-						<td>${purchase.orderStateDetail }</td>
+						<td>${purchase.orderResultDetail }</td>
 						<td>${purchase.orderPrice }</td>
 						<td class="f-14 td-manage">
 							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeState(this,'1')" href="javascript:;" title="成功">
@@ -166,7 +166,7 @@
 								<input type="hidden" value="${purchase.orderId }" >
 								<i class="Hui-iconfont">&#xe6e5;</i>
 							</a> 
-							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="ajaxCommit(this,'${purchase.orderId }','${purchase.chargeTelDetail }','${purchase.agencyId }','${purchase.billType }')" href="javascript:;" title="提交">
+							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="ajaxCommit(this,'${purchase.orderId }','${purchase.chargeTelDetail }','${purchase.accountId }')" href="javascript:;" title="提交">
 								<input type="hidden" value="${purchase.orderId }" >
 								<i class="Hui-iconfont">&#xe6dc;</i>
 							</a> 
@@ -263,7 +263,7 @@ $(document).ready(function() {
 }); 
 /**手动提交订单*/
 function ajaxCommit(vart,orderId,chargeTelDetail,agencyId,billType){
-	alert(orderId +'<br>' + chargeTelDetail + "<br>" + agencyId + "<br>" + billType );
+	alert(orderId +'<br>' + chargeTelDetail + "<br>" + accountId + "<br>" + billType );
 	
 	var msg='确认提交订单吗？';
 	var msgStr = '手动提交';
@@ -273,7 +273,7 @@ function ajaxCommit(vart,orderId,chargeTelDetail,agencyId,billType){
 			type: 'POST',
 			url: '/flowsys/chargePg/ajax_commit_order.do',
 			//dataType: 'json',
-			data: {orderId:orderId, chargeTelDetail:chargeTelDetail, agencyId:agencyId, billTypeRate:billType},
+			data: {orderId:orderId, chargeTelDetail:chargeTelDetail, accountId:accountId},
 			async: false,
 			success: function(data){
 				//tag = data;

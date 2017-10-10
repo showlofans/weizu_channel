@@ -46,7 +46,7 @@ import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
-import com.weizu.flowsys.web.trade.ao.AgencyPurchaseAO;
+import com.weizu.flowsys.web.trade.ao.AccountPurchaseAO;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
 import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
@@ -79,7 +79,7 @@ public class ChargePgController {
 	@Resource
 	private RateDiscountAO rateDiscountAO;
 	@Resource
-	private AgencyPurchaseAO agencyPurchaseAO;
+	private AccountPurchaseAO agencyPurchaseAO;
 	@Resource
 	private AgencyAO agencyAO;
 	
@@ -88,7 +88,7 @@ public class ChargePgController {
 	
 	
 	/**
-	 * @description:流量充值
+	 * @description:页面单个流量充值
 	 * @return
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月26日 下午4:58:40
@@ -96,12 +96,13 @@ public class ChargePgController {
 	@RequestMapping(value = ChargePgURL.PG_CHARGE)
 	public ModelAndView pgCharge(HttpServletRequest request,PgChargeVO pcVO){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");//用不带票账户充值
 		if(agencyVO != null){
 			boolean isAccess = agencyAO.checkIdByPass(agencyVO.getId(), agencyVO.getUserPass());
-			if(!isAccess){
+			if(!isAccess || !agencyVO.getId().equals(accountPo.getAgencyId())){
 				return new ModelAndView("error", "errorMsg", "当前登陆用户不合法");
 			}
-			pcVO.setAgencyId(agencyVO.getId());
+			pcVO.setAccountId(accountPo.getId());
 			pcVO.setFromAgencyName(agencyVO.getUserName());
 //			purchasePo.setOrderArriveTime(System.currentTimeMillis());
 //			ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
@@ -116,7 +117,7 @@ public class ChargePgController {
 			String pageMsg = "";
 			String referURL = "";
 			
-			pageMsg = purchaseAO.purchase(pcVO, agencyVO.getId());
+			pageMsg = purchaseAO.purchase(pcVO, accountPo);
 			referURL = "/flowsys/chargePg/purchase_list.do?orderResult=2";
 			resultMap.put("referURL", referURL);
 			resultMap.put("pageMsg", pageMsg);
@@ -150,7 +151,8 @@ public class ChargePgController {
 	@RequestMapping(value=ChargePgURL.PGLIST_FORPURCHASE)
 	public String pgList_forPurchase(HttpServletRequest request, HttpServletResponse response,String operatorName,Integer serviceType) throws UnsupportedEncodingException{
 //		OperatorPgDataPo oppo = new OperatorPgDataPo();
-		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");//用不带票账户充值
 //		for (OperatorTypeEnum typeEnum : OperatorTypeEnum.values()) {
 //			if(operatorType.contains(typeEnum.getDesc())){//中国移动包涵移动
 //				oppo.setOperatorType(typeEnum.getValue());
@@ -163,9 +165,9 @@ public class ChargePgController {
 //		RateDiscountPo rateDiscountPo = null;
 		if(sLength>2){
 			String scopeCityName = carrier.substring(0,sLength-2);//地区参数
-			if(agencyVO != null){
-				Integer contextId = agencyVO.getId();
-				boolean isAccept = rateDiscountAO.checkScopeIsAccept(contextId, scopeCityName);
+			if(accountPo != null){
+				Integer accountId = accountPo.getId();
+				boolean isAccept = rateDiscountAO.checkScopeIsAccept(accountId, scopeCityName);
 				if(isAccept){//如果包涵该地区，就加载包体列表
 //					String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动
 //					int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
@@ -175,7 +177,7 @@ public class ChargePgController {
 //						
 //					}
 //					int sType = Integer.parseInt(serviceType.trim());
-					RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(serviceType, carrier, contextId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue(),false);//获得对私的充值费率
+					RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(serviceType, carrier, accountId,false);//获得对私的充值费率
 //					oppo.setServiceType(sType);
 					if(ratePo != null){
 						ChargeChannelParamsPo ccpp = new ChargeChannelParamsPo(carrier, serviceType, ratePo.getChannelId());
@@ -342,7 +344,8 @@ public class ChargePgController {
 	@RequestMapping(value= ChargePgURL.AJAX_PURCHASE_PRICE)
 	public void ajaxPurchassPrice(HttpServletRequest request, Double pgPrice, Integer serviceType,String carrier,HttpServletResponse response){
 		try {
-			AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//			AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+			ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");//用不带票账户充值
 //			carrier = new String(carrier.getBytes("iso-8859-1"),"utf-8");
 			
 //			int pgSize = dataPo.getPgSize();
@@ -367,8 +370,8 @@ public class ChargePgController {
 //				}
 //			}
 			Map<String, Object> resultMap = new HashMap<String, Object>();
-			if(agencyVO != null){
-				RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(serviceType, carrier, agencyVO.getId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue(), false);//获得对私的充值费率
+			if(accountPo != null){
+				RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(serviceType, carrier, accountPo.getId(), false);//获得对私的充值费率
 				if(pgPrice != null && ratePo != null){//判断余额
 					Double purchasePrice = NumberTool.mul(pgPrice, ratePo.getActiveDiscount());//利率后的价格
 					ChargeAccountPo account1 = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
@@ -443,7 +446,7 @@ public class ChargePgController {
 	public String ajaxChargePg(ChargeChannelParamsPo ccpp){
 		List<OperatorPgDataPo> chargeList = purchaseAO.getPgByChanel(ccpp);
 		String listJsonStr = JSON.toJSONString(chargeList);
-		System.out.println(listJsonStr);
+//		System.out.println(listJsonStr);
 		return listJsonStr;
 	}
 	
@@ -575,11 +578,10 @@ public class ChargePgController {
 	@RequestMapping(value=ChargePgURL.UPDATE_PURCHASE_STATE)
 	@ResponseBody
 	public void updatePurchaseState(Long orderId,Integer orderResult, String orderResultDetail,HttpServletResponse response){
-		String updateRes = agencyPurchaseAO.updatePurchaseState(orderId, orderResult, orderResultDetail,null);
-		
+		String updateRes = agencyPurchaseAO.updatePurchaseStateByMe(orderId, orderResult, orderResultDetail,null);
 		response.setContentType("text/html;charset=utf-8");
 		try {
-				response.getWriter().print(updateRes);
+			response.getWriter().print(updateRes);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -660,12 +662,12 @@ public class ChargePgController {
 	}
 	@ResponseBody
 	@RequestMapping(value=ChargePgURL.AJAX_COMMIT_ORDER)
-	public String ajaxCommitOrder(HttpServletRequest request,Long orderId,Integer agencyId,String chargeTelDetail,Integer billTypeRate){
+	public String ajaxCommitOrder(HttpServletRequest request,Long orderId,Integer accountId,String chargeTelDetail){
 //		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession() .getAttribute("loginContext");
 //		ChannelDiscountPo cd = channelDiscountDao.getCDbyAP(orderId, agencyId);
 //		
 //		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(cd.getServiceType(), chargeTelDetail, agencyId, billTypeRate);
-		String ajaxRes = purchaseAO.ajaxCommitOrder(orderId, agencyId, chargeTelDetail, billTypeRate);
+		String ajaxRes = purchaseAO.ajaxCommitOrder(orderId, accountId, chargeTelDetail);
 		
 		return ajaxRes;
 	}

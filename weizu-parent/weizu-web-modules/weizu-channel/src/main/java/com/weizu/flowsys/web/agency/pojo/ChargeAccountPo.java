@@ -3,6 +3,7 @@ package com.weizu.flowsys.web.agency.pojo;
 import com.weizu.flowsys.core.annotation.po.TableName;
 import com.weizu.flowsys.core.beans.Po;
 import com.weizu.flowsys.core.util.NumberTool;
+import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 
 /**
  * @description:代理商充值账户实体
@@ -13,7 +14,7 @@ import com.weizu.flowsys.core.util.NumberTool;
  * @version 1.0
  */
 @TableName(name="charge_account")
-public class ChargeAccountPo extends Po {
+public class ChargeAccountPo extends Po implements Cloneable {
     private Integer id;						//账户id
 
     private Integer agencyId;				//所属代理商id
@@ -42,7 +43,16 @@ public class ChargeAccountPo extends Po {
 		this.accountBalance = accountBalance;
 		this.accountCredit = accountCredit;
 	}
-    
+    @Override
+   	public ChargeAccountPo clone() {
+    	ChargeAccountPo accountPo = null;
+       	try{  
+       		accountPo = (ChargeAccountPo)super.clone();  
+           }catch(CloneNotSupportedException e) {  
+               e.printStackTrace();  
+           }  
+   		return accountPo;
+   	}
     
 
 	/**  createCompanyAccount 创建一个默认的对公账户

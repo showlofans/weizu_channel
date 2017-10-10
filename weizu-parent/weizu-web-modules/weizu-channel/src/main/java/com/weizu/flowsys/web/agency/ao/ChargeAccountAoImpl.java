@@ -12,7 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
 import com.weizu.flowsys.web.agency.dao.CompanyCredentialsDao;
+import com.weizu.flowsys.web.agency.dao.impl.AgencyBackwardDao;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.CompanyCredentialsPo;
@@ -26,6 +28,8 @@ public class ChargeAccountAoImpl implements ChargeAccountAo {
 	
 	@Resource
 	private CompanyCredentialsDao companyCredentialsDao;
+	@Resource
+	private AgencyVODaoInterface agencyVODao;
 	
 	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
@@ -185,6 +189,17 @@ public class ChargeAccountAoImpl implements ChargeAccountAo {
 	public ChargeAccountPo getAccountByAgencyId(int agencyId, int billType) {
 		ChargeAccountPo accountPo = chargeAccountDao.get(new WherePrams("agency_id", "=", agencyId).and("bill_type", "=", billType));
 		return accountPo;
+	}
+
+	@Override
+	public ChargeAccountPo getRootAccountById(int accountId, int billType) {
+		return chargeAccountDao.getRootAccountById(accountId, billType);
+	}
+
+	@Override
+	public ChargeAccountPo getAccountById(int accountId) {
+		
+		return chargeAccountDao.get(accountId);
 	}
 
 }

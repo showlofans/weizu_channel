@@ -56,7 +56,7 @@ public interface AgencyVODaoInterface extends Dao<AgencyBackwardPo, Integer> {
 	int countByAgencyVO(AgencyBackwardVO agencyBackwardVO);
 	
 	/**
-	 * @description:通过邀请码查询代理商 id
+	 * @description:通过邀请码查询（父级）代理商 id
 	 * @param verifyCode
 	 * @return
 	 * @author:POP产品研发部 宁强
@@ -179,4 +179,13 @@ public interface AgencyVODaoInterface extends Dao<AgencyBackwardPo, Integer> {
 	 */
 	int updateAgencyTag(Integer agencyId,Integer agencyTag);
 	
+	/**
+	 * @description:查看邀请码是否符合条件
+	 * @param verifyCode
+	 * @param agencyName 待验证代理商名称
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月23日 上午11:47:05
+	 */
+	Integer checkVerifyCode(String verifyCode,String agencyName);
 }

@@ -28,6 +28,7 @@ import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.ao.ChargeRecordAO;
 import com.weizu.flowsys.web.agency.ao.CompanyCredentialsAO;
 import com.weizu.flowsys.web.agency.dao.CompanyCredentialsDao;
+import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
@@ -72,21 +73,22 @@ public class AccountController {
 	 * @createTime:2017年5月8日 上午9:20:06
 	 */
 	@RequestMapping(value = AccountURL.ADD_CHARGE_PAGE)
-	public ModelAndView addCharge(HttpServletRequest request, String userName,
-			int agencyId, int accountId,int billType) {
+	public ModelAndView addCharge(HttpServletRequest request,
+			int accountId) {
 
 		// String agencyId = request.getParameter("agencyId").trim().toString();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("agencyUserName", userName); // 代理商名字
-		resultMap.put("agencyId", agencyId); // 代理商ID
-		resultMap.put("accountId", accountId); // 代理商账户ID
+		ChargeAccountPo accountPo = chargeAccountAO.getAccountById(accountId);
+		resultMap.put("accountPo", accountPo); // 代理商名字
+//		resultMap.put("agencyId", agencyId); // 代理商ID
+//		resultMap.put("accountId", accountId); // 代理商账户ID
 		resultMap.put("billTypeEnum", BillTypeEnum.toList());
-		resultMap.put("billType", billType);//默认对私
-		if(billType == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()){
-			resultMap.put("chargeAccount",chargeAccountAO.getAccountByAgencyId(agencyId,billType));//通过代理商Id获得充值账户基本信息
-		}else{
-			resultMap.put("chargeAccount1",chargeAccountAO.getAccountByAgencyId(agencyId,billType));//通过代理商Id获得充值账户基本信息
-		}
+//		resultMap.put("billType", billType);//默认对私
+//		if(billType == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()){
+//			resultMap.put("chargeAccount",chargeAccountAO.getAccountByAgencyId(agencyId,billType));//通过代理商Id获得充值账户基本信息
+//		}else{
+//			resultMap.put("chargeAccount1",chargeAccountAO.getAccountByAgencyId(agencyId,billType));//通过代理商Id获得充值账户基本信息
+//		}
 		return new ModelAndView("account/add_charge", "resultMap", resultMap);
 	}
 
@@ -124,6 +126,7 @@ public class AccountController {
 				AgencyBackwardPo agencyPO = agencyAO.getAgencyByAccountId(chargeRecordPo.getAccountId());
 				if(agencyPO != null){
 					chargeRecordPo.setUserName(agencyPO.getUserName());
+//					chargeRecordPo.setUserRealName(agencyPO.getUserRealName());
 				}
 			}
 			return new ModelAndView("/account/charge_list", "resultMap", resultMap);
@@ -160,8 +163,8 @@ public class AccountController {
 			resultMap.put("billTypeEnum", BillTypeEnum.toList());
 			resultMap.put("accountTypeEnum", AccountTypeEnum.toConsumeList());
 			//点击金额进入连接，自动填充代理商名称
-			if(consumeRecordPo.getUserName() == null && consumeRecordPo.getAgencyId() != null){
-				AgencyBackwardPo agencyPO = agencyAO.getAgencyById(consumeRecordPo.getAgencyId());
+			if(consumeRecordPo.getUserName() == null && consumeRecordPo.getAccountId() != null){
+				AgencyBackwardPo agencyPO = agencyAO.getAgencyByAccountId(consumeRecordPo.getAccountId());
 				if(agencyPO != null){
 					consumeRecordPo.setUserName(agencyPO.getUserName());
 				}
@@ -185,22 +188,28 @@ public class AccountController {
 	public void goCharge(ChargeRecordPo chargeRecordPo,
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		ChargeAccountPo accountPo = null;
-		if(chargeRecordPo.getBillType() == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()){
-			accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
-		}else{
-			accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
+//		ChargeAccountPo accountPo = null;
+//		if(chargeRecordPo.getBillType() == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()){
+//			accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
+//		}else{
+//			accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
+//		}
+		//利用消费记录代理商ID设置为当前登陆账户id
+		int result = 0;
+		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");//修改当前代理商账户
+		if(agencyVo != null)
+		{
+			result = chargeRecordAO.updateAccount(chargeRecordPo, agencyVo.getId());
 		}
-		int result = chargeRecordAO.updateAccount(chargeRecordPo,accountPo);
 		
 		if(result > 0){
-			ChargeAccountPo agencyAccountPo = null;
-			if(chargeRecordPo.getBillType() == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()){
-				agencyAccountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
-			}else{
-				agencyAccountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
-			}
-			agencyAccountPo.addBalance(chargeRecordPo.getRechargeAmount(),-1);//session中的引用变量
+//			ChargeAccountPo agencyAccountPo = null;
+//			if(chargeRecordPo.getBillType() == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()){
+//				agencyAccountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
+//			}else{
+//				agencyAccountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
+//			}
+//			agencyAccountPo.addBalance(chargeRecordPo.getRechargeAmount(),-1);//session中的引用变量
 			response.getWriter().print("success");
 		}else{
 			response.getWriter().print("error");
@@ -238,8 +247,8 @@ public class AccountController {
 	 */
 	@RequestMapping(value=AccountURL.OPEN_COMPANY_ACCOUNT_PAGE)
 	public ModelAndView openCompanyAccountPage(HttpServletRequest request){
-		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		Map<String, Object> resultMap = new HashMap<String, Object>();
+		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVo != null)
 		{
 			CompanyCredentialsPo ccpo = companyCredentialsDao.checkCraatedByAgencyId(agencyVo.getId());
