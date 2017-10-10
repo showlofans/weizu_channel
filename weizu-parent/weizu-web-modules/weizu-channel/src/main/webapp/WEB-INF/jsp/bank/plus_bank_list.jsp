@@ -1,0 +1,166 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/view/static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="/view/lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="/view/iCheck/icheck.css" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>加款申请页面页面</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 银行卡<span class="c-gray en">&gt;</span> 卡充值 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+	<div class="pd-20">
+	<table class="table " style="float: left;margin-left: 100px;"><!-- table-border table-bordered table-bg -->
+		<thead >
+			<tr >
+				<th scope="col">
+					系统账户信息
+				</th>
+				<td><c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+						<c:if test="${billTypeEnum.value == resultMap.myBank.billType }">
+							${billTypeEnum.desc } : ${resultMap.myBank.accountBalance }
+						</c:if>
+					</c:forEach></td>
+			</tr>
+		</thead>
+		<tbody>
+			<%-- <tr>
+				<th class="text-r" width="80">系统账户信息：</th>
+				<td>${resultMap.myBank.remittanceWay }</td>
+			</tr> --%>
+			<tr>
+				<th class="text-r" width="80">银行卡类型：</th>
+				<td>${resultMap.myBank.remittanceWay }</td>
+			</tr>
+			<tr>
+				<th class="text-r">汇款账号：</th>
+				<td>${resultMap.myBank.remittanceBankAccount }</td>
+			</tr>
+			<tr>
+				<th class="text-r">账户真实姓名：</th>
+				<td>${resultMap.myBank.accountName }</td>
+			</tr>
+			<tr>
+				<th class="text-r">对账余额：</th>
+				<td>${resultMap.myBank.referenceBalance }</td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<table class="table table-border table-bordered table-bg">
+		<thead>
+			<tr >
+				<th colspan="6" scope="col">请选择打款账户
+					<!-- <span class="text-r">
+						<a style="text-decoration:none" class="btn radio btn-primary" onClick="bank_add('银行卡添加','/flowsys/bankAccount/add_bank_page.do',1)" href="javascript:;" title="添加银行卡"><i class="Hui-iconfont">&#xe600;</i>添加银行卡</a>
+					</span> -->
+				</th>
+			</tr>
+			<tr class="text-c">
+				<th></th>
+				<th>银行卡名称</th>
+				<th>银行卡账号</th>
+				<th>账户真实姓名</th>
+				<th>加款金额</th>
+				<th>加款时间</th>
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach items="${resultMap.plusBankList }" var="bank" varStatus="vst">
+				<td>
+					<div class="radio-box skin-minimal">
+						<input class="radioItem" name="id"  <c:if test="${vs.index==0 }">checked</c:if> type="radio"  value="${bank.id }" ><!-- <c:if test="${vs.index==0 }">checked</c:if> -->
+					</div>
+				</td>
+				<td>${bank.remittanceWay }</td>
+				<td>${bank.remittanceBankAccount }</td>
+				<td>${bank.accountName }</td>
+				<td><input type="text" value="" class="input-text" name="activeDiscount" id="" value="${ratePo.childRatePo.activeDiscount }" placeholder=" 转账金额" style="width:80px"></td>
+				<td>
+					<input style="width:150px" type="text" class="input-text" id="realTime" name="realTime"   value="${resultMap.searchParams.arriveEndTimeStr }"  onfocus="WdatePicker({startDate:'%y-%M-%d 23:59:59',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'arriveStartTimeStr\')}',onpicked:function(){formSub();}})"/>
+				</td>
+			</c:forEach>
+		</tbody>
+		</table>
+		
+</div>
+	<%-- <form action="" method="" class="form form-horizontal" id="form-article-add">
+		<input type="hidden" value="${resultMap.myBank.id}" name="id">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">银行卡类型：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text isEmpty" value="${resultMap.myBank.remittanceWay }" placeholder="如：建设银行" id="remittanceWay" name="remittanceWay">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">汇款账号：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text isEmpty" value="${resultMap.myBank.remittanceBankAccount }" placeholder="" id="remittanceBankAccount" name="remittanceBankAccount">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">账户真实姓名</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				 <input type="text" class="input-text isEmpty" value="${resultMap.myBank.accountName }" placeholder="" id="accountName" name="accountName">
+		 	</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">对账余额：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text isEmpty" value="${resultMap.myBank.referenceBalance }" placeholder="" id="referenceBalance" name="referenceBalance">
+			</div>
+		</div>
+		<!-- <div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+				<button class="btn btn-primary radius" type="submit" onclick="editBank()"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+				<button class="btn btn-primary radius" onClick="cancelEdit()">取消</button>
+			</div>
+		</div> -->
+	</form> --%>
+</body>
+<script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="/view/static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="/view/iCheck/jquery.icheck.min.js"></script>
+<script type="text/javascript" src="/view/static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="/view/lib/layer/2.4/layer.js"></script>  
+<script type="text/javascript">
+$(document).ready(function() {
+	$('.skin-minimal input').iCheck({
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+	/* $(".isEmpty").each(function(){
+		var info = $(this).html();
+		//alert(info == '');
+		if (info == null || info == undefined || info == '') {
+			$(this).html('没有填写');
+			$(this).addClass('c-red');
+		}
+	}) */
+})
+/* function editBank(){
+	$.ajax({
+        type:"post",
+        url:"/flowsys/bankAccount/edit_bank.do",
+        data: $('form').serialize(),//表单数据
+        async : false,
+        success:function(d){
+            if(d=="success"){
+                layer.msg('保存成功！');//保存成功提示
+				var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+	            parent.layer.close(index); //执行关闭
+            }
+            if(d=="error"){
+                layer.msg('保存异常!');
+            }
+        }
+    });
+} */
+</script>
+</html>

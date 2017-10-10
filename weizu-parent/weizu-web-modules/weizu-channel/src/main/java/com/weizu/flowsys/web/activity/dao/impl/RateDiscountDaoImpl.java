@@ -183,8 +183,8 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 	 * @createTime:2017年7月29日 下午6:23:44
 	 */
 	@Override
-	public List<RateDiscountPo> getMyChildRate(Map<String, Object> params) {
-		return sqlSessionTemplate.selectList("getMyChildRate", params);
+	public RateDiscountPo getMyChildRate(Map<String, Object> params) {
+		return sqlSessionTemplate.selectOne("getMyChildRate", params);
 	}
 	
 	@Override

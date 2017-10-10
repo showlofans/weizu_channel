@@ -86,14 +86,24 @@
 						<td class="c-blue myDiscount">${ratePo.activeDiscount }</td>
 						<td style="display:none;" class="channelDiscountId">${ratePo.channelDiscountId }</td><!-- 通道折扣id -->
 						<td style="display:none;" class="id">${ratePo.id }</td><!-- 通道折扣id -->
-						<td style="display:none;" class="agencyId">${ratePo.agencyId }</td><!-- 通道折扣id -->
+						<td style="display:none;" class="accountId">${ratePo.accountId }</td><!-- 通道折扣id -->
 						<td><c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
 								<c:if test="${ratePo.billType == billTypeEnum.value }">
 									<span>${billTypeEnum.desc }</span>
 								</c:if>
 							</c:forEach>
 						</td> 
-						<c:choose>
+								<td><input type="text" value="" class="activeDiscount input-text" name="activeDiscount" id="" value="${ratePo.childRatePo.activeDiscount }" placeholder=" 费率折扣" style="width:80px"></td>
+								<td>
+									<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+										<c:if test="${ratePo.childRatePo.billType ==  billTypeEnum.value}">
+											${billTypeEnum.desc }
+											<input class="billType" type="hidden" value="${billTypeEnum.value }">
+										</c:if>
+									</c:forEach>
+								</td>
+								<!-- 根据费率设置折扣 -->
+						<%-- <c:choose>
 							<c:when test="${empty ratePo.discountList }">
 								<td><input type="text" value="" class="activeDiscount input-text" name="activeDiscount" id="" placeholder=" 费率折扣" style="width:80px"></td>
 								<td>
@@ -142,12 +152,12 @@
 												</c:if>
 											</c:forEach>
 										</c:if>
-												<%-- ${disPo.billType }-${disPo.billTypeDesc }-${disPo.activeDiscount } --%>
+												${disPo.billType }-${disPo.billTypeDesc }-${disPo.activeDiscount }
 									</select>
 									<!-- </span> -->
 								</td>
 							</c:otherwise>
-						</c:choose>
+						</c:choose> --%>
 						<td><button onclick="addUp(this)" class="btn btn-primary radius">设置</button></td>
 					</tr>
 				</c:forEach>
@@ -169,7 +179,7 @@
 <script type="text/javascript" charset="utf8" src="/view/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="/view/lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript">
-function getBillType(vart){
+/* function getBillType(vart){
 	var optionIn = $(vart).find('option:selected').text().trim();
 	//alert(optionIn.indexOf('-'));
 	
@@ -183,19 +193,20 @@ function getBillType(vart){
 		//alert(activeId);
 	}
 	//alert(arr[1]);
-}
+} */
 /* $().ready(function() {
 	
 }) */
 //添加或者修改代理商的折扣
 function addUp(vart){//vart是提交按钮
-	var optionIn = $(vart).parents('td').prev().children('.billType').find('option:selected').text().trim();
+//	var optionIn = $(vart).parents('td').prev().children('.billType').find('option:selected').text().trim();
+	var optionIn = $(vart).parents('td').prev().children('.billType').val().trim();
 	var billType = -1;
 	//var billType = arr[0];
 	//var billType =  $(vart).parents('td').prev().children('.billType').find('option:selected').val();
 	var cDiscountId = $(vart).parents('tr').children('.channelDiscountId').html().trim();//通道折扣Id
 	//alert(cDiscountId);
-	var agencyId = $('#childAgencyId').val();//代理商Id
+	var childAccountId = $('#childAccountId').val();//代理商账户Id
 	//alert(agencyId);
 	var activeId = $(vart).parents('tr').children('.id').html().trim();//父级折扣Id
 	var $ad = $(vart).parents('td').prev().prev().children('.activeDiscount');
@@ -224,7 +235,7 @@ function addUp(vart){//vart是提交按钮
 				});
 		}else{
 			if(optionIn.indexOf('-') == -1){//没有自己的折扣
-				billType = $(vart).parents('td').prev().children('.billType').find('option:selected').val();
+				billType = $(vart).parents('td').prev().children('.billType').val();
 				layer.confirm('确认给'+agencyName+'增加费率吗？',function(index){
 					$.ajax({
 						type: 'POST',

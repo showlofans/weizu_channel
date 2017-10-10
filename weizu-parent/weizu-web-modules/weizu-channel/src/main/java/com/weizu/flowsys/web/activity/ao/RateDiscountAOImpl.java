@@ -50,7 +50,7 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		return null;
 	}
 	@Override
-	public Pagination<RateDiscountPo> getMyRateList(RateDiscountPo ratePo,Integer childAgencyId,PageParam pageParam) {
+	public Pagination<RateDiscountPo> getMyRateList(RateDiscountPo ratePo,Integer childAccountId,PageParam pageParam) {
 		Map<String, Object> paramsMap = getMapByRate(ratePo);
 		long toatalRecord = rateDiscountDao.countMyRate(paramsMap);
 		int pageSize = 10;
@@ -68,12 +68,14 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 //			pMap.put("bindState", BindStateEnum.BIND.getValue());
 //			pMap.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
 			pMap.put("activeId", ratePo1.getId());
-			pMap.put("agencyId", childAgencyId);
-			List<RateDiscountPo> list = rateDiscountDao.getMyChildRate(pMap);
-			for (RateDiscountPo rateDiscountPo : list) {
-				rateDiscountPo.setBillTypeDesc(BillTypeEnum.getEnum(rateDiscountPo.getBillType()).getDesc());
-			}
-			ratePo1.setDiscountList(list);
+			pMap.put("accountId", childAccountId);
+			pMap.put("bindState", BindStateEnum.BIND.getValue());
+			RateDiscountPo childRatePo = rateDiscountDao.getMyChildRate(pMap);
+			ratePo1.setChildRatePo(childRatePo);
+//			for (RateDiscountPo rateDiscountPo : list) {
+//				rateDiscountPo.setBillTypeDesc(BillTypeEnum.getEnum(rateDiscountPo.getBillType()).getDesc());
+//			}
+//			ratePo1.setDiscountList(list);
 		}
 		return new Pagination<RateDiscountPo>(records, toatalRecord, pageNo, pageSize);
 	}

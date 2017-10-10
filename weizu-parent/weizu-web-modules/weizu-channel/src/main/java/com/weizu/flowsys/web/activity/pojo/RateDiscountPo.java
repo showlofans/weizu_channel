@@ -37,25 +37,54 @@ public class RateDiscountPo extends Po {
     
     private Long channelId;					//通道id
     @TempField
-    private Integer agencyId;
+    private Integer accountId;				//子代理商账户id
+    @TempField
+    private Integer agencyId;				//子代理商账户id
     @TempField
     private String scopeCityName;
     @TempField
     private String billTypeDesc;			//费率描述
+//    @TempField
+//    private List<RateDiscountPo> discountList;			//活动折扣列表
     @TempField
-    private List<RateDiscountPo> discountList;			//活动折扣列表
-    
+    private RateDiscountPo childRatePo;			//子费率活动折扣
     
     public RateDiscountPo() {
 		super();
 	}
     
-	public List<RateDiscountPo> getDiscountList() {
-		return discountList;
+    
+    
+//	public List<RateDiscountPo> getDiscountList() {
+//		return discountList;
+//	}
+//
+//	public void setDiscountList(List<RateDiscountPo> discountList) {
+//		this.discountList = discountList;
+//	}
+
+	public Integer getAgencyId() {
+		return agencyId;
 	}
 
-	public void setDiscountList(List<RateDiscountPo> discountList) {
-		this.discountList = discountList;
+	public void setAgencyId(Integer agencyId) {
+		this.agencyId = agencyId;
+	}
+
+	public Integer getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(Integer accountId) {
+		this.accountId = accountId;
+	}
+
+	public RateDiscountPo getChildRatePo() {
+		return childRatePo;
+	}
+
+	public void setChildRatePo(RateDiscountPo childRatePo) {
+		this.childRatePo = childRatePo;
 	}
 
 	public RateDiscountPo(Double activeDiscount, Long activeId,
@@ -129,14 +158,6 @@ public class RateDiscountPo extends Po {
 
 	public void setScopeCityName(String scopeCityName) {
 		this.scopeCityName = scopeCityName;
-	}
-
-	public Integer getAgencyId() {
-		return agencyId;
-	}
-
-	public void setAgencyId(Integer agencyId) {
-		this.agencyId = agencyId;
 	}
 
 	public Long getChannelId() {

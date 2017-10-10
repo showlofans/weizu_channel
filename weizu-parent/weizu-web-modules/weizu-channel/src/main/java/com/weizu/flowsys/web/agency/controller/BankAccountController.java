@@ -30,15 +30,40 @@ public class BankAccountController {
 	@Resource
 	private BankAccountDaoInterface bankAccountDao;
 	
-	@RequestMapping(value=BankAccountURL.BANK_LIST)
+	@RequestMapping(value=BankAccountURL.MY_BANK_LIST)
 	public ModelAndView listBankAccount(HttpServletRequest request){
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		
 		Map<String,Object> resultMap = new HashMap<String,Object>();
 		if(agencyVo != null){
-			bankAccountAO.getBankList(agencyVo.getId(), resultMap);
+			bankAccountAO.getMyBankList(agencyVo.getId(), resultMap);
 		}
-		return new ModelAndView("/bank/bank_list", "resultMap", resultMap);
+		return new ModelAndView("/bank/my_bank_list", "resultMap", resultMap);
+	}
+	
+	/**
+	 * @description: 加款 页面<br>页面来源：my_bank_list
+	 * @param request
+	 * @param billType
+	 * @param id
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月10日 下午4:43:18
+	 */
+	@RequestMapping(value=BankAccountURL.PLUS_BANK_LIST)
+	public ModelAndView listPlusBankAccount(HttpServletRequest request, Long id){
+		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		
+		Map<String,Object> resultMap = new HashMap<String,Object>();
+		BankAccountPo myBank = bankAccountAO.getBankPoById(id);
+		if(myBank != null){
+			if(agencyVo != null){
+				bankAccountAO.getPlusBankList(agencyVo.getId(),myBank.getBillType(), resultMap);
+			}
+			resultMap.put("myBank", myBank);
+		}
+		resultMap.put("billTypeEnums", BillTypeEnum.toList());
+		return new ModelAndView("/bank/plus_bank_list", "resultMap", resultMap);
 	}
 	
 	/**

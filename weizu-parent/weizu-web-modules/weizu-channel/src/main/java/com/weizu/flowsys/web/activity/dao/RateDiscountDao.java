@@ -109,7 +109,7 @@ public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月29日 下午6:23:23
 	 */
-	List<RateDiscountPo>getMyChildRate(Map<String, Object> params);
+	RateDiscountPo getMyChildRate(Map<String, Object> params);
 	
 	/**
 	 * @description: 通过通道折扣id和账户id找到绑定的费率id

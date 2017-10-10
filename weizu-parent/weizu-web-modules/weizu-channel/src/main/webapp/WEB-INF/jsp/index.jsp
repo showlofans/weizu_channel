@@ -62,7 +62,7 @@
 							<li><a href="javascript:;" onClick="myselfinfo()">个人信息</a>
 							</li>
 							<li><a href="/flowsys/agency/logout.do">切换账户</a></li>
-							<!-- <li><a data-href="/flowsys/bankAccount/bank_list.do" data-title="银行卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">银行卡</a></li> -->
+							 <li><a data-href="/flowsys/bankAccount/my_bank_list.do" data-title="银行卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">银行卡</a></li>
 							<li><a href="javascript:;" onClick="resetPass()">修改密码</a></li>
 							<li><a href="/flowsys/agency/logout.do">退出</a></li>
 					</ul>
@@ -118,7 +118,9 @@
 				<ul>
 					<!-- <li><a data-href="/flowsys/rate/rate_add_page.do" data-title="费率添加" href="javascript:void(0)">费率添加</a></li>
 					<li><a data-href="/flowsys/rate/rate_list.do" data-title="费率列表" href="javascript:void(0)">费率列表</a></li> -->
+					<c:if test="${loginContext.agencyTag == 1 }">
 					<li><a data-href="/flowsys/agency/child_agency_list.do?agencyTag=1" data-title="认证用户" href="javascript:void(0)">认证用户</a></li>
+					</c:if>
 					<li><a data-href="/flowsys/agency/child_agency_list.do?agencyTag=0" data-title="代理商" href="javascript:void(0)">代理商</a></li>
 					<!-- <li><a data-href="/flowsys/agency/get_tel_location.do" data-title="号码归属地查询" href="javascript:void(0)">号码归属地查询</a></li> -->
 				</ul>
