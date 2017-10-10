@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.agency.dao.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -18,8 +19,8 @@ public class BankAccountDao extends DaoImpl<BankAccountPo, Long> implements
 	private SqlSessionTemplate sqlSessionTemplateASS;
 
 	@Override
-	public List<BankAccountPo> getBankList(Integer contextId) {
-		return sqlSessionTemplateASS.selectList("getBankList", contextId);
+	public List<BankAccountPo> getBankList(Map<String, Object> paramsMap) {
+		return sqlSessionTemplateASS.selectList("getBankList", paramsMap);
 	}
 
 }

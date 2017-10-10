@@ -35,16 +35,21 @@
     bct.id, bct.account_id, bct.remittance_way, bct.remittance_bank_account, bct.account_name,reference_balance,bct.agency_id,bct.use_state,act.bill_type,act.account_balance 
   </sql>
   <!-- 获得登录用户的银行卡列表 -->
-  <select id="getBankList" parameterType="int" resultMap="OtherResultMap">
+  <select id="getBankList" parameterType="map" resultMap="OtherResultMap">
   	select <include refid="Other_Column_List"></include>
   	 from <include refid="t_bct"></include> bct
   	 inner join <include refid="t_account"></include> act
   	 on bct.account_id=act.id
   	<where>
-  		act.agency_id = #{_parameter}
-  		<!-- <if test="agencyId != null">
+  		<if test="agencyId != null">
   			AND act.agency_id = #{agencyId}
-  		</if> -->
+  		</if>
+  		<if test="billType != null">
+  			AND act.bill_type = #{billType}
+  		</if>
+  		<if test="polarity != null">
+  			AND bct.polarity = #{polarity}
+  		</if>
   	</where>
   </select>
   <!-- 批量添加 -->

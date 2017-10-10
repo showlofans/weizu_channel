@@ -1,5 +1,6 @@
 package com.weizu.flowsys.web.agency.ao;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -9,8 +10,11 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.web.agency.dao.BankAccountDaoInterface;
+import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.pojo.BankAccountPo;
+import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 /**
  * @description: 银行卡管理AO
  * @projectName:weizu-channel
@@ -24,10 +28,15 @@ public class BankAccountAOImpl implements BankAccountAO {
 
 	@Resource
 	private BankAccountDaoInterface bankAccountDao;
+	@Resource
+	private ChargeAccountDao chargeAccountDao;
 	
 	@Override
-	public void getBankList(Integer contextId, Map<String,Object> resultMap) {
-		List<BankAccountPo> dataList = bankAccountDao.getBankList(contextId);
+	public void getMyBankList(Integer contextId,  Map<String,Object> resultMap) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("agencyId", contextId);
+		map.put("polarity", CallBackEnum.POSITIVE.getValue());
+		List<BankAccountPo> dataList = bankAccountDao.getBankList(map);
 		//将列表分开展示
 		List<BankAccountPo> bankList0 = new LinkedList<BankAccountPo>();
 		List<BankAccountPo> bankList = new LinkedList<BankAccountPo>();
@@ -56,6 +65,31 @@ public class BankAccountAOImpl implements BankAccountAO {
 			return "success";
 		}
 		return "error";
+	}
+
+	@Override
+	public void getPlusBankList(Integer contextId, Integer billType,
+			Map<String, Object> resultMap) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("agencyId", contextId);
+		map.put("billType", billType);
+		map.put("polarity", CallBackEnum.NEGATIVE.getValue());
+		List<BankAccountPo> dataList = bankAccountDao.getBankList(map);
+		resultMap.put("plusBankList", dataList);
+	}
+
+	@Override
+	public BankAccountPo getBankPoById(Long id) {
+		BankAccountPo bankPo = bankAccountDao.get(id);
+		if(bankPo != null){
+			ChargeAccountPo accountPo = chargeAccountDao.get(bankPo.getAccountId());
+			if(accountPo != null){
+				bankPo.setAccountBalance(accountPo.getAccountBalance());
+				bankPo.setBillType(accountPo.getBillType());
+			}
+			return bankPo;
+		}
+		return null;
 	}
 
 }

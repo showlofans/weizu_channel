@@ -8,10 +8,15 @@ public class BankAccountURL extends BaseURL {
 	 */
 	public static final String MODEL_NAME = "/flowsys/bankAccount";
 	/**
-	 * 银行卡列表
-	 * <br>/flowsys/bankAccount/bank_list.do
+	 * 我的银行卡列表
+	 * <br>/flowsys/bankAccount/my_bank_list.do
 	 */
-	public static final String BANK_LIST = "/bank_list" + DYNAMIC_WEB_SUFFIX;
+	public static final String MY_BANK_LIST = "/my_bank_list" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 加款银行卡列表
+	 * <br>/flowsys/bankAccount/plus_bank_list.do
+	 */
+	public static final String PLUS_BANK_LIST = "/plus_bank_list" + DYNAMIC_WEB_SUFFIX;
 	
 	/**
 	 * 添加银行卡页面

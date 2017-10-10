@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public enum CallBackEnum {
 	/**
-	 * 不支持回调
+	 * 不支持回调<br>被加卡
 	 */
 	NEGATIVE("不支持回调",0),
 //	/**
@@ -24,7 +24,7 @@ public enum CallBackEnum {
 //	 */
 //	UNBIND("支持回调",1),
 	/**
-	 * 支持回调
+	 * 支持回调<br>加款卡
 	 */
 	POSITIVE("支持回调",1);
 	/**

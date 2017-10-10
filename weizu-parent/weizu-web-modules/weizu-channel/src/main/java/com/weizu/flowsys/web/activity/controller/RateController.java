@@ -382,7 +382,6 @@ public class RateController {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月1日 上午11:43:53
 	 */
-	@SuppressWarnings("restriction")
 	@RequestMapping(value=RateURL.BIND_CHANNEL_LIST)
 	public ModelAndView bindChannelList(@RequestParam(value = "pageNo", required = false) String pageNo,
 			HttpServletRequest request,AccountActiveRatePo activePo)
@@ -446,7 +445,6 @@ public class RateController {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月28日 下午5:38:02
 	 */
-	@SuppressWarnings("restriction")
 	@RequestMapping(value=RateURL.MY_RATE_LIST)
 	public ModelAndView myRateList(@RequestParam(value = "pageNo", required = false) String pageNo,
 			HttpServletRequest request,RateDiscountPo ratePo,String agencyName){
@@ -454,26 +452,37 @@ public class RateController {
 		if(agencyVO == null){
 			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 		}
-//		activePo.setBindAgencyId(agencyVO.getId());//设置当前登录用户的
 		PageParam pageParam = null;
 		if(StringHelper.isNotEmpty(pageNo)){
 			pageParam = new PageParam(Integer.parseInt(pageNo), 10) ;
 		}else{
 			pageParam = new PageParam(1, 10);
 		}
-		int childAgencyId = -1;
-		if(ratePo == null){
-			Object obj = request.getSession().getAttribute("childAgencyId");
-			if(obj != null){
-				childAgencyId = Integer.parseInt(obj.toString());
-			}
-			ratePo = new RateDiscountPo();
+		int childAccountId = -1;
+//		Object obj = request.getSession().getAttribute("childAccountId");
+//		if(obj != null){
+//			childAccountId = Integer.parseInt(obj.toString());
+//		}else{
+//			
+//		}
+		if(ratePo != null){
+			childAccountId = ratePo.getAccountId();
+			request.getSession().setAttribute("childAccountId", childAccountId);
 		}else{
-			childAgencyId = ratePo.getAgencyId();
-			request.getSession().setAttribute("childAgencyId", childAgencyId);
+			return new ModelAndView("error", "errorMsg", "参数不对！！");
 		}
+//		if(ratePo == null){
+//			Object obj = request.getSession().getAttribute("childAgencyId");
+//			if(obj != null){
+//				childAgencyId = Integer.parseInt(obj.toString());
+//			}
+//			ratePo = new RateDiscountPo();
+//		}else{
+//			childAgencyId = ratePo.getAgencyId();
+//			request.getSession().setAttribute("childAgencyId", childAgencyId);
+//		}
 		ratePo.setAgencyId(agencyVO.getId());
-		Pagination<RateDiscountPo> pagination = rateDiscountAO.getMyRateList(ratePo,childAgencyId, pageParam);
+		Pagination<RateDiscountPo> pagination = rateDiscountAO.getMyRateList(ratePo,childAccountId, pageParam);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
