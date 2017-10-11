@@ -43,4 +43,21 @@ public class BankAccountURL extends BaseURL {
 	 * <br> /flowsys/bankAccount/del_bank.do
 	 */
 	public static final String DEL_BANK = "/del_bank" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 银行卡绑定
+	 * <br> /flowsys/bankAccount/attach_bank_page.do
+	 */
+	public static final String ATTACH_BANK_PAGE = "/attach_bank_page" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 银行卡绑定
+	 * <br> /flowsys/bankAccount/attach_bank.do
+	 */
+	public static final String ATTACH_BANK = "/attach_bank" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 银行卡绑定
+	 * <br> /flowsys/bankAccount/unattach_bank.do
+	 */
+	public static final String UNATTACH_BANK = "/unattach_bank" + DYNAMIC_WEB_SUFFIX;
+	
+	
 }

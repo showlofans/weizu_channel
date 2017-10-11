@@ -21,7 +21,14 @@ public interface BankAccountDaoInterface extends Dao<BankAccountPo, Long> {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年10月9日 上午11:38:03
 	 */
-	List<BankAccountPo> getBankList(Map<String, Object> paramsMap);//Integer contextId, Integer polarity
+	List<BankAccountPo> getMyBankList(Map<String, Object> paramsMap);//Integer contextId, Integer polarity
 	
+	/**
+	 * @description: 获得充值银行卡列表
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月9日 上午11:38:03
+	 */
+	List<BankAccountPo> getAttachBankList(Map<String, Object> paramsMap);
 	
 }

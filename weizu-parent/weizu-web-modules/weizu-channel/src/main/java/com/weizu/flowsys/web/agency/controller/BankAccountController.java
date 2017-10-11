@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.web.agency.ao.BankAccountAO;
 import com.weizu.flowsys.web.agency.dao.BankAccountDaoInterface;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
@@ -29,6 +30,71 @@ public class BankAccountController {
 	private BankAccountAO bankAccountAO;
 	@Resource
 	private BankAccountDaoInterface bankAccountDao;
+	
+	/**
+	 * @description: 绑定银行卡
+	 * @param request
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月11日 上午10:46:31
+	 */
+	@RequestMapping(value=BankAccountURL.ATTACH_BANK_PAGE)
+	public ModelAndView attachBankAccountPage(HttpServletRequest request,Integer accountId){
+		//当前子账户的父级代理商就是当前登陆用户
+		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		request.getSession().setAttribute("childAccountId", accountId);
+		
+		Map<String,Object> resultMap = new HashMap<String,Object>();
+		if(agencyVo != null){
+			bankAccountAO.getAttachBankList(accountId, agencyVo.getId(), resultMap);;
+		}
+		return new ModelAndView("/bank/attach_bank_list", "resultMap", resultMap);
+	}
+	/**
+	 * @description: 添加绑定
+	 * @param request
+	 * @param id
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月11日 下午3:29:34
+	 */
+	@RequestMapping(value=BankAccountURL.ATTACH_BANK)
+	@ResponseBody
+	public String attachBankAccount(HttpServletRequest request,Long id){
+		//当前子账户的父级代理商就是当前登陆用户
+		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		Object childAccountIdOjb = request.getSession().getAttribute("childAccountId");
+		Integer chileAccountId = childAccountIdOjb == null ? null : Integer.parseInt(childAccountIdOjb.toString());
+		BankAccountPo originalBankPo = bankAccountDao.get(id);
+		if(originalBankPo != null){
+			BankAccountPo bankPo = new BankAccountPo(id, chileAccountId, originalBankPo.getRemittanceWay(), originalBankPo.getRemittanceBankAccount(), originalBankPo.getAccountName(), null, agencyVo.getId(), CallBackEnum.POSITIVE.getValue(), CallBackEnum.POSITIVE.getValue());
+			return bankAccountAO.attachBank(bankPo);
+		}
+		return "error";
+	}
+	/**
+	 * @description:
+	 * @param request
+	 * @param id
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月11日 下午3:30:04
+	 */
+//	@RequestMapping(value = BankAccountURL.UNATTACH_BANK)
+//	public String unattachBankAccount(HttpServletRequest request,Long id){
+//		//当前子账户的父级代理商就是当前登陆用户
+//		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//		Object childAccountIdOjb = request.getSession().getAttribute("childAccountId");
+//		Integer chileAccountId = childAccountIdOjb == null ? null : Integer.parseInt(childAccountIdOjb.toString());
+//		BankAccountPo originalBankPo = bankAccountDao.get(id);
+//		if(originalBankPo != null){
+//			BankAccountPo bankPo = new BankAccountPo(id, chileAccountId, originalBankPo.getRemittanceWay(), originalBankPo.getRemittanceBankAccount(), originalBankPo.getAccountName(), null, agencyVo.getId(), CallBackEnum.POSITIVE.getValue(), 0);
+//			return bankAccountAO.attachBank(bankPo);
+//		}
+//		return "error";
+//	}
+	
+	
 	
 	@RequestMapping(value=BankAccountURL.MY_BANK_LIST)
 	public ModelAndView listBankAccount(HttpServletRequest request){
@@ -51,8 +117,10 @@ public class BankAccountController {
 	 * @createTime:2017年10月10日 下午4:43:18
 	 */
 	@RequestMapping(value=BankAccountURL.PLUS_BANK_LIST)
-	public ModelAndView listPlusBankAccount(HttpServletRequest request, Long id){
+	public ModelAndView listPlusBankAccount(HttpServletRequest request, Long id, Integer accountId){
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		
+		
 		
 		Map<String,Object> resultMap = new HashMap<String,Object>();
 		BankAccountPo myBank = bankAccountAO.getBankPoById(id);

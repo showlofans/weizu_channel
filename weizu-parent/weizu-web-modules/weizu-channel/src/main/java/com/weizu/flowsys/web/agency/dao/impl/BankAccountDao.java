@@ -19,8 +19,13 @@ public class BankAccountDao extends DaoImpl<BankAccountPo, Long> implements
 	private SqlSessionTemplate sqlSessionTemplateASS;
 
 	@Override
-	public List<BankAccountPo> getBankList(Map<String, Object> paramsMap) {
-		return sqlSessionTemplateASS.selectList("getBankList", paramsMap);
+	public List<BankAccountPo> getMyBankList(Map<String, Object> paramsMap) {
+		return sqlSessionTemplateASS.selectList("getMyBankList", paramsMap);
+	}
+
+	@Override
+	public List<BankAccountPo> getAttachBankList(Map<String, Object> paramsMap) {
+		return sqlSessionTemplateASS.selectList("getAttachBankList", paramsMap);
 	}
 
 }

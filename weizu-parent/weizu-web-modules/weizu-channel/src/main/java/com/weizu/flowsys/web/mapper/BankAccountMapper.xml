@@ -13,7 +13,7 @@
     <!-- <result column="bill_type" property="billType" jdbcType="INTEGER" /> -->
     <result column="reference_balance" property="referenceBalance" jdbcType="DOUBLE" />
     <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
-    <result column="use_state" property="fromAccountId" jdbcType="INTEGER" />
+    <result column="use_state" property="useState" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, account_id, remittance_way, remittance_bank_account, account_name,reference_balance,agency_id,use_state 
@@ -26,7 +26,7 @@
     <result column="account_name" property="accountName" jdbcType="VARCHAR" />
     <result column="reference_balance" property="referenceBalance" jdbcType="DOUBLE" />
     <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
-    <result column="use_state" property="fromAccountId" jdbcType="INTEGER" />
+    <result column="use_state" property="useState" jdbcType="INTEGER" />
 	<!-- 账户信息 -->
     <result column="bill_type" property="billType" jdbcType="INTEGER" /> 
     <result column="account_balance" property="accountBalance" jdbcType="DOUBLE" /> 
@@ -35,18 +35,46 @@
     bct.id, bct.account_id, bct.remittance_way, bct.remittance_bank_account, bct.account_name,reference_balance,bct.agency_id,bct.use_state,act.bill_type,act.account_balance 
   </sql>
   <!-- 获得登录用户的银行卡列表 -->
-  <select id="getBankList" parameterType="map" resultMap="OtherResultMap">
+  <select id="getMyBankList" parameterType="map" resultMap="OtherResultMap">
   	select <include refid="Other_Column_List"></include>
   	 from <include refid="t_bct"></include> bct
   	 inner join <include refid="t_account"></include> act
   	 on bct.account_id=act.id
   	<where>
   		<if test="agencyId != null">
+  			AND bct.agency_id = #{agencyId}
   			AND act.agency_id = #{agencyId}
   		</if>
   		<if test="billType != null">
   			AND act.bill_type = #{billType}
   		</if>
+  		<if test="inUseState != null">
+  			AND (bct.use_state != #{inUseState} or bct.use_state is null )
+  		</if>
+  		<if test="polarity != null">
+  			AND bct.polarity = #{polarity}
+  		</if>
+  	</where>
+  </select>
+  <!-- 获得绑定的父级代理商银行卡列表 -->
+  <select id="getAttachBankList" parameterType="map" resultMap="OtherResultMap">
+  	select <include refid="Other_Column_List"></include>
+  	 from <include refid="t_bct"></include> bct
+  	 inner join <include refid="t_account"></include> act
+  	 on bct.account_id=act.id
+  	<where>
+  		<if test="agencyId != null">
+  			AND bct.agency_id = #{agencyId}
+  		</if>
+  		<if test="accountId != null">
+  			AND bct.account_id = #{accountId}
+  		</if>
+  		<if test="useState != null">
+  			AND bct.use_state = #{useState}
+  		</if>
+  		 <!-- <if test="billType != null">
+  			AND act.bill_type = #{billType}
+  		</if> -->
   		<if test="polarity != null">
   			AND bct.polarity = #{polarity}
   		</if>
