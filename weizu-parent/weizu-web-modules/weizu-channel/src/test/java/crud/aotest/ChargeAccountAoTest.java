@@ -53,9 +53,14 @@
 ////		System.out.println(accouontPo.getAccountBalance());
 ////	}
 //	@Test
-//	public void getRootAccountById(){
-//		ChargeAccountPo accouontPo = chargeAccountDao.getRootAccountById(2, 0);
+//	public void getAccountByTransferId(){
+//		ChargeAccountPo accouontPo = chargeAccountDao.getAccountByTransferId(1l);
 //		System.out.println(accouontPo.getAccountBalance());
 //	}
+////	@Test
+////	public void getRootAccountById(){
+////		ChargeAccountPo accouontPo = chargeAccountDao.getRootAccountById(2, 0);
+////		System.out.println(accouontPo.getAccountBalance());
+////	}
 //
 //}

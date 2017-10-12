@@ -78,9 +78,10 @@ function addBank(){
                 layer.msg('添加成功！');//保存成功提示
 				var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
 	            parent.layer.close(index); //执行关闭
-            }
-            if(d=="error"){
+            }else if(d=="error"){
                 layer.msg('添加异常!');
+            }else if(d=="exist"){
+                layer.msg('该银行卡已添加!');
             }
         }
     });

@@ -1,7 +1,7 @@
 package com.weizu.flowsys.web.agency.controller;
 
+import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -9,18 +9,26 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
+import com.weizu.flowsys.operatorPg.enums.ConfirmStateTransferEnum;
+import com.weizu.flowsys.operatorPg.enums.InOrOutEnum;
 import com.weizu.flowsys.web.agency.ao.BankAccountAO;
+import com.weizu.flowsys.web.agency.ao.TransferRecAO;
 import com.weizu.flowsys.web.agency.dao.BankAccountDaoInterface;
+import com.weizu.flowsys.web.agency.dao.ITransferRecDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.BankAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
+import com.weizu.flowsys.web.agency.pojo.TransferRecordPo;
 import com.weizu.flowsys.web.agency.url.BankAccountURL;
+import com.weizu.web.foundation.DateUtil;
 
 @Controller
 @RequestMapping(value=BankAccountURL.MODEL_NAME)
@@ -30,6 +38,10 @@ public class BankAccountController {
 	private BankAccountAO bankAccountAO;
 	@Resource
 	private BankAccountDaoInterface bankAccountDao;
+	@Resource
+	private ITransferRecDao transferRecDao;
+	@Resource
+	private TransferRecAO transferRecAO;
 	
 	/**
 	 * @description: 绑定银行卡
@@ -119,15 +131,13 @@ public class BankAccountController {
 	@RequestMapping(value=BankAccountURL.PLUS_BANK_LIST)
 	public ModelAndView listPlusBankAccount(HttpServletRequest request, Long id, Integer accountId){
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		
-		
-		
 		Map<String,Object> resultMap = new HashMap<String,Object>();
-		BankAccountPo myBank = bankAccountAO.getBankPoById(id);
+		if(agencyVo != null){
+			bankAccountAO.getPlusBankList(agencyVo.getRootAgencyId(),accountId, resultMap);
+		}
+			
+		BankAccountPo myBank = bankAccountAO.getBankPoById(id);//子代理商的银行卡id
 		if(myBank != null){
-			if(agencyVo != null){
-				bankAccountAO.getPlusBankList(agencyVo.getId(),myBank.getBillType(), resultMap);
-			}
 			resultMap.put("myBank", myBank);
 		}
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
@@ -229,6 +239,80 @@ public class BankAccountController {
 			return "error";
 		}
 	}
+	/**
+	 * @description: 银行卡转账
+	 * @param request
+	 * @param id
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月12日 上午10:00:05
+	 */
+	@RequestMapping(value=BankAccountURL.TRANSFER_BANK)
+	@ResponseBody
+	public String transferBank(HttpServletRequest request,TransferRecordPo transferPo){
+		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		transferPo.setFromAgencyId(agencyVo.getId());			
+		
+		String res = transferRecAO.transferBank(transferPo);
+		return res;
+	}
+	
+	/**
+	 * @description: 获得银行卡转账记录列表
+	 * @param bankId
+	 * @param direction
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月12日 下午12:56:00
+	 */
+	@RequestMapping(value=BankAccountURL.TRANSFER_RECORD)
+	public ModelAndView getTransferRecord(Long bankId,@RequestParam(value="direction",required=false)Integer direction,
+			@RequestParam(value="pageNo",required=false)Long pageNoLong){
+		Map<String,Object> resultMap = new HashMap<String,Object>();
+		PageParam pageParam = null;
+		if(pageNoLong == null){
+			pageParam = new PageParam(1l, 10);
+		}else{
+			pageParam = new PageParam(pageNoLong, 10);
+		}
+		
+		transferRecAO.getTransferRec(bankId, direction,pageParam, resultMap);
+		
+		BankAccountPo bankPo = bankAccountDao.get(bankId);
+		resultMap.put("bankPo", bankPo);
+		
+		resultMap.put("inOrOutEnums", InOrOutEnum.toList());
+		resultMap.put("confirmStateTransferEnums", ConfirmStateTransferEnum.toList());
+		return new ModelAndView("/bank/transfer_record","resultMap",resultMap);
+	}
+	/**
+	 * @description: 转账审核页面
+	 * @param id
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月12日 下午5:37:44
+	 */
+	@RequestMapping(value=BankAccountURL.TRANSFER_CONFIRM_PAGE)
+	public ModelAndView transferConfirmPage(Long id){
+		Map<String,Object> resultMap = new HashMap<String,Object>();
+		TransferRecordPo transferPo = transferRecDao.get(id);
+		resultMap.put("transferPo", transferPo);
+		resultMap.put("confirmStateTransferEnums", ConfirmStateTransferEnum.toList());
+		return new ModelAndView("/bank/transfer_confirm_page","resultMap",resultMap);
+	}
+	
+	@RequestMapping(value=BankAccountURL.TRANSFER_CONFIRM)
+	public ModelAndView transferConfirm(Long id, Integer confirmState){
+		Map<String,Object> resultMap = new HashMap<String,Object>();
+		
+		TransferRecordPo transferPo = transferRecDao.get(id);
+		resultMap.put("transferPo", transferPo);
+		resultMap.put("confirmStateTransferEnums", ConfirmStateTransferEnum.toList());
+		return new ModelAndView("/bank/transfer_confirm_page","resultMap",resultMap);
+	}
+	
+	
+	
 	
 	
 	

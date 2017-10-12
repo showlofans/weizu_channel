@@ -44,5 +44,14 @@ public interface ChargeAccountDaoInterface extends Dao<ChargeAccountPo, Integer>
 	 */
 	int updateByAgencyId(ChargeAccountPo chargeAccountPo);
 	
+	/**
+	 * @description: 通过转账记录id找到关联的转账账户
+	 * @param transferId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月12日 下午5:58:10
+	 */
+	ChargeAccountPo getAccountByTransferId(Long transferId);
+	
 	
 }

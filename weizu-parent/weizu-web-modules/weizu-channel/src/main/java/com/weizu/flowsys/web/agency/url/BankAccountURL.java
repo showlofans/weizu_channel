@@ -58,6 +58,28 @@ public class BankAccountURL extends BaseURL {
 	 * <br> /flowsys/bankAccount/unattach_bank.do
 	 */
 	public static final String UNATTACH_BANK = "/unattach_bank" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 银行卡转账
+	 * <br> /flowsys/bankAccount/transfer_bank.do
+	 */
+	public static final String TRANSFER_BANK = "/transfer_bank" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 转账记录页面
+	 * <br> /flowsys/bankAccount/transfer_record.do
+	 */
+	public static final String TRANSFER_RECORD = "/transfer_record" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 转账审核页面
+	 * <br> /flowsys/bankAccount/transfer_confirm_page.do
+	 */
+	public static final String TRANSFER_CONFIRM_PAGE = "/transfer_confirm_page" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 审核转账记录
+	 * <br> /flowsys/bankAccount/transfer_confirm_page.do
+	 */
+	public static final String TRANSFER_CONFIRM = "/transfer_confirm" + DYNAMIC_WEB_SUFFIX;
+	
+	
 	
 	
 }

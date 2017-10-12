@@ -11,10 +11,15 @@
 //import org.springframework.test.context.ContextConfiguration;
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
+//import com.aiyi.base.pojo.PageParam;
 //import com.weizu.flowsys.core.beans.WherePrams;
+//import com.weizu.flowsys.operatorPg.enums.InOrOutEnum;
+//import com.weizu.flowsys.util.Pagination;
 //import com.weizu.flowsys.web.agency.ao.BankAccountAO;
+//import com.weizu.flowsys.web.agency.ao.TransferRecAO;
 //import com.weizu.flowsys.web.agency.dao.BankAccountDaoInterface;
 //import com.weizu.flowsys.web.agency.pojo.BankAccountPo;
+//import com.weizu.flowsys.web.agency.pojo.TransferRecordVO;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
 //
@@ -27,6 +32,9 @@
 //	@Resource
 //	private BankAccountDaoInterface bankAccountDao;
 //	
+//	@Resource
+//	private TransferRecAO transferRecAO;
+//	
 ////	@Test
 ////	public void getMyBankList(){
 ////		Map<String,Object> resultMap = new HashMap<String,Object>();
@@ -34,15 +42,40 @@
 ////		List<BankAccountPo> bankList = (List<BankAccountPo>) resultMap.get("bankList");
 ////		System.out.println(bankList.size());
 ////	}
+////	@Test
+////	public void getAttachBankList(){
+////		Map<String,Object> resultMap = new HashMap<String,Object>();
+////		bankAccountAO.getAttachBankList(61, 1, resultMap);
+////		List<BankAccountPo> unattachList = (List<BankAccountPo>) resultMap.get("unattachList");
+////		List<BankAccountPo> attachList = (List<BankAccountPo>) resultMap.get("attachList");
+////		System.out.println(unattachList.size());
+////		System.out.println(attachList.size());
+////	}
+////	@Test
+////	public void getPlusBankList(){
+////		Map<String,Object> resultMap = new HashMap<String,Object>();
+////		bankAccountAO.getPlusBankList(1, 54, resultMap);
+////		List<BankAccountPo> attachList = (List<BankAccountPo>) resultMap.get("plusBankList");
+////		System.out.println(attachList.size());
+////	}
+////	@Test
+////	public void getTransferRec(){
+////		Map<String,Object> resultMap = new HashMap<String,Object>();
+////		PageParam pageParam = new PageParam(1l, 10);
+////		transferRecAO.getTransferRec(16l, InOrOutEnum.IN.getValue(), pageParam, resultMap);
+////		Pagination<TransferRecordVO> pagination = (Pagination<TransferRecordVO>) resultMap.get("pagination");
+////		if(pagination != null){
+////			List<TransferRecordVO> list = pagination.getRecords();
+////			System.out.println(pagination.getTotalRecordLong());;
+////			System.out.println(list.size());
+////		}
+////	}
 //	@Test
-//	public void getAttachBankList(){
-//		Map<String,Object> resultMap = new HashMap<String,Object>();
-//		bankAccountAO.getAttachBankList(61, 1, resultMap);
-//		List<BankAccountPo> unattachList = (List<BankAccountPo>) resultMap.get("unattachList");
-//		List<BankAccountPo> attachList = (List<BankAccountPo>) resultMap.get("attachList");
-//		System.out.println(unattachList.size());
-//		System.out.println(attachList.size());
+//	public void getMyOneBankAccount(){
+//		BankAccountPo bankPo = bankAccountDao.getMyOneBankAccount(1, "1234154694754152", 1);
+//		System.out.println(bankPo.getAccountName());
 //	}
+//	
 ////	@Test
 ////	public void existBankPo(){
 ////		BankAccountPo bankPo = bankAccountDao.get(new WherePrams("agency_id", "=", 1).and("account_id", "=", 61).and("remittance_bank_account", "=", 123));

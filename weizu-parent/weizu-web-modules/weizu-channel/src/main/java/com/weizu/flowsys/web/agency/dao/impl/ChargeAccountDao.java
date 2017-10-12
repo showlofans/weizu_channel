@@ -70,6 +70,11 @@ public class ChargeAccountDao extends DaoImpl<ChargeAccountPo, Integer> implemen
 		return sqlSessionTemplate.update("updateByAgencyId", chargeAccountPo);
 	}
 
+	@Override
+	public ChargeAccountPo getAccountByTransferId(Long transferId) {
+		return sqlSessionTemplate.selectOne("getAccountByTransferId", transferId);
+	}
+
 	
 
 

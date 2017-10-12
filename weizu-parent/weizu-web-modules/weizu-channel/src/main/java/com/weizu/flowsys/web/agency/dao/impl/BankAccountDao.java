@@ -1,5 +1,6 @@
 package com.weizu.flowsys.web.agency.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,16 @@ public class BankAccountDao extends DaoImpl<BankAccountPo, Long> implements
 	@Override
 	public List<BankAccountPo> getAttachBankList(Map<String, Object> paramsMap) {
 		return sqlSessionTemplateASS.selectList("getAttachBankList", paramsMap);
+	}
+
+	@Override
+	public BankAccountPo getMyOneBankAccount(Integer toAgencyId,
+			String remmitanceBankAccount, Integer inUseState) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("agencyId", toAgencyId);
+		map.put("inUseState", inUseState);
+		map.put("remmitanceBankAccount", remmitanceBankAccount);
+		return sqlSessionTemplateASS.selectOne("getMyOneBankAccount", map);
 	}
 
 }

@@ -69,6 +69,11 @@ public class BankAccountAOImpl implements BankAccountAO {
 	@Override
 	public String addBank(BankAccountPo bankPo) {
 		bankPo.setPolarity(CallBackEnum.POSITIVE.getValue());//设为加款卡
+		//母卡是否存在
+		BankAccountPo rootBankPo = bankAccountDao.getMyOneBankAccount(bankPo.getAgencyId(), bankPo.getRemittanceBankAccount(), CallBackEnum.POSITIVE.getValue());
+		if(rootBankPo != null){
+			return "exist";
+		}
 		int res = bankAccountDao.add(bankPo);
 		if(res > 0){
 			return "success";
@@ -77,14 +82,18 @@ public class BankAccountAOImpl implements BankAccountAO {
 	}
 
 	@Override
-	public void getPlusBankList(Integer contextId, Integer accountId,
+	public void getPlusBankList(Integer rootAgencyId, Integer accountId,
 			Map<String, Object> resultMap) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("agencyId", contextId);
-		map.put("accountId", accountId);
-		map.put("polarity", CallBackEnum.POSITIVE.getValue());
-		List<BankAccountPo> dataList = bankAccountDao.getAttachBankList(map);
-		resultMap.put("plusBankList", dataList);
+		ChargeAccountPo accountPo = chargeAccountDao.get(accountId);
+		if(accountPo != null){
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("agencyId", rootAgencyId);
+			map.put("accountId", accountId);
+			map.put("polarity", CallBackEnum.POSITIVE.getValue());
+			map.put("useState", CallBackEnum.POSITIVE.getValue());
+			List<BankAccountPo> dataList = bankAccountDao.getAttachBankList(map);
+			resultMap.put("plusBankList", dataList);
+		}
 	}
 
 	@Override

@@ -31,4 +31,15 @@ public interface BankAccountDaoInterface extends Dao<BankAccountPo, Long> {
 	 */
 	List<BankAccountPo> getAttachBankList(Map<String, Object> paramsMap);
 	
+	/**
+	 * @description: 根据卡号获得我的那张母卡
+	 * @param toAgencyId
+	 * @param remmitanceBankAccount
+	 * @param inUseState
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月12日 下午4:33:43
+	 */
+	BankAccountPo getMyOneBankAccount(Integer toAgencyId,String remmitanceBankAccount, Integer inUseState);
+	
 }

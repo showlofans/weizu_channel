@@ -3,6 +3,7 @@ package com.weizu.flowsys.web.agency.pojo;
 import com.weizu.flowsys.core.annotation.po.TableName;
 import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
+import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 
 /**
@@ -67,7 +68,21 @@ public class BankAccountPo extends Po implements Cloneable{
 		return pvo;
 	}
 
-
+	
+	/**
+	 * @description: 修改引用账户余额
+	 * @param minusAmount
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月12日 上午11:22:34
+	 */
+	public void minusReferenceBalance(double minusAmount,int flag){
+		if(flag == -1){
+    		this.referenceBalance = NumberTool.sub(this.referenceBalance, minusAmount);
+    	}else{
+    		this.referenceBalance = NumberTool.add(this.referenceBalance, minusAmount);
+    	}
+//    	return this.referenceBalance;
+	}
 
 	public BankAccountPo() {
 		super();

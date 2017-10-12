@@ -60,10 +60,14 @@
 				<c:when test="${not empty resultMap.bankList}">
 					<c:forEach items="${resultMap.bankList }" var="bank" varStatus="vst">
 						<tr class="text-c">
-							<td>${bank.remittanceWay }</td>
+							<td>${bank.id }</td>
 							<td>${bank.remittanceBankAccount }</td>
 							<td>${bank.accountName }</td>
-							<td>${bank.referenceBalance }</td>
+							<td>
+								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/transfer_record.do?bankId=${bank.id }" data-title="转账记录" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
+									${bank.referenceBalance }
+								</a>
+							</td>
 							<!-- <td>已绑定</td> -->
 							<td class="td-manage">
 								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="bank_edit('编辑银行卡','/flowsys/bankAccount/edit_bank_page.do', ${bank.id })" href="javascript:;" title="编辑银行卡"><i class="Hui-iconfont">&#xe6df;</i></a>
@@ -129,12 +133,16 @@
 							<td>${bank.remittanceWay }</td>
 							<td>${bank.remittanceBankAccount }</td>
 							<td>${bank.accountName }</td>
-							<td>${bank.referenceBalance }</td>
+							<td>
+								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/transfer_record.do?bankId=${bank.id }" data-title="转账记录" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
+									${bank.referenceBalance }
+								</a>
+							</td>
 							<!-- <td>已绑定</td> -->
 							<td class="td-manage">
 								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="bank_edit('编辑银行卡','/flowsys/bankAccount/edit_bank_page.do', ${bank.id })" href="javascript:;" title="编辑银行卡"><i class="Hui-iconfont">&#xe6df;</i></a>
 								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="bank_del('/flowsys/bankAccount/del_bank.do',${bank.id }, '${bank.remittanceWay }')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>
-								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/plus_bank_list.do?id=${bank.id }&accountId=${chargeAccount1.id}" data-title="卡充值" href="javascript:void(0)" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe604;</i></a>
+								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/plus_bank_list.do?id=${bank.id }&accountId=${chargeAccount.id}" data-title="卡充值" href="javascript:void(0)" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe604;</i></a>
 								<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="transfer('${agency.id}')" href="javascript:;" title="卡充值"><i class="Hui-iconfont">&#xe604;</i></a> --%>
 								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="bindAgency('${agency.id}')" href="javascript:;" title="绑定代理商"><i class="Hui-iconfont">&#xe725;</i></a>
 								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" onClick="account_charge('账户充值',${agency.accountId })" href="javascript:;" title="设为默认"><i class="Hui-iconfont">&#xe60e;</i></a> 

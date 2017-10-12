@@ -9,6 +9,7 @@
 <link rel="stylesheet" type="text/css" href="/view/lib/Hui-iconfont/1.0.8/iconfont.css" />
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/skin/default/skin.css" id="skin" />
 <link rel="stylesheet" type="text/css" href="/view/iCheck/icheck.css" />
+<link rel="stylesheet" href="/view/mine/bootstrap-datetimepicker.css">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <title>加款申请页面页面</title>
@@ -18,9 +19,9 @@
 	<div class="pd-20">
 	<table class="table " style="float: left;margin-left: 100px;"><!-- table-border table-bordered table-bg -->
 		<thead >
-			<tr >
-				<th scope="col">
-					系统账户信息
+			<tr  >
+				<th class="text-r" scope="col" width="300px">
+					系统账户信息：
 				</th>
 				<td><c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
 						<c:if test="${billTypeEnum.value == resultMap.myBank.billType }">
@@ -35,7 +36,7 @@
 				<td>${resultMap.myBank.remittanceWay }</td>
 			</tr> --%>
 			<tr>
-				<th class="text-r" width="80">银行卡类型：</th>
+				<th class="text-r">银行卡类型：</th>
 				<td>${resultMap.myBank.remittanceWay }</td>
 			</tr>
 			<tr>
@@ -48,7 +49,11 @@
 			</tr>
 			<tr>
 				<th class="text-r">对账余额：</th>
-				<td>${resultMap.myBank.referenceBalance }</td>
+				<td>${resultMap.myBank.referenceBalance }
+					<input type="hidden" id="referenceBalance" value="${resultMap.myBank.referenceBalance }">
+					<input type="hidden" id="fromBankId" value="${resultMap.myBank.id }">
+				</td>
+				
 			</tr>
 		</tbody>
 	</table>
@@ -63,29 +68,41 @@
 				</th>
 			</tr>
 			<tr class="text-c">
-				<th></th>
 				<th>银行卡名称</th>
 				<th>银行卡账号</th>
 				<th>账户真实姓名</th>
-				<th>加款金额</th>
-				<th>加款时间</th>
+				<th>转账金额</th>
+				<th>真实转账时间</th>
+				<th>操作</th>
 			</tr>
 		</thead>
-		<tbody>
-			<c:forEach items="${resultMap.plusBankList }" var="bank" varStatus="vst">
-				<td>
-					<div class="radio-box skin-minimal">
-						<input class="radioItem" name="id"  <c:if test="${vs.index==0 }">checked</c:if> type="radio"  value="${bank.id }" ><!-- <c:if test="${vs.index==0 }">checked</c:if> -->
-					</div>
-				</td>
-				<td>${bank.remittanceWay }</td>
-				<td>${bank.remittanceBankAccount }</td>
-				<td>${bank.accountName }</td>
-				<td><input type="text" value="" class="input-text" name="activeDiscount" id="" value="${ratePo.childRatePo.activeDiscount }" placeholder=" 转账金额" style="width:80px"></td>
-				<td>
-					<input style="width:150px" type="text" class="input-text" id="realTime" name="realTime"   value="${resultMap.searchParams.arriveEndTimeStr }"  onfocus="WdatePicker({startDate:'%y-%M-%d 23:59:59',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'arriveStartTimeStr\')}',onpicked:function(){formSub();}})"/>
-				</td>
-			</c:forEach>
+		<tbody class="text-c">
+			<c:choose>
+				<c:when test="${not empty resultMap.plusBankList }">
+					<c:forEach items="${resultMap.plusBankList }" var="bank" varStatus="vst">
+						<td width="100">${bank.remittanceWay }</td>
+						<td width="400">${bank.remittanceBankAccount }</td>
+						<td width="100">${bank.accountName }</td>
+						<td width="150">
+							<%-- <input type="hidden" value="${bank.id }"><!--  id="toBankId" -->
+							<input type="hidden"  value="${bank.agencyId }"><!-- id="toAgencyId" --> --%>
+							<input type="text" value="" class="input-text commitAmount"  placeholder=" 转账金额" style="" width="120px"></td>
+						<td width="200">
+							<input style="width:180px" type="text" class="input-text Wdate realTime" value=""  onfocus="WdatePicker({isShowClear:false,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+						</td>
+						<td width="100">
+							<!-- <div class="radio-box skin-minimal"> -->
+								<%-- <input class="radioItem" name="id"  <c:if test="${vs.index==0 }">checked</c:if> type="radio"  value="${bank.id }" ><!-- <c:if test="${vs.index==0 }">checked</c:if> --> --%>
+							<!-- </div> -->
+								<a style="text-decoration:none" class="btn radio btn-primary" onClick="transferA('/flowsys/bankAccount/transfer_bank.do',${bank.id },${bank.agencyId },this)" href="javascript:;" title="提交转账">提交转账</a>
+						</td>
+					</c:forEach>
+				</c:when>
+				<c:otherwise>
+					<td colspan="6" class="text-c">未配置充值银行卡，请联系你的邀请注册方</td>
+				</c:otherwise>
+			</c:choose>
+			
 		</tbody>
 		</table>
 		
@@ -126,15 +143,62 @@
 </body>
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="/view/static/h-ui/js/H-ui.min.js"></script> 
-<script type="text/javascript" src="/view/iCheck/jquery.icheck.min.js"></script>
+<!-- <script type="text/javascript" src="/view/iCheck/jquery.icheck.min.js"></script> -->
 <script type="text/javascript" src="/view/static/h-ui.admin/js/H-ui.admin.js"></script>
 <script type="text/javascript" src="/view/lib/layer/2.4/layer.js"></script>  
+<script type="text/javascript" src="/view/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
 <script type="text/javascript">
+function transferA(url,toBankId,toAgencyId,vart){
+	var fromBankId = $('#fromBankId').val();
+	var realTimeObj = $(vart).parents('td').prev().children('.realTime');
+	var realTimeStr = $(realTimeObj).val();
+	var commitAmountObj = $(vart).parents('td').prev().prev().children('.commitAmount');
+	var commitAmount = $(commitAmountObj).val();
+	
+	var reg = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/;
+	var referenceBalance = $('#referenceBalance').val();
+	
+	//alert(realTimeStr+":"+commitAmount);
+	if(commitAmount == ''){
+		layer.msg('请输入转账金额！');
+		$(commitAmountObj).focus();
+	}else if(!reg.test(commitAmount)){
+		layer.msg('请输入正确的数字！');
+		$(commitAmountObj).val('');
+		$(commitAmountObj).focus();
+	}else if(commitAmount > referenceBalance){
+		layer.msg('转账金额不能大于对账金额！');
+		$(commitAmountObj).val('');
+		$(commitAmountObj).focus();
+	}
+	else if(realTimeStr == ''){
+		layer.msg('请选择真实转账时间！');
+		$(realTimeObj).focus();
+	}else{
+		$.ajax({
+	        type:"post",
+	        url:url,
+	        data: {fromBankId:fromBankId,toBankId:toBankId,toAgencyId:toAgencyId, realTimeStr:realTimeStr, commitAmount:commitAmount},//表单数据
+	        async : false,
+	        success:function(d){
+	            if(d=="success"){
+	            	layer.confirm("转账请求提交成功，待确认",function(index){
+	            		removeIframe();
+	            	});
+	            }
+	            if(d=="error"){
+	                layer.msg('转账异常!');
+	            }
+	        }
+	    });
+	}
+}
+
 $(document).ready(function() {
-	$('.skin-minimal input').iCheck({
+	/* $('.skin-minimal input').iCheck({
 		radioClass: 'iradio-blue',
 		increaseArea: '20%'
-	});
+	}); */
 	/* $(".isEmpty").each(function(){
 		var info = $(this).html();
 		//alert(info == '');

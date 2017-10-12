@@ -13,9 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
+import com.weizu.flowsys.web.agency.dao.ChargeAccountDaoInterface;
 import com.weizu.flowsys.web.agency.dao.CompanyCredentialsDao;
-import com.weizu.flowsys.web.agency.dao.impl.AgencyBackwardDao;
-import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.CompanyCredentialsPo;
 import com.weizu.web.foundation.DateUtil;
@@ -24,7 +23,7 @@ import com.weizu.web.foundation.DateUtil;
 public class ChargeAccountAoImpl implements ChargeAccountAo {
 
 	@Resource
-	private ChargeAccountDao chargeAccountDao;
+	private ChargeAccountDaoInterface chargeAccountDao;
 	
 	@Resource
 	private CompanyCredentialsDao companyCredentialsDao;

@@ -33,7 +33,7 @@ public interface BankAccountAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年10月10日 下午4:31:09
 	 */
-	void getPlusBankList(Integer contextId,Integer billType, Map<String,Object> resultMap);
+	void getPlusBankList(Integer contextId,Integer accountId, Map<String,Object> resultMap);
 	
 	/**
 	 * @description: 添加银行卡信息
