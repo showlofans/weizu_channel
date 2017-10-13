@@ -31,7 +31,7 @@ public interface TransferRecAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年10月12日 上午11:48:29
 	 */
-	void getTransferRec(Long bankId, Integer direction,PageParam pageParam, Map<String,Object> resultMap);
+	void getTransferRec(Long bankId, Integer direction,Integer confirmState,PageParam pageParam, Map<String,Object> resultMap);
 	
 	/**
 	 * @description: 转账审核
@@ -50,5 +50,5 @@ public interface TransferRecAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年10月12日 下午6:25:49
 	 */
-	List<Map<String,Object>> getMapList(Integer to_agency_id);
+//	List<Map<String,Object>> getMapList(Integer to_agency_id);
 }

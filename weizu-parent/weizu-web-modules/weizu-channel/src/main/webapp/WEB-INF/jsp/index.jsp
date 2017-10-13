@@ -62,16 +62,24 @@
 							<li><a href="javascript:;" onClick="myselfinfo()">个人信息</a>
 							</li>
 							<li><a href="/flowsys/agency/logout.do">切换账户</a></li>
-							 <li><a data-href="/flowsys/bankAccount/my_bank_list.do" data-title="银行卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">银行卡</a></li>
+							 <li><a data-href="/flowsys/bankAccount/my_bank_list.do" data-title="充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">充值卡</a></li>
 							<li><a href="javascript:;" onClick="resetPass()">修改密码</a></li>
 							<li><a href="/flowsys/agency/logout.do">退出</a></li>
 					</ul>
 				</li>
-					<li id="Hui-msg" class="dropDown right dropDown_hover"> <a href="#" class="dropDown_A" title="消息"><span class="badge badge-danger">${msgNum }</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> 
+					<li id="Hui-msg" class="dropDown right dropDown_hover"> <a href="#" class="dropDown_A" title="消息">
+						<c:if test="${msgNum != 0 }">
+							<span class="badge badge-danger">${msgNum }</span>
+						</c:if>
+						
+						<i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> 
 						<ul class="dropDown-menu menu radius box-shadow">
 							<c:if test="${unconfirm != null }">
 								<li><a data-href="/flowsys/account/confirm_company_account_page.do" data-title="认证审核" title="认证审核" onclick="Hui_admin_tab(this)">认证审核 &nbsp;&nbsp;&nbsp;&nbsp;  ${unconfirmSize }</a></li>
 							</c:if>
+							<c:forEach items="${transferMsgList }" var="transferMsg" varStatus="vst">
+								<li><a data-href="/flowsys/bankAccount/transfer_record.do?bankId=${transferMsg.id }&confirmState=2&direction=0" data-title="转账审核" title="转账审核" onclick="Hui_admin_tab(this)">${transferMsg.remmitanceBankAccount} &nbsp;&nbsp;&nbsp;&nbsp;  <span class="c-danger">${transferMsg.tfnum}</span></a></li>
+							</c:forEach>
 							<%-- <c:forEach items="${unconfirmList }" var="unconfirm" varStatus="vst" >
 								<li><a href="javascript:;" title="">${unconfirm.companyName }</a></li>
 							</c:forEach> --%>
@@ -146,6 +154,7 @@
 			<ul>
 				<li><a data-href="/flowsys/chargePg/pg_charge_page.do" title="/flowsys/chargePg/pg_charge_page.do" data-title="流量充值" href="javascript:;">流量充值</a></li>
 				<!-- <li><a data-href="/flowsys/chargePg/pg_batch_charge_page.do" title="批量充值" data-title="批量充值" href="javascript:;">批量充值</a></li> -->
+				
 			</ul>
 		</dd>
 	</dl>
@@ -173,6 +182,7 @@
 				<li><a data-href="/flowsys/account/consume_list.do" data-title="订单消费" href="javascript:void(0)">订单消费</a></li>
 				<li><a data-href="/flowsys/account/charge_list.do" data-title="充值明细" href="javascript:void(0)">充值明细</a></li>
 				<li><a data-href="/flowsys/account/account_info.do" data-title="账户信息" href="javascript:void(0)">账户信息</a></li>
+				<li><a data-href="/flowsys/bankAccount/my_bank_list.do" data-title="充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">充值卡</a></li>
 			</ul>
 		</dd>
 	</dl>

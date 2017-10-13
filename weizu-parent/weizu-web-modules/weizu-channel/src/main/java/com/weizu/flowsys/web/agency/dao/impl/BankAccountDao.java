@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.web.agency.dao.BankAccountDaoInterface;
 import com.weizu.flowsys.web.agency.pojo.BankAccountPo;
+import com.weizu.flowsys.web.agency.pojo.TransferMsgVo;
 
 @Repository(value="bankAccountDao")
 public class BankAccountDao extends DaoImpl<BankAccountPo, Long> implements
@@ -38,5 +39,19 @@ public class BankAccountDao extends DaoImpl<BankAccountPo, Long> implements
 		map.put("remmitanceBankAccount", remmitanceBankAccount);
 		return sqlSessionTemplateASS.selectOne("getMyOneBankAccount", map);
 	}
+
+	@Override
+	public List<TransferMsgVo> getTransferMsg(Integer toAgencyId,Integer confirmState) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("toAgencyId", toAgencyId);
+		params.put("confirmState", confirmState);
+		return sqlSessionTemplateASS.selectList("getTransferMsg", params);
+	}
+
+//	@Override
+//	public int delBank(String remmitanceBankAccount, Integer agencyId) {
+//		// TODO Auto-generated method stub
+//		return 0;
+//	}
 
 }

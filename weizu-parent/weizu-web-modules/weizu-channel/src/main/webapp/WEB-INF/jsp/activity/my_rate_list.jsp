@@ -34,8 +34,11 @@
 <div class="page-container">
 	<div class="text-c">
 	<form action="/flowsys/rate/my_rate_list.do" method="post" id="formD" name="dataListForm">
-		代理商名称： <input type="text" value="${childAgencyName}" name="agencyName" readonly="readonly" id="agencyName" placeholder=" " style="width:80px" class="input-text">
-		<input value="刷新" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
+		代理商名称： <input type="text" value="${childAccountPo.agencyName}" name="agencyName" readonly="readonly" id="agencyName" placeholder=" " style="width:80px" class="input-text">
+		账号类型：<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+					<c:if test="${childAccountPo.billType == billTypeEnum.value }"> ${billTypeEnum.desc }</c:if>
+				</c:forEach>
+		<!-- <a class="btn btn-success" onclick="javascript:location.reload();">刷新</a> --><!-- <i class="Hui-iconfont">&#xe665;</i> -->
 		<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 		</form>
 	</div>
@@ -51,7 +54,7 @@
 					<th>折扣</th>
 					<th>折扣类型</th>
 					<th>设置折扣</th>
-					<th>是否带</th>
+					<!-- <th>是否带</th> -->
 					<!-- <th>修改时间</th> -->
 					<!-- <th>通道规格</th> -->
 					
@@ -83,25 +86,29 @@
 								</c:if>
 							</c:forEach>
 						</td> 
-						<td class="c-blue myDiscount">${ratePo.activeDiscount }</td>
 						<td style="display:none;" class="channelDiscountId">${ratePo.channelDiscountId }</td><!-- 通道折扣id -->
-						<td style="display:none;" class="id">${ratePo.id }</td><!-- 通道折扣id -->
+						<td style="display:none;" class="activeId">${ratePo.id }</td><!-- 通道折扣id -->
+						<td style="display:none;" class="billType">${ratePo.billType }</td><!-- 通道折扣id -->
 						<td style="display:none;" class="accountId">${ratePo.accountId }</td><!-- 通道折扣id -->
+						<td class="c-blue myDiscount">${ratePo.activeDiscount }</td>
 						<td><c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
 								<c:if test="${ratePo.billType == billTypeEnum.value }">
 									<span>${billTypeEnum.desc }</span>
+									
 								</c:if>
 							</c:forEach>
 						</td> 
-								<td><input type="text" value="" class="activeDiscount input-text" name="activeDiscount" id="" value="${ratePo.childRatePo.activeDiscount }" placeholder=" 费率折扣" style="width:80px"></td>
-								<td>
+								<td><input type="text" class="activeDiscount input-text" name="activeDiscount" id="" value="${ratePo.childRatePo.activeDiscount }" placeholder=" 费率折扣" style="width:80px">
+									<input class="billType" type="hidden" value="${ratePo.childRatePo.activeDiscount }">
+									<input class="childRateId" type="hidden" value="${ratePo.childRatePo.id }">
+								</td>
+								<%-- <td>
 									<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
 										<c:if test="${ratePo.childRatePo.billType ==  billTypeEnum.value}">
 											${billTypeEnum.desc }
-											<input class="billType" type="hidden" value="${billTypeEnum.value }">
 										</c:if>
 									</c:forEach>
-								</td>
+								</td> --%>
 								<!-- 根据费率设置折扣 -->
 						<%-- <c:choose>
 							<c:when test="${empty ratePo.discountList }">
@@ -200,7 +207,7 @@
 //添加或者修改代理商的折扣
 function addUp(vart){//vart是提交按钮
 //	var optionIn = $(vart).parents('td').prev().children('.billType').find('option:selected').text().trim();
-	var optionIn = $(vart).parents('td').prev().children('.billType').val().trim();
+	var optionIn = $(vart).parents('td').prev().children('.billType').val().trim(); //判断值是否为空:子账户折扣
 	var billType = -1;
 	//var billType = arr[0];
 	//var billType =  $(vart).parents('td').prev().children('.billType').find('option:selected').val();
@@ -208,8 +215,8 @@ function addUp(vart){//vart是提交按钮
 	//alert(cDiscountId);
 	var childAccountId = $('#childAccountId').val();//代理商账户Id
 	//alert(agencyId);
-	var activeId = $(vart).parents('tr').children('.id').html().trim();//父级折扣Id
-	var $ad = $(vart).parents('td').prev().prev().children('.activeDiscount');
+	var activeId = $(vart).parents('tr').children('.activeId').html().trim();//父级折扣Id
+	var $ad = $(vart).parents('td').prev().children('.activeDiscount');
 	//var activeDiscount = $(vart).parents('td').prev().prev().children('.activeDiscount').val().trim();
 	var activeDiscount = $ad.val().trim();
 	var agencyName = $('#agencyName').val();
@@ -234,8 +241,9 @@ function addUp(vart){//vart是提交按钮
 				  }); */
 				});
 		}else{
-			if(optionIn.indexOf('-') == -1){//没有自己的折扣
-				billType = $(vart).parents('td').prev().children('.billType').val();
+//if(optionIn.indexOf('-') == -1){//没有自己的折扣
+			if(optionIn == ''){//没有自己的折扣
+				billType = $(vart).parents('tr').children('.billType').html();
 				layer.confirm('确认给'+agencyName+'增加费率吗？',function(index){
 					$.ajax({
 						type: 'POST',
@@ -257,10 +265,11 @@ function addUp(vart){//vart是提交按钮
 				//$(vart).removeAttr('disabled');
 				//$(vart).attr("disabled",'disabled');
 			}else{//有自己的折扣
-				var id = $(vart).parents('td').prev().children('.billType').find('option:selected').val();//自己折扣id
-				var arr = optionIn.split('-');
+				var id = $(vart).parents('td').prev().children('.childRateId').val().trim(); //判断值是否为空
+				var origninal = $(vart).parents('td').prev().children('.billType').val().trim(); //子代理商原来的折扣
+				
 				//var nowActiveDis = arr[2];
-				if(arr[1] != activeDiscount ){//发送ajax请求
+				if(parseFloat(origninal)!= parseFloat(activeDiscount) ){//发送ajax请求
 					layer.confirm('确认给'+agencyName+'修改费率吗？',function(index){
 						$.ajax({
 							type: 'POST',

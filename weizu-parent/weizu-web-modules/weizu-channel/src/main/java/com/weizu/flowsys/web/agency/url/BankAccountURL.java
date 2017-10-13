@@ -75,7 +75,7 @@ public class BankAccountURL extends BaseURL {
 	public static final String TRANSFER_CONFIRM_PAGE = "/transfer_confirm_page" + DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 审核转账记录
-	 * <br> /flowsys/bankAccount/transfer_confirm_page.do
+	 * <br> /flowsys/bankAccount/transfer_confirm.do
 	 */
 	public static final String TRANSFER_CONFIRM = "/transfer_confirm" + DYNAMIC_WEB_SUFFIX;
 	

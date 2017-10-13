@@ -10,6 +10,7 @@
     <result column="from_bank_id" property="fromBankId" jdbcType="BIGINT" />
     <result column="to_bank_id" property="toBankId" jdbcType="BIGINT" />
     <result column="commit_amount" property="commitAmount" jdbcType="DOUBLE" />
+    <result column="transfer_amount" property="transferAmount" jdbcType="DOUBLE" />
     <result column="commit_time" property="commitTime" jdbcType="BIGINT" />
     <result column="real_time" property="realTime" jdbcType="BIGINT" />
     <result column="confirm_time" property="confirmTime" jdbcType="BIGINT" />
@@ -19,13 +20,14 @@
     <result column="transfer_slip" property="transferSlip" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, from_bank_id, to_bank_id, commit_amount, commit_time,real_time,confirm_time,confirm_state,from_agency_id,to_agency_id,transfer_slip 
+    id, from_bank_id, to_bank_id, commit_amount, commit_time,real_time,confirm_time,confirm_state,from_agency_id,to_agency_id,transfer_slip,transfer_amount 
   </sql>
   <resultMap id="OtherResultMap" type="com.weizu.flowsys.web.agency.pojo.TransferRecordVO" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <!-- <result column="from_bank_id" property="fromBankId" jdbcType="BIGINT" />
     <result column="to_bank_id" property="toBankId" jdbcType="BIGINT" /> -->
     <result column="commit_amount" property="commitAmount" jdbcType="DOUBLE" />
+    <result column="transfer_amount" property="transferAmount" jdbcType="DOUBLE" />
     <result column="commit_time" property="commitTime" jdbcType="BIGINT" />
     <result column="real_time" property="realTime" jdbcType="BIGINT" />
     <result column="confirm_time" property="confirmTime" jdbcType="BIGINT" />
@@ -41,7 +43,7 @@
     <result column="transfer_slip" property="transferSlip" jdbcType="BIGINT" /> -->
   </resultMap>
   <sql id="Other_Column_List" >
-    tfrec.id,tfrec.commit_amount,tfrec.commit_time,tfrec.real_time,tfrec.confirm_time,tfrec.confirm_state,
+    tfrec.id,tfrec.commit_amount,tfrec.commit_time,tfrec.real_time,tfrec.confirm_time,tfrec.confirm_state,tfrec.transfer_amount,
 	bct1.remittance_way to_remittance_way,bct1.remittance_bank_account to_remittance_bank_account,
 	bct2.remittance_way from_remittance_way,bct2.remittance_bank_account from_remittance_bank_account,
 	agb.user_name from_agency_name
@@ -64,6 +66,9 @@
 		<if test="fromBankId != null">
 			AND tfrec.from_bank_id = #{fromBankId}
 		</if>
+		<if test="confirmState != null">
+			AND tfrec.confirm_state = #{confirmState}
+		</if>
 	</where>
 	order by tfrec.commit_time desc
 	<if test="start != null">
@@ -85,10 +90,13 @@
 	on agb.id=tfrec.from_agency_id
 	<where>
 		<if test="toBankId != null">
-			AND tfrec.to_bank_id = #{toBankId};
+			AND tfrec.to_bank_id = #{toBankId}
 		</if>
 		<if test="fromBankId != null">
-			AND tfrec.from_bank_id = #{fromBankId};
+			AND tfrec.from_bank_id = #{fromBankId}
+		</if>
+		<if test="confirmState != null">
+			AND tfrec.confirm_state = #{confirmState}
 		</if>
 	</where>
   </select>

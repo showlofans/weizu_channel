@@ -146,7 +146,29 @@
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/validate-methods.js"></script> 
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script> 
 <script type="text/javascript">
+/*转账-审核*/
+function article_shenhe(obj,id){
+	layer.confirm('审核转账？', {
+		btn: ['通过','不通过','取消'], 
+		shade: false,
+		closeBtn: 0
+	},
+	function(){
+		$(obj).parents("tr").find(".td-manage").prepend('<a class="c-primary" onClick="article_start(this,id)" href="javascript:;" title="申请上线">申请上线</a>');
+		$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">完成转账</span>');
+		$(obj).remove();
+		layer.msg('已发布', {icon:6,time:1000});
+	},
+	function(){
+		$(obj).parents("tr").find(".td-manage").prepend('<a class="c-primary" onClick="article_shenqing(this,id)" href="javascript:;" title="申请上线">申请上线</a>');
+		$(obj).parents("tr").find(".td-status").html('<span class="label label-danger radius">转账未通过</span>');
+		$(obj).remove();
+    	layer.msg('未通过', {icon:5,time:1000});
+	});	
+}
+
 $().ready(function() {
+	
 	$("#charge-form").validate({
 		submitHandler : function(form) {
 			var rechargeAmount = parseFloat($('#rechargeAmount').val());

@@ -58,23 +58,26 @@
 ////		List<BankAccountPo> attachList = (List<BankAccountPo>) resultMap.get("plusBankList");
 ////		System.out.println(attachList.size());
 ////	}
-////	@Test
-////	public void getTransferRec(){
-////		Map<String,Object> resultMap = new HashMap<String,Object>();
-////		PageParam pageParam = new PageParam(1l, 10);
-////		transferRecAO.getTransferRec(16l, InOrOutEnum.IN.getValue(), pageParam, resultMap);
-////		Pagination<TransferRecordVO> pagination = (Pagination<TransferRecordVO>) resultMap.get("pagination");
-////		if(pagination != null){
-////			List<TransferRecordVO> list = pagination.getRecords();
-////			System.out.println(pagination.getTotalRecordLong());;
-////			System.out.println(list.size());
-////		}
-////	}
 //	@Test
-//	public void getMyOneBankAccount(){
-//		BankAccountPo bankPo = bankAccountDao.getMyOneBankAccount(1, "1234154694754152", 1);
-//		System.out.println(bankPo.getAccountName());
+//	public void getTransferRec(){
+//		Map<String,Object> resultMap = new HashMap<String,Object>();
+//		PageParam pageParam = new PageParam(1l, 10);
+//		transferRecAO.getTransferRec(16l, InOrOutEnum.IN.getValue(), pageParam, resultMap);
+//		Pagination<TransferRecordVO> pagination = (Pagination<TransferRecordVO>) resultMap.get("pagination");
+//		if(pagination != null){
+//			List<TransferRecordVO> list = pagination.getRecords();
+//			System.out.println(pagination.getTotalRecordLong());;
+//			System.out.println(list.size());
+//			for (TransferRecordVO transferRecordVO : list) {
+//				System.out.println(transferRecordVO.getTransferAmount());
+//			}
+//		}
 //	}
+////	@Test
+////	public void getMyOneBankAccount(){
+////		BankAccountPo bankPo = bankAccountDao.getMyOneBankAccount(1, "1234154694754152", 1);
+////		System.out.println(bankPo.getAccountName());
+////	}
 //	
 ////	@Test
 ////	public void existBankPo(){

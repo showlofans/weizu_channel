@@ -66,12 +66,14 @@
 							<th width="80">转入银行卡</th>
 							<th width="80">转入账号</th>
 							<th width="60">转账金额</th>
+							<th width="60">入账金额</th>
 							<th width="80">操作</th>
 						</c:when>
 						<c:otherwise>
 							<th width="80">转出银行卡</th>
 							<th width="80">转出账号</th>
 							<th width="60">转账金额</th>
+							<th width="60">入账金额</th>
 						</c:otherwise>
 					</c:choose>
 					<th width="60">汇款确认状态</th>
@@ -89,28 +91,60 @@
 						<c:choose>
 						<c:when test="${resultMap.direction == 0 }"><!-- 转入显示转出银行卡信息 -->
 							<th width="80">${transfer.fromRemittanceWay }</th>
-							<th width="80">${transfer.fromRemittanceBankAccount }</th>
+							<th >${transfer.fromRemittanceBankAccount }</th>
 							<td>${transfer.commitAmount }</td>
-							<th width="80">
+							<td>${transfer.transferAmount }</td>
 								<c:choose>
 									<c:when test="${transfer.confirmState == 2 }">
-										<a style="text-decoration:none" class="btn radio btn-primary" onClick="transfer_confirm('审核','/flowsys/bankAccount/transfer_confirm_page.do',${transfer.id})" href="javascript:;" title="审核">审核</a>
+										<th width="80" class="td-manage">
+											<a style="text-decoration:none" class="c-primary " onClick="transfer_shenhe(this,${transfer.id},${transfer.confirmState })" href="javascript:;" title="审核">审核</a>
+										</th>
+									</c:when>
+									<c:when test="${transfer.confirmState == 1 }"><!-- 审核成功 -->
+										<th width="80" class="td-manage">
+											已审核
+											<%-- <a style="text-decoration:none" class="c-primary" onClick="transfer_shenhe(this,${transfer.id}, ${transfer.confirmState })" href="javascript:;" title="审核">重新审核</a> --%>
+										</th>
 									</c:when>
 									<c:otherwise>
-										空
+										<th width="80" class="td-manage">
+											已审核
+											<%-- <a style="text-decoration:none" class="c-primary" onClick="transfer_shenhe(this,${transfer.id}, ${transfer.confirmState })" href="javascript:;" title="审核">重新审核</a> --%>
+										</th>
 									</c:otherwise>
 								</c:choose>
-							</th>
 						</c:when>
 						<c:otherwise>
 							<th width="80">${transfer.toRemittanceWay }</th>
 							<th width="80">${transfer.toRemittanceBankAccount }</th>
 							<td>${transfer.commitAmount }</td>
+							<td>${transfer.transferAmount }</td>
 						</c:otherwise>
 					</c:choose>
-						<td class="td-status"><c:forEach items="${resultMap.confirmStateTransferEnums }" var="confirmStateEnum" varStatus="vs1">
-						<c:if test="${transfer.confirmState == confirmStateEnum.value }"> ${confirmStateEnum.desc }</c:if>
-						</c:forEach></td>
+					<td class="td-status">
+					<c:choose>
+						<c:when test="${transfer.confirmState == 2 }">
+							<c:forEach items="${resultMap.confirmStateTransferEnums }" var="confirmStateEnum" varStatus="vs1">
+								<c:if test="${transfer.confirmState == confirmStateEnum.value }"> <span class="label label-default radius">${confirmStateEnum.desc }</span></c:if>
+							</c:forEach>
+						</c:when>
+						<c:when test="${transfer.confirmState == 1 }"><!-- 审核成功 -->
+							<c:forEach items="${resultMap.confirmStateTransferEnums }" var="confirmStateEnum" varStatus="vs1">
+								<c:if test="${transfer.confirmState == confirmStateEnum.value }"> <span class="label label-success radius">${confirmStateEnum.desc }</span></c:if>
+							</c:forEach>
+						</c:when>
+						<c:otherwise>
+							<c:forEach items="${resultMap.confirmStateTransferEnums }" var="confirmStateEnum" varStatus="vs1">
+								<c:if test="${transfer.confirmState == confirmStateEnum.value }"> <span class="label label-danger radius">${confirmStateEnum.desc }</span></c:if>
+							</c:forEach>
+						</c:otherwise>
+					</c:choose>
+					</td>
+						<%-- <td class="td-status">
+							<c:forEach items="${resultMap.confirmStateTransferEnums }" var="confirmStateEnum" varStatus="vs1">
+							<c:if test="${transfer.confirmState == confirmStateEnum.value }"> <span class="label label-success radius">${confirmStateEnum.desc }</span></c:if>
+							</c:forEach>
+						</td> --%>
 						<td>${transfer.fromAgencyName }</td>
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
 						<td>${transfer.commitTimeStr }</td>
@@ -157,6 +191,96 @@
 <script src="/view/lib/bootstrap-datetimepicker.min.js"></script>
 <script src="/view/lib/bootstrap-datetimepicker.zh-CN.js"></script> -->
 <script type="text/javascript">
+/**修改状态*/
+/* function confirmState(id,confirmState,iconst){
+	$.ajax({
+		type: 'POST',
+		url: '/flowsys/bankAccount/transfer_confirm_page.do',
+		data: {id:id,confirmState:confirmState},
+		success: function(data){
+			if(data=="success")
+			{
+				if(iconst == 6){
+					layer.msg('审核通过成功', {icon:1,time:1000});
+				}else if(icons == 5){
+					layer.msg('审核未通过成功', {icon:6,time:1000});
+				}
+				//layer.msg('删除成功!',{icon:1,time:1000});
+				location.reload();
+			}else{
+				if(iconst == 6){
+					layer.msg('审核通过失败', {icon:2,time:1000});
+				}else if(icons == 5){
+					layer.msg('审核未通过失败', {icon:5,time:1000});
+				}
+				//layer.msg('删除失败!',{icon:2,time:1000});
+			}
+		},
+		error:function(data) {
+			console.log(data.msg);
+		}
+	});	
+} */
+/*转账-审核*/
+function transfer_shenhe(obj,id,confirmState){
+	layer.confirm('审核转账？', {
+		btn: ['通过','不通过','取消'], 
+		shade: false,
+		closeBtn: 0
+	},
+	function(){
+		if(confirmState != 1){//和原来的状态不一样
+			$.ajax({
+				type: 'POST',
+				url: '/flowsys/bankAccount/transfer_confirm.do',
+				data: {id:id,confirmState:1},
+				success: function(data){
+					if(data=="success")
+					{
+						layer.msg('审核通过成功', {icon:6,time:1000});
+						location.reload();
+					}else{
+						layer.msg('审核通过失败', {icon:5,time:1000});
+					}
+				},
+				error:function(data) {
+					console.log(data.msg);
+				}
+			});	
+			//confirmState(id,1,6);
+			/* $(obj).parents("tr").find(".td-manage").prepend('<a class="c-primary" onClick="transfer_shenhe(this,id,1)" href="javascript:;" title="重新审核">重新审核</a>');
+			$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">完成转账</span>');
+			$(obj).remove(); */
+		}
+		
+	},
+	function(){
+		if(confirmState != 0){//和原来的状态不一样
+		/* $(obj).parents("tr").find(".td-manage").prepend('<a class="c-primary" onClick="transfer_shenhe(this,id,0)" href="javascript:;" title="重新审核">重新审核</a>');
+			$(obj).parents("tr").find(".td-status").html('<span class="label label-danger radius">转账未通过</span>');
+			$(obj).remove(); */
+			//confirmState(id,0,5);
+			$.ajax({
+				type: 'POST',
+				url: '/flowsys/bankAccount/transfer_confirm.do',
+				data: {id:id,confirmState:0},
+				success: function(data){
+					if(data=="success")
+					{
+						layer.msg('审核未通过成功', {icon:6,time:1000});
+						location.reload();
+					}else{
+						layer.msg('审核未通过失败', {icon:5,time:1000});
+					}
+				},
+				error:function(data) {
+					console.log(data.msg);
+				}
+			});	
+    	}
+	});	
+}
+
 /*onchange通道状态*/
 function formSub(){
 	//alert($(vart).val());

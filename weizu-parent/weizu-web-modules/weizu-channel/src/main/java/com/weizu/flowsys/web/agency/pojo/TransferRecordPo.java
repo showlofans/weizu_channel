@@ -38,6 +38,16 @@ public class TransferRecordPo extends Po {
 	private Integer toAgencyId;		//收款方代理商id
 	
 	private Long transferSlip;		//转账凭条（在确认之后）
+	
+	private Double transferAmount;				//入账金额
+	
+	public Double getTransferAmount() {
+		return transferAmount;
+	}
+
+	public void setTransferAmount(Double transferAmount) {
+		this.transferAmount = transferAmount;
+	}
 
 	public String getRealTimeStr() {
 		return realTimeStr;

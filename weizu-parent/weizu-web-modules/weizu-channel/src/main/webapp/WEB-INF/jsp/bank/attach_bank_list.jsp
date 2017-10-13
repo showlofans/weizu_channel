@@ -45,7 +45,7 @@
 	 <table class="table table-border table-bordered table-bg">
 		<thead>
 			<tr >
-				<th colspan="5" scope="col">已绑定银行卡列表
+				<th colspan="5" scope="col"><span class="label label-primary radius">已绑定银行卡列表</span>
 				</th>
 			</tr>
 			<tr class="text-c">
@@ -75,7 +75,7 @@
 	 <table class="table table-border table-bordered table-bg">
 		<thead>
 			<tr>
-				<th colspan="7" scope="col">可绑定银行卡列表
+				<th colspan="7" scope="col"><span class="label label-warning radius">可绑定银行卡列表</span>
 				</th>
 			</tr>
 			<tr class="text-c">

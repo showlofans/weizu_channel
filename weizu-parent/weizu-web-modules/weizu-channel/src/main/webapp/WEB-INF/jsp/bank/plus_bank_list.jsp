@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -23,7 +24,7 @@
 				<th class="text-r" scope="col" width="300px">
 					系统账户信息：
 				</th>
-				<td><c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+				<td class="c-danger"><c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
 						<c:if test="${billTypeEnum.value == resultMap.myBank.billType }">
 							${billTypeEnum.desc } : ${resultMap.myBank.accountBalance }
 						</c:if>
@@ -99,7 +100,27 @@
 					</c:forEach>
 				</c:when>
 				<c:otherwise>
-					<td colspan="6" class="text-c">未配置充值银行卡，请联系你的邀请注册方</td>
+					<td colspan="6" class="text-c">未配置充值银行卡，请联系你的邀请注册方<br>
+						<c:choose>
+							<c:when test="${loginContext.rootAgencyId == 0 }">
+							</c:when>
+							<c:when test="${ secondAgency && fn:indexOf(qq, '&') > 0 }"><!-- 二级代理商可以用分割的方式获得上级root用户的所有联系方式 -->
+								<%-- <c:set var="qqIndex">${fn:indexOf(qq, '&') }</c:set> --%>
+								<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=${fn:substringBefore(qq, '&') }&site=qq&menu=yes"><img border="0" src="/view/button_111.gif" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
+								<!-- 企业官方需要用链接（无法用qq号进行链接） -->
+								<a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=91db89981f7ede321d77ecf9c0b02fe61afeed063fec740bb3b5023dc34f0300"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="南昌微族科技有限公司" title="南昌微族科技有限公司"></a>
+								<%-- <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=${fn:substringBefore(qq, '&') }&site=qq&menu=yes"><img border="0" src="/view/button_111.gif" alt="点击这里给我发消息" title="点击这里给我发消息"/></a> --%>
+								<%-- <a target="_blank" href="${fn:substringAfter(qq, '&') }"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="南昌微族科技有限公司" title="南昌微族科技有限公司"/></a> --%>
+								<%-- <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=${fn:substringAfter(qq, '&') }&site=qq&menu=yes"><img border="0" src="/view/button_111.gif" alt="点击这里给我发消息" title="点击这里给我发消息"/></a> --%>
+								<%-- <c:forEach items="${fn:split(qq,'&')}" var="oct" begin="0" 
+								  end="${fn:length(fn:split(arr,'&'))}" varStatus="stat">
+								</c:forEach> --%>
+							</c:when>
+							<c:otherwise>
+								<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=${qq }&site=qq&menu=yes"><img border="0" src="/view/button_111.gif" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
+							</c:otherwise>
+						</c:choose>
+					</td>
 				</c:otherwise>
 			</c:choose>
 			
@@ -157,6 +178,7 @@ function transferA(url,toBankId,toAgencyId,vart){
 	
 	var reg = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/;
 	var referenceBalance = $('#referenceBalance').val();
+	//alert(referenceBalance + ":" + commitAmount);
 	
 	//alert(realTimeStr+":"+commitAmount);
 	if(commitAmount == ''){
@@ -166,7 +188,7 @@ function transferA(url,toBankId,toAgencyId,vart){
 		layer.msg('请输入正确的数字！');
 		$(commitAmountObj).val('');
 		$(commitAmountObj).focus();
-	}else if(commitAmount > referenceBalance){
+	}else if(parseFloat(commitAmount) > parseFloat(referenceBalance)){
 		layer.msg('转账金额不能大于对账金额！');
 		$(commitAmountObj).val('');
 		$(commitAmountObj).focus();
@@ -182,7 +204,7 @@ function transferA(url,toBankId,toAgencyId,vart){
 	        async : false,
 	        success:function(d){
 	            if(d=="success"){
-	            	layer.confirm("转账请求提交成功，待确认",function(index){
+	            	layer.confirm("转账请求提交成功，待审核",function(index){
 	            		removeIframe();
 	            	});
 	            }

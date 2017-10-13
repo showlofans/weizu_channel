@@ -1,6 +1,5 @@
 package com.weizu.flowsys.web.agency.ao;
 
-import java.awt.BufferCapabilities.FlipContents;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -14,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.core.util.NumberTool;
+import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.ConfirmStateTransferEnum;
 import com.weizu.flowsys.operatorPg.enums.InOrOutEnum;
@@ -21,9 +22,11 @@ import com.weizu.flowsys.util.GetSlip;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.dao.BankAccountDaoInterface;
 import com.weizu.flowsys.web.agency.dao.ChargeAccountDaoInterface;
+import com.weizu.flowsys.web.agency.dao.ChargeRecordDaoInterface;
 import com.weizu.flowsys.web.agency.dao.ITransferRecDao;
 import com.weizu.flowsys.web.agency.pojo.BankAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
+import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.TransferRecordPo;
 import com.weizu.flowsys.web.agency.pojo.TransferRecordVO;
 import com.weizu.web.foundation.DateUtil;
@@ -39,6 +42,10 @@ public class TransferRecAOImpl implements TransferRecAO {
 	private BankAccountAO bankAccountAO;
 	@Resource
 	private ChargeAccountDaoInterface chargeAccountDao;
+//	@Resource
+//	private ChargeRecordDaoInterface chargeRecordDao;
+	@Resource
+	private ChargeRecordAO chargeRecordAO;
 	
 	
 	@Transactional
@@ -71,6 +78,7 @@ public class TransferRecAOImpl implements TransferRecAO {
 			return "error";
 		}
 		transferPo.setToBankId(bankPo.getId());
+		transferPo.setTransferAmount(0.00d);
 		//添加记录
 		int addRes = transferRecDao.add(transferPo);
 		
@@ -82,9 +90,11 @@ public class TransferRecAOImpl implements TransferRecAO {
 
 
 	@Override
-	public void getTransferRec(Long bankId, Integer direction,PageParam pageParam, Map<String,Object> resultMap) {
+	public void getTransferRec(Long bankId, Integer direction, Integer confirmState,PageParam pageParam, Map<String,Object> resultMap) {
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("fromBankId", bankId);//默认查询转出记录
+		map.put("confirmState", confirmState);//默认查询转出记录
+		
 		if(direction != null && InOrOutEnum.IN.getValue().equals(direction)){//查询转入记录
 			map.put("fromBankId", null);
 			map.put("toBankId", bankId);
@@ -122,21 +132,46 @@ public class TransferRecAOImpl implements TransferRecAO {
 		TransferRecordPo transferPo = transferRecDao.get(id);
 		int up1 = 0 ;
 		if(ConfirmStateTransferEnum.CONFIRM_PASS.getValue().equals(confirmState)){
+			Double transferAmount = transferPo.getCommitAmount();	//入账金额
 			//增加自己的银行卡款，同时增加代理商系统账户的余额
 			 BankAccountPo bankPo = bankAccountDao.get(transferPo.getToBankId());
-			 bankPo.minusReferenceBalance(transferPo.getCommitAmount(), 1);
-			 up1 = bankAccountDao.update(bankPo);
+			 Double referAccountBanlance = bankPo.minusReferenceBalance(transferAmount, 1);
+			 bankPo.setReferenceBalance(referAccountBanlance);
+			 up1 = bankAccountDao.updateLocal(bankPo,new WherePrams("id", "=", bankPo.getId()));
 			 
 			 ChargeAccountPo accountPo = chargeAccountDao.getAccountByTransferId(id);
-			 accountPo.addBalance(transferPo.getCommitAmount(), 1);
-			 int up2 = chargeAccountDao.updateLocal(accountPo, new WherePrams("id", "=", accountPo.getId()));
+			 
+			 ChargeRecordPo paramsPo = new ChargeRecordPo(transferAmount, accountPo.getBillType(), AccountTypeEnum.INCREASE.getValue(), accountPo.getId());
+			 Integer loginContextId = bankPo.getAgencyId();
+			 int upAccount = chargeRecordAO.updateAccount(paramsPo, loginContextId);
+			 up1 += upAccount -1 ;
+			 
+			 //将转账金额设置为0
+			 transferPo.setTransferAmount(transferAmount);
+			 
+//			 Double beforeBalance = accountPo.getAccountBalance();
+//			 //更新系统账户余额
+//			 Double accountBalance = accountPo.addBalance(transferAmount, 1);
+//			 
+//			 int up2 = chargeAccountDao.updateLocal(accountPo, new WherePrams("id", "=", accountPo.getId()));
+//			 int resultMsg = chargeRecordDao.add(new ChargeRecordPo(System
+//						.currentTimeMillis(), transferAmount,
+//						beforeBalance, accountPo.getAccountBalance(), 
+//						AccountTypeEnum.INCREASE.getValue(), accountPo.getId(),1,null));
+			 
+			 
 //			 int up2 = chargeAccountDao.update(accountPo);
-			 up1 += up2 -1;
+//			 up1 += up2 -1;
+//			 up1 += resultMsg -1;
+			 
 		}else if(ConfirmStateTransferEnum.FAIL_CONFIRM.getValue().equals(confirmState)){
 			//增加子代理商银行卡款
 			BankAccountPo fromBankPo = bankAccountDao.get(transferPo.getFromBankId());
-			fromBankPo.minusReferenceBalance(transferPo.getCommitAmount(), 1);
+			Double referAccountBanlance = fromBankPo.minusReferenceBalance(transferPo.getCommitAmount(), 1);
+			fromBankPo.setReferenceBalance(referAccountBanlance);
 			up1 = bankAccountDao.updateLocal(fromBankPo, new WherePrams("id", "=", fromBankPo.getId()));
+			//将转账金额设置为0
+			transferPo.setTransferAmount(0.00d);
 //			up1 = bankAccountDao.update(fromBankPo);
 		}
 		//账户更新完成后更新转账记录
@@ -154,34 +189,33 @@ public class TransferRecAOImpl implements TransferRecAO {
 	}
 
 
-	@Override
-	public List<Map<String, Object>> getMapList(Integer to_agency_id) {
-		List<Map<String, Object>> mapList = new LinkedList<Map<String,Object>>();  
-		//先找到所有的银行卡列表
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("agencyId", to_agency_id);
-		map.put("polarity", CallBackEnum.POSITIVE.getValue());
-		List<BankAccountPo> myBankList = bankAccountDao.getMyBankList(map);//无带票区分列表
-		
-//		bankAccountAO.getMyBankList(contextId, resultMap);
-		
-		//找到所有未审核的银行卡消息
-		Map<String, Object> paramsTransfer = new HashMap<String, Object>();
-		map.put("confirmState", ConfirmStateTransferEnum.ON_CONFIRM.getValue());
-		map.put("toAgencyId", CallBackEnum.POSITIVE.getValue());
-		List<TransferRecordVO> transferList = transferRecDao.getInOutRecord(paramsTransfer);
-//				.list(new WherePrams("to_agency_id", "=", to_agency_id).and("confirm_state", "=", ConfirmStateTransferEnum.ON_CONFIRM.getValue()));
-		for (BankAccountPo bankAccountPo : myBankList) {
-			Map<String, Object> paramsMap = new HashMap<String, Object>();
-			int countNum = 0;	//未审核转账记录数
-			for (TransferRecordVO transferRecordVo : transferList) {
-//				bankAccountDao.getMyOneBankAccount(transferRecordVo.getToAgencyId(), transferRecordPo.getToBankId(), CallBackEnum.POSITIVE.getValue());
-				
-//				if(transferRecordPo.getToBankId().equals(bankAccountPo.))
-			}
-			paramsMap.put("bankRtAccount", bankAccountPo.getRemittanceBankAccount());
-		}
-		return mapList;
-	}
+//	@Override
+//	public List<Map<String, Object>> getMapList(Integer to_agency_id) {
+//		List<Map<String, Object>> mapList = new LinkedList<Map<String,Object>>();  
+//		//先找到所有的银行卡列表
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		map.put("agencyId", to_agency_id);
+//		map.put("polarity", CallBackEnum.POSITIVE.getValue());
+//		List<BankAccountPo> myBankList = bankAccountDao.getMyBankList(map);//无带票区分列表
+//		
+////		bankAccountAO.getMyBankList(contextId, resultMap);
+//		
+//		//找到所有未审核的银行卡消息
+//		Map<String, Object> paramsTransfer = new HashMap<String, Object>();
+//		paramsTransfer.put("confirmState", ConfirmStateTransferEnum.ON_CONFIRM.getValue());
+//		paramsTransfer.put("toAgencyId", to_agency_id);
+//		List<TransferRecordVO> transferList = transferRecDao.getInOutRecord(paramsTransfer);
+////				.list(new WherePrams("to_agency_id", "=", to_agency_id).and("confirm_state", "=", ConfirmStateTransferEnum.ON_CONFIRM.getValue()));
+//		for (BankAccountPo bankAccountPo : myBankList) {
+//			Map<String, Object> paramsMap = new HashMap<String, Object>();
+//			int countNum = 0;	//未审核转账记录数
+//			for (TransferRecordVO transferRecordVo : transferList) {
+//				
+////				if(transferRecordPo.getToBankId().equals(bankAccountPo.))
+//			}
+//			paramsMap.put("bankRtAccount", bankAccountPo.getRemittanceBankAccount());
+//		}
+//		return mapList;
+//	}
 
 }

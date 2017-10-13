@@ -46,16 +46,28 @@ public class TransferRecordVO extends Po {
 	
 	private String fromAgencyName;				//输出来源代理商名称
 	
+	private Double transferAmount;				//入账金额
+	
 //	private Integer fromAgencyId;	//打款方代理商id
 	
 //	private Integer toAgencyId;		//收款方代理商id
 	
 //	private Long transferSlip;		//转账凭条（在确认之后）
 
+
+	public Double getTransferAmount() {
+		return transferAmount;
+	}
+
+	public void setTransferAmount(Double transferAmount) {
+		this.transferAmount = transferAmount;
+	}
+	
 	public String getFromAgencyName() {
 		return fromAgencyName;
 	}
 	
+
 	public void setFromAgencyName(String fromAgencyName) {
 		this.fromAgencyName = fromAgencyName;
 	}

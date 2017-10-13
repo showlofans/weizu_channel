@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.agency.pojo.BankAccountPo;
+import com.weizu.flowsys.web.agency.pojo.TransferMsgVo;
 
 /**
  * @description: 引用账户信息Dao层接口
@@ -41,5 +42,24 @@ public interface BankAccountDaoInterface extends Dao<BankAccountPo, Long> {
 	 * @createTime:2017年10月12日 下午4:33:43
 	 */
 	BankAccountPo getMyOneBankAccount(Integer toAgencyId,String remmitanceBankAccount, Integer inUseState);
+	
+	/**
+	 * @description: 获得转账消息展示列表
+	 * @param params
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月13日 下午1:09:52
+	 */
+	List<TransferMsgVo> getTransferMsg(Integer toAgencyId,Integer confirmState);
+	
+	/**
+	 * @description: 通过卡号和代理商id删除子母银行卡
+	 * @param remmitanceBankAccount
+	 * @param agencyId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月13日 上午11:04:35
+	 */
+//	int delBank(String remmitanceBankAccount, Integer agencyId);
 	
 }

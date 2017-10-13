@@ -75,13 +75,13 @@ public class BankAccountPo extends Po implements Cloneable{
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年10月12日 上午11:22:34
 	 */
-	public void minusReferenceBalance(double minusAmount,int flag){
+	public Double minusReferenceBalance(double minusAmount,int flag){
 		if(flag == -1){
     		this.referenceBalance = NumberTool.sub(this.referenceBalance, minusAmount);
     	}else{
     		this.referenceBalance = NumberTool.add(this.referenceBalance, minusAmount);
     	}
-//    	return this.referenceBalance;
+    	return this.referenceBalance;
 	}
 
 	public BankAccountPo() {

@@ -415,8 +415,9 @@ public class RateController {
 				request.getSession().setAttribute("isOpen", 1);
 			}
 		}
-		request.getSession().setAttribute("childAccountId", activePo.getAccountId());
-		request.getSession().setAttribute("childAgencyName", activePo.getAgencyName());
+		request.getSession().setAttribute("childAccountPo", chargeAccountDao.get(activePo.getAccountId()));
+//		request.getSession().setAttribute("childAccountId", activePo.getAccountId());
+//		request.getSession().setAttribute("childAgencyName", activePo.getAgencyName());
 		return new ModelAndView("/activity/bind_channel_list","resultMap",resultMap);
 	}
 	
@@ -467,7 +468,9 @@ public class RateController {
 //		}
 		if(ratePo != null){
 			childAccountId = ratePo.getAccountId();
-			request.getSession().setAttribute("childAccountId", childAccountId);
+//			request.getSession().setAttribute("childAccountId", childAccountId);
+//			request.getSession().setAttribute("childAgencyName", agencyName);
+			request.getSession().setAttribute("childAccountPo", chargeAccountDao.get(childAccountId));
 		}else{
 			return new ModelAndView("error", "errorMsg", "参数不对！！");
 		}
@@ -490,7 +493,6 @@ public class RateController {
 		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 		resultMap.put("pagination", pagination);
 		resultMap.put("searchParam", ratePo);
-		request.getSession().setAttribute("childAgencyName", agencyName);
 		
 		return new ModelAndView("/activity/my_rate_list","resultMap",resultMap);
 	}

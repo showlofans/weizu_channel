@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -231,8 +232,11 @@ public class BankAccountController {
 	 */
 	@RequestMapping(value=BankAccountURL.DEL_BANK)
 	@ResponseBody
+	@Transactional
 	public String delBankAccount(HttpServletRequest request,Long id){
-		int res = bankAccountDao.del(id);
+		BankAccountPo bankPo = bankAccountDao.get(id);
+		//删除子母银行卡
+		int res = bankAccountDao.del(new WherePrams("agency_id", "=", bankPo.getAgencyId()).and("remittance_bank_account", "=", bankPo.getRemittanceBankAccount()));
 		if(res > 0){
 			return "success";
 		}else{
@@ -267,7 +271,14 @@ public class BankAccountController {
 	 */
 	@RequestMapping(value=BankAccountURL.TRANSFER_RECORD)
 	public ModelAndView getTransferRecord(Long bankId,@RequestParam(value="direction",required=false)Integer direction,
-			@RequestParam(value="pageNo",required=false)Long pageNoLong){
+			@RequestParam(value="pageNo",required=false)Long pageNoLong,
+			@RequestParam(value="confirmState",required=false)Integer confirmState,
+			HttpServletRequest request){
+		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		if(agencyVo.getRootAgencyId() == 0 && direction == null){//超管默认转入
+			direction = InOrOutEnum.IN.getValue();
+		}
+		
 		Map<String,Object> resultMap = new HashMap<String,Object>();
 		PageParam pageParam = null;
 		if(pageNoLong == null){
@@ -276,7 +287,7 @@ public class BankAccountController {
 			pageParam = new PageParam(pageNoLong, 10);
 		}
 		
-		transferRecAO.getTransferRec(bankId, direction,pageParam, resultMap);
+		transferRecAO.getTransferRec(bankId, direction,confirmState,pageParam, resultMap);
 		
 		BankAccountPo bankPo = bankAccountDao.get(bankId);
 		resultMap.put("bankPo", bankPo);
@@ -302,13 +313,13 @@ public class BankAccountController {
 	}
 	
 	@RequestMapping(value=BankAccountURL.TRANSFER_CONFIRM)
-	public ModelAndView transferConfirm(Long id, Integer confirmState){
-		Map<String,Object> resultMap = new HashMap<String,Object>();
-		
-		TransferRecordPo transferPo = transferRecDao.get(id);
-		resultMap.put("transferPo", transferPo);
-		resultMap.put("confirmStateTransferEnums", ConfirmStateTransferEnum.toList());
-		return new ModelAndView("/bank/transfer_confirm_page","resultMap",resultMap);
+	@ResponseBody
+	public String transferConfirm(Long id, Integer confirmState){
+		String msg = transferRecAO.confirmTransfer(id, confirmState);
+//		if("success".equals(msg)){
+//			//设置消息session中msgNum
+//		}
+		return msg;
 	}
 	
 	

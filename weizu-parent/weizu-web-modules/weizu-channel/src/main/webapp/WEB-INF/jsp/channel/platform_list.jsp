@@ -141,12 +141,12 @@ function platform_edit(title,url,id,w,h){
 		type: 2,
 		title: title,
 		content: url,
-		area: ['650px', '560px'],
+		//area: ['650px', '560px'],
 		end: function () {
             location.reload();
 		}
 	});
-	//layer.full(index);
+	layer.full(index);
 }
 /*平台-下架*/
 function platform_del(url,epId,epName){
