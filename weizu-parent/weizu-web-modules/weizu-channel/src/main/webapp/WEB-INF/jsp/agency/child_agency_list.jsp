@@ -114,7 +114,7 @@
 						<td class="td-manage">
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="editRate(this)" href="javascript:;" title="查看APIKey"><i class="Hui-iconfont">&#xe60c;</i></a>
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="resetPass('${agency.id}')" href="javascript:;" title="重置密码"><i class="Hui-iconfont">&#xe63f;</i></a>
-							<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" onClick="account_charge('账户充值',${agency.accountId })" href="javascript:;" title="账户充值"><i class="Hui-iconfont">&#xe726;</i></a> --%> 
+							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" onClick="account_charge('账户充值',${agency.accountId })" href="javascript:;" title="账户充值"><i class="Hui-iconfont">&#xe726;</i></a> 
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" data-title="设置充值卡" data-href="/flowsys/bankAccount/attach_bank_page.do?accountId=${agency.accountId }" onClick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe725;</i></a> 
 							<%-- <a title="/flowsys/rate/rate_add_page.do?rateId=${agency.rateId }&agencyId=${agency.id}" data-href="/flowsys/rate/rate_add_page.do?rateId=${agency.rateId }&agencyId=${agency.id}" data-title="费率添加" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe6df;</i></a> --%>
 							<c:choose>

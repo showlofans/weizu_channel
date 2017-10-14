@@ -16,7 +16,7 @@
 <title>加款申请页面页面</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 银行卡<span class="c-gray en">&gt;</span> 卡充值 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页   <span class="c-gray en">&gt;</span> 账户管理 <span class="c-gray en">&gt;</span> 申请加款  <span class="c-gray en">&gt;</span> 在线充值<!-- <span class="c-gray en">&gt;</span> 银行卡<span class="c-gray en">&gt;</span> 卡充值  --><a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 	<div class="pd-20">
 	<table class="table " style="float: left;margin-left: 100px;"><!-- table-border table-bordered table-bg -->
 		<thead >
@@ -95,7 +95,7 @@
 							<!-- <div class="radio-box skin-minimal"> -->
 								<%-- <input class="radioItem" name="id"  <c:if test="${vs.index==0 }">checked</c:if> type="radio"  value="${bank.id }" ><!-- <c:if test="${vs.index==0 }">checked</c:if> --> --%>
 							<!-- </div> -->
-								<a style="text-decoration:none" class="btn radio btn-primary" onClick="transferA('/flowsys/bankAccount/transfer_bank.do',${bank.id },${bank.agencyId },this)" href="javascript:;" title="提交转账">提交转账</a>
+								<a style="text-decoration:none" class="btn radio btn-primary" onClick="transferA('/flowsys/bankAccount/transfer_bank.do',${bank.id },${bank.agencyId },this)" href="javascript:;" title="申请加款">申请加款</a>
 						</td>
 					</c:forEach>
 				</c:when>

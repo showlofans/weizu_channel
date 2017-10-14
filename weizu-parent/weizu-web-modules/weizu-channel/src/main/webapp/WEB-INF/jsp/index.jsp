@@ -62,7 +62,7 @@
 							<li><a href="javascript:;" onClick="myselfinfo()">个人信息</a>
 							</li>
 							<li><a href="/flowsys/agency/logout.do">切换账户</a></li>
-							 <li><a data-href="/flowsys/bankAccount/my_bank_list.do" data-title="充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">充值卡</a></li>
+							 <li><a data-href="/flowsys/bankAccount/my_bank_list.do" data-title="申请加款" href="javascript:void(0)" onclick="Hui_admin_tab(this)">申请加款</a></li>
 							<li><a href="javascript:;" onClick="resetPass()">修改密码</a></li>
 							<li><a href="/flowsys/agency/logout.do">退出</a></li>
 					</ul>
@@ -182,7 +182,7 @@
 				<li><a data-href="/flowsys/account/consume_list.do" data-title="订单消费" href="javascript:void(0)">订单消费</a></li>
 				<li><a data-href="/flowsys/account/charge_list.do" data-title="充值明细" href="javascript:void(0)">充值明细</a></li>
 				<li><a data-href="/flowsys/account/account_info.do" data-title="账户信息" href="javascript:void(0)">账户信息</a></li>
-				<li><a data-href="/flowsys/bankAccount/my_bank_list.do" data-title="充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">充值卡</a></li>
+				<li><a data-href="/flowsys/bankAccount/my_bank_list.do" data-title="申请加款" href="javascript:void(0)" onclick="Hui_admin_tab(this)">申请加款</a></li>
 			</ul>
 		</dd>
 	</dl>

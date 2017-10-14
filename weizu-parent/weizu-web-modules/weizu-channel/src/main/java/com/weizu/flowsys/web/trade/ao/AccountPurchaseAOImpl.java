@@ -56,23 +56,32 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 					int batchAddCrt = 0;
 					if(list != null && list.size() > 0){
 						List<ChargeRecordPo> recordPoList = new LinkedList<ChargeRecordPo>();
-						for (AccountPurchasePo agencyPurchasePo : list) {
-//							Integer agencyId = agencyPurchasePo.getAgencyId();
-//							int billType = agencyPurchasePo.getBillType();
-//							ChargeAccountPo accountPo = chargeAccountDao.get(new WherePrams("agency_id", "=", agencyId).and("bill_type", "=", billType));
-							Integer accountId = agencyPurchasePo.getAccountId();
+						List<AccountPurchasePo> apPoList = new LinkedList<AccountPurchasePo>();
+						Long recordId = chargeRecordDao.nextId();		//没添加的消费记录Id
+						for (AccountPurchasePo accountPurchasePo : list) {
+//							Integer accountId = accountPurchasePo.getaccountId();
+//							int billType = accountPurchasePo.getBillType();
+//							ChargeAccountPo accountPo = chargeAccountDao.get(new WherePrams("account_id", "=", accountId).and("bill_type", "=", billType));
+							Integer accountId = accountPurchasePo.getAccountId();
 							if(accountId != null){
 								ChargeAccountPo accountPo = chargeAccountDao.get(accountId);
-								Double orderAmount = agencyPurchasePo.getOrderAmount();
-								Double agencyBeforeBalance = accountPo.getAccountBalance();
+								Double orderAmount = accountPurchasePo.getOrderAmount();
+								Double accountBeforeBalance = accountPo.getAccountBalance();
 								accountPo.addBalance(orderAmount, 1);
 								recordPoList.add(new ChargeRecordPo(realBackTime, orderAmount,
-										agencyBeforeBalance, accountPo.getAccountBalance(), 
+										accountBeforeBalance, accountPo.getAccountBalance(), 
 										AccountTypeEnum.Replenishment.getValue(), accountId,  1 , orderId));
 								chargeAccountDao.updateLocal(accountPo, new WherePrams("id","=",accountId));
+								//根据已有的扣款记录去添加补款记录
+								AccountPurchasePo apPo = accountPurchaseDao.getAPByAccountType(orderId, accountId, AccountTypeEnum.DECREASE.getValue());
+								apPo.setRecordId(recordId);
+								apPoList.add(apPo);
+								recordId++ ;
+//								AccountPurchasePo apPo = new AccountPurchasePo(accountId, orderId, rateDiscountId, orderAmount, fromAccountId, recordId, orderPrice, fromAgencyName, orderPlatformPath, orderState)
 							}
 						}
 						batchAddCrt = chargeRecordDao.crt_addList(recordPoList);		//批量添加补款记录信息
+						accountPurchaseDao.ap_addList(apPoList);		//
 						//更新连接表
 						ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
 						//更新订单表(只更新超管的订单详情)

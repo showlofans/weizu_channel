@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.weizu.flowsys.web.trade.dao.AccountPurchaseDao">
 	<sql id="t_ap">account_purchase</sql>
+	<sql id="t_rec">charge_record</sql>
 	<!-- <sql id="t_account">charge_account</sql> -->
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.trade.pojo.AccountPurchasePo" >
     <id column="id" property="id" jdbcType="BIGINT" />
@@ -21,6 +22,9 @@
   <sql id="Base_Column_List" >
     id, account_id, purchase_id, rate_discount_id, order_amount, <!-- bill_type, --> order_state,order_platform_path,order_state_detail, order_price, from_agency_name 
   </sql>
+  <sql id="APBase_Column_List" >
+    ap.id, ap.account_id, ap.purchase_id, ap.rate_discount_id, ap.order_amount, ap.order_state,ap.order_platform_path,ap.order_state_detail, ap.order_price, ap.from_agency_name 
+  </sql>
   <sql id="Add_Column_List" >
    account_id, purchase_id, rate_discount_id, order_amount,  order_state,order_state_detail, order_platform_path, order_price, from_agency_name,from_account_id,record_id
   </sql>
@@ -33,6 +37,24 @@
   		</if>
   		<if test="accountId != null">
   			AND account_id = #{accountId}
+  		</if>
+  	</where>
+  </select>
+  <!-- 根据订单号和代理商账户id找到accountPurchase的补/扣款记录 -->
+  <select id="getAPByAccountType" parameterType="map" resultMap="BaseResultMap">
+  	select <include refid="APBase_Column_List"></include> 
+  	from <include refid="t_ap"></include> ap
+  	inner join <include refid="t_rec"></include> crt
+  	on crt.id=ap.record_id
+  	<where>
+  		<if test="purchaseId != null">
+  			AND crt.purchase_id = #{purchaseId}
+  		</if>
+  		<if test="accountId != null">
+  			AND crt.account_id = #{accountId}
+  		</if>
+  		<if test="accountType != null">
+  			AND crt.account_type = #{accountType}
   		</if>
   	</where>
   </select>

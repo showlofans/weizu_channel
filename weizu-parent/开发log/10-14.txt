@@ -1,0 +1,29 @@
+把父级代理商的默认银行卡添加给子代理商
+有了默认卡之后，怎么优先选择指定的充值卡
+
+没有补款记录
+
+一个账户，一个订单号一种消费类型只有一条记录
+/***1/
+SELECT count(purchase_id) tot FROM `charge_record`
+WHERE purchase_id is not null
+GROUP BY purchase_id,account_id,account_type
+
+找到这个账户这个订单号的扣款类型accountPurchase记录
+在找到消费记录
+//账户id也调换一下，
+
+找到这个订单的扣款accountPurchase记录
+克隆一份，设置记录id(就是改变了account_type为补款)，然后添加
+
+1045 	ZW陕西移动省内（2）
+
+待完善功能
+1.平台编辑没有是否支持回调和回调地址的添加（但是有其他参数添加）
+2.平台添加没有其他参数和回调地址的添加
+
+已完善功能
+包体添加加上数字判断,包体添加默认开通
+
+1.为什么点提交一次，会充4次
+2.怎么让订单列表只显示4条扣款的，而不显示补款的

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
+import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
@@ -53,6 +54,7 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePo, Long> implements Purcha
 	 */
 	@Override
 	public int countPurchase(Map<String, Object> paramsMap) {
+		paramsMap.put("accountType", AccountTypeEnum.DECREASE.getValue());
 		return sqlSessionTemplate.selectOne("countPurchase", paramsMap);
 	}
 
@@ -65,6 +67,7 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePo, Long> implements Purcha
 	 */
 	@Override
 	public List<PurchaseVO> getPurchase(Map<String, Object> paramsMap) {
+		paramsMap.put("accountType", AccountTypeEnum.DECREASE.getValue());
 		return sqlSessionTemplate.selectList("getPurchase", paramsMap);
 	}
 
@@ -98,6 +101,7 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePo, Long> implements Purcha
 //		Map<String,Object> map = new HashMap<String, Object>();
 //		map.put("agencyId", agencyId);
 //		map.put("orderState", OrderStateEnum.CHARGED.getValue());
+		map.put("accountType", AccountTypeEnum.DECREASE.getValue());
 		return sqlSessionTemplate.selectOne("getTotalResultFromSuccess", map);
 	}
 
@@ -106,6 +110,7 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePo, Long> implements Purcha
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("agencyId", agencyId);
 		map.put("purchaseId", purchaseId);
+		map.put("accountType", AccountTypeEnum.DECREASE.getValue());
 		return sqlSessionTemplate.selectOne("getMyPurchase", map);
 	}
 

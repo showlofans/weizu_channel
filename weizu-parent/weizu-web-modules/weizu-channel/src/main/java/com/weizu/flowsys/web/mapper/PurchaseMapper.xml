@@ -4,6 +4,7 @@
   <sql id="t_purchase">purchase</sql>
   <sql id="t_ap">account_purchase</sql>
   <sql id="t_account">charge_account</sql>
+  <sql id="t_crt">charge_record</sql>
   <sql id="t_pg">operator_pg_data</sql>
   <!-- <sql id="t_channel">channel_channel</sql>
   <sql id="t_ep">exchange_platform</sql> -->
@@ -102,6 +103,8 @@
   	from <include refid="t_purchase"></include> pur
   	inner join <include refid="t_ap"></include> ap
   	ON pur.order_id = ap.purchase_id
+  	inner join <include refid="t_crt"></include> crt
+  	on crt.id=ap.record_id
   	 INNER join <include refid="t_account"></include> act
 	on ap.account_id=act.id 
   	<!-- inner join <include refid="t_channel"></include> channel
@@ -125,6 +128,8 @@
   	from <include refid="t_purchase"></include> pur
   	inner join <include refid="t_ap"></include> ap
      on pur.order_id = ap.purchase_id
+     inner join <include refid="t_crt"></include> crt
+  	on crt.id=ap.record_id
      INNER join <include refid="t_account"></include> act
 	on ap.account_id=act.id 
      <where>
@@ -137,6 +142,9 @@
      	<if test="agencyId != null">
      		AND act.agency_id = #{agencyId}
      	</if>
+     	<if test="accountType != null">
+  			AND crt.account_type = #{accountType}
+  	</if>
      </where>
   </select>
   
@@ -147,6 +155,8 @@
      FROM <include refid="t_purchase"></include> pur
 	 inner join <include refid="t_ap"></include> ap
      on pur.order_id = ap.purchase_id
+     inner join <include refid="t_crt"></include> crt
+  	on crt.id=ap.record_id
 	 INNER join <include refid="t_account"></include> act
 	on ap.account_id=act.id 
 	INNER join <include refid="t_pg"></include> pg
@@ -207,6 +217,8 @@
      on pur.order_id = ap.purchase_id
 	 INNER join <include refid="t_account"></include> act
 	on ap.account_id=act.id 
+	inner join <include refid="t_crt"></include> crt
+  	on crt.id=ap.record_id
 	INNER join <include refid="t_pg"></include> pg
 	on pg.id = pur.pg_id
 	<!-- inner join <include refid="t_channel"></include> channel
@@ -216,6 +228,9 @@
     </where>
   </select>
   <sql id="condition_sql">
+  	<if test="accountType != null">
+  		AND crt.account_type = #{accountType}
+  	</if>
   	<if test="chargeTel != null">
   		AND pur.charge_tel LIKE concat("%",trim(#{chargeTel}) ,"%") 
   	</if>
