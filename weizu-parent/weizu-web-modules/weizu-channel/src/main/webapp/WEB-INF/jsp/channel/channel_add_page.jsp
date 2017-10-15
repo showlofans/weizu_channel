@@ -119,7 +119,7 @@
 <article class="page-container">
 	<form action="" method="" class="form form-horizontal" id="form-channel-add">
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>平台搜索：</label>
+			<label class="form-label col-xs-4 col-sm-3"><!-- <span class="c-red">*</span> -->平台搜索：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" class="input-text" onKeyUp="ajaxGet()" value="" required="required" placeholder="英文请用空格键结束" id="channel_search" name="epName">
 			</div>
@@ -182,7 +182,7 @@
 			</div>
 		</div>
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>运营商类型：</label>
+			<label class="form-label col-xs-4 col-sm-3"><!-- <span class="c-red">*</span> -->运营商类型：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 				<c:forEach items="${resultMap.operatorTypes }" var="operatorEnum" varStatus="vs">
 					<div class="radio-box">
@@ -194,7 +194,7 @@
 			</div>
 		</div>
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流量类型：</label>
+			<label class="form-label col-xs-4 col-sm-3"><!-- <span class="c-red">*</span> -->业务类型：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 				<c:forEach items="${resultMap.serviceTypes }" var="serviceEnum" varStatus="vs">
 					<div class="radio-box">
@@ -212,9 +212,9 @@
 				<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum" varStatus="vs">
 					<c:if test="${vs.index % 4==0 }"><tr></c:if>
 						<td> 
-							<div class="check-box">
+							<div class="check-box f-16">
 								<input class="cbox" onClick="checkBoxes(this)" type="checkbox" id="scopeCityCode-${vs.index }" value="${scopeCityEnum.value }">
-								${scopeCityEnum.desc }
+								${scopeCityEnum.value }${scopeCityEnum.desc }  
 								<%-- <label for="scopeCityCode-${vs.index }"></label> --%> 
 								<!-- 输入两位折扣数字 -->
 								<input class="disscount" style="display: none; width:50px;" type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">

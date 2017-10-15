@@ -49,8 +49,8 @@
 	<div class="text-c" style="display:none;">
 		<form action="/flowsys/rate/bind_channel_list.do" method="post" id="formD" name="dataListForm">
 			<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
-			<input type="hidden" name="agencyId" value="${childAgencyId }"> 
-			<input type="hidden" name="agencyName" value="${childAgencyName }"> 
+			<input type="hidden" name="agencyId" value="${childAccountPo.agencyId }"> 
+			<input type="hidden" name="agencyName" value="${childAccountPo.agencyName }"> 
 		</form>
 	</div>
 	<!-- <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加资讯" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加资讯</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div> -->
@@ -58,7 +58,7 @@
 			<!-- <sapn>通道名称：微族科技</sapn>
 			<sapn>是否带票：不带票</sapn>
 			<sapn>通道折扣：云南85</sapn> -->
-			<sapn>代理商名称：${childAgencyName }</sapn><br>
+			<sapn>代理商名称：${childAccountPo.agencyName }</sapn><br>
 			高级通道开通状态：<sapn>
 			<c:choose>
 				<c:when test="${isOpen == 1 }">开通</c:when>

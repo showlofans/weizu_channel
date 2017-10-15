@@ -3,6 +3,7 @@
 <mapper namespace="com.weizu.flowsys.web.agency.dao.BankAccountDaoInterface">
    <sql id="t_bct">bank_account</sql>
    <sql id="t_account">charge_account</sql>
+   <sql id="t_transfer">transfer_record</sql>
 	
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.agency.pojo.BankAccountPo" >
     <id column="id" property="id" jdbcType="BIGINT" />
@@ -13,11 +14,12 @@
     <!-- <result column="bill_type" property="billType" jdbcType="INTEGER" /> -->
     <result column="reference_balance" property="referenceBalance" jdbcType="DOUBLE" />
     <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
-    <result column="use_state" property="fromAccountId" jdbcType="INTEGER" />
+    <result column="use_state" property="useState" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, account_id, remittance_way, remittance_bank_account, account_name,reference_balance,agency_id,use_state 
   </sql>
+  
   <resultMap id="OtherResultMap" type="com.weizu.flowsys.web.agency.pojo.BankAccountPo" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="account_id" property="accountId" jdbcType="INTEGER" />
@@ -26,7 +28,7 @@
     <result column="account_name" property="accountName" jdbcType="VARCHAR" />
     <result column="reference_balance" property="referenceBalance" jdbcType="DOUBLE" />
     <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
-    <result column="use_state" property="fromAccountId" jdbcType="INTEGER" />
+    <result column="use_state" property="useState" jdbcType="INTEGER" />
 	<!-- 账户信息 -->
     <result column="bill_type" property="billType" jdbcType="INTEGER" /> 
     <result column="account_balance" property="accountBalance" jdbcType="DOUBLE" /> 
@@ -34,24 +36,107 @@
   <sql id="Other_Column_List" >
     bct.id, bct.account_id, bct.remittance_way, bct.remittance_bank_account, bct.account_name,reference_balance,bct.agency_id,bct.use_state,act.bill_type,act.account_balance 
   </sql>
+  
+  <resultMap id="SimpleResultMap" type="com.weizu.flowsys.web.agency.pojo.BankAccountPo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="account_name" property="accountName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Simple_Column_List" >
+    bct.id, bct.account_name
+  </sql>
+  <!-- 转账消息展示实体 -->
+  <resultMap id="TransferMsgMap" type="com.weizu.flowsys.web.agency.pojo.TransferMsgVo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="tfnum" property="tfnum" jdbcType="BIGINT" />
+    <result column="remittance_bank_account" property="remmitanceBankAccount" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Transfer_Msg_List" >
+   	bct.id, bct.remittance_bank_account, COUNT(bct.remittance_bank_account) tfnum 
+  </sql>
+  <!-- 获得转账消息展示列表 -->
+  <select id="getTransferMsg" parameterType="map" resultMap="TransferMsgMap">
+  	SELECT <include refid="Transfer_Msg_List"></include> 
+  	 FROM <include refid="t_transfer"></include> tfrec
+	INNER JOIN <include refid="t_bct"></include> bct
+	on tfrec.to_bank_id = bct.id
+	<where>
+		<if test="toAgencyId != null">
+			AND tfrec.to_agency_id = #{toAgencyId}
+		</if>
+		<if test="confirmState != null">
+			AND tfrec.confirm_state = #{confirmState}
+		</if>
+	</where>
+	GROUP BY bct.remittance_bank_account
+  </select>
+  
   <!-- 获得登录用户的银行卡列表 -->
-  <select id="getBankList" parameterType="map" resultMap="OtherResultMap">
+  <select id="getMyBankList" parameterType="map" resultMap="OtherResultMap">
   	select <include refid="Other_Column_List"></include>
   	 from <include refid="t_bct"></include> bct
   	 inner join <include refid="t_account"></include> act
   	 on bct.account_id=act.id
   	<where>
   		<if test="agencyId != null">
+  			AND bct.agency_id = #{agencyId}
   			AND act.agency_id = #{agencyId}
   		</if>
   		<if test="billType != null">
   			AND act.bill_type = #{billType}
+  		</if>
+  		<if test="inUseState != null">
+  			AND (bct.use_state != #{inUseState} or bct.use_state is null )
   		</if>
   		<if test="polarity != null">
   			AND bct.polarity = #{polarity}
   		</if>
   	</where>
   </select>
+  <!-- 获得绑定的父级代理商银行卡列表 -->
+  <select id="getAttachBankList" parameterType="map" resultMap="OtherResultMap">
+  	select <include refid="Other_Column_List"></include>
+  	 from <include refid="t_bct"></include> bct
+  	 inner join <include refid="t_account"></include> act
+  	 on bct.account_id=act.id
+  	<where>
+  		<if test="agencyId != null">
+  			AND bct.agency_id = #{agencyId}
+  		</if>
+  		<if test="accountId != null">
+  			AND bct.account_id = #{accountId}
+  		</if>
+  		<if test="useState != null">
+  			AND bct.use_state = #{useState}
+  		</if>
+  		 <!-- <if test="billType != null">
+  			AND act.bill_type = #{billType}
+  		</if> -->
+  		<if test="polarity != null">
+  			AND bct.polarity = #{polarity}
+  		</if>
+  	</where>
+  </select>
+  
+  <!-- 根据卡号获得我的那张母卡 -->
+  <select id="getMyOneBankAccount" parameterType="map" resultMap="SimpleResultMap">
+	  SELECT <include refid="Simple_Column_List"></include> 
+	  FROM <include refid="t_bct"></include> bct
+	  INNER JOIN <include refid="t_account"></include> act
+	  on act.id = bct.account_id
+	<where>
+		<if test="agencyId != null">
+			AND act.agency_id = #{agencyId}
+			and bct.agency_id = #{agencyId}
+		</if>
+		<if test="inUseState != null">
+			 and (use_state != #{inUseState} or use_state IS null)
+		</if>
+		<if test="remmitanceBankAccount != null">
+			and bct.remittance_bank_account = #{remmitanceBankAccount}
+		</if>
+	</where>
+  </select>
+  
   <!-- 批量添加 -->
    <!-- <insert id="ap_addList" useGeneratedKeys="true" parameterType="java.util.List">
   	insert into <include refid="t_ap"></include>

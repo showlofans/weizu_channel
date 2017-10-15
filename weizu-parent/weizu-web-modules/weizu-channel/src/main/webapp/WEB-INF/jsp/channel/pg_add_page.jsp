@@ -61,7 +61,7 @@
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>业务类型：</label>
 			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
 				<select id="serviceType" name="serviceType" class="select">
-					<!-- <option value="">业务类型</option> -->
+					<option value="">业务类型</option>
 					<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceType" varStatus="vs1">
 						<option value="${serviceType.value }">${serviceType.desc }</option>
 					</c:forEach>
@@ -71,23 +71,24 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">流量大小：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" required="required"  style="width:100px" value="" placeholder="" id="pgSize" name="pgSize">M
+				<input type="text" class="input-text" required="required" maxlength="6" onkeyup='this.value=this.value.replace(/\D/gi,"")' style="width:100px" value="" placeholder="" id="pgSize" name="pgSize">M
 			</div>
 		</div>
 		
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">原价：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" style="width:100px" required="required" class="input-text"  value="" placeholder="" id="pgPrice" name="pgPrice">元
+				<input type="text" style="width:100px" required="required" class="input-text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")'  value="" placeholder="" id="pgPrice" name="pgPrice">元
 			</div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否启用：</label>
 			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select name="pgInService" class="select">
-					<c:forEach items="${resultMap.pgInServiceEnums }" var="pgInService" varStatus="vs1">
+				<select  name="pgInService" class="select">
+					<%-- <c:forEach items="${resultMap.pgInServiceEnums }" var="pgInService" varStatus="vs1">
 						<option value="${pgInService.value }">${pgInService.desc }</option>
-					</c:forEach>
+					</c:forEach> --%>
+						<option value="1">开通</option>
 				</select>
 				</span> </div>
 		</div>
@@ -117,7 +118,14 @@
 $().ready(function() {
     $("#form-pg-add").validate({
     	rules:{
+    		operatorType:{
+    			required:true,
+    		},
+    		serviceType:{
+    			required:true,
+    		},
     		pgSize : {
+    			required:true,
     			remote:{//验证用户名是否存在
     				  type:"get",
     	               url:"/flowsys/operatorPg/pg_exist.do",             //servlet

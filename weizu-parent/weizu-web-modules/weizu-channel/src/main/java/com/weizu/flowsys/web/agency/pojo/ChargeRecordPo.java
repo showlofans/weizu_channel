@@ -89,6 +89,23 @@ public class ChargeRecordPo extends Po implements Cloneable{
 		this.purchaseId = purchaseId;
 	}
 	
+	/** 生成转账消费记录
+	 * @param rechargeAmount
+	 * @param billType
+	 * @param accountType
+	 * @param accountId
+	 */
+	public ChargeRecordPo(Double rechargeAmount, Integer billType,
+			Integer accountType, Integer accountId) {
+		super();
+		this.rechargeAmount = rechargeAmount;
+		this.billType = billType;
+		this.accountType = accountType;
+		this.accountId = accountId;
+	}
+
+
+
 	public Long getPurchaseId() {
 		return purchaseId;
 	}

@@ -29,7 +29,7 @@
  <body>
  <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 在线充值 <span class="c-gray en">&gt;</span> 单号充值<!--  <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> --></nav>
 <article class="page-container">
- 	<form class="form form-horizontal" action="/flowsys/chargePg/pg_charge.do" method="post"  id="form-charge">
+ 	<form class="form form-horizontal" action="" method=""  id="form-charge">
  	<input type="hidden" name="channelId" id="channelId">
  	<input type="hidden" name="billType" id="billType">
  	<input type="hidden" name="pgId" id="pgId">
@@ -37,14 +37,14 @@
  	<input style="display: none;" type="text" value="${resultMap.pageMsg }" id="pageMsg">
 	
 	<div class="row cl">
-		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机号码：</label>
+		<label class="form-label col-xs-4 col-sm-3"><!--<span class="c-red">*</span>-->手机号码：</label>
 		<div class="formControls col-xs-8 col-sm-9">
 			<input type="text" class="input-text" required="required" onchange="initForm()" onblur="ajaxPhone()" style="width:400px" value="" placeholder="" id="chargeTel" name="chargeTel">
 			<span class="error"></span>
 		</div>
 	</div>
 	<div class="row cl">
-		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>归属地：</label>
+		<label class="form-label col-xs-4 col-sm-3"><!--<span class="c-red">*</span>-->归属地：</label>
 		<div class="formControls col-xs-8 col-sm-9">
 			<input type="text" class="input-text" required  style="width:400px" value="" placeholder="" id="chargeTelDetail" name="chargeTelDetail">
 		</div>
@@ -52,7 +52,7 @@
 	<input id="rootAgencyId" value="${loginContext.rootAgencyId}" type="hidden" >
 	<c:if test="${loginContext.rootAgencyId == 0 }">
 		<div class="row cl" id="pg">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>测试平台：</label>
+			<label class="form-label col-xs-4 col-sm-3"><!--<span class="c-red">*</span>-->测试平台：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 			<!--  onfocus="ajaxPg()" -->
 				<input type="text" id="epName" name="epName" class="input-text" required style="width:400px" autocomplete="off"  placeholder="请输入平台名称" >
@@ -60,7 +60,7 @@
 		</div>
 	</c:if>
 	<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>业务类型：</label>
+			<label class="form-label col-xs-4 col-sm-3"><!--<span class="c-red">*</span>-->业务类型：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 					<span class="select-box inline">
 						<select id="select-servce-type" name="serviceType" onchange="ifAjaxPg()" style="width:150px;" class="select">
@@ -78,7 +78,7 @@
 		
 		
 	<div class="row cl" id="pg">
-		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流量面值：</label>
+		<label class="form-label col-xs-4 col-sm-3"><!--<span class="c-red">*</span>-->流量面值：</label>
 		<div class="formControls col-xs-8 col-sm-9">
 		<!--  onfocus="ajaxPg()" -->
 			<input type="text" id="pgPrice" readonly name="pgPrice" class="input-text" required style="width:400px" autocomplete="off"  placeholder="请选择购买包体" >
@@ -90,7 +90,7 @@
 	<div id="cnelInsert" class="row cl">
 	</div>
 	<div class="row cl">
-		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>采购金额：</label>
+		<label class="form-label col-xs-4 col-sm-3"><!--<span class="c-red">*</span>-->采购金额：</label>
 		<div class="formControls col-xs-8 col-sm-9">
 			<input id="orderAmount" name="orderAmount" type="text" readonly class="input-text" required  style="width:400px" value="" placeholder="请选择购买包体">
 			<c:choose>
@@ -155,23 +155,21 @@
 	 }
 	    $("#form-charge").validate({
 	    	submitHandler : function(form) {
-	    		form.submit();
-	    		/* $.ajax({
+	    		$.ajax({
 			        type:"post",
 			        url:"/flowsys/chargePg/pg_charge.do",
 			        data: $('form').serialize(),//表单数据
 			        async : false,
 			        success:function(d){
-			           if(d=="success"){
-			                layer.msg('保存成功！');//保存成功提示
+			        	removeIframe();
+			           /* if(d=="success"){
+			                layer.msg('提交成功！');//保存成功提示
 			            }
 			            if(d=="error"){
-			                layer.msg('保存异常!');
-			            }
-			            var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
-			            parent.layer.close(index); //执行关闭 
+			                layer.msg('提交异常!');
+			            } */
 			        }
-			    }); */ 
+			    });
 			}
 	    });
 });

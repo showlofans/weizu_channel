@@ -660,6 +660,16 @@ public class ChargePgController {
 //		returnMap.put("refererURL", InvoiceAccountURL.MODEL_NAME + InvoiceAccountURL.INVOICE_ACCOUNT_LIST);
 //		return new ModelAndView("success", "map", returnMap);
 	}
+	/**
+	 * @description: 异步重新提交订单<br>来源：charge_wait.jsp
+	 * @param request
+	 * @param orderId
+	 * @param accountId
+	 * @param chargeTelDetail
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月14日 上午10:02:32
+	 */
 	@ResponseBody
 	@RequestMapping(value=ChargePgURL.AJAX_COMMIT_ORDER)
 	public String ajaxCommitOrder(HttpServletRequest request,Long orderId,Integer accountId,String chargeTelDetail){

@@ -41,7 +41,7 @@
 		<c:out value="11111"></c:out>
 	</c:if> --%>
 	<c:choose>
-		<c:when test="${loginContext.rootAgencyId == 0 }">
+		 <c:when test="${loginContext.rootAgencyId == 0 }">
 		</c:when>
 		<c:when test="${ secondAgency && fn:indexOf(qq, '&') > 0 }"><!-- 二级代理商可以用分割的方式获得上级root用户的所有联系方式 -->
 			<%-- <c:set var="qqIndex">${fn:indexOf(qq, '&') }</c:set> --%>
@@ -78,7 +78,7 @@
 							<input type="text" readonly="readonly"  class="input-text" value="${chargeAccount1.accountBalance }" id="" name="">
 						</div>
 					</div>
-					<div class="row cl">
+					<%-- <div class="row cl">
 						<label class="form-label col-xs-4 col-sm-2">汇款方式：</label>
 						<div class="formControls col-xs-8 col-sm-9">
 							<input type="text" name="remittanceWay" required id="" value="${chargeAccount1.remittanceWay }" class="input-text">
@@ -89,7 +89,7 @@
 						<div class="formControls col-xs-8 col-sm-9">
 							<input name="remittanceBankAccount" required value="${chargeAccount1.remittanceBankAccount }" type="text" class="input-text"  id=""  >
 						</div>
-					</div>
+					</div> --%>
 					<%-- <div class="row cl">
 						<label class="form-label col-xs-4 col-sm-2">账户信用额：</label>
 						<div class="formControls col-xs-8 col-sm-9">
@@ -105,12 +105,12 @@
 						</div>
 					</div> --%>
 					
-					<div class="row cl">
+					<!-- <div class="row cl">
 						<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
 							<button onClick="account1_save_submit();" class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
 							<button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
 						</div>
-					</div>
+					</div> -->
 					<input type="hidden" id="billType" name="billType" value="${chargeAccount1.billType }" >
 				</div>
 			</form>
@@ -123,7 +123,7 @@
 						<input type="text" readonly="readonly"  class="input-text" value="${chargeAccount.accountBalance }" id="" name="">
 					</div>
 				</div>
-				<div class="row cl">
+				<%-- <div class="row cl">
 					<label class="form-label col-xs-4 col-sm-2">汇款方式：</label>
 					<div class="formControls col-xs-8 col-sm-9">
 						<input type="text" name="remittanceWay" id="" required value="${chargeAccount.remittanceWay }" class="input-text">
@@ -134,19 +134,19 @@
 					<div class="formControls col-xs-8 col-sm-9">
 						<input name="remittanceBankAccount" required value="${chargeAccount.remittanceBankAccount }" type="text" class="input-text"  id=""  >
 					</div>
-				</div>
+				</div> --%>
 				<%-- <div class="row cl">
 					<label class="form-label col-xs-4 col-sm-2">账户信用额：</label>
 					<div class="formControls col-xs-8 col-sm-9">
 						<input type="text"  name="accountCredit" readonly="readonly" value="${chargeAccount.accountCredit }"  class="input-text" value="5" id="emailName">
 					</div>
 				</div> --%>
-				<div class="row cl">
+				<!-- <div class="row cl">
 					<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
 						<button onClick="account_save_submit();" class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
 						<button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
 					</div>
-				</div>
+				</div> -->
 				<input type="hidden" id="billType" name="billType" value="${chargeAccount.billType }" >
 			</div>
 			</form>

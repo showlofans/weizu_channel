@@ -57,7 +57,7 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">产品列表地址：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" required value="" placeholder="" id="productListIp" name="productListIp">
+				<input type="text" class="input-text" value="" placeholder="" id="productListIp" name="productListIp">
 			</div>
 		</div>
 		<div class="row cl">
@@ -145,7 +145,7 @@ $('.skin-minimal input').iCheck({
 	radioClass: 'iradio-blue',
 	increaseArea: '20%'
 });
-/**判断平台标识是否存在*/
+/**判断平台名称是否存在*/
 function checkEpName(vart){
 	var epName = $(vart).val();
 	$.ajax({

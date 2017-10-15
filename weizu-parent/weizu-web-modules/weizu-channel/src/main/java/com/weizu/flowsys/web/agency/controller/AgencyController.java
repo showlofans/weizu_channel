@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ConfirmStateEnum;
+import com.weizu.flowsys.operatorPg.enums.ConfirmStateTransferEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgInServiceEnum;
 import com.weizu.flowsys.util.Pagination;
@@ -29,11 +30,13 @@ import com.weizu.flowsys.web.activity.dao.impl.RateBackwardDaoImpl;
 import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.ao.ChargeRecordAO;
+import com.weizu.flowsys.web.agency.dao.BankAccountDaoInterface;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.CompanyCredentialsPo;
+import com.weizu.flowsys.web.agency.pojo.TransferMsgVo;
 import com.weizu.flowsys.web.agency.url.AgencyURL;
 import com.weizu.web.foundation.VerifyCodeUtils;
 import com.weizu.web.foundation.String.StringHelper;
@@ -56,6 +59,8 @@ public class AgencyController {
 	private RateBackwardDaoImpl rateBackwardDao;
 	@Resource
 	private OperatorDiscountAO operatorDiscountAO;
+	@Resource
+	private BankAccountDaoInterface bankAccountDao;
 	
 //	/**
 //	 * @description:添加代理商跳转链接
@@ -155,6 +160,15 @@ public class AgencyController {
 				session.setAttribute("unconfirmSize", list.size());
 				msgNum += list.size();
 			}
+			List<TransferMsgVo> transferMsgList = bankAccountDao.getTransferMsg(resultPo.getId(), ConfirmStateTransferEnum.ON_CONFIRM.getValue());
+			if(transferMsgList != null && transferMsgList.size() > 0){
+				session.setAttribute("transferMsgList", transferMsgList);
+				for (TransferMsgVo transferMsgVo : transferMsgList) {
+					msgNum += transferMsgVo.getTfnum();
+				}
+//				msgNum += transferMsgList.size();
+			}
+			
 			session.setAttribute("msgNum", msgNum);
 			
 			return new ModelAndView("/index");// 返回登录人主要账户信息（余额，透支额）

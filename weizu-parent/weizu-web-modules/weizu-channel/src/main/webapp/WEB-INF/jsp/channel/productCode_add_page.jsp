@@ -150,6 +150,7 @@ $().ready(function() {
 	    	               url:"/flowsys/productCode/product_code_exist.do",             //servlet
 	    	               data:{
 	    	            	  epId :function(){return $("#selectEpId").val().trim();},
+	    	            	  operatorType :function(){return $("#operatorType").val().trim();},
 	    	            	  serviceType :function(){return $("#serviceType").val().trim();},
 	    	            	  scopeCityCode :function(){return $("#scopeCityCode").val().trim();},
 	    	               	  productCode :function(){return $("#productCode").val().trim();}
@@ -168,7 +169,7 @@ $().ready(function() {
 function changePg(){
 	var et = $("#pgId").get(0).selectedIndex;
 	//alert(et);
-	alert($("#pgId :hidden").html());
+	//alert($("#pgId :hidden").html());
 	var pgPrice = $("#pgId span:hidden").html();//:eq("+ et +")
 	//alert(pgPrice);
 	

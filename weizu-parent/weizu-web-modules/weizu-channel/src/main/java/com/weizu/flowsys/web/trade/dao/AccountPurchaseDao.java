@@ -42,4 +42,14 @@ public interface AccountPurchaseDao extends Dao<AccountPurchasePo, Long> {
 	 * @createTime:2017年9月20日 上午10:41:37
 	 */
 	Double getOrderAmount(Long purchaseId, Integer agencyId);
+	
+	/**
+	 * @description: 根据订单号和代理商账户id找到accountPurchase的补/扣款记录
+	 * @param purchaseId
+	 * @param accountId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月14日 下午12:15:44
+	 */
+	AccountPurchasePo getAPByAccountType(Long purchaseId,Integer accountId,Integer accountType);
 }

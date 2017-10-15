@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
+import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.web.trade.dao.AccountPurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.AccountPurchasePo;
 
@@ -66,6 +67,15 @@ public class AccountPurchaseDaoImpl extends DaoImpl<AccountPurchasePo, Long> imp
 		params.put("purchaseId", purchaseId);
 		params.put("accountId", accountId);
 		return sqlSessionTemplate.selectOne("getOrderAmount", params);
+	}
+
+	@Override
+	public AccountPurchasePo getAPByAccountType(Long purchaseId, Integer accountId,Integer accountType) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("purchaseId", purchaseId);
+		params.put("accountId", accountId);
+		params.put("accountType", accountType);
+		return sqlSessionTemplate.selectOne("getAPByAccountType", params);
 	}
 
 }

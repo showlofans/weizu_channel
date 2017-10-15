@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.agency.pojo;
 
 import com.weizu.flowsys.core.annotation.po.TableName;
+import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
 
 /**
@@ -25,6 +26,8 @@ public class TransferRecordPo extends Po {
 	private Long commitTime;		//提交时间（系统生成）
 	
 	private Long realTime;			//真实打款时间
+	@TempField
+	private String realTimeStr;		//页面输入参数：真实打款时间
 	
 	private Long confirmTime;		//审核时间
 	
@@ -35,6 +38,24 @@ public class TransferRecordPo extends Po {
 	private Integer toAgencyId;		//收款方代理商id
 	
 	private Long transferSlip;		//转账凭条（在确认之后）
+	
+	private Double transferAmount;				//入账金额
+	
+	public Double getTransferAmount() {
+		return transferAmount;
+	}
+
+	public void setTransferAmount(Double transferAmount) {
+		this.transferAmount = transferAmount;
+	}
+
+	public String getRealTimeStr() {
+		return realTimeStr;
+	}
+
+	public void setRealTimeStr(String realTimeStr) {
+		this.realTimeStr = realTimeStr;
+	}
 
 	public Long getId() {
 		return id;

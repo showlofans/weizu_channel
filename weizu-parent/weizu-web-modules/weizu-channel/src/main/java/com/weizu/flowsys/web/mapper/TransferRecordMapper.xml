@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weizu.flowsys.web.agency.dao.ITransferRecDao">
+   <sql id="t_transfer">transfer_record</sql>
+   <sql id="t_bct">bank_account</sql>
+   <sql id="t_agb">agency_backward</sql>
+	
+  <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.agency.pojo.TransferRecordPo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="from_bank_id" property="fromBankId" jdbcType="BIGINT" />
+    <result column="to_bank_id" property="toBankId" jdbcType="BIGINT" />
+    <result column="commit_amount" property="commitAmount" jdbcType="DOUBLE" />
+    <result column="transfer_amount" property="transferAmount" jdbcType="DOUBLE" />
+    <result column="commit_time" property="commitTime" jdbcType="BIGINT" />
+    <result column="real_time" property="realTime" jdbcType="BIGINT" />
+    <result column="confirm_time" property="confirmTime" jdbcType="BIGINT" />
+    <result column="confirm_state" property="confirmState" jdbcType="INTEGER" />
+    <result column="from_agency_id" property="fromAgencyId" jdbcType="INTEGER" />
+    <result column="to_agency_id" property="toAgencyId" jdbcType="INTEGER" />
+    <result column="transfer_slip" property="transferSlip" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, from_bank_id, to_bank_id, commit_amount, commit_time,real_time,confirm_time,confirm_state,from_agency_id,to_agency_id,transfer_slip,transfer_amount 
+  </sql>
+  <resultMap id="OtherResultMap" type="com.weizu.flowsys.web.agency.pojo.TransferRecordVO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <!-- <result column="from_bank_id" property="fromBankId" jdbcType="BIGINT" />
+    <result column="to_bank_id" property="toBankId" jdbcType="BIGINT" /> -->
+    <result column="commit_amount" property="commitAmount" jdbcType="DOUBLE" />
+    <result column="transfer_amount" property="transferAmount" jdbcType="DOUBLE" />
+    <result column="commit_time" property="commitTime" jdbcType="BIGINT" />
+    <result column="real_time" property="realTime" jdbcType="BIGINT" />
+    <result column="confirm_time" property="confirmTime" jdbcType="BIGINT" />
+    <result column="confirm_state" property="confirmState" jdbcType="INTEGER" />
+    <result column="from_remittance_way" property="fromRemittanceWay" jdbcType="VARCHAR" />
+    <result column="from_remittance_bank_account" property="fromRemittanceBankAccount" jdbcType="VARCHAR" />
+    <result column="to_remittance_way" property="toRemittanceWay" jdbcType="VARCHAR" />
+    <result column="to_remittance_bank_account" property="toRemittanceBankAccount" jdbcType="VARCHAR" />
+    <result column="from_agency_name" property="fromAgencyName" jdbcType="VARCHAR" />
+    
+    <!-- <result column="from_agency_id" property="fromAgencyId" jdbcType="INTEGER" />
+    <result column="to_agency_id" property="toAgencyId" jdbcType="INTEGER" />
+    <result column="transfer_slip" property="transferSlip" jdbcType="BIGINT" /> -->
+  </resultMap>
+  <sql id="Other_Column_List" >
+    tfrec.id,tfrec.commit_amount,tfrec.commit_time,tfrec.real_time,tfrec.confirm_time,tfrec.confirm_state,tfrec.transfer_amount,
+	bct1.remittance_way to_remittance_way,bct1.remittance_bank_account to_remittance_bank_account,
+	bct2.remittance_way from_remittance_way,bct2.remittance_bank_account from_remittance_bank_account,
+	agb.user_name from_agency_name
+  </sql>
+  
+  <!-- 获得转入转出记录 -->
+  <select id="getInOutRecord" parameterType="map" resultMap="OtherResultMap">
+  	select <include refid="Other_Column_List"></include> 
+  	FROM <include refid="t_transfer"></include> tfrec
+  	INNER JOIN <include refid="t_bct"></include> bct1
+	on tfrec.to_bank_id=bct1.id
+	INNER JOIN <include refid="t_bct"></include> bct2
+	on tfrec.from_bank_id=bct2.id
+	inner JOIN <include refid="t_agb"></include> agb
+	on agb.id=tfrec.from_agency_id
+	<where>
+		<if test="toBankId != null">
+			AND tfrec.to_bank_id = #{toBankId}
+		</if>
+		<if test="fromBankId != null">
+			AND tfrec.from_bank_id = #{fromBankId}
+		</if>
+		<if test="confirmState != null">
+			AND tfrec.confirm_state = #{confirmState}
+		</if>
+	</where>
+	order by tfrec.commit_time desc
+	<if test="start != null">
+	 	limit #{start}
+	 </if>
+	<if test="end != null">
+	 	, #{end}
+	 </if>
+  </select>
+  <!-- 获得转入转出总记录数 -->
+  <select id="countInOutRecord" parameterType="map" resultType="long">
+  	select count(*) 
+  	FROM <include refid="t_transfer"></include> tfrec
+  	INNER JOIN <include refid="t_bct"></include> bct1
+	on tfrec.to_bank_id=bct1.id
+	INNER JOIN <include refid="t_bct"></include> bct2
+	on tfrec.from_bank_id=bct2.id
+	inner JOIN <include refid="t_agb"></include> agb
+	on agb.id=tfrec.from_agency_id
+	<where>
+		<if test="toBankId != null">
+			AND tfrec.to_bank_id = #{toBankId}
+		</if>
+		<if test="fromBankId != null">
+			AND tfrec.from_bank_id = #{fromBankId}
+		</if>
+		<if test="confirmState != null">
+			AND tfrec.confirm_state = #{confirmState}
+		</if>
+	</where>
+  </select>
+  
+  
+  <!-- 获得登录用户的银行卡列表 -->
+ <!--  <select id="getMyBankList" parameterType="map" resultMap="OtherResultMap">
+  	select <include refid="Other_Column_List"></include>
+  	 from <include refid="t_bct"></include> bct
+  	 inner join <include refid="t_account"></include> act
+  	 on bct.account_id=act.id
+  	<where>
+  		<if test="agencyId != null">
+  			AND bct.agency_id = #{agencyId}
+  			AND act.agency_id = #{agencyId}
+  		</if>
+  		<if test="billType != null">
+  			AND act.bill_type = #{billType}
+  		</if>
+  		<if test="inUseState != null">
+  			AND (bct.use_state != #{inUseState} or bct.use_state is null )
+  		</if>
+  		<if test="polarity != null">
+  			AND bct.polarity = #{polarity}
+  		</if>
+  	</where>
+  </select>
+  获得绑定的父级代理商银行卡列表
+  <select id="getAttachBankList" parameterType="map" resultMap="OtherResultMap">
+  	select <include refid="Other_Column_List"></include>
+  	 from <include refid="t_bct"></include> bct
+  	 inner join <include refid="t_account"></include> act
+  	 on bct.account_id=act.id
+  	<where>
+  		<if test="agencyId != null">
+  			AND bct.agency_id = #{agencyId}
+  		</if>
+  		<if test="accountId != null">
+  			AND bct.account_id = #{accountId}
+  		</if>
+  		<if test="useState != null">
+  			AND bct.use_state = #{useState}
+  		</if>
+  		 <if test="billType != null">
+  			AND act.bill_type = #{billType}
+  		</if>
+  		<if test="polarity != null">
+  			AND bct.polarity = #{polarity}
+  		</if>
+  	</where>
+  </select> -->
+  <!-- 批量添加 -->
+   <!-- <insert id="ap_addList" useGeneratedKeys="true" parameterType="java.util.List">
+  	insert into <include refid="t_ap"></include>
+  	(<include refid="Add_Column_List"></include>)
+  	values
+  	<foreach collection="list" item="ap" index="index" separator=",">
+  		(#{ap.accountId},#{ap.purchaseId},#{ap.rateDiscountId},#{ap.orderAmount},#{ap.orderState},#{ap.orderStateDetail},#{ap.orderPlatformPath},#{ap.orderPrice},#{ap.fromAgencyName},#{ap.fromAccountId},#{ap.recordId})
+  	</foreach>
+  </insert>
+  
+  <update id="batchUpdateState" parameterType="map">
+  	update <include refid="t_ap"></include>
+  	<set>
+  		<if test="orderState != null">
+  			order_state = #{orderState},
+  		</if>
+  		<if test="orderStateDetail != null">
+  			order_state_detail = #{orderStateDetail}
+  		</if>
+  	</set>
+  	<where>
+  		<if test="purchaseId != null">
+  			purchase_id = #{purchaseId}
+  		</if>
+  	</where>
+  </update> -->
+</mapper>

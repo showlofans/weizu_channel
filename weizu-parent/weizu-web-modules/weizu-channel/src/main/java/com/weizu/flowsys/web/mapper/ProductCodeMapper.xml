@@ -155,6 +155,9 @@
 	<if test="serviceType != null">
   		AND opd.service_type = #{serviceType}
   	</if>
+	<if test="operatorType != null">
+  		AND opd.operator_type = #{operatorType}
+  	</if>
   </sql>
   
   <sql id="condition_sql">

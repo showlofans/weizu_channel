@@ -262,7 +262,7 @@ $(document).ready(function() {
 	})
 }); 
 /**手动提交订单*/
-function ajaxCommit(vart,orderId,chargeTelDetail,agencyId,billType){
+function ajaxCommit(vart,orderId,chargeTelDetail,accountId,billType){
 	alert(orderId +'<br>' + chargeTelDetail + "<br>" + accountId + "<br>" + billType );
 	
 	var msg='确认提交订单吗？';
