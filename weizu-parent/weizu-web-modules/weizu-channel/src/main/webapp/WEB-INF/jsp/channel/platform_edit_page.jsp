@@ -56,15 +56,42 @@
 			</div>
 		</div>
 		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">是否支持回调：</label>
+			<div class="formControls col-xs-7 col-sm-9 skin-minimal">
+				<div class="check-box">
+					<c:choose>
+						<c:when test="${exchangePlatformPo.epCallBack == 1 }">
+							<input name="epCallBack" checked="checked" type="checkbox" value="1" id="checkbox-1">
+							<%-- <input type="text" class='input-text' required  value='${exchangePlatformPo.epCallBackIp }' placeholder='' id='epCallBackIp' name='epCallBackIp'> --%>
+						</c:when>
+						<c:otherwise>
+							<input name="epCallBack"  type="checkbox" value="1" id="checkbox-1">
+						</c:otherwise>
+					</c:choose>
+					<label for="checkbox-1">&nbsp;</label>
+				</div>
+			</div>
+		</div>
+		<%-- <c:choose>
+			<c:when test="${epCallBack == 1 }"> --%>
+			<div class="row cl callBackIp" <c:if test="${exchangePlatformPo.epCallBack != 1 }"> style="display:none;"</c:if>>
+				<label class="form-label col-xs-4 col-sm-2">平台回调地址：</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" required  value="${exchangePlatformPo.epCallBackIp }" placeholder="输入自己的回调地址" id="epCallBackIp" name="epCallBackIp">
+				</div>
+			</div>
+			<%-- </c:when>
+		</c:choose> --%>
+		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">产品列表地址：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" class="input-text" required value="${exchangePlatformPo.productListIp }" placeholder="" id="productListIp" name="productListIp">
 			</div>
 		</div>
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2">流量查询地址：</label>
+			<label class="form-label col-xs-4 col-sm-2">订单状态查询地址：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text required" required  value="${exchangePlatformPo.pgdataCheckIp }" placeholder="" id="pgdataCheckIp" name="pgdataCheckIp">
+				<input type="text" class="input-text required" required  value="${exchangePlatformPo.epOrderStateIp }" placeholder="" id="epOrderStateIp" name="epOrderStateIp">
 			</div>
 		</div>
 		<div class="row cl">
@@ -138,6 +165,35 @@
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 <script type="text/javascript" src="/view/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
 <script type="text/javascript">
+/**增加或者删除平台回调地址输入框*/
+/* function toggleCallBack(vart){
+	if(!$(vart).is(':checked')){
+		alert('checked');
+		$(vart).append('<input type="text" class='input-text' required  value='' placeholder='' id='epCallBackIp' name='epCallBackIp'>');
+	}else{
+		alert('unchecked');
+		$(vart).next().remove();
+	}
+} */
+
+$('.skin-minimal input').iCheck({
+	checkboxClass: 'icheckbox-blue',
+	radioClass: 'iradio-blue',
+	increaseArea: '20%'
+});
+$('input').on('ifClicked', function(event){  
+		if(!$(this).is(':checked')){
+			//alert(1);
+			$('.callBackIp').show();
+			//alert('checked');
+			//$(this).append('<input type="text" class="input-text" required  value="" placeholder="" id="epCallBackIp" name="epCallBackIp"></input>');
+		}else{
+			//alert(2);
+			$('.callBackIp').hide();
+		}
+	 // alert(event.type + ' callback');  
+});
+
 /**判断平台标识是否存在*/
 function checkEpEngId(vart){
 	var epEngId = $(vart).val();
@@ -168,7 +224,7 @@ $().ready(function() {
 	                data: $('form').serialize(),//表单数据
 	                async : false,
 	                success:function(d){
-	                	alert(d);
+	                	//alert(d);
 	                    if(d=="success"){
 	                        layer.msg('保存成功！');//保存成功提示
 	                        var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引

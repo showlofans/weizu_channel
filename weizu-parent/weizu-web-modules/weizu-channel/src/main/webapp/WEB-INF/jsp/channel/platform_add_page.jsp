@@ -63,16 +63,22 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">订单状态地址：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text required" value="" placeholder="" id="pgdataCheckIp" name="pgdataCheckIp">
+				<input type="text" class="input-text required" value="" placeholder="" id="epOrderStateIp" name="epOrderStateIp">
 			</div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">是否支持回调：</label>
 			<div class="formControls col-xs-7 col-sm-9 skin-minimal">
 				<div class="check-box">
-					<input name="epCallBack" type="checkbox" value="1" id="checkbox-1">
+					<input name="epCallBack" type="checkbox"  value="1" id="checkbox-1">
 					<label for="checkbox-1">&nbsp;</label>
 				</div>
+			</div>
+		</div>
+		<div class="row cl callBackIp" style="display:none;">
+			<label class="form-label col-xs-4 col-sm-2">平台回调地址：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" required  value="" placeholder="" id="epCallBackIp" name="epCallBackIp">
 			</div>
 		</div>
 		<div class="row cl">
@@ -81,6 +87,7 @@
 				<input type="text" class="input-text" required  value="" placeholder="" id="epBalanceIp" name="epBalanceIp">
 			</div>
 		</div>
+		
 		<!-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">订单状态地址：</label>
 			<div class="formControls col-xs-8 col-sm-9">
@@ -140,11 +147,35 @@
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 <script type="text/javascript" src="/view/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
 <script type="text/javascript">
+
 $('.skin-minimal input').iCheck({
 	checkboxClass: 'icheckbox-blue',
 	radioClass: 'iradio-blue',
 	increaseArea: '20%'
 });
+$('input').on('ifClicked', function(event){  
+		if(!$(this).is(':checked')){
+			//alert(1);
+			$('.callBackIp').show();
+			//alert('checked');
+			//$(this).append('<input type="text" class="input-text" required  value="" placeholder="" id="epCallBackIp" name="epCallBackIp"></input>');
+		}else{
+			//alert(2);
+			$('.callBackIp').hide();
+		}
+	 // alert(event.type + ' callback');  
+});  
+/**增加或者删除平台回调地址输入框*/
+/* function toggleCalledBack(vart){
+	
+	if(!$(vart).is(':checked')){
+		alert('checked');
+		$(vart).append('<input type="text" class="input-text" required  value="" placeholder="" id="epCallBackIp" name="epCallBackIp">');
+	}else{
+		alert('unchecked');
+		$(vart).next().remove();
+	}
+} */
 /**判断平台名称是否存在*/
 function checkEpName(vart){
 	var epName = $(vart).val();

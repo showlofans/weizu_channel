@@ -13,6 +13,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.dao.impl.AgencyBackwardDao;
@@ -29,10 +30,11 @@ import com.weizu.flowsys.web.trade.pojo.PurchasePo;
  * @createTime:2017年8月26日 上午10:32:16
  * @version 1.0
  */
-@Controller(value=CallBackURL.MODOE_NAME)
+@Controller
+@RequestMapping(value=CallBackURL.MODOE_NAME)
 public class CallBackController {
 	@Resource
-	private AccountPurchaseAO agencyPurchaseAO;
+	private AccountPurchaseAO accountPurchaseAO;
 //	@Resource
 //	private PurchaseAO purchaseAO;
 	
@@ -118,7 +120,7 @@ public class CallBackController {
 					rjdto.setStatus(myStatus);
 					rjdto.setStatusDetail(statusDetail);
 				}
-				agencyPurchaseAO.updatePurchaseState(purchasePo.getOrderId(), myStatus, statusDetail, ts);
+				accountPurchaseAO.updatePurchaseState(purchasePo.getOrderId(), myStatus, statusDetail, ts);
 				AgencyBackwardPo agencyPo = agencyAO.getAgencyByAccountId(purchasePo.getAccountId());
 				//把rjdto按照代理商返回
 				if(!"success".equals(SendCallBackUtil.sendCallBack(rjdto, agencyPo))){//回调成功，更新数据库回调状态
@@ -136,6 +138,42 @@ public class CallBackController {
         }  
 		//String failReason,String outTradeNo,String sign,int status,Long ts
 		return "ok";
+	}
+	/**
+	 * @description: 河南硕朗回调
+	 * @param errorcode
+	 * @param transaction_id
+	 * @param user_order_id
+	 * @param number
+	 * @param status
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月16日 下午1:07:19
+	 */
+	@RequestMapping(value=CallBackURL.Weizu,method=RequestMethod.POST)
+	public void WeizuCallBack(Integer errcode, String transaction_id, String user_order_id, String number, Integer status){
+		String res = "";
+		if(errcode.equals(0)){
+			Long orderId = Long.parseLong(user_order_id);
+			String orderIdApi = transaction_id;
+			switch (status) {
+			case 4://成功:设置orderResult和orderState为成功
+				res = accountPurchaseAO.updatePurchaseState(orderId, OrderStateEnum.CHARGED.getValue(), OrderStateEnum.CHARGED.getDesc(), System.currentTimeMillis());
+				break;
+			case 8://失败:设置orderResult为充值等待(设置回调缓冲时间限制)
+				res = accountPurchaseAO.updatePurchaseState(orderId, OrderStateEnum.DAICHONG.getValue(), OrderStateEnum.DAICHONG.getDesc(), System.currentTimeMillis());
+				break;
+				
+			default:
+				break;
+			}
+		}
+		if(!"success".equals(res)){
+			System.out.println(errcode+":" +transaction_id+":"  +user_order_id+":"  +number+":"  + status);
+		}
+		//String failReason,String outTradeNo,String sign,int status,Long ts
+//		return "ok";
+		System.out.println("ok");
 	}
 	
 }

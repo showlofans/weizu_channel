@@ -18,6 +18,7 @@ import com.weizu.flowsys.api.singleton.OrderIn;
 import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 import com.weizu.flowsys.api.weizu.charge.ChargeOrder;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
@@ -89,7 +90,7 @@ public class Weizu implements BaseInterface {
 	@Override
 	public OrderDTO getOrderState() {
 		String paramsStr =  toOrderParams();
-		String jsonStr = HttpRequest.sendGet(baseParams.getEpo().getPgdataCheckIp(),paramsStr);
+		String jsonStr = HttpRequest.sendGet(baseParams.getEpo().getEpOrderStateIp(),paramsStr);
 		OrderDTO orderDTO = null;
 		try {  
 			if(StringHelper.isEmpty(jsonStr)){
@@ -179,7 +180,10 @@ public class Weizu implements BaseInterface {
 //		 baseParams.getEpo().getEpPurchaseIp();
 		 
 //		initSpecialP("1","1.0","GET");
+//		ExchangePlatformPo epPo = baseParams.getEpo();
+		
 		 String jsonStr = HttpRequest.sendGet(baseParams.getEpo().getEpPurchaseIp(), toParams());
+		 
 		 ChargeDTO chargeDTO = null;
 		 try {  
 			 	if(StringHelper.isEmpty(jsonStr)){
@@ -220,12 +224,16 @@ public class Weizu implements BaseInterface {
 	public String toParams() {
 		ExchangePlatformPo epPo = baseParams.getEpo();
 		 StringBuffer sbParams = new StringBuffer();
+		 
 		sbParams.append("username=").append(epPo.getEpUserName());
 		sbParams.append("&number=").append(baseParams.getChargeTel());
 		sbParams.append("&flowsize=").append(baseParams.getProductCode());
 		sbParams.append("&user_order_id=").append(baseParams.getOrderId());
 		sbParams.append("&scope=").append(getScope(baseParams.getServiceType()));
 		
+		if(CallBackEnum.POSITIVE.getValue().equals(epPo.getEpCallBack()) && StringHelper.isNotEmpty(epPo.getEpCallBackIp())){
+			sbParams.append("&reporturl=").append(epPo.getEpCallBackIp());
+		}
 		sbParams.append("&sign=").append(sign);
 		
 		return sbParams.toString();

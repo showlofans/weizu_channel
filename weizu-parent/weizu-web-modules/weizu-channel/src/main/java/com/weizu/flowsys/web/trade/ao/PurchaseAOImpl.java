@@ -753,7 +753,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 									boolean updateCondition = orderIn!= null && !purchaseVO2.getOrderResult().equals(orderIn.getStatus());
 									if(updateCondition){
 										//更新订单状态//返回状态和原先数据库状态不相符
-										Long ts = orderIn.getCreated_at_time();
+//										Long ts = orderIn.getCreated_at_time();
+										Long ts = System.currentTimeMillis();
 										
 										int orderState = orderIn.getStatus();
 										String orderStateDetail = orderIn.getMsg();
