@@ -78,7 +78,7 @@
 						<%-- <a href="${platform.productListIp }">${platform.productListIp }</a> --%>
 						</div></td>
 						<td><div class="f-12 c-999">
-						<span data-toggle="tooltip" data-placement="top" title="${platform.pgdataCheckIp }">${fn:substring(platform.pgdataCheckIp,0,10)}</span>
+						<span data-toggle="tooltip" data-placement="top" title="${platform.epOrderStateIp }">${fn:substring(platform.epOrderStateIp,0,10)}</span>
 						</div></td>
 						<td><div class="f-12 c-999">
 						<span data-toggle="tooltip" data-placement="top" title="${platform.epBalanceIp }">${fn:substring(platform.epBalanceIp,0,10)}</span>

@@ -23,11 +23,14 @@ public class ExchangePlatformPo extends Po {
 
     private String productListIp;		//产品列表地址
 
-    private String pgdataCheckIp;		//订单状态查询地址
+//    private String pgdataCheckIp;		//订单状态查询地址
 
     private String epBalanceIp;			//余额查询地址
     
-//    private String epOrderStateIp;			//订单状态查询地址
+    private String epOrderStateIp;			//订单状态查询地址
+    
+    private String epCallBackIp;			//订单状态回调地址
+    
 
     private String epUserName;			//账号
 
@@ -57,14 +60,6 @@ public class ExchangePlatformPo extends Po {
 	public void setEpCallBack(Integer epCallBack) {
 		this.epCallBack = epCallBack;
 	}
-
-//	public String getEpOrderStateIp() {
-//		return epOrderStateIp;
-//	}
-//
-//	public void setEpOrderStateIp(String epOrderStateIp) {
-//		this.epOrderStateIp = epOrderStateIp;
-//	}
 
 	public String getEpOtherParams() {
 		return epOtherParams;
@@ -130,13 +125,21 @@ public class ExchangePlatformPo extends Po {
         this.productListIp = productListIp == null ? null : productListIp.trim();
     }
 
-    public String getPgdataCheckIp() {
-        return pgdataCheckIp;
-    }
+    public String getEpOrderStateIp() {
+		return epOrderStateIp;
+	}
 
-    public void setPgdataCheckIp(String pgdataCheckIp) {
-        this.pgdataCheckIp = pgdataCheckIp == null ? null : pgdataCheckIp.trim();
-    }
+	public void setEpOrderStateIp(String epOrderStateIp) {
+		this.epOrderStateIp = epOrderStateIp == null ? null : epOrderStateIp.trim() ;
+	}
+
+	public String getEpCallBackIp() {
+		return epCallBackIp;
+	}
+
+	public void setEpCallBackIp(String epCallBackIp) {
+		this.epCallBackIp = epCallBackIp == null ? null : epCallBackIp.trim();
+	}
 
     public String getEpBalanceIp() {
         return epBalanceIp;

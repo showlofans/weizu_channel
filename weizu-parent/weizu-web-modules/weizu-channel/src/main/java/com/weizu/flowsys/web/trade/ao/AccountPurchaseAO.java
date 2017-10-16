@@ -11,6 +11,17 @@ public interface AccountPurchaseAO {
 	 * @createTime:2017年8月21日 下午4:11:21
 	 */
 	String updatePurchaseState(Long orderId,Integer orderResult, String orderResultDetail, Long realBackTime);
+	/**
+	 * @description:回调的时候，更新状态:成功返成功，失败返等待
+	 * @param orderId 
+	 * @param orderResult
+	 * @param orderResultDetail
+	 * @param realBackTime
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月16日 下午4:30:28
+	 */
+	String updatePurchaseStateByApi(String orderIdApi, Long orderId,Integer orderResult, String orderResultDetail, Long realBackTime);
 	
 	/**
 	 * @description: 手动推送结果

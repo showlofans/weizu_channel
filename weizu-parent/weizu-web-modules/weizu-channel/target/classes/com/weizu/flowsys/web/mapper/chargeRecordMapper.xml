@@ -169,7 +169,7 @@
 	<where>
 		<include refid="consume_condition_sql"></include>
 	</where>
-	order by crt.remittance_time desc, crt.charge_after
+	order by crt.remittance_time desc, crt.account_type desc
   	<!-- order by -->
 	<if test="start != null">
 		 	limit #{start}

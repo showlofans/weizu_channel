@@ -50,7 +50,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 		
 		if(unchargeNotSave){//手动失败，要返款
 			PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
-			if(purchasePo != null && purchasePo.getOrderResult() != null && OrderStateEnum.UNCHARGE.getValue() !=  purchasePo.getOrderResult()){//清除已经返款的记录
+			if(purchasePo != null && purchasePo.getOrderResult() != null && orderResult !=  purchasePo.getOrderResult()){//清除已经返款的记录
 				List<AccountPurchasePo> list = accountPurchaseDao.list(new WherePrams("purchase_id", "=", orderId));
 //				Double agencyAfterBalance = 0.0d;
 					int batchAddCrt = 0;
@@ -171,6 +171,25 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 			pur = purchaseDAO.updatePurchaseState(new PurchaseStateParams(orderId, System.currentTimeMillis(), orderResult, orderResultDetail, null));
 		}
 		if(pur + ap > 1){
+			return "success";
+		}
+		return "error";
+	}
+
+	@Override
+	public String updatePurchaseStateByApi(String orderIdApi, Long orderId,
+			Integer orderResult, String orderResultDetail, Long realBackTime) {
+		int ap = 0;
+		int pur = 0;
+		if(!orderResult.equals(OrderStateEnum.CHARGED.getValue())){
+			//更新连接表//不是成功和失败，就是进行
+			ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, OrderStateEnum.CHARGING.getDesc());
+		}else{
+			ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, OrderStateEnum.CHARGED.getDesc());
+		}
+		//更新订单表
+		pur = purchaseDAO.updatePurchaseState(new PurchaseStateParams(orderId, System.currentTimeMillis(), orderResult, orderResultDetail, null));
+		if(pur > 0){
 			return "success";
 		}
 		return "error";
