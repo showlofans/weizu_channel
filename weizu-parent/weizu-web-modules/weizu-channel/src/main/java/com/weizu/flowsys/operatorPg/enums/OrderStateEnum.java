@@ -10,11 +10,11 @@ public enum OrderStateEnum {
 	/**
 	 * 未充值
 	 */
-	WEICHONG("系统：未充",4),
+	WEICHONG("系统：未充",8),
 	/**
 	 * 等待充值
 	 */
-	DAICHONG("系统：待充",3),
+	DAICHONG("系统：待充",4),
 	/**
 	 * 正在充值
 	 */

@@ -134,11 +134,11 @@
 						</td>
 						<c:if test="${loginContext.rootAgencyId == 0 }">
 						<td class="f-14 td-manage">
-							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeState(this,'1')" href="javascript:;" title="成功">
+							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeState(this,1)" href="javascript:;" title="成功">
 								<input type="hidden" value="${purchase.orderId }" >
 								<i class="Hui-iconfont">&#xe6e6;</i>
 							</a>
-							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeState(this,'0')" href="javascript:;" title="失败">
+							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeState(this,0)" href="javascript:;" title="失败">
 								<input type="hidden" value="${purchase.orderId }" >
 								<i class="Hui-iconfont">&#xe6e5;</i>
 							</a> 

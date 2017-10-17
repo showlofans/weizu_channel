@@ -22,7 +22,7 @@
 	       		<font color="red">${errorMsg }</font>
 	       	</c:when>
 	       	<c:otherwise>
-	       		<font color="red">未知错误!</font>
+	       		<font color="red">系统维护之后，用户未登陆！！</font>
 	       		
 	       	</c:otherwise>
 	       </c:choose>

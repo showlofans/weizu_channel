@@ -10,8 +10,9 @@
 <META HTTP-EQUIV="Pragma" CONTENT="no-cache"> 
 	<META HTTP-EQUIV="Cache-Control" CONTENT="no-cache"> 
 	<META HTTP-EQUIV="Expires" CONTENT="0"> 
-<link rel="Bookmark" href="/favicon.ico" >
-<link rel="Shortcut Icon" href="/favicon.ico" />
+<link rel="Bookmark" href="/view/iconW.jpg" >
+<link rel="Shortcut Icon" href="/view/iconW.jpg" />
+<link href="/view/iconW.jpg" type="image/x-icon" rel="icon">
 <!--[if lt IE 9]>
 <script type="text/javascript" src="lib/html5shiv.js"></script>
 <script type="text/javascript" src="lib/respond.min.js"></script>
@@ -187,17 +188,25 @@
 		</dd>
 	</dl>
 	<!-- http://htmlify.wps.cn/doc/index.html?ksyun=UD4oMeA6/word.html&theme=clear -->
-	<!-- <dl id="menu-member">
-		<dt><i class="Hui-iconfont">&#xe6c6;</i> 平台操作指南<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+	<dl id="menu-member">
+		<dt><i class="Hui-iconfont">&#xe6c6;</i> 平台相关<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 		<dd>
 			<ul>
-					<li><a data-href="http://htmlify.wps.cn/doc/index.html?ksyun=UD4oMeA6/word.html&theme=clear" target="_blank" data-title="平台操作指南" href="javascript:void(0)">平台操作指南</a></li>
+			<c:if test="${loginContext.agencyTag == 1 }">
+				<li><a href="/view/mine/jk-doc/jk-doc.html" title="南昌微族接口文档" target="_blank">南昌微族接口文档</a></li>
+			</c:if>
+				<li><a data-href="http://htmlify.wps.cn/doc/index.html?ksyun=UD4oMeA6/word.html&theme=clear" data-title="平台操作指南" href="javascript:void(0)">平台操作指南</a></li>
 			</ul>
 		</dd>
-	</dl> -->
-	<ul>
+	</dl>
+	<%-- <ul>
+		<c:if test="${loginContext.agencyTag == 1 }">
+			<!-- <li><a data-href="/view/mine/jk-doc/jk-doc.html" data-title="南昌微族接口文档" href="javascript:void(0)">南昌微族接口文档</a></li> -->
+			<!-- <li><a href="/view/mine/jk-doc/jk-doc.html" data-title="南昌微族接口文档" target="_blank">南昌微族接口文档</a></li> -->
+			<li><a href="/view/mine/jk-doc/jk-doc.html" data-title="南昌微族接口文档" target="_blank">南昌微族接口文档</a></li>
+		</c:if>
 					<li><a data-href="http://htmlify.wps.cn/doc/index.html?ksyun=UD4oMeA6/word.html&theme=clear" data-title="平台操作指南" href="javascript:void(0)">平台操作指南</a></li>
-			</ul>
+	</ul> --%>
 	
 		<!-- <dl id="menu-member">
 			<dt><i class="Hui-iconfont">&#xe60d;</i> 会员管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>

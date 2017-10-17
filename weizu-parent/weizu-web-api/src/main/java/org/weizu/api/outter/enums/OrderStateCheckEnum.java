@@ -28,7 +28,7 @@ public enum OrderStateCheckEnum {
 	/**
 	 * 没有找到该订单
 	 */
-	ORDER_NOT_FOUND("没有找到该订单",8),
+	ORDER_NOT_FOUND("没有找到该订单",5504),
 	/**
 	 * 手机号不对！
 	 */
@@ -36,7 +36,7 @@ public enum OrderStateCheckEnum {
 	/**
 	 * 参数正确
 	 */
-	PARAMS_SUCCESS("参数正确",1);
+	PARAMS_SUCCESS("参数正确",5001);
 	
 	private String desc;
 	private Integer value;

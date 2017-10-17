@@ -31,6 +31,8 @@ import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.MD5;
 import com.weizu.web.foundation.String.StringHelper;
+import com.weizu.web.foundation.hash.Hash;
+import com.weizu.web.foundation.hash.base64.Base64Util;
 
 @Service("agencyAO")
 public class AgencyAOImpl implements AgencyAO {
@@ -65,6 +67,9 @@ public class AgencyAOImpl implements AgencyAO {
 			
 			agencyBackward.setCreateTime(System.currentTimeMillis());
 			agencyBackward.setAgencyTag(AgencyTagEnum.PLATFORM_USER.getValue());
+			//用户密码加密
+			String userPass = Hash.BASE_UTIL.encode(agencyBackward.getUserPass());
+			agencyBackward.setUserPass(userPass);
 			int addAgency = agencyVODao.add(agencyBackward);
 			//利用nextId函数获得当前注册代理商id,同时新增一个对私一个账户
 			//默认开通对私账户
@@ -107,9 +112,10 @@ public class AgencyAOImpl implements AgencyAO {
 		if(agencyBackward == null){
 			return null;
 		}
+		String userPass = Hash.BASE_UTIL.decode(agencyBackward.getUserPass());
 		AgencyBackwardVO agencyVO = new AgencyBackwardVO(agencyBackward.getId(),
 				agencyBackward.getRootAgencyId(), agencyBackward.getUserName(), 
-				agencyBackward.getUserRealName(), agencyBackward.getUserPass(), 
+				agencyBackward.getUserRealName(),userPass , 
 				agencyBackward.getAgencyTel(), agencyBackward.getUserEmail(), 
 				agencyBackward.getAgencyIp(), agencyBackward.getCreateTime(), 
 				agencyBackward.getVerifyCode(),agencyBackward.getCallBackIp(),agencyBackward.getOtherContact(),agencyBackward.getAgencyTag());
@@ -182,10 +188,11 @@ public class AgencyAOImpl implements AgencyAO {
 		Map<String,Object> resultMap = new HashMap<String, Object>();
 		AgencyBackwardPo resultAgency = agencyVODao.get(new WherePrams("user_name", "=", agencyBackward
 				.getUserName()));
+		String dataUserPass = Hash.BASE_UTIL.decode(resultAgency.getUserPass());
 		if(resultAgency != null)
 		{
 			
-			if(resultAgency.getUserPass().equals(userPass))
+			if(dataUserPass.equals(userPass))
 			{
 				resultMap.put("msg", "success");
 				resultMap.put("entity", resultAgency);
@@ -434,12 +441,13 @@ public class AgencyAOImpl implements AgencyAO {
 	 */
 	@Override
 	public int updatePass(int agencyId, String enterPass) {
-		AgencyBackwardPo agencyPo = new AgencyBackwardPo();
-		agencyPo.setUserPass(enterPass);
-		agencyPo.setId(agencyId);
+//		AgencyBackwardPo agencyPo = new AgencyBackwardPo();
+		String dataUserPass = Hash.BASE_UTIL.encode(enterPass);
+//		agencyPo.setUserPass(dataUserPass);
+//		agencyPo.setId(agencyId);
 		
 //		agencyVODao.updateLocal(agencyPo,new WherePrams("id", "=", agencyId));
-		return agencyVODao.updatePass(agencyId, enterPass);
+		return agencyVODao.updatePass(agencyId, dataUserPass);
 	}
 
 	/**
@@ -548,9 +556,10 @@ public class AgencyAOImpl implements AgencyAO {
 	@Override
 	public Boolean checkIdByPass(int agencyId,String userPass) {
 		AgencyBackwardPo resultAgency = agencyVODao.get(agencyId);
+		String dataUserPass = Hash.BASE_UTIL.decode(resultAgency.getUserPass());
 		if(resultAgency != null)
 		{
-			if(resultAgency.getUserPass().equals(userPass))
+			if(dataUserPass.equals(userPass))
 			{
 				return true;
 			}

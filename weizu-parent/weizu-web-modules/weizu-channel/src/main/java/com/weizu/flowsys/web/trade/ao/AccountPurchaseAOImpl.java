@@ -143,7 +143,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 										AccountTypeEnum.Replenishment.getValue(), accountId,  1 , orderId));
 								chargeAccountDao.updateLocal(accountPo, new WherePrams("id","=",accountId));
 								//更新连接表
-//								ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
+								ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
 //								Long appId = accountPurchaseDao.nextId();
 								//同样的订单消费再添加一笔消费记录
 								AccountPurchasePo appPo = accountPurchasePo.clone();

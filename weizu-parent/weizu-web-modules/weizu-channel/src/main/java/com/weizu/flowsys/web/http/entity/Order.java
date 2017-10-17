@@ -10,17 +10,17 @@ package com.weizu.flowsys.web.http.entity;
  */
 public class Order {
 	private OrderPo orderPo;		//订单详情
-	private int rspCode;			//返回状态
-	private String rspMsg;			//返回状态描述
+	private int tipCode;			//返回状态
+	private String tipMsg;			//返回状态描述
 	
 	public Order() {
 		super();
 	}
-	public Order(OrderPo orderPo, int rspCode, String rspMsg) {
+	public Order(OrderPo orderPo, int tipCode, String tipMsg) {
 		super();
 		this.orderPo = orderPo;
-		this.rspCode = rspCode;
-		this.rspMsg = rspMsg;
+		this.tipCode = tipCode;
+		this.tipMsg = tipMsg;
 	}
 
 	public OrderPo getOrderPo() {
@@ -30,18 +30,16 @@ public class Order {
 	public void setOrderPo(OrderPo orderPo) {
 		this.orderPo = orderPo;
 	}
-
-	public int getRspCode() {
-		return rspCode;
+	public int getTipCode() {
+		return tipCode;
 	}
-	public void setRspCode(int rspCode) {
-		this.rspCode = rspCode;
+	public void setTipCode(int tipCode) {
+		this.tipCode = tipCode;
 	}
-	public String getRspMsg() {
-		return rspMsg;
+	public String getTipMsg() {
+		return tipMsg;
 	}
-	public void setRspMsg(String rspMsg) {
-		this.rspMsg = rspMsg;
+	public void setTipMsg(String tipMsg) {
+		this.tipMsg = tipMsg;
 	}
-	
 }

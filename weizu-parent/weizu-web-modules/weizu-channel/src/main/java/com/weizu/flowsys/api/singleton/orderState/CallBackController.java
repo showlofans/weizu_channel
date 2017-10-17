@@ -150,8 +150,9 @@ public class CallBackController {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年10月16日 下午1:07:19
 	 */
-	@RequestMapping(value=CallBackURL.Weizu,method=RequestMethod.POST)
-	public void WeizuCallBack(Integer errcode, String transaction_id, String user_order_id, String number, Integer status){
+	@ResponseBody
+	@RequestMapping(value=CallBackURL.Weizu)
+	public String WeizuCallBack(Integer errcode, String transaction_id, String user_order_id, String number, Integer status){
 		String res = "";
 		if(errcode.equals(0)){
 			Long orderId = Long.parseLong(user_order_id);
@@ -172,8 +173,8 @@ public class CallBackController {
 			System.out.println(errcode+":" +transaction_id+":"  +user_order_id+":"  +number+":"  + status);
 		}
 		//String failReason,String outTradeNo,String sign,int status,Long ts
-//		return "ok";
 		System.out.println("ok");
+		return "ok";
 	}
 	
 }

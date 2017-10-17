@@ -247,7 +247,7 @@ public class ChargeImpl implements IChargeFacet {
 		
 		//最好把失败的单子卡下来
 		if(chargeDTO != null){
-			Charge charge = new Charge(chargeDTO.getTipCode(), chargeDTO.getTipMsg(), new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
+			Charge charge = new Charge(ChargeStatusEnum.CHARGE_SUCCESS.getValue(), ChargeStatusEnum.CHARGE_SUCCESS.getDesc(), new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
 			return charge;
 		}
 		else{
@@ -274,7 +274,10 @@ public class ChargeImpl implements IChargeFacet {
 		//验证包体：运营商类型，业务范围，包体大小，包体
 		int otype = -1;
 		if(resMap == null){
-			
+			chargeEnum = ChargeStatusEnum.CITY_NOT_FOUND;
+			charge =  new Charge(chargeEnum.getValue(),chargeEnum.getDesc(), null);
+			sqlMap.put("exceptionDTO", charge);
+			return sqlMap;
 		}else{
 			otype = Integer.parseInt(resMap.get("operatorType").toString());
 			PgDataPo pgData = valiUser.findPg(chargeParams.getScope(), chargeParams.getFlowsize(),otype);//

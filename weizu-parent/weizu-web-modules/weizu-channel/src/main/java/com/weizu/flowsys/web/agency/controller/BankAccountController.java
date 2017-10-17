@@ -1,11 +1,13 @@
 package com.weizu.flowsys.web.agency.controller;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,6 +62,8 @@ public class BankAccountController {
 		Map<String,Object> resultMap = new HashMap<String,Object>();
 		if(agencyVo != null){
 			bankAccountAO.getAttachBankList(accountId, agencyVo.getId(), resultMap);;
+		}else{
+			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！");
 		}
 		return new ModelAndView("/bank/attach_bank_list", "resultMap", resultMap);
 	}
@@ -73,15 +77,24 @@ public class BankAccountController {
 	 */
 	@RequestMapping(value=BankAccountURL.ATTACH_BANK)
 	@ResponseBody
-	public String attachBankAccount(HttpServletRequest request,Long id){
+	public String attachBankAccount(HttpServletRequest request,Long id, HttpServletResponse response){
 		//当前子账户的父级代理商就是当前登陆用户
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		Object childAccountIdOjb = request.getSession().getAttribute("childAccountId");
-		Integer chileAccountId = childAccountIdOjb == null ? null : Integer.parseInt(childAccountIdOjb.toString());
-		BankAccountPo originalBankPo = bankAccountDao.get(id);
-		if(originalBankPo != null){
-			BankAccountPo bankPo = new BankAccountPo(id, chileAccountId, originalBankPo.getRemittanceWay(), originalBankPo.getRemittanceBankAccount(), originalBankPo.getAccountName(), null, agencyVo.getId(), CallBackEnum.POSITIVE.getValue(), CallBackEnum.POSITIVE.getValue());
-			return bankAccountAO.attachBank(bankPo);
+		if(agencyVo == null){
+			try {
+				response.sendRedirect("error");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}else{
+			Object childAccountIdOjb = request.getSession().getAttribute("childAccountId");
+			Integer chileAccountId = childAccountIdOjb == null ? null : Integer.parseInt(childAccountIdOjb.toString());
+			BankAccountPo originalBankPo = bankAccountDao.get(id);
+			if(originalBankPo != null){
+				BankAccountPo bankPo = new BankAccountPo(id, chileAccountId, originalBankPo.getRemittanceWay(), originalBankPo.getRemittanceBankAccount(), originalBankPo.getAccountName(), null, agencyVo.getId(), CallBackEnum.POSITIVE.getValue(), CallBackEnum.POSITIVE.getValue());
+				return bankAccountAO.attachBank(bankPo);
+			}
 		}
 		return "error";
 	}
@@ -116,6 +129,8 @@ public class BankAccountController {
 		Map<String,Object> resultMap = new HashMap<String,Object>();
 		if(agencyVo != null){
 			bankAccountAO.getMyBankList(agencyVo.getId(), resultMap);
+		}else{
+			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！");
 		}
 		return new ModelAndView("/bank/my_bank_list", "resultMap", resultMap);
 	}
@@ -135,6 +150,8 @@ public class BankAccountController {
 		Map<String,Object> resultMap = new HashMap<String,Object>();
 		if(agencyVo != null){
 			bankAccountAO.getPlusBankList(agencyVo.getRootAgencyId(),accountId, resultMap);
+		}else{
+			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！");
 		}
 			
 		BankAccountPo myBank = bankAccountAO.getBankPoById(id);//子代理商的银行卡id
@@ -253,12 +270,22 @@ public class BankAccountController {
 	 */
 	@RequestMapping(value=BankAccountURL.TRANSFER_BANK)
 	@ResponseBody
-	public String transferBank(HttpServletRequest request,TransferRecordPo transferPo){
+	public String transferBank(HttpServletRequest request,TransferRecordPo transferPo, HttpServletResponse response){
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		transferPo.setFromAgencyId(agencyVo.getId());			
-		
-		String res = transferRecAO.transferBank(transferPo);
-		return res;
+			if(agencyVo == null){
+				try {
+				response.sendRedirect("error");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}else{
+				transferPo.setFromAgencyId(agencyVo.getId());			
+				String res = transferRecAO.transferBank(transferPo);
+				return res;
+			}
+			return null;
+//			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 	}
 	
 	/**
@@ -275,6 +302,9 @@ public class BankAccountController {
 			@RequestParam(value="confirmState",required=false)Integer confirmState,
 			HttpServletRequest request){
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		if(agencyVo == null){
+			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！");
+		}
 		if(agencyVo.getRootAgencyId() == 0 && direction == null){//超管默认转入
 			direction = InOrOutEnum.IN.getValue();
 		}

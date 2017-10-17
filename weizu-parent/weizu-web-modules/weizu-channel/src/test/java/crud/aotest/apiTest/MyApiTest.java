@@ -132,5 +132,9 @@
 //////		String resultStr = HttpRequest.sendPost("http://api.lljypt.com/capi/query.balance", param.toString());
 //////		System.out.println(balanceDTO.getAccountBalance());
 ////	}
+//	@Test
+//	public void testCallBack(){
+//		
+//	}
 //	
 //}

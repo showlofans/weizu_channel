@@ -15,6 +15,7 @@ import com.weizu.flowsys.web.channel.dao.impl.OperatorPgDao;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.web.foundation.MD5;
+import com.weizu.web.foundation.hash.Hash;
 
 /**
  * @description: 验证调用接口用户是否合法
@@ -52,10 +53,11 @@ public class ValiUser {
 		}
 		
 		String backAPIKey = backPo.getUserApiKey();
+		String dataUserPass = Hash.BASE_UTIL.decode(backPo.getUserPass());
 		
 		String rightSign = null;
 		try {
-			rightSign = MD5.getMd5("userName="+backPo.getUserName()+"&userPass="+backPo.getUserPass()+"&apikey="+backAPIKey,null,null);
+			rightSign = MD5.getMd5("userName="+backPo.getUserName()+"&userPass="+dataUserPass+"&apikey="+backAPIKey,null,null);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
