@@ -39,32 +39,32 @@
 //	 */
 //	@Test
 //	public  void testBase64Util(){
-//		WherePrams where = new WherePrams("id", ">", 2);
-//		Integer startNum = 100;
-//		List<AgencyBackwardPo> list = agencyVODao.list(where.limit(startNum, 10));
-//		System.out.println(list.size());
-//		System.out.println(list.get(0).getId());
-//		//更新为加密后的密码
-//		for (AgencyBackwardPo agencyBackwardPo : list) {
-//			String oringinalPass = agencyBackwardPo.getUserPass();
-//			String userPass = Hash.BASE_UTIL.encode(oringinalPass);
-//			System.out.println("加密前的密码:" + oringinalPass + "\t加密后的密码："+ userPass);
-//			agencyVODao.updatePass(agencyBackwardPo.getId(), userPass);
-//		}
-//		WherePrams where1 = new WherePrams("id", ">", 2);
-//		List<AgencyBackwardPo> list1 = agencyVODao.list(where.limit(startNum, 10));
-//		System.out.println(list1.size());
-////		//打印原来的密码
-//		for (AgencyBackwardPo backPo : list1) {
-//			String oringinalPass = backPo.getUserPass();
-//			String userPass = Hash.BASE_UTIL.decode(oringinalPass);
-//			System.out.println("解密前的密码:" + oringinalPass + "\t解密后的密码："+ userPass);
-//			/*System.out.println(backPo.getUserName() + ":" + userPass);*/
-//		}
-////		String oringinalPass = "xiao";
-////		String userPass = Hash.BASE_UTIL.encode(oringinalPass);
-////		System.out.println("加密前的密码:" + oringinalPass + "\t加密后的密码："+ userPass);
-////		agencyVODao.updatePass(1, userPass);
+////		WherePrams where = new WherePrams("id", ">", 2);
+////		Integer startNum = 100;
+////		List<AgencyBackwardPo> list = agencyVODao.list(where.limit(startNum, 10));
+////		System.out.println(list.size());
+////		System.out.println(list.get(0).getId());
+////		//更新为加密后的密码
+////		for (AgencyBackwardPo agencyBackwardPo : list) {
+////			String oringinalPass = agencyBackwardPo.getUserPass();
+////			String userPass = Hash.BASE_UTIL.encode(oringinalPass);
+////			System.out.println("加密前的密码:" + oringinalPass + "\t加密后的密码："+ userPass);
+////			agencyVODao.updatePass(agencyBackwardPo.getId(), userPass);
+////		}
+////		WherePrams where1 = new WherePrams("id", ">", 2);
+////		List<AgencyBackwardPo> list1 = agencyVODao.list(where.limit(startNum, 10));
+////		System.out.println(list1.size());
+//////		//打印原来的密码
+////		for (AgencyBackwardPo backPo : list1) {
+////			String oringinalPass = backPo.getUserPass();
+////			String userPass = Hash.BASE_UTIL.decode(oringinalPass);
+////			System.out.println("解密前的密码:" + oringinalPass + "\t解密后的密码："+ userPass);
+////			/*System.out.println(backPo.getUserName() + ":" + userPass);*/
+////		}
+//		String oringinalPass = "jeff123";
+//		String userPass = Hash.BASE_UTIL.encode(oringinalPass);
+//		System.out.println("加密前的密码:" + oringinalPass + "\t加密后的密码："+ userPass); 
+////		agencyVODao.updatePass(2, userPass);
 //		
 ////		System.out.println(list.get(0).getUserName());
 ////		System.out.println(list.get(list.size()-1).getUserName());

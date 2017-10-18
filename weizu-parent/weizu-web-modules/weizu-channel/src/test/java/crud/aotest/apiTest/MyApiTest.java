@@ -48,19 +48,24 @@
 ////	 * @author:微族通道代码设计人 宁强
 ////	 * @createTime:2017年8月31日 下午4:46:04
 ////	 */
-////	@Test
-////	public void testBalance(){
+//	@Test
+//	public void testBalance(){
+//		
+////		String apikey =backPo.getUserApiKey(); 
+//		String sign = "";
+//		try {
+//			sign = MD5.getMd5("userName="+"123&userPass=jeff123"+"&apikey="+"8a982a8a5e9fd1c1015e9fd1c1900000",null,null);
+//		} catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//		}
+//		BalanceDTO balanceDTO = balanceFacade.myBalance("123", sign, 1);
+//		System.out.println(balanceDTO.getTipMsg());
+//		System.out.println(balanceDTO.getAccountBalance());
 ////		AgencyBackwardPo backPo = agencyVODao.getSecondAgency("123");
 ////		if(backPo == null){
 ////			System.out.println("不是二级代理商");
 ////		}else{
 ////			String sign = "";
-////			String apikey =backPo.getUserApiKey(); 
-////			try {
-////				sign = MD5.getMd5("username="+backPo.getUserName()+"&apikey="+apikey,null,null);
-////			} catch (UnsupportedEncodingException e) {
-////				e.printStackTrace();
-////			}
 ////			BalanceDTO balanceDTO = balanceFacade.myBalance(backPo.getUserName(), sign, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 //////		String resultStr = HttpRequest.sendPost("http://api.lljypt.com/capi/query.balance", param.toString());
 ////			System.out.println(BillTypeEnum.getEnum(balanceDTO.getBillType()).getDesc() + ":" + balanceDTO.getAccountBalance());
@@ -71,7 +76,7 @@
 ////			System.out.println(BillTypeEnum.getEnum(balanceDTO1.getBillType()).getDesc() + ":" + balanceDTO1.getAccountBalance());
 ////			System.out.println(balanceDTO1.getRspMsg());
 ////		}
-////	}
+//	}
 //	/**
 //	 * @description: 测试订单状态
 //	 * @author:微族通道代码设计人 宁强
@@ -132,9 +137,9 @@
 //////		String resultStr = HttpRequest.sendPost("http://api.lljypt.com/capi/query.balance", param.toString());
 //////		System.out.println(balanceDTO.getAccountBalance());
 ////	}
-//	@Test
-//	public void testCallBack(){
-//		
-//	}
+////	@Test
+////	public void testCallBack(){
+////		
+////	}
 //	
 //}

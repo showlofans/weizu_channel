@@ -60,7 +60,7 @@
 					</select>
 					</span> 
 					<c:choose>
-					<c:when test="${loginContext.rootAgencyId == 0 }">
+					<c:when test="${loginContext.rootaccountId == 0 }">
 						通道类型：
 					</c:when>
 					<c:otherwise>
@@ -75,7 +75,7 @@
 						</c:forEach>
 					</select>
 					</span> 
-					<c:if test="${loginContext.rootAgencyId == 0 }">
+					<c:if test="${loginContext.rootaccountId == 0 }">
 						通道名称:<input type="text"  value="${resultMap.searchParams.channelName }" name="channelName" id="" placeholder=" 通道名称" style="width:250px" class="input-text">
 					</c:if>
 					
@@ -118,7 +118,7 @@
 					<th width="80">结果描述</th>
 					<th width="60">扣款</th>
 					<th width="60">操作</th>
-					<c:if test="${loginContext.rootAgencyId == 0 }">
+					<c:if test="${loginContext.rootaccountId == 0 }">
 						<th width="120">通道名称</th>
 					</c:if>
 					<th width="60">扣款类型</th>
@@ -128,7 +128,7 @@
 				<c:forEach items="${resultMap.pagination.records }" var="purchase" varStatus="vs">
 					<tr class="text-c">
 						<td><input type="checkbox" class="ckpur" value="" name=""></td>
-						<td style="display:none;">${purchase.agencyId }</td>
+						<td style="display:none;">${purchase.accountId }</td>
 						<td>${purchase.agencyName }</td>
 						<td>${purchase.orderId }</td>
 						<td>${purchase.chargeTel }</td>
@@ -171,7 +171,7 @@
 								<i class="Hui-iconfont">&#xe6dc;</i>
 							</a> 
 						</td>
-						<c:if test="${loginContext.rootAgencyId == 0 }"><td>${purchase.channelName }</td> 
+						<c:if test="${loginContext.rootaccountId == 0 }"><td>${purchase.channelName }</td> 
 						</c:if>
 						<td>
 							<c:forEach items="${resultMap.billTypeEnums }" var="bTypeEnum" varStatus="vs">
@@ -216,24 +216,24 @@
 /**批量提交*/
 function batchCommit(){
 	var purchaseIds = "";
-	var agencyIds = "";
+	var accountIds = "";
 	$(".ckpur:checked").each(function(){ //遍历table里的全部checkbox
        // allcheckbox += $(this).next().html() + ","; //获取所有checkbox的值
         //alert($(this).is(':checked'));
-        	agencyIds += $(this).next().html() + ","; //获取被选中的代理商id
+        	accountIds += $(this).next().html() + ","; //获取被选中的代理商id
         	purchaseIds +=  $(this).next().next().next().html() + ",";
     });
-        	//alert(agencyIds);
-	if(agencyIds.length > 1) //如果获取到
+        	//alert(accountIds);
+	if(accountIds.length > 1) //如果获取到
     {
-    	agencyIds = agencyIds.substring(0, agencyIds.length - 1);
+    	accountIds = accountIds.substring(0, accountIds.length - 1);
     	purchaseIds = purchaseIds.substring(0, purchaseIds.length - 1);
     	alert(purchaseIds);
     	$.ajax({
 			type: 'POST',
 			url: "",
 			//dataType: 'json',
-			data: {purchaseIds:purchaseIds,agencyIds:agencyIds},
+			data: {purchaseIds:purchaseIds,accountIds:accountIds},
 			success: function(resp){
 				//$(obj).parents("tr").remove();
 				//alert

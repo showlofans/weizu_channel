@@ -681,6 +681,21 @@ public class ChargePgController {
 		
 		return ajaxRes;
 	}
+	/**
+	 * @description: 充值等待批量提交订单
+	 * @param purchaseVO
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月18日 下午4:05:52
+	 */
+	@ResponseBody
+	@RequestMapping(value=ChargePgURL.BATCH_COMMIT_ORDER)
+	public String batchCommitOrder(PurchaseVO purchaseVO){
+		
+		
+		return "error";
+	}
+	
 	
 	
 }

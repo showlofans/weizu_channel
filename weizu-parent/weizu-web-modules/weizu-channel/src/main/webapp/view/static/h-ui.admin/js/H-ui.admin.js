@@ -115,6 +115,15 @@ function creatIframe(href,titleName){
 						$t.find("i").trigger("click");
 					}
 				},
+				'closeother': function (t) {
+					var $t = $(t);	
+					$("#min_title_list li").each(function () {
+						var $li = $(this);	
+						if ($li.find("i") && $li.find("span").attr("data-href") != $t.find("span").attr("data-href")) {
+							$li.find("i").trigger("click");
+						}
+					});
+				},
 				'closeall': function(t) {
 					$("#min_title_list li i").trigger("click");
 				},

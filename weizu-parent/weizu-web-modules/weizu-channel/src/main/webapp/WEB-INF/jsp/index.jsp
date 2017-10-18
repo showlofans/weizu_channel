@@ -284,6 +284,7 @@
 	<ul>
 		<li id="closethis">关闭当前 </li>
 		<li id="closeall">关闭全部 </li>
+		<li id="closeother">关闭其他 </li>
 </ul>
 </div>
 <!--_footer 作为公共模版分离出去-->
