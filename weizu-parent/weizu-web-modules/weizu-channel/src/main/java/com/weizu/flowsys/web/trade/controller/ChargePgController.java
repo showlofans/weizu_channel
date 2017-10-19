@@ -192,7 +192,7 @@ public class ChargePgController {
 							operatorPgDataPo.setPgDiscountPrice(NumberTool.mul(activeDiscount, operatorPgDataPo.getPgPrice()));
 						}
 						String listJsonStr = JSON.toJSONString(chargeList);
-						System.out.println(listJsonStr);
+//						System.out.println(listJsonStr);
 						return listJsonStr;
 					}else{
 						System.out.println("没有找到该地区费率");
@@ -532,7 +532,7 @@ public class ChargePgController {
 			case 2://充值进行
 				model = new ModelAndView("/trade/charging_list", "resultMap", resultMap);
 				break;
-			case 3://待充
+			case 4://待充
 				model = new ModelAndView("/trade/charge_wait_list", "resultMap", resultMap);
 				break;
 			default:

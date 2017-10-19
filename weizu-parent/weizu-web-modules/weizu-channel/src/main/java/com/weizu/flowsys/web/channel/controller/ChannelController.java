@@ -364,18 +364,20 @@ public class ChannelController {
 		}
 //		return new ModelAndView("/channel/activity_channel_list");
 	}
+	
 	/**
-	 * @description: 编辑修改通道
-	 * @param cdPo
+	 * @description: 编辑修改通道信息
+	 * @param channelPo
+	 * @param ifUpdateRate
 	 * @return
 	 * @author:微族通道代码设计人 宁强
-	 * @createTime:2017年9月20日 下午4:18:41
+	 * @createTime:2017年10月19日 上午9:51:38
 	 */
 	@ResponseBody
 	@RequestMapping(value= ChannelURL.EDIT_CHANNEL_DISCOUNT)
-	public String editChannelD(ChannelChannelPo channelPo){
+	public String editChannelD(ChannelChannelPo channelPo,Integer ifUpdateRate){
 		channelPo.setLastAccess(System.currentTimeMillis());
-		String res = channelChannelAO.editChannel(channelPo);
+		String res = channelChannelAO.editChannel(channelPo, ifUpdateRate);
 		return res;
 	} 
 	

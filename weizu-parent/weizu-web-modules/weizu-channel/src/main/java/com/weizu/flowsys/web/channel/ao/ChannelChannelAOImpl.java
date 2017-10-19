@@ -278,7 +278,7 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 
 	@Transactional
 	@Override
-	public String editChannel(ChannelChannelPo channelPo) {
+	public String editChannel(ChannelChannelPo channelPo, Integer ifUpdateRate) {
 		List<ChannelDiscountPo> cdList = channelDiscountDao.list(new WherePrams("channel_id", "=", channelPo.getId()));//数据库绑定的折扣列表
 		List<ChannelDiscountPo> getCDList = channelPo.getDiscountList();	//获得页面折扣列表
 		String res = "";
@@ -292,7 +292,7 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 					getCD.setId(oldCd.getId());
 					if(oldCd.getChannelDiscount().doubleValue() != getCD.getChannelDiscount().doubleValue()){//看是否一样
 						initCDByChannelPo(channelPo,getCD);
-						res = channelDiscountAO.updateChannelDiscount(getCD);
+						res = channelDiscountAO.updateChannelDiscount(getCD, ifUpdateRate);
 					}
 					break;//打破第一重循环，不再判断上一层的if
 				}

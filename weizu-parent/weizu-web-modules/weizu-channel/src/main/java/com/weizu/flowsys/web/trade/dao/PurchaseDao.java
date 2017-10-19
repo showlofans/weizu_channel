@@ -63,13 +63,23 @@ public interface PurchaseDao extends Dao<PurchasePo, Long> {
 	PurchasePo getOnePurchase(Long orderId);
 	
 	/**
-	 * @description: 查询代理商订单
+	 * @description: 查询代理商消费订单
 	 * @param map
 	 * @return
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年9月1日 下午6:53:24
 	 */
 	PurchasePo getMyPurchase(int agnecyId,Long purchaseId);
+	
+	/**
+	 * @description: 任意一个条件查询是否存在重复订单,需要有一个为空
+	 * @param orderId
+	 * @param orderIdApi
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月19日 下午4:16:30
+	 */
+	PurchasePo hasDoublePurchase(String orderId, String orderIdApi);
 	
 	/**
 	 * @description: 查询统计信息

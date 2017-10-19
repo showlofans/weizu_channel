@@ -16,6 +16,7 @@
 //import com.weizu.flowsys.util.Pagination;
 //import com.weizu.flowsys.web.trade.ao.PurchaseAO;
 //import com.weizu.flowsys.web.trade.dao.PurchaseDao;
+//import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 //import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
@@ -221,4 +222,12 @@
 ////			System.out.println(pgList.size());
 ////		}
 ////	}
+//	@Test
+//	public void hastDoublePurchase(){
+//		PurchasePo purPo = purchaseDAO.hasDoublePurchase(null, "20171018101302237750");
+//		boolean hasD = purPo != null;
+//		if(hasD){
+//			System.out.println(purPo.getChargeTel());
+//		}
+//	}
 //}

@@ -85,7 +85,7 @@ public class OrderFacadeImpl implements IOrderFacet {
 				oscEnum = OrderStateCheckEnum.ORDER_NOT_FOUND;
 				order = new Order(null,oscEnum.getValue(), oscEnum.getDesc());
 			}
-			else if(!purchasePo.getChargeTel().equals(orderParams.getNumber())){
+			else if(orderParams.getNumber() != null && !purchasePo.getChargeTel().equals(orderParams.getNumber())){
 				oscEnum = OrderStateCheckEnum.TELPHONE_ERROR;
 				order = new Order(null,oscEnum.getValue(), oscEnum.getDesc());
 			}

@@ -114,4 +114,12 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePo, Long> implements Purcha
 		return sqlSessionTemplate.selectOne("getMyPurchase", map);
 	}
 
+	@Override
+	public PurchasePo hasDoublePurchase(String orderId, String orderIdApi) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("orderId", orderId);
+		map.put("orderIdApi", orderIdApi);
+		return sqlSessionTemplate.selectOne("hasDoublePurchase", map);
+	}
+
 }

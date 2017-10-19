@@ -122,6 +122,21 @@
   	from <include refid="t_purchase"></include>
   	where order_id = #{_parameter}
   </select>
+  <!-- 任意一个条件查询是否存在重复订单:优先取订单号去判断 -->
+  <select id="hasDoublePurchase" parameterType="map" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"></include>
+  	from <include refid="t_purchase"></include>
+  	<where>
+  		<choose>
+  			<when test="orderId != null">
+	  			AND order_id = #{orderId}
+  			</when>
+  			<when test="orderIdApi != null">
+	  			AND order_id_api = #{orderIdApi}
+  			</when>
+  		</choose>
+  	</where>
+  </select>
   <!-- 查询代理商订单 -->
   <select id="getMyPurchase" parameterType="map" resultMap="BaseResultMap">
   	select <include refid="get_base_Column_List"></include>

@@ -60,7 +60,7 @@
 					</select>
 					</span> 
 					<c:choose>
-					<c:when test="${loginContext.rootaccountId == 0 }">
+					<c:when test="${loginContext.rootAgencyId == 0 }">
 						通道类型：
 					</c:when>
 					<c:otherwise>
@@ -75,7 +75,7 @@
 						</c:forEach>
 					</select>
 					</span> 
-					<c:if test="${loginContext.rootaccountId == 0 }">
+					<c:if test="${loginContext.rootAgencyId == 0 }">
 						通道名称:<input type="text"  value="${resultMap.searchParams.channelName }" name="channelName" id="" placeholder=" 通道名称" style="width:250px" class="input-text">
 					</c:if>
 					
@@ -118,7 +118,7 @@
 					<th width="80">结果描述</th>
 					<th width="60">扣款</th>
 					<th width="60">操作</th>
-					<c:if test="${loginContext.rootaccountId == 0 }">
+					<c:if test="${loginContext.rootAgencyId == 0 }">
 						<th width="120">通道名称</th>
 					</c:if>
 					<th width="60">扣款类型</th>
@@ -171,7 +171,7 @@
 								<i class="Hui-iconfont">&#xe6dc;</i>
 							</a> 
 						</td>
-						<c:if test="${loginContext.rootaccountId == 0 }"><td>${purchase.channelName }</td> 
+						<c:if test="${loginContext.rootAgencyId == 0 }"><td>${purchase.channelName }</td> 
 						</c:if>
 						<td>
 							<c:forEach items="${resultMap.billTypeEnums }" var="bTypeEnum" varStatus="vs">

@@ -214,7 +214,8 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 				return updateRes+1;
 			}
 		}
-		return sqlSessionTemplate.update("updateRateDiscountByCDId", paramsMap);
+//		return sqlSessionTemplate.update("updateRateDiscountByCDId", paramsMap);
+		return updateRes; 
 	}
 
 	

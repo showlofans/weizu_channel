@@ -107,10 +107,11 @@ public interface ChannelChannelAO {
 	/**
 	 * @description: 编辑通道
 	 * @param channelPo
+	 * @param ifUpdateRate
 	 * @return
 	 * @author:微族通道代码设计人 宁强
-	 * @createTime:2017年9月20日 下午5:58:33
+	 * @createTime:2017年10月19日 上午9:50:17
 	 */
-	String editChannel(ChannelChannelPo channelPo);
+	String editChannel(ChannelChannelPo channelPo,Integer ifUpdateRate);
 	
 }

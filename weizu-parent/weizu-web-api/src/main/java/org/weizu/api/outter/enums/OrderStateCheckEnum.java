@@ -18,7 +18,7 @@ public enum OrderStateCheckEnum {
 	/**
 	 * 用户验证失败
 	 */
-	AUTHENTICATION_FAILURE("用户验证失败",0),
+	AUTHENTICATION_FAILURE("用户验证错误",0),
 	
 	/**
 	 * 订单号为空

@@ -22,7 +22,7 @@ public enum ChargeStatusEnum {
 	/**
 	 * 系统内部错误
 	 */
-	CHARGE_INNER_ERROR("系统内部错误",5000),
+	CHARGE_INNER_ERROR("服务器内部错误",5000),
 	/**
 	 * 充值提交成功
 	 */
@@ -54,7 +54,12 @@ public enum ChargeStatusEnum {
 	/**
 	 * 归属地接口调用异常
 	 */
-	CITY_NOT_FOUND("手机号归属地查询异常",5009);
+	CITY_NOT_FOUND("手机号归属地查询异常",5009),
+	
+	/**
+	 * 出现可疑重复订单
+	 */
+	HAS_DOUBLE_PURCHAE("出现可疑重复订单",5010);
 	
 	private String desc;
 	private Integer value;

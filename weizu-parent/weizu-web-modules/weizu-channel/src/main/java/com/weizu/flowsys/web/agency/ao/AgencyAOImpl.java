@@ -188,9 +188,9 @@ public class AgencyAOImpl implements AgencyAO {
 		Map<String,Object> resultMap = new HashMap<String, Object>();
 		AgencyBackwardPo resultAgency = agencyVODao.get(new WherePrams("user_name", "=", agencyBackward
 				.getUserName()));
-		String dataUserPass = Hash.BASE_UTIL.decode(resultAgency.getUserPass());
 		if(resultAgency != null)
 		{
+			String dataUserPass = Hash.BASE_UTIL.decode(resultAgency.getUserPass());
 			
 			if(dataUserPass.equals(userPass))
 			{
