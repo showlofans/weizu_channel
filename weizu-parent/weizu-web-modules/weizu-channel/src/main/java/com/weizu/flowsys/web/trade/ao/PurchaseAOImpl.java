@@ -227,14 +227,18 @@ public class PurchaseAOImpl implements PurchaseAO {
 			orderResult = OrderStateEnum.DAICHONG.getValue();
 			orderResultDetail = "通道暂停等待";
 		}else{//通道没有暂停
-			
 			chargeDTO = chargeByBI(epPo, orderId, pcVO.getChargeTel(),pcVO.getServiceType(), dataPo.getProductCode());
 			if(chargeDTO != null){
-				orderResult = OrderStateEnum.CHARGING.getValue();
-				orderResultDetail = OrderStateEnum.CHARGING.getDesc();
-				ChargeOrder co = chargeDTO.getChargeOrder();
-				if(co != null){
-					purchasePo.setOrderIdApi(co.getOrderIdApi());
+				if(chargeDTO.getTipCode() == OrderResultEnum.SUCCESS.getCode()){
+					orderResult = OrderStateEnum.CHARGING.getValue();
+					orderResultDetail = OrderStateEnum.CHARGING.getDesc();
+					ChargeOrder co = chargeDTO.getChargeOrder();
+					if(co != null){
+						purchasePo.setOrderIdApi(co.getOrderIdApi());
+					}
+				}else{
+					orderResult = OrderStateEnum.DAICHONG.getValue();
+					orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+chargeDTO.getTipMsg();
 				}
 			}else{
 				orderResult = OrderStateEnum.DAICHONG.getValue();

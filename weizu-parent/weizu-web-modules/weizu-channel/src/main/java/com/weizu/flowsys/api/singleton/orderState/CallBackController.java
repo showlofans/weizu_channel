@@ -21,6 +21,8 @@ import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.trade.ao.AccountPurchaseAO;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
+import com.weizu.web.foundation.DateUtil;
+import com.weizu.web.foundation.String.StringHelper;
 
 /**
  * @description: 回调控制层
@@ -175,6 +177,77 @@ public class CallBackController {
 		//String failReason,String outTradeNo,String sign,int status,Long ts
 		System.out.println("ok");
 		return "ok";
+	}
+	/**
+	 * @description: 乐疯回调接口
+	 * @param errcode
+	 * @param transaction_id
+	 * @param user_order_id
+	 * @param number
+	 * @param status
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月20日 下午4:58:27
+	 */
+	@ResponseBody
+	@RequestMapping(value=CallBackURL.Lefeng)
+	public String LefengCallBack(String jsonStr){
+		System.out.println(jsonStr);
+		try {  
+            JSONObject obj = JSON.parseObject(jsonStr);
+            String mobile = obj.getString("mobile");
+            String userId = obj.getString("userId");
+            String msgId = obj.getString("msgId");//本地订单号
+            String regNo = obj.getString("regNo");
+            Integer err = obj.getInteger("err");
+            String fail_describe = obj.getString("fail_describe");
+            String report_time = obj.getString("report_time");
+            String salePrice = obj.getString("salePrice");
+            String finishTime = obj.getString("finishTime");
+            String sign = obj.getString("sign");
+            
+            long orderId = Long.parseLong(msgId.trim());
+            PurchasePo purchasePo = purchaseDAO.get(new WherePrams("order_id", "=", orderId));
+            //找到这个订单绑定的代理商，然后按照代理商的回调地址，推送json结果
+            if (purchasePo  == null) {
+            	logger.config("回调订单号不存在或者不匹配");
+            	System.out.println("回调订单号不存在或者不匹配");
+				return "回调订单号不存在";//
+			}else{
+				String orderIdFrom = purchasePo.getOrderIdFrom();
+				ResponseJsonDTO rjdto = new ResponseJsonDTO(orderId, orderIdFrom, System.currentTimeMillis());
+				String statusDetail = "";
+				int myStatus = -1;
+				Long backTime = DateUtil.strToDate(report_time, null).getTime();
+				if(0 == err){//成功回调
+					myStatus = OrderStateEnum.CHARGED.getValue();
+					statusDetail = OrderStateEnum.CHARGED.getDesc();
+					System.out.println(fail_describe);
+					rjdto.setStatus(myStatus);
+					rjdto.setStatusDetail(statusDetail);
+				}else{//失败回调
+					myStatus = OrderStateEnum.UNCHARGE.getValue();
+					statusDetail = fail_describe;
+					
+					rjdto.setStatus(myStatus);
+					rjdto.setStatusDetail(statusDetail);
+				}
+				accountPurchaseAO.updatePurchaseState(purchasePo.getOrderId(), myStatus, statusDetail, backTime);
+				AgencyBackwardPo agencyPo = agencyAO.getAgencyByAccountId(purchasePo.getAccountId());
+				if(StringHelper.isNotEmpty(orderIdFrom)){
+					//把rjdto按照代理商返回
+					if(!"success".equals(SendCallBackUtil.sendCallBack(rjdto, agencyPo))){//回调成功，更新数据库回调状态
+						logger.config("向下返回调失败");
+						System.out.println("向下返回调失败");
+					}
+				}
+			}
+  
+        } catch (JSONException e) {  
+            e.printStackTrace();  
+        }  
+		System.out.println("ok");
+		return "0000";
 	}
 	
 }

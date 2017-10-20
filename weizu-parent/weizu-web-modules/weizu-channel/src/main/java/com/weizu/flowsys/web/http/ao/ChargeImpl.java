@@ -198,7 +198,7 @@ public class ChargeImpl implements IChargeFacet {
 //					int aarAdd = accountPurchaseDao.add(app);
 				}
 				
-				if(!isChannelStateClose){
+				if(!isChannelStateClose && canCharge){
 					BaseInterface bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(pc.getProductCode(),orderId,chargeTel,chargeParams.getScope(),epPo));
 					ChargeDTO chargeDTO = bi.charge();
 					String orderIdApi = chargeDTO.getChargeOrder().getOrderIdApi();
@@ -206,9 +206,9 @@ public class ChargeImpl implements IChargeFacet {
 					purchasePo.setOrderIdApi(orderIdApi);
 					charge = getChargeByDTO(chargeDTO,chargeParams,purchasePo);
 					orderResultDetail = charge.getTipMsg();
-				}else if(canCharge){
-					orderResult = OrderStateEnum.DAICHONG.getValue();
-					orderResultDetail = ChargeStatusEnum.LACK_OF_BALANCE.getDesc();
+				}else if(!canCharge){
+//					orderResult = OrderStateEnum.DAICHONG.getValue();
+//					orderResultDetail = ChargeStatusEnum.LACK_OF_BALANCE.getDesc();
 					purchasePo.setOrderResult(orderResult);
 					purchasePo.setOrderResultDetail(orderResultDetail);
 					charge = new Charge(ChargeStatusEnum.CHARGE_SUCCESS.getValue(), ChargeStatusEnum.CHARGE_SUCCESS.getDesc(), new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));

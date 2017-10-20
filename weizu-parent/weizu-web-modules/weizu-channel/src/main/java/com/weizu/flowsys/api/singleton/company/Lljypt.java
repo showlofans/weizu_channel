@@ -207,7 +207,7 @@ public class Lljypt implements BaseInterface {
 		}
 		//最后加上一个apikey
 		sbKeyValue.append(baseParams.getEpo().getEpApikey().trim());
-		System.out.println("params:"+sbKeyValue.toString());
+		//System.out.println("params:"+sbKeyValue.toString());
 		String sign = getSignBySignStr(sbKeyValue.toString());
 		return sign;
 	}

@@ -3,7 +3,7 @@ package com.weizu.web.foundation;
 import java.security.MessageDigest;
 
 public class SHA1 {
-	 public static String getSha1(String str){
+	 public static String getSha1(String str, int stringCase){
 	        if(str==null||str.length()==0){
 	            return null;
 	        }
@@ -22,7 +22,13 @@ public class SHA1 {
 	                buf[k++] = hexDigits[byte0 >>> 4 & 0xf];
 	                buf[k++] = hexDigits[byte0 & 0xf];      
 	            }
-	            return new String(buf);
+	            if(MD5.LOWERCASE == stringCase){
+	            	return new String(buf).toLowerCase();
+	            }else if(MD5.UPPERCASE == stringCase){
+	            	return new String(buf).toUpperCase();
+	            }else{
+	            	return new String(buf);
+	            }
 	        } catch (Exception e) {
 	            // TODO: handle exception
 	            return null;
