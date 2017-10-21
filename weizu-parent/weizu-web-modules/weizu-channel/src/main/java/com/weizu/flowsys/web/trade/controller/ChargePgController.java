@@ -26,26 +26,35 @@ import org.weizu.api.outter.enums.ChargeStatusEnum;
 
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
+import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
+import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.ClassUtil;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
+import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.dao.AgengcyBackwardDaoInterface;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
+import com.weizu.flowsys.web.channel.ao.ChannelDiscountAO;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
+import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
+import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
+import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
+import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
+import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.ao.AccountPurchaseAO;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
 import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
@@ -79,12 +88,19 @@ public class ChargePgController {
 	@Resource
 	private RateDiscountAO rateDiscountAO;
 	@Resource
+	private RateDiscountDao rateDiscountDao;
+	
+	@Resource
 	private AccountPurchaseAO agencyPurchaseAO;
 	@Resource
 	private AgencyAO agencyAO;
-	
 //	@Resource
-//	private ChannelDiscountDao channelDiscountDao;
+//	private ChannelChannelDao channelChannelDao;
+	
+	@Resource
+	private ChannelDiscountDao channelDiscountDao;
+//	@Resource
+//	private ChannelDiscountAO channelDiscountAO;
 	
 	
 	/**
@@ -96,7 +112,30 @@ public class ChargePgController {
 	@RequestMapping(value = ChargePgURL.PG_CHARGE)
 	public ModelAndView pgCharge(HttpServletRequest request,PgChargeVO pcVO){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");//用不带票账户充值
+		
+		String scopeCityCode = ScopeCityEnum.QG.getValue();
+		if(!pcVO.getServiceType().equals(ServiceTypeEnum.NATION_WIDE.getValue())){
+			Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(pcVO.getChargeTelDetail());
+			scopeCityCode = scopeMap.get("scopeCityCode").toString();
+		}
+		ChargeAccountPo accountPo = null;
+		if(!agencyVO.getRootAgencyId().equals(0)){//超管测试通道，通过通道折扣提单
+			RateDiscountPo ratePo = rateDiscountDao.get(pcVO.getRateId());
+			if(ratePo!=null && ratePo.getBillType().equals(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())){
+				accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");//用不带票账户充值
+			}else{
+				accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");//用带票账户充值
+			}
+		}else{
+			ChannelDiscountPo cdPo = channelDiscountDao.get(pcVO.getCdisId());//new WherePrams("channel_id", "=", pcVO.getChannelId()).and("scope_city_code", "=", scopeCityCode)
+			if(cdPo!=null && cdPo.getBillType().equals(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())){
+				accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");//用不带票账户充值
+			}else{
+				accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");//用带票账户充值
+			}
+			
+		}
+		
 		if(agencyVO != null){
 			boolean isAccess = agencyAO.checkIdByPass(agencyVO.getId(), agencyVO.getUserPass());
 			if(!isAccess || !agencyVO.getId().equals(accountPo.getAgencyId())){

@@ -12,6 +12,10 @@ public class MyConstants {
 	 * 行云流水对私
 	 */
 	public final static String LLJYPT_ENG_0 = "Lljypt0";
+	/**
+	 * 青岛网信乐疯平台
+	 */
+	public final static String LEFENG_ENG = "Lefeng";
 	
 	
 }

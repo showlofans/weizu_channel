@@ -32,7 +32,6 @@
 	    <result column="pg_price" jdbcType="DOUBLE" property="pgPrice" />
 	    <result column="pg_name" jdbcType="VARCHAR" property="pgName" />
 	    <result column="pg_in_service" jdbcType="INTEGER" property="pgInService" />
-	    <result column="product_code" jdbcType="VARCHAR" property="productCode" />
 	 </resultMap>
 	<resultMap id="OtherMap" type="com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo">
 	   <id column="id" jdbcType="INTEGER" property="id" />
@@ -57,7 +56,7 @@
     pg.id,operator_type,operator_name,pg_in_service,pg.pg_name,pg_price,pg_size,service_type
   </sql>
   <sql id="Purchase_Column_List">
-    pg.id,pg.operator_type,pg.operator_name,pg_in_service,pg.pg_name,pg_price,pg_size,pg.service_type,pc.product_code
+    pg.id,pg.operator_type,pg.operator_name,pg_in_service,pg.pg_name,pg_price,pg_size,pg.service_type
   </sql>
   <!-- 通过通道查询购买包体list -->
   <sql id="myCnelPg_Column_List">
@@ -113,7 +112,7 @@
    		 </where>
 	</select>
 	<!-- 通过参数查询购买包体list -->
-	<select id="pgList_super" parameterType="map" resultMap="PurchasePgMap">
+	<!-- <select id="pgList_super" parameterType="map" resultMap="PurchasePgMap">
 		select <include refid="Purchase_Column_List"></include> 
 		from <include refid="t_pg"></include>pg
 		inner JOIN <include refid="t_cbp"></include> cbp
@@ -130,11 +129,11 @@
 			</include>
 			<if test="scopeCityCode != null">
 				AND cd.scope_city_code = #{scopeCityCode}
-				<!-- 产品编码的地区也要吻合 -->
+				产品编码的地区也要吻合
 				AND pc.scope_city_code = #{scopeCityCode}
 			</if>
 		</where>
-	</select>
+	</select> -->
 	<!-- <select id="pgList_forPurchase_po" resultMap="OtherMap" parameterType="map" >
 		SELECT <include refid="myPg_Column_List"></include> 
 		FROM <include refid="t_pg"></include> pg
@@ -315,23 +314,22 @@
  </select>
  
  <!-- 通过通道id和包体其他参数得到超管的充值包体参数 -->
- <!-- <select id="getPgByChanel" parameterType="map" resultMap="OtherMap">
- 	select <include refid="myCnelPg_Column_List"></include>
+ <select id="getPgByChanel" parameterType="map" resultMap="PurchasePgMap">
+ 	select <include refid="Purchase_Column_List"></include>
  	from <include refid="t_pg"></include> pg
-	INNER JOIN <include refid="t_pc"></include> pc
-	on pc.pg_id = pg.id
+	INNER JOIN <include refid="t_cbp"></include> cbp
+	on cbp.pg_id = pg.id
 	<where>
-		pg_size in (SELECT pg_size from <include refid="t_cnel"></include> WHERE id=#{cnelId})
 		<if test="operatorType != null">
 			AND pg.operator_type = #{operatorType}
 		</if>
 		<if test="serviceType != null">
 			AND pg.service_type = #{serviceType}
 		</if>
-		<if test="scopeCityCode != null">
-			AND pc.scope_city_code = #{scopeCityCode}
+		<if test="channelId != null">
+			AND cbp.channel_id = #{channelId}
 		</if>
 	</where> 
- </select> -->
+ </select> 
  	
 </mapper>

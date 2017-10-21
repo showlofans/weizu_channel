@@ -79,4 +79,13 @@ public interface ChannelDiscountAO {
 	 */
 	String updateChannelDiscount(ChannelDiscountPo discountPo, Integer ifUpdateRate);
 	
+	/**
+	 * @description: 通过费率id找到折扣id
+	 * @param rateId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月21日 下午2:29:53
+	 */
+//	ChannelDiscountPo getCDByRateDId(Long rateId);
+	
 }

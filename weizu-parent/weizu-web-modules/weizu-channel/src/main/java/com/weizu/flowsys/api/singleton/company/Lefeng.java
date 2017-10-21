@@ -40,7 +40,6 @@ public class Lefeng implements BaseInterface {
 	private static Lefeng instance = new Lefeng();  
 	private static String epEngId;
 	private static BaseP baseParams;
-	private static String [] specialKeys = new String[]{"clientId","merchant","version"};
 	private Lefeng() {
 	}
 	
@@ -60,7 +59,8 @@ public class Lefeng implements BaseInterface {
 			 		return null;
 			 	}
 	            JSONObject obj = JSON.parseObject(jsonStr);
-	            int tipCode = obj.getIntValue("code");
+//	            int tipCode = obj.getIntValue("code");
+	            String tipCode = obj.getString("code");
 	            String tipMsg = obj.getString("msg");
 	            String regNo = obj.getString("reqNo");
 	            String epEngId = epPo.getEpEngId();
@@ -147,20 +147,22 @@ public class Lefeng implements BaseInterface {
 	public String toParams() {
 		ExchangePlatformPo epPo = baseParams.getEpo();
 		JSONObject param = new JSONObject();
-		Long timeStamp = System.currentTimeMillis();		//对外统一的时间戳
+		Long timeStamp = System.currentTimeMillis()/1000;		//对外统一的时间戳
+//		Long.toString(i)
 		
 		param.put("userName", epPo.getEpUserName());
 		param.put("mobile", baseParams.getChargeTel());
 		param.put("orderMeal", baseParams.getProductCode());	//订购产品id
-		param.put("orderTime", 1);						//固定值1
-		param.put("msgId", baseParams.getOrderId());	//我的订单号
-		param.put("range", getScope(baseParams.getServiceType()));
+		param.put("orderTime", "1");						//固定值1
+		param.put("msgId", Long.toString(baseParams.getOrderId()));	//我的订单号
+		param.put("range", Integer.toString(getScope(baseParams.getServiceType())) );
 		param.put("sign", getSign(epPo, timeStamp));
-		param.put("timeStamp", timeStamp);
-		boolean callB = epPo.getEpCallBack().equals(CallBackEnum.POSITIVE.getValue()) && StringHelper.isNotEmpty(epPo.getEpCallBackIp());
-		if(callB){
-			param.put("notifyUrl", epPo.getEpCallBackIp());
-		}
+		param.put("timeStamp",Long.toString(timeStamp) );
+//		boolean callB = epPo.getEpCallBack().equals(CallBackEnum.POSITIVE.getValue()) && StringHelper.isNotEmpty(epPo.getEpCallBackIp());
+//		if(callB){
+//			param.put("notifyUrl", epPo.getEpCallBackIp());
+//		}
+		System.out.println(param.toString());
 		return param.toString();
 	}
 

@@ -36,6 +36,7 @@ import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
+import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.OrderUril;
 import com.weizu.flowsys.util.Pagination;
@@ -184,8 +185,11 @@ public class PurchaseAOImpl implements PurchaseAO {
 				System.out.println("通道使用状态暂停");
 				return "产品待更新，产品暂不支持购买！！";
 			}else{
-				Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(purchasePo.getChargeTelDetail());
-				String scopeCityCode = scopeMap.get("scopeCityCode").toString();
+				String scopeCityCode = ScopeCityEnum.QG.getValue();
+				if(!pcVO.getServiceType().equals(ServiceTypeEnum.NATION_WIDE.getValue())){
+					Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(purchasePo.getChargeTelDetail());
+					scopeCityCode = scopeMap.get("scopeCityCode").toString();
+				}
 				dataPo = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode,channel.getEpId(), purchasePo.getPgId()));
 				if(dataPo == null){
 					logger.config("编码未配置");
@@ -229,7 +233,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 		}else{//通道没有暂停
 			chargeDTO = chargeByBI(epPo, orderId, pcVO.getChargeTel(),pcVO.getServiceType(), dataPo.getProductCode());
 			if(chargeDTO != null){
-				if(chargeDTO.getTipCode() == OrderResultEnum.SUCCESS.getCode()){
+				if(chargeDTO.getTipCode().equals(OrderResultEnum.SUCCESS.getCode()) ){
 					orderResult = OrderStateEnum.CHARGING.getValue();
 					orderResultDetail = OrderStateEnum.CHARGING.getDesc();
 					ChargeOrder co = chargeDTO.getChargeOrder();
@@ -252,7 +256,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 		if(pcVO.getRateId() == null && pcVO.getCdisId() != null){//通过通道折扣充值
 			String fromAgencyName = pcVO.getFromAgencyName();
 			ChannelDiscountPo cdisPo = null;
-			if(pcVO.getCdisId() != null){
+			if(pcVO.getCdisId() != null ){
 				cdisPo = channelDiscountDao.get(pcVO.getCdisId());
 			}else{
 				logger.config("通道折扣缺失");
@@ -266,7 +270,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				purResult = purchaseDAO.addPurchase(purchasePo);
 				return "充值失败，通道暂停";
 			}else{
-				if(chargeDTO == null){//充值返充值进行
+				if(chargeDTO == null ){//充值返充值进行
 					//通道折扣充值，不去添加订单
 					return "订单提交失败";
 				}else{
@@ -278,14 +282,14 @@ public class PurchaseAOImpl implements PurchaseAO {
 					int addRec = chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
 							agencyBeforeBalance, agencyAfterBalance, 
 							AccountTypeEnum.DECREASE.getValue(), accountId, 1 , orderId));
-					purchasePo.setOrderResult(OrderStateEnum.CHARGING.getValue());
-					purchasePo.setOrderResultDetail(OrderStateEnum.CHARGING.getDesc());
+//					purchasePo.setOrderResult(OrderStateEnum.CHARGING.getValue());
+//					purchasePo.setOrderResultDetail(OrderStateEnum.CHARGING.getDesc());
 					purResult = purchaseDAO.addPurchase(purchasePo);
 					if(addRec > 0){
 						Long recordId = chargeRecordDao.nextId() -1;
-						orderResult = OrderStateEnum.CHARGING.getValue();
+//						orderResult = OrderStateEnum.CHARGING.getValue();
 						AccountPurchasePo app = new AccountPurchasePo(accountId, orderId,pcVO.getCdisId(), orderAmount,pcVO.getAccountId(), recordId, orderAmount, fromAgencyName, orderPath, orderResult);
-						app.setOrderStateDetail(OrderStateEnum.CHARGING.getDesc());
+						app.setOrderStateDetail(orderResultDetail);
 						int aarAdd = accountPurchaseDao.add(app);
 						if(aarAdd > 0){
 							return "订单提交成功";
@@ -1021,15 +1025,15 @@ public class PurchaseAOImpl implements PurchaseAO {
 		searchMap.put("channelState", ChannelStateEnum.OPEN.getValue());
 		searchMap.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
 		List<ChargeChannelPo> channelList = channelChannelDao.list_charge_channel(searchMap);
-		if(channelList != null && channelList.size()==1){//只有一条通道的时候，可以默认加载这条通道的包体
-			Map<String, Object> objMap = new HashMap<String, Object>();
-			Long cId = channelList.get(0).getId();
-			objMap.put("cnelId", cId);
-			objMap.put("operatorType", ccpp.getOperatorType());
-			objMap.put("serviceType", ccpp.getServiceType());
-			List<OperatorPgDataPo> pgList = operatorPgDao.listPgListInPcode(objMap);
-			channelList.get(0).setList(pgList);
-		}
+//		if(channelList != null && channelList.size()==1){//只有一条通道的时候，可以默认加载这条通道的包体
+//			Map<String, Object> objMap = new HashMap<String, Object>();
+//			Long cId = channelList.get(0).getId();
+//			objMap.put("cnelId", cId);
+//			objMap.put("operatorType", ccpp.getOperatorType());
+//			objMap.put("serviceType", ccpp.getServiceType());
+//			List<OperatorPgDataPo> pgList = operatorPgDao.listPgListInPcode(objMap);
+//			channelList.get(0).setList(pgList);
+//		}
 		return channelList;
 	}
 	
@@ -1046,14 +1050,17 @@ public class PurchaseAOImpl implements PurchaseAO {
 		int operatorType = OperatorTypeEnum.getValueByDesc(carrier.substring(carrier.length()-2,carrier.length()-2));
 		searchMap.put("operatorType", operatorType);
 		ccpp.setOperatorType(operatorType);
-		Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(carrier);
-		if(scopeMap != null)
-		{
-			String scopeCityCode = scopeMap.get("scopeCityCode").toString();
-			searchMap.put("scopeCityCode", scopeCityCode);
-		}
+		
 		if(ccpp.getServiceType() != null){
 			searchMap.put("serviceType", ccpp.getServiceType());
+			if(! ccpp.getServiceType().equals(ServiceTypeEnum.NATION_WIDE.getValue())){
+				Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(carrier);
+				if(scopeMap != null)
+				{
+					String scopeCityCode = scopeMap.get("scopeCityCode").toString();
+					searchMap.put("scopeCityCode", scopeCityCode);
+				}
+			}
 		}
 		if(ccpp.getEpName() != null){
 			searchMap.put("epName", ccpp.getEpName());
