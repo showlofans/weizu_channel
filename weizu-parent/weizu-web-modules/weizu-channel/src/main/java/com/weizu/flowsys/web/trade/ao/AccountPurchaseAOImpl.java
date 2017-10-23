@@ -37,16 +37,19 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 	
 	@Transactional
 	@Override
-	public String updatePurchaseState(Long orderId, Integer orderResult,
-			String orderResultDetail, Long realBackTime) {
+	public String updatePurchaseState(PurchaseStateParams purchaseStateP) {
 		int ap = 0;
 		int pur = 0;
+		Long realBackTime = purchaseStateP.getOrderBackTime();
 		if(realBackTime == null){
 			realBackTime = System.currentTimeMillis();
 		}
-		
+		Integer orderResult = purchaseStateP.getOrderResult();
+		Long orderId = purchaseStateP.getOrderId();
+		String orderResultDetail = purchaseStateP.getOrderResultDetail();
 		//失败直接返款判定
 		boolean unchargeNotSave = orderResult == OrderStateEnum.UNCHARGE.getValue();
+		String res = "error";
 		
 		if(unchargeNotSave){//手动失败，要返款
 			PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
@@ -85,11 +88,11 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 						//更新连接表
 						ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
 						//更新订单表(只更新超管的订单详情)
-						pur = purchaseDAO.updatePurchaseState(new PurchaseStateParams(orderId, System.currentTimeMillis(), orderResult, orderResultDetail, null));
+						pur = purchaseDAO.updatePurchaseState(new PurchaseStateParams(orderId, realBackTime, orderResult, orderResultDetail, purchaseStateP.getOrderIdApi()));
 					}
 			}else{
-				System.out.println("订单不存在");
-				return "error";
+//				System.out.println("订单不存在");
+				res = "error";
 			}
 			
 		}else{
@@ -100,12 +103,12 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 				ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, OrderStateEnum.CHARGED.getDesc());
 			}
 			//更新订单表
-			pur = purchaseDAO.updatePurchaseState(new PurchaseStateParams(orderId, System.currentTimeMillis(), orderResult, orderResultDetail, null));
+			pur = purchaseDAO.updatePurchaseState(new PurchaseStateParams(orderId, realBackTime, orderResult, orderResultDetail, purchaseStateP.getOrderIdApi()));
 		}
 		if(pur + ap > 1){
-			return "success";
+			res = "success";
 		}
-		return "error";
+		return res;
 	}
 
 	@Transactional

@@ -25,7 +25,7 @@ public interface PurchaseDao extends Dao<PurchasePo, Long> {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月13日 上午10:52:50
 	 */
-	int updatePurchaseState(PurchaseStateParams purchaseParams);
+	int updatePurchaseState(PurchasePo purchasePo1);
 	/**
 	 * @description: 添加订单
 	 * @param purchasePo

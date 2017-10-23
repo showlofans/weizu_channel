@@ -14,6 +14,8 @@ public class PurchaseStateParams {
 	private Integer orderResult;				//结果（enum:）
 	private String orderResultDetail;			//结果描述
 	private String orderIdApi;					//接口订单号
+	private Integer hasCallBack;				//是否已经回调
+	
 	public PurchaseStateParams() {
 		super();
 	}

@@ -36,6 +36,8 @@ public class PurchasePo extends Po {
     private String chargeTelCity;				//号码归属具体城市
     
     private Integer orderResult;				//结果（超管enum:）(0-失败，1-成功，3-待充，4-为充)
+    
+    private Integer hasCallBack;				//是否已经接收到了回调(枚举：orderResultEnum)
 
 //    private Long channelId;						//通道id（外键）
     private String channelName;					//通道名称
@@ -129,7 +131,39 @@ public PurchasePo(Long orderId, String orderIdApi, String orderIdFrom,
 	this.orderResultDetail = orderResultDetail;
 }
 
+
+
 	
+/** 订单回调构造函数
+ * @param orderId
+ * @param orderIdApi
+ * @param orderBackTime
+ * @param orderResult
+ * @param hasCallBack
+ * @param orderResultDetail
+ */
+public PurchasePo(Long orderId, String orderIdApi, Long orderBackTime,
+		Integer orderResult, Integer hasCallBack, String orderResultDetail) {
+	super();
+	this.orderId = orderId;
+	this.orderIdApi = orderIdApi;
+	this.orderBackTime = orderBackTime;
+	this.orderResult = orderResult;
+	this.hasCallBack = hasCallBack;
+	this.orderResultDetail = orderResultDetail;
+}
+
+
+public Integer getHasCallBack() {
+	return hasCallBack;
+}
+
+
+public void setHasCallBack(Integer hasCallBack) {
+	this.hasCallBack = hasCallBack;
+}
+
+
 	public String getOrderIdFrom() {
 		return orderIdFrom;
 	}

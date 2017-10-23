@@ -48,21 +48,73 @@ public class Lefeng implements BaseInterface {
 		 Lefeng.baseParams=baseParams;
     	return instance;  
     }
+	 public static String getEpEngId() {
+		return epEngId;
+	}
+
+	public static void setEpEngId(String epEngId) {
+		Lefeng.epEngId = epEngId;
+	}
+	
+	private int getScope(Integer serviceType) {
+		int scope = 0;	//全国
+		switch (serviceType) {
+		case 0:		//全国
+			scope = 0;
+			break;
+		case 1:		//省内
+			scope = 1;
+			break;
+		case 2:		//省漫游 
+			scope = 2;
+			break;
+
+		default:
+			break;
+		}
+		return scope;
+	}
+	
+	private String getSign(ExchangePlatformPo epPo,Long currentTime){
+		
+		StringBuffer sbStr = new StringBuffer();
+		sbStr.append("userName").append(epPo.getEpUserName());
+		sbStr.append("mobile").append(baseParams.getChargeTel());
+		sbStr.append("orderMeal").append(baseParams.getProductCode());
+		sbStr.append("timeStamp").append(currentTime);
+		sbStr.append("key").append(epPo.getEpApikey());
+		String sign = SHA1.getSha1(sbStr.toString(), MD5.LOWERCASE);
+		return sign;
+	}
+	
+	private String getOrderSign(ExchangePlatformPo epPo){
+		
+		StringBuffer sbStr = new StringBuffer();
+		sbStr.append("userName").append(epPo.getEpUserName());
+		sbStr.append("msgId").append(baseParams.getOrderId());
+		sbStr.append("key").append(epPo.getEpApikey());
+		String sign = SHA1.getSha1(sbStr.toString(), MD5.LOWERCASE);
+		return sign;
+	}
+	
 	
 	@Override
 	public ChargeDTO charge() {
 		ExchangePlatformPo epPo = baseParams.getEpo();
-		 String jsonStr = HttpRequest.sendPost(epPo.getEpPurchaseIp(), toParams());
+		String params = toParams();
+		System.out.println(epPo.getEpPurchaseIp() + params);
+		 String jsonStr = HttpRequest.sendPost(epPo.getEpPurchaseIp(), params);
 		 ChargeDTO chargeDTO = null;
 		 try {  
 			 	if(StringHelper.isEmpty(jsonStr)){
 			 		return null;
 			 	}
 	            JSONObject obj = JSON.parseObject(jsonStr);
+	            
 //	            int tipCode = obj.getIntValue("code");
 	            String tipCode = obj.getString("code");
 	            String tipMsg = obj.getString("msg");
-	            String regNo = obj.getString("reqNo");
+	            String reqNo = obj.getString("reqNo");
 	            String epEngId = epPo.getEpEngId();
 	            int billType = BillTypeEnum.CORPORATE_BUSINESS.getValue();
 	            if("0".equals(epEngId.substring(epEngId.length()-1))){//英文标识最后一个字符是0表示对私
@@ -120,7 +172,7 @@ public class Lefeng implements BaseInterface {
             	case 1://订购中
             		myStatus = OrderStateEnum.CHARGING.getValue();
             		break;
-            	case 45://正在充值
+            	case 45://充值不成功
             		myStatus = OrderStateEnum.UNCHARGE.getValue();
             		break;
             	default:
@@ -130,7 +182,7 @@ public class Lefeng implements BaseInterface {
             	Long created_at = Long.parseLong(finishTime);
             	PurchasePo purPo = purchaseDAO.get(orderId);
             	OrderIn orderIn = new OrderIn(reqNo, msgId, null, null, salePrice, created_at, myStatus, fail_describe);
-            	//用我这边默认的对私账户充值
+            	
             	orderDTO = new OrderDTO(orderIn, OrderResultEnum.SUCCESS.getCode(), rspMsg);
             }else{
             	System.out.println("查询失败");
@@ -166,46 +218,7 @@ public class Lefeng implements BaseInterface {
 		return param.toString();
 	}
 
-	private int getScope(Integer serviceType) {
-		int scope = 0;	//全国
-		switch (serviceType) {
-		case 0:		//全国
-			scope = 0;
-			break;
-		case 1:		//省内
-			scope = 1;
-			break;
-		case 2:		//省漫游 
-			scope = 2;
-			break;
-
-		default:
-			break;
-		}
-		return scope;
-	}
 	
-	private String getSign(ExchangePlatformPo epPo,Long currentTime){
-		
-		StringBuffer sbStr = new StringBuffer();
-		sbStr.append("userName").append(epPo.getEpUserName());
-		sbStr.append("mobile").append(baseParams.getChargeTel());
-		sbStr.append("orderMeal").append(baseParams.getProductCode());
-		sbStr.append("timeStamp").append(currentTime);
-		sbStr.append("key").append(epPo.getEpApikey());
-		String sign = SHA1.getSha1(sbStr.toString(), MD5.LOWERCASE);
-		return sign;
-	}
-	
-	private String getOrderSign(ExchangePlatformPo epPo){
-		
-		StringBuffer sbStr = new StringBuffer();
-		sbStr.append("userName").append(epPo.getEpUserName());
-		sbStr.append("msgId").append(baseParams.getOrderId());
-		sbStr.append("key").append(epPo.getEpApikey());
-		String sign = SHA1.getSha1(sbStr.toString(), MD5.LOWERCASE);
-		return sign;
-	}
 
 	@Override
 	public String toBalanceParams() {
@@ -222,14 +235,4 @@ public class Lefeng implements BaseInterface {
 		param.put("sign", getOrderSign(epPo));
 		return param.toString();
 	}
-
-
-	public static String getEpEngId() {
-		return epEngId;
-	}
-
-	public static void setEpEngId(String epEngId) {
-		Lefeng.epEngId = epEngId;
-	}
-
 }

@@ -123,7 +123,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 	@Resource
 	private AccountPurchaseDao accountPurchaseDao;
 	@Resource
-	private AccountPurchaseAO agencyPurchaseAO;
+	private AccountPurchaseAO accountPurchaseAO;
 	
 	private Logger logger = Logger.getLogger("PurchaseAOImpl");
 //	@Resource
@@ -775,7 +775,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 										purchaseVO2.setOrderBackTimeStr(DateUtil.formatAll(ts));
 										purchaseVO2.setOrderState(orderState);
 										purchaseVO2.setOrderStateDetail(orderStateDetail);
-										agencyPurchaseAO.updatePurchaseState(purchaseVO2.getOrderId(), orderState, orderStateDetail,ts);
+										accountPurchaseAO.updatePurchaseState(new PurchaseStateParams(purchaseVO2.getOrderId(), ts, orderState, orderStateDetail, null));//purchaseVO2.getOrderId(), orderState, orderStateDetail,ts
 										//把查询的结果利用接口推给下游
 										AgencyBackwardPo agencyPo = agencyAO.getAgencyByAccountId(accountId);
 												if(StringHelper.isNotEmpty(agencyPo.getCallBackIp())){//下游有回调地址的情况下，按照回调地址推送
@@ -783,7 +783,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 													System.out.println(agencyPo.getUserName() + "：" +purchaseVO2.getOrderId() + "：" +  callBackRes);
 												}
 									}else if(orderIn.getStatus() != purchaseVO2.getOrderResult() && orderIn!= null){
-//										agencyPurchaseAO.updatePurchaseState(purchaseVO2.getOrderId(), orderIn.getStatus(), orderIn.getMsg(),System.currentTimeMillis());
+//										accountPurchaseAO.updatePurchaseState(purchaseVO2.getOrderId(), orderIn.getStatus(), orderIn.getMsg(),System.currentTimeMillis());
 										//更新订单表
 										purchaseDAO.updatePurchaseState(new PurchaseStateParams(purchaseVO2.getOrderId(), System.currentTimeMillis(), orderIn.getStatus(), orderIn.getMsg(), null));
 									}
