@@ -152,6 +152,23 @@ public PurchasePo(Long orderId, String orderIdApi, Long orderBackTime,
 	this.hasCallBack = hasCallBack;
 	this.orderResultDetail = orderResultDetail;
 }
+/** 订单回调构造函数api
+ * @param orderId
+ * @param orderIdApi
+ * @param orderBackTime
+ * @param orderResult
+ * @param hasCallBack
+ * @param orderResultDetail
+ */
+//public PurchasePo(Long orderId, String orderIdApi, Long orderBackTime,
+//		Integer orderResult, String orderResultDetail) {
+//	super();
+//	this.orderId = orderId;
+//	this.orderIdApi = orderIdApi;
+//	this.orderBackTime = orderBackTime;
+//	this.orderResult = orderResult;
+//	this.orderResultDetail = orderResultDetail;
+//}
 
 
 public Integer getHasCallBack() {

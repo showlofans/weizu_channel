@@ -79,8 +79,8 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePo, Long> implements Purcha
 	 * @createTime:2017年6月21日 下午3:14:35
 	 */
 	@Override
-	public int updatePurchaseState(PurchaseStateParams purchaseParams) {
-		int updatePurchase = sqlSessionTemplate.update("updatePurState", purchaseParams);
+	public int updatePurchaseState(PurchasePo purchasePo1) {
+		int updatePurchase = sqlSessionTemplate.update("updatePurState", purchasePo1);
 		return updatePurchase;
 	}
 

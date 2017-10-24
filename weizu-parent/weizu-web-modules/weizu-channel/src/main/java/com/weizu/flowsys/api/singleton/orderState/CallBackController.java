@@ -46,6 +46,9 @@ public class CallBackController {
 	@Resource
 	private PurchaseDao purchaseDAO;
 	
+	@Resource
+	private SendCallBackUtil sendCallBack;
+	
 //	@Resource
 //	private AgencyBackwardDao agencyBackwardDao;
 	@Resource
@@ -125,10 +128,10 @@ public class CallBackController {
 					rjdto.setStatus(myStatus);
 					rjdto.setStatusDetail(statusDetail);
 				}
-				accountPurchaseAO.updatePurchaseState(new PurchaseStateParams(orderId, ts, myStatus, statusDetail, null));//purchasePo.getOrderId(), myStatus, statusDetail, ts
+				accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, null, ts, myStatus, null, statusDetail));//purchasePo.getOrderId(), myStatus, statusDetail, ts
 				AgencyBackwardPo agencyPo = agencyAO.getAgencyByAccountId(purchasePo.getAccountId());
 				//把rjdto按照代理商返回
-				if(!"success".equals(SendCallBackUtil.sendCallBack(rjdto, agencyPo))){//回调成功，更新数据库回调状态
+				if(!"success".equals(sendCallBack.sendCallBack(rjdto, agencyPo))){//回调成功，更新数据库回调状态
 					logger.config("向下返回调失败");
 					System.out.println("向下返回调失败");
 //					return "回调失败";
@@ -164,10 +167,10 @@ public class CallBackController {
 			String orderIdApi = transaction_id;
 			switch (status) {
 			case 4://成功:设置orderResult和orderState为成功
-				res = accountPurchaseAO.updatePurchaseState(new PurchaseStateParams(orderId, System.currentTimeMillis(), OrderStateEnum.CHARGED.getValue(), OrderStateEnum.CHARGED.getDesc(), null));
+				res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, null, System.currentTimeMillis(), OrderStateEnum.CHARGED.getValue(), null, OrderStateEnum.CHARGED.getDesc()));
 				break;
 			case 8://失败:设置orderResult为充值等待(设置回调缓冲时间限制)
-				res = accountPurchaseAO.updatePurchaseState(new PurchaseStateParams(orderId, System.currentTimeMillis(), OrderStateEnum.DAICHONG.getValue(), OrderStateEnum.DAICHONG.getDesc(), null));
+				res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, null, System.currentTimeMillis(), OrderStateEnum.DAICHONG.getValue(), null, OrderStateEnum.DAICHONG.getDesc()));
 				break;
 				
 			default:
@@ -196,7 +199,10 @@ public class CallBackController {
 	@RequestMapping(value=CallBackURL.Lefeng)
 	public String LefengCallBack(@RequestBody String key){
 		System.out.println(key);
-		String res = "";
+//		String res = null;
+		String successTag = "0000";
+		String statusDetail = "";
+		int myStatus = -1;
 		try {  
             JSONObject obj = JSON.parseObject(key);
             String mobile = obj.getString("mobile");
@@ -210,57 +216,30 @@ public class CallBackController {
             String finishTime = obj.getString("finishTime");
             String sign = obj.getString("sign");
             
+            //初始化参数
             long orderId = Long.parseLong(msgId.trim());
-            PurchasePo purchasePo = purchaseDAO.get(new WherePrams("order_id", "=", orderId));
-            //找到这个订单绑定的代理商，然后按照代理商的回调地址，推送json结果
-            if (purchasePo  == null) {
-            	logger.config("回调订单号不存在或者不匹配");
-            	System.out.println("回调订单号不存在或者不匹配");
-            	res = "回调订单号不存在";//
-			}else{
-				if(purchasePo.getHasCallBack() == null || OrderResultEnum.ERROR.getCode().equals(purchasePo.getHasCallBack())){//没有回调过
-					String orderIdFrom = purchasePo.getOrderIdFrom();
-					ResponseJsonDTO rjdto = new ResponseJsonDTO(orderId, orderIdFrom, System.currentTimeMillis());
-					String statusDetail = "";
-					int myStatus = -1;
-					Long backTime = DateUtil.strToDate(report_time, null).getTime();
-					if(0 == err){//成功回调
-						myStatus = OrderStateEnum.CHARGED.getValue();
-						statusDetail = OrderStateEnum.CHARGED.getDesc();
-						//System.out.println(fail_describe);
-						rjdto.setStatus(myStatus);
-						rjdto.setStatusDetail(statusDetail);
-					}else{//失败回调
-						myStatus = OrderStateEnum.UNCHARGE.getValue();
-						statusDetail = fail_describe;
-						rjdto.setStatus(myStatus);
-						rjdto.setStatusDetail(statusDetail);
-					}
-					
-					String callBack = accountPurchaseAO.updatePurchaseState(new PurchaseStateParams(orderId, backTime, myStatus, statusDetail, reqNo));
-					if("success".equals(callBack)){
-						res = "0000";
-						AgencyBackwardPo agencyPo = agencyAO.getAgencyByAccountId(purchasePo.getAccountId());
-						if(StringHelper.isNotEmpty(orderIdFrom)){
-							//把rjdto按照代理商返回
-							if(!"success".equals(SendCallBackUtil.sendCallBack(rjdto, agencyPo))){//回调成功，更新数据库回调状态
-								logger.config("向下返回调失败");
-								System.out.println("向下返回调失败");
-							}
-						}
-					}else{//设为回调失败
-						res = "更新数据库失败";
-						System.out.println("更新订单状态:"+ callBack);
-					}
-				}
-				
+            Long orderBackTime = DateUtil.strToDate(report_time, null).getTime();
+            switch (err) {
+			case 0:
+				myStatus = OrderStateEnum.CHARGED.getValue();
+				statusDetail = OrderStateEnum.CHARGED.getDesc();
+				break;
+
+			default:
+				myStatus = OrderStateEnum.UNCHARGE.getValue();
+				statusDetail = fail_describe;
+				break;
 			}
+            
+            successTag = sendCallBack.getCallBackResult(new PurchasePo(orderId, reqNo, orderBackTime, myStatus, null, statusDetail), successTag);	//不使用订单参数修改回调结果
+            //根据订单号去更新数据库，并返回回调结果
   
         } catch (JSONException e) {  
             e.printStackTrace();  
         }  
-		System.out.println("ok");
-		return res;
+//		System.out.println(successTag);
+		return successTag;
 	}
+	
 	
 }

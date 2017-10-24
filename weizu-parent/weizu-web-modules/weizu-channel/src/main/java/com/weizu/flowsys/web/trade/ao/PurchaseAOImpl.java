@@ -124,6 +124,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 	private AccountPurchaseDao accountPurchaseDao;
 	@Resource
 	private AccountPurchaseAO accountPurchaseAO;
+	@Resource
+	private SendCallBackUtil sendCallBack;
 	
 	private Logger logger = Logger.getLogger("PurchaseAOImpl");
 //	@Resource
@@ -775,17 +777,17 @@ public class PurchaseAOImpl implements PurchaseAO {
 										purchaseVO2.setOrderBackTimeStr(DateUtil.formatAll(ts));
 										purchaseVO2.setOrderState(orderState);
 										purchaseVO2.setOrderStateDetail(orderStateDetail);
-										accountPurchaseAO.updatePurchaseState(new PurchaseStateParams(purchaseVO2.getOrderId(), ts, orderState, orderStateDetail, null));//purchaseVO2.getOrderId(), orderState, orderStateDetail,ts
+										accountPurchaseAO.updatePurchaseState(new PurchasePo(purchaseVO2.getOrderId(), null, ts, orderState, null, orderStateDetail));//purchaseVO2.getOrderId(), orderState, orderStateDetail,ts
 										//把查询的结果利用接口推给下游
 										AgencyBackwardPo agencyPo = agencyAO.getAgencyByAccountId(accountId);
 												if(StringHelper.isNotEmpty(agencyPo.getCallBackIp())){//下游有回调地址的情况下，按照回调地址推送
-													String callBackRes = SendCallBackUtil.sendCallBack(new ResponseJsonDTO(purchaseVO2.getOrderId(), purchaseVO2.getOrderIdFrom(), orderState, orderStateDetail, ts), agencyPo);
+													String callBackRes = sendCallBack.sendCallBack(new ResponseJsonDTO(purchaseVO2.getOrderId(), purchaseVO2.getOrderIdFrom(), orderState, orderStateDetail, ts), agencyPo);
 													System.out.println(agencyPo.getUserName() + "：" +purchaseVO2.getOrderId() + "：" +  callBackRes);
 												}
 									}else if(orderIn.getStatus() != purchaseVO2.getOrderResult() && orderIn!= null){
 //										accountPurchaseAO.updatePurchaseState(purchaseVO2.getOrderId(), orderIn.getStatus(), orderIn.getMsg(),System.currentTimeMillis());
 										//更新订单表
-										purchaseDAO.updatePurchaseState(new PurchaseStateParams(purchaseVO2.getOrderId(), System.currentTimeMillis(), orderIn.getStatus(), orderIn.getMsg(), null));
+										purchaseDAO.updatePurchaseState(new PurchasePo(purchaseVO2.getOrderId(), null, System.currentTimeMillis(), orderIn.getStatus(), null, orderIn.getMsg()));//purchaseVO2.getOrderId(), System.currentTimeMillis(), orderIn.getStatus(), orderIn.getMsg(), null
 									}
 								}
 							}

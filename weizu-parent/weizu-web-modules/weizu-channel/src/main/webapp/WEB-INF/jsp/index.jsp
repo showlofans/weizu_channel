@@ -27,14 +27,13 @@
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
 <title>微族通道系统</title>
-<meta name="keywords" content="">
-<meta name="description" content="">
+<meta name="keywords" content="微族 小宁 流量 通道 系统 ">
+<meta name="description" content="南昌微族科技-流量系统">
 </head>
 <body>
 <header class="navbar-wrapper">
 	<div class="navbar navbar-fixed-top">
-		<div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" href="#">微族通道系统Beta</a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="#">微族通道系统Beta</a> 
-				<a href="javascript:void(0);" onclick="AddFavorite('微族流量','120.55.162.224:8082')">收 藏 本 站</a>
+		<div class="container-fluid cl"> <a title="系统最新更新时间：${applicationScope.startupTime }" class="logo navbar-logo f-l mr-10 hidden-xs" href="#">微族通道系统Beta</a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="#">微族通道系统Beta</a> 
 			<span class="logo navbar-slogan f-l mr-10 hidden-xs">
 			</span> 
 			<a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:;">&#xe667;</a>

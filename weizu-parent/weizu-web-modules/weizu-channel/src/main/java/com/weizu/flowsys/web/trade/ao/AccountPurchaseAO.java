@@ -24,7 +24,7 @@ public interface AccountPurchaseAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年10月16日 下午4:30:28
 	 */
-	String updatePurchaseStateByApi(String orderIdApi, Long orderId,Integer orderResult, String orderResultDetail, Long realBackTime);
+//	String updatePurchaseStateByApi(String orderIdApi, Long orderId,Integer orderResult, String orderResultDetail, Long realBackTime);
 	
 	/**
 	 * @description: 手动推送结果

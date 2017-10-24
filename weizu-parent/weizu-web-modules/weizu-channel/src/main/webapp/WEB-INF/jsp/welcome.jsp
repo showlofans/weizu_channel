@@ -265,7 +265,8 @@
 <script type="text/javascript" src="/view/lib/layer/2.4/layer.js"></script>
 <script type="text/javascript" src="/view/static/h-ui/js/H-ui.min.js"></script>
 <script type="text/javascript" src="/view/static/h-ui.admin/js/H-ui.admin.js"></script>
-<script>
+<script  type="text/javascript">
+var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1265916742'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s22.cnzz.com/z_stat.php%3Fid%3D1265916742%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));
 </script>
 </body>
 </html>
