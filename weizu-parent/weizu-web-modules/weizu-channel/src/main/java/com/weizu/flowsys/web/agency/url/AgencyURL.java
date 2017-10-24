@@ -18,7 +18,7 @@ public class AgencyURL extends BaseURL {
 	/**
 	 * 代理商登陆
 	 */
-	public static final String LOGIN = "/login" + DYNAMIC_WEB_SUFFIX;
+	public static final String LOGIN = "/login";
 	/**
 	 * 跳转到代理商登陆页面
 	 */

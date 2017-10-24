@@ -202,6 +202,9 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 			flag = "exist";
 		}else{//两个对象值不一样，并且英文标识不存在，或者和原来的不一样 就更新
 			epPo.setLastAccess(System.currentTimeMillis());
+			if(epPo.getEpCallBack() == null){
+				epPo.setEpCallBack(0);
+			}
 			int upRes = exchangePlatformDao.updateLocal(epPo,new WherePrams("id", "=", epPo.getId()));
 			if(upRes > 0){
 				flag = "success";

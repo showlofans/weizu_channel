@@ -19,6 +19,7 @@ import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 import com.weizu.flowsys.api.weizu.charge.ChargeOrder;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
+import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
@@ -199,8 +200,10 @@ public class Weizu implements BaseInterface {
 	            String number = orderObj.getString("number");
 	            String pgSize = orderObj.getString("flowsize");
 	            //用我这边默认的对私账户充值
-	            if(tipCode == 0 || tipCode == 50000 || tipCode == 50005 || tipCode == 50006 || tipCode == 50008 || tipCode == 50012 || tipCode == 50004 || tipCode == 55006){
-	            	chargeDTO = new ChargeDTO(OrderStateEnum.CHARGING.getValue(), tipMsg, new ChargeOrder(orderIdApi, number, pgSize, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
+	            if(tipCode == 0){
+	            	chargeDTO = new ChargeDTO(OrderResultEnum.SUCCESS.getCode(), tipMsg, new ChargeOrder(orderIdApi, number, pgSize, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
+	            }else if(tipCode == 50000 || tipCode == 50005 || tipCode == 50006 || tipCode == 50008 || tipCode == 50012 || tipCode == 50004 || tipCode == 55006){
+	            	chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), tipMsg, new ChargeOrder(orderIdApi, number, pgSize, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
 	            }else{//返回失败,考虑退款
 	            	// 最后输出到控制台  
 	            	System.out.println(tipCode+"<--->"+tipMsg);  

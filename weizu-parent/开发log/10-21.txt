@@ -1,0 +1,6 @@
+{operatorType=0, channelId=75, serviceType=0}
+
+{"sign":"3b51ff241dedce2890801621e692d08a6a66ef6d","timeStamp":1508568736,"range":0,"orderMeal":"10","msgId":747595359693312000,"userName":"NCwzkj","orderTime":1,"notifyUrl":"http://120.55.162.224:8082/flowsys/callBack/Lefeng.do","mobile":"15762713641"}
+
+提单日志
+先做提单，

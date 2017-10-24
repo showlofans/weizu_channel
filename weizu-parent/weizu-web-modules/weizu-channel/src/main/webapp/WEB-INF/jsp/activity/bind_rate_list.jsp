@@ -133,7 +133,7 @@
 				<!-- <button class="btn btn-success" type="reset"  value="重置">重置</button> -->
 				<button name="" id="" class="btn btn-success"  type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 				<%-- <input type="hidden" id="rateId" name="id" value="${resultMap.discountList[0].id }">  --%>
-				<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
+				<input type="hidden" id="pageNoLong" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
 				<input type="hidden" id="channelId" name="channelId" value="${resultMap.channelId }"> 
 				<input type="hidden" name="" value="${resultMap.channelDiscountId }" id="channelDiscountId"> 
 				
@@ -207,6 +207,9 @@
 <script src="/view/lib/bootstrap-datetimepicker.min.js"></script>
 <script src="/view/lib/bootstrap-datetimepicker.zh-CN.js"></script> -->
 <script type="text/javascript">
+/* $(document).ready(function(){ 
+	$('#formD').submit();
+}); */
 /**删除折扣*/
 function delRateDiscount(){
 	var activeDiscount = $("#rateDiscountId option:selected").text();
@@ -226,7 +229,12 @@ function delRateDiscount(){
 					layer.close(index);
 					layer.msg('折扣删除成功', {icon:5,time:1000});
 					//alert(tag);
-					location.reload();
+					//location.reload();
+					var selectedVar = $("#rateDiscountId option:selected").next().val();
+					//alert(selectedVar);
+					$("#rateDiscountId").val(selectedVar);
+					$('#pageNoLong').val("1");
+					$('#formD').submit();
 				}
 				/* else if(data == "exist"){
 					layer.msg('该折扣已存在，所以更新绑定失败!',{icon:1,time:1000});
@@ -274,6 +282,7 @@ function batch_bind(title,url,id,w,h){
 //onchange获得折扣
 function dischange(){
 	//alert(1);
+	$('#pageNoLong').val("1");
 	$('#formD').submit();
 }
 //更新绑定状态
@@ -365,6 +374,7 @@ function setDiscount(){
 	       		 ///不管有没有通道
 	          });
    		 }
+   		 $('#pageNoLong').val("1");
 	      $('#formD').submit();
        	//location.reload();//重新加载最新折扣的数据
    		 

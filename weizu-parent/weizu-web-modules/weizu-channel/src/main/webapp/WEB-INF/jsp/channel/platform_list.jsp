@@ -88,7 +88,7 @@
 						<td class="f-14 td-manage">${platform.epUserPass }</td>
 						<td class="f-14 td-manage">${platform.epApikey }</td>
 						<td><div class="f-12 c-999">
-						<a title="${platform.epIp }" data-href="${platform.epIp }" target="_blank">${fn:substring(platform.epIp,0,10)}</a><!--  onclick="Hui_admin_tab(this)" -->
+						<a title="${platform.epIp }" href="${platform.epIp }" target="_blank">${fn:substring(platform.epIp,0,10)}</a><!--  onclick="Hui_admin_tab(this)" -->
 						</div></td> 
 						<td>
 							${platform.epOtherParams }

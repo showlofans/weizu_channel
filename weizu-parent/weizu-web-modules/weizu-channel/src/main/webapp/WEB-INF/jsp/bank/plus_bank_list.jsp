@@ -81,6 +81,7 @@
 			<c:choose>
 				<c:when test="${not empty resultMap.plusBankList }">
 					<c:forEach items="${resultMap.plusBankList }" var="bank" varStatus="vst">
+						<tr>
 						<td width="100">${bank.remittanceWay }</td>
 						<td width="400">${bank.remittanceBankAccount }</td>
 						<td width="100">${bank.accountName }</td>
@@ -97,6 +98,7 @@
 							<!-- </div> -->
 								<a style="text-decoration:none" class="btn radio btn-primary" onClick="transferA('/flowsys/bankAccount/transfer_bank.do',${bank.id },${bank.agencyId },this)" href="javascript:;" title="申请加款">申请加款</a>
 						</td>
+						</tr>
 					</c:forEach>
 				</c:when>
 				<c:otherwise>

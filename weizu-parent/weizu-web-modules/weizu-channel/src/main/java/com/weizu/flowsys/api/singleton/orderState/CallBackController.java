@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,8 +20,12 @@ import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.dao.impl.AgencyBackwardDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.trade.ao.AccountPurchaseAO;
+import com.weizu.flowsys.web.trade.ao.PurchaseAO;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
+import com.weizu.flowsys.web.trade.pojo.PurchaseStateParams;
+import com.weizu.web.foundation.DateUtil;
+import com.weizu.web.foundation.String.StringHelper;
 
 /**
  * @description: 回调控制层
@@ -40,6 +45,9 @@ public class CallBackController {
 	
 	@Resource
 	private PurchaseDao purchaseDAO;
+	
+	@Resource
+	private SendCallBackUtil sendCallBack;
 	
 //	@Resource
 //	private AgencyBackwardDao agencyBackwardDao;
@@ -84,7 +92,7 @@ public class CallBackController {
 	 * @createTime:2017年8月30日 下午4:29:17
 	 */
 	@RequestMapping(value=CallBackURL.LLJYPT,method=RequestMethod.POST)
-	public String lljyptCallBack(String jsonStr){
+	public String lljyptCallBack(@RequestBody String jsonStr){
 		try {  
             JSONObject obj = JSON.parseObject(jsonStr);
             int status = obj.getIntValue("status");
@@ -120,10 +128,10 @@ public class CallBackController {
 					rjdto.setStatus(myStatus);
 					rjdto.setStatusDetail(statusDetail);
 				}
-				accountPurchaseAO.updatePurchaseState(purchasePo.getOrderId(), myStatus, statusDetail, ts);
+				accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, null, ts, myStatus, null, statusDetail));//purchasePo.getOrderId(), myStatus, statusDetail, ts
 				AgencyBackwardPo agencyPo = agencyAO.getAgencyByAccountId(purchasePo.getAccountId());
 				//把rjdto按照代理商返回
-				if(!"success".equals(SendCallBackUtil.sendCallBack(rjdto, agencyPo))){//回调成功，更新数据库回调状态
+				if(!"success".equals(sendCallBack.sendCallBack(rjdto, agencyPo))){//回调成功，更新数据库回调状态
 					logger.config("向下返回调失败");
 					System.out.println("向下返回调失败");
 //					return "回调失败";
@@ -150,18 +158,19 @@ public class CallBackController {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年10月16日 下午1:07:19
 	 */
-	@RequestMapping(value=CallBackURL.Weizu,method=RequestMethod.POST)
-	public void WeizuCallBack(Integer errcode, String transaction_id, String user_order_id, String number, Integer status){
+	@ResponseBody
+	@RequestMapping(value=CallBackURL.Weizu)
+	public String WeizuCallBack(Integer errcode, String transaction_id, String user_order_id, String number, Integer status){
 		String res = "";
 		if(errcode.equals(0)){
 			Long orderId = Long.parseLong(user_order_id);
 			String orderIdApi = transaction_id;
 			switch (status) {
 			case 4://成功:设置orderResult和orderState为成功
-				res = accountPurchaseAO.updatePurchaseState(orderId, OrderStateEnum.CHARGED.getValue(), OrderStateEnum.CHARGED.getDesc(), System.currentTimeMillis());
+				res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, null, System.currentTimeMillis(), OrderStateEnum.CHARGED.getValue(), null, OrderStateEnum.CHARGED.getDesc()));
 				break;
 			case 8://失败:设置orderResult为充值等待(设置回调缓冲时间限制)
-				res = accountPurchaseAO.updatePurchaseState(orderId, OrderStateEnum.DAICHONG.getValue(), OrderStateEnum.DAICHONG.getDesc(), System.currentTimeMillis());
+				res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, null, System.currentTimeMillis(), OrderStateEnum.DAICHONG.getValue(), null, OrderStateEnum.DAICHONG.getDesc()));
 				break;
 				
 			default:
@@ -172,8 +181,65 @@ public class CallBackController {
 			System.out.println(errcode+":" +transaction_id+":"  +user_order_id+":"  +number+":"  + status);
 		}
 		//String failReason,String outTradeNo,String sign,int status,Long ts
-//		return "ok";
 		System.out.println("ok");
+		return "ok";
 	}
+	/**
+	 * @description: 乐疯回调接口
+	 * @param errcode
+	 * @param transaction_id
+	 * @param user_order_id
+	 * @param number
+	 * @param status
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月20日 下午4:58:27
+	 */
+	@ResponseBody
+	@RequestMapping(value=CallBackURL.Lefeng)
+	public String LefengCallBack(@RequestBody String key){
+		System.out.println(key);
+//		String res = null;
+		String successTag = "0000";
+		String statusDetail = "";
+		int myStatus = -1;
+		try {  
+            JSONObject obj = JSON.parseObject(key);
+            String mobile = obj.getString("mobile");
+            String userId = obj.getString("userId");
+            String msgId = obj.getString("msgId");//本地订单号
+            String reqNo = obj.getString("reqNo");
+            Integer err = obj.getInteger("err");
+            String fail_describe = obj.getString("fail_describe");
+            String report_time = obj.getString("report_time");
+            String salePrice = obj.getString("salePrice");
+            String finishTime = obj.getString("finishTime");
+            String sign = obj.getString("sign");
+            
+            //初始化参数
+            long orderId = Long.parseLong(msgId.trim());
+            Long orderBackTime = DateUtil.strToDate(report_time, null).getTime();
+            switch (err) {
+			case 0:
+				myStatus = OrderStateEnum.CHARGED.getValue();
+				statusDetail = OrderStateEnum.CHARGED.getDesc();
+				break;
+
+			default:
+				myStatus = OrderStateEnum.UNCHARGE.getValue();
+				statusDetail = fail_describe;
+				break;
+			}
+            
+            successTag = sendCallBack.getCallBackResult(new PurchasePo(orderId, reqNo, orderBackTime, myStatus, null, statusDetail), successTag);	//不使用订单参数修改回调结果
+            //根据订单号去更新数据库，并返回回调结果
+  
+        } catch (JSONException e) {  
+            e.printStackTrace();  
+        }  
+//		System.out.println(successTag);
+		return successTag;
+	}
+	
 	
 }

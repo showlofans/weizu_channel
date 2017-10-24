@@ -72,10 +72,20 @@ public interface ChannelDiscountAO {
 	/**
 	 * @description: 更新通道折扣
 	 * @param discountPo
+	 * @param ifUpdateRate 是否需要相应调整费率折扣
 	 * @return
 	 * @author:微族通道代码设计人 宁强
-	 * @createTime:2017年9月20日 下午3:59:50
+	 * @createTime:2017年10月19日 上午9:45:49
 	 */
-	String updateChannelDiscount(ChannelDiscountPo discountPo);
+	String updateChannelDiscount(ChannelDiscountPo discountPo, Integer ifUpdateRate);
+	
+	/**
+	 * @description: 通过费率id找到折扣id
+	 * @param rateId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月21日 下午2:29:53
+	 */
+//	ChannelDiscountPo getCDByRateDId(Long rateId);
 	
 }

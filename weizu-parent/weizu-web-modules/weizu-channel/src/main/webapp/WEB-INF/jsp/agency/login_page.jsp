@@ -8,6 +8,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
 <meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="/view/iconW.jpg" >
+<link rel="Shortcut Icon" href="/view/iconW.jpg" />
+<link href="/view/iconW.jpg" type="image/x-icon" rel="icon">
 <!--[if lt IE 9]>
 <script type="text/javascript" src="lib/html5shiv.js"></script>
 <script type="text/javascript" src="lib/respond.min.js"></script>
@@ -17,6 +20,7 @@
 <!-- <link href="/view/static/h-ui.admin/css/H-ui.login.css" rel="stylesheet" type="text/css" />  -->
 <link href="/view/static/h-ui.admin/css/login.css" rel="stylesheet" type="text/css" />
 <link href="/view/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+
 <!--[if IE 6]>
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
@@ -44,7 +48,7 @@ line-height:220px;
 	<div class="loginWraper">
   <div id="loginform" class="loginBox">
   <h3 class="title">欢迎登陆</h3> 
-    <form class="form form-horizontal" id="lgForm" action="/flowsys/agency/login.do" method="post">
+    <form class="form form-horizontal" id="lgForm" action="/flowsys/agency/login" method="post">
       <div class="row cl">
         <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
         <div class="formControls col-xs-8">
@@ -61,6 +65,7 @@ line-height:220px;
         <div class="formControls col-xs-8 col-xs-offset-3">
           <input name="" type="submit" class="btn btn-default radius size-L" value="&nbsp;登&nbsp;&nbsp;&nbsp;&nbsp;录&nbsp;">
           <input name="" type="button" onclick="startRegister()"  class="btn btn-success radius size-L" value="&nbsp;注&nbsp;&nbsp;&nbsp;&nbsp;册&nbsp;">
+          <a href="javascript:void(0);" onclick="AddFavorite('微族流量','120.55.162.224:8082')">收 藏 本 站</a>
         </div>
       </div>
     </form>

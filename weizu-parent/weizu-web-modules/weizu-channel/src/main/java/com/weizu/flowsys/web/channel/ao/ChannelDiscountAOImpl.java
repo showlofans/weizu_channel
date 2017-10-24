@@ -221,16 +221,16 @@ public class ChannelDiscountAOImpl implements ChannelDiscountAO {
 
 	@Transactional
 	@Override
-	public String updateChannelDiscount(ChannelDiscountPo discountPo) {
+	public String updateChannelDiscount(ChannelDiscountPo discountPo, Integer ifUpdateRate) {
 		ChannelDiscountPo olCdPo = channelDiscountDao.get(discountPo.getId());
 		Integer cdUpRes = null; 
 		//更新费率和通道折扣
 		if(olCdPo != null && discountPo.getChannelDiscount() != null){
-			Double oldCd = olCdPo.getChannelDiscount();
-			Double editDiscount = NumberTool.sub(discountPo.getChannelDiscount(), oldCd);
-			int editRateRes = rateDiscountDao.updateRateDiscountByCDId(discountPo.getId(), editDiscount);
-			if(editRateRes > 0){
-				cdUpRes = channelDiscountDao.updateLocal(discountPo, new WherePrams("id", "=", discountPo.getId()).and("scope_city_code", "=", discountPo.getScopeCityCode()));
+			cdUpRes = channelDiscountDao.updateLocal(discountPo, new WherePrams("id", "=", discountPo.getId()).and("scope_city_code", "=", discountPo.getScopeCityCode()));
+			if(cdUpRes > 0 && ifUpdateRate.equals(1)){
+				Double oldCd = olCdPo.getChannelDiscount();
+				Double editDiscount = NumberTool.sub(discountPo.getChannelDiscount(), oldCd);
+				int editRateRes = rateDiscountDao.updateRateDiscountByCDId(discountPo.getId(), editDiscount);
 			}
 		}
 		if(cdUpRes != null){//修改折扣成功

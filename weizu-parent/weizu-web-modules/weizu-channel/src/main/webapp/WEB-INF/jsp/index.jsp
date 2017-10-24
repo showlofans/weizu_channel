@@ -10,8 +10,9 @@
 <META HTTP-EQUIV="Pragma" CONTENT="no-cache"> 
 	<META HTTP-EQUIV="Cache-Control" CONTENT="no-cache"> 
 	<META HTTP-EQUIV="Expires" CONTENT="0"> 
-<link rel="Bookmark" href="/favicon.ico" >
-<link rel="Shortcut Icon" href="/favicon.ico" />
+<link rel="Bookmark" href="/view/iconW.jpg" >
+<link rel="Shortcut Icon" href="/view/iconW.jpg" />
+<link href="/view/iconW.jpg" type="image/x-icon" rel="icon">
 <!--[if lt IE 9]>
 <script type="text/javascript" src="lib/html5shiv.js"></script>
 <script type="text/javascript" src="lib/respond.min.js"></script>
@@ -26,14 +27,13 @@
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
 <title>微族通道系统</title>
-<meta name="keywords" content="">
-<meta name="description" content="">
+<meta name="keywords" content="微族 小宁 流量 通道 系统 ">
+<meta name="description" content="南昌微族科技-流量系统">
 </head>
 <body>
 <header class="navbar-wrapper">
 	<div class="navbar navbar-fixed-top">
-		<div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" href="#">微族通道系统Beta</a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="#">微族通道系统Beta</a> 
-				<a href="javascript:void(0);" onclick="AddFavorite('微族流量','120.55.162.224:8082')">收 藏 本 站</a>
+		<div class="container-fluid cl"> <a title="系统最新更新时间：${applicationScope.startupTime }" class="logo navbar-logo f-l mr-10 hidden-xs" href="#">微族通道系统Beta</a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="#">微族通道系统Beta</a> 
 			<span class="logo navbar-slogan f-l mr-10 hidden-xs">
 			</span> 
 			<a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:;">&#xe667;</a>
@@ -141,7 +141,7 @@
 					<li><a data-href="/flowsys/chargePg/purchase_list.do" data-title="订单列表" href="javascript:void(0)">订单列表</a></li>
 					<li><a data-href="/flowsys/chargePg/purchase_list.do?orderState=2" data-title="充值进行" href="javascript:void(0)">充值进行</a></li>
 					<c:if test="${loginContext.rootAgencyId == 0 }">
-					<li><a data-href="/flowsys/chargePg/purchase_list.do?orderState=3" data-title="充值等待" href="javascript:void(0)">充值等待</a></li>
+					<li><a data-href="/flowsys/chargePg/purchase_list.do?orderState=4" data-title="充值等待" href="javascript:void(0)">充值等待</a></li>
 					</c:if>
 					<li><a data-href="/flowsys/chargePg/purchase_list.do?orderState=1" data-title="充值成功" href="javascript:void(0)">充值成功</a></li>
 					<li><a data-href="/flowsys/chargePg/purchase_list.do?orderState=0" data-title="充值失败" href="javascript:void(0)">充值失败</a></li>
@@ -187,17 +187,25 @@
 		</dd>
 	</dl>
 	<!-- http://htmlify.wps.cn/doc/index.html?ksyun=UD4oMeA6/word.html&theme=clear -->
-	<!-- <dl id="menu-member">
-		<dt><i class="Hui-iconfont">&#xe6c6;</i> 平台操作指南<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+	<dl id="menu-member">
+		<dt><i class="Hui-iconfont">&#xe6c6;</i> 平台相关<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 		<dd>
 			<ul>
-					<li><a data-href="http://htmlify.wps.cn/doc/index.html?ksyun=UD4oMeA6/word.html&theme=clear" target="_blank" data-title="平台操作指南" href="javascript:void(0)">平台操作指南</a></li>
+			<c:if test="${loginContext.agencyTag == 1 }">
+				<li><a href="/view/mine/jk-doc/jk-doc.html" title="南昌微族接口文档" target="_blank">南昌微族接口文档</a></li>
+			</c:if>
+				<li><a data-href="http://htmlify.wps.cn/doc/index.html?ksyun=UD4oMeA6/word.html&theme=clear" data-title="平台操作指南" href="javascript:void(0)">平台操作指南</a></li>
 			</ul>
 		</dd>
-	</dl> -->
-	<ul>
+	</dl>
+	<%-- <ul>
+		<c:if test="${loginContext.agencyTag == 1 }">
+			<!-- <li><a data-href="/view/mine/jk-doc/jk-doc.html" data-title="南昌微族接口文档" href="javascript:void(0)">南昌微族接口文档</a></li> -->
+			<!-- <li><a href="/view/mine/jk-doc/jk-doc.html" data-title="南昌微族接口文档" target="_blank">南昌微族接口文档</a></li> -->
+			<li><a href="/view/mine/jk-doc/jk-doc.html" data-title="南昌微族接口文档" target="_blank">南昌微族接口文档</a></li>
+		</c:if>
 					<li><a data-href="http://htmlify.wps.cn/doc/index.html?ksyun=UD4oMeA6/word.html&theme=clear" data-title="平台操作指南" href="javascript:void(0)">平台操作指南</a></li>
-			</ul>
+	</ul> --%>
 	
 		<!-- <dl id="menu-member">
 			<dt><i class="Hui-iconfont">&#xe60d;</i> 会员管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
@@ -275,6 +283,7 @@
 	<ul>
 		<li id="closethis">关闭当前 </li>
 		<li id="closeall">关闭全部 </li>
+		<li id="closeother">关闭其他 </li>
 </ul>
 </div>
 <!--_footer 作为公共模版分离出去-->

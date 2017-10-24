@@ -173,7 +173,7 @@ public class ChargeImpl implements IChargeFacet {
 			
 			long recordId = 0l;
 			long supperRecordId = 0l;
-			if(canCharge && pc != null){//可以通过接口充值
+			if(pc != null){//可以通过接口充值
 				/** 更新登录用户账户信息**/
 				accountPo.addBalance(orderAmount,-1);
 				int accountRes = chargeAccountAO.updateAccount(accountPo);		//账户最后的结果
@@ -184,17 +184,21 @@ public class ChargeImpl implements IChargeFacet {
 							AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), 1 , orderId));
 					recordId = chargeRecordDao.nextId() -1;
 				}
-				if(!isChannelStateClose){
-					/** 更新超管账户信息**/
-					superAccountPo.addBalance(superOrderAmount, -1);
-					int superAccountRes = chargeAccountAO.updateAccount(superAccountPo);
-					if(superAccountRes > 0){
-						//添加消费记录
-						chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), superOrderAmount,
-								superAgencyBeforeBalance, superAccountPo.getAccountBalance(), 
-								AccountTypeEnum.DECREASE.getValue(), superAccountPo.getId(), 1 , orderId));
-						supperRecordId = chargeRecordDao.nextId() -1 ;
-					}
+				/** 通道暂停也更新超管账户信息**/
+				superAccountPo.addBalance(superOrderAmount, -1);
+				int superAccountRes = chargeAccountAO.updateAccount(superAccountPo);
+				if(superAccountRes > 0){
+					//添加消费记录
+					chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), superOrderAmount,
+							superAgencyBeforeBalance, superAccountPo.getAccountBalance(), 
+							AccountTypeEnum.DECREASE.getValue(), superAccountPo.getId(), 1 , orderId));
+					supperRecordId = chargeRecordDao.nextId() -1 ;
+//					AccountPurchasePo app = new AccountPurchasePo(accountId, orderId,pcVO.getCdisId(), orderAmount,pcVO.getAccountId(), recordId, orderAmount, fromAgencyName, orderPath, orderResult);
+//					app.setOrderStateDetail(OrderStateEnum.CHARGING.getDesc());
+//					int aarAdd = accountPurchaseDao.add(app);
+				}
+				
+				if(!isChannelStateClose && canCharge){
 					BaseInterface bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(pc.getProductCode(),orderId,chargeTel,chargeParams.getScope(),epPo));
 					ChargeDTO chargeDTO = bi.charge();
 					String orderIdApi = chargeDTO.getChargeOrder().getOrderIdApi();
@@ -202,9 +206,19 @@ public class ChargeImpl implements IChargeFacet {
 					purchasePo.setOrderIdApi(orderIdApi);
 					charge = getChargeByDTO(chargeDTO,chargeParams,purchasePo);
 					orderResultDetail = charge.getTipMsg();
+				}else if(!canCharge){
+//					orderResult = OrderStateEnum.DAICHONG.getValue();
+//					orderResultDetail = ChargeStatusEnum.LACK_OF_BALANCE.getDesc();
+					purchasePo.setOrderResult(orderResult);
+					purchasePo.setOrderResultDetail(orderResultDetail);
+					charge = new Charge(ChargeStatusEnum.CHARGE_SUCCESS.getValue(), ChargeStatusEnum.CHARGE_SUCCESS.getDesc(), new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
 				}else{
 					orderResult = OrderStateEnum.DAICHONG.getValue();
 					orderResultDetail = ChargeStatusEnum.CHANNEL_CLOSED.getDesc();
+					purchasePo.setOrderResult(orderResult);
+					purchasePo.setOrderResultDetail(orderResultDetail);
+					
+					charge = new Charge(ChargeStatusEnum.CHARGE_SUCCESS.getValue(), ChargeStatusEnum.CHARGE_SUCCESS.getDesc(), new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
 				}
 			}else if(pc == null){
 				logger.config("产品编码未配置,没有通过接口充值，不产生接口订单号");
@@ -247,7 +261,7 @@ public class ChargeImpl implements IChargeFacet {
 		
 		//最好把失败的单子卡下来
 		if(chargeDTO != null){
-			Charge charge = new Charge(chargeDTO.getTipCode(), chargeDTO.getTipMsg(), new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
+			Charge charge = new Charge(ChargeStatusEnum.CHARGE_SUCCESS.getValue(), ChargeStatusEnum.CHARGE_SUCCESS.getDesc(), new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
 			return charge;
 		}
 		else{
@@ -274,7 +288,10 @@ public class ChargeImpl implements IChargeFacet {
 		//验证包体：运营商类型，业务范围，包体大小，包体
 		int otype = -1;
 		if(resMap == null){
-			
+			chargeEnum = ChargeStatusEnum.CITY_NOT_FOUND;
+			charge =  new Charge(chargeEnum.getValue(),chargeEnum.getDesc(), null);
+			sqlMap.put("exceptionDTO", charge);
+			return sqlMap;
 		}else{
 			otype = Integer.parseInt(resMap.get("operatorType").toString());
 			PgDataPo pgData = valiUser.findPg(chargeParams.getScope(), chargeParams.getFlowsize(),otype);//
@@ -305,6 +322,14 @@ public class ChargeImpl implements IChargeFacet {
 				sqlMap.put("exceptionDTO", charge);
 				return sqlMap;
 			}else{
+				PurchasePo purPo = purchaseDAO.hasDoublePurchase(null, chargeParams.getOrderIdFrom());
+				boolean hasD = purPo != null;
+				if(hasD && purPo.getChargeTel().equals(chargeParams.getNumber())){
+					chargeEnum = ChargeStatusEnum.HAS_DOUBLE_PURCHAE;
+					charge = new Charge(chargeEnum.getValue(),chargeEnum.getDesc(), null);
+					sqlMap.put("exceptionDTO", charge);
+					return sqlMap;
+				}
 				sqlMap.put("backPo", backPo);
 				ChargeAccountPo accountPo =  chargeAccountAO.getAccountByAgencyId(backPo.getId(), billType);
 				if(accountPo == null){

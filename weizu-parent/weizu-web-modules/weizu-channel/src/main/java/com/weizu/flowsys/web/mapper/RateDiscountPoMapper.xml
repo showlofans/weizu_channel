@@ -45,7 +45,7 @@
   	update <include refid="t_rateD"></include>
   	<set>
   		<if test="editDiscount != null">
-	  		active_discount = active_discount + #{editDiscount}
+	  		active_discount = TRUNCATE(active_discount + #{editDiscount} , 3)
   		</if>
   	</set>
   	<where>

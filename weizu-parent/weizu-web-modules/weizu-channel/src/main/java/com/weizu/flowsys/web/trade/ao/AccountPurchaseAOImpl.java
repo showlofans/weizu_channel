@@ -37,16 +37,20 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 	
 	@Transactional
 	@Override
-	public String updatePurchaseState(Long orderId, Integer orderResult,
-			String orderResultDetail, Long realBackTime) {
+	public String updatePurchaseState(PurchasePo purchasePo1) {
 		int ap = 0;
 		int pur = 0;
+		Long realBackTime = purchasePo1.getOrderBackTime();
 		if(realBackTime == null){
 			realBackTime = System.currentTimeMillis();
+			purchasePo1.setOrderBackTime(System.currentTimeMillis());
 		}
-		
+		Integer orderResult = purchasePo1.getOrderResult();
+		Long orderId = purchasePo1.getOrderId();
+		String orderResultDetail = purchasePo1.getOrderResultDetail();
 		//失败直接返款判定
 		boolean unchargeNotSave = orderResult == OrderStateEnum.UNCHARGE.getValue();
+		String res = "error";
 		
 		if(unchargeNotSave){//手动失败，要返款
 			PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
@@ -85,11 +89,11 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 						//更新连接表
 						ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
 						//更新订单表(只更新超管的订单详情)
-						pur = purchaseDAO.updatePurchaseState(new PurchaseStateParams(orderId, System.currentTimeMillis(), orderResult, orderResultDetail, null));
+						pur = purchaseDAO.updatePurchaseState(purchasePo1);//orderId, realBackTime, orderResult, orderResultDetail, purchasePo1.getOrderIdApi()
 					}
 			}else{
-				System.out.println("订单不存在");
-				return "error";
+//				System.out.println("订单不存在");
+				res = "success";
 			}
 			
 		}else{
@@ -100,12 +104,12 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 				ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, OrderStateEnum.CHARGED.getDesc());
 			}
 			//更新订单表
-			pur = purchaseDAO.updatePurchaseState(new PurchaseStateParams(orderId, System.currentTimeMillis(), orderResult, orderResultDetail, null));
+			pur = purchaseDAO.updatePurchaseState(purchasePo1);
 		}
 		if(pur + ap > 1){
-			return "success";
+			res = "success";
 		}
-		return "error";
+		return res;
 	}
 
 	@Transactional
@@ -143,7 +147,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 										AccountTypeEnum.Replenishment.getValue(), accountId,  1 , orderId));
 								chargeAccountDao.updateLocal(accountPo, new WherePrams("id","=",accountId));
 								//更新连接表
-//								ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
+								ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
 //								Long appId = accountPurchaseDao.nextId();
 								//同样的订单消费再添加一笔消费记录
 								AccountPurchasePo appPo = accountPurchasePo.clone();
@@ -157,7 +161,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 						batchAddCrt = chargeRecordDao.crt_addList(recordPoList);		//批量添加补款记录信息
 						ap = accountPurchaseDao.ap_addList(apList);
 						//更新订单表(只更新超管的订单详情)
-						pur = purchaseDAO.updatePurchaseState(new PurchaseStateParams(orderId, System.currentTimeMillis(), orderResult, orderResultDetail, null));
+						pur = purchaseDAO.updatePurchaseState(new PurchasePo(orderId, null, realBackTime, orderResult, null, orderResultDetail));
 					}
 			}else{
 				System.out.println("订单不存在");
@@ -168,7 +172,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 			//更新连接表
 			ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
 			//更新订单表
-			pur = purchaseDAO.updatePurchaseState(new PurchaseStateParams(orderId, System.currentTimeMillis(), orderResult, orderResultDetail, null));
+			pur = purchaseDAO.updatePurchaseState(new PurchasePo(orderId, null, realBackTime, orderResult, null, orderResultDetail));
 		}
 		if(pur + ap > 1){
 			return "success";
@@ -176,23 +180,23 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 		return "error";
 	}
 
-	@Override
-	public String updatePurchaseStateByApi(String orderIdApi, Long orderId,
-			Integer orderResult, String orderResultDetail, Long realBackTime) {
-		int ap = 0;
-		int pur = 0;
-		if(!orderResult.equals(OrderStateEnum.CHARGED.getValue())){
-			//更新连接表//不是成功和失败，就是进行
-			ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, OrderStateEnum.CHARGING.getDesc());
-		}else{
-			ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, OrderStateEnum.CHARGED.getDesc());
-		}
-		//更新订单表
-		pur = purchaseDAO.updatePurchaseState(new PurchaseStateParams(orderId, System.currentTimeMillis(), orderResult, orderResultDetail, null));
-		if(pur > 0){
-			return "success";
-		}
-		return "error";
-	}
+//	@Override
+//	public String updatePurchaseStateByApi(String orderIdApi, Long orderId,
+//			Integer orderResult, String orderResultDetail, Long realBackTime) {
+//		int ap = 0;
+//		int pur = 0;
+//		if(!orderResult.equals(OrderStateEnum.CHARGED.getValue())){
+//			//更新连接表//不是成功和失败，就是进行
+//			ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, OrderStateEnum.CHARGING.getDesc());
+//		}else{
+//			ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, OrderStateEnum.CHARGED.getDesc());
+//		}
+//		//更新订单表
+//		pur = purchaseDAO.updatePurchaseState(new PurchasePo(orderId, null, realBackTime, orderResult, null, orderResultDetail));
+//		if(pur > 0){
+//			return "success";
+//		}
+//		return "error";
+//	}
 
 }

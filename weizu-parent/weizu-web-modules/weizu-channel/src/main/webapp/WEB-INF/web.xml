@@ -35,6 +35,9 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+	<listener>
+		<listener-class>com.weizu.flowsys.web.base.PreloadListener</listener-class>
+	</listener>
 	<!-- 防止Spring内存溢出监听器 -->
 	<listener>
 		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
@@ -54,7 +57,7 @@
 	<servlet-mapping>
 		<servlet-name>SpringMVC</servlet-name>
 		<!-- 此处可以可以配置成*.do，对应struts的后缀习惯 -->
-		<url-pattern>*.do</url-pattern>
+		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>   

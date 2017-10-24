@@ -14,11 +14,11 @@
 //import com.aiyi.base.pojo.PageParam;
 //import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 //import com.weizu.flowsys.util.Pagination;
-//import com.weizu.flowsys.web.activity.pojo.AgencyActiveRateDTO;
 //import com.weizu.flowsys.web.agency.ao.AgencyAO;
 //import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
 //import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 //import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
+//import com.weizu.web.foundation.hash.Hash;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -85,25 +85,28 @@
 ////	public void testBindStateEnum(){
 ////		System.out.println(BindStateEnum.toBindList().size());
 ////	}
-////	@Test
-////	public void testLogin(){
-////		AgencyBackwardPo agencyPo =  new AgencyBackwardPo();
-////		agencyPo.setUserName("456");
-////		agencyPo.setUserPass("123");
-////		Map<String, Object> resultMap = agencyAO.login(agencyPo);
-////		AgencyBackwardPo resultPo = (AgencyBackwardPo) resultMap.get("entity");// 获得返回的登陆实体
-////		System.out.println(resultPo.getAgencyTel());
-////	}
+//	@Test
+//	public void testLogin(){
+//		AgencyBackwardPo agencyPo =  new AgencyBackwardPo();
+//		agencyPo.setUserName("罗大大");
+//		//得到密码
+//		String userPass = Hash.BASE_UTIL.decode("MjAxMTAz");
+//		System.out.println(userPass);
+//		agencyPo.setUserPass(userPass);
+//		Map<String, Object> resultMap = agencyAO.login(agencyPo);
+//		AgencyBackwardPo resultPo = (AgencyBackwardPo) resultMap.get("entity");// 获得返回的登陆实体
+//		System.out.println(resultPo.getAgencyTel());
+//	}
 ////	@Test
 ////	public void testCheckName(){
 ////		boolean isExist = agencyAO.checkName("xiao");
 ////		System.out.println(isExist);
 ////	}
-//	@Test
-//	public void checkVerifyCode(){
-//		boolean isExist = agencyAO.checkVerifyCode("123",null);
-//		System.out.println(isExist);
-//	}
+////	@Test
+////	public void checkVerifyCode(){
+////		boolean isExist = agencyAO.checkVerifyCode("123",null);
+////		System.out.println(isExist);
+////	}
 ////	@Test
 ////	public void testGetRootAgencyById(){
 ////		AgencyBackwardPo agencyPo = agencyVODao.getRootAgencyById(21);

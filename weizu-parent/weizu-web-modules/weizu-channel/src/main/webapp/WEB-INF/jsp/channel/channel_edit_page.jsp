@@ -69,6 +69,21 @@
 					</c:if>
 				</c:forEach>
 		</c:forEach>
+		
+		<!-- ifUpdateRate -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">同步更新下级折扣：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<div class="radio-box">
+					<input name="ifUpdateRate" class="radioItem" type="radio" value="0" checked>
+					否
+				</div>
+				<div class="radio-box">
+					<input name="ifUpdateRate" class="radioItem" type="radio" value="1" >
+					是
+				</div>
+			</div>
+		</div>
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
 				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>

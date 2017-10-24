@@ -17,7 +17,8 @@ public class CallBackURL extends BaseURL{
 	public static final String MODOE_NAME = "/flowsys/callBack";
 	/**
 	 * 微族科技回调接口<br>
-	 * 真实地址：http://www.weizutec.top:28445/flowsys/callBack/weizu.do
+	 * 真实地址：http://www.weizutec.top:28445/flowsys/callBack/weizu.do<br>
+	 * 真实地址：http://120.55.162.224:8082/flowsys/callBack/weizu.do<br>
 	 */
 	public static final String Weizu = "/weizu"+ DYNAMIC_WEB_SUFFIX;
 	/**
@@ -30,6 +31,12 @@ public class CallBackURL extends BaseURL{
 	 * 真实地址：http://www.weizutec.top:28445/flowsys/callBack/lljypt.do
 	 */
 	public static final String LLJYPT = "/lljypt"+ DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 青岛网信乐疯回调接口<br>
+	 * 真实地址：http://www.weizutec.top:28445/flowsys/callBack/weizu.do<br>
+	 * 真实地址：http://120.55.162.224:8082/flowsys/callBack/Lefeng.do<br>
+	 */
+	public static final String Lefeng = "/Lefeng"+ DYNAMIC_WEB_SUFFIX;
 	
 	
 }

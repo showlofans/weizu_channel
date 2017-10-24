@@ -16,7 +16,7 @@ public enum BalanceCheckEnum {
 	/**
 	 * 用户验证成功
 	 */
-	AUTHENTICATION_SUCCESS("用户验证成功",1),
+	AUTHENTICATION_SUCCESS("用户验证成功",5001),
 	/**
 	 * 没有该账户类型
 	 */

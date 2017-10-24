@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.weizu.api.outter.enums.ChargeStatusEnum;
 
 import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.api.singleton.BalanceDTO;
@@ -39,8 +40,6 @@ public class OuterAPIController {
 	@Resource
 	private IOrderFacet orderFacade;
 	
-	
-	
 	/**
 	 * @description:
 	 * @description: 查询账户余额接口
@@ -53,11 +52,11 @@ public class OuterAPIController {
 	 */
 	@RequestMapping(value=OuterApiURL.MY_BALANCE)
 	@ResponseBody
-	public String myBalance(String username,String sign,@RequestParam(value="billType",required=false) Integer billType){
+	public String myBalance(String userName,String sign,@RequestParam(value="billType",required=false) Integer billType){
 			if(billType == null){
 				billType = BillTypeEnum.CORPORATE_BUSINESS.getValue();
 			}
-			BalanceDTO balanceDTO = balanceFacade.myBalance(username, sign,billType);
+			BalanceDTO balanceDTO = balanceFacade.myBalance(userName, sign,billType);
 			String jsonResult = JSON.toJSON(balanceDTO).toString();
 //			response.setCharacterEncoding("UTF-8");
 //			response.getWriter().print(jsonResult);
@@ -74,27 +73,26 @@ public class OuterAPIController {
 	 */
 	@RequestMapping(value=OuterApiURL.CHARGE)
 	@ResponseBody
-	public String chargePg(String userName, String number,Integer flowsize,
+	public String chargePg(String userName, String number,Integer pgSize,
 			@RequestParam(value="scope",required=false)Integer scope, String sign,
 			@RequestParam(value="billType",required=false) Integer billType,
 			@RequestParam(value="userOrderId",required=false) String userOrderId){
-		if(billType == null){//默认对私
-			billType = BillTypeEnum.BUSINESS_INDIVIDUAL.getValue();
+		if(billType == null){//默认对公
+			billType = BillTypeEnum.CORPORATE_BUSINESS.getValue();
 		}
 		if(scope == null){//默认省漫游类型
 			scope = ServiceTypeEnum.PROVINCE_ROAMING.getValue();
 		}
 		Charge charge = null;
 		try {
-			charge = chargeImpl.charge(new ChargeParams(userName, number, flowsize, scope, sign, billType, userOrderId));
-			String jsonResult = JSON.toJSON(charge).toString();
-//		System.out.println(jsonResult);
-			return jsonResult;
+			charge = chargeImpl.charge(new ChargeParams(userName, number, pgSize, scope, sign, billType, userOrderId));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			charge = new Charge(ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc(), null);
 			e.printStackTrace();
 		}
-		return null;
+		String jsonResult = JSON.toJSON(charge).toString();
+//		System.out.println(jsonResult);
+		return jsonResult;
 	}
 	
 	/**
@@ -106,6 +104,7 @@ public class OuterAPIController {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月26日 上午10:55:24
 	 */
+	@ResponseBody
 	@RequestMapping(value=OuterApiURL.MY_ORDER_STATE)
 	public String myOrderState(String userName, String sign, Long orderId, 
 			@RequestParam(value="number", required=false)String number){

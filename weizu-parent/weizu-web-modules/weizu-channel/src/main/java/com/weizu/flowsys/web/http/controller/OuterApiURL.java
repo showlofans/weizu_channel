@@ -14,20 +14,20 @@ public class OuterApiURL extends BaseURL {
 	/**
 	 * 对外接口模块
 	 */
-	public static final String MODOE_NAME = "/weizuAPI";
+	public static final String MODOE_NAME = "/flowsys/weizuAPI";
 	/**
 	 * 下游余额查询接口<br>
 	 * 真实地址：http://www.weizutec.top:28445/weizuAPI/my_balance.do
 	 */
-	public static final String MY_BALANCE = "/my_balance"+ DYNAMIC_WEB_SUFFIX;
+	public static final String MY_BALANCE = "/my_balance";
 	/**
 	 * 下游充值接口<br>
 	 * 真实地址：http://www.weizutec.top:28445/weizuAPI/charge.do
 	 */
-	public static final String CHARGE = "/charge"+ DYNAMIC_WEB_SUFFIX;
+	public static final String CHARGE = "/charge";
 	/**
 	 * 下游主动查询接口<br>
 	 * 真实地址：http://www.weizutec.top:28445/weizuAPI/my_order_state.do
 	 */
-	public static final String MY_ORDER_STATE = "/my_order_state"+ DYNAMIC_WEB_SUFFIX;
+	public static final String MY_ORDER_STATE = "/my_order_state";
 }

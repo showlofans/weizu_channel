@@ -15,21 +15,21 @@ import com.weizu.flowsys.core.beans.Po;
 @TableName(name="agency_backward")
 public class AgencyBackwardPo extends Po{
 
-    private Integer id;						//带票费率id
+    private Integer id;						//id
 
-    private Integer rootAgencyId;			//带票费率id
+    private Integer rootAgencyId;			//父级代理商id
 
-    private String userName;				//带票费率id
+    private String userName;				//用户名
 
-    private String userPass;				//带票费率id
+    private String userPass;				//登录密码
 
-    private String userRealName;			//带票费率id
+    private String userRealName;			//登录用户真实姓名
 
-    private String agencyTel;				//带票费率id
+    private String agencyTel;				//代理商电话
 
     private String otherContact;			//其他联系方式，qq
 
-    private String userEmail;				//带票费率id
+    private String userEmail;				//代理商邮箱
 
     private String agencyIp;				//代理商系统主页地址
 
@@ -45,7 +45,7 @@ public class AgencyBackwardPo extends Po{
 //    private String rateName;
     
     
-	private Long createTime;				//账户创建时间
+	private Long createTime;				//用户注册时间
 	
 	private String verifyCode;				//注册邀请码
 	

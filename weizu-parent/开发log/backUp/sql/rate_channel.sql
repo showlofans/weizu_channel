@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50626
 File Encoding         : 65001
 
-Date: 2017-10-10 19:04:12
+Date: 2017-10-19 10:00:26
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -33,7 +33,7 @@ CREATE TABLE `account_active_rate` (
   CONSTRAINT `bind_account_fk` FOREIGN KEY (`account_id`) REFERENCES `charge_account` (`id`) ON DELETE CASCADE,
   CONSTRAINT `bind_agency_fk` FOREIGN KEY (`bind_agency_id`) REFERENCES `agency_backward` (`id`),
   CONSTRAINT `channel_agency_fk` FOREIGN KEY (`rate_discount_id`) REFERENCES `rate_discount` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1231 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1232 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of account_active_rate
@@ -691,6 +691,7 @@ INSERT INTO `account_active_rate` VALUES ('1227', '61', '1', '36', '0', '8155552
 INSERT INTO `account_active_rate` VALUES ('1228', '60', '1', '43', '0', '764388753', '1505958522240');
 INSERT INTO `account_active_rate` VALUES ('1229', '61', '1', '43', '0', '815555213', '1505958522240');
 INSERT INTO `account_active_rate` VALUES ('1230', '61', '1', '46', '0', '无厘头', '1505986790229');
+INSERT INTO `account_active_rate` VALUES ('1231', '54', '1', '49', '0', '123', '1507875851032');
 
 -- ----------------------------
 -- Table structure for `account_purchase`
@@ -1490,10 +1491,10 @@ DROP TABLE IF EXISTS `agency_backward`;
 CREATE TABLE `agency_backward` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ä»£ç†å•†id',
   `root_agency_id` int(11) DEFAULT NULL COMMENT '上一级代理商id',
-  `user_name` varchar(255) DEFAULT NULL COMMENT 'ä»£ç†å•†æ˜µç§°ï¼ˆè´¦å·ï¼‰',
+  `user_name` varchar(32) DEFAULT NULL COMMENT 'ä»£ç†å•†æ˜µç§°ï¼ˆè´¦å·ï¼‰',
   `user_pass` varchar(255) DEFAULT NULL COMMENT 'ä»£ç†å•†å¯†ç ',
   `user_real_name` varchar(255) DEFAULT NULL COMMENT 'ä»£ç†å•†çœŸå®žåå­—',
-  `agency_tel` varchar(255) DEFAULT NULL COMMENT 'è”ç³»ç”µè¯',
+  `agency_tel` varchar(11) DEFAULT NULL COMMENT 'è”ç³»ç”µè¯',
   `other_contact` varchar(255) DEFAULT NULL COMMENT '其他联系方式（qq号）',
   `user_email` varchar(255) DEFAULT NULL COMMENT 'è”ç³»é‚®ç®±',
   `agency_ip` varchar(255) DEFAULT NULL COMMENT 'ä»£ç†å•†ç³»ç»Ÿè®¿é—®ipåœ°å€',
@@ -1630,14 +1631,16 @@ CREATE TABLE `bank_account` (
   KEY `fk_ba_agency` (`agency_id`),
   CONSTRAINT `fk_ba_account` FOREIGN KEY (`account_id`) REFERENCES `charge_account` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_ba_agency` FOREIGN KEY (`agency_id`) REFERENCES `agency_backward` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of bank_account
 -- ----------------------------
-INSERT INTO `bank_account` VALUES ('1', '2', '的', '123', '1', '1', '1', null, '1');
-INSERT INTO `bank_account` VALUES ('2', '2', '的', '123', '1', '1', '2', null, '1');
-INSERT INTO `bank_account` VALUES ('3', '28', '建行', '123', '王', '3000', '1', null, '1');
+INSERT INTO `bank_account` VALUES ('17', '28', '工商对公卡', '7541541545512154655', '宁强', '30900', '1', null, '1');
+INSERT INTO `bank_account` VALUES ('19', '54', '工商对公卡', '71111111111', '李威', '1300', '2', null, '1');
+INSERT INTO `bank_account` VALUES ('20', '2', '建设银行对私卡', '322222222222222222', '李威', '2700', '2', null, '1');
+INSERT INTO `bank_account` VALUES ('21', '54', '工商对公卡', '7541541545512154655', '宁强', null, '1', '1', '1');
+INSERT INTO `bank_account` VALUES ('23', '3', '支付宝', '13699562589', '宁强', '200', '3', null, '1');
 
 -- ----------------------------
 -- Table structure for `channel_channel`
@@ -1657,7 +1660,7 @@ CREATE TABLE `channel_channel` (
   `last_access` bigint(20) DEFAULT NULL COMMENT '最后更新时间',
   `belong_agency_id` int(11) DEFAULT NULL COMMENT '通道所属代理商',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of channel_channel
@@ -1673,7 +1676,9 @@ INSERT INTO `channel_channel` VALUES ('52', '微族-浙江移动', '10& 30& 70& 
 INSERT INTO `channel_channel` VALUES ('53', '微族-山西移动', '10& 30& 70& 100& 150& 300& 500& 1024& 2048& 3072& 4096& 6144& 11264', '32', null, null, null, null, '0', '0', '1505900423985', '1');
 INSERT INTO `channel_channel` VALUES ('56', '微族-安徽移动', '10& 30& 70& 100& 150& 300& 500& 1024& 2048', '32', null, null, null, null, '0', '0', '1505899972071', '1');
 INSERT INTO `channel_channel` VALUES ('57', '微族-湖南移动', '10& 30& 70& 100& 150& 300& 500& 1024& 2048& 3072& 4096& 6144& 11264', '32', null, null, null, null, '0', '0', '1505900419160', '1');
-INSERT INTO `channel_channel` VALUES ('61', '微族-陕西本地移动', '500& 1024& 2048& 3072& 4096& 6144& 11264& 100& 300', '32', null, null, null, null, '0', '0', null, '1');
+INSERT INTO `channel_channel` VALUES ('61', '微族-陕西本地移动', '500& 1024& 2048& 3072& 4096& 6144& 11264& 100& 300', '32', null, null, null, null, '0', '0', '1507858161512', '1');
+INSERT INTO `channel_channel` VALUES ('62', '微族-陕西本地移动-带', '10& 30& 70& 150', '32', null, null, null, null, '0', '0', null, '1');
+INSERT INTO `channel_channel` VALUES ('63', '微族-宁夏移动-省漫游-带', '10& 30& 70& 100& 150& 300& 500& 1024& 2048& 3072', '32', null, null, null, null, '0', '0', null, '1');
 
 -- ----------------------------
 -- Table structure for `channel_discount`
@@ -1692,7 +1697,7 @@ CREATE TABLE `channel_discount` (
   PRIMARY KEY (`id`),
   KEY `channel_channel_discouont` (`channel_id`),
   CONSTRAINT `channel_channel_discouont` FOREIGN KEY (`channel_id`) REFERENCES `channel_channel` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of channel_discount
@@ -1709,6 +1714,8 @@ INSERT INTO `channel_discount` VALUES ('50', '53', '04', '0.467', '省漫游-微
 INSERT INTO `channel_discount` VALUES ('53', '56', '12', '0.448', '省漫游-微族-安徽移动', '0', '0', '2', '0');
 INSERT INTO `channel_discount` VALUES ('54', '57', '18', '0.768', '省漫游-微族-湖南移动', '0', '0', '2', '0');
 INSERT INTO `channel_discount` VALUES ('58', '61', '26', '0.31', '省内-微族-陕西本地移动', '0', '0', '1', '0');
+INSERT INTO `channel_discount` VALUES ('59', '62', '26', '0.41', '微族-陕西本地移动-带', '0', '0', '1', '0');
+INSERT INTO `channel_discount` VALUES ('60', '63', '29', '0.88', '微族-宁夏移动-省漫游-带', '0', '1', '2', '0');
 
 -- ----------------------------
 -- Table structure for `charge_account`
@@ -1733,8 +1740,8 @@ CREATE TABLE `charge_account` (
 -- ----------------------------
 -- Records of charge_account
 -- ----------------------------
-INSERT INTO `charge_account` VALUES ('1', '-99482.455', null, null, '0', '1', '0', null, '1495689716779', null);
-INSERT INTO `charge_account` VALUES ('2', '101.58', '中国银行', '123', '0', '2', '0', null, '1505095878921', '123');
+INSERT INTO `charge_account` VALUES ('1', '-99782.455', null, null, '0', '1', '0', null, '1495689716779', null);
+INSERT INTO `charge_account` VALUES ('2', '401.58', '中国银行', '123', '0', '2', '0', null, '1505095878921', '123');
 INSERT INTO `charge_account` VALUES ('3', '89.56', null, null, '0', '3', '0', null, '1505099730745', '456');
 INSERT INTO `charge_account` VALUES ('4', '0', null, null, '0', '4', '0', null, '1505389590642', 'wzkj');
 INSERT INTO `charge_account` VALUES ('5', '0', null, null, '0', '5', '0', null, '1505397230874', '冰河');
@@ -1786,7 +1793,7 @@ INSERT INTO `charge_account` VALUES ('50', '0', null, null, '0', '49', '0', null
 INSERT INTO `charge_account` VALUES ('51', '0', null, null, '0', '50', '0', null, '1505781054289', '119');
 INSERT INTO `charge_account` VALUES ('52', '0', null, null, '0', '51', '0', null, '1505783246196', 'gigi77');
 INSERT INTO `charge_account` VALUES ('53', '0', null, null, '0', '52', '0', null, '1505783990311', 'gigi777');
-INSERT INTO `charge_account` VALUES ('54', '0', null, null, '0', '2', '1', null, '1505874476912', '123');
+INSERT INTO `charge_account` VALUES ('54', '900', null, null, '0', '2', '1', null, '1505874476912', '123');
 INSERT INTO `charge_account` VALUES ('55', '6.9', null, null, '0', '53', '0', null, '1505880444101', '111111');
 INSERT INTO `charge_account` VALUES ('56', '0', null, null, '0', '54', '0', null, '1505880504457', 'dada');
 INSERT INTO `charge_account` VALUES ('57', '0', null, null, '0', '55', '0', null, '1505883026363', '源肥呀');
@@ -1812,7 +1819,7 @@ CREATE TABLE `charge_record` (
   PRIMARY KEY (`id`),
   KEY `fk_cr_account` (`account_id`),
   CONSTRAINT `fk_cr_account` FOREIGN KEY (`account_id`) REFERENCES `charge_account` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=225 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=232 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of charge_record
@@ -2036,6 +2043,13 @@ INSERT INTO `charge_record` VALUES ('221', '1507452496876', '1.71', '103.29', '1
 INSERT INTO `charge_record` VALUES ('222', '1507452503419', '1.38', '-99480.075', '-99481.455', '1', '1', '1', '742913528372924416');
 INSERT INTO `charge_record` VALUES ('223', '1507512593003', '1', '-99481.455', '-99482.455', '1', '1', '1', null);
 INSERT INTO `charge_record` VALUES ('224', '1507512593056', '1', '0', '1', '0', '61', '1', null);
+INSERT INTO `charge_record` VALUES ('225', '1507866489593', '300', '600', '900', '0', '54', '1', null);
+INSERT INTO `charge_record` VALUES ('226', '1507869326202', '100', '-99482.455', '-99582.455', '1', '1', '1', null);
+INSERT INTO `charge_record` VALUES ('227', '1507869326230', '100', '101.58', '201.58', '0', '2', '1', null);
+INSERT INTO `charge_record` VALUES ('228', '1507873193200', '100', '-99582.455', '-99682.455', '1', '1', '1', null);
+INSERT INTO `charge_record` VALUES ('229', '1507873193215', '100', '201.58', '301.58', '0', '2', '1', null);
+INSERT INTO `charge_record` VALUES ('230', '1507873809542', '100', '-99682.455', '-99782.455', '1', '1', '1', null);
+INSERT INTO `charge_record` VALUES ('231', '1507873809551', '100', '301.58', '401.58', '0', '2', '1', null);
 
 -- ----------------------------
 -- Table structure for `cnel_bind_pg`
@@ -2052,7 +2066,7 @@ CREATE TABLE `cnel_bind_pg` (
   KEY `cbp_fk_pg` (`pg_id`),
   CONSTRAINT `cbp_fk_cnel` FOREIGN KEY (`channel_id`) REFERENCES `channel_channel` (`id`) ON DELETE CASCADE,
   CONSTRAINT `cbp_fk_pg` FOREIGN KEY (`pg_id`) REFERENCES `operator_pg_data` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=426 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=440 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of cnel_bind_pg
@@ -2191,6 +2205,20 @@ INSERT INTO `cnel_bind_pg` VALUES ('422', '61', '75', '省内-微族-陕西本�
 INSERT INTO `cnel_bind_pg` VALUES ('423', '61', '76', '省内-微族-陕西本地移动', '280元11G省内');
 INSERT INTO `cnel_bind_pg` VALUES ('424', '61', '78', '省内-微族-陕西本地移动', '10元100M省内');
 INSERT INTO `cnel_bind_pg` VALUES ('425', '61', '79', '省内-微族-陕西本地移动', '20元300M省内');
+INSERT INTO `cnel_bind_pg` VALUES ('426', '62', '66', '微族-陕西本地移动-带', '3元10M省内');
+INSERT INTO `cnel_bind_pg` VALUES ('427', '62', '67', '微族-陕西本地移动-带', '5元30M省内');
+INSERT INTO `cnel_bind_pg` VALUES ('428', '62', '68', '微族-陕西本地移动-带', '10元70M省内');
+INSERT INTO `cnel_bind_pg` VALUES ('429', '62', '69', '微族-陕西本地移动-带', '20元150M省内');
+INSERT INTO `cnel_bind_pg` VALUES ('430', '63', '41', '微族-宁夏移动-省漫游-带', '3元10M');
+INSERT INTO `cnel_bind_pg` VALUES ('431', '63', '43', '微族-宁夏移动-省漫游-带', '5元30M');
+INSERT INTO `cnel_bind_pg` VALUES ('432', '63', '44', '微族-宁夏移动-省漫游-带', '10元70');
+INSERT INTO `cnel_bind_pg` VALUES ('433', '63', '45', '微族-宁夏移动-省漫游-带', '10元100M');
+INSERT INTO `cnel_bind_pg` VALUES ('434', '63', '46', '微族-宁夏移动-省漫游-带', '20元150M');
+INSERT INTO `cnel_bind_pg` VALUES ('435', '63', '47', '微族-宁夏移动-省漫游-带', '20元300');
+INSERT INTO `cnel_bind_pg` VALUES ('436', '63', '48', '微族-宁夏移动-省漫游-带', '30元500M');
+INSERT INTO `cnel_bind_pg` VALUES ('437', '63', '49', '微族-宁夏移动-省漫游-带', '50元1G');
+INSERT INTO `cnel_bind_pg` VALUES ('438', '63', '50', '微族-宁夏移动-省漫游-带', '70元2G');
+INSERT INTO `cnel_bind_pg` VALUES ('439', '63', '51', '微族-宁夏移动-省漫游-带', '100元3G');
 
 -- ----------------------------
 -- Table structure for `company_credentials`
@@ -2248,7 +2276,8 @@ CREATE TABLE `exchange_platform` (
   `ep_eng_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL COMMENT '平台英文标识',
   `ep_purchase_ip` varchar(255) DEFAULT NULL COMMENT '流量订购地址',
   `product_list_ip` varchar(255) DEFAULT NULL COMMENT '产品列表地址',
-  `pgdata_check_ip` varchar(255) DEFAULT NULL COMMENT '订单查询地址',
+  `ep_order_state_ip` varchar(255) DEFAULT NULL COMMENT '订单查询地址',
+  `ep_call_back_ip` varchar(255) DEFAULT NULL COMMENT '回调地址',
   `ep_balance_ip` varchar(255) DEFAULT NULL COMMENT '余额查询地址',
   `ep_user_name` varchar(255) DEFAULT NULL COMMENT '账号',
   `ep_user_pass` varchar(255) DEFAULT NULL COMMENT '密码',
@@ -2264,10 +2293,10 @@ CREATE TABLE `exchange_platform` (
 -- ----------------------------
 -- Records of exchange_platform
 -- ----------------------------
-INSERT INTO `exchange_platform` VALUES ('32', '河南硕郎', 'Weizu', 'http://139.224.70.161:32001/api/v1/sendOrder', 'http://139.224.70.161:32001/api/v1/sendOrder', 'http://139.224.70.161:32001/api/v1/orderState', 'http://139.224.70.161:32001/api/v1/getBalance', 'CS111111', '123456', null, '722c16de0a83e5bd2f988e3c7bc9fee8', 'http://139.224.70.161/', '', '0', '1505470864409');
-INSERT INTO `exchange_platform` VALUES ('42', '行云流水', 'Lljypt', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/query.order', 'http://api.lljypt.com/capi/query.balance', 'cncwz', '249636', '0', 'KKIGoAFUTxoIFfC', 'http://customer.lljypt.com/a', 'merchant=10210&clientId=10000&version=V100&', '1', '1505470884956');
-INSERT INTO `exchange_platform` VALUES ('43', '行云对私', 'Lljypt0', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/query.order', 'http://api.lljypt.com/capi/query.balance', 'cncwz', '249636', '0', 'AoYIuPLXMmpTwTw', 'http://customer.lljypt.com/a', 'merchant=10304&clientId=10000&version=V100& ', '1', '1504000740478');
-INSERT INTO `exchange_platform` VALUES ('44', 'wzkj0', 'Wzkj0', 'wzkj0', 'wzkj0', 'wzkj0', 'wzkj0', '123', '123', null, '123', '123', null, '1', '1505109915512');
+INSERT INTO `exchange_platform` VALUES ('32', '河南硕郎', 'Weizu', 'http://139.224.70.161:32001/api/v1/sendOrder', 'http://139.224.70.161:32001/api/v1/sendOrder', 'http://139.224.70.161:32001/api/v1/orderState', 'http://120.55.162.224:8082/flowsys/callBack/weizu', 'http://139.224.70.161:32001/api/v1/getBalance', 'CS111111', '123456', null, '722c16de0a83e5bd2f988e3c7bc9fee8', 'http://139.224.70.161/', '', '0', '1508204585221');
+INSERT INTO `exchange_platform` VALUES ('42', '行云流水', 'Lljypt', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/query.order', null, 'http://api.lljypt.com/capi/query.balance', 'cncwz', '249636', '0', 'KKIGoAFUTxoIFfC', 'http://customer.lljypt.com/a', 'merchant=10210&clientId=10000&version=V100&', '1', '1505470884956');
+INSERT INTO `exchange_platform` VALUES ('43', '行云对私', 'Lljypt0', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/trade.charge', 'http://api.lljypt.com/capi/query.order', null, 'http://api.lljypt.com/capi/query.balance', 'cncwz', '249636', '0', 'AoYIuPLXMmpTwTw', 'http://customer.lljypt.com/a', 'merchant=10304&clientId=10000&version=V100& ', '1', '1504000740478');
+INSERT INTO `exchange_platform` VALUES ('44', 'wzkj0', 'Wzkj0', 'wzkj0', 'wzkj0', 'wzkj0', null, 'wzkj0', '123', '123', null, '123', '123', null, '1', '1505109915512');
 
 -- ----------------------------
 -- Table structure for `operator_discount`
@@ -2340,7 +2369,7 @@ CREATE TABLE `operator_pg_data` (
   `operator_name` varchar(255) DEFAULT NULL COMMENT '运营商名称',
   `service_type` int(11) DEFAULT NULL COMMENT '业务类型（0-全国，1-省内，2-省漫游，3-转赠,4-红包）',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of operator_pg_data
@@ -2371,6 +2400,8 @@ INSERT INTO `operator_pg_data` VALUES ('75', '6144', '180', '180元6G省内', '1
 INSERT INTO `operator_pg_data` VALUES ('76', '11264', '280', '280元11G省内', '1', '0', '中国移动', '1');
 INSERT INTO `operator_pg_data` VALUES ('78', '100', '10', '10元100M省内', '1', '0', '中国移动', '1');
 INSERT INTO `operator_pg_data` VALUES ('79', '300', '20', '20元300M省内', '1', '0', '中国移动', '1');
+INSERT INTO `operator_pg_data` VALUES ('80', '10', '3', '联通3.0元10MB省漫游', '1', '1', '中国联通', '2');
+INSERT INTO `operator_pg_data` VALUES ('81', '655', '30', '联通30.0元655MB省内', '1', '1', '中国联通', '1');
 
 -- ----------------------------
 -- Table structure for `product_code`
@@ -2608,11 +2639,11 @@ DROP TABLE IF EXISTS `purchase`;
 CREATE TABLE `purchase` (
   `order_id` bigint(20) NOT NULL COMMENT 'è®¢å•å·',
   `order_id_api` varchar(255) DEFAULT NULL COMMENT '其他系统返回的订单id',
-  `order_id_from` varchar(255) DEFAULT NULL COMMENT '下级代理商传过来的订单号',
-  `account_id` int(11) DEFAULT NULL COMMENT '生成订单的代理商账户',
+  `order_id_from` varchar(40) DEFAULT NULL COMMENT '下级代理商传过来的订单号',
+  `account_id` int(255) DEFAULT NULL COMMENT '生成订单的代理商账户',
   `charge_tel` varchar(255) DEFAULT NULL COMMENT 'æ‰‹æœºå·',
   `order_amount` double DEFAULT NULL COMMENT '订单的初始价格（适用于接口充值）',
-  `pg_id` int(11) DEFAULT NULL COMMENT 'æµé‡åŒ…idï¼ˆå¤–é”®ï¼‰',
+  `pg_id` int(255) DEFAULT NULL COMMENT 'æµé‡åŒ…idï¼ˆå¤–é”®ï¼‰',
   `order_arrive_time` bigint(20) DEFAULT NULL COMMENT 'æäº¤æ—¶é—´ï¼ˆæœ¬å¹³å°èŽ·å¾—è¯¥æ•°æ®è¯·æ±‚çš„æ—¶é—´ï¼‰',
   `charge_tel_detail` varchar(255) DEFAULT NULL COMMENT 'å·ç å½’å±žï¼ˆï¼šæ±Ÿè¥¿ç§»åŠ¨ï¼‰',
   `charge_tel_city` varchar(255) DEFAULT NULL COMMENT 'å·ç å½’å±žå…·ä½“åŸŽå¸‚',
@@ -2732,7 +2763,7 @@ CREATE TABLE `rate_discount` (
   KEY `active_discount_fk` (`active_id`),
   KEY `fk_channel_dis_rate` (`channel_discount_id`),
   CONSTRAINT `fk_channel_dis_rate` FOREIGN KEY (`channel_discount_id`) REFERENCES `channel_discount` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of rate_discount
@@ -2752,6 +2783,7 @@ INSERT INTO `rate_discount` VALUES ('43', '0.768', null, '54', '0', '57');
 INSERT INTO `rate_discount` VALUES ('46', '0.31', null, '58', '0', '61');
 INSERT INTO `rate_discount` VALUES ('47', '0.58', '23', '19', '0', '22');
 INSERT INTO `rate_discount` VALUES ('48', '0.33', null, '58', '0', '61');
+INSERT INTO `rate_discount` VALUES ('49', '0.89', null, '60', '1', '63');
 
 -- ----------------------------
 -- Table structure for `service_scope`
@@ -3260,6 +3292,7 @@ CREATE TABLE `transfer_record` (
   `from_bank_id` bigint(20) DEFAULT NULL,
   `to_bank_id` bigint(20) DEFAULT NULL,
   `commit_amount` double DEFAULT NULL,
+  `transfer_amount` double DEFAULT NULL COMMENT '入账金额',
   `commit_time` bigint(20) DEFAULT NULL,
   `real_time` bigint(20) DEFAULT NULL,
   `confirm_time` bigint(20) DEFAULT NULL,
@@ -3276,9 +3309,11 @@ CREATE TABLE `transfer_record` (
   CONSTRAINT `fk_tsr_agb2` FOREIGN KEY (`to_agency_id`) REFERENCES `agency_backward` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_tsr_ba1` FOREIGN KEY (`from_bank_id`) REFERENCES `bank_account` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_tsr_ba2` FOREIGN KEY (`to_bank_id`) REFERENCES `bank_account` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of transfer_record
 -- ----------------------------
-INSERT INTO `transfer_record` VALUES ('1', '1', '2', '2', null, null, null, null, '2', '1', null);
+INSERT INTO `transfer_record` VALUES ('6', '19', '17', '300', '300', '1507864652139', '1507864646000', '1507865588052', '1', '2', '1', '6031462352208');
+INSERT INTO `transfer_record` VALUES ('7', '19', '17', '300', '300', '1507866339618', '1507866332000', '1507866489616', '1', '2', '1', '6031465958468');
+INSERT INTO `transfer_record` VALUES ('14', '19', '17', '100', '0', '1507881620653', '1507881618000', null, '2', '2', '1', null);

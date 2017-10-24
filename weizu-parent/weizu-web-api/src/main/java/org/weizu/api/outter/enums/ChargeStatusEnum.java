@@ -20,34 +20,46 @@ public enum ChargeStatusEnum {
 	 */
 	AUTHENTICATION_FAILURE("用户验证失败",0),
 	/**
-	 * 充值成功
+	 * 系统内部错误
 	 */
-	CHARGE_SUCCESS("充值成功",1),
+	CHARGE_INNER_ERROR("服务器内部错误",5000),
+	/**
+	 * 充值提交成功
+	 */
+	CHARGE_SUCCESS("success",5001),
 	/**
 	 * 欠费等待
 	 */
-	LACK_OF_BALANCE("欠费等待",2),
+	LACK_OF_BALANCE("欠费等待",5002),
 	/**
 	 * 缺少通道配置
 	 */
-	SCOPE_RATE_UNDEFINED("缺少通道配置",3),
+	SCOPE_RATE_UNDEFINED("缺少通道配置",5003),
 	/**
 	 * 通道禁止提单
 	 */
-	CHANNEL_CLOSED("通道暂停，接口暂停",4),//	通道关停
+	CHANNEL_CLOSED("通道暂停，接口暂停",5004),//	通道关停
 	/**
 	 * 票务类型错误
 	 */
-	INVALID_BILL_TYPE("票务类型错误",5),
+	INVALID_BILL_TYPE("票务类型错误",5005),
 	/**
 	 * 包体参数必须为整数
 	 */
-	INT_REQUIRED("包体参数必须为整数(包体大小;包体范围;运营商类型)",7),
-	
+	INT_REQUIRED("包体参数必须为整数(包体大小;包体范围;运营商类型)",5007),
 	/**
 	 * 充值包体不存在
 	 */
-	PG_NOT_FOUND("充值包体不存在",8);
+	PG_NOT_FOUND("充值包体不存在",5008),
+	/**
+	 * 归属地接口调用异常
+	 */
+	CITY_NOT_FOUND("手机号归属地查询异常",5009),
+	
+	/**
+	 * 出现可疑重复订单
+	 */
+	HAS_DOUBLE_PURCHAE("出现可疑重复订单",5010);
 	
 	private String desc;
 	private Integer value;

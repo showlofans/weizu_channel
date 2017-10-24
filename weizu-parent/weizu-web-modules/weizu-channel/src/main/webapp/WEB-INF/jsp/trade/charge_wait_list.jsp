@@ -128,7 +128,7 @@
 				<c:forEach items="${resultMap.pagination.records }" var="purchase" varStatus="vs">
 					<tr class="text-c">
 						<td><input type="checkbox" class="ckpur" value="" name=""></td>
-						<td style="display:none;">${purchase.agencyId }</td>
+						<td style="display:none;">${purchase.accountId }</td>
 						<td>${purchase.agencyName }</td>
 						<td>${purchase.orderId }</td>
 						<td>${purchase.chargeTel }</td>
@@ -216,24 +216,24 @@
 /**批量提交*/
 function batchCommit(){
 	var purchaseIds = "";
-	var agencyIds = "";
+	var accountIds = "";
 	$(".ckpur:checked").each(function(){ //遍历table里的全部checkbox
        // allcheckbox += $(this).next().html() + ","; //获取所有checkbox的值
         //alert($(this).is(':checked'));
-        	agencyIds += $(this).next().html() + ","; //获取被选中的代理商id
+        	accountIds += $(this).next().html() + ","; //获取被选中的代理商id
         	purchaseIds +=  $(this).next().next().next().html() + ",";
     });
-        	//alert(agencyIds);
-	if(agencyIds.length > 1) //如果获取到
+        	//alert(accountIds);
+	if(accountIds.length > 1) //如果获取到
     {
-    	agencyIds = agencyIds.substring(0, agencyIds.length - 1);
+    	accountIds = accountIds.substring(0, accountIds.length - 1);
     	purchaseIds = purchaseIds.substring(0, purchaseIds.length - 1);
     	alert(purchaseIds);
     	$.ajax({
 			type: 'POST',
 			url: "",
 			//dataType: 'json',
-			data: {purchaseIds:purchaseIds,agencyIds:agencyIds},
+			data: {purchaseIds:purchaseIds,accountIds:accountIds},
 			success: function(resp){
 				//$(obj).parents("tr").remove();
 				//alert

@@ -1,5 +1,6 @@
 package com.weizu.flowsys.api.singleton;
 
+import com.weizu.flowsys.api.singleton.company.Lefeng;
 import com.weizu.flowsys.api.singleton.company.Lljypt;
 import com.weizu.flowsys.api.singleton.company.Weizu;
 
@@ -15,9 +16,10 @@ public class SingletonFactory {
 		if(MyConstants.WEIZU_ENG.equals(epEngId))
 		{
 			return Weizu.getInstance(epEngId, baseParams);
-		}
-		if(MyConstants.LLJYPT_ENG.equals(epEngId) || MyConstants.LLJYPT_ENG_0.equals(epEngId)){
+		}else if(MyConstants.LLJYPT_ENG.equals(epEngId) || MyConstants.LLJYPT_ENG_0.equals(epEngId)){
 			return Lljypt.getInstance(epEngId, baseParams);
+		}else if(MyConstants.LEFENG_ENG.equals(epEngId)){
+			return Lefeng.getInstance(epEngId, baseParams);
 		}
 		
 		return null;

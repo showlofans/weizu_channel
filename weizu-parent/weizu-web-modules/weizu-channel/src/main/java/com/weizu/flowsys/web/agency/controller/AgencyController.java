@@ -172,7 +172,7 @@ public class AgencyController {
 			session.setAttribute("msgNum", msgNum);
 			
 			return new ModelAndView("/index");// 返回登录人主要账户信息（余额，透支额）
-		} else {
+		} else {//保留参数
 			Map<String,Object> loginMap = new HashMap<String, Object>();
 			loginMap.put("userName", agencyBackward.getUserName());
 			loginMap.put("userPass", agencyBackward.getUserPass());

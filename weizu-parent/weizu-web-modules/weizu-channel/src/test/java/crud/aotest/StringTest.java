@@ -1,10 +1,16 @@
 //package crud.aotest;
 //
+//import java.io.UnsupportedEncodingException;
+//import java.util.Date;
 //import java.util.Random;
 //
 //import org.junit.Test;
 //
 //
+//
+//
+//
+//import com.alibaba.fastjson.JSONObject;
 //import com.weizu.flowsys.core.util.NumberTool;
 ////import com.weizu.flowsys.util.ClassUtil;
 ////import com.weizu.flowsys.util.StringUtil2;
@@ -142,13 +148,27 @@
 ////		int page = 10;
 ////		long res = ll / page;
 ////		System.out.println(res);
-//		System.out.println(String.valueOf(742810868827295744l).length());
+////		System.out.println(String.valueOf(742810868827295744l).length());
 //		
 ////		UUIDGenerator generator = new UUIDGenerator();
 ////		String userApiKey = generator.generate().toString();
 ////		System.out.println("098f6bcd4621d373cade4e832627b4f6".length());//待md5编码的32位字符串
-////		String text1 = MD5.getMd5("456"+"&098f6bcd4621d373cade4e832627b4f6");
-////		System.out.println(text1);
+////		try {
+////			String text1 = MD5.getMd5("userName=123&userPass=123&apikey=8a982a8a5e9fd1c1015e9fd1c1900000",null,null);
+////			System.out.println(text1);
+////		} catch (UnsupportedEncodingException e) {
+////			// TODO Auto-generated catch block
+////			e.printStackTrace();
+////		}
+////		Long nowTime = new Date().getTime()/1000;
+////		System.out.println(nowTime);
+////		System.out.println(System.currentTimeMillis());
+////		System.out.println(System.currentTimeMillis()/1000);
+////		System.out.println(Long.toString(System.currentTimeMillis()/1000));
+////		JSONObject params = new JSONObject();
+////		params.put("sorry", 123);
+////		System.out.println(params.toString());
+//		System.out.println("123");
 ////		String text = MD5.getMd5("456"+"&098f6bcd4621d373cade4e832627b4f6");
 ////		System.out.println(text);
 ////		System.out.println(text.equals(text1));
