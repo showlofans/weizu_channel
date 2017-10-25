@@ -294,7 +294,7 @@ public class ChargeImpl implements IChargeFacet {
 			return sqlMap;
 		}else{
 			otype = Integer.parseInt(resMap.get("operatorType").toString());
-			PgDataPo pgData = valiUser.findPg(chargeParams.getScope(), chargeParams.getFlowsize(),otype);//
+			PgDataPo pgData = valiUser.findPg(new PgDataPo(otype,  chargeParams.getFlowsize(), chargeParams.getScope(), chargeParams.getPgType(), chargeParams.getPgValidity()));//,,
 			
 			if(pgData == null)
 			{

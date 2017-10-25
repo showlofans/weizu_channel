@@ -29,7 +29,11 @@ public class OperatorPgDataPo extends Po {
 
     private Integer pgInService;		//开通状态（0-开通，1-关闭）
    
-    private Integer serviceType;			//业务类型（0-全国，1-省内，2-省漫游，3-转赠,4-红包）
+    private Integer serviceType;			//业务类型（0-全国，1-省内，2-省漫游，//3-转赠,4-红包）
+    
+    private Integer pgType;				//流量类型（1-流量包，2-流量池）
+    
+    private String pgValidity;			//流量有效期(PgValidityEnum)
     
     @TempField
     private Double pgDiscountPrice;		//流量包价格（折扣）
@@ -177,9 +181,25 @@ public class OperatorPgDataPo extends Po {
     public void setPgInService(Integer pgInService) {
         this.pgInService = pgInService;
     }
-    public static void main(String[] args) {
-    	OperatorPgDataPo po = new OperatorPgDataPo();
-    	
-    	System.out.println(po);;
+//    public static void main(String[] args) {
+//    	OperatorPgDataPo po = new OperatorPgDataPo();
+//    	
+//    	System.out.println(po);;
+//	}
+
+	public Integer getPgType() {
+		return pgType;
+	}
+
+	public void setPgType(Integer pgType) {
+		this.pgType = pgType;
+	}
+
+	public String getPgValidity() {
+		return pgValidity;
+	}
+
+	public void setPgValidity(String pgValidity) {
+		this.pgValidity = pgValidity;
 	}
 }

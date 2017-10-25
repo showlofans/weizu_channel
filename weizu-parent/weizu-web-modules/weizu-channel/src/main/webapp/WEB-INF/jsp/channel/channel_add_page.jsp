@@ -160,7 +160,7 @@
 		</div>
 		<input type="hidden" id="billTypeId" value="${resultMap.billType }">
 		<div class="row cl mt-20 skin-minimal">
-			<label class="form-label col-xs-4 col-sm-3">通道类型：</label>
+			<label class="form-label col-xs-4 col-sm-3">商务类型：</label>
 			<!-- billTypes -->
 			<div class="formControls col-xs-8 col-sm-9">
 				<c:forEach items="${resultMap.billTypes }" var="billEnum" varStatus="vs">
@@ -200,6 +200,30 @@
 					<div class="radio-box">
 						<input name="serviceType" class="radioItem" type="radio" id="serviceType-${vs.index }" value="${serviceEnum.value }" <c:if test="${vs.index==0 }">checked</c:if>>
 						<label for="serviceType-${vs.index }">${serviceEnum.desc }</label>
+						<%-- <label for="operatorType-${vs.index }"></label> --%>
+					</div>
+				</c:forEach>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">流量有效期：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<c:forEach items="${resultMap.pgValidityEnums }" var="pgValidity" varStatus="vs">
+					<div class="radio-box">
+						<input name="pgValidity" class="radioItem" type="radio" id="pgValidity-${vs.index }" value="${pgValidity.value }" <c:if test="${vs.index==0 }">checked</c:if>>
+						<label for="pgValidity-${vs.index }">${pgValidity.desc }</label>
+						<%-- <label for="operatorType-${vs.index }"></label> --%>
+					</div>
+				</c:forEach>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">流量类型：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<c:forEach items="${resultMap.pgTypeEnums }" var="pgType" varStatus="vs">
+					<div class="radio-box">
+					 	<input name="pgType" class="radioItem" type="radio" id="pgType-${vs.index }" value="${pgType.value }" <c:if test="${vs.index==0 }">checked</c:if>>
+						<label for="pgType-${vs.index }">${pgType.desc }</label>
 						<%-- <label for="operatorType-${vs.index }"></label> --%>
 					</div>
 				</c:forEach>
@@ -391,26 +415,29 @@ function changeName(){
 /**checkBox的点击事件*/
 function checkBoxes(vart){
 	if($(vart).next().is(':hidden')){
-		$(vart).next().show();
-		var operatorType = $("input[name='operatorType']:checked").val();
-		var scopeCityCode = $(vart).val();
-		//alert(scopeCityCode);
-		 var serviceType = $("input[name='serviceType']:checked").val();
-		if(serviceType == 0 && scopeCityCode != '32'){
-			layer.msg('全国只能配置全国地区');
-		}else{
-			$(vart).next().val('');//置空编辑的折扣
-		}
-		 var epId = $('#epId').val();
 		 if(!$('#ep_info').is(':visible')){
 			 alert('还没有选定平台');
 			 $('#epName').focus();
 		 }else{
+			$(vart).next().show();
+			var operatorType = $("input[name='operatorType']:checked").val();
+			var scopeCityCode = $(vart).val();
+			//alert(scopeCityCode);
+			 var serviceType = $("input[name='serviceType']:checked").val();
+			if(serviceType == 0 && scopeCityCode != '32'){
+				layer.msg('全国只能配置全国地区');
+			}else{
+				$(vart).next().val('');//置空编辑的折扣
+			}
+			 var epId = $('#epId').val();
+			 var pgType = $("input[name='pgType']:checked").val();
+			 var pgValidity = $("input[name='pgValidity']:checked").val();
+			 
 			 //alert(operatorType);
 			 $.ajax( {    
 			        "type": "post",     
 			        "contentType": "application/x-www-form-urlencoded; charset=utf-8",    
-			        "url": "/flowsys/channel/change_channel_pgSize.do?operatorType="+ operatorType+"&serviceType=" + serviceType+"&scopeCityCode=" + scopeCityCode+"&epId=" + epId,
+			        "url": "/flowsys/channel/change_channel_pgSize.do?operatorType="+ operatorType+"&serviceType=" + serviceType+"&pgType=" + pgType+"&pgValidity=" + pgValidity+"&scopeCityCode=" + scopeCityCode+"&epId=" + epId,
 			        "success": function(d){
 			            $("#pgSize").val(d);	//写入pgSize
 			        }

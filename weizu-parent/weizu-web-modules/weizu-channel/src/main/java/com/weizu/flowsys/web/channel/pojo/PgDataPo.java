@@ -5,7 +5,7 @@ import com.weizu.flowsys.core.beans.Po;
 
 @TableName(name="operator_pg_data")
 public class PgDataPo extends Po {
-private Integer id;				//流量包id
+	private Integer id;						//流量包id
     
     private Integer operatorType;		//运营商类型（0-移动，1-联通，电信）
     
@@ -19,7 +19,33 @@ private Integer id;				//流量包id
 
     private Integer pgInService;		//开通状态（0-开通，1-关闭）
    
-    private Integer serviceType;			//业务类型（0-全国，1-省内，2-省漫游，3-转赠,4-红包）
+    private Integer serviceType;		//业务类型（0-全国，1-省内，2-省漫游，//3-转赠,4-红包）
+    
+    private Integer pgType;				//流量类型（1-流量包，2-流量池）
+    
+    private String pgValidity;			//流量有效期(PgValidityEnum)
+
+	/** 验证包体是否存在的必须参数
+	 * @param operatorType
+	 * @param pgSize
+	 * @param serviceType
+	 * @param pgType
+	 * @param pgValidity
+	 */
+	public PgDataPo(Integer operatorType, Integer pgSize, Integer serviceType,
+			Integer pgType, String pgValidity) {
+		super();
+		this.operatorType = operatorType;
+		this.pgSize = pgSize;
+		this.serviceType = serviceType;
+		this.pgType = pgType;
+		this.pgValidity = pgValidity;
+	}
+
+	public PgDataPo() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	public Integer getId() {
 		return id;
@@ -83,5 +109,21 @@ private Integer id;				//流量包id
 
 	public void setServiceType(Integer serviceType) {
 		this.serviceType = serviceType;
+	}
+
+	public Integer getPgType() {
+		return pgType;
+	}
+
+	public void setPgType(Integer pgType) {
+		this.pgType = pgType;
+	}
+
+	public String getPgValidity() {
+		return pgValidity;
+	}
+
+	public void setPgValidity(String pgValidity) {
+		this.pgValidity = pgValidity;
 	}
 }

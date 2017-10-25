@@ -60,8 +60,8 @@
 			<div class="formControls col-xs-8 col-sm-9">
 				 <span class="select-box inline">
 					<select name="operatorType" id="operatorType" class="select"  onchange="ajaxGetPg()">
-						<c:forEach items="${resultMap.pgTypeEnums }" var="pgType" varStatus="vs1">
-							<option value="${pgType.value }"  <c:if test="${pgType.value == resultMap.operatorType }"> selected</c:if>>${pgType.desc }</option>
+						<c:forEach items="${resultMap.operatorTypeEnums }" var="operaterType" varStatus="vs1">
+							<option value="${operaterType.value }"  <c:if test="${operaterType.value == resultMap.operatorType }"> selected</c:if>>${operaterType.desc }</option>
 						</c:forEach>
 					</select>
 				</span> 
@@ -81,6 +81,28 @@
 					</select>
 				</span> 
 			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>流量包有效期：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select id="pgValidity" name="pgValidity" class="select" onchange="ajaxGetPg()">
+					<!-- <option value="">流量包有效期</option> -->
+					<c:forEach items="${resultMap.pgValidityEnums }" var="pgValidity" varStatus="vs1">
+						<option value="${pgValidity.value }">${pgValidity.desc }</option>
+					</c:forEach>
+				</select>
+				</span> </div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>流量类型：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select name="pgType" class="select" id="pgType" onchange="ajaxGetPg()">
+					<!-- <option value="">流量类型</option> -->
+					<c:forEach items="${resultMap.pgTypeEnums }" var="pgType" varStatus="vs1">
+						<option value="${pgType.value }">${pgType.desc }</option>
+					</c:forEach>
+				</select>
+				</span> </div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">省份名称</label>
@@ -208,13 +230,15 @@ function changePg(){
  function ajaxGetPg(){
 	var stype = $("#serviceType").val();
 	var otype = $("#operatorType").val();
+	var pgType = $("#pgType").val();
+	var pgValidity = $("#pgValidity").val();
 	var epId = $('#selectEpId').val();
 	var scopeCityCode = $('#scopeCityCode').val();
 	//alert(stype + "  " + otype);
 	$.ajax({
         type:"post",
         url:"/flowsys/productCode/productCode_add_page/ajax_pg_list.do",
-        data: {operatorType:otype,serviceType:stype,epId:epId,scopeCityCode:scopeCityCode},//表单数据
+        data: {operatorType:otype,serviceType:stype,epId:epId,scopeCityCode:scopeCityCode,pgType:pgType,pgValidity:pgValidity},//表单数据
         dataType: "json",
         async : false,
         success:function(data){

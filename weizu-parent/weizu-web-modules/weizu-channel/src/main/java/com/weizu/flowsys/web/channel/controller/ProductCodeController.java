@@ -18,6 +18,8 @@ import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
@@ -26,6 +28,7 @@ import com.weizu.flowsys.web.channel.ao.AgencyEpAO;
 import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
 import com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
+import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.channel.url.ProductCodeURL;
@@ -75,14 +78,16 @@ public class ProductCodeController {
 //			}
 			if( epList != null && epList.size() > 0){
 				Integer epId = epList.get(0).getId();
-				List<OperatorPgDataPo> pgList = productCodeAO.initPgList(epId,0, 0,ScopeCityEnum.QG.getValue());//默认移动全国流量
+				List<OperatorPgDataPo> pgList = productCodeAO.initPgList(new OneCodePo(epId, ServiceTypeEnum.NATION_WIDE.getValue(), OperatorTypeEnum.MOBILE.getValue(), ScopeCityEnum.QG.getValue(), PgTypeEnum.PGDATA.getValue(), PgValidityEnum.month_day_data.getValue()));//默认移动全国流量：epId,0, 0,ScopeCityEnum.QG.getValue()
 				resultMap.put("pgList", pgList);
 				resultMap.put("epId", epList.get(0).getId());
 			}
 			resultMap.put("operatorType", 0);
 			resultMap.put("serviceType", 0);
 			resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
-			resultMap.put("pgTypeEnums", OperatorTypeEnum.toList());
+			resultMap.put("pgTypeEnums", PgTypeEnum.toList());
+			resultMap.put("pgValidityEnums", PgValidityEnum.toList());
+			resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
 			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 			return new ModelAndView("/channel/productCode_add_page", "resultMap", resultMap);
 		}else{
@@ -117,18 +122,16 @@ public class ProductCodeController {
 	 * @createTime:2017年6月9日 上午10:51:09
 	 */
 	@RequestMapping(value = ProductCodeURL.AJAX_PG_LIST)
-	public void ajaxPgList(String operatorType, String serviceType, Integer epId,String scopeCityCode,HttpServletResponse response){
-		if(StringHelper.isNotEmpty(serviceType) && StringHelper.isNotEmpty(operatorType)){
-			 //这句话的意思，是让浏览器用utf8来解析返回的数据  
-			response.setHeader("Content-type", "text/html;charset=UTF-8");  
-			//这句话的意思，是告诉servlet用UTF-8转码，而不是用默认的ISO8859  
-			response.setCharacterEncoding("UTF-8");
-			List<OperatorPgDataPo> pgList = productCodeAO.initPgList(epId,Integer.parseInt(serviceType), Integer.parseInt(operatorType),scopeCityCode);
-			try {
-				response.getWriter().print(JSON.toJSONString(pgList));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+	public void ajaxPgList(OneCodePo pgCodeParams,HttpServletResponse response){
+		 //这句话的意思，是让浏览器用utf8来解析返回的数据  
+		response.setHeader("Content-type", "text/html;charset=UTF-8");  
+		//这句话的意思，是告诉servlet用UTF-8转码，而不是用默认的ISO8859  
+		response.setCharacterEncoding("UTF-8");
+		List<OperatorPgDataPo> pgList = productCodeAO.initPgList(pgCodeParams);
+		try {
+			response.getWriter().print(JSON.toJSONString(pgList));
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	/**

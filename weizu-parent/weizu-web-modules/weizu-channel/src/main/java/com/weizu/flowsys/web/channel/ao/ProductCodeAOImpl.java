@@ -103,13 +103,22 @@ public class ProductCodeAOImpl implements ProductCodeAO {
 	 * @createTime:2017年6月9日 上午10:13:31
 	 */
 	@Override
-	public List<OperatorPgDataPo> initPgList(Integer epId, int serviceType,int operatorType,String scopeCityCode) {
+	public List<OperatorPgDataPo> initPgList(OneCodePo pgCodeParams) {
 //		OperatorPgDataPo operatorPgPo = new OperatorPgDataPo();
 //		operatorPgPo.setOperatorType(operatorType);
 //		operatorPgPo.setServiceType(serviceType);
-		List<OperatorPgDataPo> pgList = operatorPgDao.listPgListNotInPcode(epId, serviceType, operatorType,scopeCityCode);
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("serviceType", pgCodeParams.getServiceType());
+		params.put("operatorType", pgCodeParams.getOperatorType());
+		params.put("pgType", pgCodeParams.getPgType());
+		params.put("pgValidity", pgCodeParams.getPgValidity());
+		params.put("epId", pgCodeParams.getEpId());
+		params.put("scopeCityCode", pgCodeParams.getScopeCityCode());
+		
+		List<OperatorPgDataPo> pgList = operatorPgDao.listPgListNotInPcode(params);
 		return pgList;
 	}
+	
 
 	/**
 	 * @description: 添加产品编码
@@ -191,6 +200,8 @@ public class ProductCodeAOImpl implements ProductCodeAO {
 			paramsMap.put("operatorType", paramsPo.getOperatorType());
 			paramsMap.put("serviceType", paramsPo.getServiceType());
 			paramsMap.put("pgSize", paramsPo.getPgSize());
+			paramsMap.put("pgType", paramsPo.getPgType());
+			paramsMap.put("pgValidity", paramsPo.getPgValidity());
 		}
 		paramsMap.put("scopeCityCode", paramsPo.getScopeCityCode());
 		paramsMap.put("epId", paramsPo.getEpId());

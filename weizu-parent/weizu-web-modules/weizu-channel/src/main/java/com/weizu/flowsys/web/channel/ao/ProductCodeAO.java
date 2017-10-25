@@ -37,13 +37,12 @@ public interface ProductCodeAO {
 	
 	/**
 	 * @description: 通过流量类型和运营商类型获得流量列表
-	 * @param operatorType
-	 * @param serviceType
+	 * @param pgCodeParams
 	 * @return
-	 * @author:POP产品研发部 宁强
-	 * @createTime:2017年6月9日 上午10:11:56
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月25日 下午5:00:35
 	 */
-	List<OperatorPgDataPo> initPgList(Integer epId, int serviceType, int operatorType,String scopeCityCode);
+	List<OperatorPgDataPo> initPgList(OneCodePo oneCodeParams);
 	
 	/**
 	 * @description: 该编码是否在该通道已经创建

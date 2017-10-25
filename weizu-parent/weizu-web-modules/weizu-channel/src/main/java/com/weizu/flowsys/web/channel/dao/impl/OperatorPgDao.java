@@ -11,8 +11,10 @@ import org.springframework.stereotype.Repository;
 
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.web.channel.dao.OperatorPgDaoInterface;
+import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
+import com.weizu.web.foundation.String.StringHelper;
 
 /**
  * @description:流量包dao
@@ -70,20 +72,26 @@ public class OperatorPgDao extends DaoImpl<PgDataPo, Integer> implements Operato
 	 * @createTime:2017年5月16日 上午11:59:23
 	 */
 	@Override
-	public List getPgInCode(Integer operatorType,Integer serviceType, Integer epId,String scopeCityCode) {
+	public List getPgInCode(OneCodePo oneCodePo) {
 		
 		Map<String,Object> params = new HashMap<String, Object>();
-		if(operatorType != null){
-			params.put("operatorType", operatorType);
+		if(oneCodePo.getOperatorType() != null){
+			params.put("operatorType", oneCodePo.getOperatorType());
 		}
-		if(serviceType != null){
-			params.put("serviceType", serviceType);
+		if(oneCodePo.getServiceType() != null){
+			params.put("serviceType", oneCodePo.getServiceType());
 		}
-		if(epId != null){
-			params.put("epId", epId);
+		if(oneCodePo.getEpId() != null){
+			params.put("epId", oneCodePo.getEpId());
 		}
-		if(scopeCityCode != null){
-			params.put("scopeCityCode", scopeCityCode);
+		if(StringHelper.isNotEmpty(oneCodePo.getScopeCityCode())){
+			params.put("scopeCityCode", oneCodePo.getScopeCityCode());
+		}
+		if(oneCodePo.getPgType() != null){
+			params.put("pgType", oneCodePo.getPgType());
+		}
+		if(StringHelper.isNotEmpty(oneCodePo.getPgValidity())){
+			params.put("pgValidity", oneCodePo.getPgValidity());
 		}
 		return sqlSessionTemplateASS.selectList("getPgInCode", params);
 	}
@@ -165,13 +173,7 @@ public class OperatorPgDao extends DaoImpl<PgDataPo, Integer> implements Operato
 	 * @createTime:2017年8月5日 下午1:44:31
 	 */
 	@Override
-	public List<OperatorPgDataPo> listPgListNotInPcode(Integer epId,
-			Integer serviceType, Integer operatorType,String scopeCityCode) {
-		Map<String, Object> params = new HashMap<String, Object>();
-			params.put("serviceType", serviceType);
-			params.put("operatorType", operatorType);
-			params.put("epId", epId);
-			params.put("scopeCityCode", scopeCityCode);
+	public List<OperatorPgDataPo> listPgListNotInPcode(Map<String,Object> params) {
 		return sqlSessionTemplateASS.selectList("listPgListNotInPcode", params);
 	}
 	@Override

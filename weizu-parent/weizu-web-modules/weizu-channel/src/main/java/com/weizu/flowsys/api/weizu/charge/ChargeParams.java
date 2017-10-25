@@ -13,10 +13,14 @@ public class ChargeParams {
 	private String username;			//用户账号
 	private String number;				//充值号码
 	private Integer flowsize;			//流量大小
-	private Integer scope;				//流量范围
+	private Integer scope;				//业务范围()
 	private String sign;				//密钥
-	private Integer billType;			//是否带票0-不带票，1-带票
-	private String orderIdFrom;			//用户传过来的订单号
+	private Integer billType;			//是否带票0-不带票，1-带票*******
+	private String orderIdFrom;			//用户传过来的订单号***********
+	
+	private Integer pgType;				//流量类型（1-流量包，2-流量池）*****
+    
+    private String pgValidity;			//流量有效期(PgValidityEnum)********
 	
 	public ChargeParams(String username, String number, Integer flowsize,
 			Integer scope, String sign, Integer billType, String orderIdFrom) {
@@ -35,6 +39,23 @@ public class ChargeParams {
 		this.number = number;
 		this.flowsize = flowsize;
 		this.billType = billType;
+	}
+
+	
+	public Integer getPgType() {
+		return pgType;
+	}
+
+	public void setPgType(Integer pgType) {
+		this.pgType = pgType;
+	}
+
+	public String getPgValidity() {
+		return pgValidity;
+	}
+
+	public void setPgValidity(String pgValidity) {
+		this.pgValidity = pgValidity;
 	}
 
 	public String getOrderIdFrom() {

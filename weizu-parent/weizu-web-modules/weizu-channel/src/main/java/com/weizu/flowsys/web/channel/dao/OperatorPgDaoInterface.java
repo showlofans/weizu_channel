@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.weizu.flowsys.core.dao.Dao;
+import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 
@@ -73,13 +74,13 @@ public interface OperatorPgDaoInterface extends Dao<PgDataPo, Integer> {
 	int count_list(Map<String,Object> paramsMap);
 	
 	/**
-	 * @description:根据运营商类型查询通道规格列表
-	 * @param operatorType
+	 * @description: 根据运营商类型查询通道规格列表
+	 * @param oneCodePo
 	 * @return
-	 * @author:POP产品研发部 宁强
-	 * @createTime:2017年5月16日 上午11:59:00
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月25日 下午5:46:18
 	 */
-	List getPgInCode(Integer operatorType,Integer serviceType,Integer epId,String scopeCityCode);
+	List getPgInCode(OneCodePo oneCodePo);
 	
 	/**
 	 * @description: 查询某个平台没有设置产品编码的包体
@@ -90,7 +91,7 @@ public interface OperatorPgDaoInterface extends Dao<PgDataPo, Integer> {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年8月5日 下午1:43:45
 	 */
-	List<OperatorPgDataPo> listPgListNotInPcode(Integer epId,Integer serviceType,Integer operatorType,String scopeCityCode);
+	List<OperatorPgDataPo> listPgListNotInPcode(Map<String,Object> params);
 	
 	List<OperatorPgDataPo> listPgListInPcode(Map<String,Object> map);
 	

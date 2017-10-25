@@ -22,12 +22,43 @@ public class OneCodePo {
 	
 	private Integer pgId;				//包体Id
 	
+	private Integer pgType;				//流量类型（1-流量包，2-流量池）
+    
+    private String pgValidity;			//流量有效期(PgValidityEnum)
+    
+	/** 查询是否存在该包体参数
+	 * @param epId
+	 * @param serviceType
+	 * @param operatorType
+	 * @param scopeCityCode
+	 * @param pgType
+	 * @param pgValidity
+	 */
+	public OneCodePo(Integer epId, Integer serviceType,
+			Integer operatorType, String scopeCityCode, Integer pgType,
+			String pgValidity) {
+		super();
+		this.epId = epId;
+		this.serviceType = serviceType;
+		this.operatorType = operatorType;
+		this.scopeCityCode = scopeCityCode;
+		this.pgType = pgType;
+		this.pgValidity = pgValidity;
+	}
+	
 	public OneCodePo() {
 		super();
 	}
 
+	/** 查询唯一编码参数
+	 * @param scopeCityCode
+	 * @param pgSize
+	 * @param operatorType
+	 * @param serviceType
+	 * @param epId
+	 */
 	public OneCodePo(String scopeCityCode, Integer pgSize,
-			Integer operatorType, Integer serviceType, Integer epId) {
+			Integer operatorType, Integer serviceType, Integer epId,Integer pgType,Integer pgValidity) {
 		super();
 		this.epId = epId;
 		this.scopeCityCode = scopeCityCode;
@@ -36,13 +67,18 @@ public class OneCodePo {
 		this.serviceType = serviceType;
 	}
 	
+	/** 查询唯一编码参数
+	 * @param scopeCityCode
+	 * @param epId
+	 * @param pgId
+	 */
 	public OneCodePo(String scopeCityCode, Integer epId, Integer pgId) {
 		super();
 		this.scopeCityCode = scopeCityCode;
 		this.epId = epId;
 		this.pgId = pgId;
 	}
-
+	
 	public Integer getPgId() {
 		return pgId;
 	}
@@ -90,7 +126,20 @@ public class OneCodePo {
 	public void setServiceType(Integer serviceType) {
 		this.serviceType = serviceType;
 	}
-	
-	
-	
+
+	public Integer getPgType() {
+		return pgType;
+	}
+
+	public void setPgType(Integer pgType) {
+		this.pgType = pgType;
+	}
+
+	public String getPgValidity() {
+		return pgValidity;
+	}
+
+	public void setPgValidity(String pgValidity) {
+		this.pgValidity = pgValidity;
+	}
 }

@@ -122,6 +122,12 @@
 	<if test="serviceType != null">
   		AND opd.service_type = #{serviceType}
   	</if>
+	<if test="pgType != null">
+		AND pg_type = #{pgType}
+	</if>
+	<if test="pgValidity != null">
+		AND pg_validity = #{pgValidity}
+	</if>
 	<if test="epId != null">
   		AND pc.ep_id = #{epId}
   	</if>

@@ -35,6 +35,17 @@
 	<h4>${resultMap.pageTitle }</h4>
 	<form action="" method="" class="form form-horizontal" id="form-pg-add">
 		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>流量类型：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select name="pgType" class="select" id="pgType">
+					<!-- <option value="">流量类型</option> -->
+					<c:forEach items="${resultMap.pgTypeEnums }" var="pgType" varStatus="vs1">
+						<option value="${pgType.value }">${pgType.desc }</option>
+					</c:forEach>
+				</select>
+				</span> </div>
+		</div>
+		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>流量包名称：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" class="input-text" value="" placeholder="不填可用默认值" id="pgName" name="pgName">
@@ -45,8 +56,8 @@
 			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
 				<select name="operatorType" class="select" id="operatorType" onchange="btnChange(this[selectedIndex].value);">
 					<option value="">运营商类型</option>
-					<c:forEach items="${resultMap.pgTypeEnums }" var="pgType" varStatus="vs1">
-						<option value="${pgType.value }">${pgType.desc }</option>
+					<c:forEach items="${resultMap.operatoerTypeEnums }" var="operatoerType" varStatus="vs1">
+						<option value="${operatoerType.value }">${operatoerType.desc }</option>
 					</c:forEach>
 				</select>
 				</span> </div>
@@ -64,6 +75,17 @@
 					<option value="">业务类型</option>
 					<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceType" varStatus="vs1">
 						<option value="${serviceType.value }">${serviceType.desc }</option>
+					</c:forEach>
+				</select>
+				</span> </div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>流量包有效期：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select id="pgValidity" name="pgValidity" class="select">
+					<!-- <option value="">流量包有效期</option> -->
+					<c:forEach items="${resultMap.pgValidityEnums }" var="pgValidity" varStatus="vs1">
+						<option value="${pgValidity.value }">${pgValidity.desc }</option>
 					</c:forEach>
 				</select>
 				</span> </div>
@@ -124,6 +146,12 @@ $().ready(function() {
     		serviceType:{
     			required:true,
     		},
+    		/* pgType:{
+    			required:true,
+    		}, 
+    		pgValidity:{
+    			required:true,
+    		},*/
     		pgSize : {
     			required:true,
     			remote:{//验证用户名是否存在
@@ -131,6 +159,8 @@ $().ready(function() {
     	               url:"/flowsys/operatorPg/pg_exist.do",             //servlet
     	               data:{
     	            	   pgSize :function(){return $("#pgSize").val().trim();},
+    	            	   pgType :function(){return $("#pgType").val().trim();},
+    	            	   pgValidity :function(){return $("#pgValidity").val().trim();},
     	            	   serviceType :function(){return $("#serviceType").val().trim();},
     	            	   operatorType :function(){return $("#operatorType").val().trim();}
 	    			}

@@ -6,6 +6,7 @@ import java.util.Map;
 import com.aiyi.base.pojo.PageParam;
 import com.aiyi.base.pojo.PageTag;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
@@ -26,9 +27,9 @@ public interface OperatorPgAO {
 	 * @createTime:2017年4月26日 上午11:35:13
 	 */
 	Map<String,Object> listPg(Map<String,Object> params);
-	Pagination<OperatorPgDataPo> listFirstPg(Map<String,Object> params);
+//	Pagination<OperatorPgDataPo> listFirstPg(Map<String,Object> params);
 	Map<String,Object> listPg(Map<String,Object> params,PageTag pageTag);
-	Pagination<OperatorPgDataPo> listPg(Map<String,Object> params,PageParam pageParam);
+//	Pagination<OperatorPgDataPo> listPg(Map<String,Object> params,PageParam pageParam);
 	Map<String,Object> listNextPg(Map<String,Object> params);
 	
 	/**
@@ -39,10 +40,12 @@ public interface OperatorPgAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年4月28日 下午12:14:54
 	 */
-	Map<String,Object> getOperatorPgParams(OperatorPgDataPo operatorPgDataPo,String aoData);
 	Map<String,Object> getOperatorPgParams(OperatorPgDataPo operatorPgDataPo);
-	Map<String,Object> getOperatorPgParams(PageTag pageTag,OperatorPgDataPo operatorPgDataPo);
-	Pagination<OperatorPgDataPo> getOperatorPgParams(PageParam pageParam,OperatorPgDataPo operatorPgDataPo);
+//	Map<String,Object> getOperatorPgParams(OperatorPgDataPo operatorPgDataPo,String aoData);
+	
+	
+//	Map<String,Object> getOperatorPgParams(PageTag pageTag,OperatorPgDataPo operatorPgDataPo);
+	Pagination<OperatorPgDataPo> listPg(OperatorPgDataPo operatorPgDataPo,PageParam pageParam);
 	
 	/**
 	 * @description:把客户端传过来的json分页数据解析出来
@@ -91,13 +94,13 @@ public interface OperatorPgAO {
 //	List pgSizeList(int operatorType);
 	
 	/**
-	 * @description:通道规格列表变成Str
-	 * @param operatorType
+	 * @description: 通道规格列表变成Str
+	 * @param oneCodePo
 	 * @return
-	 * @author:POP产品研发部 宁强
-	 * @createTime:2017年5月16日 下午12:38:59
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月25日 下午5:44:49
 	 */
-	String pgSizeStr(Integer operatorType,Integer servict,Integer epId,String scopeCityCode);
+	String pgSizeStr(OneCodePo oneCodePo);
 	/**
 	 * @description:通道规格列表变成Str
 	 * @param operatorType
@@ -106,7 +109,7 @@ public interface OperatorPgAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月27日 上午11:37:57
 	 */
-	List pgSizeList(Integer operatorType,Integer serviceType,Integer epId,String scopeCityCode);
+//	List pgSizeList(Integer operatorType,Integer serviceType,Integer epId,String scopeCityCode);
 	
 	/**
 	 * @description:通过运营商类型查询购买包体list

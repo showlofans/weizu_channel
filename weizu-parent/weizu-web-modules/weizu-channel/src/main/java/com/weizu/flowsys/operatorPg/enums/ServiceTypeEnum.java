@@ -17,7 +17,7 @@ public enum ServiceTypeEnum {
 	/**
 	 * 全国流量
 	 */
-	NATION_WIDE("全国",0),
+	NATION_WIDE("全国通用",0),
 	/**
 	 * 省内流量
 	 */

@@ -52,6 +52,10 @@ public class ChannelChannelPo extends Po {
     private Integer operatorType;								//运营商类型（查询参数）
     @TempField
     private Integer serviceType;								//流量类型（查询参数）
+    @TempField
+    private Integer pgType;				//流量类型（1-流量包，2-流量池）
+    @TempField
+    private String pgValidity;			//流量有效期(PgValidityEnum)
     
     @TempField
     private List<ChannelDiscountPo> discountList;				//通道折扣（添加和页面参数）
@@ -74,7 +78,23 @@ public class ChannelChannelPo extends Po {
     @TempField
     private String scopeCityCode;				//省份编码（查询参数）
     
-    public String getEpName() {
+    public Integer getPgType() {
+		return pgType;
+	}
+
+	public void setPgType(Integer pgType) {
+		this.pgType = pgType;
+	}
+
+	public String getPgValidity() {
+		return pgValidity;
+	}
+
+	public void setPgValidity(String pgValidity) {
+		this.pgValidity = pgValidity;
+	}
+
+	public String getEpName() {
 		return epName;
 	}
 
