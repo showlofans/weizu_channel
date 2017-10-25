@@ -75,7 +75,7 @@
 					 <th >ID</th>
 					<th >平台名称</th>
 					<th >通道名称</th>
-					<th >业务类型</th>
+					<!-- <th >业务类型</th> -->
 					<!-- <th >交易单数</th>
 					<th >交易总额</th> -->
 					<!-- <th width="120">支持城市</th> -->
@@ -88,7 +88,7 @@
 					<th>通道利润</th> -->
 					<th>通道状态</th>
 					<th>通道使用状态</th>
-					<th>通道类型</th>
+					<!-- <th>通道类型</th> -->
 					<!-- <th>修改时间</th> -->
 					<th>通道规格</th>
 					<!-- <th>通道更新时间</th> -->
@@ -101,21 +101,136 @@
 					<tr class="text-c">
 						<td>${channel.id }</td>
 						<td>${channel.epName }</td>
-						<td>${channel.channelName }</td>
-						<td><c:forEach items="${resultMap.serviceTypeEnums }" var="serTypeEnum" varStatus="vs1">
+						<td><span data-toggle="tooltip" data-placement="top" title="${channel.pgSize }">${channel.channelName }</span></td>
+						<%-- <td><c:forEach items="${resultMap.serviceTypeEnums }" var="serTypeEnum" varStatus="vs1">
 								<c:if test="${channel.serviceType == serTypeEnum.value }">
 									<span>${serTypeEnum.desc }</span>
-									<%-- <span class="serType" style="display:none">${serTypeEnum.value }</span> --%>
+									<span class="serType" style="display:none">${serTypeEnum.value }</span>
 								</c:if>
 							</c:forEach>
-						</td> 
+						</td>  --%>
 						<td style="display:none;">${channel.serviceType }</td>
 						<td style="display:none;">${channel.operatorType }</td>
 						<%-- <td>${channel.channelTotalUse }</td>
 						<td>${channel.channelTotalAmount }</td> --%>
-						<td>${channel.discountPo.discount0 }</td>
-						<td>${channel.discountPo.discount1 }</td>
-						<td>${channel.discountPo.discount2 }</td>
+						<td>
+							<c:choose>
+								<c:when test="${fn:length(channel.discountPo.discount0) > 2 }">
+									<c:choose>
+										<c:when test="${channel.billType == 0 }">
+											<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+												<c:if test="${billTypeEnum.value == 0 }">
+													<span data-toggle="tooltip"  class="c-red" data-placement="right" title="${billTypeEnum.desc }">
+													${channel.discountPo.discount0 }</span>
+												</c:if>
+											</c:forEach>
+										</c:when>
+										<c:otherwise>
+											<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+											<c:if test="${billTypeEnum.value == 1 }">
+												<span data-toggle="tooltip" class="c-green" data-placement="right" title="${billTypeEnum.desc }">
+												${channel.discountPo.discount0 }</span>
+											</c:if>
+											</c:forEach>
+										</c:otherwise>
+									</c:choose>
+										<%-- <c:if test="${channel.billType == billTypeEnum.value }">
+											<span data-toggle="tooltip" data-placement="right" title="${billTypeEnum.desc }">
+											${channel.discountPo.discount0 }</span>
+										</c:if> --%>
+									<%-- <c:forEach items="${resultMap.serviceTypeEnums }" var="serTypeEnum" varStatus="vs1">
+										<c:if test="${channel.serviceType == serTypeEnum.value }">
+											<span data-toggle="tooltip" data-placement="right" title="${serTypeEnum.desc }">
+												${channel.discountPo.discount0 }
+											</span>
+										</c:if>
+									</c:forEach> --%>
+								</c:when>
+								<c:otherwise>
+									${channel.discountPo.discount0 }
+								</c:otherwise>
+							</c:choose>
+						</td>
+						<td>
+							<c:choose>
+								<c:when test="${fn:length(channel.discountPo.discount1) > 2 }">
+									<%-- <c:forEach items="${resultMap.serviceTypeEnums }" var="serTypeEnum" varStatus="vs1">
+										<c:if test="${channel.serviceType == serTypeEnum.value }">
+											<span data-toggle="tooltip" data-placement="right" title="${serTypeEnum.desc }">
+												${channel.discountPo.discount1 }
+											</span>
+										</c:if>
+									</c:forEach> --%>
+									<%-- <c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+										<c:if test="${channel.billType == billTypeEnum.value }">
+											<span data-toggle="tooltip" data-placement="right" title="${billTypeEnum.desc }">
+											${channel.discountPo.discount1 }</span>
+										</c:if>
+									</c:forEach> --%>
+									<c:choose>
+										<c:when test="${channel.billType == 0 }">
+											<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+												<c:if test="${billTypeEnum.value == 0 }">
+													<span data-toggle="tooltip"  class="c-red" data-placement="right" title="${billTypeEnum.desc }">
+													${channel.discountPo.discount1 }</span>
+												</c:if>
+											</c:forEach>
+										</c:when>
+										<c:otherwise>
+											<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+											<c:if test="${billTypeEnum.value == 1 }">
+												<span data-toggle="tooltip" class="c-green" data-placement="right" title="${billTypeEnum.desc }">
+												${channel.discountPo.discount1 }</span>
+											</c:if>
+											</c:forEach>
+										</c:otherwise>
+									</c:choose>
+								</c:when>
+								<c:otherwise>
+									${channel.discountPo.discount1 }
+								</c:otherwise>
+							</c:choose>
+						</td>
+						<td>
+							<c:choose>
+								<c:when test="${fn:length(channel.discountPo.discount2) > 2 }">
+									<%-- <c:forEach items="${resultMap.serviceTypeEnums }" var="serTypeEnum" varStatus="vs1">
+										<c:if test="${channel.serviceType == serTypeEnum.value }">
+											<span data-toggle="tooltip" data-placement="right" title="${serTypeEnum.desc }">
+												${channel.discountPo.discount2 }
+											</span>
+										</c:if>
+									</c:forEach> --%>
+									<%-- <c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+										<c:if test="${channel.billType == billTypeEnum.value }">
+											<span data-toggle="tooltip" data-placement="right" title="${billTypeEnum.desc }">
+											${channel.discountPo.discount2 }</span>
+										</c:if>
+									</c:forEach> --%>
+									<c:choose>
+										<c:when test="${channel.billType == 0 }">
+											<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+												<c:if test="${billTypeEnum.value == 0 }">
+													<span data-toggle="tooltip"  class="c-red" data-placement="right" title="${billTypeEnum.desc }">
+													${channel.discountPo.discount2 }</span>
+												</c:if>
+											</c:forEach>
+										</c:when>
+										<c:otherwise>
+											<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+											<c:if test="${billTypeEnum.value == 1 }">
+												<span data-toggle="tooltip" class="c-green" data-placement="right" title="${billTypeEnum.desc }">
+												${channel.discountPo.discount2 }</span>
+											</c:if>
+											</c:forEach>
+										</c:otherwise>
+									</c:choose>
+								</c:when>
+								<c:otherwise>
+									${channel.discountPo.discount2 }
+								</c:otherwise>
+							</c:choose>
+						</td>
 						<td class="td-status">
 							<c:forEach items="${resultMap.channelStateEnums }" var="cState" varStatus="vs1">
 								<c:if test="${channel.channelState == cState.value && channel.channelState==0  }"> <span class="label label-success radius">${cState.desc }</span></c:if>
@@ -128,40 +243,52 @@
 								<c:if test="${channel.channelUseState == cUseState.value  && channel.channelUseState==1}"> <span class="label radius">${cUseState.desc }</span></c:if>
 							</c:forEach>
 						</td>
-						<td><c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+						<%-- <td><c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
 								<c:if test="${channel.billType == billTypeEnum.value }">
 									<span>${billTypeEnum.desc }</span>
 								</c:if>
 							</c:forEach>
+						</td> --%>
+						<td>
+							<c:forEach items="${resultMap.serviceTypeEnums }" var="serTypeEnum" varStatus="vs1">
+								<c:if test="${channel.serviceType == serTypeEnum.value }">
+									<span data-toggle="tooltip" data-placement="top" title="${serTypeEnum.desc }">
+										${channel.pgSize }
+									</span>
+								</c:if>
+							</c:forEach>
 						</td>
-						<td>${channel.pgSize }</td>
 						<%-- <td>${channel.lastAccessStr }</td> --%>
 					<!-- 	<td class="td-status"><span class="label label-success radius">已发布</span></td> -->
 						<td class="f-14 td-manage">
-						<c:if test="${channel.channelState == 1 }"><!-- 暂停 -->
+						<c:choose>
+						<c:when test="${channel.channelState == 1 }"><!-- 暂停 -->
 							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeCState(this,'1')" href="javascript:;" title="运行">
 								<input type="hidden" value="${channel.id }" >
 								<i class="Hui-iconfont">&#xe6e6;</i>
 							</a> 
-						</c:if>
-						<c:if test="${channel.channelState == 0 }"><!-- 运行 -->
+						</c:when>
+						<c:when test="${channel.channelState == 0 }"><!-- 运行 -->
 							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeCState(this,'0')" href="javascript:;" title="暂停">
 								<input type="hidden" value="${channel.id }" >
 								<i class="Hui-iconfont">&#xe6e5;</i>
 							</a> 
-						</c:if>
-						<c:if test="${channel.channelUseState == 1 }"><!-- 已暂停 -->
+						</c:when>
+						</c:choose>
+						<c:choose>
+						<c:when test="${channel.channelUseState == 1 }"><!-- 已暂停 -->
 							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeUseState(this,'1')" href="javascript:;" title="启用">
 								<input type="hidden" value="${channel.id }" >
 								<i class="Hui-iconfont">&#xe615;</i>
 							</a> 
-						</c:if>
-						<c:if test="${channel.channelUseState == 0 }"><!-- 已启用 -->
+						</c:when>
+						<c:when test="${channel.channelUseState == 0 }"><!-- 已启用 -->
 							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeUseState(this,'0')" href="javascript:;" title="停用">
 								<input type="hidden" value="${channel.id }" >
 								<i class="Hui-iconfont">&#xe631;</i>
 							</a> 
-						</c:if>
+						</c:when>
+						</c:choose>
 						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="channel_stop('/flowsys/channel/channel_delete.do',${channel.id})" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
 						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="javascript:;" onclick="getRateList('/flowsys/rate/bind_rate_list.do',this)" data-title="折扣信息"><i class="Hui-iconfont">&#xe725;</i></a>
 						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="javascript:;" onclick="editChannel('/flowsys/channel/channel_edit_page.do?channelId=${channel.id}','编辑通道')" data-title="编辑通道"><i class="Hui-iconfont">&#xe6df;</i></a>
@@ -189,8 +316,8 @@
 /**获得费率列表**/
 function getRateList(url,objt){
 	var channelId = $(objt).parent().parent().children(":first").html();
-	var serviceType = $(objt).parent().parent().children(":eq(4)").html();
-	var operatorType = $(objt).parent().parent().children(":eq(5)").html();
+	var serviceType = $(objt).parent().parent().children(":eq(3)").html();
+	var operatorType = $(objt).parent().parent().children(":eq(4)").html();
 	//alert(serviceType);
 	//alert(operatorType);
 	//alert(channelId);

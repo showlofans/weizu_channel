@@ -24,6 +24,7 @@ import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 import com.weizu.flowsys.web.channel.dao.impl.OperatorPgDao;
+import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
@@ -298,6 +299,14 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 		{
 			params.put("pgSize", operatorPgDataPo.getPgSize());
 		}
+		if(operatorPgDataPo.getPgType() != null)
+		{
+			params.put("pgType", operatorPgDataPo.getPgType());
+		}
+		if(StringHelper.isNotEmpty(operatorPgDataPo.getPgValidity()))
+		{
+			params.put("pgValidity", operatorPgDataPo.getPgValidity());
+		}
 		
 		return params;
 	}
@@ -411,20 +420,6 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 		return resultMap;
 	}
 
-	@Override
-	public Pagination<OperatorPgDataPo> listFirstPg(
-			Map<String, Object> params) {
-		
-		return null;
-	}
-
-	@Override
-	public Pagination<OperatorPgDataPo> getOperatorPgParams(
-			PageParam pageParam, OperatorPgDataPo operatorPgDataPo) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	/**
 	 * @description:列出用于测试的流量包列表
 	 * @param params
@@ -434,8 +429,9 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 	 * @createTime:2017年5月15日 下午4:57:04
 	 */
 	@Override
-	public Pagination<OperatorPgDataPo> listPg(Map<String, Object> params,
+	public Pagination<OperatorPgDataPo> listPg(OperatorPgDataPo operatorPgDataPo,
 			PageParam pageParam) {
+		Map<String, Object> params = getOperatorPgParams(operatorPgDataPo);
 		if(params == null){
 			params = new HashMap<String, Object>();
 		}
@@ -508,8 +504,20 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 	 * @createTime:2017年5月16日 下午12:38:12
 	 */
 	@Override
-	public String pgSizeStr(Integer operatorType,Integer serviceType,Integer epId,String scopeCityCode){
-		return PgSizeEnum.initPgSizeList(pgSizeList(operatorType,serviceType,epId,scopeCityCode));
+	public String pgSizeStr(OneCodePo oneCodePo){
+		List<Integer> pgSizes = operatorPgDao.getPgInCode(oneCodePo);
+		StringBuffer pgBuffer = new StringBuffer();
+		String pgSizeStr = "";
+		if(pgSizes != null && pgSizes.size() > 0){
+			for (int i = 0; i < pgSizes.size(); i++) {
+				pgBuffer.append(pgSizes.get(i));
+				if(i != (pgSizes.size()-1)){
+					pgBuffer.append("& ");
+				}
+			}
+			pgSizeStr = pgBuffer.toString();
+		}
+		return pgSizeStr;
 	}
 
 	/**
@@ -520,10 +528,10 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月27日 上午11:38:19
 	 */
-	@Override
-	public List<Integer> pgSizeList(Integer operatorType,Integer serviceType,Integer epId,String scopeCityCode) {
-		return operatorPgDao.getPgInCode(operatorType,serviceType,epId,scopeCityCode);
-	}
+//	@Override
+//	public List<Integer> pgSizeList(Integer operatorType,Integer serviceType,Integer epId,String scopeCityCode) {
+//		return operatorPgDao.getPgInCode(operatorType,serviceType,epId,scopeCityCode);
+//	}
 
 	/**
 	 * @description:通过运营商类型查询购买包体list

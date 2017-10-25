@@ -105,8 +105,8 @@
 						</c:forEach>
 						</td>
 						<td>${pg.pgSize }M</td>
-						<td><c:forEach items="${resultMap.pgTypeEnums }" var="pgType" varStatus="vs1">
-						<c:if test="${pg.operatorType == pgType.value }"> ${pgType.desc }</c:if>
+						<td><c:forEach items="${resultMap.operatoerTypeEnums }" var="operatorType" varStatus="vs1">
+						<c:if test="${pg.operatorType == operatorType.value }"> ${operatorType.desc }</c:if>
 						</c:forEach>
 						</td>
 						<td>${pg.operatorName }</td>
@@ -147,7 +147,7 @@ function pg_add(title,url){
 	layer.open({
         type: 2,
         title: false,
-        area: ['430px', '500px'],
+        area: ['430px', '600px'],
         maxmin: false,
         closeBtn: 1,
         content: url+'?pageTitle=' + title,

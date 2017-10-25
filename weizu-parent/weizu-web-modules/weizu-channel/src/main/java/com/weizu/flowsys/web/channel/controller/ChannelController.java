@@ -23,6 +23,8 @@ import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
@@ -39,6 +41,7 @@ import com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
+import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.url.ChannelURL;
 import com.weizu.web.foundation.String.StringHelper;
 
@@ -92,6 +95,8 @@ public class ChannelController {
 //		List serviceTypes = serviceScopeAO.listServiceType();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("operatorTypes", OperatorTypeEnum.toList());
+		resultMap.put("pgTypeEnums", PgTypeEnum.toList());
+		resultMap.put("pgValidityEnums", PgValidityEnum.toList());
 		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 		resultMap.put("serviceTypes", ServiceTypeEnum.toList());
 		
@@ -110,7 +115,7 @@ public class ChannelController {
 //		
 		resultMap.put("billTypes", BillTypeEnum.toList());
 		//默认用移动的包体
-		resultMap.put("pgSizeStr", operatorPgAO.pgSizeStr(0,0,null,null));
+		resultMap.put("pgSizeStr", operatorPgAO.pgSizeStr(new OneCodePo(null, ServiceTypeEnum.NATION_WIDE.getValue(), OperatorTypeEnum.MOBILE.getValue(), ScopeCityEnum.QG.getValue(), PgTypeEnum.PGDATA.getValue(), PgValidityEnum.month_day_data.getValue())));
 		
 		return new ModelAndView("/channel/channel_add_page", "resultMap", resultMap);
 	}
@@ -240,8 +245,8 @@ public class ChannelController {
 	 */
 	@RequestMapping(value= ChannelURL.CHANGE_CHANNEL_PGSIZE)
 	@ResponseBody
-	public void changePgSizeList(String scopeCityCode,Integer operatorType,Integer serviceType,Integer epId,HttpServletResponse response) throws IOException{
-		response.getWriter().print(operatorPgAO.pgSizeStr(operatorType,serviceType,epId,scopeCityCode));
+	public void changePgSizeList(OneCodePo oneCodePo,HttpServletResponse response) throws IOException{
+		response.getWriter().print(operatorPgAO.pgSizeStr(oneCodePo));
 	}
 	
 	/**

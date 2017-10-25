@@ -8,6 +8,8 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
 import com.weizu.flowsys.web.agency.dao.impl.AgencyBackwardDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
@@ -15,6 +17,7 @@ import com.weizu.flowsys.web.channel.dao.impl.OperatorPgDao;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.web.foundation.MD5;
+import com.weizu.web.foundation.String.StringHelper;
 import com.weizu.web.foundation.hash.Hash;
 
 /**
@@ -78,9 +81,23 @@ public class ValiUser {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月23日 下午4:59:55
 	 */
-	public PgDataPo findPg(int scope, int pgSize, int operatorType)
+	public PgDataPo findPg(PgDataPo pgDataPo)
 	{
-		PgDataPo pgData = operatorPgDao.get(new WherePrams("service_type", "=", scope).and("pg_size", "=", pgSize).and("operator_type", "=", operatorType));
+		WherePrams whereP = new WherePrams("service_type", "=", pgDataPo.getServiceType()).and("pg_size", "=", pgDataPo.getPgSize()).and("operator_type", "=", pgDataPo.getOperatorType());
+		if(pgDataPo.getPgType() == null){//默认使用流量包
+			whereP.and("pg_type", "=", PgTypeEnum.PGDATA.getValue());
+		}else{
+			whereP.and("pg_type", "=", pgDataPo.getPgType());
+		}
+		
+		if(StringHelper.isEmpty(pgDataPo.getPgValidity())){//默认使用月包
+			whereP.and("pg_validity", "=", PgValidityEnum.month_day_data.getValue());
+		}else{
+			whereP.and("pg_validity", "=", pgDataPo.getPgValidity());
+			
+		}
+		
+		PgDataPo pgData = operatorPgDao.get(whereP);
 		return pgData;
 	}
 	

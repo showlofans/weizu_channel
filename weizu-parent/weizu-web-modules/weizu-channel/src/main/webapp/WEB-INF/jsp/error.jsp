@@ -25,7 +25,7 @@
 	       		<font color="red">系统维护之后，用户未登陆！！</font><br>
 	       	</c:otherwise>
 	       </c:choose>
-	       系统最后更新时间：${applicationScope.startupTime }
+	      <br> <font color="green">系统最后更新时间：${applicationScope.startupTime }</font>
 		  </td>
         </tr>
       </table>

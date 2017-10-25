@@ -17,6 +17,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgInServiceEnum;
+import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
@@ -163,17 +165,19 @@ public class OperatorPgController {
 //		if(operatorPgDataPo != null && operatorPgDataPo.getServiceType() == null){
 //			operatorPgDataPo.setServiceType(0);//默认全国
 //		}
-		Map<String, Object> paramsMap = operatorPgAO
-				.getOperatorPgParams(operatorPgDataPo);
+//		Map<String, Object> paramsMap = operatorPgAO
+//				.getOperatorPgParams(operatorPgDataPo);
 		PageParam pageParam = null;
 		if(StringHelper.isNotEmpty(pageNo)){
 			pageParam = new PageParam(Integer.parseInt(pageNo), 10);
 		}else{
 			pageParam = new PageParam(1, 10);
 		}
-		Pagination<OperatorPgDataPo> pagination = operatorPgAO.listPg(paramsMap,pageParam);
+		Pagination<OperatorPgDataPo> pagination = operatorPgAO.listPg(operatorPgDataPo,pageParam);
 		resultMap.put("pgInEnums", PgInServiceEnum.toList());
-		resultMap.put("pgTypeEnums", OperatorTypeEnum.toList());
+		resultMap.put("operatoerTypeEnums", OperatorTypeEnum.toList());
+		resultMap.put("pgTypeEnums", PgTypeEnum.toList());
+		resultMap.put("pgValidityEnums", PgValidityEnum.toList());
 		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 		resultMap.put("params", operatorPgDataPo);
 		resultMap.put("pagination", pagination);
@@ -198,7 +202,9 @@ public class OperatorPgController {
 //			resultMap.put("pageTitle", new String(pageTitle.getBytes("ISO8859-1"), "utf-8"));
 			resultMap.put("pageTitle", pageTitle);
 		}
-		resultMap.put("pgTypeEnums", OperatorTypeEnum.toList());
+		resultMap.put("operatoerTypeEnums", OperatorTypeEnum.toList());
+		resultMap.put("pgTypeEnums", PgTypeEnum.toList());
+		resultMap.put("pgValidityEnums", PgValidityEnum.toList());
 		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 		resultMap.put("pgInServiceEnums", PgInServiceEnum.toList());
 		return new ModelAndView("/channel/pg_add_page", "resultMap", resultMap);
@@ -247,8 +253,8 @@ public class OperatorPgController {
 	 */
 	@ResponseBody
 	@RequestMapping(value=OperatorPgURL.PG_EXIST)
-	public Boolean existPg(OperatorPgDataPo pgData){
-		if(valiUser.findPg(pgData.getServiceType(), pgData.getPgSize(), pgData.getOperatorType()) == null){
+	public Boolean existPg(PgDataPo pgData){
+		if(valiUser.findPg(pgData) == null){
 			return true;
 		}else{
 			return false;

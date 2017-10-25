@@ -15,14 +15,17 @@
 	<sql id="t_cbp">cnel_bind_pg</sql>
 	<!-- <sql id="t_scope">service_scope</sql> -->
 	
-	<resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo">
+	<resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.PgDataPo">
 	    <id column="id" jdbcType="INTEGER" property="id" />
 	    <result column="operator_type" jdbcType="INTEGER" property="operatorType" />
+	    <result column="service_type" jdbcType="INTEGER" property="serviceType" />
 	    <result column="operator_name" jdbcType="VARCHAR" property="operatorName" />
 	    <result column="pg_size" jdbcType="INTEGER" property="pgSize" />
 	    <result column="pg_price" jdbcType="DOUBLE" property="pgPrice" />
 	    <result column="pg_name" jdbcType="VARCHAR" property="pgName" />
 	    <result column="pg_in_service" jdbcType="INTEGER" property="pgInService" />
+	    <result column="pg_type" jdbcType="INTEGER" property="pgType" />
+	    <result column="pg_validity" jdbcType="VARCHAR" property="pgValidity" />
 	 </resultMap>
 	<resultMap id="PurchasePgMap" type="com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo">
 	    <id column="id" jdbcType="INTEGER" property="id" />
@@ -53,7 +56,7 @@
 	    <result column="rte_id" property="rteId" />
 	 </resultMap>
   <sql id="Base_Column_List">
-    pg.id,operator_type,operator_name,pg_in_service,pg.pg_name,pg_price,pg_size,service_type
+    pg.id,operator_type,operator_name,pg_in_service,pg.pg_name,pg_price,pg_size,service_type,pg_type,pg_validity
   </sql>
   <sql id="Purchase_Column_List">
     pg.id,pg.operator_type,pg.operator_name,pg_in_service,pg.pg_name,pg_price,pg_size,pg.service_type
@@ -226,6 +229,12 @@
 		<if test="scopeCityCode != null">
 			AND pc.scope_city_code = #{scopeCityCode}
 		</if>
+		<if test="pgType != null">
+			AND pg.pg_type = #{pgType}
+		</if>
+		<if test="pgValidity != null">
+			AND pg.pg_validity = #{pgValidity}
+		</if>
 	</sql>
 	
 	<!-- 查询where语句块 -->
@@ -254,6 +263,12 @@
 		<if test="pgPrice != null">
 			AND pg_price = #{pgPrice}
 		</if>
+		<if test="pgType != null">
+			AND pg_type = #{pgType}
+		</if>
+		<if test="pgValidity != null">
+			AND pg_validity = #{pgValidity}
+		</if>
 	</sql>
  <!-- 查询某个平台没有设置产品编码的包体 -->
  <select id="listPgListNotInPcode" parameterType="map" resultMap="BaseResultMap">
@@ -274,6 +289,12 @@
 		</if>
 		<if test="serviceType != null">
 			AND service_type = #{serviceType}
+		</if>
+		<if test="pgValidity != null">
+			AND pg_validity = #{pgValidity}
+		</if>
+		<if test="pgType != null">
+			AND pg_type = #{pgType}
 		</if>
  	</where>
  </select>
