@@ -253,6 +253,18 @@
 			</div>
 		</div>
 		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">通道类型：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<c:forEach items="${resultMap.channelTypeEnums }" var="channelTypeEnum" varStatus="vs">
+					<div class="radio-box">
+					 	<input name="channelType" class="radioItem" type="radio" id="channelType-${vs.index }" value="${channelTypeEnum.value }" <c:if test="${vs.index==0 }">checked</c:if>>
+						<label for="channelType-${vs.index }">${channelTypeEnum.desc }</label>
+						<%-- <label for="operatorType-${vs.index }"></label> --%>
+					</div>
+				</c:forEach>
+			</div>
+		</div>
+		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">通道规格：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" class="input-text" value="${resultMap.pgSizeStr }" required="required" placeholder="${resultMap.pgSizeStr }" id="pgSize" name="pgSize">

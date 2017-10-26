@@ -34,6 +34,8 @@ public class ChannelDiscountPo extends Po {
     
     private Integer discountType;			//折扣类型（0-对上，1-对下）
     
+    private Integer channelType;						//通道类型（1-普通通道包，2-红包通道，3-转移包，4-共享包）
+    
     @TempField
     private String scopeCityName;			// 地区名字
     
@@ -65,6 +67,14 @@ public class ChannelDiscountPo extends Po {
 		this.discountType = discountType;
 	}
 	
+	public Integer getChannelType() {
+		return channelType;
+	}
+
+	public void setChannelType(Integer channelType) {
+		this.channelType = channelType;
+	}
+
 	public Integer getBillType() {
 		return billType;
 	}

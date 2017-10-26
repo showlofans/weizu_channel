@@ -53,14 +53,14 @@
 						</c:forEach>
 					</select>
 					</span> 
-					<c:choose>
+						扣款类型：
+					<%-- <c:choose>
 					<c:when test="${loginContext.rootAgencyId == 0 }">
 						通道类型：
 					</c:when>
 					<c:otherwise>
-						扣款类型：
 					</c:otherwise>
-					</c:choose>
+					</c:choose> --%>
 					
 					<span class="select-box inline">
 						<select name="billType" class="select">

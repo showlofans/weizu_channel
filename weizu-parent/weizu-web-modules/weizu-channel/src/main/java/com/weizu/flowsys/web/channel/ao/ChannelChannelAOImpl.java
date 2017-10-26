@@ -17,12 +17,12 @@ import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
-import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.pojo.DiscountPo;
 import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 import com.weizu.flowsys.web.channel.dao.ICnelBindPgDao;
+import com.weizu.flowsys.web.channel.dao.OperatorPgDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.CnelBindPgPo;
@@ -44,6 +44,8 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 	private ChannelDiscountAO channelDiscountAO;
 	@Resource
 	private ValiUser valiUser;
+	@Resource
+	private OperatorPgDaoInterface operatorPgDao;
 	
 	@Override
 	public ExchangePlatformPo getEpByChannelId(Long channelId) {
@@ -182,13 +184,21 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 	 */
 	private void initChannelDiscountStr(List<ChannelChannelPo> records) {
 		for (ChannelChannelPo channelChannelPo : records) {
+			Map<String,Object> params = new HashMap<String, Object>();
+			params.put("channelId", channelChannelPo.getId());
+			List<PgDataPo> pgList = operatorPgDao.getPgByChanel(params);
+			channelChannelPo.setPgList(pgList);
+			channelChannelPo.setPgType(pgList.get(0).getPgType());
+			channelChannelPo.setPgValidity(pgList.get(0).getPgValidity());
+			
 			List<ChannelDiscountPo>  list = channelChannelPo.getDiscountList();
 			StringBuffer discount0 = new StringBuffer("{");
 			StringBuffer discount1 = new StringBuffer("{");
 			StringBuffer discount2 = new StringBuffer("{");
 			if(list != null && list.size()>0){
 				channelChannelPo.setServiceType(list.get(0).getServiceType());//初始化业务类型
-				channelChannelPo.setOperatorType(list.get(0).getOperatorType());//初始化业务类型
+				channelChannelPo.setOperatorType(list.get(0).getOperatorType());//初始化运营商类型
+				channelChannelPo.setChannelType(list.get(0).getChannelType());//初始化通道类型
 				for (ChannelDiscountPo channelDiscountPo : list) {
 					String code = channelDiscountPo.getScopeCityCode();
 					String ScopeCityName = ScopeCityEnum.getEnum(code).getDesc();	//城市名
@@ -269,6 +279,15 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 			}
 			if(StringHelper.isNotEmpty(channelPo.getEpName())){
 				paramsMap.put("epName", channelPo.getEpName());
+			}
+			if(channelPo.getPgType() != null){
+				paramsMap.put("pgType", channelPo.getPgType());
+			}
+			if(channelPo.getChannelType() != null){
+				paramsMap.put("channelType", channelPo.getChannelType());
+			}
+			if(StringHelper.isNotEmpty(channelPo.getPgValidity())){
+				paramsMap.put("pgValidity", channelPo.getPgValidity());
 			}
 			
 		}

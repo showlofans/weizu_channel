@@ -27,9 +27,11 @@
 	    <result column="pg_type" jdbcType="INTEGER" property="pgType" />
 	    <result column="pg_validity" jdbcType="VARCHAR" property="pgValidity" />
 	 </resultMap>
-	<resultMap id="PurchasePgMap" type="com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo">
+	<resultMap id="PurchasePgMap" type="com.weizu.flowsys.web.channel.pojo.PgDataPo">
 	    <id column="id" jdbcType="INTEGER" property="id" />
 	    <result column="operator_type" jdbcType="INTEGER" property="operatorType" />
+	    <result column="pg_type" jdbcType="INTEGER" property="pgType" />
+	    <result column="pg_validity" jdbcType="VARCHAR" property="pgValidity" />
 	    <result column="operator_name" jdbcType="VARCHAR" property="operatorName" />
 	    <result column="pg_size" jdbcType="INTEGER" property="pgSize" />
 	    <result column="pg_price" jdbcType="DOUBLE" property="pgPrice" />
@@ -59,7 +61,7 @@
     pg.id,operator_type,operator_name,pg_in_service,pg.pg_name,pg_price,pg_size,service_type,pg_type,pg_validity
   </sql>
   <sql id="Purchase_Column_List">
-    pg.id,pg.operator_type,pg.operator_name,pg_in_service,pg.pg_name,pg_price,pg_size,pg.service_type
+    pg.id,pg.operator_type,pg.operator_name,pg_in_service,pg.pg_name,pg_price,pg_size,pg.service_type,pg_validity,pg_type
   </sql>
   <!-- 通过通道查询购买包体list -->
   <sql id="myCnelPg_Column_List">

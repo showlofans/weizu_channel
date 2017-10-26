@@ -26,6 +26,7 @@ import com.weizu.flowsys.web.activity.pojo.AccountActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.DiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountShowDTO;
+import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 import com.weizu.web.foundation.String.StringHelper;
 
 @Service(value="rateDiscountAO")
@@ -44,11 +45,11 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月12日 下午5:21:52
 	 */
-	@Override
-	public Pagination<RateDiscountPo> getRateList(RateDiscountPo ratePo,PageParam pageParam) {
-		
-		return null;
-	}
+//	@Override
+//	public Pagination<RateDiscountPo> getRateList(RateDiscountPo ratePo,PageParam pageParam) {
+//		
+//		return null;
+//	}
 	@Override
 	public Pagination<RateDiscountPo> getMyRateList(RateDiscountPo ratePo,Integer childAccountId,PageParam pageParam) {
 		Map<String, Object> paramsMap = getMapByRate(ratePo);
@@ -591,14 +592,42 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年8月2日 上午11:54:40
 	 */
+//	@Override
+//	public RateDiscountPo getRateForCharge(int serviceType,
+//			String carrier, int accountId, Boolean judgeChannelState) {
+//		Map<String, Object> params = new HashMap<String, Object>();
+//		//用不带票的账户去获得价格
+//		params.put("accountId", accountId);
+//		params.put("bindState", BindStateEnum.BIND.getValue());
+//		params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+//		params.put("serviceType", serviceType);
+//		int sLength = carrier.length();
+//		String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动
+//		if(ServiceTypeEnum.NATION_WIDE.getValue() != serviceType){
+//			String scopeCityName = carrier.substring(0,sLength-2);
+//			int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
+//			params.put("operatorType", opType);
+//			String scopeCityCode = ScopeCityEnum.getValueByDesc(scopeCityName);
+//			params.put("scopeCityCode", scopeCityCode);
+//		}else{
+//			params.put("scopeCityCode", ScopeCityEnum.QG.getValue());//使用全国的地区
+//		}
+//		if(judgeChannelState){//需要判断通道状态:比如再次提交获得的费率，比如测试通道的时候
+//			params.put("channelState", ChannelStateEnum.OPEN.getValue());
+//		}
+//		return rateDiscountDao.getRateForCharge(params);
+//	}
+	
 	@Override
-	public RateDiscountPo getRateForCharge(int serviceType,
-			String carrier, int accountId, Boolean judgeChannelState) {
+	public RateDiscountPo getRateForCharge(ChargeChannelParamsPo ccpp,
+			int accountId, Boolean judgeChannelState) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		//用不带票的账户去获得价格
 		params.put("accountId", accountId);
 		params.put("bindState", BindStateEnum.BIND.getValue());
 		params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+		Integer serviceType = ccpp.getServiceType();
+		String carrier = ccpp.getCarrier();
 		params.put("serviceType", serviceType);
 		int sLength = carrier.length();
 		String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动
@@ -614,8 +643,24 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		if(judgeChannelState){//需要判断通道状态:比如再次提交获得的费率，比如测试通道的时候
 			params.put("channelState", ChannelStateEnum.OPEN.getValue());
 		}
-		return rateDiscountDao.getRateForCharge(params);
+		if(ccpp.getChannelType() == null || ccpp.getPgType() == null || StringHelper.isEmpty(ccpp.getPgValidity())){
+			//有任何一个为空，就需要获取费率列表
+			List<RateDiscountPo> dataList = rateDiscountDao.getRateListForCharge(params);
+			for (RateDiscountPo rateDiscountPo : dataList) {
+				
+			}
+			//获得枚举列表
+			
+			return rateDiscountDao.getRateForCharge(params);
+		}else{
+			params.put("channelType", ccpp.getChannelType());
+			params.put("pgType", ccpp.getPgType());
+			params.put("pgValidity", ccpp.getPgValidity());
+			return rateDiscountDao.getRateForCharge(params);
+		}
+		
 	}
+	
 	@Override
 	public RateDiscountPo getRateByAcountIdAndCDId(Long channelDiscountId,
 			Integer accountId) {
@@ -625,4 +670,5 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		}
 		return null;
 	}
+	
 }

@@ -1,5 +1,7 @@
 package com.weizu.flowsys.web.channel.pojo;
 
+import com.weizu.flowsys.core.annotation.po.TempField;
+
 
 /**
  * @description: 通道充值页面查询参数
@@ -19,6 +21,10 @@ public class ChargeChannelParamsPo {
 	private Long channelId;					//通道id（再次通过通道查询包体的时候参数）
 //	private Integer agencyId;				//代理商id
 	private Integer billType;				//是否带票
+	
+    private Integer pgType;				//流量类型（1-流量包，2-流量池）
+    private String pgValidity;			//流量有效期(PgValidityEnum)
+    private Integer channelType;						//通道类型（页面参数：1-普通通道包，2-红包通道，3-转移包，4-共享包）
 	
 	public ChargeChannelParamsPo(String carrier, String scopeCityCode,
 			String epName) {
@@ -41,6 +47,36 @@ public class ChargeChannelParamsPo {
 		this.serviceType = serviceType;
 		this.channelId = channelId;
 	}
+
+	public Integer getPgType() {
+		return pgType;
+	}
+
+
+	public void setPgType(Integer pgType) {
+		this.pgType = pgType;
+	}
+
+
+	public String getPgValidity() {
+		return pgValidity;
+	}
+
+
+	public void setPgValidity(String pgValidity) {
+		this.pgValidity = pgValidity;
+	}
+
+
+	public Integer getChannelType() {
+		return channelType;
+	}
+
+
+	public void setChannelType(Integer channelType) {
+		this.channelType = channelType;
+	}
+
 
 	public Long getChannelId() {
 		return channelId;

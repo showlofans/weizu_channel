@@ -73,7 +73,7 @@ public class PurchaseVO implements Cloneable {
     
 //    private ExchangePlatformPo ep;				//平台信息
     
-    private Integer billType;					//票务
+    private Integer billType;					//账户类型（搜索和展示参数）
     
     private Long rateDiscountId;						//费率折扣id
     
@@ -87,7 +87,7 @@ public class PurchaseVO implements Cloneable {
         }  
 		return pvo;
 	}
-    
+
 	public Integer getAgencyId() {
 		return agencyId;
 	}

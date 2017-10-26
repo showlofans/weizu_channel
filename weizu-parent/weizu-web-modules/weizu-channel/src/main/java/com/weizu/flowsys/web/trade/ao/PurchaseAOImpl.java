@@ -64,6 +64,7 @@ import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
+import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.http.ParamsEntityWeiZu;
 import com.weizu.flowsys.web.http.weizu.OrderStateResult;
@@ -1064,6 +1065,15 @@ public class PurchaseAOImpl implements PurchaseAO {
 				}
 			}
 		}
+		if(ccpp.getPgType() != null){
+			searchMap.put("pgType", ccpp.getPgType());
+		}
+		if(ccpp.getChannelType() != null){
+			searchMap.put("channelType", ccpp.getChannelType());
+		}
+		if(StringHelper.isNotEmpty(ccpp.getPgValidity())){
+			searchMap.put("pgValidity", ccpp.getPgValidity());
+		}
 		if(ccpp.getEpName() != null){
 			searchMap.put("epName", ccpp.getEpName());
 		}
@@ -1097,24 +1107,24 @@ public class PurchaseAOImpl implements PurchaseAO {
 	}
 
 	@Override
-	public List<OperatorPgDataPo> getPgByChanel(ChargeChannelParamsPo ccpp) {
+	public List<PgDataPo> getPgByChanel(ChargeChannelParamsPo ccpp) {
 		Map<String, Object> objMap = new HashMap<String, Object>();
-		String carrier = ccpp.getCarrier();
-		if(StringHelper.isNotEmpty(carrier)){
-			int operatorType = OperatorTypeEnum.getValueByDesc(carrier.substring(carrier.length()-2));
-			objMap.put("operatorType", operatorType);
-			if(ServiceTypeEnum.NATION_WIDE.getValue() != ccpp.getServiceType()){
-				Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(carrier);
-				if(scopeMap.get("scopeCityCode") != null){
-					objMap.put("scopeCityCode", scopeMap.get("scopeCityCode").toString());
-				}
-			}
-		}
+//		String carrier = ccpp.getCarrier();
+//		if(StringHelper.isNotEmpty(carrier)){
+//			int operatorType = OperatorTypeEnum.getValueByDesc(carrier.substring(carrier.length()-2));
+//			objMap.put("operatorType", operatorType);
+//			if(ServiceTypeEnum.NATION_WIDE.getValue() != ccpp.getServiceType()){
+//				Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(carrier);
+//				if(scopeMap.get("scopeCityCode") != null){
+//					objMap.put("scopeCityCode", scopeMap.get("scopeCityCode").toString());
+//				}
+//			}
+//		}
 		if(ccpp.getChannelId() != null){
 			objMap.put("channelId", ccpp.getChannelId());
 		}
-		objMap.put("serviceType", ccpp.getServiceType());
-		List<OperatorPgDataPo> pgList = operatorPgDao.getPgByChanel(objMap);
+//		objMap.put("serviceType", ccpp.getServiceType());
+		List<PgDataPo> pgList = operatorPgDao.getPgByChanel(objMap);
 		return pgList;
 	}
 

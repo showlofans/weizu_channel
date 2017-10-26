@@ -121,11 +121,20 @@ public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	List<RateDiscountPo>getRateByAcountIdAndCDId(Long channelDiscountId,Integer accountId);
 	
 	/**
-	 * @description:  获得充值的折扣 
+	 * @description:  获得充值的折扣列表
 	 * @param params
 	 * @return
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年8月2日 上午11:33:52
+	 */
+	List<RateDiscountPo> getRateListForCharge(Map<String, Object> params);
+	
+	/**
+	 * @description: 获得充值的折扣
+	 * @param params
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月26日 下午4:56:31
 	 */
 	RateDiscountPo getRateForCharge(Map<String, Object> params);
 	

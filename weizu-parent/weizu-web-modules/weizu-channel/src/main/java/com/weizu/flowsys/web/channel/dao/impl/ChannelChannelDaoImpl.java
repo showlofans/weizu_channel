@@ -117,6 +117,7 @@ public class ChannelChannelDaoImpl extends DaoImpl<ChannelChannelPo, Long> imple
 //		String serviceTypeStr = ServiceTypeEnum.getEnum(serviceType).getDesc();
 //		channelPo.setChannelName(serviceTypeStr +"-"+channelPo.getChannelName());
 		String channelName = channelPo.getChannelName();
+		int channelType = channelPo.getChannelType();
 		
 		for(ChannelDiscountPo cdp: channelPo.getDiscountList())
 		{
@@ -125,6 +126,7 @@ public class ChannelChannelDaoImpl extends DaoImpl<ChannelChannelPo, Long> imple
 			ChannelDiscountPo cdp1 = new ChannelDiscountPo(channelId, cdp.getScopeCityCode(), channelDiscount, channelName, operatorType, serviceType,ChannelDiscountTypeEnum.CHANNEL.getValue());
 //			cdp1.setId(nextId);
 			cdp1.setBillType(billType);
+			cdp1.setChannelType(channelType);
 			disList.add(cdp1);
 		}
 		int discountRes = channelDiscountDao.discount_addList(disList);

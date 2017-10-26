@@ -39,8 +39,8 @@
 	 <span class="select-box inline">
 		<select name="operatorType" class="select"  onchange="submitForm()">
 			<option value="">运营商类型</option>
-			<c:forEach items="${resultMap.pgTypeEnums }" var="pgType" varStatus="vs1">
-				<option value="${pgType.value }" <c:if test="${pgType.value == resultMap.params.operatorType }"> selected</c:if>>${pgType.desc }</option>
+			<c:forEach items="${resultMap.operatoerTypeEnums }" var="operatorTypeEnum" varStatus="vs1">
+				<option value="${operatorTypeEnum.value }" <c:if test="${operatorTypeEnum.value == resultMap.params.operatorType }"> selected</c:if>>${operatorTypeEnum.desc }</option>
 			</c:forEach>
 		</select>
 	</span> 

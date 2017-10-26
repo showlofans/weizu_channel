@@ -146,6 +146,11 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 	 * @createTime:2017年8月2日 上午11:34:40
 	 */
 	@Override
+	public List<RateDiscountPo> getRateListForCharge(Map<String, Object> params) {
+		return sqlSessionTemplate.selectList("getRateForCharge", params);
+	}
+	
+	@Override
 	public RateDiscountPo getRateForCharge(Map<String, Object> params) {
 		return sqlSessionTemplate.selectOne("getRateForCharge", params);
 	}
@@ -217,7 +222,5 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 //		return sqlSessionTemplate.update("updateRateDiscountByCDId", paramsMap);
 		return updateRes; 
 	}
-
-	
 
 }

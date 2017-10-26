@@ -102,7 +102,7 @@ public interface OperatorPgDaoInterface extends Dao<PgDataPo, Integer> {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年8月28日 下午5:26:36
 	 */
-	List<OperatorPgDataPo> getPgByChanel(Map<String,Object> map);
+	List<PgDataPo> getPgByChanel(Map<String,Object> map);
 	
 //	Pagination<OperatorPgDataPo> list();
 }

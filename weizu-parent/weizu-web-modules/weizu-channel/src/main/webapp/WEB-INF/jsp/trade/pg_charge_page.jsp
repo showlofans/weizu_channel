@@ -58,23 +58,63 @@
 				<input type="text" id="epName" name="epName" class="input-text" required style="width:400px" autocomplete="off"  placeholder="请输入平台名称" >
 			</div>
 		</div>
-	</c:if>
-	<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><!--<span class="c-red">*</span>-->业务类型：</label>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">通道类型：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
-					<span class="select-box inline">
-						<select id="select-servce-type" name="serviceType" onchange="ifAjaxPg()" style="width:150px;" class="select">
-							<option value="">请选择</option>
-							<c:forEach items="${resultMap.serviceTypeEnum }" var="typeEnum" varStatus="vs1">
-								<option value="${typeEnum.value }" <c:if test="${typeEnum.value == resultMap.params.serviceType }"> selected</c:if>>${typeEnum.desc }</option>
-							</c:forEach>
-						</select>
-					</span>
-						<!-- <span style="width: 300;" onclick="showNext(this)" title="提示信息"><i class="Hui-iconfont">&#xe6cd;</i></span>
-						<span class="select-box inline" style="display:none;" >
-						</span> -->
+				<span class="select-box inline">
+					<select name="channelType"  id="channelType" class="select" onchange="ifAjaxPg()" style="width:150px;">
+					<!-- <option value="">请选择</option> -->
+					<c:forEach items="${resultMap.channelTypeEnums }" var="channelTypeEnum" varStatus="vs2">
+						<option value="${channelTypeEnum.value }">${channelTypeEnum.desc }</option>
+					</c:forEach>
+				</select>
+				</span>
 			</div>
 		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">流量类型：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<span class="select-box inline">
+					<select name="pgType"  id="pgType" class="select" onchange="ifAjaxPg()" style="width:150px;">
+					<!-- <option value="">请选择</option> -->
+					<c:forEach items="${resultMap.pgTypeEnums }" var="pgTypeEnum" varStatus="vs2">
+						<option value="${pgTypeEnum.value }">${pgTypeEnum.desc }</option>
+					</c:forEach>
+				</select>
+				</span>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">有效期：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<span class="select-box inline">
+					<select name="pgValidity"  id="pgValidity" class="select" style="width:150px;"  onchange="ifAjaxPg()">
+					<!-- <option value="">请选择</option> -->
+					<c:forEach items="${resultMap.pgValidityEnums }" var="pgValidityEnum" varStatus="vs2">
+						<option value="${pgValidityEnum.value }">${pgValidityEnum.desc }</option>
+					</c:forEach>
+				</select>
+				</span>
+			</div>
+		</div>
+	</c:if>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><!--<span class="c-red">*</span>-->业务类型：</label>
+		<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<span class="select-box inline">
+					<select id="select-servce-type" name="serviceType" onchange="ifAjaxPg()" style="width:150px;" class="select">
+						<option value="">请选择</option>
+						<c:forEach items="${resultMap.serviceTypeEnum }" var="typeEnum" varStatus="vs1">
+							<option value="${typeEnum.value }" <c:if test="${typeEnum.value == resultMap.params.serviceType }"> selected</c:if>>${typeEnum.desc }</option>
+						</c:forEach>
+					</select>
+				</span>
+					<!-- <span style="width: 300;" onclick="showNext(this)" title="提示信息"><i class="Hui-iconfont">&#xe6cd;</i></span>
+					<span class="select-box inline" style="display:none;" >
+					</span> -->
+		</div>
+	</div>
+	
 		
 		
 	<div class="row cl" id="pg">
@@ -478,10 +518,11 @@
 	
     function ajaxPg(){
     	 tel=$('input[name=chargeTel]').val();
-    	 var carrier = $("#chargeTelDetail").val();
-    	 var serviceType = $("#select-servce-type").val();
     	 //alert(serviceType);
          if(tel){
+	    	 var carrier = $("#chargeTelDetail").val();
+	    	 var serviceType = $("#select-servce-type").val();
+	    	 
              if(reg.test(tel)){
             	 //如果点击了有的话就先删除原来的业务
             	 //var serviceTypeTag = $("#pg").children().eq(2);//有第三个元素
@@ -501,11 +542,14 @@
            	 
        	   if(rootAgencyId == 0){
 	       	  var epName = $('#epName').val();
-	       	
+	       	  var pgValidity = $("#pgValidity").val();
+	    	  var pgType = $("#pgType").val();
+	    	  var channelType = $("#channelType").val();
+	       	  
 	       	 // alert(epEngId);
 	       	  $.ajax({
 	                type: "post",
-	                url: '/flowsys/chargePg/ajax_charge_channel.do?carrier='+ carrier + '&serviceType=' + serviceType + '&epName=' + epName,
+	                url: '/flowsys/chargePg/ajax_charge_channel.do?carrier='+ carrier + '&pgType=' + pgType+ '&channelType=' + channelType+ '&pgValidity=' + pgValidity+ '&serviceType=' + serviceType + '&epName=' + epName,
 	                dataType: "json",
 	                async: false,
 	                contentType: "application/x-www-form-urlencoded; charset=utf-8", 

@@ -36,16 +36,24 @@
 	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
 	<div class="text-c">
 		<form action="/flowsys/rate/bind_rate_list.do" method="post" id="formD" name="formD">
+		
 				通道名称：<sapn class="c-red">${resultMap.channelName }</sapn>
+				
 			通道类型
 			<c:forEach items="${resultMap.billTypeEnums }" var="billEnum" varStatus="vs">
-				<span id="billTypeDesc"  class="c-red">
-				<c:if test="${resultMap.channelBillType==billEnum.value }">${billEnum.desc }</c:if>
-				</span>
+			<c:forEach items="${resultMap.stypeEnums }" var="stype" varStatus="vs1">
+			<c:forEach items="${resultMap.otypeEnums }" var="otype" varStatus="vs2">
+				<c:if test="${resultMap.channelBillType==billEnum.value && stype.value == resultMap.searchParams.serviceType && resultMap.searchParams.operatorType == otype.value }">
+					<span id="billTypeDesc"  data-toggle="tooltip" data-placement="bottom" title="${stype.desc } ${otype.desc } "  class="c-red">
+							${billEnum.desc }
+					</span>
+				</c:if>
+			</c:forEach>
+			</c:forEach>
 			</c:forEach>
 			通道折扣：<span id=""  class="c-red">${resultMap.channelDiscount }</span>
 			</sapn>
-				业务类型：<span class="select-box inline">
+				<%-- 业务类型：<span class="select-box inline">
 					<select name="serviceType" id="serviceType" class="select" onchange="getCity()">
 						<c:forEach items="${resultMap.stypeEnums }" var="stype" varStatus="vs1">
 							<c:if test="${ stype.value == resultMap.searchParams.serviceType }">
@@ -63,9 +71,9 @@
 							</c:if>	
 						</c:forEach>
 					</select>
-				</span>
+				</span> --%>
 				地区：<span class="select-box inline">
-						<select name="scopeCityCode" id="scopeCityCode" class="select" onchange="setDiscount()">
+						<select name="scopeCityCode" id="scopeCityCode" class="select c-red" onchange="setDiscount()">
 						<!-- <option value="">请选择</option> -->
 						<c:forEach items="${resultMap.scopeList }" var="scopeCityCode" varStatus="vst">
 							<option value="${scopeCityCode }" <c:if test="${scopeCityCode == resultMap.searchParams.scopeCityCode }"> selected</c:if>>

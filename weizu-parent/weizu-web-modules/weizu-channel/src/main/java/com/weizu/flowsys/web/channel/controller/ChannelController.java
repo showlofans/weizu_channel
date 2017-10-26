@@ -21,6 +21,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
+import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
@@ -97,6 +98,7 @@ public class ChannelController {
 		resultMap.put("operatorTypes", OperatorTypeEnum.toList());
 		resultMap.put("pgTypeEnums", PgTypeEnum.toList());
 		resultMap.put("pgValidityEnums", PgValidityEnum.toList());
+		resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());
 		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 		resultMap.put("serviceTypes", ServiceTypeEnum.toList());
 		
@@ -222,14 +224,18 @@ public class ChannelController {
 		}
 		Pagination<ChannelChannelPo> pagination = channelChannelAO.listChannel(pageParam, channelChannelPo);
 		
+		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("pagination", pagination);
 		resultMap.put("searchParam", channelChannelPo);
-		resultMap.put("channelStateEnums", ChannelStateEnum.toList());
-		resultMap.put("channelUseStateEnums", ChannelUseStateEnum.toList());
-		resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
-		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
-		resultMap.put("billTypeEnums", BillTypeEnum.toList());
+		resultMap.put("channelStateEnums", ChannelStateEnum.toList());		//通道状态
+		resultMap.put("channelUseStateEnums", ChannelUseStateEnum.toList());//
+		resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());		//	
+		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());		//
+		resultMap.put("pgTypeEnums", PgTypeEnum.toList());					//
+		resultMap.put("pgValidityEnums", PgValidityEnum.toList());			//
+		resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());		//
+		resultMap.put("billTypeEnums", BillTypeEnum.toList());				//
 		
 		
 		return new ModelAndView("/channel/channel_list", "resultMap", resultMap); 

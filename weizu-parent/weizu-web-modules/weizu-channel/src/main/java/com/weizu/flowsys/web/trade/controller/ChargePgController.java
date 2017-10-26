@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,12 +27,14 @@ import org.weizu.api.outter.enums.ChargeStatusEnum;
 
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
-import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
+import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.ClassUtil;
@@ -40,19 +43,16 @@ import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.agency.ao.AgencyAO;
-import com.weizu.flowsys.web.agency.dao.AgengcyBackwardDaoInterface;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
-import com.weizu.flowsys.web.channel.ao.ChannelDiscountAO;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
-import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
-import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
+import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.ao.AccountPurchaseAO;
@@ -101,7 +101,21 @@ public class ChargePgController {
 	private ChannelDiscountDao channelDiscountDao;
 //	@Resource
 //	private ChannelDiscountAO channelDiscountAO;
-	
+	/** 
+	 * @description: 充值页面异步获得充值通道
+	 * <br>页面： pg_charge_page
+	 * @param ccpp
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年8月28日 下午3:58:05
+	 */
+	@ResponseBody
+	@RequestMapping(value=ChargePgURL.AJAX_CHARGE_CHANNEL)
+	public String ajaxChargeChannel(ChargeChannelParamsPo ccpp){
+		List<ChargeChannelPo> chargeList = purchaseAO.ajaxChargeChannel(ccpp);
+		String listJsonStr = JSON.toJSONString(chargeList);
+		return listJsonStr;
+	}
 	
 	/**
 	 * @description:页面单个流量充值
@@ -188,7 +202,8 @@ public class ChargePgController {
 	 */
 	@ResponseBody
 	@RequestMapping(value=ChargePgURL.PGLIST_FORPURCHASE)
-	public String pgList_forPurchase(HttpServletRequest request, HttpServletResponse response,String operatorName,Integer serviceType) throws UnsupportedEncodingException{
+	public String pgList_forPurchase(HttpServletRequest request, HttpServletResponse response,
+			ChargeChannelParamsPo ccpp) throws UnsupportedEncodingException{
 //		OperatorPgDataPo oppo = new OperatorPgDataPo();
 //		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");//用不带票账户充值
@@ -198,7 +213,7 @@ public class ChargePgController {
 //			}
 //		}
 //		operatorName = new String(operatorName.getBytes("iso-8859-1"), "utf-8");
-		String carrier = operatorName.trim();//江西移动
+		String carrier = ccpp.getCarrier();//江西移动
 		int sLength = carrier.length();
 		List<OperatorPgDataPo> list = new ArrayList<OperatorPgDataPo>();
 //		RateDiscountPo rateDiscountPo = null;
@@ -216,14 +231,15 @@ public class ChargePgController {
 //						
 //					}
 //					int sType = Integer.parseInt(serviceType.trim());
-					RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(serviceType, carrier, accountId,false);//获得对私的充值费率
+					RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(ccpp, accountId,false);//获得对私的充值费率
 //					oppo.setServiceType(sType);
 					if(ratePo != null){
-						ChargeChannelParamsPo ccpp = new ChargeChannelParamsPo(carrier, serviceType, ratePo.getChannelId());
+						ChargeChannelParamsPo ccpp1 = new ChargeChannelParamsPo(carrier, ccpp.getServiceType(), ratePo.getChannelId());
 //						ccpp.setBillType(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-						List<OperatorPgDataPo> chargeList = purchaseAO.getPgByChanel(ccpp);
+						List<PgDataPo> pgList = purchaseAO.getPgByChanel(ccpp1);
 						Double activeDiscount = ratePo.getActiveDiscount();
 						Long channelId = ratePo.getChannelId();
+						List<OperatorPgDataPo> chargeList = initByPgList(pgList);
 						for (OperatorPgDataPo operatorPgDataPo : chargeList) {//初始化第一个折扣，折扣id和包体价格
 							operatorPgDataPo.setRteId(ratePo.getId());
 							operatorPgDataPo.setRteDis(activeDiscount);
@@ -236,7 +252,6 @@ public class ChargePgController {
 					}else{
 						System.out.println("没有找到该地区费率");
 					}
-//					list = operatorPgAO.pgList_forPurchase(oppo,ScopeCityEnum.getValueByDesc(scopeCityName), contextId);
 				}
 			}
 		}
@@ -252,6 +267,21 @@ public class ChargePgController {
 //			e.printStackTrace();
 //		}
 	}
+	/**
+	 * @description: 把pgData换成oeratorPgDataPo
+	 * @param pgList
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月26日 上午11:25:32
+	 */
+	private List<OperatorPgDataPo> initByPgList(List<PgDataPo> pgList) {
+		List<OperatorPgDataPo> dataList = new LinkedList<OperatorPgDataPo>();
+		for (PgDataPo pgDataPo : pgList) {
+			dataList.add(new OperatorPgDataPo(pgDataPo.getId(), pgDataPo.getOperatorType(), pgDataPo.getOperatorName(), pgDataPo.getPgSize(), pgDataPo.getPgPrice(), pgDataPo.getPgName(), pgDataPo.getPgInService(), pgDataPo.getServiceType(), pgDataPo.getPgType(), pgDataPo.getPgValidity()));
+		}
+		return dataList;
+	}
+
 	@RequestMapping(value=ChargePgURL.PGLIST_SUPER_FORPURCHASE)
 	public void pgList_super_forPurchase(HttpServletRequest request, HttpServletResponse response,String operatorName,String serviceType,String epEngId) throws UnsupportedEncodingException{
 //		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
@@ -286,7 +316,6 @@ public class ChargePgController {
 ////					oppo.setOperatorName(carrier);
 //					int sType = Integer.parseInt(serviceType.trim());
 //					oppo.setServiceType(sType);
-//					list = operatorPgAO.pgList_forPurchase(oppo,ScopeCityEnum.getValueByDesc(scopeCityName), contextId);
 //					rateDiscountPo = rateDiscountAO.getRateForCharge(sType, carrier, contextId);
 //				}
 //			}
@@ -311,6 +340,15 @@ public class ChargePgController {
 	public ModelAndView pg_charge_page(@RequestParam(value="msg",required=false)String msg){
 		Map<String,Object> resultMap = new HashMap<String,Object>();
 		resultMap.put("serviceTypeEnum", ServiceTypeEnum.toList());
+		
+		Map<String,Object> params = new HashMap<String,Object>();
+		
+		
+		rateDiscountDao.getRateListForCharge(params);
+		
+		resultMap.put("pgTypeEnums", PgTypeEnum.toList());					//
+		resultMap.put("pgValidityEnums", PgValidityEnum.toList());			//
+		resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());		//
 		resultMap.put("pageMsg", msg);
 		return new ModelAndView("/trade/pg_charge_page","resultMap",resultMap);
 	}
@@ -458,21 +496,7 @@ public class ChargePgController {
 		}
 	}
 	
-	/** 
-	 * @description: 充值页面异步获得充值通道
-	 * <br>页面： pg_charge_page
-	 * @param ccpp
-	 * @return
-	 * @author:微族通道代码设计人 宁强
-	 * @createTime:2017年8月28日 下午3:58:05
-	 */
-	@ResponseBody
-	@RequestMapping(value=ChargePgURL.AJAX_CHARGE_CHANNEL)
-	public String ajaxChargeChannel(ChargeChannelParamsPo ccpp){
-		List<ChargeChannelPo> chargeList = purchaseAO.ajaxChargeChannel(ccpp);
-		String listJsonStr = JSON.toJSONString(chargeList);
-		return listJsonStr;
-	}
+	
 	/**
 	 * @description: 异步获得充值包体列表
 	 * @param ccpp
@@ -483,7 +507,7 @@ public class ChargePgController {
 	@ResponseBody
 	@RequestMapping(value=ChargePgURL.AJAX_CHARGE_PG)
 	public String ajaxChargePg(ChargeChannelParamsPo ccpp){
-		List<OperatorPgDataPo> chargeList = purchaseAO.getPgByChanel(ccpp);
+		List<PgDataPo> chargeList = purchaseAO.getPgByChanel(ccpp);
 		String listJsonStr = JSON.toJSONString(chargeList);
 //		System.out.println(listJsonStr);
 		return listJsonStr;

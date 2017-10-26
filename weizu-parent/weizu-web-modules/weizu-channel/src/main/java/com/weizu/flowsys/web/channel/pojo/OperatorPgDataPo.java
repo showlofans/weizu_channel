@@ -54,6 +54,28 @@ public class OperatorPgDataPo extends Po {
     @TempField
     private Double rteDis;				//费率折扣
 
+	public OperatorPgDataPo(Integer id, Integer operatorType,
+			String operatorName, Integer pgSize, Double pgPrice, String pgName,
+			Integer pgInService, Integer serviceType, Integer pgType,
+			String pgValidity) {
+		super();
+		this.id = id;
+		this.operatorType = operatorType;
+		this.operatorName = operatorName;
+		this.pgSize = pgSize;
+		this.pgPrice = pgPrice;
+		this.pgName = pgName;
+		this.pgInService = pgInService;
+		this.serviceType = serviceType;
+		this.pgType = pgType;
+		this.pgValidity = pgValidity;
+	}
+
+	public OperatorPgDataPo() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	public Long getCdisId() {
 		return cdisId;
 	}

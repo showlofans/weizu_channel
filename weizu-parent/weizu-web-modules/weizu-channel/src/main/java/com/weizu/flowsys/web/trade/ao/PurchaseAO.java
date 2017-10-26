@@ -3,19 +3,14 @@ package com.weizu.flowsys.web.trade.ao;
 import java.util.List;
 import java.util.Map;
 
-
-
-
-
 //import org.weizu.api.facet.orderState.PageOrder;
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
-import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
-import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
+import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.http.ParamsEntityWeiZu;
 import com.weizu.flowsys.web.http.weizu.OrderStateResult;
 import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
@@ -127,7 +122,7 @@ public interface PurchaseAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年9月16日 下午2:32:22
 	 */
-	List<OperatorPgDataPo> getPgByChanel(ChargeChannelParamsPo ccpp);
+	List<PgDataPo> getPgByChanel(ChargeChannelParamsPo ccpp);
 	
 	
 	
