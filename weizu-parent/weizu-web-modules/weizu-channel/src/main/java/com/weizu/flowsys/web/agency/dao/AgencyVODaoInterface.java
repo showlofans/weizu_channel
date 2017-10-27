@@ -177,7 +177,7 @@ public interface AgencyVODaoInterface extends Dao<AgencyBackwardPo, Integer> {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年9月18日 下午6:02:51
 	 */
-	int updateAgencyTag(Integer agencyId,Integer agencyTag);
+	int updateAgencyTag(Integer agencyId,Map<String,Object> params);
 	
 	/**
 	 * @description:查看邀请码是否符合条件

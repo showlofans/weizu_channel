@@ -74,7 +74,7 @@
 						
 						<i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> 
 						<ul class="dropDown-menu menu radius box-shadow">
-							<c:if test="${unconfirm != null }">
+							<c:if test="${loginContext.rootAgencyId == 0 }">
 								<li><a data-href="/flowsys/account/confirm_company_account_page.do" data-title="认证审核" title="认证审核" onclick="Hui_admin_tab(this)">认证审核 &nbsp;&nbsp;&nbsp;&nbsp;  ${unconfirmSize }</a></li>
 							</c:if>
 							<c:forEach items="${transferMsgList }" var="transferMsg" varStatus="vst">
@@ -191,9 +191,9 @@
 		<dt><i class="Hui-iconfont">&#xe6c6;</i> 平台相关<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 		<dd>
 			<ul>
-			<c:if test="${loginContext.agencyTag == 1 }">
+			<%-- <c:if test="${loginContext.agencyTag == 1 }">
+			</c:if> --%>
 				<li><a href="/view/mine/jk-doc/jk-doc.html" title="南昌微族接口文档" target="_blank">南昌微族接口文档</a></li>
-			</c:if>
 				<li><a data-href="http://htmlify.wps.cn/doc/index.html?ksyun=UD4oMeA6/word.html&theme=clear" data-title="平台操作指南" href="javascript:void(0)">平台操作指南</a></li>
 			</ul>
 		</dd>
@@ -331,7 +331,7 @@ function myselfinfo(){
 	layer.open({
         type: 2,
         title: "个人信息",
-        area: ['1000px', '500px'],
+        area: ['500px', '600px'],
         maxmin: false,
         closeBtn: 1,
         content: '/flowsys/agency/agency_info.do',

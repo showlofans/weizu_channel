@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.weizu.flowsys.web.channel.pojo.SpecialOpdType;
+
 /**
  * @description: 流量类型枚举
  * @projectName:weizu-channel
@@ -35,6 +37,7 @@ public enum PgTypeEnum {
 		this.desc = desc;
 		this.value = value;
 	}
+	
 	public static PgTypeEnum getEnum(Integer value)
 	{
 		if (value == null)
@@ -110,6 +113,51 @@ public enum PgTypeEnum {
 			attachmentTypeMapList.add(pgInServiceMap);
 		}
 
+		return attachmentTypeMapList;
+	}
+	
+	/**
+	 * @description: 获得特别的备注
+	 * @param value
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月27日 下午12:23:22
+	 */
+	public static String getSpecialDesc(int value){
+		// 获取附件类型枚举数组
+		PgTypeEnum[] enumArray = PgTypeEnum.values();
+		for (PgTypeEnum pgTypeEnum : enumArray) {
+			if(pgTypeEnum.getValue() == value && pgTypeEnum.getValue() != 1){
+				return pgTypeEnum.getDesc();
+			}
+		}
+		return null;
+	}
+	
+	public static List<Map<String, Object>> toSpecialList(List<SpecialOpdType> specialOpdList, List<Long> agnecyCnelList)
+	{
+		// 获取附件类型枚举数组
+		PgTypeEnum[] enumArray = PgTypeEnum.values();
+		
+		// 定义枚举list
+		List<Map<String, Object>> attachmentTypeMapList = new ArrayList<Map<String, Object>>(enumArray.length);
+		Map<String, Object> pgInServiceMap1 = new HashMap<String, Object>(2);
+		pgInServiceMap1.put("desc", PgTypeEnum.PGDATA.getDesc());
+		pgInServiceMap1.put("value", PgTypeEnum.PGDATA.getValue());
+		attachmentTypeMapList.add(pgInServiceMap1);
+		for (Long agencyCnelId : agnecyCnelList) {
+			for (SpecialOpdType opdType : specialOpdList) {
+				if(opdType.getChannelId() == agencyCnelId){
+					PgTypeEnum pgInServiceEnum = getEnum(opdType.getPgType());
+					if(pgInServiceEnum != null){
+						Map<String, Object> pgInServiceMap = new HashMap<String, Object>(2);
+						pgInServiceMap.put("desc", pgInServiceEnum.getDesc());
+						pgInServiceMap.put("value", pgInServiceEnum.getValue());
+						attachmentTypeMapList.add(pgInServiceMap);
+					}
+				}
+			}
+		} 
 		return attachmentTypeMapList;
 	}
 	

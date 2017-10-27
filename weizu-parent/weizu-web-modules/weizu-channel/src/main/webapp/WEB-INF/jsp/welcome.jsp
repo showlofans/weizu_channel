@@ -31,7 +31,8 @@
 </head>
 <body>
 <div class="page-container">
-	<p class="f-20 text-success">欢迎使用微族通道系统 <span class="f-14">Beta</span>版本</p>
+	<p class="f-20 text-success">欢迎使用微族通道系统 <span title="最后更新时间：${startupTime }" class="f-14">Beta</span>版本</p>
+	<p>最后更新时间：${startupTime }</p>
 	<!-- <p>登录次数：18 </p>
 	<p>上次登录IP：222.35.131.79.1  上次登录时间：2014-6-14 11:19:55</p> -->
 	<!-- <iframe width='738' height='523' class='preview-iframe' scrolling='no' frameborder='0' src='http://download.csdn.net/source/preview/2453923/e55ebbf1b3ddcc48ccaa5684a663488d' ></iframe> -->
@@ -94,16 +95,60 @@
 	</table> -->
 	<%-- <c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vst"></c:forEach> --%>
 	<c:forEach items="${resultMap.rateList }" var="ratePo" varStatus="vst">
-		<c:forEach items="${resultMap.billTypeEnums }" var="billTypeE" varStatus="vst1">
-			<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeE" varStatus="vst2">
-				<c:if test="${ratePo.serviceType == serviceTypeE.value && ratePo.billType == billTypeE.value }">
-					<h3>${serviceTypeE.desc }:${billTypeE.desc }:</h3>
-					移动：${ratePo.discountPo.discount0 }<br>
-					联通：${ratePo.discountPo.discount1 }<br>
-					电信：${ratePo.discountPo.discount2 }<br>
-				</c:if>
-			</c:forEach>
-		</c:forEach>
+			
+		<c:choose>
+			<c:when test="${empty ratePo.specialTag }">
+				<c:forEach items="${resultMap.billTypeEnums }" var="billTypeE" varStatus="vst1">
+					<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeE" varStatus="vst2">
+						<c:if test="${ratePo.serviceType == serviceTypeE.value && ratePo.billType == billTypeE.value }">
+							<c:choose>
+								<c:when test="${empty ratePo.discountPo.discount0 && empty ratePo.discountPo.discount1 && empty ratePo.discountPo.discount2 }">
+								</c:when>
+								<c:otherwise>
+									<h3>${serviceTypeE.desc }-${billTypeE.desc }</h3>
+								</c:otherwise>
+							</c:choose>
+							<c:choose>
+								<c:when test="${not empty ratePo.discountPo.discount0 }">
+									移动：${ratePo.discountPo.discount0 }<br>
+								</c:when>
+								<c:when test="${not empty ratePo.discountPo.discount1 }">
+									联通：${ratePo.discountPo.discount1 }<br>
+								</c:when>
+								<c:when test="${not empty ratePo.discountPo.discount2 }">
+									电信：${ratePo.discountPo.discount2 }<br>
+								</c:when>
+							</c:choose>
+							
+						</c:if>
+					</c:forEach>
+				</c:forEach>
+			</c:when>
+			<c:otherwise>
+				<span class="c-red">
+				<c:forEach items="${resultMap.billTypeEnums }" var="billTypeE" varStatus="vst1">
+					<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeE" varStatus="vst2">
+						<c:if test="${ratePo.serviceType == serviceTypeE.value && ratePo.billType == billTypeE.value}">
+							<h3>${serviceTypeE.desc }-${billTypeE.desc }-${ratePo.specialTag }</h3>
+							<c:choose>
+								<c:when test="${not empty ratePo.discountPo.discount0 }">
+									移动：${ratePo.discountPo.discount0 }<br>
+								</c:when>
+								<c:when test="${not empty ratePo.discountPo.discount1 }">
+									联通：${ratePo.discountPo.discount1 }<br>
+								</c:when>
+								<c:when test="${not empty ratePo.discountPo.discount2 }">
+									电信：${ratePo.discountPo.discount2 }<br>
+								</c:when>
+							</c:choose>
+						</c:if>
+					</c:forEach>
+				</c:forEach>
+				</span>
+			</c:otherwise>
+			
+		</c:choose>
+	
 	</c:forEach>
 	<%-- <c:if test="${not empty resultMap.map.nationWide }">
 		<h3>全国</h3>
@@ -251,6 +296,7 @@
 			</tr>
 		</tbody>
 	</table> -->
+	<span id="rootAgencyId">${loginContext.rootAgencyId }</span>
 </div>
 <footer class="footer mt-20">
 	<div class="container">
@@ -266,7 +312,10 @@
 <script type="text/javascript" src="/view/static/h-ui/js/H-ui.min.js"></script>
 <script type="text/javascript" src="/view/static/h-ui.admin/js/H-ui.admin.js"></script>
 <script  type="text/javascript">
-var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1265916742'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s22.cnzz.com/z_stat.php%3Fid%3D1265916742%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));
+var rootId = $('#rootAgencyId').html();
+if(rootId == 0 || rootId == '0'){
+	var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1265916742'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s22.cnzz.com/z_stat.php%3Fid%3D1265916742%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));
+}
 </script>
 </body>
 </html>

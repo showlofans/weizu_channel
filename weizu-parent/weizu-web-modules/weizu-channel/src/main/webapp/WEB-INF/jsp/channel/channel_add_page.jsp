@@ -427,11 +427,11 @@ function changeName(){
 /**checkBox的点击事件*/
 function checkBoxes(vart){
 	if($(vart).next().is(':hidden')){
+		$(vart).next().show();
 		 if(!$('#ep_info').is(':visible')){
 			 alert('还没有选定平台');
 			 $('#epName').focus();
 		 }else{
-			$(vart).next().show();
 			var operatorType = $("input[name='operatorType']:checked").val();
 			var scopeCityCode = $(vart).val();
 			//alert(scopeCityCode);

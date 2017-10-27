@@ -68,6 +68,8 @@ public class ProductCodeDAOImpl extends DaoImpl<ProductCodePo, Long> implements
 				paramsMap.put("serviceType", productCodePo.getServiceType());
 				paramsMap.put("operatorType", productCodePo.getOperatorType());
 				paramsMap.put("scopeCityCode", productCodePo.getScopeCityCode());
+				paramsMap.put("pgValidity", productCodePo.getPgValidity());
+				paramsMap.put("pgType", productCodePo.getPgType());
 //			}
 		}
 		return sqlSessionTemplate.selectOne("existProductCode", paramsMap);

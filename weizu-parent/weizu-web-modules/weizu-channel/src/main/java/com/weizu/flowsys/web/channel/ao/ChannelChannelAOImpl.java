@@ -14,8 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
+import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.pojo.DiscountPo;
@@ -106,11 +109,29 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 		channelPo.setChannelState(0);
 //		String serviceType = ServiceTypeEnum.getEnum(channelPo.getServiceType()).getDesc();
 //		channelPo.setChannelName(serviceType +"-"+channelPo.getChannelName());
+		
+		StringBuffer specialTagSb = new StringBuffer();
+		String cnelTypeS = ChannelTypeEnum.getSpecialDesc(channelPo.getChannelType());
+		if(StringHelper.isNotEmpty(cnelTypeS)){
+			specialTagSb.append(cnelTypeS);
+		}
+		String pgTypeS = PgTypeEnum.getSpecialDesc(channelPo.getPgType());
+		if(StringHelper.isNotEmpty(pgTypeS)){
+			specialTagSb.append("_").append(pgTypeS);
+		}
+		String pgValidityS = PgValidityEnum.getSpecialDesc(channelPo.getPgValidity());
+		if(StringHelper.isNotEmpty(pgValidityS)){
+			specialTagSb.append("_").append(pgValidityS);
+		}
+		channelPo.setSpecialTag(specialTagSb.toString());
+		
 		int cnelAddRes = channelChannelDao.channel_addList(channelPo);
 		String pgSizeStr = channelPo.getPgSize();
 		String [] pgSize = pgSizeStr.split("&");
 		List<CnelBindPgPo> cbpList = new LinkedList<CnelBindPgPo>();
 		String cnelName = channelPo.getChannelName();
+		
+		
 		for (String pgStr : pgSize) {
 			int sType = channelPo.getServiceType();
 			int oType = channelPo.getOperatorType();

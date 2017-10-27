@@ -528,9 +528,10 @@ public class AgencyController {
 	 * @createTime:2017年5月22日 上午10:14:54
 	 */
 	@RequestMapping(value= AgencyURL.CHILD_AGENCY_EDIT_PAGE)
-	public ModelAndView editAgencyPage(HttpServletRequest request,String id){
-		Map<String, Object> resultMap = agencyAO.prepareParam(id);
-		
+	public ModelAndView editAgencyPage(HttpServletRequest request,Integer id){
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		AgencyBackwardPo agencyPo = agencyAO.prepareParam(id);
+		resultMap.put("agencyPo", agencyPo);
 		return  new ModelAndView("/agency/child_agency_edit", "resultMap", resultMap);
 	}
 	/**

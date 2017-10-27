@@ -444,7 +444,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 	@Override
 	public String ajaxCommitOrder(Long orderId,Integer accountId,String chargeTelDetail) {
 		ChannelDiscountPo cd = channelDiscountDao.getCDbyAP(orderId, accountId);
-		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(cd.getServiceType(), chargeTelDetail, accountId,true);
+		/**todo*/
+		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo(chargeTelDetail, cd.getServiceType(), null, null, null) , accountId,true);
 		PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
 		if(ratePo != null){
 			int billType = ratePo.getBillType();//票务全部使用费率配置的票务

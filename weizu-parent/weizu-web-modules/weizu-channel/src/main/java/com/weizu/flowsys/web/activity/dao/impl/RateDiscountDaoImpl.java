@@ -145,10 +145,10 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年8月2日 上午11:34:40
 	 */
-	@Override
-	public List<RateDiscountPo> getRateListForCharge(Map<String, Object> params) {
-		return sqlSessionTemplate.selectList("getRateForCharge", params);
-	}
+//	@Override
+//	public List<RateDiscountPo> getRateListForCharge(Map<String, Object> params) {
+//		return sqlSessionTemplate.selectList("getRateForCharge", params);
+//	}
 	
 	@Override
 	public RateDiscountPo getRateForCharge(Map<String, Object> params) {
@@ -221,6 +221,13 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 		}
 //		return sqlSessionTemplate.update("updateRateDiscountByCDId", paramsMap);
 		return updateRes; 
+	}
+
+	@Override
+	public List<Long> getChannelByAgency(Integer agencyId) {
+		Map<String,Object> params = new HashMap<String, Object>();
+		params.put("agencyId", agencyId);
+		return sqlSessionTemplate.selectList("getChannelByAgency",params);
 	}
 
 }

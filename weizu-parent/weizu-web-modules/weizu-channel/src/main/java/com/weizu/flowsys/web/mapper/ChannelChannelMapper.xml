@@ -12,7 +12,7 @@
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.ChannelChannelPo" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
-    <result column="pg_size" property="pgSize" jdbcType="VARCHAR" />
+    <result column="special_tag" property="specialTag" jdbcType="VARCHAR" />
     <result column="ep_id" property="epId" jdbcType="INTEGER" />
     <result column="channel_total_use" property="channelTotalUse" jdbcType="INTEGER" />
     <result column="channel_total_amount" property="channelTotalAmount" jdbcType="DOUBLE" />
@@ -26,7 +26,7 @@
     <collection property="discountList" resultMap="com.weizu.flowsys.web.channel.dao.ChannelDiscountDao.BaseResultMap"></collection>
   </resultMap>
   <sql id="Base_Column_List" >
-    channel.id, channel.channel_name, pg_size, ep_id, channel_total_use, channel_total_amount, channel_total_profit, 
+    channel.id, channel.channel_name, special_tag, ep_id, channel_total_use, channel_total_amount, channel_total_profit, 
     channel_balance, channel_state, channel_use_state, channel.last_access,belong_agency_id,
     discount.id,channel_id,scope_city_code,channel_discount,operator_type,service_type,discount.bill_type,discount.channel_type,
     ep.ep_name ep_name
@@ -36,14 +36,60 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <id column="cd_id" property="cdId" jdbcType="BIGINT" />
     <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
-    <result column="pg_size" property="pgSize" jdbcType="VARCHAR" />
+    <result column="special_tag" property="specialTag" jdbcType="VARCHAR" />
     <result column="ep_id" property="epId" jdbcType="INTEGER" />
     <result column="ep_name" property="epName" jdbcType="VARCHAR" />
     <result column="channel_discount" property="channelDiscount" jdbcType="DOUBLE" />
   </resultMap>
   <sql id="Charge_Colume_List">
-  	cnel.id,cd.id cd_id,cnel.channel_name,cnel.pg_size,cnel.ep_id,ep.ep_name,cd.channel_discount
+  	cnel.id,cd.id cd_id,cnel.channel_name,cnel.special_tag,cnel.ep_id,ep.ep_name,cd.channel_discount
   </sql>
+  
+  <resultMap id="SpecialCnelResultMap" type="com.weizu.flowsys.web.channel.pojo.SpecialCnelType" >
+    <result column="channel_id" property="channelId" jdbcType="BIGINT" />
+    <result column="channel_type" property="channelType" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="SpecialCnel_Colume_List">
+  	cd.channel_id channel_id,cd.channel_type
+  </sql>
+  
+  <!-- 获得特殊通道类型 -->
+  <select id="getSpecialCnelType" parameterType="int" resultMap="SpecialCnelResultMap">
+  	select <include refid="SpecialCnel_Colume_List"></include> 
+  	from <include refid="t_channel"></include> cnel
+	INNER JOIN <include refid="t_discount"></include> cd
+	on cnel.id=cd.channel_id
+	<where>
+		<if test="#{_parameter != null}">
+			cd.channel_type != #{_parameter}
+		</if>
+	</where>
+  </select>
+  
+  <resultMap id="SpecialOpdResultMap" type="com.weizu.flowsys.web.channel.pojo.SpecialOpdType" >
+    <result column="channel_id" property="channelId" jdbcType="BIGINT" />
+    <result column="pg_type" property="pgType" jdbcType="INTEGER" />
+    <result column="pg_validity" property="pgValidity" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="SpecialOpd_Colume_List">
+  	cbg.channel_id,opd.pg_type,opd.pg_validity
+  </sql>
+  
+  <!-- 获得特殊包体类型 -->
+  <select id="getSpecialOpdType" parameterType="map" resultMap="SpecialOpdResultMap">
+  	select <include refid="SpecialOpd_Colume_List"></include> 
+    FROM <include refid="t_cbp"></include> cbg 
+	INNER JOIN <include refid="t_pg"></include> opd
+	on cbg.pg_id=opd.id 
+	<where>
+		<if test="#{pgType != null}">
+			opd.pg_type != #{pgType}
+		</if>
+		<if test="#{pgValidity != null}">
+			or opd.pg_validity != #{pgValidity}
+		</if>
+	</where>
+  </select>
   
   <!-- <resultMap id="SimpleChannelMap" type="com.weizu.flowsys.web.channel.pojo.ChannelChannelPo" >
   	<id column="id" property="id" jdbcType="BIGINT" />

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html>
 <!--[if IE 8]><html class="ie8" lang="en"><![endif]-->
 <!--[if IE 9]><html class="ie9" lang="en"><![endif]-->
@@ -58,6 +59,8 @@
 				<input type="text" id="epName" name="epName" class="input-text" required style="width:400px" autocomplete="off"  placeholder="请输入平台名称" >
 			</div>
 		</div>
+	</c:if>
+	<c:if test="${resultMap.channelTypeEnums != null && fn:length(resultMap.channelTypeEnums) > 0 }">
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">通道类型：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
@@ -71,6 +74,8 @@
 				</span>
 			</div>
 		</div>
+	</c:if>
+	<c:if test="${resultMap.pgTypeEnums != null && fn:length(resultMap.pgTypeEnums) > 0 }">
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">流量类型：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
@@ -84,6 +89,8 @@
 				</span>
 			</div>
 		</div>
+	</c:if>
+	<c:if test="${resultMap.pgValidityEnums != null && fn:length(resultMap.pgValidityEnums) > 0 }">
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">有效期：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
@@ -425,7 +432,10 @@
 		} */
 		$("#pgPrice").val("");//重置参数
   	 	 $("#orderAmount").val("");
-  		ajaxPg();
+  	 	var sType1 = $("#select-servce-type").val();
+  	 	if(sType1 != null && sType1 != ''){
+	  		ajaxPg();
+  	 	}
 	}
 	/**
 	 * 乘法运算，避免数据相乘小数点后产生多位数和计算精度损失。
@@ -521,6 +531,7 @@
     	 //alert(serviceType);
          if(tel){
 	    	 var carrier = $("#chargeTelDetail").val();
+	    	 alert(carrier);
 	    	 var serviceType = $("#select-servce-type").val();
 	    	 
              if(reg.test(tel)){
@@ -540,11 +551,11 @@
             	//查询流量包
             	 	//ajax2();
            	 
+       	  var pgValidity = $("#pgValidity").val();
+    	  var pgType = $("#pgType").val();
+    	  var channelType = $("#channelType").val();
        	   if(rootAgencyId == 0){
 	       	  var epName = $('#epName').val();
-	       	  var pgValidity = $("#pgValidity").val();
-	    	  var pgType = $("#pgType").val();
-	    	  var channelType = $("#channelType").val();
 	       	  
 	       	 // alert(epEngId);
 	       	  $.ajax({
@@ -629,7 +640,7 @@
 	       	   }else{
 		       		$.ajax({
 		                type: "post",
-		                url: '/flowsys/chargePg/pgList_forPurchase.do?operatorName='+ carrier + '&serviceType=' + serviceType,
+		                url: '/flowsys/chargePg/pgList_forPurchase.do?carrier='+ carrier + '&pgType=' + pgType+ '&channelType=' + channelType+ '&pgValidity=' + pgValidity + '&serviceType=' + serviceType,
 		                dataType: "json",
 		                async: false,
 		                contentType: "application/x-www-form-urlencoded; charset=utf-8", 
@@ -640,7 +651,7 @@
 		              		var dataRole = eval(data);
 		              		//alert(dataRole.length);
 		              	  if($(".pgNameType") == undefined || $(".pgNameType").length <= 0){
-		                  var appendData = "<label class='form-label col-xs-4 col-sm-3'><span class='c-red'>*</span>包体大小：</label><div class='formControls col-xs-8 col-sm-9 skin-minimal'>"; 
+		                  var appendData = "<label class='form-label col-xs-4 col-sm-3'><span class='c-red'>*</span>选择包体：</label><div class='formControls col-xs-8 col-sm-9 skin-minimal'>"; 
 		                  if(dataRole.length > 0){
 		                      for(var i=0; i < dataRole.length; i++){
 		                    	   var price = dataRole[i].pgPrice;

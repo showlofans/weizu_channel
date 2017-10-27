@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.weizu.flowsys.web.channel.pojo.SpecialCnelType;
+import com.weizu.flowsys.web.channel.pojo.SpecialOpdType;
+
 /**
  * @description: 通道类型枚举
  * @projectName:weizu-channel
@@ -65,6 +68,24 @@ public enum ChannelTypeEnum {
 	}
 	
 	/**
+	 * @description: 获得特别的备注
+	 * @param value
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月27日 下午12:23:22
+	 */
+	public static String getSpecialDesc(int value){
+		// 获取附件类型枚举数组
+		ChannelTypeEnum[] enumArray = ChannelTypeEnum.values();
+		for (ChannelTypeEnum ChannelTypeEnum : enumArray) {
+			if(ChannelTypeEnum.getValue().equals(value)  && ChannelTypeEnum.ORDINARY.getValue() != value){
+				return ChannelTypeEnum.getDesc();
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * @description:将枚举转换为MAP，转换成的MAP的key值为枚举值，value值为一个MAP，包含desc和value两个key，值分别为枚举的desc和value值
 	 * @return
 	 * @author:POP产品研发部 宁强
@@ -115,6 +136,30 @@ public enum ChannelTypeEnum {
 			attachmentTypeMapList.add(billTypeMap);
 		}
 
+		return attachmentTypeMapList;
+	}
+	
+	public static List<Map<String, Object>> toSpecialList(List<SpecialCnelType> specialCnelList, List<Long> agnecyCnelList)
+	{
+		// 定义枚举list
+		List<Map<String, Object>> attachmentTypeMapList = new ArrayList<Map<String, Object>>();
+		Map<String, Object> pgInServiceMap1 = new HashMap<String, Object>(2);
+		pgInServiceMap1.put("desc", ChannelTypeEnum.ORDINARY.getDesc());
+		pgInServiceMap1.put("value", ChannelTypeEnum.ORDINARY.getValue());
+		attachmentTypeMapList.add(pgInServiceMap1);
+		for (Long agencyCnelId : agnecyCnelList) {
+			for (SpecialCnelType cnelType : specialCnelList) {
+				if(cnelType.getChannelId() == agencyCnelId){
+					ChannelTypeEnum pgInServiceEnum = getEnum(cnelType.getChannelType());
+					if(pgInServiceEnum != null){
+						Map<String, Object> pgInServiceMap = new HashMap<String, Object>(2);
+						pgInServiceMap.put("desc", pgInServiceEnum.getDesc());
+						pgInServiceMap.put("value", pgInServiceEnum.getValue());
+						attachmentTypeMapList.add(pgInServiceMap);
+					}
+				}
+			}
+		} 
 		return attachmentTypeMapList;
 	}
 	

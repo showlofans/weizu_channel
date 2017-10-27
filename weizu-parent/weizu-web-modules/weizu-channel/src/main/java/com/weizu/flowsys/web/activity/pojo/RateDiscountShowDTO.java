@@ -20,6 +20,8 @@ public class RateDiscountShowDTO {
 	@TempField
 	private String discount;				//简化折扣
 	
+	private String specialTag;				//通道特殊类型
+	
 	public RateDiscountShowDTO(DiscountPo discountPo, Integer billType) {
 		super();
 		this.discountPo = discountPo;
@@ -32,6 +34,7 @@ public class RateDiscountShowDTO {
 		this.discountPo = discountPo;
 		this.billType = billType;
 		this.serviceType = serviceType;
+//		this.specialTag = specialTag;
 	}
 
 
@@ -39,6 +42,14 @@ public class RateDiscountShowDTO {
 		super();
 		this.billType = billType;
 		this.discount = discount;
+	}
+
+	public String getSpecialTag() {
+		return specialTag;
+	}
+
+	public void setSpecialTag(String specialTag) {
+		this.specialTag = specialTag;
 	}
 
 	public Integer getServiceType() {

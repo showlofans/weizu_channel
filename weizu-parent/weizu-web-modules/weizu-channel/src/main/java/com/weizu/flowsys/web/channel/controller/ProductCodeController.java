@@ -78,7 +78,7 @@ public class ProductCodeController {
 //			}
 			if( epList != null && epList.size() > 0){
 				Integer epId = epList.get(0).getId();
-				List<OperatorPgDataPo> pgList = productCodeAO.initPgList(new OneCodePo(epId, ServiceTypeEnum.NATION_WIDE.getValue(), OperatorTypeEnum.MOBILE.getValue(), ScopeCityEnum.QG.getValue(), PgTypeEnum.PGDATA.getValue(), PgValidityEnum.month_day_data.getValue()));//默认移动全国流量：epId,0, 0,ScopeCityEnum.QG.getValue()
+				List<OperatorPgDataPo> pgList = productCodeAO.initPgList(new OneCodePo(epId, ServiceTypeEnum.NATION_WIDE.getValue(), OperatorTypeEnum.MOBILE.getValue(), ScopeCityEnum.QG.getValue(), PgTypeEnum.PGDATA.getValue(), PgValidityEnum.MONTH_DAY_DATA.getValue()));//默认移动全国流量：epId,0, 0,ScopeCityEnum.QG.getValue()
 				resultMap.put("pgList", pgList);
 				resultMap.put("epId", epList.get(0).getId());
 			}

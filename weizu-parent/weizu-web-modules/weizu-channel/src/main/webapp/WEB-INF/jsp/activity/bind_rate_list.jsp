@@ -37,20 +37,23 @@
 	<div class="text-c">
 		<form action="/flowsys/rate/bind_rate_list.do" method="post" id="formD" name="formD">
 		
-				通道名称：<sapn class="c-red">${resultMap.channelName }</sapn>
+				通道名称：<sapn class="c-red" data-toggle="tooltip" data-placement="bottom" title="${resultMap.specialTag }">${resultMap.channelName }</sapn>
 				
 			通道类型
 			<c:forEach items="${resultMap.billTypeEnums }" var="billEnum" varStatus="vs">
 			<c:forEach items="${resultMap.stypeEnums }" var="stype" varStatus="vs1">
 			<c:forEach items="${resultMap.otypeEnums }" var="otype" varStatus="vs2">
 				<c:if test="${resultMap.channelBillType==billEnum.value && stype.value == resultMap.searchParams.serviceType && resultMap.searchParams.operatorType == otype.value }">
+					<input type="hidden" id="serviceType" value="${resultMap.searchParams.serviceType }"/> 
+					<input type="hidden" id="operatorType" value="${resultMap.searchParams.operatorType }"/> 
 					<span id="billTypeDesc"  data-toggle="tooltip" data-placement="bottom" title="${stype.desc } ${otype.desc } "  class="c-red">
-							${billEnum.desc }
+							${billEnum.desc } 
 					</span>
 				</c:if>
 			</c:forEach>
 			</c:forEach>
 			</c:forEach>
+			<input type="hidden" id="specialTag" value="${resultMap.specialTag }"/> 
 			通道折扣：<span id=""  class="c-red">${resultMap.channelDiscount }</span>
 			</sapn>
 				<%-- 业务类型：<span class="select-box inline">
@@ -270,11 +273,12 @@ function batch_bind(title,url,id,w,h){
 	var serviceType = $('#serviceType').val();
 	var operatorType = $('#operatorType').val();
 	var billType = $('#billTypeRate').val();
+	var specialTag = $('#specialTag').val();
 	//alert(rateDiscountId);
 	if(rateDiscountId == ""){
 		alert("没有可选的折扣！");
 	}else{
-		url = url + '?scopeCityCode='+scopeCityCode+'&serviceType='+serviceType+'&operatorType='+operatorType+'&billType='+billType + '&rateDiscountId=' + rateDiscountId + '&activeDiscount=' + activeDiscount; 
+		url = url + '?scopeCityCode='+scopeCityCode+'&serviceType='+serviceType+'&specialTag='+specialTag+'&operatorType='+operatorType+'&billType='+billType + '&rateDiscountId=' + rateDiscountId + '&activeDiscount=' + activeDiscount; 
 		var index = layer.open({
 			type: 2,
 			title: title,

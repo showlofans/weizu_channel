@@ -357,39 +357,35 @@ public class AgencyAOImpl implements AgencyAO {
 	 * @createTime:2017年5月22日 下午4:08:47
 	 */
 	@Override
-	public Map<String, Object> prepareParam(String id) {
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		if(StringHelper.isNotEmpty(id)){
-			AgencyBackwardPo agBackwardPo = agencyVODao.get(Integer.parseInt(id));
-			if(agBackwardPo != null){
-				if(StringHelper.isEmpty(agBackwardPo.getUserApiKey()) && agBackwardPo.getAgencyTag() == AgencyTagEnum.DATA_USER.getValue())
-				{
-					UUIDGenerator generator = new UUIDGenerator();
-					String uuid = generator.generate().toString();
-	//				String md5ApiKey = MD5.getMd5(agBackwardPo.getUserName())
-					agBackwardPo.setUserApiKey(uuid);
-					int res = agencyVODao.update(agBackwardPo);//更新代理商apikey信息
-					if(res < 1)//没有更新成功也不展示出来
-					{
-						agBackwardPo.setUserApiKey("");//不能让页面提交过来
-					}
-				}else if(agBackwardPo.getAgencyTag() == AgencyTagEnum.PLATFORM_USER.getValue()){
-					agBackwardPo.setUserApiKey("没有");
-				}
-				//取随便一家的信用值，因为对公对私的信用额统一了
-//				ChargeAccountPo chargeAccountPo = chargeAccountAO.getAccountByAgencyId(Integer.parseInt(id),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-			
-//				agBackwardPo.setAccountCredit(chargeAccountPo.getAccountCredit());//设置信用值
-				
-//				List<RateBackwardPo> list = rateBackwardDao.selectByRootId(agBackwardPo.getRootAgencyId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-//				List<RateBackwardPo> billList = rateBackwardDao.selectByRootId(agBackwardPo.getRootAgencyId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
-//				resultMap.put("rateList", list);//费率列表
-//				resultMap.put("billRateList", billList);//带票费率列表
-				resultMap.put("agencyPo", agBackwardPo);
-			}
-		}
+	public AgencyBackwardPo prepareParam(Integer id) {
+		AgencyBackwardPo agBackwardPo = agencyVODao.get(id);
+//		if(agBackwardPo != null){
+//			if(StringHelper.isEmpty(agBackwardPo.getUserApiKey()) && agBackwardPo.getAgencyTag() == AgencyTagEnum.DATA_USER.getValue())
+//			{
+//				UUIDGenerator generator = new UUIDGenerator();
+//				String uuid = generator.generate().toString();
+////				String md5ApiKey = MD5.getMd5(agBackwardPo.getUserName())
+//				agBackwardPo.setUserApiKey(uuid);
+//				int res = agencyVODao.update(agBackwardPo);//更新代理商apikey信息
+//				if(res < 1)//没有更新成功也不展示出来
+//				{
+//					agBackwardPo.setUserApiKey("");//不能让页面提交过来
+//				}
+//			}else if(agBackwardPo.getAgencyTag() == AgencyTagEnum.PLATFORM_USER.getValue()){
+//				agBackwardPo.setUserApiKey("没有");
+//			}
+//			//取随便一家的信用值，因为对公对私的信用额统一了
+////				ChargeAccountPo chargeAccountPo = chargeAccountAO.getAccountByAgencyId(Integer.parseInt(id),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+//		
+////				agBackwardPo.setAccountCredit(chargeAccountPo.getAccountCredit());//设置信用值
+//			
+////				List<RateBackwardPo> list = rateBackwardDao.selectByRootId(agBackwardPo.getRootAgencyId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+////				List<RateBackwardPo> billList = rateBackwardDao.selectByRootId(agBackwardPo.getRootAgencyId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
+////				resultMap.put("rateList", list);//费率列表
+////				resultMap.put("billRateList", billList);//带票费率列表
+//		}
 		
-		return resultMap;
+		return agBackwardPo;
 	}
 
 	/**

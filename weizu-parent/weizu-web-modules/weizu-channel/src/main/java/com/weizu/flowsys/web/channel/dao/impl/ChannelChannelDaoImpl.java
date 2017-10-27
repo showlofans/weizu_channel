@@ -23,6 +23,8 @@ import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
+import com.weizu.flowsys.web.channel.pojo.SpecialCnelType;
+import com.weizu.flowsys.web.channel.pojo.SpecialOpdType;
 
 @Repository(value = "channelChannelDao")
 public class ChannelChannelDaoImpl extends DaoImpl<ChannelChannelPo, Long> implements
@@ -146,6 +148,18 @@ public class ChannelChannelDaoImpl extends DaoImpl<ChannelChannelPo, Long> imple
 	@Override
 	public List<ChargeChannelPo> list_charge_channel(Map<String, Object> params) {
 		return sqlSessionTemplate.selectList("list_charge_channel",params);
+	}
+	@Override
+	public List<SpecialCnelType> getSpecialCnelType(Integer cnelType) {
+		return sqlSessionTemplate.selectList("getSpecialCnelType", cnelType);
+	}
+	@Override
+	public List<SpecialOpdType> getSpecialOpdType(SpecialOpdType specialOpdType) {
+		Map<String,Object> params = new HashMap<String, Object>();
+		params.put("pgType", specialOpdType.getPgType());
+		params.put("pgValidity", specialOpdType.getPgValidity());
+		
+		return sqlSessionTemplate.selectList("getSpecialOpdType", params);
 	}
 
 }

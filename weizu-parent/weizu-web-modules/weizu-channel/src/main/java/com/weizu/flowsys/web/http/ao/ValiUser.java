@@ -91,7 +91,7 @@ public class ValiUser {
 		}
 		
 		if(StringHelper.isEmpty(pgDataPo.getPgValidity())){//默认使用月包
-			whereP.and("pg_validity", "=", PgValidityEnum.month_day_data.getValue());
+			whereP.and("pg_validity", "=", PgValidityEnum.MONTH_DAY_DATA.getValue());
 		}else{
 			whereP.and("pg_validity", "=", pgDataPo.getPgValidity());
 			

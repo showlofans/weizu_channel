@@ -23,6 +23,8 @@ public class RateDiscountPo extends Po {
     private Long activeId;					//父级折扣Id
     
     private Long channelDiscountId;
+    @TempField
+    private String specialTag;				//通道特殊类型
     
     private Integer billType;				//是否带票（0-一般不带票，1-带票高级）
     
@@ -62,10 +64,20 @@ public class RateDiscountPo extends Po {
 //	public void setDiscountList(List<RateDiscountPo> discountList) {
 //		this.discountList = discountList;
 //	}
-
+    
 	public Integer getAgencyId() {
 		return agencyId;
 	}
+
+	public String getSpecialTag() {
+		return specialTag;
+	}
+
+	public void setSpecialTag(String specialTag) {
+		this.specialTag = specialTag;
+	}
+
+
 
 	public void setAgencyId(Integer agencyId) {
 		this.agencyId = agencyId;

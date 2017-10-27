@@ -19,11 +19,11 @@ public class ChargeParams {
 	private String orderIdFrom;			//用户传过来的订单号***********
 	
 	private Integer pgType;				//流量类型（1-流量包，2-流量池）*****
-    
+	private Integer channelType;		//通道类型（1-普通通道包，2-红包通道，3-转移包，4-共享包）********
     private String pgValidity;			//流量有效期(PgValidityEnum)********
 	
 	public ChargeParams(String username, String number, Integer flowsize,
-			Integer scope, String sign, Integer billType, String orderIdFrom) {
+			Integer scope, String sign, Integer billType) {
 		super();
 		this.username = username;
 		this.number = number;
@@ -31,7 +31,6 @@ public class ChargeParams {
 		this.scope = scope;
 		this.sign = sign;
 		this.billType = billType;
-		this.orderIdFrom = orderIdFrom;
 	}
 	
 	public ChargeParams(String number, Integer flowsize, Integer billType) {
@@ -41,7 +40,14 @@ public class ChargeParams {
 		this.billType = billType;
 	}
 
-	
+	public Integer getChannelType() {
+		return channelType;
+	}
+
+	public void setChannelType(Integer channelType) {
+		this.channelType = channelType;
+	}
+
 	public Integer getPgType() {
 		return pgType;
 	}

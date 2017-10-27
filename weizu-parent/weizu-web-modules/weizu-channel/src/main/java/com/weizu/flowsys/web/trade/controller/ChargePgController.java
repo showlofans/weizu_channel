@@ -47,12 +47,15 @@ import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
+import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
+import com.weizu.flowsys.web.channel.pojo.SpecialCnelType;
+import com.weizu.flowsys.web.channel.pojo.SpecialOpdType;
 import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.ao.AccountPurchaseAO;
@@ -94,13 +97,50 @@ public class ChargePgController {
 	private AccountPurchaseAO agencyPurchaseAO;
 	@Resource
 	private AgencyAO agencyAO;
-//	@Resource
-//	private ChannelChannelDao channelChannelDao;
+	@Resource
+	private ChannelChannelDao channelChannelDao;
 	
 	@Resource
 	private ChannelDiscountDao channelDiscountDao;
 //	@Resource
 //	private ChannelDiscountAO channelDiscountAO;
+	/**
+	 * @description:获得流量包购买列表
+	 * @param response
+	 * @param operatorType
+	 * @author:POP产品研发部 宁强
+	 * @throws UnsupportedEncodingException 
+	 * @createTime:2017年5月31日 下午12:04:22
+	 */
+	@RequestMapping(value=ChargePgURL.PG_CHARGE_PAGE)
+	public ModelAndView pg_charge_page(@RequestParam(value="msg",required=false)String msg,HttpServletRequest request){
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		Map<String,Object> resultMap = new HashMap<String,Object>();
+		if(agencyVO != null){
+			if(agencyVO.getRootAgencyId() != 0){
+				List<SpecialCnelType> specialCnelList = channelChannelDao.getSpecialCnelType(ChannelTypeEnum.ORDINARY.getValue());
+				
+				List<SpecialOpdType> specialOpdList = channelChannelDao.getSpecialOpdType(new SpecialOpdType(PgTypeEnum.PGDATA.getValue(), PgValidityEnum.MONTH_DAY_DATA.getValue()));
+				
+				List<Long> agnecyCnelList = rateDiscountDao.getChannelByAgency(agencyVO.getId());
+				
+				resultMap.put("pgTypeEnums", PgTypeEnum.toSpecialList(specialOpdList, agnecyCnelList));					//
+				resultMap.put("pgValidityEnums", PgValidityEnum.toSpecialList(specialOpdList, agnecyCnelList));			//
+				resultMap.put("channelTypeEnums", ChannelTypeEnum.toSpecialList(specialCnelList, agnecyCnelList));		//
+			}else{
+				resultMap.put("pgTypeEnums", PgTypeEnum.toList());					//
+				resultMap.put("pgValidityEnums", PgValidityEnum.toList());			//
+				resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());		//
+			}
+			
+			resultMap.put("serviceTypeEnum", ServiceTypeEnum.toList());
+//		Map<String,Object> params = new HashMap<String,Object>();
+			resultMap.put("pageMsg", msg);
+			return new ModelAndView("/trade/pg_charge_page","resultMap",resultMap);
+		}else{
+			return new ModelAndView("error", "errorMsg", "当前登录用户不合法");
+		}
+	}
 	/** 
 	 * @description: 充值页面异步获得充值通道
 	 * <br>页面： pg_charge_page
@@ -328,30 +368,6 @@ public class ChargePgController {
 			e.printStackTrace();
 		}
 	}
-	/**
-	 * @description:获得流量包购买列表
-	 * @param response
-	 * @param operatorType
-	 * @author:POP产品研发部 宁强
-	 * @throws UnsupportedEncodingException 
-	 * @createTime:2017年5月31日 下午12:04:22
-	 */
-	@RequestMapping(value=ChargePgURL.PG_CHARGE_PAGE)
-	public ModelAndView pg_charge_page(@RequestParam(value="msg",required=false)String msg){
-		Map<String,Object> resultMap = new HashMap<String,Object>();
-		resultMap.put("serviceTypeEnum", ServiceTypeEnum.toList());
-		
-		Map<String,Object> params = new HashMap<String,Object>();
-		
-		
-		rateDiscountDao.getRateListForCharge(params);
-		
-		resultMap.put("pgTypeEnums", PgTypeEnum.toList());					//
-		resultMap.put("pgValidityEnums", PgValidityEnum.toList());			//
-		resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());		//
-		resultMap.put("pageMsg", msg);
-		return new ModelAndView("/trade/pg_charge_page","resultMap",resultMap);
-	}
 	
 	/**
 	 * @description: 获得流量充值的采购金额(通道)
@@ -419,7 +435,7 @@ public class ChargePgController {
 	 * @createTime:2017年8月2日 上午10:55:16
 	 */
 	@RequestMapping(value= ChargePgURL.AJAX_PURCHASE_PRICE)
-	public void ajaxPurchassPrice(HttpServletRequest request, Double pgPrice, Integer serviceType,String carrier,HttpServletResponse response){
+	public void ajaxPurchassPrice(HttpServletRequest request, Double pgPrice, ChargeChannelParamsPo ccpp,HttpServletResponse response){
 		try {
 //			AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 			ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");//用不带票账户充值
@@ -448,7 +464,7 @@ public class ChargePgController {
 //			}
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 			if(accountPo != null){
-				RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(serviceType, carrier, accountPo.getId(), false);//获得对私的充值费率
+				RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(ccpp, accountPo.getId(), false);//获得对私的充值费率
 				if(pgPrice != null && ratePo != null){//判断余额
 					Double purchasePrice = NumberTool.mul(pgPrice, ratePo.getActiveDiscount());//利率后的价格
 					ChargeAccountPo account1 = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");

@@ -135,7 +135,7 @@
 					<tr class="text-c">
 						<td>${channel.id }</td>
 						<td>${channel.epName }</td>
-						<td><span data-toggle="tooltip" data-placement="top" title="${channel.pgSize }">${channel.channelName }</span></td>
+						<td>${channel.channelName }</td><!-- <span data-toggle="tooltip" data-placement="top" title="${channel.pgSize }"></span> -->
 						<%-- <td><c:forEach items="${resultMap.serviceTypeEnums }" var="serTypeEnum" varStatus="vs1">
 								<c:if test="${channel.serviceType == serTypeEnum.value }">
 									<span>${serTypeEnum.desc }</span>
@@ -145,6 +145,7 @@
 						</td>  --%>
 						<td style="display:none;">${channel.serviceType }</td>
 						<td style="display:none;">${channel.operatorType }</td>
+						<td style="display:none;">${channel.specialTag }</td> 
 						<%-- <td>${channel.channelTotalUse }</td>
 						<td>${channel.channelTotalAmount }</td> --%>
 						<td>
@@ -284,7 +285,7 @@
 							</c:forEach>
 						</td> --%>
 						<td>
-							<c:forEach items="${resultMap.serviceTypeEnums }" var="serTypeEnum" varStatus="vs1">
+							<%-- <c:forEach items="${resultMap.serviceTypeEnums }" var="serTypeEnum" varStatus="vs1">
 								<c:forEach items="${resultMap.pgTypeEnums }" var="pgTypeEnum" varStatus="vs2">
 									<c:forEach items="${resultMap.pgValidityEnums }" var="pgValidityEnum" varStatus="vs3">
 										<c:forEach items="${resultMap.channelTypeEnums }" var="channelTypeEnum" varStatus="vs4">
@@ -293,12 +294,22 @@
 													<c:forEach items="${channel.pgList }"  var="pgData" varStatus="vst">
 														${pgData.pgSize }&
 													</c:forEach>
-													<%-- ${channel.pgSize } --%>
+													${channel.pgSize }
 												</span>
 											</c:if>
 										</c:forEach>
 									</c:forEach>
 								</c:forEach>
+							</c:forEach> --%>
+							<c:forEach items="${resultMap.serviceTypeEnums }" var="serTypeEnum" varStatus="vs1">
+								<c:if test="${channel.serviceType == serTypeEnum.value }">
+									<span data-toggle="tooltip" data-placement="top" title="${serTypeEnum.desc } ${channel.specialTag }">
+										<c:forEach items="${channel.pgList }"  var="pgData" varStatus="vst">
+											${pgData.pgSize }&
+										</c:forEach>
+										<%-- ${channel.pgSize } --%>
+									</span>
+								</c:if>
 							</c:forEach>
 						</td>
 						<%-- <td>${channel.lastAccessStr }</td> --%>
@@ -361,11 +372,13 @@ function getRateList(url,objt){
 	var channelId = $(objt).parent().parent().children(":first").html();
 	var serviceType = $(objt).parent().parent().children(":eq(3)").html();
 	var operatorType = $(objt).parent().parent().children(":eq(4)").html();
+	var specialTag = $(objt).parent().parent().children(":eq(5)").html();
+	//alert(specialTag)
 	//alert(serviceType);
 	//alert(operatorType);
 	//alert(channelId);
 	$("#channelId").val(channelId);
-	 $(objt).attr('data-href',url+'?'+'channelId='+Number(channelId)+'&serviceType='+ serviceType+'&operatorType='+ operatorType); //+$('form').serialize()
+	 $(objt).attr('data-href',url+'?'+'channelId='+Number(channelId)+'&serviceType='+ serviceType+'&operatorType='+ operatorType+'&specialTag='+ specialTag); //+$('form').serialize()
 		Hui_admin_tab(objt);
 }
 /**编辑通道页面*/

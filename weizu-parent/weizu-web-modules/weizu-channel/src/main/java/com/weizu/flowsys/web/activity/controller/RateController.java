@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -696,7 +697,7 @@ public class RateController {
 	 * @createTime:2017年7月10日 上午11:53:39
 	 */
 	@RequestMapping(value=RateURL.BIND_RATE_LIST)
-	public ModelAndView getBindRateList(AccountActiveRatePo aarp,Long channelId, @RequestParam(value = "pageNoLong", required = false) Long pageNoLong,HttpServletRequest request){
+	public ModelAndView getBindRateList(AccountActiveRatePo aarp,Long channelId,String specialTag, @RequestParam(value = "pageNoLong", required = false) Long pageNoLong,HttpServletRequest request){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 //		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		PageParam pageParam = null;
@@ -712,6 +713,7 @@ public class RateController {
 		resultMap.put("bindStateEnums", BindStateEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
+		resultMap.put("specialTag", specialTag);
 		resultMap.put("searchParams", aarp);
 		
 		return new ModelAndView("/activity/bind_rate_list","resultMap",resultMap);
@@ -959,6 +961,7 @@ public class RateController {
 //		resultMap.put("map", map);
 		resultMap.put("rateList", rateList);
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
+//		resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
 		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 		return new ModelAndView("/welcome", "resultMap", resultMap);
 	}

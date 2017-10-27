@@ -41,6 +41,7 @@ import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 import com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
+import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
@@ -341,7 +342,7 @@ public class ChargeImpl implements IChargeFacet {
 					sqlMap.put("accountPo", accountPo);
 					String chargeTelDetail = resMap.get("chargeTelDetail").toString();
 					//折扣是忽略包体大小的
-					RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(chargeParams.getScope(), chargeTelDetail, accountPo.getId(),false);
+					RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo(chargeTelDetail, chargeParams.getScope(), null, null, null), accountPo.getId(),false);
 					if(ratePo == null){
 						chargeEnum = ChargeStatusEnum.SCOPE_RATE_UNDEFINED;
 						charge = new Charge(chargeEnum.getValue(),chargeEnum.getDesc(), null);

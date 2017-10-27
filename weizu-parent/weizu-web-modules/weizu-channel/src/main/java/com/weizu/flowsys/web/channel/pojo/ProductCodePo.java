@@ -39,9 +39,29 @@ public class ProductCodePo extends Po{
     @TempField
     private Integer serviceType;	//包体类型
     @TempField
+    private Integer pgType;				//流量类型（1-流量包，2-流量池）
+    @TempField
+    private String pgValidity;			//流量有效期(PgValidityEnum)
+    @TempField
     private String epName;			//平台名称
 
-    public String getProductName() {
+    public Integer getPgType() {
+		return pgType;
+	}
+
+	public void setPgType(Integer pgType) {
+		this.pgType = pgType;
+	}
+
+	public String getPgValidity() {
+		return pgValidity;
+	}
+
+	public void setPgValidity(String pgValidity) {
+		this.pgValidity = pgValidity;
+	}
+
+	public String getProductName() {
 		return productName;
 	}
 

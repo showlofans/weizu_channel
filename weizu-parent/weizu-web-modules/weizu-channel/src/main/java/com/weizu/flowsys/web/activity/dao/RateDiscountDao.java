@@ -127,7 +127,7 @@ public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年8月2日 上午11:33:52
 	 */
-	List<RateDiscountPo> getRateListForCharge(Map<String, Object> params);
+//	List<RateDiscountPo> getRateListForCharge(Map<String, Object> params);
 	
 	/**
 	 * @description: 获得充值的折扣
@@ -156,5 +156,14 @@ public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	 * @createTime:2017年7月13日 下午1:30:03
 	 */
 //	List<String> getDistinctScope(RateDiscountPo rateDiscountPo);
+	
+	/**
+	 * @description:通过代理商id找到它绑定的通道id
+	 * @param agencyId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月27日 上午10:43:13
+	 */
+	List<Long> getChannelByAgency(Integer agencyId);
 	
 }

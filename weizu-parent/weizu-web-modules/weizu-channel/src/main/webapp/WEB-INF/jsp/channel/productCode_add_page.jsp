@@ -175,6 +175,8 @@ $().ready(function() {
 	    	            	  operatorType :function(){return $("#operatorType").val().trim();},
 	    	            	  serviceType :function(){return $("#serviceType").val().trim();},
 	    	            	  scopeCityCode :function(){return $("#scopeCityCode").val().trim();},
+	    	            	  pgType :function(){return $("#pgType").val().trim();},
+	    	            	  pgValidity :function(){return $("#pgValidity").val().trim();},
 	    	               	  productCode :function(){return $("#productCode").val().trim();}
 	    					}
     				},

@@ -1,8 +1,6 @@
 //package crud.aotest;
 //
-//import java.util.HashMap;
 //import java.util.List;
-//import java.util.Map;
 //
 //import javax.annotation.Resource;
 //
@@ -11,13 +9,8 @@
 //import org.springframework.test.context.ContextConfiguration;
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
-//import com.aiyi.base.pojo.PageParam;
-//import com.weizu.flowsys.util.Pagination;
-//import com.weizu.flowsys.web.activity.ao.AgencyActiveChannelAO;
 //import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 //import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
-//import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
-//import com.weizu.flowsys.web.activity.pojo.RateDiscountShowDTO;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -28,8 +21,8 @@
 //	@Resource
 //	private RateDiscountAO rateDiscountAO;
 //	
-//	@Resource
-//	private AgencyActiveChannelAO agencyActiveChannelAO;
+////	@Resource
+////	private AgencyActiveChannelAO agencyActiveChannelAO;
 //	
 ////	@Test
 ////	public void testGetDiscountList(){
@@ -100,10 +93,17 @@
 ////			}
 ////		}
 ////	}
+////	@Test
+////	public void updateRateDiscountByCDId(){
+////		int res = rateDiscountDao.updateRateDiscountByCDId(19l, 0.1);
+////		System.out.println(res);
+////	}
 //	@Test
-//	public void updateRateDiscountByCDId(){
-//		int res = rateDiscountDao.updateRateDiscountByCDId(19l, 0.1);
-//		System.out.println(res);
+//	public void getChannelByAgency(){
+//		List<Long> channelList= rateDiscountDao.getChannelByAgency(2);
+//		for (Long channelId : channelList) {
+//			System.out.println("chanelId:"+channelId);
+//		}
 //	}
 ////	@Test
 ////	public void testAddMyRate(){

@@ -54,7 +54,10 @@
 			</span>
 		</c:forEach>
 		<span id="billTypeDesc"  class="c-red">
-			${resultMap.ratePo.activeDiscount }
+			${resultMap.ratePo.activeDiscount }  
+		</span>
+		<span id="specialTag"  class="c-red">
+			 ${resultMap.ratePo.specialTag }
 		</span>
 	</div>
 	<div class="text-c">

@@ -34,7 +34,26 @@ public class ChargeChannelParamsPo {
 		this.epName = epName;
 	}
 	
-	
+	/** getRateForCharge专用封装参数
+	 * @param carrier
+	 * @param serviceType
+	 * @param pgType
+	 * @param pgValidity
+	 * @param channelType
+	 */
+	public ChargeChannelParamsPo(String carrier, Integer serviceType,
+			Integer pgType, String pgValidity, Integer channelType) {
+		super();
+		this.carrier = carrier;
+		this.serviceType = serviceType;
+		this.pgType = pgType;
+		this.pgValidity = pgValidity;
+		this.channelType = channelType;
+	}
+
+
+
+
 	/** 代理商通过费率参数找到通道，再找到包体
 	 * @param carrier
 	 * @param serviceType

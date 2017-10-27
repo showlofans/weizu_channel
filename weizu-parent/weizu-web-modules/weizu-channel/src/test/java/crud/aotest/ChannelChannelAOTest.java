@@ -9,19 +9,21 @@
 //import org.springframework.test.context.ContextConfiguration;
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
-//import com.aiyi.base.pojo.PageParam;
-//import com.alibaba.fastjson.JSON;
-//import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
-//import com.weizu.flowsys.util.Pagination;
+//import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
+//import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
+//import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 //import com.weizu.flowsys.web.channel.ao.ChannelChannelAO;
-//import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
-//import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
+//import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
+//import com.weizu.flowsys.web.channel.pojo.SpecialCnelType;
+//import com.weizu.flowsys.web.channel.pojo.SpecialOpdType;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
 //public class ChannelChannelAOTest {
 //	@Resource
 //	private ChannelChannelAO channelChannelAO;
+//	@Resource
+//	private ChannelChannelDao channelChannelDao;
 //	
 ////	@Test
 ////	public void listChannel()
@@ -62,4 +64,18 @@
 ////		System.out.println(JSON.toJSONString(records)); 
 ////		
 ////	}
+////	@Test
+////	public void getSpecialCnel(){
+////		List<SpecialCnelType> cnelList = channelChannelDao.getSpecialCnelType(ChannelTypeEnum.ORDINARY.getValue());
+////		for (SpecialCnelType specialCnelType : cnelList) {
+////			System.out.println(specialCnelType.getChannelId() + "<-------->" + specialCnelType.getChannelType());
+////		}
+////	}
+//	@Test
+//	public void getSpecialOpd(){
+//		List<SpecialOpdType> opdList = channelChannelDao.getSpecialOpdType(new SpecialOpdType(PgTypeEnum.PGDATA.getValue(), PgValidityEnum.month_day_data.getValue()));
+//		for (SpecialOpdType specialOpdType : opdList) {
+//			System.out.println(specialOpdType.getChannelId() + "<-------->" + specialOpdType.getPgType()+ "<-------->" + specialOpdType.getPgValidity());
+//		}
+//	}
 //}

@@ -255,6 +255,9 @@ WHERE a2.root_agency_id=4 and active1.rate_discount_id=22 and active1.bind_state
   		<if test="agencyTag != null">
   			agency_tag = #{agencyTag}
   		</if>
+  		<if test="userApiKey != null">
+  			,user_api_key = #{userApiKey}
+  		</if>
   	</set>
   	<where>
   		id = #{id}
