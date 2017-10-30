@@ -33,6 +33,8 @@ public class OperatorPgDataPo extends Po {
     
     private Integer pgType;				//流量类型（1-流量包，2-流量池）
     
+    private Integer circulateWay;				//流通方式（1-普通通道包，2-红包通道，3-转移包，4-共享包）
+    
     private String pgValidity;			//流量有效期(PgValidityEnum)
     
     @TempField
@@ -57,7 +59,7 @@ public class OperatorPgDataPo extends Po {
 	public OperatorPgDataPo(Integer id, Integer operatorType,
 			String operatorName, Integer pgSize, Double pgPrice, String pgName,
 			Integer pgInService, Integer serviceType, Integer pgType,
-			String pgValidity) {
+			String pgValidity,Integer circulateWay) {
 		super();
 		this.id = id;
 		this.operatorType = operatorType;
@@ -68,9 +70,17 @@ public class OperatorPgDataPo extends Po {
 		this.pgInService = pgInService;
 		this.serviceType = serviceType;
 		this.pgType = pgType;
+		this.circulateWay = circulateWay;
 		this.pgValidity = pgValidity;
 	}
+	
+	public Integer getCirculateWay() {
+		return circulateWay;
+	}
 
+	public void setCirculateWay(Integer circulateWay) {
+		this.circulateWay = circulateWay;
+	}
 	public OperatorPgDataPo() {
 		super();
 		// TODO Auto-generated constructor stub

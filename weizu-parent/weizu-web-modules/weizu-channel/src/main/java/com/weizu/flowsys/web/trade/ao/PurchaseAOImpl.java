@@ -709,13 +709,13 @@ public class PurchaseAOImpl implements PurchaseAO {
 			PageParam pageParam) {
 		Boolean isCharged = purchaseVO.getOrderState() != null && (purchaseVO.getOrderState() == OrderStateEnum.CHARGED.getValue() ||purchaseVO.getOrderState() == OrderStateEnum.UNCHARGE.getValue());
 		Map<String, Object> paramsMap = getMapByPojo(purchaseVO,isCharged);
-		int totalRecord = purchaseDAO.countPurchase(paramsMap);//今天的订单数量
+		long totalRecord = purchaseDAO.countPurchase(paramsMap);//今天的订单数量
 		//设置总记录数和页面参数和查询参数
 		totalRecord = resetTotalRecord(purchaseVO,paramsMap,isCharged,totalRecord);
 		
 		int pageSize = pageParam.getPageSize();
-		int pageNo = pageParam.getPageNo();
-		paramsMap.put("start", (pageNo-1) * pageSize);
+		Long pageNoLong = pageParam.getPageNoLong();
+		paramsMap.put("start", (pageNoLong-1) * pageSize);
 		paramsMap.put("end", pageSize);
 		
 		List<PurchaseVO> records = purchaseDAO.getPurchase(paramsMap);
@@ -812,7 +812,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 			}
 		}
 		resultMap.put("searchParams", purchaseVO);	//查询参数放入返回参数
-		return new Pagination<PurchaseVO>(records, totalRecord, pageNo, pageSize);
+		return new Pagination<PurchaseVO>(records, totalRecord, pageNoLong, pageSize);
 	}
 	
 
@@ -820,7 +820,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 	public List<PurchaseVO> getPurchase(PurchaseVO purchaseVO) {
 		Boolean isCharged = purchaseVO.getOrderState() != null && (purchaseVO.getOrderState() == OrderStateEnum.CHARGED.getValue() ||purchaseVO.getOrderState() == OrderStateEnum.UNCHARGE.getValue());
 		Map<String, Object> paramsMap = getMapByPojo(purchaseVO,isCharged);
-		int totalRecord = purchaseDAO.countPurchase(paramsMap);//今天的订单数量
+		long totalRecord = purchaseDAO.countPurchase(paramsMap);//今天的订单数量
 		//设置总记录数和页面参数和查询参数paramsMap
 		resetTotalRecord(purchaseVO,paramsMap,isCharged,totalRecord);
 		List<PurchaseVO> records = purchaseDAO.getPurchase(paramsMap);
@@ -863,8 +863,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 	 * @param totalRecord
 	 * @return
 	 */
-	private int resetTotalRecord(PurchaseVO purchaseVO,
-			Map<String, Object> paramsMap, Boolean isCharged, int totalRecord) {
+	private long resetTotalRecord(PurchaseVO purchaseVO,
+			Map<String, Object> paramsMap, Boolean isCharged, long totalRecord) {
 		//在没有记录的情况下重置查询条件和查询参数
 		if(totalRecord == 0){
 			Long currentTime = System.currentTimeMillis();

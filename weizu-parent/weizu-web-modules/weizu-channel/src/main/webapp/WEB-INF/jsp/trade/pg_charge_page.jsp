@@ -343,9 +343,30 @@
      	           				$("#pgSize").val(data[0].pgSize);
      	           				$("#pgId").val(data[0].id);
                 				}else{ */
-                					appendData += "<div class='radio-box pgNameType'><input type='hidden' value='"+data.pgList[i].id+"'></input><input class='pgNameRadio' type='radio' name='pgNameRadio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)'><label for='pgName-"+(i+1)+"'>"+name+"</label></div><input type='hidden' class='price' value='"+price+"'></input>"
-                					+"<input type='hidden' value='"+pgSize+"'></input><input type='hidden' value='"+productCode+"'></input><input type='hidden'  value='"+pgDiscountPrice +"'></input></input><input type='hidden' value='"+rteDis 
-                					+"'></input><input type='hidden' value='"+channelId +"'></input><input type='hidden' value='"+rteId +"'></input><br>";;
+                					appendData += "<div class='radio-box pgNameType'><input type='hidden' value='";
+                					appendData += data.pgList[i].id;
+                					appendData +="'></input><input class='pgNameRadio' type='radio' name='pgNameRadio' id='pgName-";
+               						appendData += (i+1);
+               						appendData += "' onclick='changeRadio(this)'><label for='pgName-";
+           							appendData += (i+1);
+           							appendData += "'>";
+               						appendData += name;
+               						appendData += "</label></div><input type='hidden' class='price' value='";
+           							appendData += price;
+           							appendData += "'></input>";
+           							appendData +="<input type='hidden' value='";
+       								appendData += pgSize;
+       								appendData +="'></input><input type='hidden' value='";
+   									appendData += productCode;
+   									appendData += "'></input><input type='hidden'  value='";
+									appendData += pgDiscountPrice;
+									appendData += "'></input></input><input type='hidden' value='";
+									appendData += rteDis ;
+									appendData += "'></input><input type='hidden' value='";
+									appendData += channelId;
+									appendData += "'></input><input type='hidden' value='";
+									appendData += rteId;
+									appendData += "'></input><br>";;
                 				// }
                    }
                }else{
@@ -507,9 +528,22 @@
                  	   //var cdis = dataRole1[i].cdis;
                  	  // var cdisId = dataRole1[i].cdisId;
                  	   //var pgDiscountPrice = dataRole1[i].pgDiscountPrice;
-       					appendData1 += "<div class='radio-box pgNameType'><input type='hidden' value='"+dataRole1[i].id+"'></input><input class='pgNameRadio' type='radio' name='pgNameRadio' id='pgName-"+(i+1)+"' onclick='getPrice(this)'><label for='pgName-"+(i+1)+"'>"
-       					+name+"</label></div><input type='hidden' class='price' value='"+price+"'></input>"
-       					+"<input type='hidden' value='"+pgSize+"'></input><input type='hidden' value='"+productCode+"'></input>";
+       					appendData1 += "<div class='radio-box pgNameType'><input type='hidden' value='";
+       					appendData1 += dataRole1[i].id;
+       					appendData1 += "'></input><input class='pgNameRadio' type='radio' name='pgNameRadio' id='pgName-";
+       					appendData1 += (i+1);
+       					appendData1 += "' onclick='getPrice(this)'><label for='pgName-";
+       					appendData1 += (i+1);
+       					appendData1 += "'>";
+       					appendData1 += name;
+       					appendData1 += "</label></div><input type='hidden' class='price' value='";
+       					appendData1 += price;
+       					appendData1 += "'></input>";
+       					appendData1 += "<input type='hidden' value='";
+       					appendData1 += pgSize;
+       					appendData1 += "'></input><input type='hidden' value='";
+       					appendData1 += productCode;
+       					appendData1 += "'></input>";
        				 }
                    appendData1 += "</div>";
                }else{

@@ -119,6 +119,7 @@ public class AgencyAOImpl implements AgencyAO {
 				agencyBackward.getAgencyTel(), agencyBackward.getUserEmail(), 
 				agencyBackward.getAgencyIp(), agencyBackward.getCreateTime(), 
 				agencyBackward.getVerifyCode(),agencyBackward.getCallBackIp(),agencyBackward.getOtherContact(),agencyBackward.getAgencyTag());
+		agencyVO.setUserApiKey(agencyBackward.getUserApiKey());
 //		setOtherContact(agencyBackward.getRootAgencyId(),agencyVO);
 		
 //		if(agencyBackward.getRootAgencyId() != 0){

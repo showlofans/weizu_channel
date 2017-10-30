@@ -89,7 +89,26 @@
 				<c:forEach items="${resultMap.pagination.records }" var="agency" varStatus="vs">
 					<tr class="text-c font-red">
 						<td style="display:none">${agency.id }</td>
-						<td>${agency.userName }</td>
+						<td>
+						<c:choose>
+							<c:when test="${agency.billType == 0 }">
+								<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+									<c:if test="${billTypeEnum.value == 0 }">
+										<span class="c-red" ><!-- data-toggle="tooltip"   data-placement="right" title="${billTypeEnum.desc }" -->
+										${agency.userName }</span>
+									</c:if>
+								</c:forEach>
+							</c:when>
+							<c:otherwise>
+								<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+								<c:if test="${billTypeEnum.value == 1 }">
+									<span class="c-green"><!--  data-toggle="tooltip"  data-placement="right" title="${billTypeEnum.desc }" -->
+									${agency.userName }</span>
+								</c:if>
+								</c:forEach>
+							</c:otherwise>
+						</c:choose>
+						</td>
 						<td>${agency.userRealName }</td>
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
 						<td>${agency.agencyTel }</td>
@@ -104,7 +123,7 @@
 							${agency.accountBalance }</a>
 							</c:when>
 							<c:otherwise>
-								<a data-href="/flowsys/account/charge_list.do?accountId=${agency.accountId }" data-toggle="tooltip" data-placement="top" title="点击查看记录" data-title="充值记录" style="text-decoration:none"  onclick="Hui_admin_tab(this)">
+								<a class="c-green" data-href="/flowsys/account/charge_list.do?accountId=${agency.accountId }" data-toggle="tooltip" data-placement="top" title="点击查看记录" data-title="充值记录" style="text-decoration:none"  onclick="Hui_admin_tab(this)">
 							${agency.accountBalance }</a>
 							</c:otherwise>
 						</c:choose>

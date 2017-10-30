@@ -80,7 +80,7 @@
 					
 					<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
-					<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
+					<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
 					<input type="hidden" name="orderResult" value="${resultMap.searchParams.orderResult }">
 				</div>
 		</form>
@@ -180,6 +180,7 @@
 <script src="/view/lib/bootstrap-datetimepicker.zh-CN.js"></script> -->
 <script type="text/javascript">
 function formSub(){
+	$("input[name='pageNoLong']").val('');
 	$('form').submit();
 }
 $(document).ready(function() {

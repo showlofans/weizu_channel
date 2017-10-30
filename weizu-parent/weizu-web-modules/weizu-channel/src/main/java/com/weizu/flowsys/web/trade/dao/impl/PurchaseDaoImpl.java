@@ -53,7 +53,7 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePo, Long> implements Purcha
 	 * @createTime:2017年6月13日 下午12:47:58
 	 */
 	@Override
-	public int countPurchase(Map<String, Object> paramsMap) {
+	public long countPurchase(Map<String, Object> paramsMap) {
 		paramsMap.put("accountType", AccountTypeEnum.DECREASE.getValue());
 		return sqlSessionTemplate.selectOne("countPurchase", paramsMap);
 	}

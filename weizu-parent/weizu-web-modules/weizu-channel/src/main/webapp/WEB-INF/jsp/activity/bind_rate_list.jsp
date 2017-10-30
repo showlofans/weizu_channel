@@ -48,6 +48,8 @@
 					<input type="hidden" id="operatorType" value="${resultMap.searchParams.operatorType }"/> 
 					<span id="billTypeDesc"  data-toggle="tooltip" data-placement="bottom" title="${stype.desc } ${otype.desc } "  class="c-red">
 							${billEnum.desc } 
+						<input type="hidden" id="serviceType" name="serviceType" value="${stype.value }">
+						<input type="hidden" id="operatorType" name="operatorType" value="${otype.value }">
 					</span>
 				</c:if>
 			</c:forEach>

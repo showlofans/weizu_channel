@@ -160,8 +160,8 @@ public class AccountController {
 //			consumeRecordPo.setAgencyId(contextId);
 			Pagination<ConsumeRecordPo> pagination =  chargeRecordAO.listConsumeRecord(resultMap,contextId,consumeRecordPo, pageParam);
 			resultMap.put("pagination", pagination);
-			resultMap.put("billTypeEnum", BillTypeEnum.toList());
-			resultMap.put("accountTypeEnum", AccountTypeEnum.toConsumeList());
+			resultMap.put("billTypeEnums", BillTypeEnum.toList());
+			resultMap.put("accountTypeEnums", AccountTypeEnum.toConsumeList());
 			//点击金额进入连接，自动填充代理商名称
 			if(consumeRecordPo.getUserName() == null && consumeRecordPo.getAccountId() != null){
 				AgencyBackwardPo agencyPO = agencyAO.getAgencyByAccountId(consumeRecordPo.getAccountId());
@@ -185,7 +185,7 @@ public class AccountController {
 	 * @createTime:2017年6月2日 上午10:14:30
 	 */
 	@RequestMapping(value = AccountURL.ADD_CHARGE)
-	public void goCharge(ChargeRecordPo chargeRecordPo,
+	public void goCharge(Integer accountId, Double rechargeAmount,
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 //		ChargeAccountPo accountPo = null;
@@ -199,7 +199,7 @@ public class AccountController {
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");//修改当前代理商账户
 		if(agencyVo != null)
 		{
-			result = chargeRecordAO.updateAccount(chargeRecordPo, agencyVo.getId());
+			result = chargeRecordAO.updateAccount(accountId,rechargeAmount, agencyVo.getId());
 		}
 		
 		if(result > 0){

@@ -43,6 +43,9 @@ import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.agency.ao.AgencyAO;
+import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
+import com.weizu.flowsys.web.agency.dao.ChargeAccountDaoInterface;
+import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
@@ -102,6 +105,8 @@ public class ChargePgController {
 	
 	@Resource
 	private ChannelDiscountDao channelDiscountDao;
+	@Resource
+	private ChargeAccountAo chargeAccountAO;
 //	@Resource
 //	private ChannelDiscountAO channelDiscountAO;
 	/**
@@ -166,31 +171,24 @@ public class ChargePgController {
 	@RequestMapping(value = ChargePgURL.PG_CHARGE)
 	public ModelAndView pgCharge(HttpServletRequest request,PgChargeVO pcVO){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		
-		String scopeCityCode = ScopeCityEnum.QG.getValue();
-		if(!pcVO.getServiceType().equals(ServiceTypeEnum.NATION_WIDE.getValue())){
-			Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(pcVO.getChargeTelDetail());
-			scopeCityCode = scopeMap.get("scopeCityCode").toString();
-		}
-		ChargeAccountPo accountPo = null;
-		if(!agencyVO.getRootAgencyId().equals(0)){//超管测试通道，通过通道折扣提单
-			RateDiscountPo ratePo = rateDiscountDao.get(pcVO.getRateId());
-			if(ratePo!=null && ratePo.getBillType().equals(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())){
-				accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");//用不带票账户充值
-			}else{
-				accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");//用带票账户充值
-			}
-		}else{
-			ChannelDiscountPo cdPo = channelDiscountDao.get(pcVO.getCdisId());//new WherePrams("channel_id", "=", pcVO.getChannelId()).and("scope_city_code", "=", scopeCityCode)
-			if(cdPo!=null && cdPo.getBillType().equals(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())){
-				accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");//用不带票账户充值
-			}else{
-				accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");//用带票账户充值
-			}
-			
-		}
-		
 		if(agencyVO != null){
+//			String scopeCityCode = ScopeCityEnum.QG.getValue();
+//			if(!pcVO.getServiceType().equals(ServiceTypeEnum.NATION_WIDE.getValue())){
+//				Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(pcVO.getChargeTelDetail());
+//				scopeCityCode = scopeMap.get("scopeCityCode").toString();
+//			}
+			ChargeAccountPo accountPo = null;
+			if(!agencyVO.getRootAgencyId().equals(0)){
+				RateDiscountPo ratePo = rateDiscountDao.get(pcVO.getRateId());
+				if(ratePo != null){
+					accountPo = chargeAccountAO.getAccountByAgencyId(agencyVO.getId(), ratePo.getBillType());
+				}
+			}else{//超管测试通道，通过通道折扣提单
+				ChannelDiscountPo cdPo = channelDiscountDao.get(pcVO.getCdisId());//new WherePrams("channel_id", "=", pcVO.getChannelId()).and("scope_city_code", "=", scopeCityCode)
+				if(cdPo!=null && cdPo.getBillType().equals(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())){
+					accountPo = chargeAccountAO.getAccountByAgencyId(agencyVO.getId(), cdPo.getBillType());
+				}
+			}
 			boolean isAccess = agencyAO.checkIdByPass(agencyVO.getId(), agencyVO.getUserPass());
 			if(!isAccess || !agencyVO.getId().equals(accountPo.getAgencyId())){
 				return new ModelAndView("error", "errorMsg", "当前登陆用户不合法");
@@ -209,15 +207,13 @@ public class ChargePgController {
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 			String pageMsg = "";
 			String referURL = "";
-			
 			pageMsg = purchaseAO.purchase(pcVO, accountPo);
 			referURL = "/flowsys/chargePg/purchase_list.do?orderResult=2";
 			resultMap.put("referURL", referURL);
 			resultMap.put("pageMsg", pageMsg);
 			return new ModelAndView("/trade/charge_result_page", "resultMap", resultMap);
-		}else{
-			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 		}
+		return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 	}
 	
 	/**
@@ -317,7 +313,7 @@ public class ChargePgController {
 	private List<OperatorPgDataPo> initByPgList(List<PgDataPo> pgList) {
 		List<OperatorPgDataPo> dataList = new LinkedList<OperatorPgDataPo>();
 		for (PgDataPo pgDataPo : pgList) {
-			dataList.add(new OperatorPgDataPo(pgDataPo.getId(), pgDataPo.getOperatorType(), pgDataPo.getOperatorName(), pgDataPo.getPgSize(), pgDataPo.getPgPrice(), pgDataPo.getPgName(), pgDataPo.getPgInService(), pgDataPo.getServiceType(), pgDataPo.getPgType(), pgDataPo.getPgValidity()));
+			dataList.add(new OperatorPgDataPo(pgDataPo.getId(), pgDataPo.getOperatorType(), pgDataPo.getOperatorName(), pgDataPo.getPgSize(), pgDataPo.getPgPrice(), pgDataPo.getPgName(), pgDataPo.getPgInService(), pgDataPo.getServiceType(), pgDataPo.getPgType(), pgDataPo.getPgValidity(),pgDataPo.getCirculateWay()));
 		}
 		return dataList;
 	}
@@ -541,7 +537,7 @@ public class ChargePgController {
 	 */
 	@SuppressWarnings("restriction")
 	@RequestMapping(value = ChargePgURL.PURCHASE_LIST)
-	public ModelAndView purchaseList(HttpServletRequest request, PurchaseVO purchaseVO, @RequestParam(value="pageNo",required=false)String pageNo){
+	public ModelAndView purchaseList(HttpServletRequest request, PurchaseVO purchaseVO, @RequestParam(value="pageNoLong",required=false)Long pageNoLong){
 		HttpSession httpSession = request.getSession();
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)httpSession.getAttribute("loginContext");
 		if(agencyVO != null){
@@ -551,11 +547,11 @@ public class ChargePgController {
 		}
 		PageParam pageParam = null;
 		Pagination<PurchaseVO> pagination = null;
-		if(StringHelper.isNotEmpty(pageNo)){
-			pageParam = new PageParam(Integer.parseInt(pageNo), 10) ;
+		if(pageNoLong != null){
+			pageParam = new PageParam(pageNoLong, 10) ;
 		}else{//初始化开始时间和结束时间
 			
-			pageParam = new PageParam(1, 10);
+			pageParam = new PageParam(1l, 10);
 		}
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		pagination = purchaseAO.getPurchase(resultMap,purchaseVO, pageParam);//

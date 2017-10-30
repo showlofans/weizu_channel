@@ -59,21 +59,21 @@ public class SendCallBackUtil {
 			String resMsg = "";
 			int i = 0;
 			do{
-				try {
+//				try {
 					i++;
 					String backJson = JSONObject.toJSONString(rjdto);
 					resMsg = HttpRequest.sendPost(requestUrl, backJson);
 					if(i== CALL_BACK_TIME){
 						return "error";
 					}
-					if( i < 4 && !"ok".equals(resMsg) ){
-						Thread.sleep(30 * 1000 * i);//30 60 90
-					}else{
-						Thread.sleep(30 * 1000 * 10);//300s
-					}
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+//					if( i < 4 && !"ok".equals(resMsg) ){
+//						Thread.sleep(30 * 1000 * i);//30 60 90
+//					}else{
+//						Thread.sleep(30 * 1000 * 10);//300s
+//					}
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
 			}while(!"ok".equals(resMsg));
 			
 			return "success";

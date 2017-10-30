@@ -53,7 +53,7 @@ public class OperatorPgDao extends DaoImpl<PgDataPo, Integer> implements Operato
 	 * @createTime:2017年4月28日 下午3:35:32
 	 */
 	@Override
-	public List<OperatorPgDataPo> list(Map<String, Object> paramsMap) {
+	public List<PgDataPo> list(Map<String, Object> paramsMap) {
 		
 		return sqlSessionTemplateASS.selectList("pgList_select",paramsMap);
 	}

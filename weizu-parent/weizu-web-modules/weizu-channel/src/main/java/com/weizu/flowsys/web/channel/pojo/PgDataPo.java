@@ -23,6 +23,8 @@ public class PgDataPo extends Po {
     
     private Integer pgType;				//流量类型（1-流量包，2-流量池）
     
+    private Integer circulateWay;				//流通方式（1-普通通道包，2-红包通道，3-转移包，4-共享包）
+    
     private String pgValidity;			//流量有效期(PgValidityEnum)
 
 	/** 验证包体是否存在的必须参数
@@ -33,18 +35,27 @@ public class PgDataPo extends Po {
 	 * @param pgValidity
 	 */
 	public PgDataPo(Integer operatorType, Integer pgSize, Integer serviceType,
-			Integer pgType, String pgValidity) {
+			Integer pgType, String pgValidity,Integer circulateWay) {
 		super();
 		this.operatorType = operatorType;
 		this.pgSize = pgSize;
 		this.serviceType = serviceType;
 		this.pgType = pgType;
 		this.pgValidity = pgValidity;
+		this.circulateWay = circulateWay;
 	}
 
 	public PgDataPo() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+	
+	public Integer getCirculateWay() {
+		return circulateWay;
+	}
+
+	public void setCirculateWay(Integer circulateWay) {
+		this.circulateWay = circulateWay;
 	}
 
 	public Integer getId() {

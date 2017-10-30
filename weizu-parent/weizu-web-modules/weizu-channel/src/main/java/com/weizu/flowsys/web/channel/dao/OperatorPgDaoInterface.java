@@ -25,7 +25,7 @@ public interface OperatorPgDaoInterface extends Dao<PgDataPo, Integer> {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年4月27日 下午4:11:24
 	 */
-	List<OperatorPgDataPo> list(Map<String,Object> paramsMap);
+	List<PgDataPo> list(Map<String,Object> paramsMap);
 	
 	/**
 	 * @description:通过运营商类型查询购买包体list

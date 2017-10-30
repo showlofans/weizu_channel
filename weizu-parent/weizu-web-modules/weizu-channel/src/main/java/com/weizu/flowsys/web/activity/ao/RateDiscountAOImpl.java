@@ -726,13 +726,13 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动
 		if(ServiceTypeEnum.NATION_WIDE.getValue() != serviceType){
 			String scopeCityName = carrier.substring(0,sLength-2);
-			int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
-			params.put("operatorType", opType);
 			String scopeCityCode = ScopeCityEnum.getValueByDesc(scopeCityName);
 			params.put("scopeCityCode", scopeCityCode);
 		}else{
 			params.put("scopeCityCode", ScopeCityEnum.QG.getValue());//使用全国的地区
 		}
+		int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
+		params.put("operatorType", opType);
 		if(judgeChannelState){//需要判断通道状态:比如再次提交获得的费率，比如测试通道的时候
 			params.put("channelState", ChannelStateEnum.OPEN.getValue());
 		}

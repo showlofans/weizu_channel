@@ -88,9 +88,9 @@
 //	@Test
 //	public void testLogin(){
 //		AgencyBackwardPo agencyPo =  new AgencyBackwardPo();
-//		agencyPo.setUserName("罗大大");
+//		agencyPo.setUserName("123");
 //		//得到密码
-//		String userPass = Hash.BASE_UTIL.decode("MjAxMTAz");
+//		String userPass = Hash.BASE_UTIL.decode("MTIzNDU2");
 //		System.out.println(userPass);
 //		agencyPo.setUserPass(userPass);
 //		Map<String, Object> resultMap = agencyAO.login(agencyPo);

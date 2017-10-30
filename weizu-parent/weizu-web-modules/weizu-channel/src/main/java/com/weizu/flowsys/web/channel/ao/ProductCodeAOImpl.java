@@ -84,12 +84,28 @@ public class ProductCodeAOImpl implements ProductCodeAO {
 			if(StringHelper.isNotEmpty(productCodePo.getEpName())){
 				paramsMap.put("epName", productCodePo.getEpName());
 			}
+			if(productCodePo.getCirculateWay() != null)
+			{
+				paramsMap.put("circulateWay", productCodePo.getCirculateWay());
+			}
+			if(productCodePo.getPgType() != null)
+			{
+				paramsMap.put("pgType", productCodePo.getPgType());
+			}
+			if(StringHelper.isNotEmpty(productCodePo.getPgValidity()))
+			{
+				paramsMap.put("pgValidity", productCodePo.getPgValidity());
+			}
 			if(StringHelper.isNotEmpty(productCodePo.getProductName())){
 				paramsMap.put("productName", productCodePo.getProductName());
 			}
 			if(StringHelper.isNotEmpty(productCodePo.getProductCode())){
 				paramsMap.put("productCode", productCodePo.getProductCode());
 			}
+			if(StringHelper.isNotEmpty(productCodePo.getScopeCityCode())){
+				paramsMap.put("scopeCityCode", productCodePo.getScopeCityCode());
+			}
+			
 		}
 		return paramsMap;
 	}
@@ -111,6 +127,7 @@ public class ProductCodeAOImpl implements ProductCodeAO {
 		params.put("serviceType", pgCodeParams.getServiceType());
 		params.put("operatorType", pgCodeParams.getOperatorType());
 		params.put("pgType", pgCodeParams.getPgType());
+		params.put("circulateWay", pgCodeParams.getCirculateWay());
 		params.put("pgValidity", pgCodeParams.getPgValidity());
 		params.put("epId", pgCodeParams.getEpId());
 		params.put("scopeCityCode", pgCodeParams.getScopeCityCode());
@@ -151,12 +168,13 @@ public class ProductCodeAOImpl implements ProductCodeAO {
 	private String initProductName(ProductCodePo productCodePo) {
 		StringBuffer resub = new StringBuffer();
 		
-		for (Map<String,Object> map : ScopeCityEnum.toList()) {
-			if(productCodePo.getScopeCityCode().equals(map.get("value").toString())){
-				resub.append(map.get("desc").toString());
-				break;
-			}
-		}
+		
+//		for (Map<String,Object> map : ScopeCityEnum.toList()) {
+//			if(productCodePo.getScopeCityCode().equals(map.get("value").toString())){
+//				resub.append(map.get("desc").toString());
+//				break;
+//			}
+//		}
 //		for (Map<String,Object> map : OperatorTypeEnum.toList()) {
 //			int operatorType = Integer.parseInt(map.get("value").toString());
 //			if(productCodePo.getOperatorType() == operatorType){
@@ -202,6 +220,7 @@ public class ProductCodeAOImpl implements ProductCodeAO {
 			paramsMap.put("pgSize", paramsPo.getPgSize());
 			paramsMap.put("pgType", paramsPo.getPgType());
 			paramsMap.put("pgValidity", paramsPo.getPgValidity());
+			paramsMap.put("circulateWay", paramsPo.getCirculateWay());
 		}
 		paramsMap.put("scopeCityCode", paramsPo.getScopeCityCode());
 		paramsMap.put("epId", paramsPo.getEpId());

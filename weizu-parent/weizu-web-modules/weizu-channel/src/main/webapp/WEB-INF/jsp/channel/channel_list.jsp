@@ -36,13 +36,9 @@
 	<form class="form form-horizontal" action="/flowsys/channel/channel_list.do" method="post" id="formD" name="dataListForm">
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
 		<div class="row cl formControls">
-			通道名称：<input type="text" value="${resultMap.searchParam.channelName }" name="channelName" id="" placeholder=" 通道名称" style="width:100px" class="input-text">
-			平台名称：<input type="text" value="${resultMap.searchParam.epName }" name="epName" id="" placeholder=" 平台名称" style="width:100px" class="input-text">
-			
-			
-			
 			通道省份：<input type="text" value="${resultMap.searchParam.scopeCityName }" name="scopeCityName" id="" placeholder=" 通道省份" style="width:100px" class="input-text">
-			
+			平台名称：<input type="text" value="${resultMap.searchParam.epName }" name="epName" id="" placeholder=" 平台名称" style="width:100px" class="input-text">
+			通道名称：<input type="text" value="${resultMap.searchParam.channelName }" name="channelName" id="" placeholder=" 通道名称" style="width:100px" class="input-text">
 			通道类型
 			<span class="select-box inline">
 				<select name="channelType" class="select" onchange="getChannelList()">

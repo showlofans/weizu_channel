@@ -79,32 +79,32 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年4月27日 下午5:21:24
 	 */
-	@Override
-	public Map<String,Object> listNextPg(Map<String,Object> params) {
-		Map<String,Object> resultMap = new HashMap<String, Object>();
-		
-		
-//		Pagination<OperatorPgDataPo> resultList = getPgList(params);
-		List<OperatorPgDataPo> resultList = operatorPgDao.list(params);	
-//		List<OperatorPgDataPo> list = resultList.getCurrData();
-		resultMap.put("pgInEnums", PgInServiceEnum.toList());
-		resultMap.put("pgTypeEnums", OperatorTypeEnum.toList());
-		
-		//分页参数
-		int totalElements = operatorPgDao.count_list(params);
-		resultMap.put("iTotalRecords",  totalElements);//总记录数
-//		resultMap.put("sEcho",  params.get("sEcho").toString());//??
-		int pageSize = Integer.parseInt(params.get("pageSize").toString());
-		resultMap.put("sEcho", params.get("sEcho").toString());
-		if(pageSize > 0 )
-		{
-			int totalPage = (totalElements + pageSize - 1) / pageSize;
-//			resultMap.put("iTotalRecords", totalPage);	//总页数
-		}
-		
-		resultMap.put("pg_list", resultList);
-		return resultMap;
-	}
+//	@Override
+//	public Map<String,Object> listNextPg(Map<String,Object> params) {
+//		Map<String,Object> resultMap = new HashMap<String, Object>();
+//		
+//		
+////		Pagination<OperatorPgDataPo> resultList = getPgList(params);
+//		List<OperatorPgDataPo> resultList = operatorPgDao.list(params);	
+////		List<OperatorPgDataPo> list = resultList.getCurrData();
+//		resultMap.put("pgInEnums", PgInServiceEnum.toList());
+//		resultMap.put("pgTypeEnums", OperatorTypeEnum.toList());
+//		
+//		//分页参数
+//		int totalElements = operatorPgDao.count_list(params);
+//		resultMap.put("iTotalRecords",  totalElements);//总记录数
+////		resultMap.put("sEcho",  params.get("sEcho").toString());//??
+//		int pageSize = Integer.parseInt(params.get("pageSize").toString());
+//		resultMap.put("sEcho", params.get("sEcho").toString());
+//		if(pageSize > 0 )
+//		{
+//			int totalPage = (totalElements + pageSize - 1) / pageSize;
+////			resultMap.put("iTotalRecords", totalPage);	//总页数
+//		}
+//		
+//		resultMap.put("pg_list", resultList);
+//		return resultMap;
+//	}
 	/**
 	 * @description:加载第一页流量列表
 	 * @param params
@@ -117,7 +117,7 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 //		Pagination<OperatorPgDataPo> resultList = getPgList(params);
 //		List<OperatorPgDataPo> list = resultList.getCurrData();
 		Map<String,Object> resultMap = new HashMap<String, Object>();
-		List<OperatorPgDataPo> resultList = operatorPgDao.list(params);	
+		List<PgDataPo> resultList = operatorPgDao.list(params);	
 		
 		resultMap.put("pgInEnums", PgInServiceEnum.toList());
 		resultMap.put("pgTypeEnums", OperatorTypeEnum.toList());
@@ -142,33 +142,33 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月5日 上午9:32:43
 	 */
-	@Override
-	public Map<String,Object> listPg(Map<String,Object> params,PageTag pageTag) {
-//		Pagination<OperatorPgDataPo> resultList = getPgList(params);
-//		List<OperatorPgDataPo> list = resultList.getCurrData();
-		Map<String,Object> resultMap = new HashMap<String, Object>();
-//		params.put("start", value)
-		List<OperatorPgDataPo> resultList = operatorPgDao.list(params);	
-		
-		resultMap.put("pgInEnums", PgInServiceEnum.toList());
-		resultMap.put("pgTypeEnums", OperatorTypeEnum.toList());
-		resultMap.put("pg_list", resultList);
-		//把分页参数返回到页面当中
-		int totalElements = operatorPgDao.count_list(params);
-		
-		if(pageTag != null){
-			pageTag = new PageTag();
-			resultMap.put("currentPage",  pageTag.getPageIndex());
-			resultMap.put("pageSize",  pageTag.getPageSize());
-		}else{
-			resultMap.put("currentPage",  1);//把当前页设定为第一页
-			resultMap.put("pageSize",  10);//总记录数
-		}
-		pageTag.setTotalRows(totalElements);
-		resultMap.put("totalPageCount",  pageTag.getTotalPage());//总记录数
-		
-		return resultMap;
-	}
+//	@Override
+//	public Map<String,Object> listPg(Map<String,Object> params,PageTag pageTag) {
+////		Pagination<OperatorPgDataPo> resultList = getPgList(params);
+////		List<OperatorPgDataPo> list = resultList.getCurrData();
+//		Map<String,Object> resultMap = new HashMap<String, Object>();
+////		params.put("start", value)
+//		List<OperatorPgDataPo> resultList = operatorPgDao.list(params);	
+//		
+//		resultMap.put("pgInEnums", PgInServiceEnum.toList());
+//		resultMap.put("pgTypeEnums", OperatorTypeEnum.toList());
+//		resultMap.put("pg_list", resultList);
+//		//把分页参数返回到页面当中
+//		int totalElements = operatorPgDao.count_list(params);
+//		
+//		if(pageTag != null){
+//			pageTag = new PageTag();
+//			resultMap.put("currentPage",  pageTag.getPageIndex());
+//			resultMap.put("pageSize",  pageTag.getPageSize());
+//		}else{
+//			resultMap.put("currentPage",  1);//把当前页设定为第一页
+//			resultMap.put("pageSize",  10);//总记录数
+//		}
+//		pageTag.setTotalRows(totalElements);
+//		resultMap.put("totalPageCount",  pageTag.getTotalPage());//总记录数
+//		
+//		return resultMap;
+//	}
 	/*private Pagination<OperatorPgDataPo> getPgList(final Map<String,Object> params){
 		
 		int pageIndex = Integer.parseInt(params.get("pageIndex").toString());
@@ -298,6 +298,10 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 		if(operatorPgDataPo.getPgSize() != null)
 		{
 			params.put("pgSize", operatorPgDataPo.getPgSize());
+		}
+		if(operatorPgDataPo.getCirculateWay() != null)
+		{
+			params.put("circulateWay", operatorPgDataPo.getCirculateWay());
 		}
 		if(operatorPgDataPo.getPgType() != null)
 		{
@@ -429,7 +433,7 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 	 * @createTime:2017年5月15日 下午4:57:04
 	 */
 	@Override
-	public Pagination<OperatorPgDataPo> listPg(OperatorPgDataPo operatorPgDataPo,
+	public Pagination<PgDataPo> listPg(OperatorPgDataPo operatorPgDataPo,
 			PageParam pageParam) {
 		Map<String, Object> params = getOperatorPgParams(operatorPgDataPo);
 		if(params == null){
@@ -441,8 +445,8 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 		int totalElements = operatorPgDao.count_list(params);
 		params.put("start", (pageNo-1) * pageSize);
 		params.put("end", pageSize);
-		List<OperatorPgDataPo> recordList = operatorPgDao.list(params);
-		return new Pagination<OperatorPgDataPo>(recordList, totalElements, pageNo, pageSize);
+		List<PgDataPo> recordList = operatorPgDao.list(params);
+		return new Pagination<PgDataPo>(recordList, totalElements, pageNo, pageSize);
 	}
 
 	/**

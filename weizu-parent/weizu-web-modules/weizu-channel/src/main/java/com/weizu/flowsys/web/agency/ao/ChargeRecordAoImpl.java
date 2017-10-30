@@ -47,19 +47,19 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 	 */
 	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
-	public int updateAccount(ChargeRecordPo chargeRecordPo,Integer loginContextId) {
+	public int updateAccount(Integer accountId, Double chargeAmount,Integer loginContextId) {
+		ChargeAccountPo chargeAccountPo = chargeAccountDao.get(accountId);
 		
 //		if(chargeRecordPo.getBillType() == BillTypeEnum.CORPORATE_BUSINESS.getValue()){
 //			
 //		}
 		
 //		int accountId = chargeRecordPo.getAccountId();
-		ChargeAccountPo loginAccountPo = chargeAccountDao.selectByAgencyId(loginContextId, chargeRecordPo.getBillType());
+		ChargeAccountPo loginAccountPo = chargeAccountDao.selectByAgencyId(loginContextId, chargeAccountPo.getBillType());
 		/****************修改登陆账户********************/
 		/**充值前余额*/
 		double agencyBeforeBalance = loginAccountPo.getAccountBalance();
 		/**充值额（两个修改是共用的）*/
-		double chargeAmount = chargeRecordPo.getRechargeAmount();
 		/** 向消费记录表插入登陆用户数据 */
 		chargeRecordDao.add(new ChargeRecordPo(System
 				.currentTimeMillis(), chargeAmount,
@@ -77,18 +77,21 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 
 		/** 数据库取出来的的账户对象 */
 //		ChargeAccountPo chargeAccountPo = chargeAccountDao.selectByAgencyId(chargeRecordPo.getAgencyId(),chargeRecordPo.getBillType());
-		ChargeAccountPo chargeAccountPo = chargeAccountDao.get(chargeRecordPo.getAccountId());
+		
 		/**充值前余额*/
 		double beforeBalance = chargeAccountPo.getAccountBalance();
 		
 		/** 向消费记录表插入数据 */
+		double afterBalance = NumberTool.add(beforeBalance, chargeAmount);
+		
 		int resultMsg = chargeRecordDao.add(new ChargeRecordPo(System
 				.currentTimeMillis(), chargeAmount,
-				beforeBalance, NumberTool.add(beforeBalance, chargeAmount), 
-				chargeRecordPo.getAccountType(), chargeAccountPo.getId(),1,null));
+				beforeBalance, afterBalance, 
+				AccountTypeEnum.INCREASE.getValue(), chargeAccountPo.getId(),1,null));
 
 		/** 更新账户表的余额值 */
-		chargeAccountPo.addBalance(chargeAmount,0);
+//		chargeAccountPo.addBalance(chargeAmount,0);
+		chargeAccountPo.setAccountBalance(afterBalance);
 		int resultMsg2 = chargeAccountAO.updateAccount(chargeAccountPo);
 		return resultMsg + resultMsg2 - 1 ;
 	}

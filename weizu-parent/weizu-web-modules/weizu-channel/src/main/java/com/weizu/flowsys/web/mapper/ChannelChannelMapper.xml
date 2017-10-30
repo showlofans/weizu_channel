@@ -83,7 +83,7 @@
 	on cbg.pg_id=opd.id 
 	<where>
 		<if test="#{pgType != null}">
-			opd.pg_type != #{pgType}
+		  AND opd.pg_type != #{pgType}
 		</if>
 		<if test="#{pgValidity != null}">
 			or opd.pg_validity != #{pgValidity}

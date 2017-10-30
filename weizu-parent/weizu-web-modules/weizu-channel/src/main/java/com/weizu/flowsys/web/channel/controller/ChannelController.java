@@ -117,7 +117,7 @@ public class ChannelController {
 //		
 		resultMap.put("billTypes", BillTypeEnum.toList());
 		//默认用移动的包体
-		resultMap.put("pgSizeStr", operatorPgAO.pgSizeStr(new OneCodePo(null, ServiceTypeEnum.NATION_WIDE.getValue(), OperatorTypeEnum.MOBILE.getValue(), ScopeCityEnum.QG.getValue(), PgTypeEnum.PGDATA.getValue(), PgValidityEnum.MONTH_DAY_DATA.getValue())));
+		resultMap.put("pgSizeStr", operatorPgAO.pgSizeStr(new OneCodePo(null, ServiceTypeEnum.NATION_WIDE.getValue(), OperatorTypeEnum.MOBILE.getValue(), ScopeCityEnum.QG.getValue(), PgTypeEnum.PGDATA.getValue(), PgValidityEnum.MONTH_DAY_DATA.getValue(),ChannelTypeEnum.ORDINARY.getValue())));
 		
 		return new ModelAndView("/channel/channel_add_page", "resultMap", resultMap);
 	}

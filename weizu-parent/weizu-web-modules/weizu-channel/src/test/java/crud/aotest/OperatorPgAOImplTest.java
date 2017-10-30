@@ -1,8 +1,6 @@
 //package crud.aotest;
 //
-//import java.util.HashMap;
 //import java.util.List;
-//import java.util.Map;
 //
 //import javax.annotation.Resource;
 //
@@ -11,12 +9,12 @@
 //import org.springframework.test.context.ContextConfiguration;
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
-//import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
+//import com.aiyi.base.pojo.PageParam;
+//import com.weizu.flowsys.util.Pagination;
 //import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 //import com.weizu.flowsys.web.channel.dao.OperatorPgDaoInterface;
 //import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
-//import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
-//import com.weizu.flowsys.web.trade.ao.PurchaseAO;
+//import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -76,14 +74,19 @@
 //////			}
 ////	}
 //	
-////	@Test
-////	public void testListPg(){
-////		PageParam pageParam = new PageParam(1,10);
+//	@Test
+//	public void testListPg(){
+//		PageParam pageParam = new PageParam(1,10);
 ////		Map<String,Object> params = new HashMap<String, Object>();
-////		Pagination<OperatorPgDataPo> pagination =  operatorPgAO.listPg(params, pageParam);
-////		System.out.println(pagination.getRecords().get(1).getOperatorName());
-////		
-////	}
+//		OperatorPgDataPo pgPo = new OperatorPgDataPo();
+//		Pagination<PgDataPo> pagination =  operatorPgAO.listPg(pgPo, pageParam);
+//		List<PgDataPo> pgList = pagination.getRecords();
+//		for (PgDataPo pgData : pgList) {
+//			System.out.println("pgType:" + pgData.getPgType());
+//			System.out.println("getPgValidity:" + pgData.getPgValidity());
+//			System.out.println("getCirculateWay:" + pgData.getCirculateWay());
+//		}
+//	}
 ////	@Test
 ////	public void testPgList_forPurchase(){
 ////		OperatorPgDataPo operatorPgPo = new OperatorPgDataPo();
@@ -113,11 +116,11 @@
 ////			System.out.println(Integer.parseInt(object.toString()));
 ////		}
 ////	}
-//	@Test
-//	public void testPgListNoCode(){
-//		List<OperatorPgDataPo> list = operatorPgDao.listPgListNotInPcode(2, ServiceTypeEnum.PROVINCE_ROAMING.getValue(), 0,"19");
-//		System.out.println(list.size());
-//	}
+////	@Test
+////	public void testPgListNoCode(){
+////		List<OperatorPgDataPo> list = operatorPgDao.listPgListNotInPcode(2, ServiceTypeEnum.PROVINCE_ROAMING.getValue(), 0,"19");
+////		System.out.println(list.size());
+////	}
 ////	@Test
 ////	public void testPgListCode(){
 ////		Map<String,Object> map = operatorPgAO.getBy(new SuperPurchaseParam("广东移动", "0", "Weizu"));

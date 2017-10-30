@@ -25,12 +25,14 @@
 	    <result column="pg_name" jdbcType="VARCHAR" property="pgName" />
 	    <result column="pg_in_service" jdbcType="INTEGER" property="pgInService" />
 	    <result column="pg_type" jdbcType="INTEGER" property="pgType" />
+	    <result column="circulate_way" jdbcType="INTEGER" property="circulateWay" />
 	    <result column="pg_validity" jdbcType="VARCHAR" property="pgValidity" />
 	 </resultMap>
 	<resultMap id="PurchasePgMap" type="com.weizu.flowsys.web.channel.pojo.PgDataPo">
 	    <id column="id" jdbcType="INTEGER" property="id" />
 	    <result column="operator_type" jdbcType="INTEGER" property="operatorType" />
 	    <result column="pg_type" jdbcType="INTEGER" property="pgType" />
+	    <result column="circulate_way" jdbcType="INTEGER" property="circulateWay" />
 	    <result column="pg_validity" jdbcType="VARCHAR" property="pgValidity" />
 	    <result column="operator_name" jdbcType="VARCHAR" property="operatorName" />
 	    <result column="pg_size" jdbcType="INTEGER" property="pgSize" />
@@ -58,7 +60,7 @@
 	    <result column="rte_id" property="rteId" />
 	 </resultMap>
   <sql id="Base_Column_List">
-    pg.id,operator_type,operator_name,pg_in_service,pg.pg_name,pg_price,pg_size,service_type,pg_type,pg_validity
+    pg.id,operator_type,operator_name,pg_in_service,pg.pg_name,pg_price,pg_size,service_type,pg_type,pg_validity,circulate_way
   </sql>
   <sql id="Purchase_Column_List">
     pg.id,pg.operator_type,pg.operator_name,pg_in_service,pg.pg_name,pg_price,pg_size,pg.service_type,pg_validity,pg_type
@@ -89,7 +91,7 @@
 	</insert>
 	
 	<!-- 查询分页包体list -->
-	<select id="pgList_select" resultMap="OtherMap">
+	<select id="pgList_select" resultMap="BaseResultMap">
 		 select 
     	<include refid="Base_Column_List" />
    		 from <include refid="t_pg"></include> pg
@@ -234,6 +236,9 @@
 		<if test="pgType != null">
 			AND pg.pg_type = #{pgType}
 		</if>
+		<if test="circulateWay != null">
+			AND circulate_way = #{circulateWay}
+		</if>
 		<if test="pgValidity != null">
 			AND pg.pg_validity = #{pgValidity}
 		</if>
@@ -271,6 +276,9 @@
 		<if test="pgValidity != null">
 			AND pg_validity = #{pgValidity}
 		</if>
+		<if test="circulateWay != null">
+			AND circulate_way = #{circulateWay}
+		</if>
 	</sql>
  <!-- 查询某个平台没有设置产品编码的包体 -->
  <select id="listPgListNotInPcode" parameterType="map" resultMap="BaseResultMap">
@@ -297,6 +305,9 @@
 		</if>
 		<if test="pgType != null">
 			AND pg_type = #{pgType}
+		</if>
+		<if test="circulateWay != null">
+			AND circulate_way = #{circulateWay}
 		</if>
  	</where>
  </select>

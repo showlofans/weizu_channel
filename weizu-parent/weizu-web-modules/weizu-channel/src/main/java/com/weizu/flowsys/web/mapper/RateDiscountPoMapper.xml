@@ -115,7 +115,7 @@
 	 		</if>
 	 	</where>
 	 	order by active.active_time DESC) b 
-	 	GROUP BY b.scope_city_code
+	 	<!-- GROUP BY b.scope_city_code -->
   </select>
   
   <!-- 获得充值的折扣 -->
@@ -135,7 +135,7 @@
 	 		<include refid="tripple_table_sql"></include>
 	 	</where>
 	 	order by active.active_time DESC) b 
-	 	GROUP BY b.scope_city_code
+	 	<!-- GROUP BY b.scope_city_code -->
   </select>
   
   <!-- 通过代理商id找到它绑定的通道id -->

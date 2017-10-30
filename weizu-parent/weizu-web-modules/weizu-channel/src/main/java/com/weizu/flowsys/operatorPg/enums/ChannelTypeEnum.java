@@ -2,11 +2,14 @@ package com.weizu.flowsys.operatorPg.enums;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.weizu.flowsys.web.channel.pojo.SpecialCnelType;
-import com.weizu.flowsys.web.channel.pojo.SpecialOpdType;
+import com.weizu.flowsys.web.channel.pojo.SpecialCnelType;
 
 /**
  * @description: 通道类型枚举
@@ -141,25 +144,70 @@ public enum ChannelTypeEnum {
 	
 	public static List<Map<String, Object>> toSpecialList(List<SpecialCnelType> specialCnelList, List<Long> agnecyCnelList)
 	{
+		if(specialCnelList == null || specialCnelList.size() == 0){
+			return null;
+		}
+		
+		// 获取附件类型枚举数组
+		ChannelTypeEnum[] enumArray = ChannelTypeEnum.values();
+	    Set<Integer> result = new HashSet<Integer>();
+		
+		Set<Integer> allCnelType = new HashSet<Integer>();
+		for (ChannelTypeEnum cnelTypeEnum : enumArray) {
+			allCnelType.add(cnelTypeEnum.getValue()) ;
+		}
 		// 定义枚举list
-		List<Map<String, Object>> attachmentTypeMapList = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> attachmentTypeMapList = new ArrayList<Map<String, Object>>(enumArray.length);
+		
+		//先添加第一个普通的
 		Map<String, Object> pgInServiceMap1 = new HashMap<String, Object>(2);
 		pgInServiceMap1.put("desc", ChannelTypeEnum.ORDINARY.getDesc());
 		pgInServiceMap1.put("value", ChannelTypeEnum.ORDINARY.getValue());
 		attachmentTypeMapList.add(pgInServiceMap1);
+		
+		Set<Integer> getChannelType = new HashSet<Integer>();	//set2
+		
 		for (Long agencyCnelId : agnecyCnelList) {
 			for (SpecialCnelType cnelType : specialCnelList) {
-				if(cnelType.getChannelId() == agencyCnelId){
-					ChannelTypeEnum pgInServiceEnum = getEnum(cnelType.getChannelType());
-					if(pgInServiceEnum != null){
-						Map<String, Object> pgInServiceMap = new HashMap<String, Object>(2);
-						pgInServiceMap.put("desc", pgInServiceEnum.getDesc());
-						pgInServiceMap.put("value", pgInServiceEnum.getValue());
-						attachmentTypeMapList.add(pgInServiceMap);
-					}
+				if(cnelType.getChannelId() == agencyCnelId){// && !ChannelTypeEnum.ORDINARY.getValue().equals(cnelType.getChannelType()
+					getChannelType.add(cnelType.getChannelType());
 				}
 			}
 		} 
+		//差集运算
+		result.clear();
+        result.addAll(allCnelType);
+        result.retainAll(getChannelType);
+		
+        for (ChannelTypeEnum cnelTypeEnum : enumArray) {
+			 Iterator<Integer> i = result.iterator();//先迭代出来  
+	        while(i.hasNext()){//遍历  
+//	            System.out.println(i.next()); 
+	            if(i.next().equals(cnelTypeEnum.getValue())){
+	            	Map<String, Object> pgInServiceMap = new HashMap<String, Object>(2);
+	            	pgInServiceMap.put("desc", cnelTypeEnum.getDesc());
+	            	pgInServiceMap.put("value", cnelTypeEnum.getValue());
+	            	attachmentTypeMapList.add(pgInServiceMap);
+	            }
+	        }  
+		}
+		
+        
+//		for (Long agencyCnelId : agnecyCnelList) {
+//			for (SpecialCnelType cnelType : specialCnelList) {
+//				
+//				
+//				if(cnelType.getChannelId() == agencyCnelId){
+//					ChannelTypeEnum pgInServiceEnum = getEnum(cnelType.getChannelType());
+//					if(pgInServiceEnum != null){
+//						Map<String, Object> pgInServiceMap = new HashMap<String, Object>(2);
+//						pgInServiceMap.put("desc", pgInServiceEnum.getDesc());
+//						pgInServiceMap.put("value", pgInServiceEnum.getValue());
+//						attachmentTypeMapList.add(pgInServiceMap);
+//					}
+//				}
+//			}
+//		} 
 		return attachmentTypeMapList;
 	}
 	

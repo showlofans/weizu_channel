@@ -143,7 +143,7 @@ public class TransferRecAOImpl implements TransferRecAO {
 			 
 			 ChargeRecordPo paramsPo = new ChargeRecordPo(transferAmount, accountPo.getBillType(), AccountTypeEnum.INCREASE.getValue(), accountPo.getId());
 			 Integer loginContextId = bankPo.getAgencyId();
-			 int upAccount = chargeRecordAO.updateAccount(paramsPo, loginContextId);
+			 int upAccount = chargeRecordAO.updateAccount(accountPo.getId(),transferAmount, loginContextId);
 			 up1 += upAccount -1 ;
 			 
 			 //将转账金额设置为0

@@ -81,7 +81,7 @@
 					
 					<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
-					<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
+					<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
 				</div>
 		</form>
 	</div>
@@ -100,7 +100,6 @@
 					<!-- <th width="150">充值时间</th> -->
 					<th width="100">号码归属</th>
 					<th width="60">城市</th>
-					<th width="60">充值方式</th>
 					<th width="80">结果</th>
 					<th width="80">结果描述</th>
 					<th width="60">金额</th><!-- 返款 -->
@@ -108,33 +107,52 @@
 						<th width="120">通道名称</th>
 					</c:if>
 					<th width="60">扣款类型</th>
+					<th width="60">充值方式</th>
 				</tr>
 			</thead>
 			<tbody>
 				<c:forEach items="${resultMap.pagination.records }" var="purchase" varStatus="vs">
 					<tr class="text-c">
-						<td>${purchase.agencyName }</td>
-						<td>${purchase.orderId }</td>
+						<td>${purchase.agencyName }
+						</td>
+						<td>${purchase.orderId }
+							<%-- <c:choose>
+								<c:when test="${purchase.billType == 0 }">
+									<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+										<c:if test="${billTypeEnum.value == 0 }">
+											<span class="c-red" data-toggle="tooltip"  data-placement="right" title="${billTypeEnum.desc }"  >
+											${purchase.orderId }</span>
+										</c:if>
+									</c:forEach>
+								</c:when>
+								<c:otherwise>
+									<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+									<c:if test="${billTypeEnum.value == 1 }">
+										<span class="c-green" data-toggle="tooltip"  data-placement="right" title="${billTypeEnum.desc }"><!--   -->
+										${purchase.orderId }</span>
+									</c:if>
+									</c:forEach>
+								</c:otherwise>
+							</c:choose> --%>
+						</td>
 						<td>${purchase.chargeTel }</td>
 						 <td>${purchase.pgSize }</td>
 						<td>${purchase.pgPrice }</td>
-						<td>${purchase.orderArriveTimeStr }</td>
+						<td>
+							<span class="label label-defaunt">
+								${purchase.orderArriveTimeStr }
+							</span>
+						</td>
 						 <%-- <td>${purchase.orderBackTimeStr }</td> --%>
 						<td>${purchase.chargeTelDetail }</td>
 						<td>${purchase.chargeTelCity }</td>
-						<!-- 充值方式 -->
-						<td>
-						<c:forEach items="${resultMap.orderPathEnums }" var="orderPathEnum" varStatus="vsp">
-							<c:if test="${purchase.orderPlatformPath == orderPathEnum.value }">
-								${orderPathEnum.desc }
-							</c:if>
-						</c:forEach>
-						</td>
 						<!-- 结果 -->
 						<td>
 							<c:forEach items="${resultMap.orderStateEnums }" var="orderStateEnum" varStatus="vs">
 								<c:if test="${purchase.orderState == orderStateEnum.value }">
-									${orderStateEnum.desc }
+									<span class="label label-defaunt radius">
+										${orderStateEnum.desc }
+									</span>
 								</c:if>
 							</c:forEach>
 						</td>
@@ -149,7 +167,11 @@
 								</c:otherwise>
 							</c:choose>
 						</td>
-						<td>${purchase.orderPrice }</td>
+						<td>
+							<span class="label label-defaunt radius">
+								${purchase.orderPrice }
+							</span>
+						</td>
 						<c:if test="${loginContext.rootAgencyId == 0 }"><td>${purchase.channelName }</td> 
 						</c:if>
 						<td>
@@ -158,6 +180,14 @@
 									${bTypeEnum.desc }
 								</c:if>
 							</c:forEach>
+						</td>
+						<!-- 充值方式 -->
+						<td>
+						<c:forEach items="${resultMap.orderPathEnums }" var="orderPathEnum" varStatus="vsp">
+							<c:if test="${purchase.orderPlatformPath == orderPathEnum.value }">
+								${orderPathEnum.desc }
+							</c:if>
+						</c:forEach>
 						</td>
 					</tr>
 				</c:forEach>
@@ -185,7 +215,6 @@
 <script type="text/javascript" src="/view/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
 <!-- jQuery -->
 
-<script type="text/javascript" charset="utf8" src="/view/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="/view/lib/laypage/1.2/laypage.js"></script>
 <!-- 时间选择器 -->
 <!--  <script src="/view/lib/moment.js"></script>
@@ -193,6 +222,7 @@
 <script src="/view/lib/bootstrap-datetimepicker.zh-CN.js"></script> -->
 <script type="text/javascript">
 function formSub(){
+	$("input[name='pageNoLong']").val('');
 	$('form').submit();
 }
 $(document).ready(function() {

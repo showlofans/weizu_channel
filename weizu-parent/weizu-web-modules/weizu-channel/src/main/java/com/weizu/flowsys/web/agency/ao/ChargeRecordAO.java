@@ -17,7 +17,7 @@ public interface ChargeRecordAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月6日 下午4:06:02
 	 */
-	int updateAccount(ChargeRecordPo chargeRecordPo,Integer loginContextId);
+	int updateAccount(Integer accountId, Double rechargeAmount,Integer loginContextId);
 	
 	/**
 	 * @description:修改登陆用户账户余额

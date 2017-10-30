@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgInServiceEnum;
 import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
@@ -173,11 +174,14 @@ public class OperatorPgController {
 		}else{
 			pageParam = new PageParam(1, 10);
 		}
-		Pagination<OperatorPgDataPo> pagination = operatorPgAO.listPg(operatorPgDataPo,pageParam);
+		Pagination<PgDataPo> pagination = operatorPgAO.listPg(operatorPgDataPo,pageParam);
 		resultMap.put("pgInEnums", PgInServiceEnum.toList());
 		resultMap.put("operatoerTypeEnums", OperatorTypeEnum.toList());
+		
 		resultMap.put("pgTypeEnums", PgTypeEnum.toList());
 		resultMap.put("pgValidityEnums", PgValidityEnum.toList());
+		resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());
+		
 		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 		resultMap.put("params", operatorPgDataPo);
 		resultMap.put("pagination", pagination);
@@ -202,9 +206,11 @@ public class OperatorPgController {
 //			resultMap.put("pageTitle", new String(pageTitle.getBytes("ISO8859-1"), "utf-8"));
 			resultMap.put("pageTitle", pageTitle);
 		}
-		resultMap.put("operatoerTypeEnums", OperatorTypeEnum.toList());
 		resultMap.put("pgTypeEnums", PgTypeEnum.toList());
 		resultMap.put("pgValidityEnums", PgValidityEnum.toList());
+		resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());
+		
+		resultMap.put("operatoerTypeEnums", OperatorTypeEnum.toList());
 		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 		resultMap.put("pgInServiceEnums", PgInServiceEnum.toList());
 		return new ModelAndView("/channel/pg_add_page", "resultMap", resultMap);

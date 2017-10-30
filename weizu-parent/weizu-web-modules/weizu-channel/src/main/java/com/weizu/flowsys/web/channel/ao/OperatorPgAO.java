@@ -28,9 +28,9 @@ public interface OperatorPgAO {
 	 */
 	Map<String,Object> listPg(Map<String,Object> params);
 //	Pagination<OperatorPgDataPo> listFirstPg(Map<String,Object> params);
-	Map<String,Object> listPg(Map<String,Object> params,PageTag pageTag);
+//	Map<String,Object> listPg(Map<String,Object> params,PageTag pageTag);
 //	Pagination<OperatorPgDataPo> listPg(Map<String,Object> params,PageParam pageParam);
-	Map<String,Object> listNextPg(Map<String,Object> params);
+//	Map<String,Object> listNextPg(Map<String,Object> params);
 	
 	/**
 	 * @description:封装流量查询参数
@@ -45,7 +45,7 @@ public interface OperatorPgAO {
 	
 	
 //	Map<String,Object> getOperatorPgParams(PageTag pageTag,OperatorPgDataPo operatorPgDataPo);
-	Pagination<OperatorPgDataPo> listPg(OperatorPgDataPo operatorPgDataPo,PageParam pageParam);
+	Pagination<PgDataPo> listPg(OperatorPgDataPo operatorPgDataPo,PageParam pageParam);
 	
 	/**
 	 * @description:把客户端传过来的json分页数据解析出来

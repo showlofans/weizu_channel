@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
@@ -89,13 +90,19 @@ public class ValiUser {
 		}else{
 			whereP.and("pg_type", "=", pgDataPo.getPgType());
 		}
+		if(pgDataPo.getCirculateWay() == null){//默认使用流量包
+			whereP.and("circulate_way", "=", ChannelTypeEnum.ORDINARY.getValue());
+		}else{
+			whereP.and("circulate_way", "=", pgDataPo.getCirculateWay());
+		}
 		
 		if(StringHelper.isEmpty(pgDataPo.getPgValidity())){//默认使用月包
 			whereP.and("pg_validity", "=", PgValidityEnum.MONTH_DAY_DATA.getValue());
 		}else{
 			whereP.and("pg_validity", "=", pgDataPo.getPgValidity());
-			
 		}
+		
+		
 		
 		PgDataPo pgData = operatorPgDao.get(whereP);
 		return pgData;

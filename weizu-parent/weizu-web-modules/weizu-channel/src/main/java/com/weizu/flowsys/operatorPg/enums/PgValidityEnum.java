@@ -2,8 +2,11 @@ package com.weizu.flowsys.operatorPg.enums;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.weizu.flowsys.web.channel.pojo.SpecialOpdType;
 
@@ -24,7 +27,11 @@ public enum PgValidityEnum {
 	/**
 	 * 1日包
 	 */
-	ONE_DAY_DATA("1日包", "01"),
+	ONE_DAY_DATA("今日包", "01"),
+	/**
+	 * 24小时包
+	 */
+	TWEENTYFOUR_HOURS("24小时包", "24"),
 	/**
 	 * 3日包
 	 */
@@ -44,7 +51,7 @@ public enum PgValidityEnum {
 	/**
 	 * 年包
 	 */
-	one_year_data("年包", "365");
+	ONE_YEAR_DATA("年包", "365");
 	
 
 	/** 描述 */
@@ -163,26 +170,67 @@ public enum PgValidityEnum {
 	
 	public static List<Map<String, Object>> toSpecialList(List<SpecialOpdType> specialOpdList, List<Long> agnecyCnelList)
 	{
+		if(specialOpdList == null || specialOpdList.size() == 0){
+			return null;
+		}
+		PgValidityEnum[] enumArray = PgValidityEnum.values();
+		Set<String> result = new HashSet<String>();
 		
+		Set<String> allPgValidity = new HashSet<String>();
+		for (PgValidityEnum pgValidityEnum : enumArray) {
+			allPgValidity.add(pgValidityEnum.getValue()) ;
+		}
 		// 定义枚举list
-		List<Map<String, Object>> attachmentTypeMapList = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> attachmentTypeMapList = new ArrayList<Map<String, Object>>(enumArray.length);
 		Map<String, Object> pgInServiceMap1 = new HashMap<String, Object>(2);
 		pgInServiceMap1.put("desc", PgValidityEnum.MONTH_DAY_DATA.getDesc());
 		pgInServiceMap1.put("value", PgValidityEnum.MONTH_DAY_DATA.getValue());
 		attachmentTypeMapList.add(pgInServiceMap1);
+		
+		Set<String> getPgValidity = new HashSet<String>();	//set2
+		
 		for (Long agencyCnelId : agnecyCnelList) {
 			for (SpecialOpdType opdType : specialOpdList) {
-				if(opdType.getChannelId() == agencyCnelId){
-					PgValidityEnum pgInServiceEnum = getEnum(opdType.getPgValidity());
-					if(pgInServiceEnum != null){
-						Map<String, Object> pgInServiceMap = new HashMap<String, Object>(2);
-						pgInServiceMap.put("desc", pgInServiceEnum.getDesc());
-						pgInServiceMap.put("value", pgInServiceEnum.getValue());
-						attachmentTypeMapList.add(pgInServiceMap);
-					}
+				if(opdType.getChannelId() == agencyCnelId && !opdType.getPgValidity().equals(PgValidityEnum.MONTH_DAY_DATA.getValue())){
+					getPgValidity.add(opdType.getPgValidity());
 				}
 			}
 		} 
+		//差集运算
+		result.clear();
+        result.addAll(allPgValidity);
+        result.retainAll(getPgValidity);
+//        System.out.println("差集：" + result);
+        
+		//根据两个集合获得差集
+		for (PgValidityEnum pgValidityEnum : enumArray) {
+			 Iterator<String> i = result.iterator();//先迭代出来  
+	        while(i.hasNext()){//遍历  
+//	            System.out.println(i.next()); 
+	            if(i.next().equals(pgValidityEnum.getValue())){
+	            	Map<String, Object> pgInServiceMap = new HashMap<String, Object>(2);
+	            	pgInServiceMap.put("desc", pgValidityEnum.getDesc());
+	            	pgInServiceMap.put("value", pgValidityEnum.getValue());
+	            	attachmentTypeMapList.add(pgInServiceMap);
+	            }
+	        }  
+		}
+		
+		
+		
+//		for (Long agencyCnelId : agnecyCnelList) {
+//			for (SpecialOpdType opdType : specialOpdList) {
+//				if(opdType.getChannelId() == agencyCnelId){
+//					PgValidityEnum pgInServiceEnum = getEnum(opdType.getPgValidity());
+//					if(pgInServiceEnum != null){
+//						Map<String, Object> pgInServiceMap = new HashMap<String, Object>(2);
+//						pgInServiceMap.put("desc", pgInServiceEnum.getDesc());
+//						pgInServiceMap.put("value", pgInServiceEnum.getValue());
+//						attachmentTypeMapList.add(pgInServiceMap);
+//					}
+//				}
+//			}
+//		} 
 		return attachmentTypeMapList;
 	}
 
