@@ -127,7 +127,7 @@ public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年8月2日 上午11:33:52
 	 */
-//	List<RateDiscountPo> getRateListForCharge(Map<String, Object> params);
+	List<RateDiscountPo> getRateListForCharge(Map<String, Object> params);
 	
 	/**
 	 * @description: 获得充值的折扣

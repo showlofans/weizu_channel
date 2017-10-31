@@ -139,9 +139,9 @@
 						 <td>${purchase.pgSize }</td>
 						<td>${purchase.pgPrice }</td>
 						<td>
-							<span class="label label-defaunt">
 								${purchase.orderArriveTimeStr }
-							</span>
+							<!-- <span class="label label-defaunt">
+							</span> -->
 						</td>
 						 <%-- <td>${purchase.orderBackTimeStr }</td> --%>
 						<td>${purchase.chargeTelDetail }</td>

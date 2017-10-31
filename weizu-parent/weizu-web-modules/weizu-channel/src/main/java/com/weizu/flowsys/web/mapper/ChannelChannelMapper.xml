@@ -54,14 +54,17 @@
   </sql>
   
   <!-- 获得特殊通道类型 -->
-  <select id="getSpecialCnelType" parameterType="int" resultMap="SpecialCnelResultMap">
+  <select id="getSpecialCnelType" parameterType="map" resultMap="SpecialCnelResultMap">
   	select <include refid="SpecialCnel_Colume_List"></include> 
   	from <include refid="t_channel"></include> cnel
 	INNER JOIN <include refid="t_discount"></include> cd
 	on cnel.id=cd.channel_id
 	<where>
-		<if test="#{_parameter != null}">
-			cd.channel_type != #{_parameter}
+		<if test="#{cnelType != null}">
+			AND cd.channel_type != #{cnelType}
+		</if>
+		<if test="#{channelUseState != null}">
+			AND cnel.channel_use_state = #{channelUseState}
 		</if>
 	</where>
   </select>
@@ -72,21 +75,26 @@
     <result column="pg_validity" property="pgValidity" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="SpecialOpd_Colume_List">
-  	cbg.channel_id,opd.pg_type,opd.pg_validity
+  	cbp.channel_id,opd.pg_type,opd.pg_validity
   </sql>
   
   <!-- 获得特殊包体类型 -->
   <select id="getSpecialOpdType" parameterType="map" resultMap="SpecialOpdResultMap">
   	select <include refid="SpecialOpd_Colume_List"></include> 
-    FROM <include refid="t_cbp"></include> cbg 
+    FROM <include refid="t_cbp"></include> cbp 
+    INNER JOIN <include refid="t_channel"></include> chnel
+	on chnel.id=cbp.channel_id
 	INNER JOIN <include refid="t_pg"></include> opd
-	on cbg.pg_id=opd.id 
+	on cbp.pg_id=opd.id 
 	<where>
 		<if test="#{pgType != null}">
 		  AND opd.pg_type != #{pgType}
 		</if>
 		<if test="#{pgValidity != null}">
-			or opd.pg_validity != #{pgValidity}
+		or opd.pg_validity != #{pgValidity}
+		</if>
+		<if test="#{channelUseState != null}">
+			AND chnel.channel_use_state = #{channelUseState}
 		</if>
 	</where>
   </select>

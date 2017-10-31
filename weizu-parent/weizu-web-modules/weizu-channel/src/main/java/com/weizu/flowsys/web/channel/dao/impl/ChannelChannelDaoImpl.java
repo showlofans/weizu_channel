@@ -151,13 +151,17 @@ public class ChannelChannelDaoImpl extends DaoImpl<ChannelChannelPo, Long> imple
 	}
 	@Override
 	public List<SpecialCnelType> getSpecialCnelType(Integer cnelType) {
-		return sqlSessionTemplate.selectList("getSpecialCnelType", cnelType);
+		Map<String,Object> params = new HashMap<String, Object>();
+		params.put("channelUseState", ChannelStateEnum.OPEN.getValue());
+		params.put("cnelType", cnelType);
+		return sqlSessionTemplate.selectList("getSpecialCnelType", params);
 	}
 	@Override
 	public List<SpecialOpdType> getSpecialOpdType(SpecialOpdType specialOpdType) {
 		Map<String,Object> params = new HashMap<String, Object>();
 		params.put("pgType", specialOpdType.getPgType());
 		params.put("pgValidity", specialOpdType.getPgValidity());
+		params.put("channelUseState", ChannelStateEnum.OPEN.getValue());
 		
 		return sqlSessionTemplate.selectList("getSpecialOpdType", params);
 	}

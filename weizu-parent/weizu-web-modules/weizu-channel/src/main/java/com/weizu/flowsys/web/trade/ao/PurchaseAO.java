@@ -124,6 +124,15 @@ public interface PurchaseAO {
 	 */
 	List<PgDataPo> getPgByChanel(ChargeChannelParamsPo ccpp);
 	
+	/**
+	 * @description: 充值页面异步获得充值包体（超级管理员）
+	 * @param channelId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月31日 上午11:51:27
+	 */
+	List<PgDataPo> getPgByChanel(Long channelId);
+	
 	
 	
 	/**

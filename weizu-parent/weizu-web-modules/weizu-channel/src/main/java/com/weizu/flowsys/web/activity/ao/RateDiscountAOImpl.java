@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
@@ -30,6 +31,9 @@ import com.weizu.flowsys.web.activity.pojo.DiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountShowDTO;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
+import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
+import com.weizu.flowsys.web.channel.pojo.PgDataPo;
+import com.weizu.flowsys.web.trade.ao.PurchaseAO;
 import com.weizu.web.foundation.String.StringHelper;
 
 @Service(value="rateDiscountAO")
@@ -40,6 +44,9 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	
 	@Resource
 	private AgencyActiveRateDTODao agencyActiveRateDTODao;
+	
+	@Resource
+	private PurchaseAO purchaseAO;
 	
 	/**
 	 * @description: 获得费率列表
@@ -457,6 +464,11 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		params.put("accountId", accountId);
 		String scopeCityCode = ScopeCityEnum.getValueByDesc(scopeCityName);
 		params.put("scopeCityCode", scopeCityCode);
+		params.put("bindState", BindStateEnum.BIND.getValue());
+		params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+		params.put("channelType", ChannelTypeEnum.ORDINARY.getValue());
+		params.put("pgType", PgTypeEnum.PGDATA.getValue());
+		params.put("pgValidity", PgValidityEnum.MONTH_DAY_DATA.getValue());
 		RateDiscountPo ratePo = rateDiscountDao.getRateForCharge(params);
 		if(ratePo != null){
 			return true;
@@ -774,6 +786,64 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 			return rateList.get(0);
 		}
 		return null;
+	}
+
+	@Override
+	public List<PgDataPo> getPgListForPurchase(
+			ChargeChannelParamsPo ccpp, int agencyId, Boolean judgeChannelState) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		//用不带票的账户去获得价格
+		params.put("agencyId", agencyId);
+		params.put("bindState", BindStateEnum.BIND.getValue());
+		params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+		Integer serviceType = ccpp.getServiceType();
+		String carrier = ccpp.getCarrier();
+		params.put("serviceType", serviceType);
+		int sLength = carrier.length();
+		String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动
+		if(ServiceTypeEnum.NATION_WIDE.getValue() != serviceType){
+			String scopeCityName = carrier.substring(0,sLength-2);
+			String scopeCityCode = ScopeCityEnum.getValueByDesc(scopeCityName);
+			params.put("scopeCityCode", scopeCityCode);
+		}else{
+			params.put("scopeCityCode", ScopeCityEnum.QG.getValue());//使用全国的地区
+		}
+		int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
+		params.put("operatorType", opType);
+		if(judgeChannelState){//需要判断通道状态:比如再次提交获得的费率，比如测试通道的时候
+			params.put("channelState", ChannelStateEnum.OPEN.getValue());
+		}
+		if (ccpp.getChannelType() == null) {
+			params.put("channelType", ChannelTypeEnum.ORDINARY.getValue());
+		} else {
+			params.put("channelType", ccpp.getChannelType());
+		}
+		if (ccpp.getPgType() == null) {
+			params.put("pgType", PgTypeEnum.PGDATA.getValue());
+		} else {
+			params.put("pgType", ccpp.getPgType());
+		}
+		if (StringHelper.isEmpty(ccpp.getPgValidity())) {
+			params.put("pgValidity", PgValidityEnum.MONTH_DAY_DATA.getValue());
+		} else {
+			params.put("pgValidity", ccpp.getPgValidity());
+		}
+		
+		List<RateDiscountPo> rateList = rateDiscountDao.getRateListForCharge(params);
+		List<PgDataPo> resultList = new LinkedList<PgDataPo>();
+		for (RateDiscountPo rateDiscountPo : rateList) {
+			List<PgDataPo> pgList = purchaseAO.getPgByChanel(rateDiscountPo.getChannelId());
+			resultList.addAll(pgList);
+		}
+//		List<OperatorPgDataPo> chargeList = initByPgList(resultList);
+//		for (OperatorPgDataPo operatorPgDataPo : chargeList) {//初始化第一个折扣，折扣id和包体价格
+//			operatorPgDataPo.setRteId(ratePo.getId());
+//			operatorPgDataPo.setRteDis(activeDiscount);
+//			operatorPgDataPo.setChannelId(channelId);
+//			operatorPgDataPo.setPgDiscountPrice(NumberTool.mul(activeDiscount, operatorPgDataPo.getPgPrice()));
+//		}
+		
+		return resultList;
 	}
 	
 }

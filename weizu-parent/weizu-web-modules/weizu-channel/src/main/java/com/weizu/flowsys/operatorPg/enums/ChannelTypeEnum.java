@@ -159,11 +159,7 @@ public enum ChannelTypeEnum {
 		// 定义枚举list
 		List<Map<String, Object>> attachmentTypeMapList = new ArrayList<Map<String, Object>>(enumArray.length);
 		
-		//先添加第一个普通的
-		Map<String, Object> pgInServiceMap1 = new HashMap<String, Object>(2);
-		pgInServiceMap1.put("desc", ChannelTypeEnum.ORDINARY.getDesc());
-		pgInServiceMap1.put("value", ChannelTypeEnum.ORDINARY.getValue());
-		attachmentTypeMapList.add(pgInServiceMap1);
+		
 		
 		Set<Integer> getChannelType = new HashSet<Integer>();	//set2
 		
@@ -179,8 +175,15 @@ public enum ChannelTypeEnum {
         result.addAll(allCnelType);
         result.retainAll(getChannelType);
 		
+        Iterator<Integer> i = result.iterator();//先迭代出来  
+        if(i.hasNext()){
+        	//先添加第一个普通的
+    		Map<String, Object> pgInServiceMap1 = new HashMap<String, Object>(2);
+    		pgInServiceMap1.put("desc", ChannelTypeEnum.ORDINARY.getDesc());
+    		pgInServiceMap1.put("value", ChannelTypeEnum.ORDINARY.getValue());
+    		attachmentTypeMapList.add(pgInServiceMap1);
+        }
         for (ChannelTypeEnum cnelTypeEnum : enumArray) {
-			 Iterator<Integer> i = result.iterator();//先迭代出来  
 	        while(i.hasNext()){//遍历  
 //	            System.out.println(i.next()); 
 	            if(i.next().equals(cnelTypeEnum.getValue())){

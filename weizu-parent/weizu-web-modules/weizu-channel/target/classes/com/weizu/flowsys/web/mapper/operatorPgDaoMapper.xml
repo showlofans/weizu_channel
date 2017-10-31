@@ -354,12 +354,12 @@
 	INNER JOIN <include refid="t_cbp"></include> cbp
 	on cbp.pg_id = pg.id
 	<where>
-		<if test="operatorType != null">
+		<!-- <if test="operatorType != null">
 			AND pg.operator_type = #{operatorType}
 		</if>
 		<if test="serviceType != null">
 			AND pg.service_type = #{serviceType}
-		</if>
+		</if> -->
 		<if test="channelId != null">
 			AND cbp.channel_id = #{channelId}
 		</if>

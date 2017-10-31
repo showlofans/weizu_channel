@@ -243,17 +243,15 @@ public class ChargePgController {
 //		OperatorPgDataPo oppo = new OperatorPgDataPo();
 //		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");//用不带票账户充值
-//		for (OperatorTypeEnum typeEnum : OperatorTypeEnum.values()) {
-//			if(operatorType.contains(typeEnum.getDesc())){//中国移动包涵移动
-//				oppo.setOperatorType(typeEnum.getValue());
-//			}
-//		}
-//		operatorName = new String(operatorName.getBytes("iso-8859-1"), "utf-8");
 		String carrier = ccpp.getCarrier();//江西移动
 		int sLength = carrier.length();
-		List<OperatorPgDataPo> list = new ArrayList<OperatorPgDataPo>();
-//		RateDiscountPo rateDiscountPo = null;
+//		List<OperatorPgDataPo> list = new ArrayList<OperatorPgDataPo>();
 		if(sLength>2){
+//			if(sLength>2 && agencyVO != null){
+//			List<PgDataPo> pgList = rateDiscountAO.getPgListForPurchase(ccpp, agencyVO.getId(), true);
+//			String listJsonStr = JSON.toJSONString(pgList);
+////		System.out.println(listJsonStr);
+//			return listJsonStr;
 			String scopeCityName = carrier.substring(0,sLength-2);//地区参数
 			if(accountPo != null){
 				Integer accountId = accountPo.getId();
@@ -272,7 +270,7 @@ public class ChargePgController {
 					if(ratePo != null){
 						ChargeChannelParamsPo ccpp1 = new ChargeChannelParamsPo(carrier, ccpp.getServiceType(), ratePo.getChannelId());
 //						ccpp.setBillType(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-						List<PgDataPo> pgList = purchaseAO.getPgByChanel(ccpp1);
+						List<PgDataPo> pgList = purchaseAO.getPgByChanel(ratePo.getChannelId());
 						Double activeDiscount = ratePo.getActiveDiscount();
 						Long channelId = ratePo.getChannelId();
 						List<OperatorPgDataPo> chargeList = initByPgList(pgList);

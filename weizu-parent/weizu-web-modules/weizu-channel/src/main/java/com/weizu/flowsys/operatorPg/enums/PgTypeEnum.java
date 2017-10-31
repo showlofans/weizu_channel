@@ -155,12 +155,6 @@ public enum PgTypeEnum {
 		// 定义枚举list
 		List<Map<String, Object>> attachmentTypeMapList = new ArrayList<Map<String, Object>>(enumArray.length);
 		
-		//先添加第一个普通的
-		Map<String, Object> pgInServiceMap1 = new HashMap<String, Object>(2);
-		pgInServiceMap1.put("desc", PgTypeEnum.PGDATA.getDesc());
-		pgInServiceMap1.put("value", PgTypeEnum.PGDATA.getValue());
-		attachmentTypeMapList.add(pgInServiceMap1);
-		
 		Set<Integer> getPgType = new HashSet<Integer>();	//set2
 		
 		for (Long agencyCnelId : agnecyCnelList) {
@@ -177,8 +171,15 @@ public enum PgTypeEnum {
 //        System.out.println("差集：" + result);
         
 		//根据两个集合获得差集
+        Iterator<Integer> i = result.iterator();//先迭代出来  
+        if(i.hasNext()){
+        	//先添加第一个普通的
+    		Map<String, Object> pgInServiceMap1 = new HashMap<String, Object>(2);
+    		pgInServiceMap1.put("desc", PgTypeEnum.PGDATA.getDesc());
+    		pgInServiceMap1.put("value", PgTypeEnum.PGDATA.getValue());
+    		attachmentTypeMapList.add(pgInServiceMap1);
+        }
 		for (PgTypeEnum pgTypeEnum : enumArray) {
-			 Iterator<Integer> i = result.iterator();//先迭代出来  
 	        while(i.hasNext()){//遍历  
 //	            System.out.println(i.next()); 
 	            if(i.next().equals(pgTypeEnum.getValue())){

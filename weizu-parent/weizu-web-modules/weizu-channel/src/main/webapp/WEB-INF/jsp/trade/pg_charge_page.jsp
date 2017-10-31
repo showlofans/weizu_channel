@@ -584,17 +584,40 @@
                	 } */
             	//查询流量包
             	 	//ajax2();
-           	 
-       	  var pgValidity = $("#pgValidity").val();
-    	  var pgType = $("#pgType").val();
-    	  var channelType = $("#channelType").val();
+       	if(rootAgencyId == 0){
+    	  var url = '/flowsys/chargePg/ajax_charge_channel.do?carrier=';
+       	}else{
+    	  var url = '/flowsys/chargePg/pgList_forPurchase.do?carrier=';
+       	}
+    	  url += carrier;
+    	  url += '&serviceType=';
+    	  url += serviceType; 
+    	  if($("#pgValidity").length >0){
+	       	 var pgValidity = $("#pgValidity").val();
+    		 url += '&pgValidity=';
+    		 url += pgValidity;
+    	  }
+    	  if($("#pgType").length >0){
+          	 var pgType = $("#pgType").val();
+    		 url += '&pgType=';
+    		 url += pgType;
+    	  }
+    	  if($("#channelType").length >0){
+	    	 var channelType = $("#channelType").val();
+    		 url += '&channelType=';
+    		 url += channelType;
+    	  }
+    	  /* else{
+    		  alert('13699562589');
+    	  } */
        	   if(rootAgencyId == 0){
 	       	  var epName = $('#epName').val();
-	       	  
+       		  url += '&epName=';
+	    	  url += epName;
 	       	 // alert(epEngId);
 	       	  $.ajax({
 	                type: "post",
-	                url: '/flowsys/chargePg/ajax_charge_channel.do?carrier='+ carrier + '&pgType=' + pgType+ '&channelType=' + channelType+ '&pgValidity=' + pgValidity+ '&serviceType=' + serviceType + '&epName=' + epName,
+	                url: url,
 	                dataType: "json",
 	                async: false,
 	                contentType: "application/x-www-form-urlencoded; charset=utf-8", 
@@ -674,7 +697,7 @@
 	       	   }else{
 		       		$.ajax({
 		                type: "post",
-		                url: '/flowsys/chargePg/pgList_forPurchase.do?carrier='+ carrier + '&pgType=' + pgType+ '&channelType=' + channelType+ '&pgValidity=' + pgValidity + '&serviceType=' + serviceType,
+		                url: url,
 		                dataType: "json",
 		                async: false,
 		                contentType: "application/x-www-form-urlencoded; charset=utf-8", 

@@ -8,6 +8,8 @@ import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountShowDTO;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
+import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
+import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 
 public interface RateDiscountAO {
 	/**
@@ -155,6 +157,17 @@ public interface RateDiscountAO {
 	 * @createTime:2017年10月26日 下午4:42:16
 	 */
 	RateDiscountPo getRateForCharge(ChargeChannelParamsPo ccpp, int accountId,Boolean judgeChannelState);
+	
+	/**
+	 * @description: 获得充值的包体
+	 * @param ccpp
+	 * @param accountId
+	 * @param judgeChannelState
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月31日 下午4:27:38
+	 */
+	List<PgDataPo> getPgListForPurchase(ChargeChannelParamsPo ccpp, int agencyId,Boolean judgeChannelState);
 	
 	/**
 	 * @description:

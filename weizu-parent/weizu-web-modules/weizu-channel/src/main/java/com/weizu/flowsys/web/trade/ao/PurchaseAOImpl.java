@@ -1109,7 +1109,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 
 	@Override
 	public List<PgDataPo> getPgByChanel(ChargeChannelParamsPo ccpp) {
-		Map<String, Object> objMap = new HashMap<String, Object>();
+//		Map<String, Object> objMap = new HashMap<String, Object>();
 //		String carrier = ccpp.getCarrier();
 //		if(StringHelper.isNotEmpty(carrier)){
 //			int operatorType = OperatorTypeEnum.getValueByDesc(carrier.substring(carrier.length()-2));
@@ -1121,10 +1121,21 @@ public class PurchaseAOImpl implements PurchaseAO {
 //				}
 //			}
 //		}
-		if(ccpp.getChannelId() != null){
-			objMap.put("channelId", ccpp.getChannelId());
-		}
+//		if(ccpp.getChannelId() != null){
+//			objMap.put("channelId", ccpp.getChannelId());
+//		}
 //		objMap.put("serviceType", ccpp.getServiceType());
+//		List<PgDataPo> pgList = operatorPgDao.getPgByChanel(objMap);
+//		return pgList;
+		return null;
+	}
+
+	@Override
+	public List<PgDataPo> getPgByChanel(Long channelId) {
+		Map<String, Object> objMap = new HashMap<String, Object>();
+		if(channelId != null){
+			objMap.put("channelId", channelId);
+		}
 		List<PgDataPo> pgList = operatorPgDao.getPgByChanel(objMap);
 		return pgList;
 	}
