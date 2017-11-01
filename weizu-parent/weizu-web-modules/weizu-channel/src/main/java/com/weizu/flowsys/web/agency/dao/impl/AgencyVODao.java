@@ -211,6 +211,11 @@ public class AgencyVODao extends DaoImpl<AgencyBackwardPo, Integer> implements A
 		return sqlSessionTemplateASS.selectOne("checkVerifyCode", params);
 	}
 
+	@Override
+	public AgencyBackwardPo getAgencyByAccountId(Integer accountId) {
+		return sqlSessionTemplateASS.selectOne("getAgencyByAccountId", accountId);
+	}
+
 	/**
 	 * @description:  更新密码
 	 * @param paramMap

@@ -30,6 +30,10 @@
     id, root_agency_id,user_api_key, user_name, user_pass, user_real_name, agency_tel, other_contact, user_email, 
     agency_ip, agency_tag, call_back_ip, create_time, verify_code
   </sql>
+  <sql id="AgencyAccount_Column_List">
+    agb.id, root_agency_id,user_api_key, agb.user_name, user_pass, user_real_name, agb.agency_tel, other_contact, user_email, 
+    agb.agency_ip, agb.agency_tag, agb.call_back_ip, agb.create_time, agb.verify_code
+  </sql>
   
 
 <!-- 查询父级代理商实体 -->
@@ -39,6 +43,16 @@
 	<where>
 		id = (SELECT root_agency_id from <include refid="agency_backward"></include>
 		 WHERE id= #{_parameter})
+	</where>
+</select>
+
+<select id="getAgencyByAccountId" parameterType="int" resultMap="BaseResultMap">
+	select <include refid="AgencyAccount_Column_List"></include>
+	from <include refid="agency_backward"></include> agb
+	inner join <include refid="t_account"></include> act
+	on act.agency_id = agb.id
+	<where>
+		act.id = #{_parameter}
 	</where>
 </select>
   

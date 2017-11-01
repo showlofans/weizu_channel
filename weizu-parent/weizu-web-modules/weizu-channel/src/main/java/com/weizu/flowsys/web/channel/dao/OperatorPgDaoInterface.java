@@ -104,5 +104,14 @@ public interface OperatorPgDaoInterface extends Dao<PgDataPo, Integer> {
 	 */
 	List<PgDataPo> getPgByChanel(Map<String,Object> map);
 	
+	/**
+	 * @description: 根据代理商id和其他充值参数获得包体列表
+	 * @param map
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月1日 上午11:08:27
+	 */
+	List<PgDataPo> pg_list_for_purchase(Map<String,Object> map);
+	
 //	Pagination<OperatorPgDataPo> list();
 }

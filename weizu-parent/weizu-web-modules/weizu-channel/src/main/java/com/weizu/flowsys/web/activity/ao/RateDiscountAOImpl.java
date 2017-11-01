@@ -845,5 +845,12 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		
 		return resultList;
 	}
+
+	@Override
+	public RateDiscountPo getPriceByPg(Integer pgId, Integer agencyId, Long channelId) {
+		RateDiscountPo ratePo = rateDiscountDao.getPriceByPg(agencyId, pgId,channelId);
+		
+		return ratePo;
+	}
 	
 }

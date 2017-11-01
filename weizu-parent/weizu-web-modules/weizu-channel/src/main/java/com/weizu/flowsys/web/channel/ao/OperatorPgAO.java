@@ -6,6 +6,7 @@ import java.util.Map;
 import com.aiyi.base.pojo.PageParam;
 import com.aiyi.base.pojo.PageTag;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
@@ -145,6 +146,16 @@ public interface OperatorPgAO {
 	 * @createTime:2017年8月23日 下午4:41:49
 	 */
 	Map<String,Object> getBy(SuperPurchaseParam spp);
+	
+	/**
+	 * @description: 根据代理商id和其他充值参数获得包体列表
+	 * @param ccpp
+	 * @param agencyId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月1日 上午11:06:30
+	 */
+	List<PgDataPo> pg_list_for_purchase(ChargeChannelParamsPo ccpp, Integer agencyId);
 	
 	/**
 	 * @description: 是否存在该包体

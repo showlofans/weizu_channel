@@ -166,4 +166,14 @@ public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	 */
 	List<Long> getChannelByAgency(Integer agencyId);
 	
+	/**
+	 * @description: 根据包体获得代理商绑定的价格
+	 * @param agencyId
+	 * @param pgId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月1日 上午9:53:48
+	 */
+	RateDiscountPo getPriceByPg(Integer agencyId, Integer pgId, Long channelId);
+	
 }

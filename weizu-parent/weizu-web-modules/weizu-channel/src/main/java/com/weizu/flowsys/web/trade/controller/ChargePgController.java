@@ -27,6 +27,7 @@ import org.weizu.api.outter.enums.ChargeStatusEnum;
 
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
+import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
@@ -48,15 +49,20 @@ import com.weizu.flowsys.web.agency.dao.ChargeAccountDaoInterface;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
+import com.weizu.flowsys.web.channel.ao.ExchangePlatformAO;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
 import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
 import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
+import com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
+import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
+import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
+import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.channel.pojo.SpecialCnelType;
 import com.weizu.flowsys.web.channel.pojo.SpecialOpdType;
 import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
@@ -107,6 +113,10 @@ public class ChargePgController {
 	private ChannelDiscountDao channelDiscountDao;
 	@Resource
 	private ChargeAccountAo chargeAccountAO;
+	@Resource
+	private ExchangePlatformAO exchangePlatformAO;
+	@Resource
+	private ExchangePlatformDaoInterface exchangePlatformDao;
 //	@Resource
 //	private ChannelDiscountAO channelDiscountAO;
 	/**
@@ -178,15 +188,18 @@ public class ChargePgController {
 //				scopeCityCode = scopeMap.get("scopeCityCode").toString();
 //			}
 			ChargeAccountPo accountPo = null;
+			Long channelId = null;
 			if(!agencyVO.getRootAgencyId().equals(0)){
 				RateDiscountPo ratePo = rateDiscountDao.get(pcVO.getRateId());
 				if(ratePo != null){
 					accountPo = chargeAccountAO.getAccountByAgencyId(agencyVO.getId(), ratePo.getBillType());
+					channelId = ratePo.getChannelId();
 				}
 			}else{//超管测试通道，通过通道折扣提单
 				ChannelDiscountPo cdPo = channelDiscountDao.get(pcVO.getCdisId());//new WherePrams("channel_id", "=", pcVO.getChannelId()).and("scope_city_code", "=", scopeCityCode)
 				if(cdPo!=null && cdPo.getBillType().equals(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())){
 					accountPo = chargeAccountAO.getAccountByAgencyId(agencyVO.getId(), cdPo.getBillType());
+					channelId = cdPo.getChannelId();
 				}
 			}
 			boolean isAccess = agencyAO.checkIdByPass(agencyVO.getId(), agencyVO.getUserPass());
@@ -207,6 +220,7 @@ public class ChargePgController {
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 			String pageMsg = "";
 			String referURL = "";
+			pcVO.setChannelId(channelId);
 			pageMsg = purchaseAO.purchase(pcVO, accountPo);
 			referURL = "/flowsys/chargePg/purchase_list.do?orderResult=2";
 			resultMap.put("referURL", referURL);
@@ -229,7 +243,7 @@ public class ChargePgController {
 //		return null;
 //	}
 	/**
-	 * @description:获得流量包购买列表
+	 * @description:代理商获得流量包购买列表
 	 * @param response
 	 * @param operatorType
 	 * @author:POP产品研发部 宁强
@@ -241,54 +255,72 @@ public class ChargePgController {
 	public String pgList_forPurchase(HttpServletRequest request, HttpServletResponse response,
 			ChargeChannelParamsPo ccpp) throws UnsupportedEncodingException{
 //		OperatorPgDataPo oppo = new OperatorPgDataPo();
-//		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");//用不带票账户充值
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//		ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");//用不带票账户充值
 		String carrier = ccpp.getCarrier();//江西移动
-		int sLength = carrier.length();
-//		List<OperatorPgDataPo> list = new ArrayList<OperatorPgDataPo>();
-		if(sLength>2){
-//			if(sLength>2 && agencyVO != null){
-//			List<PgDataPo> pgList = rateDiscountAO.getPgListForPurchase(ccpp, agencyVO.getId(), true);
-//			String listJsonStr = JSON.toJSONString(pgList);
-////		System.out.println(listJsonStr);
-//			return listJsonStr;
-			String scopeCityName = carrier.substring(0,sLength-2);//地区参数
-			if(accountPo != null){
-				Integer accountId = accountPo.getId();
-				boolean isAccept = rateDiscountAO.checkScopeIsAccept(accountId, scopeCityName);
-				if(isAccept){//如果包涵该地区，就加载包体列表
-//					String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动
-//					int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
-//					oppo.setOperatorType(opType);
-//					oppo.setOperatorName(carrier);
-//					if(StringHelper.isEmpty(serviceType)){
-//						
-//					}
-//					int sType = Integer.parseInt(serviceType.trim());
-					RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(ccpp, accountId,false);//获得对私的充值费率
-//					oppo.setServiceType(sType);
-					if(ratePo != null){
-						ChargeChannelParamsPo ccpp1 = new ChargeChannelParamsPo(carrier, ccpp.getServiceType(), ratePo.getChannelId());
-//						ccpp.setBillType(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-						List<PgDataPo> pgList = purchaseAO.getPgByChanel(ratePo.getChannelId());
-						Double activeDiscount = ratePo.getActiveDiscount();
-						Long channelId = ratePo.getChannelId();
-						List<OperatorPgDataPo> chargeList = initByPgList(pgList);
-						for (OperatorPgDataPo operatorPgDataPo : chargeList) {//初始化第一个折扣，折扣id和包体价格
-							operatorPgDataPo.setRteId(ratePo.getId());
-							operatorPgDataPo.setRteDis(activeDiscount);
-							operatorPgDataPo.setChannelId(channelId);
-							operatorPgDataPo.setPgDiscountPrice(NumberTool.mul(activeDiscount, operatorPgDataPo.getPgPrice()));
-						}
-						String listJsonStr = JSON.toJSONString(chargeList);
-//						System.out.println(listJsonStr);
-						return listJsonStr;
-					}else{
-						System.out.println("没有找到该地区费率");
-					}
-				}
+		if(StringHelper.isNotEmpty(carrier) && carrier.length() > 2){
+			
+			String desc = carrier.substring(carrier.length()-2);
+			int operatorType = OperatorTypeEnum.getValueByDesc(desc);
+			ccpp.setOperatorType(operatorType);		//设置运营商类型
+			
+			String scopeCityCode = ScopeCityEnum.getValueByCarrier(carrier);
+			//PurchaseUtil.getScopeCityByCarrier(carrier)
+			
+			if(StringHelper.isNotEmpty(scopeCityCode) && agencyVO != null){
+				ccpp.setScopeCityCode(scopeCityCode);//设置地区编码
+				
+				List<PgDataPo> chargeList = operatorPgAO.pg_list_for_purchase(ccpp, agencyVO.getId());
+				String listJsonStr = JSON.toJSONString(chargeList);
+				return listJsonStr;
 			}
 		}
+		
+//		int sLength = carrier.length();
+////		List<OperatorPgDataPo> list = new ArrayList<OperatorPgDataPo>();
+//		if(sLength>2){
+////			if(sLength>2 && agencyVO != null){
+////			List<PgDataPo> pgList = rateDiscountAO.getPgListForPurchase(ccpp, agencyVO.getId(), true);
+////			String listJsonStr = JSON.toJSONString(pgList);
+//////		System.out.println(listJsonStr);
+////			return listJsonStr;
+//			String scopeCityName = carrier.substring(0,sLength-2);//地区参数
+//			if(accountPo != null){
+//				Integer accountId = accountPo.getId();
+//				boolean isAccept = rateDiscountAO.checkScopeIsAccept(accountId, scopeCityName);
+//				if(isAccept){//如果包涵该地区，就加载包体列表
+////					String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动
+////					int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
+////					oppo.setOperatorType(opType);
+////					oppo.setOperatorName(carrier);
+////					if(StringHelper.isEmpty(serviceType)){
+////						
+////					}
+////					int sType = Integer.parseInt(serviceType.trim());
+//					RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(ccpp, accountId,false);//获得对私的充值费率
+////					oppo.setServiceType(sType);
+//					if(ratePo != null){
+//						ChargeChannelParamsPo ccpp1 = new ChargeChannelParamsPo(carrier, ccpp.getServiceType(), ratePo.getChannelId());
+////						ccpp.setBillType(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+//						List<PgDataPo> pgList = purchaseAO.getPgByChanel(ratePo.getChannelId());
+//						Double activeDiscount = ratePo.getActiveDiscount();
+//						Long channelId = ratePo.getChannelId();
+//						List<OperatorPgDataPo> chargeList = initByPgList(pgList);
+//						for (OperatorPgDataPo operatorPgDataPo : chargeList) {//初始化第一个折扣，折扣id和包体价格
+//							operatorPgDataPo.setRteId(ratePo.getId());
+//							operatorPgDataPo.setRteDis(activeDiscount);
+//							operatorPgDataPo.setChannelId(channelId);
+//							operatorPgDataPo.setPgDiscountPrice(NumberTool.mul(activeDiscount, operatorPgDataPo.getPgPrice()));
+//						}
+//						String listJsonStr = JSON.toJSONString(chargeList);
+////						System.out.println(listJsonStr);
+//						return listJsonStr;
+//					}else{
+//						System.out.println("没有找到该地区费率");
+//					}
+//				}
+//			}
+//		}
 		return "";
 //		Map<String,Object> map = new HashMap<String, Object>();
 //		map.put("pgList", list);
@@ -428,11 +460,65 @@ public class ChargePgController {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年8月2日 上午10:55:16
 	 */
+	@ResponseBody
 	@RequestMapping(value= ChargePgURL.AJAX_PURCHASE_PRICE)
-	public void ajaxPurchassPrice(HttpServletRequest request, Double pgPrice, ChargeChannelParamsPo ccpp,HttpServletResponse response){
-		try {
-//			AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-			ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");//用不带票账户充值
+	public String ajaxPurchassPrice(HttpServletRequest request, Double pgPrice,String carrier,Long channelId, Integer pgId, HttpServletResponse response){
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		if(agencyVO != null){
+			if(agencyVO.getRootAgencyId() == 0){
+				ChannelDiscountPo cdPo = channelDiscountDao.get(new WherePrams("channel_id", "=", channelId));
+				if(cdPo != null){
+					Double purchasePrice = NumberTool.mul(pgPrice, cdPo.getChannelDiscount());//利率后的价格
+					resultMap.put("price", purchasePrice);
+					resultMap.put("cdId", cdPo.getId());			//	折扣id
+					resultMap.put("billType", cdPo.getBillType());
+					
+					ExchangePlatformPo platformPo = exchangePlatformDao.getEpByCDiscountId(cdPo.getId());
+					if(platformPo != null){
+						String scopeCityCode = ScopeCityEnum.getValueByCarrier(carrier);
+						ProductCodePo code = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, platformPo.getId(), pgId));
+						resultMap.put("productCode", code.getProductCode());
+					}
+					resultMap.put("channelId", cdPo.getChannelId());
+					resultMap.put("rateDiscount", cdPo.getChannelDiscount());	//折扣
+					return JSON.toJSONString(resultMap);
+				}
+				
+			}else{
+				RateDiscountPo ratePo = rateDiscountAO.getPriceByPg(pgId, agencyVO.getId(),channelId);
+				if(ratePo != null){
+					ChargeAccountPo accountPo = chargeAccountAO.getAccountByAgencyId( agencyVO.getId(), ratePo.getBillType());
+					if(accountPo != null){
+						Double purchasePrice = NumberTool.mul(pgPrice, ratePo.getActiveDiscount());//利率后的价格
+						if(accountPo.getAccountBalance() >= purchasePrice){//可以扣款，提单，充值
+							resultMap.put("price", purchasePrice);
+							resultMap.put("rateDiscountId", ratePo.getId());			//	折扣id
+							resultMap.put("billType", ratePo.getBillType());
+							
+							ExchangePlatformPo platformPo = exchangePlatformDao.getEpByRateId(ratePo.getId());
+							if(platformPo != null){
+								String scopeCityCode = ScopeCityEnum.getValueByCarrier(carrier);
+								ProductCodePo code = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, platformPo.getId(), pgId));
+								resultMap.put("productCode", code.getProductCode());
+							}
+						}else{
+							resultMap.put("price", pgPrice);
+							resultMap.put("msg", ChargeStatusEnum.LACK_OF_BALANCE.getValue());//欠费等待
+						}
+						resultMap.put("channelId", ratePo.getChannelId());
+						resultMap.put("rateDiscount", ratePo.getActiveDiscount());	//折扣
+						return JSON.toJSONString(resultMap);
+					}
+				}
+			}
+			
+		}else{
+			System.out.println("未登录");
+		}
+		return "";
+			
+//			ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");//用不带票账户充值
 //			carrier = new String(carrier.getBytes("iso-8859-1"),"utf-8");
 			
 //			int pgSize = dataPo.getPgSize();
@@ -456,27 +542,28 @@ public class ChargePgController {
 //					}
 //				}
 //			}
-			Map<String, Object> resultMap = new HashMap<String, Object>();
-			if(accountPo != null){
-				RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(ccpp, accountPo.getId(), false);//获得对私的充值费率
-				if(pgPrice != null && ratePo != null){//判断余额
-					Double purchasePrice = NumberTool.mul(pgPrice, ratePo.getActiveDiscount());//利率后的价格
-					ChargeAccountPo account1 = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
-					if(account1.getAccountBalance() >= purchasePrice){//可以扣款，提单，充值
-						resultMap.put("price", purchasePrice);
-						resultMap.put("rateDiscountId", ratePo.getId());			//	折扣id
-						//resultMap.put("billTypeRate", ratePo.getBillType());		//折扣票务类型
-//						resultMap.put("msg", OrderStateEnum);//欠费等待
-//						resultMap.put("billType", bestChannel.getBillType());
-//						response.getWriter().print(JSON.toJSONString(resultMap));
-					}else{
-						resultMap.put("price", pgPrice);
-						resultMap.put("msg", ChargeStatusEnum.LACK_OF_BALANCE.getValue());//欠费等待
-					}
-					resultMap.put("channelId", ratePo.getChannelId());
-					resultMap.put("rateDiscount", ratePo.getActiveDiscount());	//折扣
-					response.getWriter().print(JSON.toJSONString(resultMap));
-				}
+//			try {
+//			Map<String, Object> resultMap = new HashMap<String, Object>();
+//			if(accountPo != null){
+//				RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(ccpp, accountPo.getId(), false);//获得对私的充值费率
+//				if(pgPrice != null && ratePo != null){//判断余额
+//					Double purchasePrice = NumberTool.mul(pgPrice, ratePo.getActiveDiscount());//利率后的价格
+//					ChargeAccountPo account1 = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
+//					if(account1.getAccountBalance() >= purchasePrice){//可以扣款，提单，充值
+//						resultMap.put("price", purchasePrice);
+//						resultMap.put("rateDiscountId", ratePo.getId());			//	折扣id
+//						//resultMap.put("billTypeRate", ratePo.getBillType());		//折扣票务类型
+////						resultMap.put("msg", OrderStateEnum);//欠费等待
+////						resultMap.put("billType", bestChannel.getBillType());
+////						response.getWriter().print(JSON.toJSONString(resultMap));
+//					}else{
+//						resultMap.put("price", pgPrice);
+//						resultMap.put("msg", ChargeStatusEnum.LACK_OF_BALANCE.getValue());//欠费等待
+//					}
+//					resultMap.put("channelId", ratePo.getChannelId());
+//					resultMap.put("rateDiscount", ratePo.getActiveDiscount());	//折扣
+//					response.getWriter().print(JSON.toJSONString(resultMap));
+//				}
 				
 				
 //				OperatorScopeVO operatorScopeVO = new OperatorScopeVO(scopeCityName,agencyVO.getId(),operatorType);
@@ -497,13 +584,13 @@ public class ChargePgController {
 //				}else{//沒有該地區的最优通道
 //					response.getWriter().print(dataPo.getPgPrice());
 //				}
-			}
-		} 
-		catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
-		}catch (IOException e) {
-			e.printStackTrace();
-		}
+//			}
+//		} 
+//		catch (UnsupportedEncodingException e1) {
+//			e1.printStackTrace();
+//		}catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	
@@ -516,8 +603,8 @@ public class ChargePgController {
 	 */
 	@ResponseBody
 	@RequestMapping(value=ChargePgURL.AJAX_CHARGE_PG)
-	public String ajaxChargePg(ChargeChannelParamsPo ccpp){
-		List<PgDataPo> chargeList = purchaseAO.getPgByChanel(ccpp);
+	public String ajaxChargePg(Long channelId){
+		List<PgDataPo> chargeList = purchaseAO.getPgByChanel(channelId);
 		String listJsonStr = JSON.toJSONString(chargeList);
 //		System.out.println(listJsonStr);
 		return listJsonStr;

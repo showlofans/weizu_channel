@@ -312,7 +312,7 @@
     }; */
     var rootAgencyId = $('#rootAgencyId').val();
 	//   alert(rootAgencyId);
-     function changeChannelRadio(vart){
+    /*  function changeChannelRadio(vart){
     	 $.ajax({
              type: "post",
              url: '/flowsys/chargePg/pgList_forPurchase.do?operatorName='+ carrier + '&serviceType=' + serviceType,
@@ -342,7 +342,7 @@
      	           				//$("#pgPrice").val(data[0].pgPrice);
      	           				$("#pgSize").val(data[0].pgSize);
      	           				$("#pgId").val(data[0].id);
-                				}else{ */
+                				}else{ 
                 					appendData += "<div class='radio-box pgNameType'><input type='hidden' value='";
                 					appendData += data.pgList[i].id;
                 					appendData +="'></input><input class='pgNameRadio' type='radio' name='pgNameRadio' id='pgName-";
@@ -367,7 +367,7 @@
 									appendData += "'></input><input type='hidden' value='";
 									appendData += rteId;
 									appendData += "'></input><br>";;
-                				// }
+                				 }
                    }
                }else{
              	  appendData += "没有配置该业务类型，或者号码不符合充值条件！！";
@@ -381,40 +381,35 @@
            	  }
            	  }
          }) 
-     }
+     } */
 	
-	function changeRadio(vart){
-	   var pprice = $(vart).parent().next().val();
-	   var psize = $(vart).parent().next().next().val();//包大小
-	   var productCode = $(vart).parent().next().next().next().val();//包编码
-	   var pgDiscountPrice = $(vart).parent().next().next().next().next().val();
-	   var rateDis = $(vart).parent().next().next().next().next().next().val();
-	   var channelId = $(vart).parent().next().next().next().next().next().next().val();
+	function changeRadio(vart,channelId){
+	  // var psize = $(vart).parent().next().next().val();//包大小
+	  //var channelId = $(vart).parent().next().next().next().val();//通道id
+	  //alert(channelId);
+	  // var pgDiscountPrice = $(vart).parent().next().next().next().next().val();
+	   //var rateDis = $(vart).parent().next().next().next().next().next().val();
+	  // var channelId = $(vart).parent().next().next().next().next().next().next().val();
 	  // alert(channelId);
-	   if(rootAgencyId == 0){
+	   /* if(rootAgencyId == 0){
 		   var cdisId = $(vart).parent().next().next().next().next().next().next().next().val();
 		   $('#cdisId').val(cdisId);
 		   alert(cdisId);
 	   }else{
 		   var rteId = $(vart).parent().next().next().next().next().next().next().next().val();
 		   $('#rateId').val(rteId);
-	   }
-	   $('#rateDiscount').html(rateDis);
+	   } */
+	   //$('#rateDiscount').html(rateDis);
 	   //alert(channelId);
-	   $('#channelId').val(channelId);
-	   //alert(productCode);
-	   $("#productCode").val(productCode);
-	   $("#orderAmount").val(pgDiscountPrice);
-	   $("#pgPrice").val(pprice);//改变价格
-	   //alert($(vart).prev().val());
-	   $("#pgId").val($(vart).prev().val());//包体id
+	   var pgId = $(vart).prev().val();
+	   var pprice = $(vart).parent().next().val();
 	   
-	   var serviceType = $("#select-servce-type").val();
-	   var carrier = $("#chargeTelDetail").val();
-	   $("#billType").val(0);
-	   /* $.ajax({
+       $("#pgId").val(pgId);//包体id
+       var carrier = $('#chargeTelDetail').val();
+       
+       $.ajax({
            type: "get",
-           url: '/flowsys/chargePg/ajax_purchase_price.do?pgSize=' + psize + '&pgPrice=' + pprice + '&serviceType='+serviceType+ '&carrier='+carrier,
+           url: '/flowsys/chargePg/ajax_purchase_price.do?pgPrice=' + pprice + '&pgId='+pgId+ '&channelId='+channelId+ '&carrier='+carrier,
            async: false,
            dataType: "json",
            contentType: "application/x-www-form-urlencoded; charset=utf-8", 
@@ -426,18 +421,37 @@
         		//}); 
          	 //$("#orderAmount").val(data);
         		//alert(data.msg);
-        	if(data.msg == 2){
+        	if(data.msg == 5002){
         		alert('账户余额不足');
+        		$("#orderAmount").val('');
+        		$("#pgPrice").val('');
         	}else{
 	         	 $("#orderAmount").val(data.price);
-	         	 $("#channelId").val(data.channelId);
-	         	// alert(data.rateDiscount);
+	         	
+	         	 $('#channelId').val(data.channelId);
+	         	 //if(data.cdId != null && data.cdId !=""){
+	         		 $('#cdisId').val(data.cdId);
+	         	 //}else{
+		         	 $('#rateId').val(data.rateDiscountId);
+	         	 //}
+	      	   //alert(productCode);
+	      	   $("#productCode").val(data.productCode);
+	      	   $("#pgPrice").val(pprice);//改变包体原价
+	      	   //alert($(vart).prev().val());
+	      	   
         	}
          	 $('#rateDiscount').html(data.rateDiscount);
         		
          	 $("#billType").val(data.billType);
            }
-       }) */
+       })
+	   
+	  
+	   
+	   //var serviceType = $("#select-servce-type").val();
+	   //var carrier = $("#chargeTelDetail").val();
+	   //$("#billType").val(0);
+	   
 	   
    }
    /*  $('.skin-minimal input').on('iCheck',{		//给单选框加特效
@@ -475,12 +489,12 @@
 		 }
 		 return Number(num1.toString().replace(".", "")) * Number(num2.toString().replace(".", "")) / Math.pow(10, baseNum);
 	};
-	/**响应包体点击事件*/
+	/** 代理商折扣响应包体点击事件*/
 	function getPrice(vart){
 		var pgPrice = $(vart).parent().next().val();//包体价格
 		var productCode = $(vart).parent().next().next().next().val();//包体编码
 		var cdis = $('#rateDiscount').html();
-		var orderAmount = numMulti(pgPrice,cdis);
+		//var orderAmount = numMulti(pgPrice,cdis);
 		//alert(orderAmount);
 		var pgId =  $(vart).prev().val();
 		$("#pgId").val(pgId);
@@ -489,7 +503,7 @@
 		$("#pgPrice").val(pgPrice);
 	};
 	
-	/**异步获得充值包体列表*/
+	/** 通道异步获得充值包体列表*/
 	function togglelePg(vart){
 		
 		
@@ -508,7 +522,7 @@
     	 //var epName = $('#epName').val();
     	 $.ajax({
              type: "post",
-             url: '/flowsys/chargePg/ajax_charge_pg.do?carrier='+ carrier + '&serviceType=' + serviceType + '&channelId=' + cnelId,
+             url: '/flowsys/chargePg/ajax_charge_pg.do?channelId='+ cnelId,
              dataType: "json",
              async: false,
              contentType: "application/x-www-form-urlencoded; charset=utf-8", 
@@ -518,7 +532,7 @@
            	  //alert(dataRole1.length);
            	  //if($(".pgNameType") == undefined || $(".pgNameType").length <= 0){
                var appendData1 = "<label class='form-label col-xs-4 col-sm-3'>包体大小：</label><div class='formControls col-xs-8 col-sm-9 skin-minimal'>"; 
-               if(dataRole1.length > 0){
+               if(dataRole1 != null && dataRole1.length > 0){
                    for(var i=0; i < dataRole1.length; i++){
                  	   var price = dataRole1[i].pgPrice;
                  	   var name = dataRole1[i].pgName;
@@ -532,7 +546,7 @@
        					appendData1 += dataRole1[i].id;
        					appendData1 += "'></input><input class='pgNameRadio' type='radio' name='pgNameRadio' id='pgName-";
        					appendData1 += (i+1);
-       					appendData1 += "' onclick='getPrice(this)'><label for='pgName-";
+       					appendData1 += "' onclick='changeRadio(this,"+ cnelId +")'><label for='pgName-";
        					appendData1 += (i+1);
        					appendData1 += "'>";
        					appendData1 += name;
@@ -565,7 +579,7 @@
     	 //alert(serviceType);
          if(tel){
 	    	 var carrier = $("#chargeTelDetail").val();
-	    	 alert(carrier);
+	    	 //alert(carrier);
 	    	 var serviceType = $("#select-servce-type").val();
 	    	 
              if(reg.test(tel)){
@@ -714,10 +728,10 @@
 		                    	   var price = dataRole[i].pgPrice;
 		                    	   var name = dataRole[i].pgName;
 		                    	   var pgSize = dataRole[i].pgSize;
-		                    	   var productCode = dataRole[i].productCode;
-		                    	   var pgDiscountPrice = dataRole[i].pgDiscountPrice;
-		                    	   var rteDis = dataRole[i].rteDis;
-		                    	   var rteId = dataRole[i].rteId;
+		                    	   //var productCode = dataRole[i].productCode;
+		                    	   //var pgDiscountPrice = dataRole[i].pgDiscountPrice;
+		                    	   //var rteDis = dataRole[i].rteDis;
+		                    	   //var rteId = dataRole[i].rteId;
 		                    	   var channelId = dataRole[i].channelId;
 		                   				/* if(i == 0){//默认设置第一个为选中 
 		        	           				appendData += "<div class='radio-box pgNameType'><input name='pgName' class='pgNameRadio' type='radio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)' checked><label for='pgName-"+(i+1)+"'>"+name+"</label></div>"
@@ -727,9 +741,10 @@
 		        	           				$("#pgSize").val(data[0].pgSize);
 		        	           				$("#pgId").val(data[0].id);
 		                   				}else{ */
-		                   					appendData += "<div class='radio-box pgNameType'><input type='hidden' value='"+dataRole[i].id+"'></input><input class='pgNameRadio' type='radio' name='pgNameRadio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)'><label for='pgName-"+(i+1)+"'>"+name+"</label></div><input type='hidden' class='price' value='"+price+"'></input>"
-		                   					+"<input type='hidden' value='"+pgSize+"'></input><input type='hidden' value='"+productCode+"'></input><input type='hidden'  value='"+pgDiscountPrice +"'></input></input><input type='hidden' value='"+rteDis 
-		                   					+"'></input><input type='hidden' value='"+channelId +"'></input><input type='hidden' value='"+rteId +"'></input><br>";;
+		                   					appendData += "<div class='radio-box pgNameType'><input type='hidden' value='"+dataRole[i].id+"'></input><input class='pgNameRadio' type='radio' name='pgNameRadio' id='pgName-"+(i+1)+"' onclick='changeRadio(this,"+channelId+")'><label for='pgName-"+(i+1)+"'>"+name+"</label></div><input type='hidden' class='price' value='"+price+"'></input>"
+		                   					+"<input type='hidden' value='"+pgSize+"'></input><input type='hidden' value='"+channelId+"'></input>"
+		                   					/* <input type='hidden' value='"+productCode+"'></input><input type='hidden'  value='"+pgDiscountPrice +"'></input></input><input type='hidden' value='"+rteDis 
+		                   					+"'></input><input type='hidden' value='"+channelId +"'></input><input type='hidden' value='"+rteId +"'></input><br>";; */
 		                   				// }
 		                      }
 		                  }else{

@@ -170,6 +170,16 @@ public interface RateDiscountAO {
 	List<PgDataPo> getPgListForPurchase(ChargeChannelParamsPo ccpp, int agencyId,Boolean judgeChannelState);
 	
 	/**
+	 * @description: 通过包体id获得代理商绑定的价格
+	 * @param id
+	 * @param agencyId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月1日 上午9:41:10
+	 */
+	RateDiscountPo getPriceByPg(Integer id, Integer agencyId, Long channelId);
+	
+	/**
 	 * @description:
 	 * @param aacp
 	 * @param rateDiscountPo

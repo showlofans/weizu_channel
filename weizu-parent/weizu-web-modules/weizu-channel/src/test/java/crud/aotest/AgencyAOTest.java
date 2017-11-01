@@ -12,6 +12,7 @@
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
 //import com.aiyi.base.pojo.PageParam;
+//import com.weizu.flowsys.core.beans.WherePrams;
 //import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 //import com.weizu.flowsys.util.Pagination;
 //import com.weizu.flowsys.web.agency.ao.AgencyAO;
@@ -87,15 +88,17 @@
 ////	}
 //	@Test
 //	public void testLogin(){
-//		AgencyBackwardPo agencyPo =  new AgencyBackwardPo();
-//		agencyPo.setUserName("流量代理");
+//		String userName = "xiaoning";
+//		AgencyBackwardPo agencyPo = agencyVODao.get(new WherePrams("user_name", "=", userName));
 //		//得到密码
-//		String userPass = Hash.BASE_UTIL.decode("eGluZzA4MTUwMDA=");
+//		String userPass = Hash.BASE_UTIL.decode(agencyPo.getUserPass());
+//		System.out.println(userName);//15754715147
 //		System.out.println(userPass);
-//		agencyPo.setUserPass(userPass);
-//		Map<String, Object> resultMap = agencyAO.login(agencyPo);
-//		AgencyBackwardPo resultPo = (AgencyBackwardPo) resultMap.get("entity");// 获得返回的登陆实体
-//		System.out.println(resultPo.getAgencyTel());
+//		System.out.println(agencyPo.getCallBackIp());
+////		agencyPo.setUserPass(userPass);//948109abc
+////		Map<String, Object> resultMap = agencyAO.login(agencyPo);
+////		AgencyBackwardPo resultPo = (AgencyBackwardPo) resultMap.get("entity");// 获得返回的登陆实体
+////		System.out.println(resultPo.getAgencyTel());
 //	}
 ////	@Test
 ////	public void testCheckName(){

@@ -53,16 +53,17 @@ public class SendCallBackUtil {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年9月4日 下午1:08:42
 	 */
-	public String sendCallBack(ResponseJsonDTO rjdto,AgencyBackwardPo agencyPo){
-		String requestUrl = agencyPo.getCallBackIp();
-		if(StringHelper.isNotEmpty(requestUrl)){
+	public String sendCallBack(ResponseJsonDTO rjdto,String reportUrl){
+//		String requestUrl = agencyPo.getCallBackIp();
+		String repRes = "";
+		if(StringHelper.isNotEmpty(reportUrl)){
 			String resMsg = "";
 			int i = 0;
-			do{
+//			do{
 //				try {
 					i++;
 					String backJson = JSONObject.toJSONString(rjdto);
-					resMsg = HttpRequest.sendPost(requestUrl, backJson);
+					resMsg = HttpRequest.sendPost(reportUrl, backJson);
 					if(i== CALL_BACK_TIME){
 						return "error";
 					}
@@ -74,17 +75,23 @@ public class SendCallBackUtil {
 //				} catch (InterruptedException e) {
 //					e.printStackTrace();
 //				}
-			}while(!"ok".equals(resMsg));
-			
-			return "success";
+//			}while(!"ok".equals(resMsg));
+			if("ok".equals(resMsg)){
+				repRes = "success";
+			}else{
+				repRes = "error";
+			}
+			System.out.println(rjdto.getOrderId()+"推送响应："+resMsg);
 		}else{
 			System.out.println("回调地址不存在");
-			return "error";
+			repRes = "error";
 		}
+		System.out.println(rjdto.getOrderId()+"推送结果："+repRes );
+		return repRes;
 	}
 	
 	/**
-	 * @description:
+	 * @description: 对上游接收回调结果
 	 * @param purchasePo1 待更新的订单实体
 	 * @param purchasePo 订单表中该订单的其他基本信息
 	 * @return
@@ -110,9 +117,9 @@ public class SendCallBackUtil {
  				String callBack = accountPurchaseAO.updatePurchaseState(params);//orderId, backTime, myStatus, statusDetail, reqNo
  				if("success".equals(callBack)){//没有回调，本次回调成功
  					AgencyBackwardPo agencyPo = agencyAO.getAgencyByAccountId(purchasePo.getAccountId());
- 					if(StringHelper.isNotEmpty(orderIdFrom)){
+ 					if(StringHelper.isNotEmpty(orderIdFrom) && agencyPo != null){
  						//把rjdto按照代理商返回
- 						if(!"success".equals(sendCallBack(rjdto, agencyPo))){//回调成功，更新数据库回调状态
+ 						if(!"success".equals(sendCallBack(rjdto, agencyPo.getCallBackIp()))){//回调成功，更新数据库回调状态
  							//					logger.config("向下返回调失败");
  							System.out.println("向下返回调失败");
  						}

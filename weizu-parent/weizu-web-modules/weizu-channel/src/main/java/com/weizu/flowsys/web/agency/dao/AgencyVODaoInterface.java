@@ -188,4 +188,13 @@ public interface AgencyVODaoInterface extends Dao<AgencyBackwardPo, Integer> {
 	 * @createTime:2017年9月23日 上午11:47:05
 	 */
 	Integer checkVerifyCode(String verifyCode,String agencyName);
+	
+	/**
+	 * @description: 通过账户id获得代理商实体
+	 * @param accountId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月1日 下午3:23:20
+	 */
+	AgencyBackwardPo getAgencyByAccountId(Integer accountId);
 }

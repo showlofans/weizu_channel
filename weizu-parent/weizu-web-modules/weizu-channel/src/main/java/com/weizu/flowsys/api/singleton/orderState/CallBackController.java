@@ -128,14 +128,15 @@ public class CallBackController {
 					rjdto.setStatus(myStatus);
 					rjdto.setStatusDetail(statusDetail);
 				}
-				accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, null, ts, myStatus, null, statusDetail));//purchasePo.getOrderId(), myStatus, statusDetail, ts
-				AgencyBackwardPo agencyPo = agencyAO.getAgencyByAccountId(purchasePo.getAccountId());
+				String res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, null, ts, myStatus, null, statusDetail));//purchasePo.getOrderId(), myStatus, statusDetail, ts
+				System.out.println("向下返回调结果："+res);
+//				AgencyBackwardPo agencyPo = agencyAO.getAgencyByAccountId(purchasePo.getAccountId());
 				//把rjdto按照代理商返回
-				if(!"success".equals(sendCallBack.sendCallBack(rjdto, agencyPo))){//回调成功，更新数据库回调状态
-					logger.config("向下返回调失败");
-					System.out.println("向下返回调失败");
-//					return "回调失败";
-				}
+//				if(!"success".equals(sendCallBack.sendCallBack(rjdto, agencyPo.getCallBackIp()))){//回调成功，更新数据库回调状态
+//					logger.config("向下返回调失败");
+//					System.out.println("向下返回调失败");
+////					return "回调失败";
+//				}
 			}
             
 		    // 最后输出到控制台  

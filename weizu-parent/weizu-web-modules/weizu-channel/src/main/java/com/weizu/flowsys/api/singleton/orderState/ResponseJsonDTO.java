@@ -14,15 +14,17 @@ public class ResponseJsonDTO {
 	private int status;				//返回订单状态
 	private String statusDetail;		//失败原因
 	private Long timeStamp;			//返回的时间戳
+	private String chargeTel;		//充值手机号
 	
 	public ResponseJsonDTO(Long orderId, String orderIdFrom, int status,
-			String statusDetail, Long timeStamp) {
+			String statusDetail, Long timeStamp, String chargeTel) {
 		super();
 		this.orderId = orderId;
 		this.orderIdFrom = orderIdFrom;
 		this.status = status;
 		this.statusDetail = statusDetail;
 		this.timeStamp = timeStamp;
+		this.chargeTel = chargeTel;
 	}
 	public ResponseJsonDTO(Long orderId, String orderIdFrom, Long timeStamp) {
 		super();
@@ -31,7 +33,12 @@ public class ResponseJsonDTO {
 		this.timeStamp = timeStamp;
 	}
 
-
+	public String getChargeTel() {
+		return chargeTel;
+	}
+	public void setChargeTel(String chargeTel) {
+		this.chargeTel = chargeTel;
+	}
 	public ResponseJsonDTO() {
 		super();
 	}

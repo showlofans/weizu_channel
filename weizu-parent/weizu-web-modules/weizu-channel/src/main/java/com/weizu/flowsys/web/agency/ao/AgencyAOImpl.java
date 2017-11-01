@@ -173,6 +173,7 @@ public class AgencyAOImpl implements AgencyAO {
 				agencyBackward.getAccountCredit(), 
 				System.currentTimeMillis(), agencyBackward.getVerifyCode());
 		agencyPo.setOtherContact(agencyBackward.getOtherContact());
+		agencyPo.setCallBackIp(agencyBackward.getCallBackIp());
 		return agencyPo;
 	}
 
@@ -542,12 +543,8 @@ public class AgencyAOImpl implements AgencyAO {
 	}
 	@Override
 	public AgencyBackwardPo getAgencyByAccountId(Integer accountId) {
-		ChargeAccountPo accountPo = chargeAccountDao.get(accountId);
-		if(accountPo != null){
-			AgencyBackwardPo agencyPo = agencyVODao.get(accountPo.getAgencyId());
-			return agencyPo;
-		}
-		return null;
+		AgencyBackwardPo agencyPo = agencyVODao.getAgencyByAccountId(accountId);
+		return agencyPo;
 	}
 
 	@Override

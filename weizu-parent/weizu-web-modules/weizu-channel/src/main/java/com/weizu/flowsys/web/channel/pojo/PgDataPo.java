@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.channel.pojo;
 
 import com.weizu.flowsys.core.annotation.po.TableName;
+import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
 
 @TableName(name="operator_pg_data")
@@ -26,6 +27,8 @@ public class PgDataPo extends Po {
     private Integer circulateWay;				//流通方式（1-普通通道包，2-红包通道，3-转移包，4-共享包）
     
     private String pgValidity;			//流量有效期(PgValidityEnum)
+    @TempField
+    private Long channelId;				//通道id
 
 	/** 验证包体是否存在的必须参数
 	 * @param operatorType
@@ -43,6 +46,14 @@ public class PgDataPo extends Po {
 		this.pgType = pgType;
 		this.pgValidity = pgValidity;
 		this.circulateWay = circulateWay;
+	}
+	
+	public Long getChannelId() {
+		return channelId;
+	}
+
+	public void setChannelId(Long channelId) {
+		this.channelId = channelId;
 	}
 
 	public PgDataPo() {

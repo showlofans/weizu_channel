@@ -24,6 +24,7 @@ import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 import com.weizu.flowsys.web.channel.dao.impl.OperatorPgDao;
+import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
@@ -667,5 +668,58 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 		}
 		return params;
 	}
+
+	@Override
+	public List<PgDataPo> pg_list_for_purchase(ChargeChannelParamsPo ccpp,
+			Integer agencyId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("agencyId", agencyId);
+		if(ccpp.getOperatorType() != null){
+			params.put("operatorType", ccpp.getOperatorType());
+		}
+		if(ccpp.getServiceType() != null){
+			params.put("serviceType", ccpp.getServiceType());
+		}
+		if(ccpp.getScopeCityCode() != null){
+			params.put("scopeCityCode", ccpp.getScopeCityCode());
+		}
+		
+		if(ccpp.getChannelType() != null){
+			params.put("channelType", ccpp.getChannelType());
+		}
+		if(ccpp.getPgType() != null){
+			params.put("pgType", ccpp.getPgType());
+		}
+		if(StringHelper.isNotEmpty(ccpp.getPgValidity())){
+			params.put("pgValidity", ccpp.getPgValidity());
+		}
+		
+		List<PgDataPo> pgList = operatorPgDao.pg_list_for_purchase(params);
+		return pgList;
+	}
+	
+//	private Map<String,Object> getParamsByCCPP(ChargeChannelParamsPo ccpp){
+//		Map<String, Object> params = new HashMap<String, Object>();
+//		if(ccpp.getOperatorType() != null){
+//			params.put("operatorType", ccpp.getOperatorType());
+//		}
+//		if(ccpp.getServiceType() != null){
+//			params.put("serviceType", ccpp.getServiceType());
+//		}
+//		if(ccpp.getScopeCityCode() != null){
+//			params.put("scopeCityCode", ccpp.getScopeCityCode());
+//		}
+//		
+//		if(ccpp.getChannelType() != null){
+//			params.put("channelType", ccpp.getChannelType());
+//		}
+//		if(ccpp.getPgType() != null){
+//			params.put("pgType", ccpp.getPgType());
+//		}
+//		if(StringHelper.isNotEmpty(ccpp.getPgValidity())){
+//			params.put("pgValidity", ccpp.getPgValidity());
+//		}
+//		return params;
+//	}
 
 }
