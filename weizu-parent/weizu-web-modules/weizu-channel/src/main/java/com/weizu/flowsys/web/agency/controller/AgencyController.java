@@ -314,7 +314,13 @@ public class AgencyController {
 	@RequestMapping(value = AgencyURL.AGENCY_INFO)
 	public ModelAndView myselfInfoPage(HttpServletRequest request) {
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		
 		if(agencyVo != null){
+//			agencyAO.get
+			Map<String, Object> resultMap = agencyAO.login(new AgencyBackwardPo(agencyVo.getUserName(), agencyVo.getUserPass()));
+			AgencyBackwardPo resultPo = (AgencyBackwardPo) resultMap.get("entity");
+			AgencyBackwardVO agencyVO = agencyAO.getVOByPo(resultPo);
+			request.getSession().setAttribute("loginContext", agencyVO);
 //			if(StringHelper.isEmpty(agencyVo.getVerifyCode())){//数据库中没有邀请码信息（注册时的邀请码：已经被置空）
 //				String verifyCode = "";
 //				verifyCode = VerifyCodeUtils.generateVerifyCode(VerifyCodeUtils.DEFAULT_SIZE);
