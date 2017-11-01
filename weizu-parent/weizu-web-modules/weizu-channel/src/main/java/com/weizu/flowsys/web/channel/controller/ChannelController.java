@@ -21,6 +21,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
+import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
@@ -97,6 +98,7 @@ public class ChannelController {
 		resultMap.put("operatorTypes", OperatorTypeEnum.toList());
 		resultMap.put("pgTypeEnums", PgTypeEnum.toList());
 		resultMap.put("pgValidityEnums", PgValidityEnum.toList());
+		resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());
 		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 		resultMap.put("serviceTypes", ServiceTypeEnum.toList());
 		
@@ -115,7 +117,7 @@ public class ChannelController {
 //		
 		resultMap.put("billTypes", BillTypeEnum.toList());
 		//默认用移动的包体
-		resultMap.put("pgSizeStr", operatorPgAO.pgSizeStr(new OneCodePo(null, ServiceTypeEnum.NATION_WIDE.getValue(), OperatorTypeEnum.MOBILE.getValue(), ScopeCityEnum.QG.getValue(), PgTypeEnum.PGDATA.getValue(), PgValidityEnum.month_day_data.getValue())));
+		resultMap.put("pgSizeStr", operatorPgAO.pgSizeStr(new OneCodePo(null, ServiceTypeEnum.NATION_WIDE.getValue(), OperatorTypeEnum.MOBILE.getValue(), ScopeCityEnum.QG.getValue(), PgTypeEnum.PGDATA.getValue(), PgValidityEnum.MONTH_DAY_DATA.getValue(),ChannelTypeEnum.ORDINARY.getValue())));
 		
 		return new ModelAndView("/channel/channel_add_page", "resultMap", resultMap);
 	}
@@ -222,14 +224,18 @@ public class ChannelController {
 		}
 		Pagination<ChannelChannelPo> pagination = channelChannelAO.listChannel(pageParam, channelChannelPo);
 		
+		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("pagination", pagination);
 		resultMap.put("searchParam", channelChannelPo);
-		resultMap.put("channelStateEnums", ChannelStateEnum.toList());
-		resultMap.put("channelUseStateEnums", ChannelUseStateEnum.toList());
-		resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
-		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
-		resultMap.put("billTypeEnums", BillTypeEnum.toList());
+		resultMap.put("channelStateEnums", ChannelStateEnum.toList());		//通道状态
+		resultMap.put("channelUseStateEnums", ChannelUseStateEnum.toList());//
+		resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());		//	
+		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());		//
+		resultMap.put("pgTypeEnums", PgTypeEnum.toList());					//
+		resultMap.put("pgValidityEnums", PgValidityEnum.toList());			//
+		resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());		//
+		resultMap.put("billTypeEnums", BillTypeEnum.toList());				//
 		
 		
 		return new ModelAndView("/channel/channel_list", "resultMap", resultMap); 

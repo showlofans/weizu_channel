@@ -47,7 +47,7 @@
 			<span class="select-box inline">
 			<select name="accountType" class="select" onchange="getConsume()" >
 				<option value="">交易类型</option>
-				<c:forEach items="${resultMap.accountTypeEnum }" var="accountTypeE" varStatus="vs1">
+				<c:forEach items="${resultMap.accountTypeEnums }" var="accountTypeE" varStatus="vs1">
 					<option value="${accountTypeE.value }" <c:if test="${resultMap.searchParams.accountType == accountTypeE.value }"> selected</c:if>>${accountTypeE.desc }</option>
 				</c:forEach>
 			</select>
@@ -72,14 +72,14 @@
 					<th width="80">交易费用</th>
 					<th width="80">余额</th>
 					<th width="75">交易类型</th>
-					<c:choose>
+					<%-- <c:choose>
 						<c:when test="${loginContext.rootAgencyId == 0 }">
 							<th width="75">通道类型</th>
 						</c:when>
 						<c:otherwise>
 							<th width="75">扣款类型</th>
 						</c:otherwise>
-					</c:choose>
+					</c:choose> --%>
 					<th width="60">交易时间</th>
 				</tr>
 			</thead>
@@ -87,20 +87,51 @@
 				<c:forEach items="${resultMap.pagination.records }" var="consumeRec" varStatus="vs">
 					<tr class="text-c">
 						<%-- <td>${pg.pgId }</td> --%>
-						<td>${consumeRec.purchaseId }</td><!--订单号 -->
-						<td class="c-red">${consumeRec.userName }</td><!-- 代理名称 -->
+						<td>
+						<c:choose>
+							<c:when test="${consumeRec.accountType == 1 }">
+								<span class="c-red"  data-toggle="tooltip"  data-placement="top" title="扣款订单">${consumeRec.purchaseId }</span>
+							</c:when>
+							<c:otherwise>
+								<span class="c-blue" data-toggle="tooltip"  data-placement="top" title="补款订单">${consumeRec.purchaseId }</span>
+							</c:otherwise>
+						</c:choose>
+						</td><!--订单号 -->
+						<%-- <td <c:if test='${consumeRec.accountType == 1 }'>class='c-red'</c:if> >
+							${consumeRec.purchaseId }
+						</td> --%>
+						<td>
+							<c:choose>
+								<c:when test="${consumeRec.billType == 0 }">
+									<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+										<c:if test="${billTypeEnum.value == 0 }">
+											<span class="c-red" data-toggle="tooltip"  data-placement="right" title="${billTypeEnum.desc }"  >
+											${consumeRec.userName }</span>
+										</c:if>
+									</c:forEach>
+								</c:when>
+								<c:otherwise>
+									<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+									<c:if test="${billTypeEnum.value == 1 }">
+										<span class="c-green" data-toggle="tooltip"  data-placement="right" title="${billTypeEnum.desc }"><!--   -->
+										${consumeRec.userName }</span>
+									</c:if>
+									</c:forEach>
+								</c:otherwise>
+							</c:choose>
+						</td><!-- 代理名称 -->
 						<td>${consumeRec.chargeTel }</td><!--  -->
 						<td>${consumeRec.chargeBefore }</td>
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
 						<td>${consumeRec.rechargeAmount }</td>
 						 <td>${consumeRec.chargeAfter }</td>
 						<!-- 备注 -->
-						<td><c:forEach items="${resultMap.accountTypeEnum }" var="accountType" varStatus="vs1">
+						<td><c:forEach items="${resultMap.accountTypeEnums }" var="accountType" varStatus="vs1">
 						<c:if test="${consumeRec.accountType == accountType.value }"> ${accountType.desc }</c:if>
 						</c:forEach></td>
-						<td><c:forEach items="${resultMap.billTypeEnum }" var="billTypeE" varStatus="vs1">
+						<%-- <td><c:forEach items="${resultMap.billTypeEnums }" var="billTypeE" varStatus="vs1">
 						<c:if test="${consumeRec.billType == billTypeE.value }"> ${billTypeE.desc }</c:if>
-						</c:forEach></td>
+						</c:forEach></td> --%>
 						<td>${consumeRec.remittanceTimeStr }</td>
 						<%-- <fmt:formatDate value="${chargeRec.remittanceTime }" pattern="yyyy-MM-dd HH:mm:ss"/> ${chargeRec.remittanceTime }</td> --%>
 					</tr>

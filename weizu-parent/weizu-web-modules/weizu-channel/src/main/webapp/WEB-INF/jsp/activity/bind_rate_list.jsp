@@ -36,16 +36,29 @@
 	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
 	<div class="text-c">
 		<form action="/flowsys/rate/bind_rate_list.do" method="post" id="formD" name="formD">
-				通道名称：<sapn class="c-red">${resultMap.channelName }</sapn>
+		
+				通道名称：<sapn class="c-red" data-toggle="tooltip" data-placement="bottom" title="${resultMap.specialTag }">${resultMap.channelName }</sapn>
+				
 			通道类型
 			<c:forEach items="${resultMap.billTypeEnums }" var="billEnum" varStatus="vs">
-				<span id="billTypeDesc"  class="c-red">
-				<c:if test="${resultMap.channelBillType==billEnum.value }">${billEnum.desc }</c:if>
-				</span>
+			<c:forEach items="${resultMap.stypeEnums }" var="stype" varStatus="vs1">
+			<c:forEach items="${resultMap.otypeEnums }" var="otype" varStatus="vs2">
+				<c:if test="${resultMap.channelBillType==billEnum.value && stype.value == resultMap.searchParams.serviceType && resultMap.searchParams.operatorType == otype.value }">
+					<input type="hidden" id="serviceType" value="${resultMap.searchParams.serviceType }"/> 
+					<input type="hidden" id="operatorType" value="${resultMap.searchParams.operatorType }"/> 
+					<span id="billTypeDesc"  data-toggle="tooltip" data-placement="bottom" title="${stype.desc } ${otype.desc } "  class="c-red">
+							${billEnum.desc } 
+						<input type="hidden" id="serviceType" name="serviceType" value="${stype.value }">
+						<input type="hidden" id="operatorType" name="operatorType" value="${otype.value }">
+					</span>
+				</c:if>
 			</c:forEach>
+			</c:forEach>
+			</c:forEach>
+			<input type="hidden" id="specialTag" value="${resultMap.specialTag }"/> 
 			通道折扣：<span id=""  class="c-red">${resultMap.channelDiscount }</span>
 			</sapn>
-				业务类型：<span class="select-box inline">
+				<%-- 业务类型：<span class="select-box inline">
 					<select name="serviceType" id="serviceType" class="select" onchange="getCity()">
 						<c:forEach items="${resultMap.stypeEnums }" var="stype" varStatus="vs1">
 							<c:if test="${ stype.value == resultMap.searchParams.serviceType }">
@@ -63,9 +76,9 @@
 							</c:if>	
 						</c:forEach>
 					</select>
-				</span>
+				</span> --%>
 				地区：<span class="select-box inline">
-						<select name="scopeCityCode" id="scopeCityCode" class="select" onchange="setDiscount()">
+						<select name="scopeCityCode" id="scopeCityCode" class="select c-red" onchange="setDiscount()">
 						<!-- <option value="">请选择</option> -->
 						<c:forEach items="${resultMap.scopeList }" var="scopeCityCode" varStatus="vst">
 							<option value="${scopeCityCode }" <c:if test="${scopeCityCode == resultMap.searchParams.scopeCityCode }"> selected</c:if>>
@@ -262,11 +275,12 @@ function batch_bind(title,url,id,w,h){
 	var serviceType = $('#serviceType').val();
 	var operatorType = $('#operatorType').val();
 	var billType = $('#billTypeRate').val();
+	var specialTag = $('#specialTag').val();
 	//alert(rateDiscountId);
 	if(rateDiscountId == ""){
 		alert("没有可选的折扣！");
 	}else{
-		url = url + '?scopeCityCode='+scopeCityCode+'&serviceType='+serviceType+'&operatorType='+operatorType+'&billType='+billType + '&rateDiscountId=' + rateDiscountId + '&activeDiscount=' + activeDiscount; 
+		url = url + '?scopeCityCode='+scopeCityCode+'&serviceType='+serviceType+'&specialTag='+specialTag+'&operatorType='+operatorType+'&billType='+billType + '&rateDiscountId=' + rateDiscountId + '&activeDiscount=' + activeDiscount; 
 		var index = layer.open({
 			type: 2,
 			title: title,

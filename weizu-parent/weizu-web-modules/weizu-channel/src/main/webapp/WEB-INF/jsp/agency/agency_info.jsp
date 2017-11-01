@@ -55,7 +55,14 @@
 				<input type="text" style="width:200px" class="input-text"  value="${loginContext.otherContact }" placeholder="" id="otherContact" name="otherContact">
 			</div>
 		</div>
+		
 		<c:if test="${loginContext.agencyTag == 1 }">
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-2">对接apikey：</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" style="width:200px" class="input-text" readOnly  value="${loginContext.userApiKey }" placeholder="" id="userApiKey">
+				</div>
+			</div>
 			<div class="row cl">
 				<label class="form-label col-xs-4 col-sm-2">回调地址：</label>
 				<div class="formControls col-xs-8 col-sm-9">

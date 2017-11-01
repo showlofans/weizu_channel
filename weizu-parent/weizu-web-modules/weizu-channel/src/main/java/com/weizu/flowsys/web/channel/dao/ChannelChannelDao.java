@@ -7,6 +7,8 @@ import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
+import com.weizu.flowsys.web.channel.pojo.SpecialCnelType;
+import com.weizu.flowsys.web.channel.pojo.SpecialOpdType;
 
 /**
  * @description: 通道接口
@@ -83,5 +85,22 @@ public interface ChannelChannelDao extends Dao<ChannelChannelPo, Long> {
 	 * @createTime:2017年8月28日 下午3:45:36
 	 */
 	List<ChargeChannelPo> list_charge_channel(Map<String,Object> params);
+	
+	/**
+	 * @description: 获得特殊通道的特殊类型
+	 * @param channelId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月27日 上午10:24:59
+	 */
+	List<SpecialCnelType> getSpecialCnelType (Integer cnelType);
+	/**
+	 * @description: 获得特殊包体的特殊类型
+	 * @param specialOpdType
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月27日 上午10:24:59
+	 */
+	List<SpecialOpdType> getSpecialOpdType (SpecialOpdType specialOpdType);
 
 }

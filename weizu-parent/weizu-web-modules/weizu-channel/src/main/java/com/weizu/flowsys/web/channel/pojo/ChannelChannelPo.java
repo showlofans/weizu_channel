@@ -25,7 +25,9 @@ public class ChannelChannelPo extends Po {
 
     private String channelName;
 
-    private String pgSize;
+    private String specialTag;
+    @TempField
+    private String pgSize;								//pgSizeStr:页面参数
 
     private Integer epId;
 
@@ -40,7 +42,9 @@ public class ChannelChannelPo extends Po {
     private Integer channelState;
 
     private Integer channelUseState;
-
+    @TempField
+    private Integer channelType;						//通道类型（页面参数：1-普通通道包，2-红包通道，3-转移包，4-共享包）
+    
     private Long lastAccess;
     @TempField
     private String epName;								//平台名字
@@ -59,6 +63,9 @@ public class ChannelChannelPo extends Po {
     
     @TempField
     private List<ChannelDiscountPo> discountList;				//通道折扣（添加和页面参数）
+   
+    @TempField
+    private List<PgDataPo> pgList;				//包体列表（页面参数）
     
     @TempField
     private Map<String,Object> scopeCityCodes;				//查询参数
@@ -78,7 +85,31 @@ public class ChannelChannelPo extends Po {
     @TempField
     private String scopeCityCode;				//省份编码（查询参数）
     
-    public Integer getPgType() {
+    public String getPgSize() {
+		return pgSize;
+	}
+
+	public void setPgSize(String pgSize) {
+		this.pgSize = pgSize;
+	}
+
+	public Integer getChannelType() {
+		return channelType;
+	}
+
+	public void setChannelType(Integer channelType) {
+		this.channelType = channelType;
+	}
+
+	public List<PgDataPo> getPgList() {
+		return pgList;
+	}
+
+	public void setPgList(List<PgDataPo> pgList) {
+		this.pgList = pgList;
+	}
+
+	public Integer getPgType() {
 		return pgType;
 	}
 
@@ -190,15 +221,15 @@ public class ChannelChannelPo extends Po {
         this.channelName = channelName == null ? null : channelName.trim();
     }
 
-    public String getPgSize() {
-        return pgSize;
-    }
+    public String getSpecialTag() {
+		return specialTag;
+	}
 
-    public void setPgSize(String pgSize) {
-        this.pgSize = pgSize == null ? null : pgSize.trim();
-    }
+	public void setSpecialTag(String specialTag) {
+		this.specialTag = specialTag;
+	}
 
-    public Integer getEpId() {
+	public Integer getEpId() {
         return epId;
     }
 

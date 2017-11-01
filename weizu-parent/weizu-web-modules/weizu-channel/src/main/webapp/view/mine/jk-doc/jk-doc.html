@@ -64,7 +64,7 @@
     <blockquote data-anchor-id="tger" class="white-blockquote"> 
    <p><strong>南昌微族流量充值平台入口：<a href="http://120.55.162.224:8082" target="_blank">http://120.55.162.224:8082</a></strong></p> 
    <p>接口使用前提：完成对公账户的认证</p> 
-   <p><!-- 版本:V1.0  -->更新时间：2017-10-19 17:59:00</p> 
+   <p><!-- 版本:V1.0  -->更新时间：2017-11-01 17:59:00</p> 
    <p><!-- 版本:V1.0  -->接口对接咨询：3004599415#qq.com</p> 
     </blockquote>
     <div class="md-section-divider"></div>
@@ -144,19 +144,37 @@
        <td style="text-align:left;">pgSize</td> 
        <td style="text-align:left;">int</td> 
        <td style="text-align:left;">是</td> 
-       <td style="text-align:left;">充值流量大小 5M参数为5,10M参数为10,1G参数为1024,2G参数为2048以此类推</td> 
+       <td style="text-align:left;">流量大小： 5M参数为5,10M参数为10,1G参数为1024,2G参数为2048以此类推</td> 
       </tr> 
       <tr> 
        <td style="text-align:left;">billType</td> 
        <td style="text-align:left;">int</td> 
        <td style="text-align:left;">否</td> 
-       <td style="text-align:left;">值为1代表对公，值为0代表对私。不传0即默认为1</td> 
+       <td style="text-align:left;">账户类型，值为1代表对公，值为0代表对私。不传0即默认为1</td> 
       </tr> 
       <tr> 
        <td style="text-align:left;">scope</td> 
        <td style="text-align:left;">int</td> 
        <td style="text-align:left;">否</td> 
-       <td style="text-align:left;">值为0代表全国漫游流量，值为1代表省内流量，值为2代表省漫游流量。不传即默认为2</td> 
+       <td style="text-align:left;">业务范围：值为0代表全国漫游流量，值为1代表省内流量，值为2代表省漫游流量。不传即默认为2</td> 
+      </tr> 
+      <tr> 
+       <td style="text-align:left;">channelType</td> 
+       <td style="text-align:left;">int</td> 
+       <td style="text-align:left;">否</td> 
+       <td style="text-align:left;">通道类型：值为1代表普通流量，值为2代表红包流量，值为3代表省转移流量，值为4代表共享流量。不传即默认为1</td> <!-- 通道类型（1-普通流量，2-红包流量，3-转移流量，4-共享流量） -->
+      </tr> 
+      <tr> 
+       <td style="text-align:left;">pgType</td> 
+       <td style="text-align:left;">int</td> 
+       <td style="text-align:left;">否</td> 
+       <td style="text-align:left;">流量类型：值为0代表全国漫游流量，值为1代表流量包，值为2代表流量池。不传即默认为1</td> <!-- （1-流量包，2-流量池） -->
+      </tr> 
+      <tr> 
+       <td style="text-align:left;">pgValidity</td> 
+       <td style="text-align:left;">String</td> 
+       <td style="text-align:left;">否</td> 
+       <td style="text-align:left;">流量有效期：30-月包，01-今日包，24-24小时包，01-今日包，03-3日包，07-7日包，90-季度包，180-半年包，365-年包。不传即默认30</td> 
       </tr> 
       <!-- <tr> 
        <td style="text-align:left;">timestamp</td> 
@@ -244,14 +262,13 @@
       </tr> 
      </tbody>
     </table>
-    <!-- <div class="md-section-divider"></div> 
-    <h3 data-anchor-id="cxt0" id="3充值结果回调">2.充值结果回调</h3>
+    <div class="md-section-divider"></div> 
+    <h3 data-anchor-id="cxt0" id="2充值结果回调">2.充值结果回调（待测试）</h3>
     <ul data-anchor-id="s0g1"> 
-     <li>请求方式:POST/GET</li> 
-     <li>回调地址:用户设置的或者订单递交的reporturl</li> 
-     <li>GET方式:?tipCode=0&amp;orderId=201504210952082292343482&amp;user_orderId=201504210952123#ber=13333333333&amp;status=4</li> 
+     <li>请求方式:POST</li> 
+     <li>回调地址:用户设置的的reporturl</li> 
      <li>响应内容: ok 为成功，其他则失败 </li>
-     <li>响应说明: 超时或者非200状态码的 http 响应系统会判断回调失败，并且重新发起回调，共四次回调，间隔为30秒、60秒、120秒，300秒</li> 
+     <!-- <li>响应说明: 超时或者非200状态码的 http 响应系统会判断回调失败，并且重新发起回调，共四次回调，间隔为30秒、60秒、120秒，300秒</li>  -->
     </ul>
     <table data-anchor-id="06rb" class="table table-striped-white table-bordered"> 
      <thead> 
@@ -263,34 +280,40 @@
      </thead> 
      <tbody> 
       <tr> 
-       <td style="text-align:left;">tipCode</td> 
-       <td style="text-align:left;">int 6</td> 
-       <td style="text-align:left;">数据操作错误码，0代表成功，非0代表异常</td> 
-      </tr> 
-      <tr> 
        <td style="text-align:left;">orderId</td> 
-       <td style="text-align:left;">String 32</td> 
+       <td style="text-align:left;">Long</td> 
        <td style="text-align:left;">订单号</td> 
       </tr> 
       <tr> 
-       <td style="text-align:left;">user_orderId</td> 
+       <td style="text-align:left;">orderIdFrom</td> 
        <td style="text-align:left;">String 40</td> 
        <td style="text-align:left;">用户提交的订单号</td> 
       </tr> 
       <tr> 
-       <td style="text-align:left;">number</td> 
+       <td style="text-align:left;">chargeTel</td> 
        <td style="text-align:left;">String 11</td> 
        <td style="text-align:left;">手机号码</td> 
       </tr> 
       <tr> 
        <td style="text-align:left;">status</td> 
        <td style="text-align:left;">int 3</td> 
-       <td style="text-align:left;">充值结果:成功4失败8</td> 
+       <td style="text-align:left;">充值结果:成功1失败0 </td> 
       </tr> 
+      <tr> 
+       <td style="text-align:left;">statusDetail</td> 
+       <td style="text-align:left;">String</td> 
+       <td style="text-align:left;">充值结果描述</td> 
+      </tr> 
+      <tr> 
+       <td style="text-align:left;">timeStamp</td> 
+       <td style="text-align:left;">Long</td> 
+       <td style="text-align:left;">充值时间</td> 
+      </tr> 
+      <tr> 
      </tbody>
-    </table> -->
+    </table>
     <div class="md-section-divider"></div> 
-    <h3 data-anchor-id="hju9" id="3获取账号余额">2.获取账号余额</h3>
+    <h3 data-anchor-id="hju9" id="3获取账号余额">3.获取账号余额</h3>
     <ul data-anchor-id="cqrx"> 
      <li>请求方式:GET</li> 
      <li>请求地址:<a href="http://120.55.162.224:8082/flowsys/weizuAPI/my_balance?userName=xxxx&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2&amp;billType=0" target="_blank">http://120.55.162.224:8082/flowsys/weizuAPI/my_balance?userName=xxxx&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2&amp;billType=0</a></li> 
@@ -355,7 +378,7 @@
      </tbody>
     </table>
     <div class="md-section-divider"></div> 
-    <h3 data-anchor-id="scug" id="4获取某一订单详情">3.获取某一订单详情</h3>
+    <h3 data-anchor-id="scug" id="4获取某一订单详情">4.获取某一订单详情</h3>
     <ul data-anchor-id="jkh7"> 
      <li>请求方式:GET</li> 
      <li>请求地址:<a href="http://120.55.162.224:8082/flowsys/weizuAPI/my_order_state?userName=xxxx&amp;orderId=745830224406515712&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2" target="_blank">http://120.55.162.224:8082/flowsys/weizuAPI/my_order_state?userName=xxxx&amp;orderId=745830224406515712&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2</a></li> 

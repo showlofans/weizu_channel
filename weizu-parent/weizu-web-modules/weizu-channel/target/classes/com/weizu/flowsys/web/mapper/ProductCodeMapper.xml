@@ -28,11 +28,14 @@
     <result column="pg_name" property="pgName" jdbcType="VARCHAR" />
     <result column="operator_type" property="operatorType" jdbcType="INTEGER" />
     <result column="service_type" property="serviceType" jdbcType="INTEGER" />
+    <result column="pg_type" jdbcType="INTEGER" property="pgType" />
+    <result column="circulate_way" jdbcType="INTEGER" property="circulateWay" />
+    <result column="pg_validity" jdbcType="VARCHAR" property="pgValidity" />
     <result column="ep_name" property="epName" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >
-    pc.*,opd.pg_size,opd.pg_price,opd.pg_name,opd.operator_type,opd.service_type,ep.ep_name
+    pc.*,opd.pg_size,opd.pg_price,opd.pg_name,opd.operator_type,opd.service_type,opd.pg_type,opd.pg_validity,opd.circulate_way,ep.ep_name
   </sql>
   <sql id="Simple_Column_List" >
     pc.*
@@ -128,6 +131,9 @@
 	<if test="pgValidity != null">
 		AND pg_validity = #{pgValidity}
 	</if>
+	<if test="circulateWay != null">
+		AND opd.circulate_way=#{circulateWay}
+	</if>
 	<if test="epId != null">
   		AND pc.ep_id = #{epId}
   	</if>
@@ -164,6 +170,15 @@
 	<if test="operatorType != null">
   		AND opd.operator_type = #{operatorType}
   	</if>
+  	<if test="pgType != null">
+		AND opd.pg_type=#{pgType}
+	</if>
+	<if test="pgValidity != null">
+		AND opd.pg_validity=#{pgValidity}
+	</if>
+	<if test="circulateWay != null">
+		AND opd.circulate_way=#{circulateWay}
+	</if>
   </sql>
   
   <sql id="condition_sql">
@@ -172,6 +187,9 @@
   	</if>
   	<if test="productCode != null">
   		AND product_code like concat("%",trim(#{productCode}),"%")
+  	</if>
+  	<if test="scopeCityCode != null">
+  		AND scope_city_code = #{scopeCityCode}
   	</if>
   	<if test="operatorType != null">
   		AND opd.operator_type = #{operatorType}
@@ -185,6 +203,15 @@
   	<if test="epName != null">
   		AND ep.ep_name like concat("%",trim(#{epName}),"%")
   	</if>
+  	<if test="pgType != null">
+		AND opd.pg_type=#{pgType}
+	</if>
+	<if test="pgValidity != null">
+		AND opd.pg_validity=#{pgValidity}
+	</if>
+	<if test="circulateWay != null">
+		AND opd.circulate_way=#{circulateWay}
+	</if>
   	<!-- <if test="epId != null">
   		AND ep_id = #{epId}
   	</if>

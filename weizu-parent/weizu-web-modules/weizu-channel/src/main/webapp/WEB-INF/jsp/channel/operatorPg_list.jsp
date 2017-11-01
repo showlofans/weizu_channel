@@ -32,49 +32,89 @@
 <body>
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 流量包管理 <span class="c-gray en">&gt;</span> 流量包列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
-	<form action="/flowsys/operatorPg/operatorPg_list.do" method="post" id="formD" name="dataListForm">
 	<div class="text-c">
+	<form class="form form-horizontal" action="/flowsys/operatorPg/operatorPg_list.do" method="post" id="formD" name="dataListForm">
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
-	  运营商类型：
-	 <span class="select-box inline">
-		<select name="operatorType" class="select"  onchange="submitForm()">
-			<option value="">运营商类型</option>
-			<c:forEach items="${resultMap.pgTypeEnums }" var="pgType" varStatus="vs1">
-				<option value="${pgType.value }" <c:if test="${pgType.value == resultMap.params.operatorType }"> selected</c:if>>${pgType.desc }</option>
-			</c:forEach>
-		</select>
-	</span> 
-	  流量类型：
-	 <span class="select-box inline">
-		<select name="serviceType" class="select" onchange="submitForm()">
-			<option value="">流量类型</option>
-			<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
-				<option value="${serviceTypeEnum.value }" <c:if test="${serviceTypeEnum.value == resultMap.params.serviceType }"> selected</c:if>>${serviceTypeEnum.desc }</option>
-			</c:forEach>
-		</select>
-	</span> 
-		包状态
+	<div class="row cl formControls">
+		 <!--  包体有效期： -->
+		 <span class="select-box inline">
+			<select name="pgValidity" class="select"  onchange="submitForm()">
+				<option value="">包体有效期</option>
+				<c:forEach items="${resultMap.pgValidityEnums }" var="pgValidityEnum" varStatus="vs1">
+					<option value="${pgValidityEnum.value }" <c:if test="${pgValidityEnum.value == resultMap.params.pgValidity }"> selected</c:if>>${pgValidityEnum.desc }</option>
+				</c:forEach>
+			</select>
+		</span> 
+		&nbsp;&nbsp;
+		 <!--  流量流通方式： -->
+		 <span class="select-box inline">
+			<select name="circulateWay" class="select"  onchange="submitForm()">
+				<option value="">流量流通方式</option>
+				<c:forEach items="${resultMap.channelTypeEnums }" var="channelTypeEnum" varStatus="vs1">
+					<option value="${channelTypeEnum.value }" <c:if test="${channelTypeEnum.value == resultMap.params.circulateWay }"> selected</c:if>>${channelTypeEnum.desc }</option>
+				</c:forEach>
+			</select>
+		</span> 
+		&nbsp;&nbsp;
+		 <!--  运营商类型： -->
+		 <span class="select-box inline">
+			<select name="operatorType" class="select"  onchange="submitForm()">
+				<option value="">运营商类型</option>
+				<c:forEach items="${resultMap.operatoerTypeEnums }" var="operatorTypeEnum" varStatus="vs1">
+					<option value="${operatorTypeEnum.value }" <c:if test="${operatorTypeEnum.value == resultMap.params.operatorType }"> selected</c:if>>${operatorTypeEnum.desc }</option>
+				</c:forEach>
+			</select>
+		</span> 
+		&nbsp;&nbsp;
+		 <!--  流量类型： -->
+		 <span class="select-box inline">
+			<select name="serviceType" class="select" onchange="submitForm()">
+				<option value="">业务类型</option>
+				<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
+					<option value="${serviceTypeEnum.value }" <c:if test="${serviceTypeEnum.value == resultMap.params.serviceType }"> selected</c:if>>${serviceTypeEnum.desc }</option>
+				</c:forEach>
+			</select>
+		</span> 
+		&nbsp;&nbsp;
+			<!-- 包状态 -->
 		<span class="select-box inline">
 			<select name="pgInService" class="select"  onchange="submitForm()">
-			<option value="">请选择</option>
+			<option value="">包状态</option>
 			<c:forEach items="${resultMap.pgInEnums }" var="pgIn" varStatus="vs1">
 				<option value="${pgIn.value }" <c:if test="${pgIn.value == resultMap.params.pgInService }"> selected</c:if>>${pgIn.desc }</option>
 			</c:forEach>
 		</select>
 		</span>
+		&nbsp;&nbsp;
+			<!-- 包状态 -->
+		<span class="select-box inline">
+			<select name="pgType" class="select"  onchange="submitForm()">
+			<option value="">流量类型</option>
+			<c:forEach items="${resultMap.pgTypeEnums }" var="pgTypeEnum" varStatus="vs1">
+				<option value="${pgTypeEnum.value }" <c:if test="${pgTypeEnum.value == resultMap.params.pgType }"> selected</c:if>>${pgTypeEnum.desc }</option>
+			</c:forEach>
+		</select>
+		</span>
+			
+			
+	</div>
+	
+	<div class="row cl" style="margin-top: 30dp">
+		流量大小:<input type="text" value="${resultMap.params.pgSize }" name="pgSize" id="" placeholder="大小" style="width:80px" class="input-text">
 		原价：<input type="text" value="${resultMap.params.pgPrice }" name="pgPrice" id="" placeholder=" 原价" style="width:80px" class="input-text">元
 		<!-- 支持城市：<input type="text" name="scopeCityName" id="" placeholder=" 支持城市" style="width:250px" class="input-text"> -->
 		<!-- 日期范围：
 		<input type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'logmax\')||\'%y-%M-%d\'}' })" id="logmin" class="input-text Wdate" style="width:120px;">
 		-
 		<input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'logmin\')}',maxDate:'%y-%M-%d' })" id="logmax" class="input-text Wdate" style="width:120px;"> -->
-		流量大小:<input type="text" value="${resultMap.params.pgSize }" name="pgSize" id="" placeholder="大小" style="width:50px" class="input-text">M
 		<button type="button" class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 		<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜流量</button>
 		<a style="text-decoration:none" class="btn btn-success" onClick="pg_add('包体添加','/flowsys/operatorPg/pg_add_page.do')" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i>添加</a>
 		<!-- <button class="btn btn-success" onClick="pg_add('包体添加','pg_add_page.do')" value="添加流量包体">添加</button> -->
 		<input type="hidden" name="pageNo" value="${pagination.pageNo }"> 
-		</form>
+	</div>
+</form>
+</div>
 	</div>
 	<!-- <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加资讯" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加资讯</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div> -->
 	<div class="mt-20">
@@ -84,14 +124,17 @@
 					<!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
 					<!-- <th width="80">流量包Id</th> -->
 					<th width="200">流量包名称</th>
-					<th width="80">流量类型</th>
+					<th width="80">业务类型</th>
+					<th width="80">有效期</th>
+					<th width="80">流通方式</th>
+					<!-- <th width="80">流量类型</th> -->
 					<th width="80">流量大小</th>
 					<th width="80">运营商类型</th>
-					<th width="80">运营商名称</th>
+					<!-- <th width="80">运营商名称</th> -->
 					<!-- <th width="120">支持城市</th> -->
 					<th width="75">原价</th>
-					<th width="60">使用状态</th>
-					<th width="120">操作</th>
+					<!-- <th width="60">使用状态</th> -->
+					 <th width="120">操作</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -99,21 +142,57 @@
 					<tr class="text-c">
 						<!-- <td><input type="checkbox" value="" name=""></td> -->
 						<%-- <td>${pg.pgId }</td> --%>
-						<td>${pg.pgName }</td>
+						<td>
+						<c:choose>
+							<c:when test="${pg.pgInService == 1 }"><!-- 使用状态为开通状态 -->
+								<c:forEach items="${resultMap.pgInEnums }" var="pgIn" varStatus="vs1">
+									<c:if test="${pg.pgInService == pgIn.value }">
+										<span data-toggle="tooltip" data-placement="top" title="${pgIn.desc }" class="c-green">${pg.pgName }</span>
+									 </c:if>
+								</c:forEach>
+							</c:when>
+							<c:otherwise>
+								<span class="">${pg.pgName }</span>
+							</c:otherwise>
+						</c:choose>
+						</td>
 						<td><c:forEach items="${resultMap.serviceTypeEnums }" var="serviceType" varStatus="vs1">
 						<c:if test="${pg.serviceType == serviceType.value }"> ${serviceType.desc }</c:if>
 						</c:forEach>
 						</td>
-						<td>${pg.pgSize }M</td>
-						<td><c:forEach items="${resultMap.operatoerTypeEnums }" var="operatorType" varStatus="vs1">
-						<c:if test="${pg.operatorType == operatorType.value }"> ${operatorType.desc }</c:if>
+						<td><c:forEach items="${resultMap.pgValidityEnums }" var="pgValidityEnum" varStatus="vs1">
+						<c:if test="${pg.pgValidity == pgValidityEnum.value }"> ${pgValidityEnum.desc }</c:if>
 						</c:forEach>
 						</td>
-						<td>${pg.operatorName }</td>
+						<td><c:forEach items="${resultMap.channelTypeEnums }" var="channelTypeEnum" varStatus="vs1">
+						<c:if test="${pg.circulateWay == channelTypeEnum.value }"> ${channelTypeEnum.desc }</c:if>
+						</c:forEach>
+						</td>
+						<%-- <td><c:forEach items="${resultMap.pgTypeEnums }" var="pgTypeEnum" varStatus="vs1">
+						<c:if test="${pg.pgType == pgTypeEnum.value }"> ${pgTypeEnum.desc }</c:if>
+						</c:forEach>
+						</td> --%>
+						
+						<td>
+							<c:forEach items="${resultMap.pgTypeEnums }" var="pgTypeEnum" varStatus="vs1">
+								<c:if test="${pgTypeEnum.value == pg.pgType }"> 
+									<span data-toggle="tooltip" data-placement="bottom" title="${pgTypeEnum.desc }">
+										${pg.pgSize }M
+									</span>
+								</c:if>
+							</c:forEach>
+						</td>
+						<td><c:forEach items="${resultMap.operatoerTypeEnums }" var="operatorType" varStatus="vs1">
+						<c:if test="${pg.operatorType == operatorType.value }">
+							<span data-toggle="tooltip" data-placement="top" title="${pg.operatorName  }"> ${operatorType.desc }</span>
+						</c:if>
+						</c:forEach>
+						</td>
+						<%-- <td>${pg.operatorName }</td> --%>
 						<td>${pg.pgPrice }</td>
-						<td class="td-status"><c:forEach items="${resultMap.pgInEnums }" var="pgIn" varStatus="vs1">
+						<%-- <td class="td-status"><c:forEach items="${resultMap.pgInEnums }" var="pgIn" varStatus="vs1">
 						<c:if test="${pg.pgInService == pgIn.value }"> ${pgIn.desc }</c:if>
-						</c:forEach></td>
+						</c:forEach></td> --%>
 						<td class="f-14 td-manage">
 						<a style="text-decoration:none" class="ml-5" onClick="pg_del(this,${pg.id})" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
 						</td>
@@ -147,7 +226,7 @@ function pg_add(title,url){
 	layer.open({
         type: 2,
         title: false,
-        area: ['430px', '600px'],
+        area: ['500px', '600px'],
         maxmin: false,
         closeBtn: 1,
         content: url+'?pageTitle=' + title,

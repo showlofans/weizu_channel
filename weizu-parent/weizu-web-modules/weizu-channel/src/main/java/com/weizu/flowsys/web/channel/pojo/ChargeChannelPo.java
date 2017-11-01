@@ -16,10 +16,17 @@ public class ChargeChannelPo {
     private String channelName;
 	private Integer epId;
 	private String epName;					//平台名字
+	private String specialTag;				//平台特殊
 	private Double channelDiscount;			//通道折扣
 	private Long cdId;						//通道折扣id
 	private List<OperatorPgDataPo> list;	//包体列表
 	
+	public String getSpecialTag() {
+		return specialTag;
+	}
+	public void setSpecialTag(String specialTag) {
+		this.specialTag = specialTag;
+	}
 	public Long getCdId() {
 		return cdId;
 	}

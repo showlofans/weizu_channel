@@ -1,6 +1,8 @@
 package com.weizu.flowsys.web.agency.ao;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -12,6 +14,7 @@ import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ConfirmStateEnum;
+import com.weizu.flowsys.util.UUIDGenerator;
 import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
 import com.weizu.flowsys.web.agency.dao.CompanyCredentialsDao;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
@@ -19,6 +22,7 @@ import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.CompanyCredentialsPo;
+import com.weizu.web.foundation.String.StringHelper;
 
 /**
  * @description: 认证实体业务层接口实现类
@@ -155,7 +159,19 @@ public class CompanyCredentialsAOImpl implements CompanyCredentialsAO {
 			ChargeAccountPo chargePo = new ChargeAccountPo();
 			//认证通过后，设置代理商为认证用户
 			int agencyId = ccpo.getAgencyId();
-			 int popTag = agencyVODao.updateAgencyTag(agencyId, AgencyTagEnum.DATA_USER.getValue());
+			AgencyBackwardPo agBackwardPo = agencyVODao.get(agencyId);
+			Map<String, Object> params = new HashMap<String, Object>();
+			if(agBackwardPo != null){
+				if(StringHelper.isEmpty(agBackwardPo.getUserApiKey()) && agBackwardPo.getAgencyTag() == AgencyTagEnum.DATA_USER.getValue())
+				{
+					UUIDGenerator generator = new UUIDGenerator();
+					String userAPiKey = generator.generate().toString();
+					params.put("userApiKey", userAPiKey);
+				}
+			}
+			params.put("id", agencyId);
+			params.put("agencyTag", AgencyTagEnum.DATA_USER.getValue());
+			 int popTag = agencyVODao.updateAgencyTag(agencyId, params);
 			
 			chargePo.setAgencyId(agencyId);
 			chargePo.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());//增加一个对公账户

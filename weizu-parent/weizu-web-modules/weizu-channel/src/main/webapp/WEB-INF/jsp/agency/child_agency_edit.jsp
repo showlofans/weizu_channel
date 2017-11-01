@@ -63,6 +63,13 @@
 			</div>
 		</div>
 		</c:if>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">用户QQ：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<%-- <input type="text" readonly="readonly" style="width:200px" class="input-text"  value="${resultMap.agencyPo.agencyIp }" placeholder="" id="agencyIp" name="agencyIp"> --%>
+				${resultMap.agencyPo.otherContact }
+			</div>
+		</div>
 		<%-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">用户信用：</label>
 			<div class="formControls col-xs-8 col-sm-9">

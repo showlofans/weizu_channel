@@ -6,13 +6,14 @@
 <mapper namespace="com.weizu.flowsys.web.channel.dao.OperatorPgDaoInterface">
 	<sql id="t_pg">operator_pg_data</sql>
 	<sql id="t_pc">product_code</sql>
-	<sql id="t_aar">agency_active_rate</sql>
+	<sql id="t_aar">account_active_rate</sql>
 	<sql id="t_rte">rate_discount</sql>
 	<sql id="t_cnel">channel_channel</sql>
 	<sql id="t_cd">channel_discount</sql>
 	<sql id="t_pCode">product_code</sql>
 	<sql id="t_ep">exchange_platform</sql>
 	<sql id="t_cbp">cnel_bind_pg</sql>
+	<sql id="t_act">charge_account</sql>
 	<!-- <sql id="t_scope">service_scope</sql> -->
 	
 	<resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.PgDataPo">
@@ -25,16 +26,21 @@
 	    <result column="pg_name" jdbcType="VARCHAR" property="pgName" />
 	    <result column="pg_in_service" jdbcType="INTEGER" property="pgInService" />
 	    <result column="pg_type" jdbcType="INTEGER" property="pgType" />
+	    <result column="circulate_way" jdbcType="INTEGER" property="circulateWay" />
 	    <result column="pg_validity" jdbcType="VARCHAR" property="pgValidity" />
 	 </resultMap>
-	<resultMap id="PurchasePgMap" type="com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo">
+	<resultMap id="PurchasePgMap" type="com.weizu.flowsys.web.channel.pojo.PgDataPo">
 	    <id column="id" jdbcType="INTEGER" property="id" />
 	    <result column="operator_type" jdbcType="INTEGER" property="operatorType" />
+	    <result column="pg_type" jdbcType="INTEGER" property="pgType" />
+	    <result column="circulate_way" jdbcType="INTEGER" property="circulateWay" />
+	    <result column="pg_validity" jdbcType="VARCHAR" property="pgValidity" />
 	    <result column="operator_name" jdbcType="VARCHAR" property="operatorName" />
 	    <result column="pg_size" jdbcType="INTEGER" property="pgSize" />
 	    <result column="pg_price" jdbcType="DOUBLE" property="pgPrice" />
 	    <result column="pg_name" jdbcType="VARCHAR" property="pgName" />
 	    <result column="pg_in_service" jdbcType="INTEGER" property="pgInService" />
+	    <result column="channel_id" property="channelId" />
 	 </resultMap>
 	<resultMap id="OtherMap" type="com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo">
 	   <id column="id" jdbcType="INTEGER" property="id" />
@@ -56,10 +62,10 @@
 	    <result column="rte_id" property="rteId" />
 	 </resultMap>
   <sql id="Base_Column_List">
-    pg.id,operator_type,operator_name,pg_in_service,pg.pg_name,pg_price,pg_size,service_type,pg_type,pg_validity
+    pg.id,operator_type,operator_name,pg_in_service,pg.pg_name,pg_price,pg_size,service_type,pg_type,pg_validity,circulate_way
   </sql>
   <sql id="Purchase_Column_List">
-    pg.id,pg.operator_type,pg.operator_name,pg_in_service,pg.pg_name,pg_price,pg_size,pg.service_type
+    pg.id,pg.operator_type,pg.operator_name,pg_in_service,pg.pg_name,pg_price,pg_size,pg.service_type,pg_validity,pg_type,cbp.channel_id
   </sql>
   <!-- 通过通道查询购买包体list -->
   <sql id="myCnelPg_Column_List">
@@ -87,7 +93,7 @@
 	</insert>
 	
 	<!-- 查询分页包体list -->
-	<select id="pgList_select" resultMap="OtherMap">
+	<select id="pgList_select" resultMap="BaseResultMap">
 		 select 
     	<include refid="Base_Column_List" />
    		 from <include refid="t_pg"></include> pg
@@ -232,6 +238,9 @@
 		<if test="pgType != null">
 			AND pg.pg_type = #{pgType}
 		</if>
+		<if test="circulateWay != null">
+			AND circulate_way = #{circulateWay}
+		</if>
 		<if test="pgValidity != null">
 			AND pg.pg_validity = #{pgValidity}
 		</if>
@@ -269,6 +278,9 @@
 		<if test="pgValidity != null">
 			AND pg_validity = #{pgValidity}
 		</if>
+		<if test="circulateWay != null">
+			AND circulate_way = #{circulateWay}
+		</if>
 	</sql>
  <!-- 查询某个平台没有设置产品编码的包体 -->
  <select id="listPgListNotInPcode" parameterType="map" resultMap="BaseResultMap">
@@ -295,6 +307,9 @@
 		</if>
 		<if test="pgType != null">
 			AND pg_type = #{pgType}
+		</if>
+		<if test="circulateWay != null">
+			AND circulate_way = #{circulateWay}
 		</if>
  	</where>
  </select>
@@ -341,16 +356,61 @@
 	INNER JOIN <include refid="t_cbp"></include> cbp
 	on cbp.pg_id = pg.id
 	<where>
-		<if test="operatorType != null">
+		<!-- <if test="operatorType != null">
 			AND pg.operator_type = #{operatorType}
 		</if>
 		<if test="serviceType != null">
 			AND pg.service_type = #{serviceType}
-		</if>
+		</if> -->
 		<if test="channelId != null">
 			AND cbp.channel_id = #{channelId}
 		</if>
 	</where> 
  </select> 
- 	
+ 
+ <!-- 通过费率获得充值的包体 -->
+ <select id="pg_list_for_purchase" parameterType="map" resultMap="PurchasePgMap">
+ 	SELECT <include refid="Purchase_Column_List"></include>
+ 	 FROM <include refid="t_pg"></include> pg
+	 INNER JOIN <include refid="t_cbp"></include> cbp 
+	 ON cbp.pg_id=pg.id
+	 <where>
+	 	cbp.channel_id in 
+	 	(SELECT rte.channel_id from rate_discount rte
+		INNER JOIN <include refid="t_cnel"></include> chnel
+		on chnel.id=rte.channel_id
+		INNER JOIN <include refid="t_cd"></include> cd
+		on cd.channel_id=chnel.id
+		INNER JOIN <include refid="t_aar"></include> aar
+		on aar.rate_discount_id=rte.id
+		INNER JOIN <include refid="t_act"></include> act
+		on aar.account_id=act.id
+		<where>
+			<if test="agencyId != null">
+				AND act.agency_id=#{agencyId}
+			</if>
+			<if test="channelUseState != null">
+				AND chnel.channel_use_state=#{channelUseState}
+			</if>
+			<if test="scopeCityCode != null">
+				AND cd.scope_city_code=#{scopeCityCode}
+			</if>
+			<if test="channelType != null">
+				AND cd.channel_type=#{channelType}
+			</if>
+		</where>)
+		<if test="operatorType != null">
+			AND operator_type = #{operatorType}
+		</if>
+		<if test="serviceType != null">
+			AND service_type = #{serviceType}
+		</if>
+		<if test="pgValidity != null">
+			AND pg_validity = #{pgValidity}
+		</if>
+		<if test="pgType != null">
+			AND pg_type = #{pgType}
+		</if>
+	 </where>
+ </select>
 </mapper>

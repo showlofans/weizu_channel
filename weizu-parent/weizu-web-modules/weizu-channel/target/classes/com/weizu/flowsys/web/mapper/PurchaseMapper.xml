@@ -228,7 +228,7 @@
   </update>
   
   <!-- 根据参数订单总记录数 -->
-  <select id="countPurchase" resultType="java.lang.Integer" parameterType="map" >
+  <select id="countPurchase" resultType="long" parameterType="map" >
     select 
     count(*)
      FROM <include refid="t_purchase"></include> pur

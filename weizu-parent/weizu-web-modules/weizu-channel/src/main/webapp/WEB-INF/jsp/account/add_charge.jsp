@@ -102,7 +102,7 @@
 				<c:forEach items="${resultMap.billTypeEnum }" var="billTypeE" varStatus="vs">
 					<c:if test="${resultMap.accountPo.billType == billTypeE.value }">
 						<input type="text" class="input-text" readonly="readonly" value="${billTypeE.desc }" style="width:100px;"  id="billTypeDesc">
-						<input type="hidden" name="billType" value="${billTypeE.value }">
+						<%-- <input type="hidden" name="billType" value="${billTypeE.value }"> --%>
 					</c:if>
 				</c:forEach>
 			</div>

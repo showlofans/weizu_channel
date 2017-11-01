@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
+import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 
@@ -146,6 +147,11 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 	 * @createTime:2017年8月2日 上午11:34:40
 	 */
 	@Override
+	public List<RateDiscountPo> getRateListForCharge(Map<String, Object> params) {
+		return sqlSessionTemplate.selectList("getRateForCharge", params);
+	}
+	
+	@Override
 	public RateDiscountPo getRateForCharge(Map<String, Object> params) {
 		return sqlSessionTemplate.selectOne("getRateForCharge", params);
 	}
@@ -218,6 +224,22 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 		return updateRes; 
 	}
 
-	
+	@Override
+	public List<Long> getChannelByAgency(Integer agencyId) {
+		Map<String,Object> params = new HashMap<String, Object>();
+		params.put("agencyId", agencyId);
+		return sqlSessionTemplate.selectList("getChannelByAgency",params);
+	}
+
+	@Override
+	public RateDiscountPo getPriceByPg(Integer agencyId, Integer pgId, Long channelId) {
+		Map<String,Object> params = new HashMap<String, Object>();
+		params.put("agencyId", agencyId);
+		params.put("pgId", pgId);
+		params.put("channelId", channelId);
+		params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+		return sqlSessionTemplate.selectOne("getPriceByPg",params);
+		
+	}
 
 }

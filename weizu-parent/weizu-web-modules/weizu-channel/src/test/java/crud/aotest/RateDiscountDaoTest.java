@@ -1,8 +1,6 @@
 //package crud.aotest;
 //
-//import java.util.HashMap;
 //import java.util.List;
-//import java.util.Map;
 //
 //import javax.annotation.Resource;
 //
@@ -11,13 +9,15 @@
 //import org.springframework.test.context.ContextConfiguration;
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
-//import com.aiyi.base.pojo.PageParam;
-//import com.weizu.flowsys.util.Pagination;
-//import com.weizu.flowsys.web.activity.ao.AgencyActiveChannelAO;
+//import com.alibaba.fastjson.JSON;
+//import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
+//import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
+//import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
+//import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 //import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 //import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
-//import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
-//import com.weizu.flowsys.web.activity.pojo.RateDiscountShowDTO;
+//import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
+//import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -28,8 +28,8 @@
 //	@Resource
 //	private RateDiscountAO rateDiscountAO;
 //	
-//	@Resource
-//	private AgencyActiveChannelAO agencyActiveChannelAO;
+////	@Resource
+////	private AgencyActiveChannelAO agencyActiveChannelAO;
 //	
 ////	@Test
 ////	public void testGetDiscountList(){
@@ -100,10 +100,23 @@
 ////			}
 ////		}
 ////	}
+////	@Test
+////	public void updateRateDiscountByCDId(){
+////		int res = rateDiscountDao.updateRateDiscountByCDId(19l, 0.1);
+////		System.out.println(res);
+////	}
+////	@Test
+////	public void getChannelByAgency(){
+////		List<Long> channelList= rateDiscountDao.getChannelByAgency(2);
+////		for (Long channelId : channelList) {
+////			System.out.println("chanelId:"+channelId);
+////		}
+////	}
 //	@Test
-//	public void updateRateDiscountByCDId(){
-//		int res = rateDiscountDao.updateRateDiscountByCDId(19l, 0.1);
-//		System.out.println(res);
+//	public void getPgListForPurchase(){
+//		List<PgDataPo> pgList = rateDiscountAO.getPgListForPurchase(new ChargeChannelParamsPo("陕西移动", ServiceTypeEnum.PROVINCE.getValue(), PgTypeEnum.PGDATA.getValue(), PgValidityEnum.MONTH_DAY_DATA.getValue(), ChannelTypeEnum.ORDINARY.getValue()), 101, true);
+//		String listJsonStr = JSON.toJSONString(pgList);
+//		System.out.println(listJsonStr);
 //	}
 ////	@Test
 ////	public void testAddMyRate(){

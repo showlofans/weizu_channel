@@ -84,7 +84,7 @@ public interface AgencyAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月22日 下午4:07:13
 	 */
-	Map<String,Object> prepareParam(String id);
+	AgencyBackwardPo prepareParam(Integer id);
 	
 	/**
 	 * @description:通过代理商id获得该代理商的邀请码

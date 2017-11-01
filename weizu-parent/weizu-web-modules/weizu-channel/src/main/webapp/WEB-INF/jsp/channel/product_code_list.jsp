@@ -33,11 +33,40 @@
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 平台通道管理 <span class="c-gray en">&gt;</span> 产品编码列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
-	<form action="/flowsys/productCode/product_code_list.do" method="post" id="formD" name="dataListForm">
+	<form class="form form-horizontal" action="/flowsys/productCode/product_code_list.do" method="post" id="formD" name="dataListForm">
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
-		包体编码名称：<input type="text" value="${resultMap.searchParam.productName }" name="productName" id="" placeholder="包体编码名称" style="width:250px" class="input-text">
-		产品编码：<input type="text" value="${resultMap.searchParam.productCode }" name="productCode" id="" placeholder=" 产品编码" style="width:250px" class="input-text">
-		平台名称：<input type="text" value="${resultMap.searchParam.epName }" name="epName" id="epName" placeholder=" 平台名称" style="width:250px" class="input-text">
+		<div class="row cl formControls">
+		平台名称：<input type="text" value="${resultMap.searchParam.epName }" name="epName" id="epName" placeholder=" 平台名称" style="width:150px" class="input-text">&nbsp;&nbsp;
+		<span class="select-box inline">
+				<select name="operatorType" onchange="submitForm()" class="select">
+				<option value="">运营商</option>
+				<c:forEach items="${resultMap.operatorTypeEnums }" var="otypeEnum" varStatus="vs2">
+					<option value="${otypeEnum.value }" <c:if test="${otypeEnum.value == resultMap.searchParam.operatorType }"> selected</c:if>>${otypeEnum.desc }</option>
+				</c:forEach>
+			</select>
+			</span> 
+			&nbsp;&nbsp;
+		<%-- 包体编码名称：<input type="text" value="${resultMap.searchParam.productName }" name="productName" id="" placeholder="包体编码名称" style="width:250px" class="input-text">&nbsp;&nbsp; --%>
+		<%-- 包体编码名称：<input type="text" value="${resultMap.searchParam.productName }" name="productName" id="" placeholder="包体编码名称" style="width:250px" class="input-text">&nbsp;&nbsp; --%>
+		<span class="select-box inline">
+			<select name="scopeCityCode" onchange="submitForm()" class="select">
+			<option value="">编码地区</option>
+			<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum">
+				<option value="${scopeCityEnum.value }" <c:if test="${scopeCityEnum.value == resultMap.searchParam.scopeCityCode }"> selected</c:if>>${scopeCityEnum.desc }</option>
+			</c:forEach>
+		</select>
+		</span> 
+		&nbsp;&nbsp;
+		<span class="select-box inline">
+			<select name="serviceType" onchange="submitForm()" class="select">
+			<option value="">业务类型</option>
+			<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceType" varStatus="vs1">
+				<option value="${serviceType.value }" <c:if test="${serviceType.value == resultMap.searchParam.serviceType }"> selected</c:if>>${serviceType.desc }</option>
+			</c:forEach>
+		</select>
+		</span> 
+		&nbsp;&nbsp;
+		产品编码：<input type="text" value="${resultMap.searchParam.productCode }" name="productCode" id="" placeholder=" 产品编码" style="width:150px" class="input-text">&nbsp;&nbsp;
 		<%-- 对接平台：
 		<span class="select-box inline">
 			<select id="epId" name="epId" class="select" onchange="submitForm()">
@@ -46,21 +75,44 @@
 			</c:forEach>
 		</select>
 		</span>  --%>
-		运营商类型：
-		<span class="select-box inline">
-			<select name="operatorType" onchange="submitForm()" class="select">
-			<option value="">请选择</option>
-			<c:forEach items="${resultMap.operatorTypeEnums }" var="otypeEnum" varStatus="vs2">
-				<option value="${otypeEnum.value }" <c:if test="${otypeEnum.value == resultMap.searchParam.operatorType }"> selected</c:if>>${otypeEnum.desc }</option>
-			</c:forEach>
-		</select>
-		</span> 
+		</div>
 		
-		<button type="button" class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
-		<a style="text-decoration:none" class="btn btn-success" onClick="pCode_add('产品编码添加','/flowsys/productCode/productCode_add_page.do')" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i>添加</a>
-		<input value="查询" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
-		
-		<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
+		<div class="row cl" style="margin-top: 30dp">
+			<span class="select-box inline">
+				<select name="pgValidity" class="select"  onchange="submitForm()">
+					<option value="">包体有效期</option>
+					<c:forEach items="${resultMap.pgValidityEnums }" var="pgValidityEnum" varStatus="vs1">
+						<option value="${pgValidityEnum.value }" <c:if test="${pgValidityEnum.value == resultMap.searchParam.pgValidity }"> selected</c:if>>${pgValidityEnum.desc }</option>
+					</c:forEach>
+				</select>
+			</span> 
+			&nbsp;&nbsp;
+			 <!--  流量流通方式： -->
+			 <span class="select-box inline">
+				<select name="circulateWay" class="select"  onchange="submitForm()">
+					<option value="">流量流通方式</option>
+					<c:forEach items="${resultMap.channelTypeEnums }" var="channelTypeEnum" varStatus="vs1">
+						<option value="${channelTypeEnum.value }" <c:if test="${channelTypeEnum.value == resultMap.searchParam.circulateWay }"> selected</c:if>>${channelTypeEnum.desc }</option>
+					</c:forEach>
+				</select>
+			</span> 
+			&nbsp;&nbsp;
+			<!-- 包状态 -->
+			<span class="select-box inline">
+				<select name="pgType" class="select"  onchange="submitForm()">
+				<option value="">流量类型</option>
+				<c:forEach items="${resultMap.pgTypeEnums }" var="pgTypeEnum" varStatus="vs1">
+					<option value="${pgTypeEnum.value }" <c:if test="${pgTypeEnum.value == resultMap.searchParam.pgType }"> selected</c:if>>${pgTypeEnum.desc }</option>
+				</c:forEach>
+			</select>
+			</span>
+			&nbsp;&nbsp;
+			
+			<button type="button" class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
+			<a style="text-decoration:none" class="btn btn-success" onClick="pCode_add('产品编码添加','/flowsys/productCode/productCode_add_page.do')" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i>添加</a>
+			<input value="查询" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
+			<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
+		</div>
 		</form>
 	</div>
 	<div class="mt-20">
@@ -68,33 +120,35 @@
 			<thead>
 				<tr class="text-c">
 					<!-- <th width="80">流量包Id</th> -->
-					<th width="80">ID</th>
-					<th width="200">包体编码名称</th>
+					<th width="30">ID</th>
 					<th width="80">平台名称</th>
-					<th width="80">包大小</th>
 					<th width="80">产品编码</th>
+					<th width="80">包大小(M)</th>
 					<!-- <th width="120">支持城市</th> -->
-					<th width="60">运营商类型</th>
-					<th width="60">价格</th>
-					<th width="60">业务类型</th>
-					<th width="75">地区</th>
 					
-					<th width="60">操作</th>
+					<th width="100">地区</th>
+					<th width="60">价格(元)</th>
+					<th width="60">业务类型</th>
+					<th width="60">运营商类型</th>
+					<th width="100">包体编码名称</th>
+					
+					<th width="30">操作</th>
 				</tr>
 			</thead>
 			<tbody>
 				<c:forEach items="${resultMap.pagination.records }" var="product" varStatus="vs">
 					<tr class="text-c">
 						<td>${product.id }</td> 
-						<td>${product.productName }</td>
 						<td>${product.epName }</td>
+						<td class="c-blue">${product.productCode }</td>
 						<td>${product.pgSize }</td>
-						<td>${product.productCode }</td>
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
 						<td>
-							<c:forEach items="${resultMap.operatorTypeEnums }" var="operatorType" varStatus="vs1">
-							<c:if test="${product.operatorType == operatorType.value }"> ${operatorType.desc }</c:if>
-							</c:forEach>
+						<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum">
+							<c:if test="${scopeCityEnum.value== product.scopeCityCode}">
+								<span data-toggle="tooltip" data-placement="right" title="${product.scopeCityCode }">${scopeCityEnum.desc }</span>
+							</c:if>
+						</c:forEach>
 						</td>
 						<td>${product.pgPrice }</td> 
 						<td>
@@ -102,11 +156,14 @@
 							<c:if test="${product.serviceType == serviceType.value }"> ${serviceType.desc }</c:if>
 							</c:forEach>
 						</td>
-						<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum">
-							<c:if test="${scopeCityEnum.value== product.scopeCityCode}">
-								<td><span data-toggle="tooltip" data-placement="right" title="${scopeCityEnum.desc }">${product.scopeCityCode }</span></td>
-							</c:if>
-						</c:forEach>
+						
+						
+						<td>
+							<c:forEach items="${resultMap.operatorTypeEnums }" var="operatorType" varStatus="vs1">
+							<c:if test="${product.operatorType == operatorType.value }"> ${operatorType.desc }</c:if>
+							</c:forEach>
+						</td>
+						<td>${product.productName }</td>
 						 
 						<%-- 
 						<td>
@@ -162,6 +219,7 @@ function produce_del(url,codeId){
 
 /*提交表单**/
 function submitForm(){
+	$("input[name='pageNo']").val('');
 	$('form').submit();
 }
 
@@ -174,7 +232,7 @@ function pCode_add(title,url){
 	layer.open({
         type: 2,
         title: false,
-        area: ['430px', '500px'],
+        area: ['500px', '600px'],
         maxmin: false,
         closeBtn: 1,
         content: url+'?pageTitle=' + title + '&epName='+ epName,

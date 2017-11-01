@@ -12,11 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
+import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
@@ -26,6 +30,10 @@ import com.weizu.flowsys.web.activity.pojo.AccountActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.DiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountShowDTO;
+import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
+import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
+import com.weizu.flowsys.web.channel.pojo.PgDataPo;
+import com.weizu.flowsys.web.trade.ao.PurchaseAO;
 import com.weizu.web.foundation.String.StringHelper;
 
 @Service(value="rateDiscountAO")
@@ -37,6 +45,9 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	@Resource
 	private AgencyActiveRateDTODao agencyActiveRateDTODao;
 	
+	@Resource
+	private PurchaseAO purchaseAO;
+	
 	/**
 	 * @description: 获得费率列表
 	 * @param ratePo
@@ -44,11 +55,11 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月12日 下午5:21:52
 	 */
-	@Override
-	public Pagination<RateDiscountPo> getRateList(RateDiscountPo ratePo,PageParam pageParam) {
-		
-		return null;
-	}
+//	@Override
+//	public Pagination<RateDiscountPo> getRateList(RateDiscountPo ratePo,PageParam pageParam) {
+//		
+//		return null;
+//	}
 	@Override
 	public Pagination<RateDiscountPo> getMyRateList(RateDiscountPo ratePo,Integer childAccountId,PageParam pageParam) {
 		Map<String, Object> paramsMap = getMapByRate(ratePo);
@@ -453,6 +464,11 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		params.put("accountId", accountId);
 		String scopeCityCode = ScopeCityEnum.getValueByDesc(scopeCityName);
 		params.put("scopeCityCode", scopeCityCode);
+		params.put("bindState", BindStateEnum.BIND.getValue());
+		params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+		params.put("channelType", ChannelTypeEnum.ORDINARY.getValue());
+		params.put("pgType", PgTypeEnum.PGDATA.getValue());
+		params.put("pgValidity", PgValidityEnum.MONTH_DAY_DATA.getValue());
 		RateDiscountPo ratePo = rateDiscountDao.getRateForCharge(params);
 		if(ratePo != null){
 			return true;
@@ -483,32 +499,122 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	 * @createTime:2017年9月1日 下午4:41:56
 	 */
 	private void initRateList(List<RateDiscountPo> rateList,List<RateDiscountShowDTO> showList,int billType,int serviceType) {
+		List<RateDiscountShowDTO> dtoList = new LinkedList<RateDiscountShowDTO>();
 		String key = "";
 		if(rateList != null && rateList.size()>0){//有对公的费率
 //			DiscountPo dpo = null;
-			StringBuffer discount0 = new StringBuffer("{");
-			StringBuffer discount1 = new StringBuffer("{");
-			StringBuffer discount2 = new StringBuffer("{");
+			int i = 0;
+			int j = 0;
+			int k = 0;
 			for (RateDiscountPo rateDiscountPo2 : rateList) {
-				String code = rateDiscountPo2.getScopeCityCode();
-				String ScopeCityName = ScopeCityEnum.getEnum(code).getDesc();	//城市名
 				int operatorType = rateDiscountPo2.getOperatorType();
 				if(operatorType == OperatorTypeEnum.MOBILE.getValue())
 				{
-					discount0.append("\""+ScopeCityName+"\":\""+rateDiscountPo2.getActiveDiscount()+"\",");
+					i++;
 				}else if(operatorType == OperatorTypeEnum.TELECOME.getValue())
 				{
-					discount2.append("\""+ScopeCityName+"\":\""+rateDiscountPo2.getActiveDiscount()+"\",");
+					k++;
 				}else//联通
 				{
-					discount1.append("\""+ScopeCityName+"\":\""+rateDiscountPo2.getActiveDiscount()+"\",");
+					j++;
 				}
 			}
-			String dis0Str = discount0.append("}").toString();
-			String dis1Str = discount1.append("}").toString();
-			String dis2Str = discount2.append("}").toString();
+			StringBuffer discount0 = null;
+			StringBuffer discount1 = null;
+			StringBuffer discount2 = null;
+			if(i > 0){
+				discount0 = new StringBuffer("{");
+			}
+			if(j > 0){
+				discount1 = new StringBuffer("{");
+			}
+			if(k > 0){
+				discount2 = new StringBuffer("{");
+			}
+			
+			int m = 0;
+			for (RateDiscountPo rateDiscountPo2 : rateList) {
+				
+				String code = rateDiscountPo2.getScopeCityCode();
+				String ScopeCityName = ScopeCityEnum.getEnum(code).getDesc();	//城市名
+				int operatorType = rateDiscountPo2.getOperatorType();
+				if(StringHelper.isEmpty(rateDiscountPo2.getSpecialTag())){
+					if(operatorType == OperatorTypeEnum.MOBILE.getValue())
+					{
+						discount0.append("\""+ScopeCityName+"\":\""+rateDiscountPo2.getActiveDiscount()+"\"");
+						if(m != rateList.size()-1){
+							discount0.append(",");
+						}
+					}else if(operatorType == OperatorTypeEnum.TELECOME.getValue())
+					{
+						discount2.append("\""+ScopeCityName+"\":\""+rateDiscountPo2.getActiveDiscount()+"\"");
+						if(m != rateList.size()-1){
+							discount2.append(",");
+						}
+					}else//联通
+					{
+						discount1.append("\""+ScopeCityName+"\":\""+rateDiscountPo2.getActiveDiscount()+"\"");
+						if(m != rateList.size()-1){
+							discount1.append(",");
+						}
+					}
+				}else{
+					StringBuffer discountTag = new StringBuffer("{");
+					DiscountPo dpo = null;
+					if(operatorType == OperatorTypeEnum.MOBILE.getValue())
+					{
+						discountTag.append("\""+ScopeCityName+"\":\""+rateDiscountPo2.getActiveDiscount()+"\"");
+						discountTag.append("}");
+						dpo = new DiscountPo(discountTag.toString(), null, null);
+					}else if(operatorType == OperatorTypeEnum.TELECOME.getValue())
+					{
+						discountTag.append("\""+ScopeCityName+"\":\""+rateDiscountPo2.getActiveDiscount()+"\"");
+						discountTag.append("}");
+						dpo = new DiscountPo(null, null, discountTag.toString());
+					}else//联通
+					{
+						discountTag.append("\""+ScopeCityName+"\":\""+rateDiscountPo2.getActiveDiscount()+"\"");
+						discountTag.append("}");
+						dpo = new DiscountPo(null, discountTag.toString(), null );
+					}
+					if(m != rateList.size()-1){
+						discountTag.append(",");
+					}
+					String specialTag = rateDiscountPo2.getSpecialTag();
+					RateDiscountShowDTO showDTO = new RateDiscountShowDTO(dpo, billType,serviceType);
+					showDTO.setSpecialTag(specialTag);
+					showList.add(showDTO);
+				}
+				m++;
+			}
+			String dis0Str = "";
+			String dis1Str = "";
+			String dis2Str = "";
+			if(i > 0){
+				if( discount0.length() == 1){
+					dis0Str = null;
+				}else{
+					dis0Str = discount0.append("}").toString();
+				}
+			}
+			if(j > 0){
+				if( discount1.length() == 1){
+					dis1Str = null;
+				}else{
+					dis1Str = discount1.append("}").toString();
+				}
+			}
+			if(k > 0){
+				if( discount2.length() == 1){
+					dis2Str = null;
+				}else{
+					dis2Str = discount2.append("}").toString();
+				}
+			}
 			DiscountPo dpo = new DiscountPo(dis0Str, dis1Str, dis2Str);
-			showList.add(new RateDiscountShowDTO(dpo, billType,serviceType));
+			RateDiscountShowDTO showDTO = new RateDiscountShowDTO(dpo, billType,serviceType);
+			showList.add(showDTO);
+			
 //			Map<String,Object> bMap = new HashMap<String, Object>();
 //			if(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue() == billType){
 //				bMap.put("noDTO", new RateDiscountShowDTO(dpo, 1,serviceType));
@@ -591,31 +697,87 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年8月2日 上午11:54:40
 	 */
+//	@Override
+//	public RateDiscountPo getRateForCharge(int serviceType,
+//			String carrier, int accountId, Boolean judgeChannelState) {
+//		Map<String, Object> params = new HashMap<String, Object>();
+//		//用不带票的账户去获得价格
+//		params.put("accountId", accountId);
+//		params.put("bindState", BindStateEnum.BIND.getValue());
+//		params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+//		params.put("serviceType", serviceType);
+//		int sLength = carrier.length();
+//		String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动
+//		if(ServiceTypeEnum.NATION_WIDE.getValue() != serviceType){
+//			String scopeCityName = carrier.substring(0,sLength-2);
+//			int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
+//			params.put("operatorType", opType);
+//			String scopeCityCode = ScopeCityEnum.getValueByDesc(scopeCityName);
+//			params.put("scopeCityCode", scopeCityCode);
+//		}else{
+//			params.put("scopeCityCode", ScopeCityEnum.QG.getValue());//使用全国的地区
+//		}
+//		if(judgeChannelState){//需要判断通道状态:比如再次提交获得的费率，比如测试通道的时候
+//			params.put("channelState", ChannelStateEnum.OPEN.getValue());
+//		}
+//		return rateDiscountDao.getRateForCharge(params);
+//	}
+	
 	@Override
-	public RateDiscountPo getRateForCharge(int serviceType,
-			String carrier, int accountId, Boolean judgeChannelState) {
+	public RateDiscountPo getRateForCharge(ChargeChannelParamsPo ccpp,
+			int accountId, Boolean judgeChannelState) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		//用不带票的账户去获得价格
 		params.put("accountId", accountId);
 		params.put("bindState", BindStateEnum.BIND.getValue());
 		params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+		Integer serviceType = ccpp.getServiceType();
+		String carrier = ccpp.getCarrier();
 		params.put("serviceType", serviceType);
 		int sLength = carrier.length();
 		String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动
 		if(ServiceTypeEnum.NATION_WIDE.getValue() != serviceType){
 			String scopeCityName = carrier.substring(0,sLength-2);
-			int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
-			params.put("operatorType", opType);
 			String scopeCityCode = ScopeCityEnum.getValueByDesc(scopeCityName);
 			params.put("scopeCityCode", scopeCityCode);
 		}else{
 			params.put("scopeCityCode", ScopeCityEnum.QG.getValue());//使用全国的地区
 		}
+		int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
+		params.put("operatorType", opType);
 		if(judgeChannelState){//需要判断通道状态:比如再次提交获得的费率，比如测试通道的时候
 			params.put("channelState", ChannelStateEnum.OPEN.getValue());
 		}
+//		if(ccpp.getChannelType() == null || ccpp.getPgType() == null || StringHelper.isEmpty(ccpp.getPgValidity())){
+//			//有任何一个为空，就需要获取费率列表
+//			List<RateDiscountPo> dataList = rateDiscountDao.getRateListForCharge(params);
+//			for (RateDiscountPo rateDiscountPo : dataList) {
+//				
+//			}
+//			//获得枚举列表
+//			
+//			return rateDiscountDao.getRateForCharge(params);
+//		}else{
+//			return rateDiscountDao.getRateForCharge(params);
+//		}
+		if (ccpp.getChannelType() == null) {
+			params.put("channelType", ChannelTypeEnum.ORDINARY.getValue());
+		} else {
+			params.put("channelType", ccpp.getChannelType());
+		}
+		if (ccpp.getPgType() == null) {
+			params.put("pgType", PgTypeEnum.PGDATA.getValue());
+		} else {
+			params.put("pgType", ccpp.getPgType());
+		}
+		if (StringHelper.isEmpty(ccpp.getPgValidity())) {
+			params.put("pgValidity", PgValidityEnum.MONTH_DAY_DATA.getValue());
+		} else {
+			params.put("pgValidity", ccpp.getPgValidity());
+		}
 		return rateDiscountDao.getRateForCharge(params);
 	}
+	
 	@Override
 	public RateDiscountPo getRateByAcountIdAndCDId(Long channelDiscountId,
 			Integer accountId) {
@@ -625,4 +787,70 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		}
 		return null;
 	}
+
+	@Override
+	public List<PgDataPo> getPgListForPurchase(
+			ChargeChannelParamsPo ccpp, int agencyId, Boolean judgeChannelState) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		//用不带票的账户去获得价格
+		params.put("agencyId", agencyId);
+		params.put("bindState", BindStateEnum.BIND.getValue());
+		params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+		Integer serviceType = ccpp.getServiceType();
+		String carrier = ccpp.getCarrier();
+		params.put("serviceType", serviceType);
+		int sLength = carrier.length();
+		String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动
+		if(ServiceTypeEnum.NATION_WIDE.getValue() != serviceType){
+			String scopeCityName = carrier.substring(0,sLength-2);
+			String scopeCityCode = ScopeCityEnum.getValueByDesc(scopeCityName);
+			params.put("scopeCityCode", scopeCityCode);
+		}else{
+			params.put("scopeCityCode", ScopeCityEnum.QG.getValue());//使用全国的地区
+		}
+		int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
+		params.put("operatorType", opType);
+		if(judgeChannelState){//需要判断通道状态:比如再次提交获得的费率，比如测试通道的时候
+			params.put("channelState", ChannelStateEnum.OPEN.getValue());
+		}
+		if (ccpp.getChannelType() == null) {
+			params.put("channelType", ChannelTypeEnum.ORDINARY.getValue());
+		} else {
+			params.put("channelType", ccpp.getChannelType());
+		}
+		if (ccpp.getPgType() == null) {
+			params.put("pgType", PgTypeEnum.PGDATA.getValue());
+		} else {
+			params.put("pgType", ccpp.getPgType());
+		}
+		if (StringHelper.isEmpty(ccpp.getPgValidity())) {
+			params.put("pgValidity", PgValidityEnum.MONTH_DAY_DATA.getValue());
+		} else {
+			params.put("pgValidity", ccpp.getPgValidity());
+		}
+		
+		List<RateDiscountPo> rateList = rateDiscountDao.getRateListForCharge(params);
+		List<PgDataPo> resultList = new LinkedList<PgDataPo>();
+		for (RateDiscountPo rateDiscountPo : rateList) {
+			List<PgDataPo> pgList = purchaseAO.getPgByChanel(rateDiscountPo.getChannelId());
+			resultList.addAll(pgList);
+		}
+//		List<OperatorPgDataPo> chargeList = initByPgList(resultList);
+//		for (OperatorPgDataPo operatorPgDataPo : chargeList) {//初始化第一个折扣，折扣id和包体价格
+//			operatorPgDataPo.setRteId(ratePo.getId());
+//			operatorPgDataPo.setRteDis(activeDiscount);
+//			operatorPgDataPo.setChannelId(channelId);
+//			operatorPgDataPo.setPgDiscountPrice(NumberTool.mul(activeDiscount, operatorPgDataPo.getPgPrice()));
+//		}
+		
+		return resultList;
+	}
+
+	@Override
+	public RateDiscountPo getPriceByPg(Integer pgId, Integer agencyId, Long channelId) {
+		RateDiscountPo ratePo = rateDiscountDao.getPriceByPg(agencyId, pgId,channelId);
+		
+		return ratePo;
+	}
+	
 }

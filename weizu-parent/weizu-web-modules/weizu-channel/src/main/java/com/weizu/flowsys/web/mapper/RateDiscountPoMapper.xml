@@ -7,12 +7,15 @@
   <sql id="t_active">account_active_rate</sql> 
   <sql id="t_cnel">channel_channel</sql> 
   <sql id="t_account">charge_account</sql>
+  <sql id="t_pg">operator_pg_data</sql>
+ 	<sql id="t_cbp">cnel_bind_pg</sql>
   
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.activity.pojo.RateDiscountPo" >
     <id column="id" property="id" jdbcType="BIGINT" />
    <result column="operator_type" property="operatorType" jdbcType="INTEGER" />
     <result column="service_type" property="serviceType" jdbcType="INTEGER" />
     <result column="scope_city_code" property="scopeCityCode" jdbcType="VARCHAR" />
+    <result column="special_tag" property="specialTag" jdbcType="VARCHAR" />
     <result column="bill_type" property="billType" jdbcType="INTEGER" />
     <result column="active_discount" property="activeDiscount" jdbcType="DOUBLE" />
     <result column="active_id" property="activeId" jdbcType="BIGINT" />
@@ -31,14 +34,45 @@
   </sql>
   
   <sql id="Show_Rate_List">
-  	b.active_discount,b.id,b.active_time,b.operator_type,b.service_type,b.scope_city_code,b.channel_id,b.channel_discount_id,b.bill_type,b.active_id
+  	b.active_discount,b.id,b.active_time,b.operator_type,b.service_type,b.scope_city_code,b.channel_id,b.channel_discount_id,b.bill_type,b.active_id,b.special_tag
   </sql>
   <sql id="Get_My_Rate">
-  	rate.id, rate.active_id,active.active_time, channel_discount_id,rate.active_discount,rate.bill_type,cd.operator_type,cd.service_type,cd.scope_city_code,rate.channel_id 
+  	rate.id, rate.active_id,active.active_time, channel_discount_id,rate.active_discount,rate.bill_type,cd.operator_type,cd.service_type,cd.scope_city_code,rate.channel_id,cnel.special_tag 
   </sql>
   <sql id="My_Rate_List">
   	rate.id, rate.active_id, active_discount,channel_discount_id,rate.bill_type 
   </sql>
+  
+  <select id="getPriceByPg" parameterType="map" resultMap="MyRateResultMap">
+  	select <include refid="My_Rate_List"></include> 
+  	from <include refid="t_rateD"></include> rate
+	INNER JOIN <include refid="t_active"></include> aar
+	on aar.rate_discount_id=rate.id
+	INNER JOIN <include refid="t_account"></include> act
+	on aar.account_id=act.id
+	<where>
+		<if test="agencyId != null">
+			AND act.agency_id = #{agencyId}
+		</if>
+		<if test="channelId != null">
+			AND rate.channel_id = #{channelId}
+		</if>
+		<!-- AND rate.channel_id IN
+		(
+			SELECT cbp.channel_id from <include refid="t_cbp"></include> cbp
+			INNER JOIN <include refid="t_cnel"></include> chnel
+			ON chnel.id=cbp.channel_id
+			<where> 
+				<if test="pgId != null">
+					AND cbp.pg_id=#{pgId}
+				</if>
+				<if test="channelUseState != null">
+					AND chnel.channel_use_state=#{channelUseState}
+				</if>
+			</where>
+		) -->
+	</where>
+  </select>
   
   <!-- 根据通道折扣差额修改费率折扣 -->
   <update id="updateRateDiscountByCDId" parameterType="map">
@@ -112,7 +146,7 @@
 	 		</if>
 	 	</where>
 	 	order by active.active_time DESC) b 
-	 	GROUP BY b.scope_city_code
+	 	<!-- GROUP BY b.scope_city_code -->
   </select>
   
   <!-- 获得充值的折扣 -->
@@ -132,8 +166,24 @@
 	 		<include refid="tripple_table_sql"></include>
 	 	</where>
 	 	order by active.active_time DESC) b 
-	 	GROUP BY b.scope_city_code
+	 	<!-- GROUP BY b.scope_city_code -->
   </select>
+  
+  <!-- 通过代理商id找到它绑定的通道id -->
+  <select id="getChannelByAgency" parameterType="map" resultType="long" >
+  	SELECT rte.channel_id
+  	 FROM <include refid="t_rateD"></include>  rte
+	 INNER JOIN <include refid="t_active"></include> aar 
+	 on rte.id = aar.rate_discount_id
+	 INNER JOIN <include refid="t_account"></include> act
+	 on act.id=aar.account_id
+	 <where>
+	 	<if test="#{agencyId != null}">
+	 		act.agency_id=#{agencyId}
+	 	</if>
+	 </where>
+  </select>
+  
   <!-- 查看代理商是否在某一通道上已经配置了该地区的折扣 -->
   <select id="getScopeExceptionForRate" parameterType="map" resultType="int">
   	select count(*)
@@ -152,6 +202,18 @@
   </select>
   <!-- 三表连接的查询条件 -->
   <sql id="tripple_table_sql">
+  	AND cnel.id IN 
+	(SELECT cbg.channel_id from <include refid="t_pg"></include> opd
+	INNER JOIN <include refid="t_cbp"></include> cbg
+	on cbg.pg_id=opd.id 
+	<where>
+		<if test="pgType != null">
+			AND opd.pg_type=#{pgType}
+		</if>
+		<if test="pgValidity != null">
+			AND opd.pg_validity=#{pgValidity}
+		</if>
+	</where>)
   	 <if test="accountId != null">
 		AND active.account_id = #{accountId}
 	</if>
@@ -167,6 +229,9 @@
 	<if test="channelId != null"><!-- 费率类型 -->
 		AND rate.channel_id = #{channelId}
 	</if>
+	<if test="channelType != null">
+  		AND cd.channel_type = #{channelType}
+  	</if>
 	<if test="operatorType != null">
  		AND cd.operator_type = #{operatorType}
  	</if>

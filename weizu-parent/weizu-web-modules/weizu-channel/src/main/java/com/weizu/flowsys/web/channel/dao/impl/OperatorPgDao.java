@@ -10,6 +10,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
+import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.web.channel.dao.OperatorPgDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
@@ -53,7 +54,7 @@ public class OperatorPgDao extends DaoImpl<PgDataPo, Integer> implements Operato
 	 * @createTime:2017年4月28日 下午3:35:32
 	 */
 	@Override
-	public List<OperatorPgDataPo> list(Map<String, Object> paramsMap) {
+	public List<PgDataPo> list(Map<String, Object> paramsMap) {
 		
 		return sqlSessionTemplateASS.selectList("pgList_select",paramsMap);
 	}
@@ -186,8 +187,14 @@ public class OperatorPgDao extends DaoImpl<PgDataPo, Integer> implements Operato
 	}
 
 	@Override
-	public List<OperatorPgDataPo> getPgByChanel(Map<String, Object> map) {
+	public List<PgDataPo> getPgByChanel(Map<String, Object> map) {
 		return sqlSessionTemplateASS.selectList("getPgByChanel", map);
+	}
+
+	@Override
+	public List<PgDataPo> pg_list_for_purchase(Map<String, Object> map) {
+		map.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+		return sqlSessionTemplateASS.selectList("pg_list_for_purchase", map);
 	}
 
 	

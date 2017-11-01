@@ -11,7 +11,6 @@ import com.weizu.flowsys.api.weizu.facet.IOrderFacet;
 import com.weizu.flowsys.api.weizu.order.QueryOrderParams;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
-import com.weizu.flowsys.web.channel.ao.ChannelForwardAO;
 import com.weizu.flowsys.web.channel.dao.impl.OperatorPgDao;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.http.entity.Order;
@@ -45,8 +44,6 @@ public class OrderFacadeImpl implements IOrderFacet {
 	
 	@Resource
 	private OperatorPgDao operatorPgDao;
-	@Resource
-	private ChannelForwardAO channelForwardAO;
 //	@Resource
 //	private AccountPurchaseDao accountPurchaseDao;
 	

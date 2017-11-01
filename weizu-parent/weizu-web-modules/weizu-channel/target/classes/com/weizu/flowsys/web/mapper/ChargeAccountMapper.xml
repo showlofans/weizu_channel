@@ -59,16 +59,20 @@
 	 <!-- 通过代理商id更新代理商账户信息 -->
 	 <update id="updateByAgencyId" parameterType="com.weizu.flowsys.web.agency.pojo.ChargeAccountPo">
 	 	update <include refid="t_account"></include>
-	 	<include refid="set_sql"></include>
+	 	<set>
+	 		<if test="accountBalance != null">
+	 			account_balance = #{accountBalance},
+	 		</if>
+	 	</set>
 	 	<where>
 	 		<include refid="update_sql"></include>
 	 	</where>
 	 </update>
 	 
 	 <sql id="update_sql">
-	 	<if test="agencyId != null">
+	 	<!-- <if test="agencyId != null">
 	 		AND agency_id = #{agencyId}
-	 	</if>
+	 	</if> -->
 	 	<if test="id != null">
 	 		AND id = #{id}
 	 	</if>

@@ -10,11 +10,15 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.weizu.flowsys.api.singleton.orderState.ResponseJsonDTO;
+import com.weizu.flowsys.api.singleton.orderState.SendCallBackUtil;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
+import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeRecordDao;
+import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.trade.dao.AccountPurchaseDao;
@@ -34,6 +38,12 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 	private ChargeAccountDao chargeAccountDao;
 	@Resource
 	private ChargeRecordDao chargeRecordDao;
+	@Resource
+	private AgencyVODaoInterface agencyVODao;
+	@Resource
+	private SendCallBackUtil sendCallBack;
+	
+	
 	
 	@Transactional
 	@Override
@@ -52,8 +62,8 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 		boolean unchargeNotSave = orderResult == OrderStateEnum.UNCHARGE.getValue();
 		String res = "error";
 		
+		PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
 		if(unchargeNotSave){//手动失败，要返款
-			PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
 			if(purchasePo != null && purchasePo.getOrderResult() != null && orderResult !=  purchasePo.getOrderResult()){//清除已经返款的记录
 				List<AccountPurchasePo> list = accountPurchaseDao.list(new WherePrams("purchase_id", "=", orderId));
 //				Double agencyAfterBalance = 0.0d;
@@ -99,13 +109,21 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 		}else{
 			if(!orderResult.equals(OrderStateEnum.CHARGED.getValue())){
 				//更新连接表//不是成功和失败，就是进行
-				ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, OrderStateEnum.CHARGING.getDesc());
+				ap = accountPurchaseDao.batchUpdateState(orderId, OrderStateEnum.CHARGING.getValue(), OrderStateEnum.CHARGING.getDesc());
+				orderResult = OrderStateEnum.CHARGING.getValue();
 			}else{
 				ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, OrderStateEnum.CHARGED.getDesc());
 			}
 			//更新订单表
 			pur = purchaseDAO.updatePurchaseState(purchasePo1);
 		}
+		if(purchasePo != null){
+			AgencyBackwardPo agencyPo = agencyVODao.getAgencyByAccountId(purchasePo.getAccountId());
+			if(agencyPo != null && !orderResult.equals(OrderStateEnum.CHARGING.getValue())){//不是充值进行，才返回调
+				sendCallBack.sendCallBack(new ResponseJsonDTO(orderId, purchasePo.getOrderIdFrom(), orderResult, "（推送）"+orderResultDetail, System.currentTimeMillis(),purchasePo.getChargeTel()), agencyPo.getCallBackIp());
+			}
+		}
+		
 		if(pur + ap > 1){
 			res = "success";
 		}
@@ -121,8 +139,8 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 		if(realBackTime == null){
 			realBackTime = System.currentTimeMillis();
 		}
+		PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
 		if(orderResult == OrderStateEnum.UNCHARGE.getValue()){//手动失败，要返款
-			PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
 			if(purchasePo != null && purchasePo.getOrderResult() != null && OrderStateEnum.UNCHARGE.getValue() !=  purchasePo.getOrderResult()){//清除已经返款的记录
 				List<AccountPurchasePo> list = accountPurchaseDao.list(new WherePrams("purchase_id", "=", orderId));
 //				Double agencyAfterBalance = 0.0d;
@@ -173,6 +191,12 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 			ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
 			//更新订单表
 			pur = purchaseDAO.updatePurchaseState(new PurchasePo(orderId, null, realBackTime, orderResult, null, orderResultDetail));
+		}
+		if(purchasePo != null){
+			AgencyBackwardPo agencyPo = agencyVODao.getAgencyByAccountId(purchasePo.getAccountId());
+			if(agencyPo != null){
+				sendCallBack.sendCallBack(new ResponseJsonDTO(orderId, purchasePo.getOrderIdFrom(), orderResult, "（推送）"+orderResultDetail, System.currentTimeMillis(),purchasePo.getChargeTel()), agencyPo.getCallBackIp());
+			}
 		}
 		if(pur + ap > 1){
 			return "success";

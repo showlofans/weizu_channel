@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
@@ -69,24 +70,58 @@ public class ProductCodeController {
 		//查询所有平台名称
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO != null){
-//			List<AgencyEpPo> epList = agencyEpAO.getAgencyEpByAgencyId(agencyVO.getId());
-			List<ExchangePlatformPo> epList = exchangePlatformDao.list(new WherePrams("ep_name", "like", epName));
-			resultMap.put("epList", epList);
-			//判断前台是否穿了平台id过来，没有就默认取第一个
-//			if(epId == null && epList != null && epList.size() > 0){
-//				epId = epList.get(0).getEpId();
-//			}
-			if( epList != null && epList.size() > 0){
-				Integer epId = epList.get(0).getId();
-				List<OperatorPgDataPo> pgList = productCodeAO.initPgList(new OneCodePo(epId, ServiceTypeEnum.NATION_WIDE.getValue(), OperatorTypeEnum.MOBILE.getValue(), ScopeCityEnum.QG.getValue(), PgTypeEnum.PGDATA.getValue(), PgValidityEnum.month_day_data.getValue()));//默认移动全国流量：epId,0, 0,ScopeCityEnum.QG.getValue()
+			OneCodePo oneCodePo = (OneCodePo)request.getSession().getAttribute("oneCodePo");
+			if(oneCodePo != null){
+				List<ExchangePlatformPo> epList = exchangePlatformDao.list(new WherePrams("ep_name", "like", epName));
+				if( epList != null && epList.size() > 0 ){
+					oneCodePo.setEpId(epList.get(0).getId());
+					resultMap.put("epList", epList);
+				}
+				Integer operatorType = oneCodePo.getOperatorType();
+				Integer serviceType = oneCodePo.getServiceType();
+				Integer pgType = oneCodePo.getPgType();
+				Integer circulateWay = oneCodePo.getCirculateWay();
+				
+				String scopeCityCode = oneCodePo.getScopeCityCode();
+				String pgValidity = oneCodePo.getPgValidity();
+				if(operatorType == null){
+					operatorType = OperatorTypeEnum.MOBILE.getValue();
+				}
+				if(serviceType == null){
+					serviceType = ServiceTypeEnum.NATION_WIDE.getValue();
+					oneCodePo.setServiceType(serviceType);
+				}
+				if(pgType == null){
+					pgType = PgTypeEnum.PGDATA.getValue();
+					oneCodePo.setPgType(pgType);
+				}
+				if(serviceType == null){
+					serviceType = ServiceTypeEnum.NATION_WIDE.getValue();
+					oneCodePo.setServiceType(serviceType);
+				}
+				if(circulateWay == null){
+					circulateWay = ChannelTypeEnum.ORDINARY.getValue();
+					oneCodePo.setCirculateWay(circulateWay);
+				}
+				if(StringHelper.isEmpty(pgValidity)){
+					pgValidity = PgValidityEnum.MONTH_DAY_DATA.getValue();
+					oneCodePo.setPgValidity(pgValidity);
+				}
+				if(StringHelper.isEmpty(scopeCityCode)){
+					scopeCityCode = ScopeCityEnum.QG.getValue();
+					oneCodePo.setScopeCityCode(scopeCityCode);
+				}
+				
+				List<OperatorPgDataPo> pgList = productCodeAO.initPgList(oneCodePo);//默认移动全国流量：epId,0, 0,ScopeCityEnum.QG.getValue()
 				resultMap.put("pgList", pgList);
-				resultMap.put("epId", epList.get(0).getId());
+				resultMap.put("oneCodePo", oneCodePo);
 			}
-			resultMap.put("operatorType", 0);
-			resultMap.put("serviceType", 0);
+			
 			resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 			resultMap.put("pgTypeEnums", PgTypeEnum.toList());
 			resultMap.put("pgValidityEnums", PgValidityEnum.toList());
+			resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());
+			
 			resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
 			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 			return new ModelAndView("/channel/productCode_add_page", "resultMap", resultMap);
@@ -105,7 +140,7 @@ public class ProductCodeController {
 	public void addProdouctCode(ProductCodePo productCodePo,HttpServletResponse response,HttpServletRequest request){
 		String result = productCodeAO.addProduct(productCodePo);
 		request.getSession().setAttribute("epId", productCodePo.getEpId());//修改默认加载的平台编码列表
-		request.getSession().setAttribute("product_add", productCodePo);
+//		request.getSession().setAttribute("product_add", productCodePo);
 		
 		try {
 			response.getWriter().print(result);
@@ -167,7 +202,7 @@ public class ProductCodeController {
 	public ModelAndView getProductCode(ProductCodePo productCodePo,HttpServletRequest request,@RequestParam(value = "pageNo", required = false)String pageNo)
 	{
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-//		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		request.getSession().setAttribute("oneCodePo",new OneCodePo(null, productCodePo.getServiceType(), productCodePo.getOperatorType(), productCodePo.getScopeCityCode(), productCodePo.getPgType(), productCodePo.getPgValidity(), productCodePo.getCirculateWay()));
 //		if(agencyVO != null){
 //			List<AgencyEpPo> epList = agencyEpAO.getAgencyEpByAgencyId(agencyVO.getId());
 //			resultMap.put("epList", epList);
@@ -210,6 +245,9 @@ public class ProductCodeController {
 			//List<ExchangePlatformPo> epList = 
 			resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
 			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
+			resultMap.put("pgTypeEnums", PgTypeEnum.toList());
+			resultMap.put("pgValidityEnums", PgValidityEnum.toList());
+			resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());
 			resultMap.put("searchParam", productCodePo);
 			resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 			return new ModelAndView("/channel/product_code_list", "resultMap", resultMap);

@@ -26,6 +26,8 @@ public class OneCodePo {
     
     private String pgValidity;			//流量有效期(PgValidityEnum)
     
+    private Integer circulateWay;				//流通方式（1-普通通道包，2-红包通道，3-转移包，4-共享包）
+    
 	/** 查询是否存在该包体参数
 	 * @param epId
 	 * @param serviceType
@@ -36,7 +38,7 @@ public class OneCodePo {
 	 */
 	public OneCodePo(Integer epId, Integer serviceType,
 			Integer operatorType, String scopeCityCode, Integer pgType,
-			String pgValidity) {
+			String pgValidity,Integer circulateWay) {
 		super();
 		this.epId = epId;
 		this.serviceType = serviceType;
@@ -44,6 +46,7 @@ public class OneCodePo {
 		this.scopeCityCode = scopeCityCode;
 		this.pgType = pgType;
 		this.pgValidity = pgValidity;
+		this.circulateWay = circulateWay;
 	}
 	
 	public OneCodePo() {
@@ -58,13 +61,15 @@ public class OneCodePo {
 	 * @param epId
 	 */
 	public OneCodePo(String scopeCityCode, Integer pgSize,
-			Integer operatorType, Integer serviceType, Integer epId,Integer pgType,Integer pgValidity) {
+			Integer operatorType, Integer serviceType, Integer epId,Integer pgType,
+			Integer pgValidity,Integer circulateWay) {
 		super();
 		this.epId = epId;
 		this.scopeCityCode = scopeCityCode;
 		this.pgSize = pgSize;
 		this.operatorType = operatorType;
 		this.serviceType = serviceType;
+		this.circulateWay = circulateWay;
 	}
 	
 	/** 查询唯一编码参数
@@ -79,6 +84,14 @@ public class OneCodePo {
 		this.pgId = pgId;
 	}
 	
+	public Integer getCirculateWay() {
+		return circulateWay;
+	}
+
+	public void setCirculateWay(Integer circulateWay) {
+		this.circulateWay = circulateWay;
+	}
+
 	public Integer getPgId() {
 		return pgId;
 	}

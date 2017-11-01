@@ -23,6 +23,8 @@ import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
+import com.weizu.flowsys.web.channel.pojo.SpecialCnelType;
+import com.weizu.flowsys.web.channel.pojo.SpecialOpdType;
 
 @Repository(value = "channelChannelDao")
 public class ChannelChannelDaoImpl extends DaoImpl<ChannelChannelPo, Long> implements
@@ -117,6 +119,7 @@ public class ChannelChannelDaoImpl extends DaoImpl<ChannelChannelPo, Long> imple
 //		String serviceTypeStr = ServiceTypeEnum.getEnum(serviceType).getDesc();
 //		channelPo.setChannelName(serviceTypeStr +"-"+channelPo.getChannelName());
 		String channelName = channelPo.getChannelName();
+		int channelType = channelPo.getChannelType();
 		
 		for(ChannelDiscountPo cdp: channelPo.getDiscountList())
 		{
@@ -125,6 +128,7 @@ public class ChannelChannelDaoImpl extends DaoImpl<ChannelChannelPo, Long> imple
 			ChannelDiscountPo cdp1 = new ChannelDiscountPo(channelId, cdp.getScopeCityCode(), channelDiscount, channelName, operatorType, serviceType,ChannelDiscountTypeEnum.CHANNEL.getValue());
 //			cdp1.setId(nextId);
 			cdp1.setBillType(billType);
+			cdp1.setChannelType(channelType);
 			disList.add(cdp1);
 		}
 		int discountRes = channelDiscountDao.discount_addList(disList);
@@ -144,6 +148,22 @@ public class ChannelChannelDaoImpl extends DaoImpl<ChannelChannelPo, Long> imple
 	@Override
 	public List<ChargeChannelPo> list_charge_channel(Map<String, Object> params) {
 		return sqlSessionTemplate.selectList("list_charge_channel",params);
+	}
+	@Override
+	public List<SpecialCnelType> getSpecialCnelType(Integer cnelType) {
+		Map<String,Object> params = new HashMap<String, Object>();
+		params.put("channelUseState", ChannelStateEnum.OPEN.getValue());
+		params.put("cnelType", cnelType);
+		return sqlSessionTemplate.selectList("getSpecialCnelType", params);
+	}
+	@Override
+	public List<SpecialOpdType> getSpecialOpdType(SpecialOpdType specialOpdType) {
+		Map<String,Object> params = new HashMap<String, Object>();
+		params.put("pgType", specialOpdType.getPgType());
+		params.put("pgValidity", specialOpdType.getPgValidity());
+		params.put("channelUseState", ChannelStateEnum.OPEN.getValue());
+		
+		return sqlSessionTemplate.selectList("getSpecialOpdType", params);
 	}
 
 }

@@ -16,6 +16,9 @@ import com.weizu.flowsys.api.weizu.facet.IChargeFacet;
 import com.weizu.flowsys.api.weizu.facet.IOrderFacet;
 import com.weizu.flowsys.api.weizu.order.QueryOrderParams;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.web.http.entity.Charge;
 import com.weizu.flowsys.web.http.entity.Order;
@@ -76,6 +79,9 @@ public class OuterAPIController {
 	public String chargePg(String userName, String number,Integer pgSize,
 			@RequestParam(value="scope",required=false)Integer scope, String sign,
 			@RequestParam(value="billType",required=false) Integer billType,
+			@RequestParam(value="channelType",required=false) Integer channelType,
+			@RequestParam(value="pgType",required=false) Integer pgType,
+			@RequestParam(value="pgValidity",required=false) String pgValidity,
 			@RequestParam(value="userOrderId",required=false) String userOrderId){
 		if(billType == null){//默认对公
 			billType = BillTypeEnum.CORPORATE_BUSINESS.getValue();
@@ -83,9 +89,29 @@ public class OuterAPIController {
 		if(scope == null){//默认省漫游类型
 			scope = ServiceTypeEnum.PROVINCE_ROAMING.getValue();
 		}
+		if(pgType == null)
+		{
+			pgType = PgTypeEnum.PGDATA.getValue();
+		}
+		if(StringHelper.isEmpty(pgValidity ))
+		{
+			pgValidity = PgValidityEnum.MONTH_DAY_DATA.getValue();
+		}
+		if(channelType == null){
+			channelType = ChannelTypeEnum.ORDINARY.getValue();
+		}
+		
+		
+		ChargeParams chargeParams = new ChargeParams(userName, number, pgSize, scope, sign, billType);
+		chargeParams.setPgType(pgType);
+		chargeParams.setPgValidity(pgValidity);
+		chargeParams.setChannelType(channelType);
+		if(StringHelper.isNotEmpty(userOrderId)){
+			chargeParams.setOrderIdFrom(userOrderId);
+		}
 		Charge charge = null;
 		try {
-			charge = chargeImpl.charge(new ChargeParams(userName, number, pgSize, scope, sign, billType, userOrderId));
+			charge = chargeImpl.charge(chargeParams);
 		} catch (Exception e) {
 			charge = new Charge(ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc(), null);
 			e.printStackTrace();

@@ -83,6 +83,30 @@ public enum ScopeCityEnum {
 		}
 		return null;
 	}
+	/**
+	 * @description: 通过地区获得产品编码
+	 * @param carrier
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月1日 上午10:43:44
+	 */
+	@SuppressWarnings("null")
+	public static String getValueByCarrier(String carrier){
+		if(carrier == null && carrier.length() > 2){
+			return null;
+		}
+		ScopeCityEnum[] enumAry = ScopeCityEnum.values();
+		
+		for (ScopeCityEnum scopeCityEnum : enumAry) {
+			String desc = carrier.substring(0,carrier.length()-2);
+			if(scopeCityEnum.desc.contains(desc) ){
+				return scopeCityEnum.value;
+			}
+		}
+		return null;
+	}
+	
+	
 	
 	/**
 	 * @description: 获得值数组

@@ -42,7 +42,7 @@ public interface PurchaseDao extends Dao<PurchasePo, Long> {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月13日 下午12:46:13
 	 */
-	int countPurchase(Map<String,Object> paramsMap);
+	long countPurchase(Map<String,Object> paramsMap);
 	
 	/**
 	 * @description: 查询订单列表

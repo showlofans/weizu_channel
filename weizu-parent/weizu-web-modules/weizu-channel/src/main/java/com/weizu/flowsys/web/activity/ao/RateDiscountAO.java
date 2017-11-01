@@ -7,6 +7,9 @@ import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountShowDTO;
+import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
+import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
+import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 
 public interface RateDiscountAO {
 	/**
@@ -16,7 +19,7 @@ public interface RateDiscountAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月12日 下午5:20:46
 	 */
-	Pagination<RateDiscountPo> getRateList(RateDiscountPo ratePo,PageParam pageParam);
+//	Pagination<RateDiscountPo> getRateList(RateDiscountPo ratePo,PageParam pageParam);
 	
 	/**
 	 * @description:获得我的费率列表
@@ -142,7 +145,39 @@ public interface RateDiscountAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年8月2日 上午11:54:07
 	 */
-	RateDiscountPo getRateForCharge(int serviceType,String carrier, int accountId,Boolean judgeChannelState);
+//	RateDiscountPo getRateForCharge(int serviceType,String carrier, int accountId,Boolean judgeChannelState);
+	
+	/**
+	 * @description: 获得真正的充值费率
+	 * @param ccpp
+	 * @param accountId
+	 * @param judgeChannelState
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月26日 下午4:42:16
+	 */
+	RateDiscountPo getRateForCharge(ChargeChannelParamsPo ccpp, int accountId,Boolean judgeChannelState);
+	
+	/**
+	 * @description: 获得充值的包体
+	 * @param ccpp
+	 * @param accountId
+	 * @param judgeChannelState
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月31日 下午4:27:38
+	 */
+	List<PgDataPo> getPgListForPurchase(ChargeChannelParamsPo ccpp, int agencyId,Boolean judgeChannelState);
+	
+	/**
+	 * @description: 通过包体id获得代理商绑定的价格
+	 * @param id
+	 * @param agencyId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月1日 上午9:41:10
+	 */
+	RateDiscountPo getPriceByPg(Integer id, Integer agencyId, Long channelId);
 	
 	/**
 	 * @description:

@@ -6,11 +6,13 @@
  	<sql id="t_discount">channel_discount</sql>
  	<!-- <sql id="t">rate_discount</sql> -->
  	<sql id="t_ep">exchange_platform</sql>
+ 	<sql id="t_pg">operator_pg_data</sql>
+ 	<sql id="t_cbp">cnel_bind_pg</sql>
   
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.ChannelChannelPo" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
-    <result column="pg_size" property="pgSize" jdbcType="VARCHAR" />
+    <result column="special_tag" property="specialTag" jdbcType="VARCHAR" />
     <result column="ep_id" property="epId" jdbcType="INTEGER" />
     <result column="channel_total_use" property="channelTotalUse" jdbcType="INTEGER" />
     <result column="channel_total_amount" property="channelTotalAmount" jdbcType="DOUBLE" />
@@ -24,23 +26,78 @@
     <collection property="discountList" resultMap="com.weizu.flowsys.web.channel.dao.ChannelDiscountDao.BaseResultMap"></collection>
   </resultMap>
   <sql id="Base_Column_List" >
-    channel.id, channel.channel_name, pg_size, ep_id, channel_total_use, channel_total_amount, channel_total_profit, 
+    channel.id, channel.channel_name, special_tag, ep_id, channel_total_use, channel_total_amount, channel_total_profit, 
     channel_balance, channel_state, channel_use_state, channel.last_access,belong_agency_id,
-    discount.id,channel_id,scope_city_code,channel_discount,operator_type,service_type,discount.bill_type,ep.ep_name ep_name
+    discount.id,channel_id,scope_city_code,channel_discount,operator_type,service_type,discount.bill_type,discount.channel_type,
+    ep.ep_name ep_name
   </sql>
   <!-- 通道充值页面返回实体 -->
   <resultMap id="ChargeResultMap" type="com.weizu.flowsys.web.channel.pojo.ChargeChannelPo" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <id column="cd_id" property="cdId" jdbcType="BIGINT" />
     <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
-    <result column="pg_size" property="pgSize" jdbcType="VARCHAR" />
+    <result column="special_tag" property="specialTag" jdbcType="VARCHAR" />
     <result column="ep_id" property="epId" jdbcType="INTEGER" />
     <result column="ep_name" property="epName" jdbcType="VARCHAR" />
     <result column="channel_discount" property="channelDiscount" jdbcType="DOUBLE" />
   </resultMap>
   <sql id="Charge_Colume_List">
-  	cnel.id,cd.id cd_id,cnel.channel_name,cnel.pg_size,cnel.ep_id,ep.ep_name,cd.channel_discount
+  	cnel.id,cd.id cd_id,cnel.channel_name,cnel.special_tag,cnel.ep_id,ep.ep_name,cd.channel_discount
   </sql>
+  
+  <resultMap id="SpecialCnelResultMap" type="com.weizu.flowsys.web.channel.pojo.SpecialCnelType" >
+    <result column="channel_id" property="channelId" jdbcType="BIGINT" />
+    <result column="channel_type" property="channelType" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="SpecialCnel_Colume_List">
+  	cd.channel_id channel_id,cd.channel_type
+  </sql>
+  
+  <!-- 获得特殊通道类型 -->
+  <select id="getSpecialCnelType" parameterType="map" resultMap="SpecialCnelResultMap">
+  	select <include refid="SpecialCnel_Colume_List"></include> 
+  	from <include refid="t_channel"></include> cnel
+	INNER JOIN <include refid="t_discount"></include> cd
+	on cnel.id=cd.channel_id
+	<where>
+		<if test="#{cnelType != null}">
+			AND cd.channel_type != #{cnelType}
+		</if>
+		<if test="#{channelUseState != null}">
+			AND cnel.channel_use_state = #{channelUseState}
+		</if>
+	</where>
+  </select>
+  
+  <resultMap id="SpecialOpdResultMap" type="com.weizu.flowsys.web.channel.pojo.SpecialOpdType" >
+    <result column="channel_id" property="channelId" jdbcType="BIGINT" />
+    <result column="pg_type" property="pgType" jdbcType="INTEGER" />
+    <result column="pg_validity" property="pgValidity" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="SpecialOpd_Colume_List">
+  	cbp.channel_id,opd.pg_type,opd.pg_validity
+  </sql>
+  
+  <!-- 获得特殊包体类型 -->
+  <select id="getSpecialOpdType" parameterType="map" resultMap="SpecialOpdResultMap">
+  	select <include refid="SpecialOpd_Colume_List"></include> 
+    FROM <include refid="t_cbp"></include> cbp 
+    INNER JOIN <include refid="t_channel"></include> chnel
+	on chnel.id=cbp.channel_id
+	INNER JOIN <include refid="t_pg"></include> opd
+	on cbp.pg_id=opd.id 
+	<where>
+		<if test="#{pgType != null}">
+		  AND opd.pg_type != #{pgType}
+		</if>
+		<if test="#{pgValidity != null}">
+		or opd.pg_validity != #{pgValidity}
+		</if>
+		<if test="#{channelUseState != null}">
+			AND chnel.channel_use_state = #{channelUseState}
+		</if>
+	</where>
+  </select>
   
   <!-- <resultMap id="SimpleChannelMap" type="com.weizu.flowsys.web.channel.pojo.ChannelChannelPo" >
   	<id column="id" property="id" jdbcType="BIGINT" />
@@ -95,9 +152,24 @@
   	inner join <include refid="t_discount"></include> cd
   	on cnel.id = cd.channel_id
   	<where>
+  		AND cnel.id IN 
+	(SELECT cbg.channel_id from <include refid="t_pg"></include> opd
+	INNER JOIN <include refid="t_cbp"></include> cbg
+	on cbg.pg_id=opd.id 
+	<where>
+		<if test="pgType != null">
+			AND opd.pg_type=#{pgType}
+		</if>
+		<if test="pgValidity != null">
+			AND opd.pg_validity=#{pgValidity}
+		</if>
+	</where>)
 	 	<if test="epName != null">
 	 		AND ep.ep_name = #{epName}
 	 	</if>
+	 	<if test="channelType != null">
+	  		AND cd.channel_type = #{channelType}
+	  	</if>
 	 	<if test="operatorType != null">
   		AND cd.operator_type = #{operatorType}
 	  	</if>
@@ -167,6 +239,18 @@
   
   <!-- 查询通道列表参数 -->
   <sql id="condition_sql">
+  	AND channel.id IN 
+	(SELECT cbg.channel_id from <include refid="t_pg"></include> opd
+	INNER JOIN <include refid="t_cbp"></include> cbg
+	on cbg.pg_id=opd.id 
+	<where>
+		<if test="pgType != null">
+			AND opd.pg_type=#{pgType}
+		</if>
+		<if test="pgValidity != null">
+			AND opd.pg_validity=#{pgValidity}
+		</if>
+	</where>)
   	<if test="channelName != null">
   		AND channel.channel_name like CONCAT('%', TRIM(#{channelName}), '%')
   	</if>
@@ -188,9 +272,12 @@
   	<if test="discountType != null">
   		AND discount.discount_type = #{discountType}
   	</if>
-  	<if test="channelId != null">
-  		AND channel.id = #{channelId}
+  	<if test="channelType != null">
+  		AND discount.channel_type = #{channelType}
   	</if>
+  	<!-- <if test="channelId != null">
+  		AND channel.id = #{channelId}
+  	</if> -->
   	<if test="operatorType != null">
   		AND discount.operator_type = #{operatorType}
   	</if>

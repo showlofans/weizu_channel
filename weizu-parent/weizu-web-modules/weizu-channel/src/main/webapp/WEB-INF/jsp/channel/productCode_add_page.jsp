@@ -38,8 +38,8 @@
 		<div class="row cl">
 		<label class="form-label col-xs-4 col-sm-3">平台</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<span class="select-box inline">
-					<select id="selectEpId" name="epId" onchange="ajaxGetPg()"  class="select">
+				<span class="select-box ">
+					<select id="selectEpId" name="epId" style onchange="ajaxGetPg()"  class="select">
 						<c:forEach items="${resultMap.epList }" var="ep" varStatus="vs1">
 							<option value="${ep.id }" >${ep.epName }</option>
 							<%-- <c:choose>
@@ -58,10 +58,10 @@
 		<div class="row cl">
 		<label class="form-label col-xs-4 col-sm-3">运营商类型：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				 <span class="select-box inline">
+				 <span class="select-box ">
 					<select name="operatorType" id="operatorType" class="select"  onchange="ajaxGetPg()">
 						<c:forEach items="${resultMap.operatorTypeEnums }" var="operaterType" varStatus="vs1">
-							<option value="${operaterType.value }"  <c:if test="${operaterType.value == resultMap.operatorType }"> selected</c:if>>${operaterType.desc }</option>
+							<option value="${operaterType.value }"  <c:if test="${operaterType.value == resultMap.oneCodePo.operatorType }"> selected</c:if>>${operaterType.desc }</option>
 						</c:forEach>
 					</select>
 				</span> 
@@ -70,60 +70,23 @@
 		<div class="row cl">
 			 <label class="form-label col-xs-4 col-sm-3">业务类型：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				 <span class="select-box inline">
+				 <span class="select-box">
 					<select name="serviceType" id="serviceType" class="select" onchange="ajaxGetPg()">
 						<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
-							<c:if test="${serviceTypeEnum.value == resultMap.product_add.serviceType }">
-								<option value="${serviceTypeEnum.value }" selected="selected" >${serviceTypeEnum.desc }</option>
-							</c:if>
-							<option value="${serviceTypeEnum.value }" >${serviceTypeEnum.desc }</option>
+							<option value="${serviceTypeEnum.value }" <c:if test="${serviceTypeEnum.value == resultMap.oneCodePo.serviceType }">selected="selected"</c:if> >${serviceTypeEnum.desc }</option>
 						</c:forEach>
 					</select>
 				</span> 
 			</div>
 		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>流量包有效期：</label>
-			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select id="pgValidity" name="pgValidity" class="select" onchange="ajaxGetPg()">
-					<!-- <option value="">流量包有效期</option> -->
-					<c:forEach items="${resultMap.pgValidityEnums }" var="pgValidity" varStatus="vs1">
-						<option value="${pgValidity.value }">${pgValidity.desc }</option>
-					</c:forEach>
-				</select>
-				</span> </div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>流量类型：</label>
-			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select name="pgType" class="select" id="pgType" onchange="ajaxGetPg()">
-					<!-- <option value="">流量类型</option> -->
-					<c:forEach items="${resultMap.pgTypeEnums }" var="pgType" varStatus="vs1">
-						<option value="${pgType.value }">${pgType.desc }</option>
-					</c:forEach>
-				</select>
-				</span> </div>
-		</div>
+		
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">省份名称</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<span class="select-box inline">
+				<span class="select-box">
 					<select id="scopeCityCode" name="scopeCityCode" class="select" onchange="ajaxGetPg()">
 						<c:forEach items="${resultMap.scopeCityEnums }" var="cityEnum" varStatus="vs1">
-							<option value="${cityEnum.value }" selected="selected" >${cityEnum.desc }</option>
-						</c:forEach>
-					</select>
-				</span>
-			</div>
-		</div>
-		<div class="row cl">
-		<label class="form-label col-xs-4 col-sm-3">包体</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<span class="select-box inline">
-					<select name="pgId" id="pgId" class="select"  onchange="changePg()"> <!-- -->
-						<c:forEach items="${resultMap.pgList }" var="pg" varStatus="vs1">
-							<option value="${pg.id }">${pg.pgName }</option>
-							<span id="spanPgPrice" style="display:none;">${pg.pgPrice }</span><!-- 包体价格 -->
+							<option value="${cityEnum.value }" <c:if test="${cityEnum.value == resultMap.oneCodePo.scopeCityCode }">selected="selected"</c:if> >${cityEnum.desc }</option>
 						</c:forEach>
 					</select>
 				</span>
@@ -137,14 +100,62 @@
 			</div>
 		</div>
 		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>流量包有效期：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select id="pgValidity" name="pgValidity" class="select" onchange="ajaxGetPg()">
+					<!-- <option value="">流量包有效期</option> -->
+					<c:forEach items="${resultMap.pgValidityEnums }" var="pgValidity" varStatus="vs1">
+						<option <c:if test="${pgValidity.value == resultMap.oneCodePo.pgValidity }">selected="selected"</c:if> value="${pgValidity.value }">${pgValidity.desc }</option>
+					</c:forEach>
+				</select>
+				</span> </div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>流量流通方式：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+				<select name="circulateWay" id="circulateWay" class="select"  onchange="ajaxGetPg()">
+					<!-- <option value="">流量流通方式</option> -->
+					<c:forEach items="${resultMap.channelTypeEnums }" var="channelTypeEnum" varStatus="vs1">
+						<option value="${channelTypeEnum.value }" <c:if test="${channelTypeEnum.value == resultMap.oneCodePo.circulateWay }"> selected</c:if>>${channelTypeEnum.desc }</option>
+					</c:forEach>
+				</select></span>  
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>流量类型：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select name="pgType" class="select" id="pgType" onchange="ajaxGetPg()">
+					<!-- <option value="">流量类型</option> -->
+					<c:forEach items="${resultMap.pgTypeEnums }" var="pgType" varStatus="vs1">
+						<option value="${pgType.value }" <c:if test="${pgType.value == resultMap.oneCodePo.pgType }"> selected</c:if>>${pgType.desc }</option>
+					</c:forEach>
+				</select>
+				</span> </div>
+		</div>
+		<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3">包体</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<span class="select-box">
+					<select name="pgId" id="pgId" class="select"  onchange="changePg()"> <!-- -->
+						<option value="">包体大小</option>
+						<c:forEach items="${resultMap.pgList }" var="pg" varStatus="vs1">
+							<option value="${pg.id }">${pg.pgName }</option>
+							<span style="display:none;">${pg.pgSize }</span><!-- 包体价格 -->
+						</c:forEach>
+					</select>
+				</span>
+			</div>
+		</div>
+		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
 				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
 				<button class="btn btn-primary radius" onClick="cancelEdit()">取消</button>
 			</div>
 		</div>
-	<input id="pgPrice"  type="hidden" value="" name="pgPrice"></input>
+	<input id="pgSize" type="hidden" value="" name="pgSize"></input>
 	</form>
-<!-- 	<input id="pgSize" type="hidden" value="" name="pgSize"></input> -->
 </article>
 
 <!--_footer 作为公共模版分离出去-->
@@ -162,11 +173,12 @@
 
 $().ready(function() {
     $("#product_form").validate({
-    	submitHandler: function(){
-            save();
-        },
     	rules:{
+    		pgId:{
+    			required:true
+    		},
     		productCode : {
+    				required:true,
 	    			remote:{//验证通编码是否存在
 	    				  type:"post",
 	    	               url:"/flowsys/productCode/product_code_exist.do",             //servlet
@@ -175,12 +187,16 @@ $().ready(function() {
 	    	            	  operatorType :function(){return $("#operatorType").val().trim();},
 	    	            	  serviceType :function(){return $("#serviceType").val().trim();},
 	    	            	  scopeCityCode :function(){return $("#scopeCityCode").val().trim();},
+	    	            	  pgType :function(){return $("#pgType").val().trim();},
+	    	            	  pgValidity :function(){return $("#pgValidity").val().trim();},
 	    	               	  productCode :function(){return $("#productCode").val().trim();}
 	    					}
-    				},
-    				required:true
+    				}
     		}
     	},
+    	submitHandler: function(){
+            save();
+        },
     	messages:{
     		productCode:{ remote:jQuery.format("该通道编码已存在！！ "),required:"必填"}
     	}
@@ -190,9 +206,12 @@ $().ready(function() {
 /**设置包体其他属性*/
 function changePg(){
 	var et = $("#pgId").get(0).selectedIndex;
+	//alert($(et).next().html());
 	//alert(et);
 	//alert($("#pgId :hidden").html());
-	var pgPrice = $("#pgId span:hidden").html();//:eq("+ et +")
+	var pgSize = $(et).next().html();//:eq("+ et +")
+	alert(pgSize);
+	$('#pgSize').val(pgSize);
 	//alert(pgPrice);
 	
 	/* var palist = $("#pgList").val();
@@ -232,20 +251,21 @@ function changePg(){
 	var otype = $("#operatorType").val();
 	var pgType = $("#pgType").val();
 	var pgValidity = $("#pgValidity").val();
+	var circulateWay = $("#circulateWay").val();
 	var epId = $('#selectEpId').val();
 	var scopeCityCode = $('#scopeCityCode').val();
 	//alert(stype + "  " + otype);
 	$.ajax({
         type:"post",
         url:"/flowsys/productCode/productCode_add_page/ajax_pg_list.do",
-        data: {operatorType:otype,serviceType:stype,epId:epId,scopeCityCode:scopeCityCode,pgType:pgType,pgValidity:pgValidity},//表单数据
+        data: {operatorType:otype,serviceType:stype,epId:epId,scopeCityCode:scopeCityCode,pgType:pgType,pgValidity:pgValidity,circulateWay:circulateWay},//表单数据
         dataType: "json",
         async : false,
         success:function(data){
         	//alert(data.length);
             $("#pgId").empty();//清空原有收据 
+            var appendData = "<option value=''>包体列表 </option>";
         	if(data.length > 0){
-                var appendData;
                 $('#productCode').removeAttr('readonly');
         		for(var i=0; i < data.length; i++){
         			appendData += "<option value="+ data[i].id +">" + data[i].pgName +"</option>";

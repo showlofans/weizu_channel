@@ -72,6 +72,14 @@ public class AgencyBackwardPo extends Po{
 		this.verifyCode = verifyCode;
 	}
 	
+	public AgencyBackwardPo(String userName, String userPass) {
+		super();
+		this.userName = userName;
+		this.userPass = userPass;
+	}
+
+
+
 	public String getCallBackIp() {
 		return callBackIp;
 	}

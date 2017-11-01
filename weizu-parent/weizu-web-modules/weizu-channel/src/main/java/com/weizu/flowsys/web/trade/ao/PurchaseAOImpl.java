@@ -64,6 +64,7 @@ import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
+import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.http.ParamsEntityWeiZu;
 import com.weizu.flowsys.web.http.weizu.OrderStateResult;
@@ -443,7 +444,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 	@Override
 	public String ajaxCommitOrder(Long orderId,Integer accountId,String chargeTelDetail) {
 		ChannelDiscountPo cd = channelDiscountDao.getCDbyAP(orderId, accountId);
-		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(cd.getServiceType(), chargeTelDetail, accountId,true);
+		/**todo*/
+		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo(chargeTelDetail, cd.getServiceType(), null, null, null) , accountId,true);
 		PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
 		if(ratePo != null){
 			int billType = ratePo.getBillType();//票务全部使用费率配置的票务
@@ -707,13 +709,13 @@ public class PurchaseAOImpl implements PurchaseAO {
 			PageParam pageParam) {
 		Boolean isCharged = purchaseVO.getOrderState() != null && (purchaseVO.getOrderState() == OrderStateEnum.CHARGED.getValue() ||purchaseVO.getOrderState() == OrderStateEnum.UNCHARGE.getValue());
 		Map<String, Object> paramsMap = getMapByPojo(purchaseVO,isCharged);
-		int totalRecord = purchaseDAO.countPurchase(paramsMap);//今天的订单数量
+		long totalRecord = purchaseDAO.countPurchase(paramsMap);//今天的订单数量
 		//设置总记录数和页面参数和查询参数
 		totalRecord = resetTotalRecord(purchaseVO,paramsMap,isCharged,totalRecord);
 		
 		int pageSize = pageParam.getPageSize();
-		int pageNo = pageParam.getPageNo();
-		paramsMap.put("start", (pageNo-1) * pageSize);
+		Long pageNoLong = pageParam.getPageNoLong();
+		paramsMap.put("start", (pageNoLong-1) * pageSize);
 		paramsMap.put("end", pageSize);
 		
 		List<PurchaseVO> records = purchaseDAO.getPurchase(paramsMap);
@@ -777,13 +779,14 @@ public class PurchaseAOImpl implements PurchaseAO {
 										purchaseVO2.setOrderBackTimeStr(DateUtil.formatAll(ts));
 										purchaseVO2.setOrderState(orderState);
 										purchaseVO2.setOrderStateDetail(orderStateDetail);
-										accountPurchaseAO.updatePurchaseState(new PurchasePo(purchaseVO2.getOrderId(), null, ts, orderState, null, orderStateDetail));//purchaseVO2.getOrderId(), orderState, orderStateDetail,ts
+										String res = accountPurchaseAO.updatePurchaseState(new PurchasePo(purchaseVO2.getOrderId(), null, ts, orderState, null, orderStateDetail));//purchaseVO2.getOrderId(), orderState, orderStateDetail,ts
+										System.out.println("向下返回调结果："+res);
 										//把查询的结果利用接口推给下游
-										AgencyBackwardPo agencyPo = agencyAO.getAgencyByAccountId(accountId);
-												if(StringHelper.isNotEmpty(agencyPo.getCallBackIp())){//下游有回调地址的情况下，按照回调地址推送
-													String callBackRes = sendCallBack.sendCallBack(new ResponseJsonDTO(purchaseVO2.getOrderId(), purchaseVO2.getOrderIdFrom(), orderState, orderStateDetail, ts), agencyPo);
-													System.out.println(agencyPo.getUserName() + "：" +purchaseVO2.getOrderId() + "：" +  callBackRes);
-												}
+//										AgencyBackwardPo agencyPo = agencyAO.getAgencyByAccountId(accountId);
+//										if(agencyPo != null && StringHelper.isNotEmpty(agencyPo.getCallBackIp())){//下游有回调地址的情况下，按照回调地址推送
+//											String callBackRes = sendCallBack.sendCallBack(new ResponseJsonDTO(purchaseVO2.getOrderId(), purchaseVO2.getOrderIdFrom(), orderState, orderStateDetail, ts), agencyPo.getCallBackIp());
+//											System.out.println(agencyPo.getUserName() + "：" +purchaseVO2.getOrderId() + "：" +  callBackRes);
+//										}
 									}else if(orderIn.getStatus() != purchaseVO2.getOrderResult() && orderIn!= null){
 //										accountPurchaseAO.updatePurchaseState(purchaseVO2.getOrderId(), orderIn.getStatus(), orderIn.getMsg(),System.currentTimeMillis());
 										//更新订单表
@@ -810,7 +813,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 			}
 		}
 		resultMap.put("searchParams", purchaseVO);	//查询参数放入返回参数
-		return new Pagination<PurchaseVO>(records, totalRecord, pageNo, pageSize);
+		return new Pagination<PurchaseVO>(records, totalRecord, pageNoLong, pageSize);
 	}
 	
 
@@ -818,7 +821,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 	public List<PurchaseVO> getPurchase(PurchaseVO purchaseVO) {
 		Boolean isCharged = purchaseVO.getOrderState() != null && (purchaseVO.getOrderState() == OrderStateEnum.CHARGED.getValue() ||purchaseVO.getOrderState() == OrderStateEnum.UNCHARGE.getValue());
 		Map<String, Object> paramsMap = getMapByPojo(purchaseVO,isCharged);
-		int totalRecord = purchaseDAO.countPurchase(paramsMap);//今天的订单数量
+		long totalRecord = purchaseDAO.countPurchase(paramsMap);//今天的订单数量
 		//设置总记录数和页面参数和查询参数paramsMap
 		resetTotalRecord(purchaseVO,paramsMap,isCharged,totalRecord);
 		List<PurchaseVO> records = purchaseDAO.getPurchase(paramsMap);
@@ -861,8 +864,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 	 * @param totalRecord
 	 * @return
 	 */
-	private int resetTotalRecord(PurchaseVO purchaseVO,
-			Map<String, Object> paramsMap, Boolean isCharged, int totalRecord) {
+	private long resetTotalRecord(PurchaseVO purchaseVO,
+			Map<String, Object> paramsMap, Boolean isCharged, long totalRecord) {
 		//在没有记录的情况下重置查询条件和查询参数
 		if(totalRecord == 0){
 			Long currentTime = System.currentTimeMillis();
@@ -1064,6 +1067,15 @@ public class PurchaseAOImpl implements PurchaseAO {
 				}
 			}
 		}
+		if(ccpp.getPgType() != null){
+			searchMap.put("pgType", ccpp.getPgType());
+		}
+		if(ccpp.getChannelType() != null){
+			searchMap.put("channelType", ccpp.getChannelType());
+		}
+		if(StringHelper.isNotEmpty(ccpp.getPgValidity())){
+			searchMap.put("pgValidity", ccpp.getPgValidity());
+		}
 		if(ccpp.getEpName() != null){
 			searchMap.put("epName", ccpp.getEpName());
 		}
@@ -1097,24 +1109,35 @@ public class PurchaseAOImpl implements PurchaseAO {
 	}
 
 	@Override
-	public List<OperatorPgDataPo> getPgByChanel(ChargeChannelParamsPo ccpp) {
+	public List<PgDataPo> getPgByChanel(ChargeChannelParamsPo ccpp) {
+//		Map<String, Object> objMap = new HashMap<String, Object>();
+//		String carrier = ccpp.getCarrier();
+//		if(StringHelper.isNotEmpty(carrier)){
+//			int operatorType = OperatorTypeEnum.getValueByDesc(carrier.substring(carrier.length()-2));
+//			objMap.put("operatorType", operatorType);
+//			if(ServiceTypeEnum.NATION_WIDE.getValue() != ccpp.getServiceType()){
+//				Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(carrier);
+//				if(scopeMap.get("scopeCityCode") != null){
+//					objMap.put("scopeCityCode", scopeMap.get("scopeCityCode").toString());
+//				}
+//			}
+//		}
+//		if(ccpp.getChannelId() != null){
+//			objMap.put("channelId", ccpp.getChannelId());
+//		}
+//		objMap.put("serviceType", ccpp.getServiceType());
+//		List<PgDataPo> pgList = operatorPgDao.getPgByChanel(objMap);
+//		return pgList;
+		return null;
+	}
+
+	@Override
+	public List<PgDataPo> getPgByChanel(Long channelId) {
 		Map<String, Object> objMap = new HashMap<String, Object>();
-		String carrier = ccpp.getCarrier();
-		if(StringHelper.isNotEmpty(carrier)){
-			int operatorType = OperatorTypeEnum.getValueByDesc(carrier.substring(carrier.length()-2));
-			objMap.put("operatorType", operatorType);
-			if(ServiceTypeEnum.NATION_WIDE.getValue() != ccpp.getServiceType()){
-				Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(carrier);
-				if(scopeMap.get("scopeCityCode") != null){
-					objMap.put("scopeCityCode", scopeMap.get("scopeCityCode").toString());
-				}
-			}
+		if(channelId != null){
+			objMap.put("channelId", channelId);
 		}
-		if(ccpp.getChannelId() != null){
-			objMap.put("channelId", ccpp.getChannelId());
-		}
-		objMap.put("serviceType", ccpp.getServiceType());
-		List<OperatorPgDataPo> pgList = operatorPgDao.getPgByChanel(objMap);
+		List<PgDataPo> pgList = operatorPgDao.getPgByChanel(objMap);
 		return pgList;
 	}
 

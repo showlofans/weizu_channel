@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html>
 <!--[if IE 8]><html class="ie8" lang="en"><![endif]-->
 <!--[if IE 9]><html class="ie9" lang="en"><![endif]-->
@@ -59,22 +60,68 @@
 			</div>
 		</div>
 	</c:if>
-	<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><!--<span class="c-red">*</span>-->业务类型：</label>
+	<c:if test="${resultMap.channelTypeEnums != null && fn:length(resultMap.channelTypeEnums) > 0 }">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">通道类型：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
-					<span class="select-box inline">
-						<select id="select-servce-type" name="serviceType" onchange="ifAjaxPg()" style="width:150px;" class="select">
-							<option value="">请选择</option>
-							<c:forEach items="${resultMap.serviceTypeEnum }" var="typeEnum" varStatus="vs1">
-								<option value="${typeEnum.value }" <c:if test="${typeEnum.value == resultMap.params.serviceType }"> selected</c:if>>${typeEnum.desc }</option>
-							</c:forEach>
-						</select>
-					</span>
-						<!-- <span style="width: 300;" onclick="showNext(this)" title="提示信息"><i class="Hui-iconfont">&#xe6cd;</i></span>
-						<span class="select-box inline" style="display:none;" >
-						</span> -->
+				<span class="select-box inline">
+					<select name="channelType"  id="channelType" class="select" onchange="ifAjaxPg()" style="width:150px;">
+					<!-- <option value="">请选择</option> -->
+					<c:forEach items="${resultMap.channelTypeEnums }" var="channelTypeEnum" varStatus="vs2">
+						<option value="${channelTypeEnum.value }">${channelTypeEnum.desc }</option>
+					</c:forEach>
+				</select>
+				</span>
 			</div>
 		</div>
+	</c:if>
+	<c:if test="${resultMap.pgTypeEnums != null && fn:length(resultMap.pgTypeEnums) > 0 }">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">流量类型：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<span class="select-box inline">
+					<select name="pgType"  id="pgType" class="select" onchange="ifAjaxPg()" style="width:150px;">
+					<!-- <option value="">请选择</option> -->
+					<c:forEach items="${resultMap.pgTypeEnums }" var="pgTypeEnum" varStatus="vs2">
+						<option value="${pgTypeEnum.value }">${pgTypeEnum.desc }</option>
+					</c:forEach>
+				</select>
+				</span>
+			</div>
+		</div>
+	</c:if>
+	<c:if test="${resultMap.pgValidityEnums != null && fn:length(resultMap.pgValidityEnums) > 0 }">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">有效期：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<span class="select-box inline">
+					<select name="pgValidity"  id="pgValidity" class="select" style="width:150px;"  onchange="ifAjaxPg()">
+					<!-- <option value="">请选择</option> -->
+					<c:forEach items="${resultMap.pgValidityEnums }" var="pgValidityEnum" varStatus="vs2">
+						<option value="${pgValidityEnum.value }">${pgValidityEnum.desc }</option>
+					</c:forEach>
+				</select>
+				</span>
+			</div>
+		</div>
+	</c:if>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><!--<span class="c-red">*</span>-->业务类型：</label>
+		<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<span class="select-box inline">
+					<select id="select-servce-type" name="serviceType" onchange="ifAjaxPg()" style="width:150px;" class="select">
+						<option value="">请选择</option>
+						<c:forEach items="${resultMap.serviceTypeEnum }" var="typeEnum" varStatus="vs1">
+							<option value="${typeEnum.value }" <c:if test="${typeEnum.value == resultMap.params.serviceType }"> selected</c:if>>${typeEnum.desc }</option>
+						</c:forEach>
+					</select>
+				</span>
+					<!-- <span style="width: 300;" onclick="showNext(this)" title="提示信息"><i class="Hui-iconfont">&#xe6cd;</i></span>
+					<span class="select-box inline" style="display:none;" >
+					</span> -->
+		</div>
+	</div>
+	
 		
 		
 	<div class="row cl" id="pg">
@@ -265,7 +312,7 @@
     }; */
     var rootAgencyId = $('#rootAgencyId').val();
 	//   alert(rootAgencyId);
-     function changeChannelRadio(vart){
+    /*  function changeChannelRadio(vart){
     	 $.ajax({
              type: "post",
              url: '/flowsys/chargePg/pgList_forPurchase.do?operatorName='+ carrier + '&serviceType=' + serviceType,
@@ -295,11 +342,32 @@
      	           				//$("#pgPrice").val(data[0].pgPrice);
      	           				$("#pgSize").val(data[0].pgSize);
      	           				$("#pgId").val(data[0].id);
-                				}else{ */
-                					appendData += "<div class='radio-box pgNameType'><input type='hidden' value='"+data.pgList[i].id+"'></input><input class='pgNameRadio' type='radio' name='pgNameRadio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)'><label for='pgName-"+(i+1)+"'>"+name+"</label></div><input type='hidden' class='price' value='"+price+"'></input>"
-                					+"<input type='hidden' value='"+pgSize+"'></input><input type='hidden' value='"+productCode+"'></input><input type='hidden'  value='"+pgDiscountPrice +"'></input></input><input type='hidden' value='"+rteDis 
-                					+"'></input><input type='hidden' value='"+channelId +"'></input><input type='hidden' value='"+rteId +"'></input><br>";;
-                				// }
+                				}else{ 
+                					appendData += "<div class='radio-box pgNameType'><input type='hidden' value='";
+                					appendData += data.pgList[i].id;
+                					appendData +="'></input><input class='pgNameRadio' type='radio' name='pgNameRadio' id='pgName-";
+               						appendData += (i+1);
+               						appendData += "' onclick='changeRadio(this)'><label for='pgName-";
+           							appendData += (i+1);
+           							appendData += "'>";
+               						appendData += name;
+               						appendData += "</label></div><input type='hidden' class='price' value='";
+           							appendData += price;
+           							appendData += "'></input>";
+           							appendData +="<input type='hidden' value='";
+       								appendData += pgSize;
+       								appendData +="'></input><input type='hidden' value='";
+   									appendData += productCode;
+   									appendData += "'></input><input type='hidden'  value='";
+									appendData += pgDiscountPrice;
+									appendData += "'></input></input><input type='hidden' value='";
+									appendData += rteDis ;
+									appendData += "'></input><input type='hidden' value='";
+									appendData += channelId;
+									appendData += "'></input><input type='hidden' value='";
+									appendData += rteId;
+									appendData += "'></input><br>";;
+                				 }
                    }
                }else{
              	  appendData += "没有配置该业务类型，或者号码不符合充值条件！！";
@@ -313,40 +381,35 @@
            	  }
            	  }
          }) 
-     }
+     } */
 	
-	function changeRadio(vart){
-	   var pprice = $(vart).parent().next().val();
-	   var psize = $(vart).parent().next().next().val();//包大小
-	   var productCode = $(vart).parent().next().next().next().val();//包编码
-	   var pgDiscountPrice = $(vart).parent().next().next().next().next().val();
-	   var rateDis = $(vart).parent().next().next().next().next().next().val();
-	   var channelId = $(vart).parent().next().next().next().next().next().next().val();
+	function changeRadio(vart,channelId){
+	  // var psize = $(vart).parent().next().next().val();//包大小
+	  //var channelId = $(vart).parent().next().next().next().val();//通道id
+	  //alert(channelId);
+	  // var pgDiscountPrice = $(vart).parent().next().next().next().next().val();
+	   //var rateDis = $(vart).parent().next().next().next().next().next().val();
+	  // var channelId = $(vart).parent().next().next().next().next().next().next().val();
 	  // alert(channelId);
-	   if(rootAgencyId == 0){
+	   /* if(rootAgencyId == 0){
 		   var cdisId = $(vart).parent().next().next().next().next().next().next().next().val();
 		   $('#cdisId').val(cdisId);
 		   alert(cdisId);
 	   }else{
 		   var rteId = $(vart).parent().next().next().next().next().next().next().next().val();
 		   $('#rateId').val(rteId);
-	   }
-	   $('#rateDiscount').html(rateDis);
+	   } */
+	   //$('#rateDiscount').html(rateDis);
 	   //alert(channelId);
-	   $('#channelId').val(channelId);
-	   //alert(productCode);
-	   $("#productCode").val(productCode);
-	   $("#orderAmount").val(pgDiscountPrice);
-	   $("#pgPrice").val(pprice);//改变价格
-	   //alert($(vart).prev().val());
-	   $("#pgId").val($(vart).prev().val());//包体id
+	   var pgId = $(vart).prev().val();
+	   var pprice = $(vart).parent().next().val();
 	   
-	   var serviceType = $("#select-servce-type").val();
-	   var carrier = $("#chargeTelDetail").val();
-	   $("#billType").val(0);
-	   /* $.ajax({
+       $("#pgId").val(pgId);//包体id
+       var carrier = $('#chargeTelDetail').val();
+       
+       $.ajax({
            type: "get",
-           url: '/flowsys/chargePg/ajax_purchase_price.do?pgSize=' + psize + '&pgPrice=' + pprice + '&serviceType='+serviceType+ '&carrier='+carrier,
+           url: '/flowsys/chargePg/ajax_purchase_price.do?pgPrice=' + pprice + '&pgId='+pgId+ '&channelId='+channelId+ '&carrier='+carrier,
            async: false,
            dataType: "json",
            contentType: "application/x-www-form-urlencoded; charset=utf-8", 
@@ -358,18 +421,37 @@
         		//}); 
          	 //$("#orderAmount").val(data);
         		//alert(data.msg);
-        	if(data.msg == 2){
+        	if(data.msg == 5002){
         		alert('账户余额不足');
+        		$("#orderAmount").val('');
+        		$("#pgPrice").val('');
         	}else{
 	         	 $("#orderAmount").val(data.price);
-	         	 $("#channelId").val(data.channelId);
-	         	// alert(data.rateDiscount);
+	         	
+	         	 $('#channelId').val(data.channelId);
+	         	 //if(data.cdId != null && data.cdId !=""){
+	         		 $('#cdisId').val(data.cdId);
+	         	 //}else{
+		         	 $('#rateId').val(data.rateDiscountId);
+	         	 //}
+	      	   //alert(productCode);
+	      	   $("#productCode").val(data.productCode);
+	      	   $("#pgPrice").val(pprice);//改变包体原价
+	      	   //alert($(vart).prev().val());
+	      	   
         	}
          	 $('#rateDiscount').html(data.rateDiscount);
         		
          	 $("#billType").val(data.billType);
            }
-       }) */
+       })
+	   
+	  
+	   
+	   //var serviceType = $("#select-servce-type").val();
+	   //var carrier = $("#chargeTelDetail").val();
+	   //$("#billType").val(0);
+	   
 	   
    }
    /*  $('.skin-minimal input').on('iCheck',{		//给单选框加特效
@@ -385,7 +467,10 @@
 		} */
 		$("#pgPrice").val("");//重置参数
   	 	 $("#orderAmount").val("");
-  		ajaxPg();
+  	 	var sType1 = $("#select-servce-type").val();
+  	 	if(sType1 != null && sType1 != ''){
+	  		ajaxPg();
+  	 	}
 	}
 	/**
 	 * 乘法运算，避免数据相乘小数点后产生多位数和计算精度损失。
@@ -404,12 +489,12 @@
 		 }
 		 return Number(num1.toString().replace(".", "")) * Number(num2.toString().replace(".", "")) / Math.pow(10, baseNum);
 	};
-	/**响应包体点击事件*/
+	/** 代理商折扣响应包体点击事件*/
 	function getPrice(vart){
 		var pgPrice = $(vart).parent().next().val();//包体价格
 		var productCode = $(vart).parent().next().next().next().val();//包体编码
 		var cdis = $('#rateDiscount').html();
-		var orderAmount = numMulti(pgPrice,cdis);
+		//var orderAmount = numMulti(pgPrice,cdis);
 		//alert(orderAmount);
 		var pgId =  $(vart).prev().val();
 		$("#pgId").val(pgId);
@@ -418,7 +503,7 @@
 		$("#pgPrice").val(pgPrice);
 	};
 	
-	/**异步获得充值包体列表*/
+	/** 通道异步获得充值包体列表*/
 	function togglelePg(vart){
 		
 		
@@ -437,7 +522,7 @@
     	 //var epName = $('#epName').val();
     	 $.ajax({
              type: "post",
-             url: '/flowsys/chargePg/ajax_charge_pg.do?carrier='+ carrier + '&serviceType=' + serviceType + '&channelId=' + cnelId,
+             url: '/flowsys/chargePg/ajax_charge_pg.do?channelId='+ cnelId,
              dataType: "json",
              async: false,
              contentType: "application/x-www-form-urlencoded; charset=utf-8", 
@@ -447,7 +532,7 @@
            	  //alert(dataRole1.length);
            	  //if($(".pgNameType") == undefined || $(".pgNameType").length <= 0){
                var appendData1 = "<label class='form-label col-xs-4 col-sm-3'>包体大小：</label><div class='formControls col-xs-8 col-sm-9 skin-minimal'>"; 
-               if(dataRole1.length > 0){
+               if(dataRole1 != null && dataRole1.length > 0){
                    for(var i=0; i < dataRole1.length; i++){
                  	   var price = dataRole1[i].pgPrice;
                  	   var name = dataRole1[i].pgName;
@@ -457,9 +542,22 @@
                  	   //var cdis = dataRole1[i].cdis;
                  	  // var cdisId = dataRole1[i].cdisId;
                  	   //var pgDiscountPrice = dataRole1[i].pgDiscountPrice;
-       					appendData1 += "<div class='radio-box pgNameType'><input type='hidden' value='"+dataRole1[i].id+"'></input><input class='pgNameRadio' type='radio' name='pgNameRadio' id='pgName-"+(i+1)+"' onclick='getPrice(this)'><label for='pgName-"+(i+1)+"'>"
-       					+name+"</label></div><input type='hidden' class='price' value='"+price+"'></input>"
-       					+"<input type='hidden' value='"+pgSize+"'></input><input type='hidden' value='"+productCode+"'></input>";
+       					appendData1 += "<div class='radio-box pgNameType'><input type='hidden' value='";
+       					appendData1 += dataRole1[i].id;
+       					appendData1 += "'></input><input class='pgNameRadio' type='radio' name='pgNameRadio' id='pgName-";
+       					appendData1 += (i+1);
+       					appendData1 += "' onclick='changeRadio(this,"+ cnelId +")'><label for='pgName-";
+       					appendData1 += (i+1);
+       					appendData1 += "'>";
+       					appendData1 += name;
+       					appendData1 += "</label></div><input type='hidden' class='price' value='";
+       					appendData1 += price;
+       					appendData1 += "'></input>";
+       					appendData1 += "<input type='hidden' value='";
+       					appendData1 += pgSize;
+       					appendData1 += "'></input><input type='hidden' value='";
+       					appendData1 += productCode;
+       					appendData1 += "'></input>";
        				 }
                    appendData1 += "</div>";
                }else{
@@ -478,10 +576,12 @@
 	
     function ajaxPg(){
     	 tel=$('input[name=chargeTel]').val();
-    	 var carrier = $("#chargeTelDetail").val();
-    	 var serviceType = $("#select-servce-type").val();
     	 //alert(serviceType);
          if(tel){
+	    	 var carrier = $("#chargeTelDetail").val();
+	    	 //alert(carrier);
+	    	 var serviceType = $("#select-servce-type").val();
+	    	 
              if(reg.test(tel)){
             	 //如果点击了有的话就先删除原来的业务
             	 //var serviceTypeTag = $("#pg").children().eq(2);//有第三个元素
@@ -498,14 +598,40 @@
                	 } */
             	//查询流量包
             	 	//ajax2();
-           	 
+       	if(rootAgencyId == 0){
+    	  var url = '/flowsys/chargePg/ajax_charge_channel.do?carrier=';
+       	}else{
+    	  var url = '/flowsys/chargePg/pgList_forPurchase.do?carrier=';
+       	}
+    	  url += carrier;
+    	  url += '&serviceType=';
+    	  url += serviceType; 
+    	  if($("#pgValidity").length >0){
+	       	 var pgValidity = $("#pgValidity").val();
+    		 url += '&pgValidity=';
+    		 url += pgValidity;
+    	  }
+    	  if($("#pgType").length >0){
+          	 var pgType = $("#pgType").val();
+    		 url += '&pgType=';
+    		 url += pgType;
+    	  }
+    	  if($("#channelType").length >0){
+	    	 var channelType = $("#channelType").val();
+    		 url += '&channelType=';
+    		 url += channelType;
+    	  }
+    	  /* else{
+    		  alert('13699562589');
+    	  } */
        	   if(rootAgencyId == 0){
 	       	  var epName = $('#epName').val();
-	       	
+       		  url += '&epName=';
+	    	  url += epName;
 	       	 // alert(epEngId);
 	       	  $.ajax({
 	                type: "post",
-	                url: '/flowsys/chargePg/ajax_charge_channel.do?carrier='+ carrier + '&serviceType=' + serviceType + '&epName=' + epName,
+	                url: url,
 	                dataType: "json",
 	                async: false,
 	                contentType: "application/x-www-form-urlencoded; charset=utf-8", 
@@ -585,7 +711,7 @@
 	       	   }else{
 		       		$.ajax({
 		                type: "post",
-		                url: '/flowsys/chargePg/pgList_forPurchase.do?operatorName='+ carrier + '&serviceType=' + serviceType,
+		                url: url,
 		                dataType: "json",
 		                async: false,
 		                contentType: "application/x-www-form-urlencoded; charset=utf-8", 
@@ -596,16 +722,16 @@
 		              		var dataRole = eval(data);
 		              		//alert(dataRole.length);
 		              	  if($(".pgNameType") == undefined || $(".pgNameType").length <= 0){
-		                  var appendData = "<label class='form-label col-xs-4 col-sm-3'><span class='c-red'>*</span>包体大小：</label><div class='formControls col-xs-8 col-sm-9 skin-minimal'>"; 
+		                  var appendData = "<label class='form-label col-xs-4 col-sm-3'><span class='c-red'>*</span>选择包体：</label><div class='formControls col-xs-8 col-sm-9 skin-minimal'>"; 
 		                  if(dataRole.length > 0){
 		                      for(var i=0; i < dataRole.length; i++){
 		                    	   var price = dataRole[i].pgPrice;
 		                    	   var name = dataRole[i].pgName;
 		                    	   var pgSize = dataRole[i].pgSize;
-		                    	   var productCode = dataRole[i].productCode;
-		                    	   var pgDiscountPrice = dataRole[i].pgDiscountPrice;
-		                    	   var rteDis = dataRole[i].rteDis;
-		                    	   var rteId = dataRole[i].rteId;
+		                    	   //var productCode = dataRole[i].productCode;
+		                    	   //var pgDiscountPrice = dataRole[i].pgDiscountPrice;
+		                    	   //var rteDis = dataRole[i].rteDis;
+		                    	   //var rteId = dataRole[i].rteId;
 		                    	   var channelId = dataRole[i].channelId;
 		                   				/* if(i == 0){//默认设置第一个为选中 
 		        	           				appendData += "<div class='radio-box pgNameType'><input name='pgName' class='pgNameRadio' type='radio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)' checked><label for='pgName-"+(i+1)+"'>"+name+"</label></div>"
@@ -615,9 +741,10 @@
 		        	           				$("#pgSize").val(data[0].pgSize);
 		        	           				$("#pgId").val(data[0].id);
 		                   				}else{ */
-		                   					appendData += "<div class='radio-box pgNameType'><input type='hidden' value='"+dataRole[i].id+"'></input><input class='pgNameRadio' type='radio' name='pgNameRadio' id='pgName-"+(i+1)+"' onclick='changeRadio(this)'><label for='pgName-"+(i+1)+"'>"+name+"</label></div><input type='hidden' class='price' value='"+price+"'></input>"
-		                   					+"<input type='hidden' value='"+pgSize+"'></input><input type='hidden' value='"+productCode+"'></input><input type='hidden'  value='"+pgDiscountPrice +"'></input></input><input type='hidden' value='"+rteDis 
-		                   					+"'></input><input type='hidden' value='"+channelId +"'></input><input type='hidden' value='"+rteId +"'></input><br>";;
+		                   					appendData += "<div class='radio-box pgNameType'><input type='hidden' value='"+dataRole[i].id+"'></input><input class='pgNameRadio' type='radio' name='pgNameRadio' id='pgName-"+(i+1)+"' onclick='changeRadio(this,"+channelId+")'><label for='pgName-"+(i+1)+"'>"+name+"</label></div><input type='hidden' class='price' value='"+price+"'></input>"
+		                   					+"<input type='hidden' value='"+pgSize+"'></input><input type='hidden' value='"+channelId+"'></input>"
+		                   					/* <input type='hidden' value='"+productCode+"'></input><input type='hidden'  value='"+pgDiscountPrice +"'></input></input><input type='hidden' value='"+rteDis 
+		                   					+"'></input><input type='hidden' value='"+channelId +"'></input><input type='hidden' value='"+rteId +"'></input><br>";; */
 		                   				// }
 		                      }
 		                  }else{

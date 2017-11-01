@@ -25,7 +25,7 @@ public interface OperatorPgDaoInterface extends Dao<PgDataPo, Integer> {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年4月27日 下午4:11:24
 	 */
-	List<OperatorPgDataPo> list(Map<String,Object> paramsMap);
+	List<PgDataPo> list(Map<String,Object> paramsMap);
 	
 	/**
 	 * @description:通过运营商类型查询购买包体list
@@ -102,7 +102,16 @@ public interface OperatorPgDaoInterface extends Dao<PgDataPo, Integer> {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年8月28日 下午5:26:36
 	 */
-	List<OperatorPgDataPo> getPgByChanel(Map<String,Object> map);
+	List<PgDataPo> getPgByChanel(Map<String,Object> map);
+	
+	/**
+	 * @description: 根据代理商id和其他充值参数获得包体列表
+	 * @param map
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月1日 上午11:08:27
+	 */
+	List<PgDataPo> pg_list_for_purchase(Map<String,Object> map);
 	
 //	Pagination<OperatorPgDataPo> list();
 }
