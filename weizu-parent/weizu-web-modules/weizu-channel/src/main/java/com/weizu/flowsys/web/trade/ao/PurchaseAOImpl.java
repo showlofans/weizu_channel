@@ -818,14 +818,19 @@ public class PurchaseAOImpl implements PurchaseAO {
 	
 
 	@Override
-	public List<PurchaseVO> getPurchase(PurchaseVO purchaseVO) {
+	public Map<String,Object> getPurchaseMap(PurchaseVO purchaseVO) {
 		Boolean isCharged = purchaseVO.getOrderState() != null && (purchaseVO.getOrderState() == OrderStateEnum.CHARGED.getValue() ||purchaseVO.getOrderState() == OrderStateEnum.UNCHARGE.getValue());
 		Map<String, Object> paramsMap = getMapByPojo(purchaseVO,isCharged);
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		long totalRecord = purchaseDAO.countPurchase(paramsMap);//今天的订单数量
 		//设置总记录数和页面参数和查询参数paramsMap
-		resetTotalRecord(purchaseVO,paramsMap,isCharged,totalRecord);
+		totalRecord = resetTotalRecord(purchaseVO,paramsMap,isCharged,totalRecord);
+		resultMap.put("totalRecord", totalRecord);
+		
 		List<PurchaseVO> records = purchaseDAO.getPurchase(paramsMap);
-		return records;
+		resultMap.put("records", records);
+		
+		return resultMap;
 	}
 
 	
@@ -1140,6 +1145,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 		List<PgDataPo> pgList = operatorPgDao.getPgByChanel(objMap);
 		return pgList;
 	}
+
+	
 
 
 }

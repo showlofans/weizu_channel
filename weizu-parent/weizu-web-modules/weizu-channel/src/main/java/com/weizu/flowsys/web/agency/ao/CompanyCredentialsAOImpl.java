@@ -162,7 +162,7 @@ public class CompanyCredentialsAOImpl implements CompanyCredentialsAO {
 			AgencyBackwardPo agBackwardPo = agencyVODao.get(agencyId);
 			Map<String, Object> params = new HashMap<String, Object>();
 			if(agBackwardPo != null){
-				if(StringHelper.isEmpty(agBackwardPo.getUserApiKey()) && agBackwardPo.getAgencyTag() == AgencyTagEnum.DATA_USER.getValue())
+				if(StringHelper.isEmpty(agBackwardPo.getUserApiKey()))
 				{
 					UUIDGenerator generator = new UUIDGenerator();
 					String userAPiKey = generator.generate().toString();
@@ -172,16 +172,20 @@ public class CompanyCredentialsAOImpl implements CompanyCredentialsAO {
 			params.put("id", agencyId);
 			params.put("agencyTag", AgencyTagEnum.DATA_USER.getValue());
 			 int popTag = agencyVODao.updateAgencyTag(agencyId, params);
-			
-			chargePo.setAgencyId(agencyId);
-			chargePo.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());//增加一个对公账户
-			AgencyBackwardPo agencyPo = agencyVODao.get(agencyId);
-			String userName = agencyPo.getUserName();
-			chargePo.setAgencyName(userName);
-			chargePo.setCreateTime(ccpo.getConfirmTime());
-			chargePo.setRemittanceBankAccount(ccpo.getBankAccount());
-			int addCharge = chargeAccountDao.add(chargePo);
-			if(res + addCharge + popTag > 2){
+			 if(!AgencyTagEnum.DATA_USER.getValue().equals(agBackwardPo.getAgencyTag())){
+				 chargePo.setAgencyId(agencyId);
+				 chargePo.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());//增加一个对公账户
+				 AgencyBackwardPo agencyPo = agencyVODao.get(agencyId);
+				 String userName = agencyPo.getUserName();
+				 chargePo.setAgencyName(userName);
+				 chargePo.setCreateTime(ccpo.getConfirmTime());
+				 chargePo.setRemittanceBankAccount(ccpo.getBankAccount());
+				 int addCharge = chargeAccountDao.add(chargePo);
+				 if(res + addCharge + popTag > 2){
+					return "success";
+				 }
+			 }
+			if(res + popTag > 1){
 				return "success";
 			}
 		}

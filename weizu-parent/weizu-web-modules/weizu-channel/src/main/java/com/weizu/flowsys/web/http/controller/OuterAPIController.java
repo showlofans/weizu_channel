@@ -53,7 +53,7 @@ public class OuterAPIController {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年9月1日 下午5:59:57
 	 */
-	@RequestMapping(value=OuterApiURL.MY_BALANCE)
+	@RequestMapping(value=OuterApiURL.MY_BALANCE,produces = "text/json;charset=UTF-8")
 	@ResponseBody
 	public String myBalance(String userName,String sign,@RequestParam(value="billType",required=false) Integer billType){
 			if(billType == null){
@@ -74,7 +74,7 @@ public class OuterAPIController {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月23日 下午4:48:53
 	 */
-	@RequestMapping(value=OuterApiURL.CHARGE)
+	@RequestMapping(value=OuterApiURL.CHARGE,produces = "text/json;charset=UTF-8")
 	@ResponseBody
 	public String chargePg(String userName, String number,Integer pgSize,
 			@RequestParam(value="scope",required=false)Integer scope, String sign,
@@ -131,7 +131,7 @@ public class OuterAPIController {
 	 * @createTime:2017年6月26日 上午10:55:24
 	 */
 	@ResponseBody
-	@RequestMapping(value=OuterApiURL.MY_ORDER_STATE)
+	@RequestMapping(value=OuterApiURL.MY_ORDER_STATE,produces = "text/json;charset=UTF-8")
 	public String myOrderState(String userName, String sign, Long orderId, 
 			@RequestParam(value="number", required=false)String number){
 		

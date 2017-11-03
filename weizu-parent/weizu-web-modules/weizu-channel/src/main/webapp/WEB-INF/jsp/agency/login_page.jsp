@@ -40,7 +40,7 @@ text-align:center;
 line-height:220px;
 } */
 </style>
-<title>后台登录 - 维族通道系统</title>
+<title>后台登录-微族通道系统</title>
 <meta name="keywords" content="">
 <meta name="description" content="">
 </head>

@@ -526,6 +526,15 @@ public class AgencyAOImpl implements AgencyAO {
 		}
 		return true;
 	}
+	
+	@Override
+	public boolean checkVerifiCode(String verifyCode) {
+		long res = agencyVODao.count(new WherePrams("verify_code", "=", verifyCode));
+		if(res > 0){
+			return true;//邀请码存在，允许注册
+		}
+		return false;
+	}
 
 	@Override
 	public AgencyBackwardPo getRootAgencyById(Integer agencyId) {

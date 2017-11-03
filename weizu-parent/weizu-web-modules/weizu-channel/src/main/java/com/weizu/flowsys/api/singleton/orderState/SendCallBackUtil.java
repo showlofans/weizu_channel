@@ -63,6 +63,7 @@ public class SendCallBackUtil {
 //				try {
 					i++;
 					String backJson = JSONObject.toJSONString(rjdto);
+					System.out.println("推送的json:"+ backJson);
 					resMsg = HttpRequest.sendPost(reportUrl, backJson);
 					if(i== CALL_BACK_TIME){
 						return "error";

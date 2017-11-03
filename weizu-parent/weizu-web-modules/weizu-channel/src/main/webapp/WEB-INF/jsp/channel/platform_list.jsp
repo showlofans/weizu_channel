@@ -123,7 +123,7 @@
 /*平台-添加*/
 function platform_add(title,url){
 	//alert("sd");
-	layer.open({
+	var index = layer.open({
         type: 2,
         title: false,
         area: ['650px', '560px'],
@@ -134,6 +134,7 @@ function platform_add(title,url){
             location.reload();
         }
     });
+	layer.full(index);
 }
 /*平台-编辑*/
 function platform_edit(title,url,id,w,h){

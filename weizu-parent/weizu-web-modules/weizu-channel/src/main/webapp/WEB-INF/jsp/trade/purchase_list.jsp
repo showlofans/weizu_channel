@@ -149,7 +149,7 @@
 						<!-- 结果 -->
 						<td>
 							<c:forEach items="${resultMap.orderStateEnums }" var="orderStateEnum" varStatus="vs">
-								<c:if test="${purchase.orderState == orderStateEnum.value }">
+								<c:if test="${purchase.orderResult == orderStateEnum.value }">
 									<span class="label label-defaunt radius">
 										${orderStateEnum.desc }
 									</span>

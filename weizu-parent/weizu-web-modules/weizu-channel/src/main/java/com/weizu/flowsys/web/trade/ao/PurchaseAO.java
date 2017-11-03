@@ -46,6 +46,16 @@ public interface PurchaseAO {
 	 * @createTime:2017年6月13日 下午12:52:58
 	 */
 	Pagination<PurchaseVO> getPurchase(Map<String, Object> resultMap,PurchaseVO purchaseVO,PageParam pageParam);
+	
+	/**
+	 * @description: 根据页面订单实体获得总记录数
+	 * @param purchaseVO
+	 * @param isCharged
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月3日 上午9:47:38
+	 */
+//	Long getTotalRecordByParams(PurchaseVO purchaseVO, Boolean isCharged);
 	/**
 	 * @description: 获得不分页列表
 	 * @param purchaseVO
@@ -53,7 +63,7 @@ public interface PurchaseAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年9月22日 上午9:53:53
 	 */
-	List<PurchaseVO> getPurchase(PurchaseVO purchaseVO);
+	Map<String,Object> getPurchaseMap(PurchaseVO purchaseVO);
 	
 	/**
 	 * @description:通过微族api充值

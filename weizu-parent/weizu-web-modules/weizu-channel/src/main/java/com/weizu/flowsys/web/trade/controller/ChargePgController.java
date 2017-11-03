@@ -655,32 +655,52 @@ public class ChargePgController {
 				break;
 			case 1://充值成功
 				int callTag = 0; 
-				if(httpSession.getAttribute("lastSearch") == null){
+				//不统计的情况：记录数一样，并且搜索条件也一样的，就不重新统计
+				///需要统计的情况：记录数不一样，搜索条件不一样
+				Map<String,Object> dataMap = purchaseAO.getPurchaseMap(purchaseVO);
+				Long totalRecord = 0l;
+				if(dataMap.get("totalRecord") != null){
+					totalRecord = Long.parseLong(dataMap.get("totalRecord").toString());
+				}
+				Long sessionTotal = 0l;
+				if(httpSession.getAttribute("sessionTotal") != null){
+					sessionTotal = Long.parseLong(httpSession.getAttribute("sessionTotal").toString());
+				}
+				
+				if(httpSession.getAttribute("lastSearch") == null){//统计最初的数据
+					if(totalRecord != 0){
+						httpSession.setAttribute("sessionTotal", totalRecord);
+					}
 					httpSession.setAttribute("lastSearch", purchaseVO);
 					//没有搜索过，就可以统计一遍
 					callTag = 1;
-				}else{
+				}else{//
 					PurchaseVO pvo = (PurchaseVO)httpSession.getAttribute("lastSearch");
 					PurchaseVO pvoC = pvo.clone();
 					PurchaseVO sample = purchaseVO.clone();
 					ignoreEndTime(pvoC,sample);
-					if(!ClassUtil.contrastObj(pvoC, sample)){
+					if(!ClassUtil.contrastObj(pvoC, sample) || !totalRecord.equals(sessionTotal)){//搜索参数不一样进行统计//看session中的总记录数和查出来的总记录数是否相等，不相等，就进行重新统计
 						callTag = 1;
 						//查询参数不相等，就把新的purhcaeVO放到lastSearch中
 						httpSession.setAttribute("lastSearch", purchaseVO);
+						httpSession.setAttribute("sessionTotal", totalRecord);
 					}
 				}
-				List<PurchaseVO> records = purchaseAO.getPurchase(purchaseVO);
-				if(callTag == 1 && records != null && records.size() > 0){
-					System.out.println(callTag +"-开始统计总扣款");
-					TotalResult tot = purchaseAO.getTotalResultFromSuccess(purchaseVO);
-					Double totalCost = 0.00d;
-					for (PurchaseVO purchaseVO2 : records) {
-						totalCost = NumberTool.add(totalCost, purchaseVO2.getOrderAmount());
+				
+				if(dataMap.get("records") != null){
+					List<PurchaseVO> records = (List<PurchaseVO>)dataMap.get("records");
+					//进行统计
+					if(callTag == 1  && records.size() > 0){
+						System.out.println(callTag +"-开始统计总扣款");
+						TotalResult tot = purchaseAO.getTotalResultFromSuccess(purchaseVO);
+						Double totalCost = 0.00d;
+						for (PurchaseVO purchaseVO2 : records) {
+							totalCost = NumberTool.add(totalCost, purchaseVO2.getOrderAmount());
+						}
+						tot.setTotalCost(totalCost);
+						System.out.println("总成本："+totalCost);
+						httpSession.setAttribute("tot", tot);
 					}
-					tot.setTotalCost(totalCost);
-					System.out.println("总成本："+totalCost);
-					httpSession.setAttribute("tot", tot);
 				}
 //				else{
 //					httpSession.setAttribute("tot", null);

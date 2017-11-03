@@ -62,7 +62,7 @@
     <div class="md-section-divider"></div>
     <h1 data-anchor-id="xbv3" id="南昌微族流量接口文档">平台接口文档</h1>
     <blockquote data-anchor-id="tger" class="white-blockquote"> 
-   <p><strong>南昌微族流量充值平台入口：<a href="http://120.55.162.224:8082" target="_blank">http://120.55.162.224:8082</a></strong></p> 
+   <p><strong>南昌微族流量充值平台入口：<a href="http://120.55.162.224" target="_blank">http://120.55.162.224</a></strong></p> 
    <p>接口使用前提：完成对公账户的认证</p> 
    <p><!-- 版本:V1.0  -->更新时间：2017-11-01 17:59:00</p> 
    <p><!-- 版本:V1.0  -->接口对接咨询：3004599415#qq.com</p> 
@@ -87,7 +87,7 @@
     <h3 data-anchor-id="agyx" id="2apikey">2.apikey</h3>
     <blockquote data-anchor-id="yyp6" class="white-blockquote"> 
      <ol> 
-      <li><!-- 后台查看或者 -->询问管理员</li> 
+      <li>后台查看或者询问管理员</li> 
      </ol> 
     </blockquote>
     <table data-anchor-id="0d6i" class="table table-striped-white table-bordered"> 
@@ -114,8 +114,8 @@
     <ul data-anchor-id="ic13"> 
      <li>请求方式:
       <!-- POST/ -->GET</li> 
-     <li>举例地址:<a href="http://120.55.162.224:8082/flowsys/weizuAPI/charge?userName=xxxx&amp;number=13333333333&amp;pgSize=5&amp;userOrderId=123123&amp;sign=225345C671534666D1232ACE718A690B" target="_blank">http://120.55.162.224:8082/flowsys/weizuAPI/charge?userName=xxxx&amp;number=13333333333&amp;pgSize=5&amp;userOrderId=123123&amp;<!-- timestamp=1502677243503&amp; -->sign=225345C671534666D1232ACE718A690B</a></li> 
-     <li>请求地址:<a href="http://120.55.162.224:8082/flowsys/weizuAPI/charge" target="_blank">http://120.55.162.224:8082/flowsys/weizuAPI/charge </a></li> 
+     <li>举例地址:<a href="http://120.55.162.224/flowsys/weizuAPI/charge?userName=xxxx&amp;number=13333333333&amp;pgSize=5&amp;userOrderId=123123&amp;sign=225345C671534666D1232ACE718A690B" target="_blank">http://120.55.162.224/flowsys/weizuAPI/charge?userName=xxxx&amp;number=13333333333&amp;pgSize=5&amp;userOrderId=123123&amp;<!-- timestamp=1502677243503&amp; -->sign=225345C671534666D1232ACE718A690B</a></li> 
+     <li>请求地址:<a href="http://120.55.162.224/flowsys/weizuAPI/charge" target="_blank">http://120.55.162.224/flowsys/weizuAPI/charge </a></li> 
      <li>请求参数:</li> 
     </ul>
     <table data-anchor-id="3aar" class="table table-striped-white table-bordered"> 
@@ -168,7 +168,7 @@
        <td style="text-align:left;">pgType</td> 
        <td style="text-align:left;">int</td> 
        <td style="text-align:left;">否</td> 
-       <td style="text-align:left;">流量类型：值为0代表全国漫游流量，值为1代表流量包，值为2代表流量池。不传即默认为1</td> <!-- （1-流量包，2-流量池） -->
+       <td style="text-align:left;">流量类型：值为1代表流量包，值为2代表流量池。不传即默认为1</td> <!-- （1-流量包，2-流量池） -->
       </tr> 
       <tr> 
        <td style="text-align:left;">pgValidity</td> 
@@ -316,7 +316,7 @@
     <h3 data-anchor-id="hju9" id="3获取账号余额">3.获取账号余额</h3>
     <ul data-anchor-id="cqrx"> 
      <li>请求方式:GET</li> 
-     <li>请求地址:<a href="http://120.55.162.224:8082/flowsys/weizuAPI/my_balance?userName=xxxx&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2&amp;billType=0" target="_blank">http://120.55.162.224:8082/flowsys/weizuAPI/my_balance?userName=xxxx&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2&amp;billType=0</a></li> 
+     <li>请求地址:<a href="http://120.55.162.224/flowsys/weizuAPI/my_balance?userName=xxxx&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2&amp;billType=0" target="_blank">http://120.55.162.224/flowsys/weizuAPI/my_balance?userName=xxxx&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2&amp;billType=0</a></li> 
      <li>数据格式:key=value</li> 
      <li>请求参数: 
       <table data-anchor-id="op24" class="table table-striped-white table-bordered"> 
@@ -381,7 +381,7 @@
     <h3 data-anchor-id="scug" id="4获取某一订单详情">4.获取某一订单详情</h3>
     <ul data-anchor-id="jkh7"> 
      <li>请求方式:GET</li> 
-     <li>请求地址:<a href="http://120.55.162.224:8082/flowsys/weizuAPI/my_order_state?userName=xxxx&amp;orderId=745830224406515712&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2" target="_blank">http://120.55.162.224:8082/flowsys/weizuAPI/my_order_state?userName=xxxx&amp;orderId=745830224406515712&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2</a></li> 
+     <li>请求地址:<a href="http://120.55.162.224/flowsys/weizuAPI/my_order_state?userName=xxxx&amp;orderId=745830224406515712&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2" target="_blank">http://120.55.162.224/flowsys/weizuAPI/my_order_state?userName=xxxx&amp;orderId=745830224406515712&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2</a></li> 
      <li>数据格式:key=value</li> 
      <li>请求参数:</li> 
     </ul>
@@ -405,7 +405,7 @@
        <td style="text-align:left;">orderId</td> 
        <td style="text-align:left;">Long</td> 
        <td style="text-align:left;">是</td> 
-       <td style="text-align:left;">订单ID<!--， 即orderId（user_orderId 和 orderId 至少传一个值，同时传优先选择 orderId) --></td> 
+       <td style="text-align:left;">平台返的充值订单号<!--， 即orderId（user_orderId 和 orderId 至少传一个值，同时传优先选择 orderId) --></td> 
       </tr> 
      <!--  <tr> 
        <td style="text-align:left;">user_orderId</td> 

@@ -48,6 +48,10 @@ public class AgencyURL extends BaseURL {
 	 */
 	public static final String REGISTER_CHECK_NAME = "/register_check_name" + DYNAMIC_WEB_SUFFIX;
 	/**
+	 * ajax验证注册邀请码是否存在
+	 */
+	public static final String REGISTER_CHECK_CODE = "/register_check_code" + DYNAMIC_WEB_SUFFIX;
+	/**
 	 * 查询自己的邀请码信息
 	 */
 	public static final String GET_VERIFY_CODE = "/get_verify_code" + DYNAMIC_WEB_SUFFIX;

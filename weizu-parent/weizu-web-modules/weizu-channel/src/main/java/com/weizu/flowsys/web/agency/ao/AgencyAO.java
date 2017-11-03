@@ -172,6 +172,17 @@ public interface AgencyAO {
 	 * @createTime:2017年8月17日 上午11:27:54
 	 */
 	boolean checkName(String name); 
+
+	/**
+	 * @description: remote验证邀请码是否存在
+	 * @param verifiCode
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月3日 下午2:48:14
+	 */
+	boolean checkVerifiCode(String verifiCode); 
+	
+	
 	
 	/**
 	 * @description: 查看登陆用户是否合法（密码是否正确）
