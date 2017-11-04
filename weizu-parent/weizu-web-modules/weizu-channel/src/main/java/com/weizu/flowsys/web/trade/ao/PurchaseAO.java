@@ -174,4 +174,13 @@ public interface PurchaseAO {
 	 */
 	String ajaxCommitOrder(Long orderId,Integer accountId,String chargeTelDetail);
 	
+	/**
+	 * @description: 批量提交订单
+	 * @param purchaseVO
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月4日 上午9:56:37
+	 */
+	String batchCommitOrder(PurchaseVO purchaseVO);
+	
 }

@@ -45,6 +45,8 @@ public class PurchasePo extends Po {
     private String orderResultDetail;			//结果描述(超管失败原因)
     
     private Double orderAmount;					//扣款:用与判断订单价格是否高于余额
+
+    private Double pgPrice;					//扣款:用与判断订单价格是否高于余额
 //    @TempField
 //    private Long recordId;						//消费记录id-外键
     @TempField
@@ -69,6 +71,15 @@ public PurchasePo(String chargeTel, Integer pgId,
 		this.chargeTelDetail = chargeTelDetail;
 	}
 
+
+public Double getPgPrice() {
+	return pgPrice;
+}
+
+
+public void setPgPrice(Double pgPrice) {
+	this.pgPrice = pgPrice;
+}
 
 
 /** 接口充值构造订单

@@ -2,13 +2,38 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui/css/H-ui.min.css" />
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/H-ui.admin.css" />
 <link rel="stylesheet" type="text/css" href="/view/lib/Hui-iconfont/1.0.8/iconfont.css" /> 
 <title>错误页面</title>
 </head>
-<body  bgcolor="#DAF9FE">
+<body>
+	<section class="container-fluid page-404 minWP text-c">
+	<p class="error-description">系统最后更新时间：${applicationScope.startupTime }</p>
+	<p class="error-title"><i class="Hui-iconfont va-m" style="font-size:80px">&#xe688;</i>
+		<span class="va-m"> 500-12</span>
+	</p>
+	<p class="error-description">您暂时不在登陆状态~</p>
+	 <c:choose>
+       	<c:when test="${not empty errorMsg }">
+       		<p class="error-description">${errorMsg }</p>
+       	</c:when>
+       	<c:otherwise>
+       		<p class="error-description">系统维护之后，用户未登陆！！</p>
+       	</c:otherwise>
+      </c:choose>
+	<p class="error-info">您可以：
+		<a href="javascript:;" onclick="history.go(-1)" class="c-primary">&lt; 返回重新登陆</a>
+		<span class="ml-20">|</span>
+		<!-- <a class="btn btn-success radius" href="javascript:parent.location.reload();" title="去首页"><i class="Hui-iconfont">&#xe68f;</i></a> -->
+		<a href="javascript:parent.location.reload();" class="c-primary ml-20">刷新登陆 &gt;</a>
+	</p>
+	</section>
 <%-- <table width="100%" border="0" cellspacing="0" bordercolor="#B0E1B3">
   <tr>
     <td bordercolor="#FFFFFF" bgcolor="#80D7F0">
@@ -48,7 +73,7 @@
    </td>
   </tr>
 </table> --%>
-<table width="100%" border="0" cellspacing="0" bordercolor="">
+<%-- <table width="100%" border="0" cellspacing="0" bordercolor="">
   <tr>
     <td bordercolor="#FFFFFF" bgcolor="#80D7F0">
       <table width="100%" border="0" align="center">
@@ -86,6 +111,6 @@
       </table>
    </td>
   </tr>
-</table> 
+</table> --%> 
 </body>
 </html>

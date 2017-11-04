@@ -727,7 +727,6 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	public RateDiscountPo getRateForCharge(ChargeChannelParamsPo ccpp,
 			int accountId, Boolean judgeChannelState) {
 		Map<String, Object> params = new HashMap<String, Object>();
-		//用不带票的账户去获得价格
 		params.put("accountId", accountId);
 		params.put("bindState", BindStateEnum.BIND.getValue());
 		params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());

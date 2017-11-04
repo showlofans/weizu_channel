@@ -8,8 +8,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
 <META HTTP-EQUIV="Pragma" CONTENT="no-cache"> 
-	<META HTTP-EQUIV="Cache-Control" CONTENT="no-cache"> 
-	<META HTTP-EQUIV="Expires" CONTENT="0"> 
+<!-- <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache"> 
+<META HTTP-EQUIV="Expires" CONTENT="0">  -->
 <link rel="Bookmark" href="/view/iconW.jpg" >
 <link rel="Shortcut Icon" href="/view/iconW.jpg" />
 <link href="/view/iconW.jpg" type="image/x-icon" rel="icon">
@@ -138,13 +138,21 @@
 			<dt><i class="Hui-iconfont">&#xe687;</i> 订单管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
-					<li><a data-href="/flowsys/chargePg/purchase_list.do" data-title="订单列表" href="javascript:void(0)">订单列表</a></li>
-					<li><a data-href="/flowsys/chargePg/purchase_list.do?orderState=2" data-title="充值进行" href="javascript:void(0)">充值进行</a></li>
-					<c:if test="${loginContext.rootAgencyId == 0 }">
-					<li><a data-href="/flowsys/chargePg/purchase_list.do?orderState=4" data-title="充值等待" href="javascript:void(0)">充值等待</a></li>
-					</c:if>
-					<li><a data-href="/flowsys/chargePg/purchase_list.do?orderState=1" data-title="充值成功" href="javascript:void(0)">充值成功</a></li>
-					<li><a data-href="/flowsys/chargePg/purchase_list.do?orderState=0" data-title="充值失败" href="javascript:void(0)">充值失败</a></li>
+					<c:choose>
+						<c:when test="${loginContext.rootAgencyId == 0 }">
+							<li><a data-href="/flowsys/chargePg/purchase_list.do" data-title="订单列表" href="javascript:void(0)">订单列表</a></li>
+							<li><a data-href="/flowsys/chargePg/purchase_list.do?orderResult=2" data-title="充值进行" href="javascript:void(0)">充值进行</a></li>
+							<li><a data-href="/flowsys/chargePg/purchase_list.do?orderResult=4" data-title="充值等待" href="javascript:void(0)">充值等待</a></li>
+							<li><a data-href="/flowsys/chargePg/purchase_list.do?orderResult=1" data-title="充值成功" href="javascript:void(0)">充值成功</a></li>
+							<li><a data-href="/flowsys/chargePg/purchase_list.do?orderResult=0" data-title="充值失败" href="javascript:void(0)">充值失败</a></li>
+						</c:when>
+						<c:otherwise>
+							<li><a data-href="/flowsys/chargePg/purchase_list.do" data-title="订单列表" href="javascript:void(0)">订单列表</a></li>
+							<li><a data-href="/flowsys/chargePg/purchase_list.do?orderState=2" data-title="充值进行" href="javascript:void(0)">充值进行</a></li>
+							<li><a data-href="/flowsys/chargePg/purchase_list.do?orderState=1" data-title="充值成功" href="javascript:void(0)">充值成功</a></li>
+							<li><a data-href="/flowsys/chargePg/purchase_list.do?orderState=0" data-title="充值失败" href="javascript:void(0)">充值失败</a></li>
+						</c:otherwise>
+					</c:choose>
 			</ul>
 		</dd>
 	</dl>

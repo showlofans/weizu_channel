@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.trade.ao;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -229,7 +230,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 			return "调用接口异常";
 		}
 		purchasePo.setChargeTelCity(chargeTelCity);
-		Boolean isChannelStateCanceled = channel.getChannelState() == ChannelUseStateEnum.CLOSE.getValue();
+		Boolean isChannelStateCanceled = channel.getChannelState() == ChannelStateEnum.CLOSE.getValue();
 		if(isChannelStateCanceled){
 			orderResult = OrderStateEnum.DAICHONG.getValue();
 			orderResultDetail = "通道暂停等待";
@@ -443,55 +444,62 @@ public class PurchaseAOImpl implements PurchaseAO {
 	@Transactional
 	@Override
 	public String ajaxCommitOrder(Long orderId,Integer accountId,String chargeTelDetail) {
+		String res = "error";
+		
 		ChannelDiscountPo cd = channelDiscountDao.getCDbyAP(orderId, accountId);
-		/**todo*/
+		/**todo*///超管的单子是不会有充值等待的；只有下级代理商的单子才有充值等待
 		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo(chargeTelDetail, cd.getServiceType(), null, null, null) , accountId,true);
-		PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
+		
 		if(ratePo != null){
-			int billType = ratePo.getBillType();//票务全部使用费率配置的票务
-			//更新消费记录表（先更新账户余额，再更新订单，最后更新记录）
-			ChargeAccountPo accountPo = chargeAccountDao.get(accountId);
-			
-			/**账户信息的更新结果*/
-			int recordRes = 0;
-			
-			AgencyBackwardPo rootAgencyPo = agencyVODao.getRootAgencyById(accountPo.getAgencyId()) ;
-			/**充值额（）*/
-			Double orderAmount = purchasePo.getOrderAmount();
-			//在二级代理商的情况下才去判断余额
-			boolean ifLackBalance = rootAgencyPo != null && orderAmount < accountPo.getAccountBalance();
-			Long currentTime = System.currentTimeMillis();
-			int orderPath = OrderPathEnum.CHARGE_SOCKET.getValue();
-			Integer orderResult = null;
-			if(!ifLackBalance){//订单价格大于余额
-				logger.config("余额不足或者不是接口用户，下单失败");
-				return "余额不足，下单失败";
+			ChannelChannelPo cnelPo = channelChannelDao.get(ratePo.getChannelId());
+			if(cnelPo != null && cnelPo.getChannelState().equals(ChannelStateEnum.OPEN.getValue())){//通道是开启的
+				PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
+				//更新消费记录表（先更新账户余额，再更新订单，最后更新记录）
+				ChargeAccountPo accountPo = chargeAccountDao.get(accountId);
+				
+				/**账户信息的更新结果*/
+				int recordRes = 0;
+				
+				/**重置充值额（）*/
+				Double orderAmount = NumberTool.mul(ratePo.getActiveDiscount(), purchasePo.getPgPrice());
+				purchasePo.setOrderAmount(orderAmount);
+				
+				
+				//在二级代理商的情况下才去判断余额
+				//AgencyBackwardPo rootAgencyPo = agencyVODao.getRootAgencyById(accountPo.getAgencyId()) ;
+				//默认都是二级代理商
+				//boolean ifLackBalance = ;//rootAgencyPo != null
+				//Long currentTime = System.currentTimeMillis();
+				//int orderPath = OrderPathEnum.CHARGE_SOCKET.getValue();
+				Integer orderResult = null;
+				if(orderAmount > accountPo.getAccountBalance()){//订单价格大于余额
+					logger.config("余额不足或者不是接口用户，下单失败");
+					return "余额不足，下单失败";
 //			resultMap.put("referURL", "/flowsys/chargePg/purchase_list.do?orderResult=2");
-			}else{
-				if(ChargeStatusEnum.LACK_OF_BALANCE.getDesc().equals(purchasePo.getOrderResultDetail())){//因为是超管提交订单，所以可以用订单表的状态
-					//因为欠费而导致充值等待，提单不会扣款，再次提交的时候就需要把扣款加上（欠费用户或者授信用户才会出现的情况）
-					/**充值前余额*/
-					Double agencyBeforeBalance = accountPo.getAccountBalance();
-					
-					accountPo.addBalance(orderAmount,-1);
-					/** 更新登录用户账户信息**/
-					recordRes = chargeAccountAO.updateAccount(accountPo);
-					if(recordRes > 0){
-						Long rateDiscountId = ratePo.getId();			//折扣id
-						
-						//开始把第一个消费记录，连接加上，
-						/** 向消费记录表插入登陆用户数据 */
+				}else{
+					//接口订单出现欠费等待
+					if(ChargeStatusEnum.LACK_OF_BALANCE.getDesc().equals(purchasePo.getOrderResultDetail())){//因为是超管提交订单，所以可以用订单表的状态
+						//因为欠费而导致充值等待，提单不会扣款，再次提交的时候就需要把扣款加上（欠费用户或者授信用户才会出现的情况）
+						/**充值前余额*/
+						//Double agencyBeforeBalance = accountPo.getAccountBalance();
+						//accountPo.addBalance(orderAmount,-1);
+						/** 更新登录用户账户信息**/
+						//recordRes = chargeAccountAO.updateAccount(accountPo);
+						//if(recordRes > 0){
+							//Long rateDiscountId = ratePo.getId();			//折扣id
+							//开始把第一个消费记录，连接加上，
+							/** 向消费记录表插入登陆用户数据 */
 //						Long nextIdRecord = chargeRecordDao.nextId();
-						chargeRecordDao.add(new ChargeRecordPo(currentTime, orderAmount,
-								agencyBeforeBalance, accountPo.getAccountBalance(), 
-								AccountTypeEnum.DECREASE.getValue(), accountId, 1 , orderId));
-						/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
-					}
-					
-				}else{//其他原因导致充值等待(因为下游还是显示充值进行，所以只需要更新)
-					//超管绑定的账户类型，应该和通道折扣类型一样
-					ChargeAccountPo superAccountPo = chargeAccountAO.getRootAccountById(accountId, cd.getBillType());
-					AccountPurchasePo superApPo = accountPurchaseDao.get(new WherePrams("account_id", "=", superAccountPo.getId()).and("purchase_id", "=", orderId));
+//							chargeRecordDao.add(new ChargeRecordPo(currentTime, orderAmount,
+//									agencyBeforeBalance, accountPo.getAccountBalance(), 
+//									AccountTypeEnum.DECREASE.getValue(), accountId, 1 , orderId));
+							/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
+//						}
+						
+					}else{//其他原因导致充值等待(因为下游还是显示充值进行，所以只需要更新)
+						//超管绑定的账户类型，应该和通道折扣类型一样
+						ChargeAccountPo superAccountPo = chargeAccountAO.getRootAccountById(accountId, cd.getBillType());
+						AccountPurchasePo superApPo = accountPurchaseDao.get(new WherePrams("account_id", "=", superAccountPo.getId()).and("purchase_id", "=", orderId));
 //					ChargeAccountPo superAccountPo = chargeAccountAO.getAccountByAgencyId(superAgencyId, cd.getBillType());
 //					Double superOrderAmount = superApPo.getOrderAmount();//超管的成本
 //					Double superAgencyBeforeBalance = superAccountPo.getAccountBalance();
@@ -508,43 +516,63 @@ public class PurchaseAOImpl implements PurchaseAO {
 //					if(charge!= null){
 //						orderResultDetail = charge.getTipMsg();
 //					}
-					superApPo.setRateDiscountId(cd.getId());//ap中的通道折扣id只对超级管理员有用
-					superApPo.setOrderState(orderResult);
-					superApPo.setOrderStateDetail(OrderStateEnum.CHARGING.getDesc());
-					accountPurchaseDao.update(superApPo);
-					logger.config("通道暂停后，再次提交");
+						superApPo.setRateDiscountId(cd.getId());//ap中的通道折扣id只对超级管理员有用
+						superApPo.setOrderState(orderResult);
+						superApPo.setOrderStateDetail(OrderStateEnum.CHARGING.getDesc());
+						accountPurchaseDao.update(superApPo);
+						logger.config("通道暂停后，再次提交");
+					}
 				}
-			}
 //			AgencyPurchasePo apPo = accountPurchaseDao.get(new WherePrams("agency_id", "=", agencyId).and("purchase_id", "=", orderId));
-			//重新设置某笔订单某个代理商相关的通道信息，以便通过正确的费率通道去查询最新的结果
-			AccountPurchasePo apPo = new AccountPurchasePo();
+				//重新设置某笔订单某个代理商相关的通道信息，以便通过正确的费率通道去查询最新的结果
+				AccountPurchasePo apPo = new AccountPurchasePo();
 //			RateDiscountPo nowRatePo = rateDiscountAO.getRateByAcountIdAndCDId(cd.getId(), accountId);
 //			if(nowRatePo != null){
 //				
 //			}else{
 //				
 //			}
-			 apPo.setRateDiscountId(ratePo.getId());
+				apPo.setRateDiscountId(ratePo.getId());
 //			 int aapUpdRes = accountPurchaseDao.update(apPo);
-			 int aapUpdRes = accountPurchaseDao.updateLocal(apPo, new WherePrams("account_id", "=", accountId).and("purchase_id", "=", orderId));
-			 
-			ExchangePlatformPo epPo = channelChannelDao.getEpByChannelId(ratePo.getChannelId());
-			String scopeCityCode = PurchaseUtil.getScopeCityByCarrier(chargeTelDetail).get("scopeCityCode").toString();
-			ProductCodePo pc = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, epPo.getId(), purchasePo.getPgId()));
+				int aapUpdRes = accountPurchaseDao.updateLocal(apPo, new WherePrams("account_id", "=", accountId).and("purchase_id", "=", orderId));
+				
+				ExchangePlatformPo epPo = channelChannelDao.getEpByChannelId(ratePo.getChannelId());
+				String scopeCityCode = StringHelper.isNotEmpty(chargeTelDetail)?PurchaseUtil.getScopeCityByCarrier(chargeTelDetail).get("scopeCityCode").toString():null;
+				ProductCodePo pc = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, epPo.getId(), purchasePo.getPgId()));
 //			if(!channelPo.getChannelState() == ChannelStateEnum.CLOSE.getValue()){
-			chargeByBI(epPo, orderId, purchasePo.getChargeTel(),cd.getServiceType(), pc.getProductCode());
+				ChargeDTO chargeDTO= chargeByBI(epPo, orderId, purchasePo.getChargeTel(),cd.getServiceType(), pc.getProductCode());
+				String orderResultDetail = null;
+				if(chargeDTO != null){
+					if(chargeDTO.getTipCode().equals(OrderResultEnum.SUCCESS.getCode()) ){
+						orderResult = OrderStateEnum.CHARGING.getValue();
+						orderResultDetail = OrderStateEnum.CHARGING.getDesc();
+						ChargeOrder co = chargeDTO.getChargeOrder();
+						if(co != null){
+							purchasePo.setOrderIdApi(co.getOrderIdApi());
+						}
+						res = "success";
+					}else{
+						orderResult = OrderStateEnum.DAICHONG.getValue();
+						orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+chargeDTO.getTipMsg();
+					}
+				}else{
+					orderResult = OrderStateEnum.DAICHONG.getValue();
+					orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+"平台直接返失败";
+				}
+				purchasePo.setOrderResult(orderResult);
+				purchasePo.setOrderResultDetail(orderResultDetail);
+				purchaseDAO.updateLocal(purchasePo,new WherePrams("order_id", "=", orderId));
+				
 //			BaseInterface bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(pc.getProductCode(),orderId,purchasePo.getChargeTel(),cd.getServiceType(),epPo));
 //			ChargeDTO chargeDTO = bi.charge();
 //			String orderIdApi = chargeDTO.getChargeOrder().getOrderIdApi();
 //			logger.config("上游返回的订单号："+ orderIdApi);//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
 //			purchasePo.setOrderIdApi(orderIdApi);
 //			purchasePo.setOrderArriveTime(currentTime);
-//			int upResPur = purchaseDAO.updateLocal(purchasePo,new WherePrams("order_id", "=", orderId));
-		}//费率存在
-		else{
-			return "error";
+			}//费率存在
 		}
-		return "success";
+			
+		return res;
 	}
 	
 //	@Override
@@ -1144,6 +1172,40 @@ public class PurchaseAOImpl implements PurchaseAO {
 		}
 		List<PgDataPo> pgList = operatorPgDao.getPgByChanel(objMap);
 		return pgList;
+	}
+
+	
+	@Override
+	public String batchCommitOrder(PurchaseVO purchaseVO) {
+		Map<String,Object> dataMap = getPurchaseMap(purchaseVO);
+		List<PurchaseVO> records = new ArrayList<PurchaseVO>();
+		if(dataMap.get("records") != null){
+			records = (List<PurchaseVO>)dataMap.get("records");
+		}
+//		String res = "success";
+//		while(res.equals("success")){
+//			
+//			res = ajaxCommitOrder(purchaseVO2.getOrderId(), purchaseVO2.getAccountId(), purchaseVO2.getChargeTelDetail());
+//		}
+		int successTag = 0;
+		int errorTag = 0;
+		
+		for (PurchaseVO purchaseVO2 : records) {
+			String res = ajaxCommitOrder(purchaseVO2.getOrderId(), purchaseVO2.getAccountId(), purchaseVO2.getChargeTelDetail());
+			if("success".equals(res)){
+				successTag++;
+			}else{
+				errorTag++;
+			}
+		}
+		StringBuffer sb = new StringBuffer();
+		sb.append("批量成功了 ");
+		sb.append(successTag);
+		sb.append("单,失败了 ");
+		sb.append(errorTag);
+		sb.append("单");
+		System.out.println(sb.toString());
+		return sb.toString();
 	}
 
 	

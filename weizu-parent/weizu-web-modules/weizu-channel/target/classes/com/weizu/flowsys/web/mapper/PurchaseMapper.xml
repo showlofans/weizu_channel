@@ -28,6 +28,8 @@
     <result column="channel_name" property="channelName" jdbcType="BIGINT" />
     <result column="order_amount" property="orderAmount" jdbcType="DOUBLE" />
     <result column="bill_type" property="billType" jdbcType="INTEGER" />
+    
+    <result column="pg_price" property="pgPrice" jdbcType="DOUBLE" />
   </resultMap>
   <!--  订单页面 -->
   <resultMap id="VOResultMap" type="com.weizu.flowsys.web.trade.pojo.PurchaseVO" >
@@ -119,8 +121,10 @@
   
   <!-- 通过订单号查询订单 -->
   <select id="getOnePurchase" parameterType="java.lang.Long" resultMap="BaseResultMap">
-  	select <include refid="Base_Column_List"></include>
-  	from <include refid="t_purchase"></include>
+  	select <include refid="Base_Column_List"></include>,pg.pg_price
+  	from <include refid="t_purchase"></include> pur
+  	inner join <include refid="t_pg"></include> pg
+  	on pg.id = pur.pg_id
   	where order_id = #{_parameter}
   </select>
   <!-- 任意一个条件查询是否存在重复订单:优先取订单号去判断 -->

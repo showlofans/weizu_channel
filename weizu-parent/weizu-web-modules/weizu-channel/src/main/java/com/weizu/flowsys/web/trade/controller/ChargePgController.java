@@ -871,9 +871,19 @@ public class ChargePgController {
 	@ResponseBody
 	@RequestMapping(value=ChargePgURL.BATCH_COMMIT_ORDER)
 	public String batchCommitOrder(PurchaseVO purchaseVO){
+		String res = "error";
+		//只有待冲的单子可以批量提交
+		if(purchaseVO.getOrderResult().equals(OrderStateEnum.DAICHONG.getValue())){
+//			Map<String,Object> dataMap = purchaseAO.getPurchaseMap(purchaseVO);
+//			List<PurchaseVO> records = new ArrayList<PurchaseVO>();
+//			if(dataMap.get("records") != null){
+//				records = (List<PurchaseVO>)dataMap.get("records");
+//			}
+			res = purchaseAO.batchCommitOrder(purchaseVO);
+			
+		}
 		
-		
-		return "error";
+		return res;
 	}
 	
 	

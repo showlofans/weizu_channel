@@ -87,7 +87,9 @@
 					<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<button class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 					<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
+					<input type="hidden" id="totalRecordLong" value="${resultMap.pagination.totalRecordLong }"> 
 					<input type="hidden" name="orderResult" value="${resultMap.searchParams.orderResult }">
+					<input type="hidden" name="orderState" value="${resultMap.searchParams.orderState }">
 				</div>
 				<!--  <div class="form-group pt5">提交时间：<div class="input-group" style="width:150px"><span class="input-group-addon"><i class="fa fa-calendar ft13em"></i></span> <input type="text" placeholder="开始时间" data-date-format="YYYY-MM-DD HH:mm:ss" name="created_start" id="created_start"></div>--
 				<div class="input-group" style="width:150px"><span class="input-group-addon"><i class="fa fa-calendar ft13em"></i></span> <input type="text" placeholder="结束时间" data-date-format="YYYY-MM-DD HH:mm:ss" name="created_end" id="created_end"></div>
@@ -103,7 +105,7 @@
 		<table class="table table-border table-bordered table-bg table-hover table-sort">
 			<thead>
 				<tr class="text-c">
-					<th width="25"><input type="checkbox" name="" value=""></th>
+					<!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
 					<th width="100">所属代理商</th>
 					<th width="150">订单号</th>
 					<th width="100">手机号</th>
@@ -127,7 +129,7 @@
 			<tbody>
 				<c:forEach items="${resultMap.pagination.records }" var="purchase" varStatus="vs">
 					<tr class="text-c">
-						<td><input type="checkbox" class="ckpur" value="" name=""></td>
+						<!-- <td><input type="checkbox" class="ckpur" value="" name=""></td> -->
 						<td style="display:none;">${purchase.accountId }</td>
 						<td>${purchase.agencyName }</td>
 						<td>${purchase.orderId }</td>
@@ -215,18 +217,44 @@
 <script type="text/javascript">
 /**批量提交*/
 function batchCommit(){
-	var purchaseIds = "";
+	/* var purchaseIds = "";
 	var accountIds = "";
 	$(".ckpur:checked").each(function(){ //遍历table里的全部checkbox
        // allcheckbox += $(this).next().html() + ","; //获取所有checkbox的值
         //alert($(this).is(':checked'));
         	accountIds += $(this).next().html() + ","; //获取被选中的代理商id
         	purchaseIds +=  $(this).next().next().next().html() + ",";
-    });
+    }); 
         	//alert(accountIds);
 	if(accountIds.length > 1) //如果获取到
-    {
-    	accountIds = accountIds.substring(0, accountIds.length - 1);
+    {*/
+		var totalRecordLong = $('#totalRecordLong').val();
+		if(totalRecordLong < 1){
+			layer.msg('没有订单可以提');
+		}else if(totalRecordLong > 15){
+			layer.msg('不能批量提交过多订单最大为 15');
+		}else{
+			$.ajax({
+				type: 'POST',
+				url: "/flowsys/chargePg/batch_commit_order.do",
+				//dataType: 'json',
+				data: {purchaseIds:purchaseIds,accountIds:accountIds},
+				success: function(resp){
+					//$(obj).parents("tr").remove();
+					//alert
+					if(resp=="success"){
+						//layer.msg('更新绑定成功',{icon:1,time:1000});
+						location.reload();
+	               	 }else{
+						layer.msg('更新绑定失败',{icon:1,time:1000});
+	               	 }
+				},
+				error:function(resp) {
+					console.log(resp.msg);
+				}
+			}); 
+		}
+    	/* accountIds = accountIds.substring(0, accountIds.length - 1);
     	purchaseIds = purchaseIds.substring(0, purchaseIds.length - 1);
     	alert(purchaseIds);
     	$.ajax({
@@ -248,9 +276,9 @@ function batchCommit(){
 				console.log(resp.msg);
 			}
 		});
-    }else{
+    	}else{
     	alert("未选中");
-    } 
+    }  */
 }
 function formSub(){
 	$('form').submit();
