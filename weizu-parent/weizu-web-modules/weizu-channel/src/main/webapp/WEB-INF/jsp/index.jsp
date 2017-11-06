@@ -109,13 +109,13 @@
 				<dt><i class="Hui-iconfont">&#xe679;</i> 通道管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 				<dd>
 					<ul>
-						<li><a data-href="/flowsys/channel/channel_add_page.do" data-title="通道添加" href="javascript:void(0)">通道添加</a></li>
-						<li><a data-href="/flowsys/channel/channel_list.do" data-title="通道列表" href="javascript:void(0)">通道列表</a></li>
-						<!-- <li><a data-href="/flowsys/rate/bind_channel_list.do?bindTag=bAgency" data-title="活动通道" href="javascript:void(0)">活动通道</a></li> -->
 						<c:if test="${power== 'no'}">
 							<li><a data-href="/flowsys/platform/platform_list.do" data-title="平台管理" href="javascript:void(0)">平台管理</a></li>
 							<li><a data-href="/flowsys/productCode/product_code_list.do" data-title="产品编码" href="javascript:void(0)">产品编码</a></li>
 						</c:if>
+						<li><a data-href="/flowsys/channel/channel_add_page.do" data-title="通道添加" href="javascript:void(0)">通道添加</a></li>
+						<li><a data-href="/flowsys/channel/channel_list.do" data-title="通道列表" href="javascript:void(0)">通道列表</a></li>
+						<!-- <li><a data-href="/flowsys/rate/bind_channel_list.do?bindTag=bAgency" data-title="活动通道" href="javascript:void(0)">活动通道</a></li> -->
 					</ul>
 				</dd>
 			</dl>

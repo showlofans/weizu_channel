@@ -379,8 +379,8 @@ function getRateList(url,objt){
 }
 /**编辑通道页面*/
 function editChannel(obj,url,title){
-	$(objt).attr('data-href',url);
-	Hui_admin_tab(objt);
+	$(obj).attr('data-href',url);
+	Hui_admin_tab(obj);
 	/* layer.open({
         type: 2,
         title: title,
