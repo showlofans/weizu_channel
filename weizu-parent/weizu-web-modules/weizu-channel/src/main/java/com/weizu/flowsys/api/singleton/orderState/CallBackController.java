@@ -14,6 +14,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.web.agency.ao.AgencyAO;
@@ -246,8 +247,11 @@ public class CallBackController {
 				statusDetail = fail_describe;
 				break;
 			}
-            
-            successTag = sendCallBack.getCallBackResult(new PurchasePo(orderId, reqNo, orderBackTime, myStatus, null, statusDetail), successTag);	//不使用订单参数修改回调结果
+            String res = "";
+            res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, reqNo, System.currentTimeMillis(), myStatus,null , statusDetail));
+            if(!"success".equals(res)){
+            	successTag = res;
+            }
             //根据订单号去更新数据库，并返回回调结果
   
         } catch (JSONException e) {  

@@ -51,6 +51,8 @@ public class PurchasePo extends Po {
 //    private Long recordId;						//消费记录id-外键
     @TempField
     private Integer billType;					//票务类型
+    
+    private String agencyCallIp;				//代理商回调地址
 	
 	public PurchasePo() {
 		super();
@@ -70,6 +72,15 @@ public PurchasePo(String chargeTel, Integer pgId,
 		this.pgId = pgId;
 		this.chargeTelDetail = chargeTelDetail;
 	}
+
+public String getAgencyCallIp() {
+	return agencyCallIp;
+}
+
+
+public void setAgencyCallIp(String agencyCallIp) {
+	this.agencyCallIp = agencyCallIp;
+}
 
 
 public Double getPgPrice() {

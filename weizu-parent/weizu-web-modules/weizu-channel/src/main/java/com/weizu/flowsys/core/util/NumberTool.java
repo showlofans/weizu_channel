@@ -1,6 +1,7 @@
 package com.weizu.flowsys.core.util;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 
 public class NumberTool {
 	
@@ -84,4 +85,22 @@ public class NumberTool {
         BigDecimal one = new BigDecimal("1");
         return b.divide(one,scale,BigDecimal.ROUND_HALF_UP).doubleValue();
     }
+    
+    public static String longToDec(Object object)
+	{
+		String dou = "";
+
+		if (object == null)
+		{
+			return dou;
+		}
+
+		Long tempDouble = Long.parseLong(object.toString());
+
+		BigDecimal bigDecimal = new BigDecimal(tempDouble);
+
+		DecimalFormat decimalFormat = new DecimalFormat();
+
+		return decimalFormat.format(bigDecimal);
+	}
 }	

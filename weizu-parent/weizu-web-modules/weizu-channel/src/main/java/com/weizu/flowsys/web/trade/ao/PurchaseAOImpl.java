@@ -2,6 +2,7 @@ package com.weizu.flowsys.web.trade.ao;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,8 +11,16 @@ import java.util.logging.Logger;
 
 import javax.annotation.Resource;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.NumberUtils;
 import org.weizu.api.outter.enums.ChargeStatusEnum;
 
 import com.aiyi.base.pojo.PageParam;
@@ -28,8 +37,7 @@ import com.weizu.flowsys.api.weizu.charge.ChargeOrder;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
-import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
-import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
+import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
@@ -75,7 +83,6 @@ import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.AccountPurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
-import com.weizu.flowsys.web.trade.pojo.PurchaseStateParams;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 import com.weizu.flowsys.web.trade.pojo.TotalResult;
 import com.weizu.web.foundation.DateUtil;
@@ -294,6 +301,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 //						orderResult = OrderStateEnum.CHARGING.getValue();
 						AccountPurchasePo app = new AccountPurchasePo(accountId, orderId,pcVO.getCdisId(), orderAmount,pcVO.getAccountId(), recordId, orderAmount, fromAgencyName, orderPath, orderResult);
 						app.setOrderStateDetail(orderResultDetail);
+						app.setApDiscount(cdisPo.getChannelDiscount());
 						int aarAdd = accountPurchaseDao.add(app);
 						if(aarAdd > 0){
 							return "订单提交成功";
@@ -331,6 +339,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 						Long recordId = chargeRecordDao.nextId() -1;
 						AccountPurchasePo app = new AccountPurchasePo(accountId, orderId, rateDiscountId, orderAmount, pcVO.getAccountId(), recordId, orderAmount, pcVO.getFromAgencyName(), orderPath, orderState);
 						app.setOrderStateDetail(orderStateDetail);
+						app.setApDiscount(ratePo.getActiveDiscount());
 						int aapAddRes = accountPurchaseDao.add(app);
 					}
 				}else{
@@ -384,6 +393,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 						AccountPurchasePo app = new AccountPurchasePo(apAccountId, orderId, activeRatePo.getId(), minusAmount,from_accountPo.getId(), recordId, plusAmount, fromAgencyName, orderPath, orderState);
 						recordId++;
 						app.setOrderStateDetail(orderStateDetail);
+						app.setApDiscount(activeRatePo.getActiveDiscount());
 						apPoList.add(app);
 					}
 					//由父变成子，进行迭代
@@ -417,9 +427,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 						AccountTypeEnum.DECREASE.getValue(), superAccountPo.getId(), 1 , orderId));
 				/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
 				int orderPath = OrderPathEnum.CHILD_WEB_PAGE.getValue();
-				ChannelDiscountPo cdPo = channelDiscountDao.get(ratePo.getChannelDiscountId());
-				AccountPurchasePo app = new AccountPurchasePo(superAccountPo.getId(), orderId, cdPo.getId(), orderAmount,from_accountPo.getId(),recordId, orderPrice, fromAgencyName, orderPath, orderState);
+				//ChannelDiscountPo cdPo = channelDiscountDao.get(ratePo.getChannelDiscountId());
+				AccountPurchasePo app = new AccountPurchasePo(superAccountPo.getId(), orderId, cdisPo.getId(), orderAmount,from_accountPo.getId(),recordId, orderPrice, fromAgencyName, orderPath, orderState);
 				app.setOrderStateDetail(orderStateDetail);
+				app.setApDiscount(cdisPo.getChannelDiscount());
 				apPoList.add(app);
 				
 				int batchAddCrt = chargeRecordDao.crt_addList(recordPoList);		//批量添加扣款记录信息
@@ -517,6 +528,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 //						orderResultDetail = charge.getTipMsg();
 //					}
 						superApPo.setRateDiscountId(cd.getId());//ap中的通道折扣id只对超级管理员有用
+						superApPo.setApDiscount(cd.getChannelDiscount());
 						superApPo.setOrderState(orderResult);
 						superApPo.setOrderStateDetail(OrderStateEnum.CHARGING.getDesc());
 						accountPurchaseDao.update(superApPo);
@@ -762,7 +774,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 //					ChargeAccountPo accountPo1 = chargeAccountAO.getAccountByAgencyId(purchaseVO.getAgencyId(), BillTypeEnum.CORPORATE_BUSINESS.getValue());
 //					Double orderAmount = null;
 //					if(accountPo1!= null){//优先使用对公账户查询
-								Double orderAmount = accountPurchaseDao.getOrderAmount(purchaseVO2.getOrderId(), accountId);//得到了成本
+						AccountPurchasePo ap = accountPurchaseDao.getAPByAccountType(purchaseVO2.getOrderId(), accountId,AccountTypeEnum.DECREASE.getValue());//得到了成本
+						Double orderAmount = ap.getOrderAmount();
 						if(orderAmount != null){
 							purchaseVO2.setOrderAmount(orderAmount);
 						}
@@ -1207,8 +1220,168 @@ public class PurchaseAOImpl implements PurchaseAO {
 		System.out.println(sb.toString());
 		return sb.toString();
 	}
-
 	
+	@Override
+	public String batchPushOrder(PurchaseVO purchaseVO) {
+		Map<String,Object> dataMap = getPurchaseMap(purchaseVO);
+		List<PurchaseVO> records = new ArrayList<PurchaseVO>();
+		if(dataMap.get("records") != null){
+			records = (List<PurchaseVO>)dataMap.get("records");
+		}
+		
+		int successTag = 0;
+		int errorTag = 0;
+		
+		for (PurchaseVO purchaseVO2 : records) {
+			String res = "error";
+			if(StringHelper.isNotEmpty(purchaseVO2.getAgencyCallIp())){
+				//推送订单结果
+				res = sendCallBack.sendCallBack(new ResponseJsonDTO(purchaseVO2.getOrderId(), purchaseVO2.getOrderIdFrom(), purchaseVO.getOrderResult(), "（推送）"+purchaseVO2.getOrderResultDetail(), System.currentTimeMillis(),purchaseVO2.getChargeTel()), purchaseVO2.getAgencyCallIp());
+			}else{
+				successTag++;//没有回调ip，设置为回调成功
+			}
+			if("success".equals(res)){
+				successTag++;
+			}else{
+				errorTag++;
+			}
+		}
+		StringBuffer sb = new StringBuffer();
+		sb.append("批量成功了 ");
+		sb.append(successTag);
+		sb.append("单,失败了 ");
+		sb.append(errorTag);
+		sb.append("单");
+		System.out.println(sb.toString());
+		return sb.toString();
+	}
 
+	/**
+	 * @description:
+	 * @param purchaseVO
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月7日 下午2:48:26
+	 */
+	@Override
+	public HSSFWorkbook exportChargedList(PurchaseVO purchaseVO,Integer agencyTag) {
+		
+			HSSFWorkbook hbook = null;
+			Map<String,Object> dataMap = getPurchaseMap(purchaseVO);
+			List<PurchaseVO> records = new ArrayList<PurchaseVO>();
+			if(dataMap.get("records") != null){
+				records = (List<PurchaseVO>)dataMap.get("records");
+				String[] header =
+				{ "所属代理商", "订单号", "手机号", "流量大小", "面值", "折扣", "扣款金额" ,  "订单完成时间" };
+				Boolean isDataUser = AgencyTagEnum.DATA_USER.getValue().equals(agencyTag);
+				if(isDataUser){
+					header=Arrays.copyOf(header, header.length+1);
+					header[header.length-1] = "来源订单号";
+				}
+
+				hbook = new HSSFWorkbook();
+
+				HSSFSheet hSheet = hbook.createSheet();
+
+				hSheet.setColumnWidth(0, 35 * 80);
+				hSheet.setColumnWidth(1, 35 * 150);
+				hSheet.setColumnWidth(2, 35 * 100);
+				hSheet.setColumnWidth(3, 35 * 100);
+				hSheet.setColumnWidth(4, 35 * 100);
+				hSheet.setColumnWidth(5, 35 * 100);
+				hSheet.setColumnWidth(6, 35 * 80);
+				hSheet.setColumnWidth(7, 35 * 200);
+				if(isDataUser){{
+					hSheet.setColumnWidth(8, 35 * 200);
+				}
+				HSSFRow hRow = hSheet.createRow(0);
+
+				HSSFCellStyle style = hbook.createCellStyle();
+				style.setFillForegroundColor(HSSFColor.LIME.index);
+				style.setFillBackgroundColor(HSSFColor.GREEN.index);
+				for (int i = 0; i < header.length; i++)
+				{
+					HSSFCell hCell = hRow.createCell(i);
+					hCell.setCellStyle(style);
+					hCell.setCellType(HSSFCell.CELL_TYPE_STRING);
+					hCell.setCellValue(header[i]);
+				}
+
+				int i = 0;
+				//String tradeType = "";				// 台账类型
+				//String tradeNo = "";				// 交易号
+				for (PurchaseVO r : records)
+				{
+					i++;
+					hRow = hSheet.createRow(i);
+					//代理商名称
+					hRow.createCell(0).setCellValue(r.getAgencyName());
+					//订单号
+					hRow.createCell(1).setCellValue(r.getOrderId().toString());
+
+//					else if (r.getTradeType().equals("2"))
+//					{
+//						tradeType = "补款";
+//					}
+					// 充值号码
+					hRow.createCell(2).setCellValue(r.getChargeTel());
+//
+//					if (r.getTradeType().equals("2") || r.getTradeType().equals("3"))
+//					{
+//						tradeNo = r.getTradeId() + "";
+//					}
+//					else
+//					{
+//						tradeNo = r.getTradeNo();
+//					}
+					//包体大小
+					hRow.createCell(3).setCellValue(r.getPgSize());
+
+					//"面值", "折扣", "扣款金额" , "代理商订单号", "订单完成时间
+				
+					// 面值
+					hRow.createCell(4).setCellValue(r.getPgPrice());
+
+					// 折扣
+					hRow.createCell(5).setCellValue(r.getApDiscount()==null?0d:r.getApDiscount());
+					// 扣款金额
+					hRow.createCell(6).setCellValue(NumberTool.round(r.getOrderAmount(), 3));
+					// 订单完成时间
+					hRow.createCell(7).setCellValue(DateUtil.formatAll(r.getOrderBackTime()));
+					
+					if(isDataUser){
+						// 代理商订单号
+						hRow.createCell(8).setCellValue(r.getOrderIdFrom());
+					}
+				}
+			}
+
+//				hRow = hSheet.createRow(i + 1);
+//
+//				hRow.createCell(0).setCellValue("实付金额：" + returnMap.get("alreadyPayAmt"));
+//				hRow.createCell(1).setCellValue("应付金额：" + returnMap.get("shouldPayAmt"));
+//				hRow.createCell(2).setCellValue("冻结金额：" + returnMap.get("freezingAmount"));
+//				hRow.createCell(3).setCellValue("金额期初：" + returnMap.get("preAmt"));
+//				hRow.createCell(4).setCellValue("可用金额：" + returnMap.get("userfulAmount"));
+//
+//				Map<String, Object> params = new HashMap<String, Object>();
+//				params.put("memberId", memberId);
+//				Pagination<InvoiceAccount> invoiceAccountPage = invoiceAccountService.queryPageInvoiceAccount(new PageParam(1, 15), params);
+//
+//				if (invoiceAccountPage != null && invoiceAccountPage.getTotalCount() > 0)
+//				{
+//					InvoiceAccount a = invoiceAccountPage.getRecordList().get(0);
+//					String preInvoiceRecord = VelocityTool.getPreInvoiceRecord(a.getMemberId());
+//
+//					hRow.createCell(5).setCellValue("应收票额：" + NumberTool.formatNumber(a.getPreBalance(), "###,###,##0.00"));
+//					hRow.createCell(6).setCellValue("已收票额：" + NumberTool.formatNumber(NumberUtils.sub(a.getBalance(), NumberUtils.parseDouble(preInvoiceRecord)), "###,###,##0.00"));
+//					hRow.createCell(7).setCellValue("票额期初：" + NumberTool.formatNumber(NumberUtils.parseDouble(preInvoiceRecord), "###,###,##0.00"));
+//					hRow.createCell(8).setCellValue("欠票票额：" + NumberTool.formatNumber(NumberUtils.sub(a.getPreBalance(), a.getBalance()), "###,###,##0.00"));
+//				}
+			
+			}
+
+			return hbook;
+		}
 
 }

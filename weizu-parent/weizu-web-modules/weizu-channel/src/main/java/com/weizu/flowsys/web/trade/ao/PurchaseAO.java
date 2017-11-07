@@ -3,6 +3,9 @@ package com.weizu.flowsys.web.trade.ao;
 import java.util.List;
 import java.util.Map;
 
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
 //import org.weizu.api.facet.orderState.PageOrder;
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
@@ -182,5 +185,23 @@ public interface PurchaseAO {
 	 * @createTime:2017年11月4日 上午9:56:37
 	 */
 	String batchCommitOrder(PurchaseVO purchaseVO);
+	
+	/**
+	 * @description: 批量推送订单
+	 * @param purchaseVO 查询推送的订单
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月7日 下午4:44:31
+	 */
+	String batchPushOrder(PurchaseVO purchaseVO);
+	
+	/**
+	 * @description: 导出充值成功列表
+	 * @param purchaseVO
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月7日 下午2:27:29
+	 */
+	HSSFWorkbook exportChargedList(PurchaseVO purchaseVO, Integer agencyTag);
 	
 }

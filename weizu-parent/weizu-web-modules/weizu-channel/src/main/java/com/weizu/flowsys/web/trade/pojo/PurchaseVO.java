@@ -77,6 +77,10 @@ public class PurchaseVO implements Cloneable {
     
     private Long rateDiscountId;						//费率折扣id
     
+    private Double apDiscount;					//实际折扣
+    
+    private String agencyCallIp;				//代理商回调地址
+    
     @Override
 	public PurchaseVO clone() {
     	PurchaseVO pvo = null;
@@ -86,6 +90,24 @@ public class PurchaseVO implements Cloneable {
             e.printStackTrace();  
         }  
 		return pvo;
+	}
+    
+	public String getAgencyCallIp() {
+		return agencyCallIp;
+	}
+
+	public void setAgencyCallIp(String agencyCallIp) {
+		this.agencyCallIp = agencyCallIp;
+	}
+
+
+
+	public Double getApDiscount() {
+		return apDiscount;
+	}
+
+	public void setApDiscount(Double apDiscount) {
+		this.apDiscount = apDiscount;
 	}
 
 	public Integer getAgencyId() {

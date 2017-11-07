@@ -54,13 +54,6 @@
 					</select>
 					</span> 
 						扣款类型：
-					<%-- <c:choose>
-					<c:when test="${loginContext.rootAgencyId == 0 }">
-						通道类型：
-					</c:when>
-					<c:otherwise>
-					</c:otherwise>
-					</c:choose> --%>
 					<span class="select-box inline">
 						<select name="billType" class="select">
 						<option value="">请选择</option>
@@ -81,7 +74,12 @@
 					<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 					<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
+					<c:if test="${loginContext.rootAgencyId == 0 }">
+						<button name="" id="" class="btn btn-primary radius" onclick="batchPush()" type="button"><i class="Hui-iconfont">&#xe665;</i> 批量推送</button>
+					</c:if>
+					
 					<input type="hidden" name="orderResult" value="${resultMap.searchParams.orderResult }">
+					<input type="hidden" name="orderState" value="${resultMap.searchParams.orderState }">
 				</div>
 		</form>
 	</div>
@@ -179,6 +177,28 @@
 <script src="/view/lib/bootstrap-datetimepicker.min.js"></script>
 <script src="/view/lib/bootstrap-datetimepicker.zh-CN.js"></script> -->
 <script type="text/javascript">
+/**批量推送订单*/
+function batchPush(){
+	$.ajax({
+		type: 'POST',
+		url: "/flowsys/chargePg/batch_push_order.do",
+		//dataType: 'json',
+		data: $('form').serialize(),
+		success: function(resp){
+			//$(obj).parents("tr").remove();
+			//alert
+			if(resp=="success"){
+				layer.msg('批量推送成功',{icon:1,time:1000});
+				//location.reload();
+           	 }else{
+				layer.msg('批量推送失败',{icon:2,time:1000});
+           	 }
+		},
+		error:function(resp) {
+			console.log(resp.msg);
+		}
+	}); 
+}
 function formSub(){
 	$("input[name='pageNoLong']").val('');
 	$('form').submit();

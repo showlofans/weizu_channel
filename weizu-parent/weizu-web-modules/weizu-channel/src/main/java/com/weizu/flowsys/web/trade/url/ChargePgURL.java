@@ -94,6 +94,17 @@ public class ChargePgURL extends BaseURL {
 	 * 充值等待批量提交订单
 	 */
 	public static final String BATCH_COMMIT_ORDER = "/batch_commit_order" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 导出充值成功订单
+	 * <br>/flowsys/chargePg/export_charged_list.do
+	 */
+	public static final String EXPORT_CHARGED_LIST = "/export_charged_list" + DYNAMIC_WEB_SUFFIX;
+	
+	/**
+	 * 批量推送结果
+	 */
+	public static final String BATCH_PUSH_ORDER = "/batch_push_order" + DYNAMIC_WEB_SUFFIX;
+	
 	
 	
 	

@@ -43,6 +43,7 @@
     <result column="order_result_detail" property="orderResultDetail" jdbcType="VARCHAR" />
     <result column="operator_type" property="operatorType" />
     <result column="pg_price" property="pgPrice" />
+    <result column="agency_call_ip" property="agencyCallIp" jdbcType="VARCHAR" />
     <!-- 连接表信息 -->
     <result column="order_arrive_time" property="orderArriveTime" jdbcType="BIGINT" />
     <result column="order_back_time" property="orderBackTime" jdbcType="BIGINT" />
@@ -57,6 +58,7 @@
     <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
     <result column="actBill_type" property="billType" jdbcType="INTEGER" />
     <result column="rate_discount_id" property="rateDiscountId" jdbcType="BIGINT" />
+    <result column="ap_discount" property="apDiscount" jdbcType="DOUBLE" />
     
     <!-- 平台相关信息 -->
     <!-- <result column="id" jdbcType="INTEGER" property="ep.id" />
@@ -76,7 +78,7 @@
   </resultMap>
    <sql id="Base_Column_List" >
     order_id,order_id_api, order_id_from, account_id, charge_tel, pg_id, order_amount, order_arrive_time,charge_tel_detail, 
-    charge_tel_city, order_result, channel_name, order_result_detail,has_call_back
+    charge_tel_city, order_result, channel_name, order_result_detail,has_call_back,agency_call_ip
   </sql>
    <sql id="get_base_Column_List" >
     order_id,order_id_api, order_id_from, ap.account_id,ap.order_state order_result,ap.order_state_detail order_result_detail, pur.charge_tel, pg_id, ap.order_amount, order_arrive_time,charge_tel_detail, 
@@ -85,7 +87,7 @@
   <sql id="VO_Column_List"><!-- 订单页面 -->
   	ap.from_agency_name,ap.account_id, pur.order_id, pur.order_id_api, pur.order_id_from, pur.charge_tel, pg.pg_size, pg.operator_type, pg.pg_price, pur.order_arrive_time,
   	pur.order_back_time, pur.charge_tel_detail, pur.charge_tel_city,ap.order_amount ap_order_amount,ap.order_price,pur.order_result,ap.order_state,ap.order_state_Detail,ap.order_platform_path,
-  	 pur.order_result_detail,pur.channel_name,act.bill_type actBill_type,ap.rate_discount_id
+  	 pur.order_result_detail,pur.channel_name,act.bill_type actBill_type,ap.rate_discount_id,ap.ap_discount, pur.agency_call_ip
   </sql>
   
   
@@ -311,7 +313,7 @@
   	insert into <include refid="t_purchase"></include>
   	( <include refid="Base_Column_List"></include> )
   	values (#{orderId},#{orderIdApi},#{orderIdFrom},#{accountId},#{chargeTel},#{pgId},#{orderAmount},#{orderArriveTime},
-  	#{chargeTelDetail},#{chargeTelCity},#{orderResult},#{channelName},#{orderResultDetail},#{hasCallBack} ) 
+  	#{chargeTelDetail},#{chargeTelCity},#{orderResult},#{channelName},#{orderResultDetail},#{hasCallBack}, #{agencyCallIp} ) 
   </insert>
   
 </mapper>

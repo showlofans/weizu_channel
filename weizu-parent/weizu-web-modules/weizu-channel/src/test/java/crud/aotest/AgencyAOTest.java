@@ -91,7 +91,7 @@
 ////	}
 ////	@Test
 ////	public void testLogin(){
-////		String userName = "锋之云无票";
+////		String userName = "123";
 ////		AgencyBackwardPo agencyPo = agencyVODao.get(new WherePrams("user_name", "=", userName));
 ////		//得到密码
 ////		String userPass = Hash.BASE_UTIL.decode(agencyPo.getUserPass());
@@ -128,7 +128,7 @@
 ////	}
 //	@Test
 //	public void findUser(){
-//		AgencyBackwardPo agencyPo = valiUser.findAgency("锋之云无票", "16D09112560F72AB60430CD3278E18DF");
+//		AgencyBackwardPo agencyPo = valiUser.findAgency("123", "3527956B61387FEF9919FAD2F85C55E8");//3527956B61387FEF9919FAD2F85C55E8
 //		System.out.println(agencyPo == null);
 //	}
 //

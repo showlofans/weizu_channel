@@ -53,6 +53,7 @@ import com.weizu.flowsys.web.trade.dao.AccountPurchaseDao;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.AccountPurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
+import com.weizu.web.foundation.String.StringHelper;
 
 /**
  * @description: 下游充值接口实现（最新）
@@ -164,6 +165,12 @@ public class ChargeImpl implements IChargeFacet {
 				purchasePo = new PurchasePo(orderId, chargeParams.getOrderIdFrom(), accountId, chargeTel, pgData.getId(), 
 						System.currentTimeMillis(), chargeTelDetail, chargeTelCity, orderResult, channelPo.getChannelName(), 
 						orderResultDetail, orderAmount, billType);
+				if(StringHelper.isNotEmpty(chargeParams.getReportUrl())){//
+					purchasePo.setAgencyCallIp(chargeParams.getReportUrl());
+				}else{//传单没有传回调地址,使用系统固定的回调地址
+					purchasePo.setAgencyCallIp(backPo.getCallBackIp());
+				}
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

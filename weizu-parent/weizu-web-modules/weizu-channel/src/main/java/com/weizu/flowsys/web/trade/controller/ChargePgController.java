@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -73,6 +76,7 @@ import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 import com.weizu.flowsys.web.trade.pojo.TotalResult;
 import com.weizu.flowsys.web.trade.url.ChargePgURL;
+import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
 
 /**
@@ -870,21 +874,85 @@ public class ChargePgController {
 	 */
 	@ResponseBody
 	@RequestMapping(value=ChargePgURL.BATCH_COMMIT_ORDER)
-	public String batchCommitOrder(PurchaseVO purchaseVO){
+	public String batchCommitOrder(PurchaseVO purchaseVO, HttpServletRequest request){
 		String res = "error";
-		//只有待冲的单子可以批量提交
-		if(purchaseVO.getOrderResult().equals(OrderStateEnum.DAICHONG.getValue())){
-//			Map<String,Object> dataMap = purchaseAO.getPurchaseMap(purchaseVO);
-//			List<PurchaseVO> records = new ArrayList<PurchaseVO>();
-//			if(dataMap.get("records") != null){
-//				records = (List<PurchaseVO>)dataMap.get("records");
-//			}
-			res = purchaseAO.batchCommitOrder(purchaseVO);
-			
+		HttpSession httpSession = request.getSession();
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)httpSession.getAttribute("loginContext");
+		if(agencyVO != null){
+			purchaseVO.setAgencyId(agencyVO.getId());//设置为当前登陆用户的订单
+			//只有待冲的单子可以批量提交
+			if(purchaseVO.getOrderResult().equals(OrderStateEnum.DAICHONG.getValue())){
+				res = purchaseAO.batchCommitOrder(purchaseVO);
+			}
 		}
-		
 		return res;
 	}
+	/**
+	 * @description: 批量推送订单
+	 * @param purchaseVO
+	 * @param request
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月7日 下午5:31:59
+	 */
+	@ResponseBody
+	@RequestMapping(value=ChargePgURL.BATCH_PUSH_ORDER)
+	public String batchPushOrder(PurchaseVO purchaseVO, HttpServletRequest request){
+		String res = "error";
+		HttpSession httpSession = request.getSession();
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)httpSession.getAttribute("loginContext");
+		if(agencyVO != null){
+			purchaseVO.setAgencyId(agencyVO.getId());//设置为当前登陆用户的订单
+			res = purchaseAO.batchPushOrder(purchaseVO);
+		}
+		return res;
+	}
+	
+	
+	/**
+	 * @description: 导出订单列表
+	 * @param purchaseVO
+	 * @param response
+	 * @param request
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月7日 下午3:05:58
+	 */
+	@RequestMapping(value=ChargePgURL.EXPORT_CHARGED_LIST, method=RequestMethod.GET)
+	public void exportChargedList(PurchaseVO purchaseVO,HttpServletResponse response,HttpServletRequest request){
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession() .getAttribute("loginContext");
+		if(agencyVO != null){
+			purchaseVO.setAgencyId(agencyVO.getId());//设置为当前登陆用户的订单
+			HSSFWorkbook hbook = purchaseAO.exportChargedList(purchaseVO, agencyVO.getAgencyTag()); 
+			if (hbook != null)
+			{
+				try
+				{
+					request.setCharacterEncoding("UTF-8");
+					response.reset();
+					response.setCharacterEncoding("UTF-8");
+					response.setContentType("application/msexcel;charset=UTF-8");
+					response.addHeader("Content-Disposition", "attachment;filename=\"" + new String(("成功订单记录" + DateUtil.formatPramm(new Date(), "yyyy-MM-dd") + ".xls").getBytes("GBK"), "ISO8859_1")
+					+ "\"");
+					OutputStream outputStream = response.getOutputStream();
+					hbook.write(outputStream);
+					outputStream.flush();
+					outputStream.close();
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}else{
+			try {
+				response.getOutputStream().print("alert('导出失败，未登录')");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	
 	
 	

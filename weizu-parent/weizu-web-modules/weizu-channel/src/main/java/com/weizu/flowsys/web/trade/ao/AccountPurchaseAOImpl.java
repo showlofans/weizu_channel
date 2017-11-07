@@ -14,6 +14,7 @@ import com.weizu.flowsys.api.singleton.orderState.ResponseJsonDTO;
 import com.weizu.flowsys.api.singleton.orderState.SendCallBackUtil;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
@@ -26,6 +27,7 @@ import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.AccountPurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseStateParams;
+import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 
 @Service(value="accountPurchaseAO")
 public class AccountPurchaseAOImpl implements AccountPurchaseAO {
@@ -42,8 +44,6 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 	private AgencyVODaoInterface agencyVODao;
 	@Resource
 	private SendCallBackUtil sendCallBack;
-	
-	
 	
 	@Transactional
 	@Override
@@ -98,6 +98,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 						accountPurchaseDao.ap_addList(apPoList);		//
 						//更新连接表
 						ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
+						purchasePo1.setHasCallBack(OrderResultEnum.SUCCESS.getCode());
 						//更新订单表(只更新超管的订单详情)
 						pur = purchaseDAO.updatePurchaseState(purchasePo1);//orderId, realBackTime, orderResult, orderResultDetail, purchasePo1.getOrderIdApi()
 					}
@@ -114,6 +115,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 			}else{
 				ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, OrderStateEnum.CHARGED.getDesc());
 			}
+			purchasePo1.setHasCallBack(OrderResultEnum.SUCCESS.getCode());
 			//更新订单表
 			pur = purchaseDAO.updatePurchaseState(purchasePo1);
 		}
@@ -202,6 +204,14 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 			return "success";
 		}
 		return "error";
+	}
+
+	@Override
+	public String batchUpdatePurchaseState(PurchaseVO purchaseVO) {
+		String res = "error";
+		
+		
+		return res;
 	}
 
 //	@Override

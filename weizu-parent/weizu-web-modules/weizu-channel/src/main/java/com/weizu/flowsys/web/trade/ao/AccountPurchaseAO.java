@@ -2,6 +2,7 @@ package com.weizu.flowsys.web.trade.ao;
 
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseStateParams;
+import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 
 public interface AccountPurchaseAO {
 	/**
@@ -14,6 +15,15 @@ public interface AccountPurchaseAO {
 	 * @createTime:2017年8月21日 下午4:11:21
 	 */
 	String updatePurchaseState(PurchasePo purchasePo);
+	
+	/**
+	 * @description: 批量推送(更新)订单状态
+	 * @param purchaseVO 查询参数
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月7日 下午4:40:31
+	 */
+	String batchUpdatePurchaseState(PurchaseVO purchaseVO);
 	/**
 	 * @description:回调的时候，更新状态:成功返成功，失败返等待
 	 * @param orderId 

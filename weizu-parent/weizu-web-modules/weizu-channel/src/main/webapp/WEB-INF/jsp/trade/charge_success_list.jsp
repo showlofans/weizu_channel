@@ -41,6 +41,7 @@
 					订单号:<input type="text"  value="${resultMap.searchParams.orderId }" name="orderId" id="" placeholder=" 订单号" style="width:250px" class="input-text">
 					归属地:<input type="text"  value="${resultMap.searchParams.chargeTelDetail }" name="chargeTelDetail" id="" placeholder=" 归属地" style="width:80px" class="input-text">
 				</div>
+					
 				
 				<div class="row cl" style="margin-top: 30dp">
 					运营商类型：
@@ -79,8 +80,35 @@
 					
 					<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+					
+					<c:choose>
+						<c:when test="${loginContext.rootAgencyId == 0 }">
+							<a href="/flowsys/chargePg/export_charged_list.do?chargeTel=${resultMap.searchParams.chargeTel }&agencyName=${resultMap.searchParams.agencyName }&orderId=${resultMap.searchParams.orderId }&chargeTelDetail=${resultMap.searchParams.chargeTelDetail }
+											&operatorType=${resultMap.searchParams.operatorType }
+											&billType=${resultMap.searchParams.billType }
+											&channelName=${resultMap.searchParams.channelName }
+											&backStartTimeStr=${resultMap.searchParams.backStartTimeStr }
+											&backEndTimeStr=${resultMap.searchParams.backEndTimeStr }
+											&orderResult=${resultMap.searchParams.orderResult }">【导出列表】
+							</a>
+							<button name="" id="" class="btn btn-primary radius" onclick="batchPush()" type="button"><i class="Hui-iconfont">&#xe665;</i> 批量推送</button>
+							<input type="hidden" name="orderResult" value="${resultMap.searchParams.orderResult }">
+						</c:when>
+						<c:otherwise>
+							<a href="/flowsys/chargePg/export_charged_list.do?chargeTel=${resultMap.searchParams.chargeTel }&agencyName=${resultMap.searchParams.agencyName }&orderId=${resultMap.searchParams.orderId }&chargeTelDetail=${resultMap.searchParams.chargeTelDetail }
+											&operatorType=${resultMap.searchParams.operatorType }
+											&billType=${resultMap.searchParams.billType }
+											&channelName=${resultMap.searchParams.channelName }
+											&backStartTimeStr=${resultMap.searchParams.backStartTimeStr }
+											&backEndTimeStr=${resultMap.searchParams.backEndTimeStr }
+											&orderState=${resultMap.searchParams.orderState }">【导出列表】
+							</a>
+							<input type="hidden" name="orderState" value="${resultMap.searchParams.orderState }">
+						</c:otherwise>
+					</c:choose>
+					
+					<!-- <button name="" id="" class="btn btn-primary radius" onclick="exportS()" type="button"><i class="Hui-iconfont">&#xe665;</i> 导出</button> -->
 					<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
-					<input type="hidden" name="orderResult" value="${resultMap.searchParams.orderResult }">
 				</div>
 		</form>
 	</div>
@@ -197,6 +225,47 @@
 
 <script type="text/javascript" src="/view/lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript">
+/**批量推送订单*/
+function batchPush(){
+	$.ajax({
+		type: 'POST',
+		url: "/flowsys/chargePg/batch_push_order.do",
+		//dataType: 'json',
+		data: $('form').serialize(),
+		success: function(resp){
+			//$(obj).parents("tr").remove();
+			//alert
+			if(resp=="success"){
+				layer.msg('批量推送成功',{icon:1,time:1000});
+				//location.reload();
+           	 }else{
+				layer.msg('批量推送失败',{icon:2,time:1000});
+           	 }
+		},
+		error:function(resp) {
+			console.log(resp.msg);
+		}
+	}); 
+}
+
+/**导出列表*/
+/* function exportS(){
+	$.ajax({
+        type:"get",
+        url:"/flowsys/chargePg/export_charged_list.do",
+        data: $('form').serialize(),//表单数据
+        async : false,
+        success:function(d){
+        	//removeIframe();
+           /* if(d=="success"){
+                layer.msg('提交成功！');//保存成功提示
+            }
+            if(d=="error"){
+                layer.msg('提交异常!');
+            } 
+        }
+    });
+} */
 function formSub(){
 	$('form').submit();
 }

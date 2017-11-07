@@ -196,12 +196,12 @@
        <td style="text-align:left;">method</td> 
        <td style="text-align:left;">否</td> 
        <td style="text-align:left;">回调方式，默认POST。如果需要使用GET方式:method=GET</td> 
-      </tr> 
+      </tr>  -->
       <tr> 
-       <td style="text-align:left;">reporturl</td> 
+       <td style="text-align:left;">reportUrl</td> 
        <td style="text-align:left;">否</td> 
        <td style="text-align:left;">回调地址，可选参数，填则回调，不填则不回调（设置回调地址有两种方式:1.接口传入回调地址 2.后台配置固定回调地址。如果同时在接口传入回调地址和后台配置了固定回调地址，那么优先选择接口传入的回调地址）</td> 
-      </tr>  -->
+      </tr> 
       <tr> 
        <td style="text-align:left;">sign</td> 
        <td style="text-align:left;">String</td> 
@@ -266,7 +266,7 @@
     <h3 data-anchor-id="cxt0" id="2充值结果回调">2.充值结果回调（待测试）</h3>
     <ul data-anchor-id="s0g1"> 
      <li>请求方式:POST</li> 
-     <li>回调地址:用户设置的的reporturl</li> 
+     <li>回调地址:用户设置的的reportUrl</li> 
      <li>响应内容: ok 为成功，其他则失败 </li>
      <!-- <li>响应说明: 超时或者非200状态码的 http 响应系统会判断回调失败，并且重新发起回调，共四次回调，间隔为30秒、60秒、120秒，300秒</li>  -->
     </ul>

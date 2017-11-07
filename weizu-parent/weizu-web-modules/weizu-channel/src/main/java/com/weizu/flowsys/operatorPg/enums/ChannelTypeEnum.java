@@ -183,10 +183,11 @@ public enum ChannelTypeEnum {
     		pgInServiceMap1.put("value", ChannelTypeEnum.ORDINARY.getValue());
     		attachmentTypeMapList.add(pgInServiceMap1);
         }
-        for (ChannelTypeEnum cnelTypeEnum : enumArray) {
-	        while(i.hasNext()){//遍历  
-//	            System.out.println(i.next()); 
-	            if(i.next().equals(cnelTypeEnum.getValue())){
+        while(i.hasNext()){//遍历 
+        	Integer getTypeEn =  i.next();
+        	for (ChannelTypeEnum cnelTypeEnum : enumArray) {
+	            //System.out.println(i.next()); 
+	            if(getTypeEn.equals(cnelTypeEnum.getValue())){
 	            	Map<String, Object> pgInServiceMap = new HashMap<String, Object>(2);
 	            	pgInServiceMap.put("desc", cnelTypeEnum.getDesc());
 	            	pgInServiceMap.put("value", cnelTypeEnum.getValue());

@@ -82,6 +82,7 @@ public class OuterAPIController {
 			@RequestParam(value="channelType",required=false) Integer channelType,
 			@RequestParam(value="pgType",required=false) Integer pgType,
 			@RequestParam(value="pgValidity",required=false) String pgValidity,
+			@RequestParam(value="reportUrl",required=false) String reportUrl,
 			@RequestParam(value="userOrderId",required=false) String userOrderId){
 		if(billType == null){//默认对公
 			billType = BillTypeEnum.CORPORATE_BUSINESS.getValue();
@@ -108,6 +109,9 @@ public class OuterAPIController {
 		chargeParams.setChannelType(channelType);
 		if(StringHelper.isNotEmpty(userOrderId)){
 			chargeParams.setOrderIdFrom(userOrderId);
+		}
+		if(StringHelper.isNotEmpty(reportUrl)){
+			chargeParams.setReportUrl(reportUrl);
 		}
 		Charge charge = null;
 		try {
