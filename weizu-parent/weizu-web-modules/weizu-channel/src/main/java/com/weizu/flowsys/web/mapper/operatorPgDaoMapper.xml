@@ -275,6 +275,9 @@
 		<if test="pgType != null">
 			AND pg_type = #{pgType}
 		</if>
+		<if test="pgServiceType != null">
+			AND pg_service_type = #{pgServiceType}
+		</if>
 		<if test="pgValidity != null">
 			AND pg_validity = #{pgValidity}
 		</if>
@@ -407,6 +410,9 @@
 		</if>
 		<if test="pgValidity != null">
 			AND pg_validity = #{pgValidity}
+		</if>
+		<if test="pgServiceType != null">
+			AND pg_service_type = #{pgServiceType}
 		</if>
 		<if test="pgType != null">
 			AND pg_type = #{pgType}

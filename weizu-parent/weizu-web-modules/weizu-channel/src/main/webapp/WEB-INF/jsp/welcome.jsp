@@ -94,62 +94,85 @@
 		</tbody>
 	</table> -->
 	<%-- <c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vst"></c:forEach> --%>
-	<c:forEach items="${resultMap.rateList }" var="ratePo" varStatus="vst">
+	<table class="table table-border table-bordered table-bg mt-20">
+		<thead>
+			<tr>
+				<th colspan="2" scope="col">流量信息</th>
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach items="${resultMap.rateList }" var="ratePo" varStatus="vst">
+				<c:choose>
+					<c:when test="${empty ratePo.specialTag }">
+						<c:forEach items="${resultMap.billTypeEnums }" var="billTypeE" varStatus="vst1">
+							<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeE" varStatus="vst2">
+								<c:if test="${ratePo.serviceType == serviceTypeE.value && ratePo.billType == billTypeE.value }">
+									<tr>
+											<c:choose>
+												<c:when test="${empty ratePo.discountPo.discount0 && empty ratePo.discountPo.discount1 && empty ratePo.discountPo.discount2 }">
+												</c:when>
+												<c:otherwise>
+													<th width="20%">
+														${serviceTypeE.desc }-${billTypeE.desc }
+													</th>
+												</c:otherwise>
+											</c:choose>
+										
+										<c:choose>
+											<c:when test="${empty ratePo.discountPo.discount0 && empty ratePo.discountPo.discount1 && empty ratePo.discountPo.discount2 }">
+											</c:when>
+											<c:otherwise>
+												<td>
+													<c:if test="${not empty ratePo.discountPo.discount0 }">
+														移动：${ratePo.discountPo.discount0 }<br>
+													</c:if>
+													<c:if test="${not empty ratePo.discountPo.discount1 }">
+														联通：${ratePo.discountPo.discount1 }<br>
+													</c:if>
+													<c:if test="${not empty ratePo.discountPo.discount2 }">
+														电信：${ratePo.discountPo.discount2 }<br>
+													</c:if>
+												</td>
+											</c:otherwise>
+										</c:choose>
+										
+									</tr>
+								</c:if>
+							</c:forEach>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<c:forEach items="${resultMap.billTypeEnums }" var="billTypeE" varStatus="vst1">
+							<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeE" varStatus="vst2">
+								<c:if test="${ratePo.serviceType == serviceTypeE.value && ratePo.billType == billTypeE.value}">
+									<tr>
+										<th class="c-red">${serviceTypeE.desc }-${billTypeE.desc }-${ratePo.specialTag }</th>
+										<td >
+											<c:choose>
+												<c:when test="${not empty ratePo.discountPo.discount0 }">
+													移动：${ratePo.discountPo.discount0 }<br>
+												</c:when>
+												<c:when test="${not empty ratePo.discountPo.discount1 }">
+													联通：${ratePo.discountPo.discount1 }<br>
+												</c:when>
+												<c:when test="${not empty ratePo.discountPo.discount2 }">
+													电信：${ratePo.discountPo.discount2 }<br>
+												</c:when>
+											</c:choose>
+										</td>
+									</tr>
+								</c:if>
+							</c:forEach>
+						</c:forEach>
+					</c:otherwise>
+					
+				</c:choose>
 			
-		<c:choose>
-			<c:when test="${empty ratePo.specialTag }">
-				<c:forEach items="${resultMap.billTypeEnums }" var="billTypeE" varStatus="vst1">
-					<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeE" varStatus="vst2">
-						<c:if test="${ratePo.serviceType == serviceTypeE.value && ratePo.billType == billTypeE.value }">
-							<c:choose>
-								<c:when test="${empty ratePo.discountPo.discount0 && empty ratePo.discountPo.discount1 && empty ratePo.discountPo.discount2 }">
-								</c:when>
-								<c:otherwise>
-									<h3>${serviceTypeE.desc }-${billTypeE.desc }</h3>
-								</c:otherwise>
-							</c:choose>
-							<c:choose>
-								<c:when test="${not empty ratePo.discountPo.discount0 }">
-									移动：${ratePo.discountPo.discount0 }<br>
-								</c:when>
-								<c:when test="${not empty ratePo.discountPo.discount1 }">
-									联通：${ratePo.discountPo.discount1 }<br>
-								</c:when>
-								<c:when test="${not empty ratePo.discountPo.discount2 }">
-									电信：${ratePo.discountPo.discount2 }<br>
-								</c:when>
-							</c:choose>
-							
-						</c:if>
-					</c:forEach>
-				</c:forEach>
-			</c:when>
-			<c:otherwise>
-				<span class="c-red">
-				<c:forEach items="${resultMap.billTypeEnums }" var="billTypeE" varStatus="vst1">
-					<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeE" varStatus="vst2">
-						<c:if test="${ratePo.serviceType == serviceTypeE.value && ratePo.billType == billTypeE.value}">
-							<h3>${serviceTypeE.desc }-${billTypeE.desc }-${ratePo.specialTag }</h3>
-							<c:choose>
-								<c:when test="${not empty ratePo.discountPo.discount0 }">
-									移动：${ratePo.discountPo.discount0 }<br>
-								</c:when>
-								<c:when test="${not empty ratePo.discountPo.discount1 }">
-									联通：${ratePo.discountPo.discount1 }<br>
-								</c:when>
-								<c:when test="${not empty ratePo.discountPo.discount2 }">
-									电信：${ratePo.discountPo.discount2 }<br>
-								</c:when>
-							</c:choose>
-						</c:if>
-					</c:forEach>
-				</c:forEach>
-				</span>
-			</c:otherwise>
-			
-		</c:choose>
+			</c:forEach>
+		</tbody>
+	</table>
 	
-	</c:forEach>
+	
 	<%-- <c:if test="${not empty resultMap.map.nationWide }">
 		<h3>全国</h3>
 		<c:if test="${not empty resultMap.map.nationWide.billDTO }">
@@ -296,7 +319,7 @@
 			</tr>
 		</tbody>
 	</table> -->
-	<span id="rootAgencyId">${loginContext.rootAgencyId }</span>
+	<span style="display: none;" id="rootAgencyId">${loginContext.rootAgencyId }</span>
 </div>
 <footer class="footer mt-20">
 	<div class="container">

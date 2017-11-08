@@ -50,7 +50,7 @@ public class ChargeAccountAoImpl implements ChargeAccountAo {
 	 */
 	@Override
 	public List<CompanyCredentialsPo> getUnconfirmedAccount(int rootAgencyId) {
-		List<CompanyCredentialsPo> list = companyCredentialsDao.list(new WherePrams("confirm_agency_id", "=", rootAgencyId).orderBy("commit_time"));
+		List<CompanyCredentialsPo> list = companyCredentialsDao.list(new WherePrams("confirm_agency_id", "=", rootAgencyId).orderBy("commit_time desc"));
 		for (CompanyCredentialsPo companyCredentialsPo : list) {
 			if(companyCredentialsPo.getCommitTime() != null){
 				String commitTimeStr = DateUtil.formatAll(companyCredentialsPo.getCommitTime());

@@ -193,7 +193,6 @@ public class OperatorPgDao extends DaoImpl<PgDataPo, Integer> implements Operato
 
 	@Override
 	public List<PgDataPo> pg_list_for_purchase(Map<String, Object> map) {
-		map.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
 		return sqlSessionTemplateASS.selectList("pg_list_for_purchase", map);
 	}
 

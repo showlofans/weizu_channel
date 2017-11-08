@@ -17,6 +17,7 @@ import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
@@ -136,7 +137,7 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 			int sType = channelPo.getServiceType();
 			int oType = channelPo.getOperatorType();
 			int pgSizeInt = Integer.parseInt(pgStr.trim());
-			PgDataPo pgData = valiUser.findPg(new PgDataPo(oType, pgSizeInt, sType, channelPo.getPgType(), channelPo.getPgValidity(),channelPo.getChannelType()));//sType, pgSizeInt, oType
+			PgDataPo pgData = valiUser.findPg(new PgDataPo(oType, pgSizeInt, sType, channelPo.getPgType(), channelPo.getPgValidity(),channelPo.getChannelType(),PgServiceTypeEnum.PGCHARGE.getValue()));//sType, pgSizeInt, oType
 			if(pgData == null){
 				System.out.println("通道添加，包体不存在");
 				return "error";

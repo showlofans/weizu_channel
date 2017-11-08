@@ -347,7 +347,7 @@ public class ChargePgController {
 	private List<OperatorPgDataPo> initByPgList(List<PgDataPo> pgList) {
 		List<OperatorPgDataPo> dataList = new LinkedList<OperatorPgDataPo>();
 		for (PgDataPo pgDataPo : pgList) {
-			dataList.add(new OperatorPgDataPo(pgDataPo.getId(), pgDataPo.getOperatorType(), pgDataPo.getOperatorName(), pgDataPo.getPgSize(), pgDataPo.getPgPrice(), pgDataPo.getPgName(), pgDataPo.getPgInService(), pgDataPo.getServiceType(), pgDataPo.getPgType(), pgDataPo.getPgValidity(),pgDataPo.getCirculateWay()));
+			dataList.add(new OperatorPgDataPo(pgDataPo.getId(), pgDataPo.getOperatorType(), pgDataPo.getOperatorName(), pgDataPo.getPgSize(), pgDataPo.getPgPrice(), pgDataPo.getPgName(), pgDataPo.getPgInService(), pgDataPo.getServiceType(), pgDataPo.getPgType(), pgDataPo.getPgValidity(),pgDataPo.getCirculateWay(),pgDataPo.getPgServiceType()));
 		}
 		return dataList;
 	}
@@ -650,10 +650,20 @@ public class ChargePgController {
 		resultMap.put("orderPathEnums", OrderPathEnum.toList());
 		resultMap.put("orderStateEnums", OrderStateEnum.toList());
 		ModelAndView model = new ModelAndView("/trade/purchase_list", "resultMap", resultMap);
-		if(purchaseVO.getOrderState() == null){
+		
+		Boolean isSuper = agencyVO.getRootAgencyId() == 0;
+		Boolean getBackOringinal = (purchaseVO.getOrderState() == null && !isSuper) || (purchaseVO.getOrderResult() == null && isSuper);
+		
+		if(getBackOringinal){//状态为空的已经鸳鸯返回了
 			return model;
-		}else{
-			switch (purchaseVO.getOrderState()) {
+		}else{//状态应该都不为空
+			Integer state = null;
+			if(isSuper){
+				state = purchaseVO.getOrderResult();
+			}else{
+				state = purchaseVO.getOrderState();
+			}
+			switch (state) {
 			case 0://充值失败
 				model = new ModelAndView("/trade/charge_failure_list", "resultMap", resultMap);
 				break;

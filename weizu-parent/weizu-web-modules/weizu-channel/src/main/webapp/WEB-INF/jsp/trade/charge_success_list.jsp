@@ -108,7 +108,7 @@
 					</c:choose>
 					
 					<!-- <button name="" id="" class="btn btn-primary radius" onclick="exportS()" type="button"><i class="Hui-iconfont">&#xe665;</i> 导出</button> -->
-					<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
+					<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
 				</div>
 		</form>
 	</div>
@@ -235,12 +235,13 @@ function batchPush(){
 		success: function(resp){
 			//$(obj).parents("tr").remove();
 			//alert
-			if(resp=="success"){
+			/* if(resp=="success"){
 				layer.msg('批量推送成功',{icon:1,time:1000});
 				//location.reload();
            	 }else{
 				layer.msg('批量推送失败',{icon:2,time:1000});
-           	 }
+           	 } */
+			layer.msg(resp,{icon:1,time:1000});
 		},
 		error:function(resp) {
 			console.log(resp.msg);

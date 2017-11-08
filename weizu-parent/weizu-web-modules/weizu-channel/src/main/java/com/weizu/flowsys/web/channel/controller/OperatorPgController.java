@@ -18,6 +18,7 @@ import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgInServiceEnum;
+import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
@@ -174,6 +175,11 @@ public class OperatorPgController {
 		}else{
 			pageParam = new PageParam(1, 10);
 		}
+		
+		if(operatorPgDataPo.getPgServiceType() == null){
+			operatorPgDataPo.setPgServiceType(PgServiceTypeEnum.PGCHARGE.getValue());
+		}
+		
 		Pagination<PgDataPo> pagination = operatorPgAO.listPg(operatorPgDataPo,pageParam);
 		resultMap.put("pgInEnums", PgInServiceEnum.toList());
 		resultMap.put("operatoerTypeEnums", OperatorTypeEnum.toList());
@@ -181,6 +187,7 @@ public class OperatorPgController {
 		resultMap.put("pgTypeEnums", PgTypeEnum.toList());
 		resultMap.put("pgValidityEnums", PgValidityEnum.toList());
 		resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());
+		resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());
 		
 		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 		resultMap.put("params", operatorPgDataPo);

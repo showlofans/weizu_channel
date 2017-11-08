@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
@@ -85,6 +86,12 @@ public class ValiUser {
 	public PgDataPo findPg(PgDataPo pgDataPo)
 	{
 		WherePrams whereP = new WherePrams("service_type", "=", pgDataPo.getServiceType()).and("pg_size", "=", pgDataPo.getPgSize()).and("operator_type", "=", pgDataPo.getOperatorType());
+		if(pgDataPo.getPgServiceType() == null){//默认使用流量包
+			whereP.and("pg_service_type", "=", PgServiceTypeEnum.PGCHARGE.getValue());
+		}
+		else{//是否话费和流量都用同样的接口进行充值
+			whereP.and("pg_service_type", "=", pgDataPo.getPgServiceType());
+		}
 		if(pgDataPo.getPgType() == null){//默认使用流量包
 			whereP.and("pg_type", "=", PgTypeEnum.PGDATA.getValue());
 		}else{
@@ -101,6 +108,8 @@ public class ValiUser {
 		}else{
 			whereP.and("pg_validity", "=", pgDataPo.getPgValidity());
 		}
+		
+		
 		
 		
 		

@@ -36,6 +36,15 @@
 	<form class="form form-horizontal" action="/flowsys/operatorPg/operatorPg_list.do" method="post" id="formD" name="dataListForm">
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
 	<div class="row cl formControls">
+		<span class="select-box inline">
+			<select name="pgServiceType" class="select"  onchange="submitForm()">
+			<option value="">包体类型</option>
+			<c:forEach items="${resultMap.pgServiceTypeEnums }" var="pgServiceTypeEnum" varStatus="vs1">
+				<option value="${pgServiceTypeEnum.value }" <c:if test="${pgServiceTypeEnum.value == resultMap.params.pgServiceType }"> selected</c:if>>${pgServiceTypeEnum.desc }</option>
+			</c:forEach>
+		</select>
+		</span>
+		&nbsp;&nbsp;
 		 <!--  包体有效期： -->
 		 <span class="select-box inline">
 			<select name="pgValidity" class="select"  onchange="submitForm()">
@@ -95,7 +104,6 @@
 			</c:forEach>
 		</select>
 		</span>
-			
 			
 	</div>
 	

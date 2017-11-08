@@ -27,6 +27,8 @@ public class PgDataPo extends Po {
     private Integer circulateWay;				//流通方式（1-普通通道包，2-红包通道，3-转移包，4-共享包）
     
     private String pgValidity;			//流量有效期(PgValidityEnum)
+    
+    private Integer pgServiceType;		//包体业务类型 (PgServiceTypeEnum)
     @TempField
     private Long channelId;				//通道id
 
@@ -38,7 +40,7 @@ public class PgDataPo extends Po {
 	 * @param pgValidity
 	 */
 	public PgDataPo(Integer operatorType, Integer pgSize, Integer serviceType,
-			Integer pgType, String pgValidity,Integer circulateWay) {
+			Integer pgType, String pgValidity,Integer circulateWay, Integer pgServiceType) {
 		super();
 		this.operatorType = operatorType;
 		this.pgSize = pgSize;
@@ -46,8 +48,18 @@ public class PgDataPo extends Po {
 		this.pgType = pgType;
 		this.pgValidity = pgValidity;
 		this.circulateWay = circulateWay;
+		this.pgServiceType = pgServiceType;
 	}
 	
+	
+	public Integer getPgServiceType() {
+		return pgServiceType;
+	}
+
+	public void setPgServiceType(Integer pgServiceType) {
+		this.pgServiceType = pgServiceType;
+	}
+
 	public Long getChannelId() {
 		return channelId;
 	}

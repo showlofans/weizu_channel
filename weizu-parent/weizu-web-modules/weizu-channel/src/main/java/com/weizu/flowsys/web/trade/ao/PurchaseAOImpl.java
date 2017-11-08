@@ -45,6 +45,7 @@ import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
+import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.OrderUril;
@@ -791,6 +792,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 					boolean canGetStateByAPI = purchaseVO2.getOrderResult() != null && purchaseVO2.getOrderResult().equals(OrderStateEnum.DAICHONG.getValue()) && "通道暂停等待".equals(purchaseVO2.getOrderResultDetail());
 					/**订单列表，订单又不支持回调的时候**/
 					if(isPurchaseList && purchaseVO2.getRateDiscountId() != null && !canGetStateByAPI && purchaseVO2.getOrderResult() != null){//只能通过费率id，如果通道或者费率被删除，就得不到最新的订单状态//要求有充值回调记录
+						
 						ExchangePlatformPo purchaseEp = exchangePlatformDao.getEpByRateId(purchaseVO2.getRateDiscountId());
 						if(purchaseEp == null){
 							purchaseEp = exchangePlatformDao.getEpByCDiscountId(purchaseVO2.getRateDiscountId());
@@ -1183,6 +1185,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 		if(channelId != null){
 			objMap.put("channelId", channelId);
 		}
+		//objMap.put("pgServiceType", PgServiceTypeEnum.PGCHARGE.getValue());
 		List<PgDataPo> pgList = operatorPgDao.getPgByChanel(objMap);
 		return pgList;
 	}

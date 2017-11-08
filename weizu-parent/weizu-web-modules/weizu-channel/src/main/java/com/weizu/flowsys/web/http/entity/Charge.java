@@ -34,12 +34,11 @@ public class Charge {
 	public void setTipMsg(String tipMsg) {
 		this.tipMsg = tipMsg;
 	}
-	public ChargePo getChargeOrder() {
+	public ChargePo getChargePo() {
 		return chargePo;
 	}
-	public void setChargeOrder(ChargePo chargePo) {
+	public void setChargePo(ChargePo chargePo) {
 		this.chargePo = chargePo;
 	}
-	
-	
+
 }

@@ -16,9 +16,11 @@ import com.aiyi.base.pojo.PageTag;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.weizu.flowsys.core.util.NumberTool;
+import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgInServiceEnum;
+import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgSizeEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
@@ -307,6 +309,13 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 		if(operatorPgDataPo.getPgType() != null)
 		{
 			params.put("pgType", operatorPgDataPo.getPgType());
+		}
+		if(operatorPgDataPo.getPgServiceType() != null)
+		{
+			params.put("pgServiceType", operatorPgDataPo.getPgServiceType());
+		}else{//默认
+			params.put("pgServiceType", PgServiceTypeEnum.PGCHARGE.getValue());
+			
 		}
 		if(StringHelper.isNotEmpty(operatorPgDataPo.getPgValidity()))
 		{
@@ -693,7 +702,8 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 		if(StringHelper.isNotEmpty(ccpp.getPgValidity())){
 			params.put("pgValidity", ccpp.getPgValidity());
 		}
-		
+		params.put("pgServiceType", PgServiceTypeEnum.PGCHARGE.getValue());
+		params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
 		List<PgDataPo> pgList = operatorPgDao.pg_list_for_purchase(params);
 		return pgList;
 	}
