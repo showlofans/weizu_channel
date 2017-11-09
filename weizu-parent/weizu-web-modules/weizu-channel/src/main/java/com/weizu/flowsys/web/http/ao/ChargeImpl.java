@@ -292,7 +292,7 @@ public class ChargeImpl implements IChargeFacet {
 		Map<String, Object> sqlMap = new HashMap<String, Object>();
 		
 		Charge charge = null;
-		AgencyBackwardPo backPo = valiUser.findAgency(chargeParams.getUsername(), chargeParams.getSign());
+		AgencyBackwardPo backPo = valiUser.findAgency(chargeParams.getUserName(), chargeParams.getSign());
 		//充值用户不合法
 		if(backPo == null)
 		{

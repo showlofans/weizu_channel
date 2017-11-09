@@ -121,6 +121,33 @@ public enum ServiceTypeEnum {
 
 		return attachmentTypeMapList;
 	}
+	/**
+	 * @description: 话费业务类型枚举列表
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月9日 下午3:53:04
+	 */
+	public static List<Map<String, Object>> toHuaList()
+	{
+		// 获取附件类型枚举数组
+		ServiceTypeEnum[] enumArray = ServiceTypeEnum.values();
+		
+		// 定义枚举list
+		List<Map<String, Object>> attachmentTypeMapList = new ArrayList<Map<String, Object>>(enumArray.length);
+		
+		for (ServiceTypeEnum serviceTypeEnum : enumArray)
+		{
+			if(serviceTypeEnum.getValue() != PROVINCE_ROAMING.getValue()){
+				Map<String, Object> serviceTypeMap = new HashMap<String, Object>(2);
+				serviceTypeMap.put("desc", serviceTypeEnum.getDesc());
+				serviceTypeMap.put("value", serviceTypeEnum.getValue());
+				
+				attachmentTypeMapList.add(serviceTypeMap);
+			}
+		}
+		
+		return attachmentTypeMapList;
+	}
 	
 	public String getDesc() {
 		return desc;

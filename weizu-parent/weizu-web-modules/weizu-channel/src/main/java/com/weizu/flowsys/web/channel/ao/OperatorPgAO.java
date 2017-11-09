@@ -5,12 +5,14 @@ import java.util.Map;
 
 import com.aiyi.base.pojo.PageParam;
 import com.aiyi.base.pojo.PageTag;
+import com.weizu.flowsys.api.weizu.charge.PgProductParams;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
+import com.weizu.flowsys.web.http.entity.PgProduct;
 
 public interface OperatorPgAO {
 	/**
@@ -156,6 +158,15 @@ public interface OperatorPgAO {
 	 * @createTime:2017年11月1日 上午11:06:30
 	 */
 	List<PgDataPo> pg_list_for_purchase(ChargeChannelParamsPo ccpp, Integer agencyId);
+	
+	/**
+	 * @description: 获得流量产品列表
+	 * @param pgParams
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月9日 下午2:04:41
+	 */
+//	PgProduct getPgProductList(PgProductParams pgParams);
 	
 	/**
 	 * @description: 是否存在该包体

@@ -175,21 +175,27 @@ public class OperatorPgController {
 		}else{
 			pageParam = new PageParam(1, 10);
 		}
-		
-		if(operatorPgDataPo.getPgServiceType() == null){
-			operatorPgDataPo.setPgServiceType(PgServiceTypeEnum.PGCHARGE.getValue());
+		Integer pgServiceType = operatorPgDataPo.getPgServiceType();
+		if(pgServiceType == null){
+			pgServiceType = PgServiceTypeEnum.PGCHARGE.getValue();
+		}
+		if(pgServiceType.equals(PgServiceTypeEnum.PGCHARGE.getValue())){//添加流量
+			resultMap.put("pgTypeEnums", PgTypeEnum.toList());
+			resultMap.put("pgValidityEnums", PgValidityEnum.toList());
+			resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());
+			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
+		}else{
+			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toHuaList());
 		}
 		
+//		resultMap.put("pgServiceType", pgServiceType);
 		Pagination<PgDataPo> pagination = operatorPgAO.listPg(operatorPgDataPo,pageParam);
 		resultMap.put("pgInEnums", PgInServiceEnum.toList());
 		resultMap.put("operatoerTypeEnums", OperatorTypeEnum.toList());
 		
-		resultMap.put("pgTypeEnums", PgTypeEnum.toList());
-		resultMap.put("pgValidityEnums", PgValidityEnum.toList());
-		resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());
 		resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());
 		
-		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
+		operatorPgDataPo.setPgServiceType(pgServiceType);
 		resultMap.put("params", operatorPgDataPo);
 		resultMap.put("pagination", pagination);
 		return new ModelAndView("/channel/operatorPg_list", "resultMap", resultMap);
@@ -206,19 +212,26 @@ public class OperatorPgController {
 	 * @createTime:2017年6月5日 下午2:32:33
 	 */
 	@RequestMapping(value = OperatorPgURL.PG_ADD_PAGE)
-	public ModelAndView pg_add_page(@RequestParam(value = "pageTitle", required = false)String pageTitle) throws UnsupportedEncodingException{
+	public ModelAndView pg_add_page(Integer pgServiceType) throws UnsupportedEncodingException{
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		if(StringHelper.isNotEmpty(pageTitle)){
-//			resultMap.put("pageTitle", new String(pageTitle.getBytes("ISO8859-1"), "utf-8"));
-			resultMap.put("pageTitle", pageTitle);
+//		if(StringHelper.isNotEmpty(pageTitle)){
+////			resultMap.put("pageTitle", new String(pageTitle.getBytes("ISO8859-1"), "utf-8"));
+//			resultMap.put("pageTitle", pageTitle);
+//		}
+		
+		if(pgServiceType.equals(PgServiceTypeEnum.PGCHARGE.getValue())){//添加流量
+			resultMap.put("pgTypeEnums", PgTypeEnum.toList());
+			resultMap.put("pgValidityEnums", PgValidityEnum.toList());
+			resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());
+			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
+		}else{//添加话费
+			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toHuaList());
 		}
-		resultMap.put("pgTypeEnums", PgTypeEnum.toList());
-		resultMap.put("pgValidityEnums", PgValidityEnum.toList());
-		resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());
+		resultMap.put("pgServiceType", pgServiceType);
+		resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());
 		
 		resultMap.put("operatoerTypeEnums", OperatorTypeEnum.toList());
-		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 		resultMap.put("pgInServiceEnums", PgInServiceEnum.toList());
 		return new ModelAndView("/channel/pg_add_page", "resultMap", resultMap);
 	}

@@ -31,6 +31,8 @@ public class PgDataPo extends Po {
     private Integer pgServiceType;		//包体业务类型 (PgServiceTypeEnum)
     @TempField
     private Long channelId;				//通道id
+    @TempField
+    private String productCode;		//产品编码
 
 	/** 验证包体是否存在的必须参数
 	 * @param operatorType
@@ -51,7 +53,14 @@ public class PgDataPo extends Po {
 		this.pgServiceType = pgServiceType;
 	}
 	
-	
+	public String getProductCode() {
+		return productCode;
+	}
+
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
+	}
+
 	public Integer getPgServiceType() {
 		return pgServiceType;
 	}

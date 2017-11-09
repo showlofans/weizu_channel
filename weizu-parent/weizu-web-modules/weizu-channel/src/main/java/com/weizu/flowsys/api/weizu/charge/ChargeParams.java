@@ -10,7 +10,7 @@ package com.weizu.flowsys.api.weizu.charge;
  */
 public class ChargeParams {
 	
-	private String username;			//用户账号
+	private String userName;			//用户账号
 	private String number;				//充值号码
 	private Integer flowsize;			//流量大小
 	private Integer scope;				//业务范围()
@@ -23,10 +23,10 @@ public class ChargeParams {
     private String pgValidity;			//流量有效期(PgValidityEnum)********
     private String reportUrl;			//回调地址
 	
-	public ChargeParams(String username, String number, Integer flowsize,
+	public ChargeParams(String userName, String number, Integer flowsize,
 			Integer scope, String sign, Integer billType) {
 		super();
-		this.username = username;
+		this.userName = userName;
 		this.number = number;
 		this.flowsize = flowsize;
 		this.scope = scope;
@@ -110,11 +110,11 @@ public class ChargeParams {
 	public ChargeParams() {
 		super();
 	}
-	public String getUsername() {
-		return username;
+	public String getUserName() {
+		return userName;
 	}
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 	public String getNumber() {
 		return number;

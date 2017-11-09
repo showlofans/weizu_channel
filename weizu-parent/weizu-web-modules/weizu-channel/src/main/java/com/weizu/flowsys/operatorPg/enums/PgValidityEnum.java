@@ -25,6 +25,10 @@ public enum PgValidityEnum {
 	 */
 	MONTH_DAY_DATA("月包", "30"),
 	/**
+	 * 月包
+	 */
+	TWEENTY_DAY_DATA("20天包", "20"),
+	/**
 	 * 1日包
 	 */
 	ONE_DAY_DATA("今日包", "01"),

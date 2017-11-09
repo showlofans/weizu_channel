@@ -15,6 +15,7 @@ import com.aiyi.base.pojo.PageParam;
 import com.aiyi.base.pojo.PageTag;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.weizu.flowsys.api.weizu.charge.PgProductParams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
@@ -31,6 +32,7 @@ import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
+import com.weizu.flowsys.web.http.entity.PgProduct;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.web.foundation.String.StringHelper;
 
@@ -707,6 +709,18 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 		List<PgDataPo> pgList = operatorPgDao.pg_list_for_purchase(params);
 		return pgList;
 	}
+
+//	@Override
+//	public PgProduct getPgProductList(PgProductParams pgParams) {
+//		Map<String,Object> map = new HashMap<String,Object>();
+////		map.put("agencyId", pgParams.get);
+//		map.put("bindState", );
+//		map.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+//		
+//		operatorPgDao.getProductPgList(map);
+//		
+//		return null;
+//	}
 	
 //	private Map<String,Object> getParamsByCCPP(ChargeChannelParamsPo ccpp){
 //		Map<String, Object> params = new HashMap<String, Object>();

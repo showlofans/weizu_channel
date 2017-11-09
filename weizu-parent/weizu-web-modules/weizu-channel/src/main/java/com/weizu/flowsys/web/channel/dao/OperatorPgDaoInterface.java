@@ -7,6 +7,7 @@ import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
+import com.weizu.flowsys.web.http.entity.PgProductPo;
 
 public interface OperatorPgDaoInterface extends Dao<PgDataPo, Integer> {
 	/**
@@ -112,6 +113,15 @@ public interface OperatorPgDaoInterface extends Dao<PgDataPo, Integer> {
 	 * @createTime:2017年11月1日 上午11:08:27
 	 */
 	List<PgDataPo> pg_list_for_purchase(Map<String,Object> map);
+	
+	/**
+	 * @description: 通过代理商id获得产品列表
+	 * @param map
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月9日 上午11:08:10
+	 */
+	List<PgProductPo> getProductPgList(Map<String,Object> map);
 	
 //	Pagination<OperatorPgDataPo> list();
 }

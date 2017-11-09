@@ -37,34 +37,38 @@
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
 	<div class="row cl formControls">
 		<span class="select-box inline">
-			<select name="pgServiceType" class="select"  onchange="submitForm()">
-			<option value="">包体类型</option>
+			<select name="pgServiceType" id="pgServiceType" class="select c-green"  onchange="submitForm()">
+			<!-- <option value="">包体类型</option> -->
 			<c:forEach items="${resultMap.pgServiceTypeEnums }" var="pgServiceTypeEnum" varStatus="vs1">
 				<option value="${pgServiceTypeEnum.value }" <c:if test="${pgServiceTypeEnum.value == resultMap.params.pgServiceType }"> selected</c:if>>${pgServiceTypeEnum.desc }</option>
 			</c:forEach>
 		</select>
 		</span>
 		&nbsp;&nbsp;
-		 <!--  包体有效期： -->
-		 <span class="select-box inline">
-			<select name="pgValidity" class="select"  onchange="submitForm()">
-				<option value="">包体有效期</option>
-				<c:forEach items="${resultMap.pgValidityEnums }" var="pgValidityEnum" varStatus="vs1">
-					<option value="${pgValidityEnum.value }" <c:if test="${pgValidityEnum.value == resultMap.params.pgValidity }"> selected</c:if>>${pgValidityEnum.desc }</option>
-				</c:forEach>
-			</select>
-		</span> 
-		&nbsp;&nbsp;
-		 <!--  流量流通方式： -->
-		 <span class="select-box inline">
-			<select name="circulateWay" class="select"  onchange="submitForm()">
-				<option value="">流量流通方式</option>
-				<c:forEach items="${resultMap.channelTypeEnums }" var="channelTypeEnum" varStatus="vs1">
-					<option value="${channelTypeEnum.value }" <c:if test="${channelTypeEnum.value == resultMap.params.circulateWay }"> selected</c:if>>${channelTypeEnum.desc }</option>
-				</c:forEach>
-			</select>
-		</span> 
-		&nbsp;&nbsp;
+		 
+		 <c:if test="${resultMap.params.pgServiceType ==1 }"><!-- 流量还是话费 -->
+			 <!--  包体有效期： -->
+			 <span class="select-box inline">
+				<select name="pgValidity" class="select"  onchange="submitForm()">
+					<option value="">包体有效期</option>
+					<c:forEach items="${resultMap.pgValidityEnums }" var="pgValidityEnum" varStatus="vs1">
+						<option value="${pgValidityEnum.value }" <c:if test="${pgValidityEnum.value == resultMap.params.pgValidity }"> selected</c:if>>${pgValidityEnum.desc }</option>
+					</c:forEach>
+				</select>
+			</span> 
+			&nbsp;&nbsp;
+			 <!--  流量流通方式： -->
+			 <span class="select-box inline">
+				<select name="circulateWay" class="select"  onchange="submitForm()">
+					<option value="">流量流通方式</option>
+					<c:forEach items="${resultMap.channelTypeEnums }" var="channelTypeEnum" varStatus="vs1">
+						<option value="${channelTypeEnum.value }" <c:if test="${channelTypeEnum.value == resultMap.params.circulateWay }"> selected</c:if>>${channelTypeEnum.desc }</option>
+					</c:forEach>
+				</select>
+			</span> 
+			&nbsp;&nbsp;
+		</c:if>
+		
 		 <!--  运营商类型： -->
 		 <span class="select-box inline">
 			<select name="operatorType" class="select"  onchange="submitForm()">
@@ -94,6 +98,8 @@
 			</c:forEach>
 		</select>
 		</span>
+		
+		<c:if test="${resultMap.params.pgServiceType ==1 }"><!-- 流量还是话费 -->
 		&nbsp;&nbsp;
 			<!-- 包状态 -->
 		<span class="select-box inline">
@@ -104,7 +110,7 @@
 			</c:forEach>
 		</select>
 		</span>
-			
+		</c:if>
 	</div>
 	
 	<div class="row cl" style="margin-top: 30dp">
@@ -131,12 +137,17 @@
 				<tr class="text-c">
 					<!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
 					<!-- <th width="80">流量包Id</th> -->
-					<th width="200">流量包名称</th>
+					
+					<th width="80">属性</th>
+					<th width="200">包名称</th>
 					<th width="80">业务类型</th>
-					<th width="80">有效期</th>
-					<th width="80">流通方式</th>
-					<!-- <th width="80">流量类型</th> -->
-					<th width="80">流量大小</th>
+					
+					<c:if test="${resultMap.params.pgServiceType ==1 }">
+						<th width="80">有效期</th>
+						<th width="80">流通方式</th>
+						<!-- <th width="80">流量类型</th> -->
+						<th width="80">流量大小</th>
+					</c:if>
 					<th width="80">运营商类型</th>
 					<!-- <th width="80">运营商名称</th> -->
 					<!-- <th width="120">支持城市</th> -->
@@ -150,6 +161,11 @@
 					<tr class="text-c">
 						<!-- <td><input type="checkbox" value="" name=""></td> -->
 						<%-- <td>${pg.pgId }</td> --%>
+						<td><c:forEach items="${resultMap.pgServiceTypeEnums }" var="pgServiceType" varStatus="vs1">
+						<c:if test="${pg.pgServiceType == pgServiceType.value }"> ${pgServiceType.desc }</c:if>
+						</c:forEach>
+						</td>
+						
 						<td>
 						<c:choose>
 							<c:when test="${pg.pgInService == 1 }"><!-- 使用状态为开通状态 -->
@@ -168,28 +184,31 @@
 						<c:if test="${pg.serviceType == serviceType.value }"> ${serviceType.desc }</c:if>
 						</c:forEach>
 						</td>
-						<td><c:forEach items="${resultMap.pgValidityEnums }" var="pgValidityEnum" varStatus="vs1">
-						<c:if test="${pg.pgValidity == pgValidityEnum.value }"> ${pgValidityEnum.desc }</c:if>
-						</c:forEach>
-						</td>
-						<td><c:forEach items="${resultMap.channelTypeEnums }" var="channelTypeEnum" varStatus="vs1">
-						<c:if test="${pg.circulateWay == channelTypeEnum.value }"> ${channelTypeEnum.desc }</c:if>
-						</c:forEach>
-						</td>
-						<%-- <td><c:forEach items="${resultMap.pgTypeEnums }" var="pgTypeEnum" varStatus="vs1">
-						<c:if test="${pg.pgType == pgTypeEnum.value }"> ${pgTypeEnum.desc }</c:if>
-						</c:forEach>
-						</td> --%>
-						
-						<td>
-							<c:forEach items="${resultMap.pgTypeEnums }" var="pgTypeEnum" varStatus="vs1">
-								<c:if test="${pgTypeEnum.value == pg.pgType }"> 
-									<span data-toggle="tooltip" data-placement="bottom" title="${pgTypeEnum.desc }">
-										${pg.pgSize }M
-									</span>
-								</c:if>
+						<c:if test="${resultMap.params.pgServiceType ==1 }"><!-- 流量还是话费 -->
+							<td><c:forEach items="${resultMap.pgValidityEnums }" var="pgValidityEnum" varStatus="vs1">
+							<c:if test="${pg.pgValidity == pgValidityEnum.value }"> ${pgValidityEnum.desc }</c:if>
 							</c:forEach>
-						</td>
+							</td>
+							<td><c:forEach items="${resultMap.channelTypeEnums }" var="channelTypeEnum" varStatus="vs1">
+							<c:if test="${pg.circulateWay == channelTypeEnum.value }"> ${channelTypeEnum.desc }</c:if>
+							</c:forEach>
+							</td>
+							<%-- <td><c:forEach items="${resultMap.pgTypeEnums }" var="pgTypeEnum" varStatus="vs1">
+							<c:if test="${pg.pgType == pgTypeEnum.value }"> ${pgTypeEnum.desc }</c:if>
+							</c:forEach>
+							</td> --%>
+							
+							<td>
+								<c:forEach items="${resultMap.pgTypeEnums }" var="pgTypeEnum" varStatus="vs1">
+									<c:if test="${pgTypeEnum.value == pg.pgType }"> 
+										<span data-toggle="tooltip" data-placement="bottom" title="${pgTypeEnum.desc }">
+											${pg.pgSize }M
+										</span>
+									</c:if>
+								</c:forEach>
+							</td>
+						</c:if>
+						
 						<td><c:forEach items="${resultMap.operatoerTypeEnums }" var="operatorType" varStatus="vs1">
 						<c:if test="${pg.operatorType == operatorType.value }">
 							<span data-toggle="tooltip" data-placement="top" title="${pg.operatorName  }"> ${operatorType.desc }</span>
@@ -230,14 +249,15 @@ function submitForm(){
 }
 /*包体-添加*/
 function pg_add(title,url){
-	//alert("sd");
+	//alert("sd");pageTitle=' + title +"&
+	var pgServiceType = $('#pgServiceType').val();
 	layer.open({
         type: 2,
-        title: false,
+        title: title,
         area: ['500px', '600px'],
         maxmin: false,
         closeBtn: 1,
-        content: url+'?pageTitle=' + title,
+        content: url+'?pgServiceType=' + pgServiceType,
          end: function () {
             location.reload();
         }

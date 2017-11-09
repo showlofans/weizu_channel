@@ -168,7 +168,7 @@
 	</dl>
 	<c:if test="${loginContext.rootAgencyId == 0 }">
 	<dl id="menu-article">
-			<dt><i class="Hui-iconfont">&#xe6c6;</i> 包体标准价管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dt><i class="Hui-iconfont">&#xe6c6;</i> 标准价管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
 					<li><a data-href="/flowsys/operatorPg/operatorPg_list.do" data-title="标准价管理" href="javascript:void(0)">标准价管理</a></li>

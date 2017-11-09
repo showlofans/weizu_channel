@@ -442,6 +442,7 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 				params.put("serviceType", serviceTypeEnum.getValue());
 				params.put("bindState", BindStateEnum.BIND.getValue());
 				params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+				//分类查询，然后合并
 				List<RateDiscountPo> rateListBill = rateDiscountDao.getShowRate(params);
 				initRateList(rateListBill, dtoList, billTypeEnum.getValue(), serviceTypeEnum.getValue());
 			}

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weizu.flowsys.web.channel.dao.IProcincesDAO">
+	<sql id="t_cities">cities</sql>
+	<sql id="t_provinces">provinces</sql>
+	
+  <resultMap id="CitiesBaseMap" type="com.weizu.flowsys.web.channel.pojo.Cities" >
+    <result column="cityid" property="cityid" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="provinceid" property="provinceid" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.Provinces" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="provinceid" property="provinceid" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <collection property="cities" column="provinceid" resultMap="CitiesBaseMap"></collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    p.id, p.provinceid, p.province, c.cityid, c.city  
+  </sql>
+  <!-- 根据代理商和订单号获得订单的成本 -->
+  <!-- <select id="getOrderAmount" parameterType="map" resultType="double">
+  	select order_amount from <include refid="t_ap"></include>
+  	<where>
+  		<if test="purchaseId != null">
+  			AND purchase_id = #{purchaseId}
+  		</if>
+  		<if test="accountId != null">
+  			AND account_id = #{accountId}
+  		</if>
+  	</where>
+  </select> -->
+  <!-- 根据订单号和代理商账户id找到accountPurchase的补/扣款记录 -->
+  <select id="getProvinces" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"></include> 
+  	from <include refid="t_provinces"></include> p
+  	inner join <include refid="t_cities"></include> c
+  	on p.provinceid=c.provinceid
+  	<where>
+  		<!-- <if test="purchaseId != null">
+  			AND crt.purchase_id = #{purchaseId}
+  		</if>
+  		<if test="accountId != null">
+  			AND crt.account_id = #{accountId}
+  		</if>
+  		<if test="accountType != null">
+  			AND crt.account_type = #{accountType}
+  		</if> -->
+  	</where>
+  </select>
+  <!-- 批量添加 -->
+  <!--  <insert id="ap_addList" useGeneratedKeys="true" parameterType="java.util.List">
+  	insert into <include refid="t_ap"></include>
+  	(<include refid="Add_Column_List"></include>)
+  	values
+  	<foreach collection="list" item="ap" index="index" separator=",">
+  		(#{ap.accountId},#{ap.purchaseId},#{ap.rateDiscountId},#{ap.orderAmount},#{ap.orderState},#{ap.orderStateDetail},#{ap.orderPlatformPath},#{ap.orderPrice},#{ap.fromAgencyName},#{ap.fromAccountId},#{ap.recordId})
+  	</foreach>
+  </insert>
+  
+  <update id="batchUpdateState" parameterType="map">
+  	update <include refid="t_ap"></include>
+  	<set>
+  		<if test="orderState != null">
+  			order_state = #{orderState},
+  		</if>
+  		<if test="orderStateDetail != null">
+  			order_state_detail = #{orderStateDetail}
+  		</if>
+  	</set>
+  	<where>
+  		<if test="purchaseId != null">
+  			purchase_id = #{purchaseId}
+  		</if>
+  	</where>
+  </update> -->
+</mapper>

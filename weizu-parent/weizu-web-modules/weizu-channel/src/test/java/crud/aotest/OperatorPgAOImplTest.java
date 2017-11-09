@@ -1,6 +1,8 @@
 //package crud.aotest;
 //
+//import java.util.HashMap;
 //import java.util.List;
+//import java.util.Map;
 //
 //import javax.annotation.Resource;
 //
@@ -10,7 +12,9 @@
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
 //import com.aiyi.base.pojo.PageParam;
+//import com.alibaba.fastjson.JSON;
 //import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
+//import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 //import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 //import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 //import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
@@ -21,6 +25,7 @@
 //import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 //import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 //import com.weizu.flowsys.web.channel.pojo.PgDataPo;
+//import com.weizu.flowsys.web.http.entity.PgProductPo;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -93,16 +98,37 @@
 ////			System.out.println("getCirculateWay:" + pgData.getCirculateWay());
 ////		}
 ////	}
+////	@Test
+////	public void pg_list_for_purchase(){
+////		ChargeChannelParamsPo paramsPo = new ChargeChannelParamsPo(null, ServiceTypeEnum.PROVINCE.getValue(), PgTypeEnum.PGDATA.getValue(), PgValidityEnum.MONTH_DAY_DATA.getValue(), ChannelTypeEnum.ORDINARY.getValue());
+////		paramsPo.setOperatorType(OperatorTypeEnum.MOBILE.getValue());
+////		paramsPo.setScopeCityCode("26");
+////		List<PgDataPo> pgList = operatorPgAO.pg_list_for_purchase(paramsPo, 101);
+////		for (PgDataPo pgDataPo : pgList) {
+////			System.out.println(pgDataPo.getPgName());
+////			System.out.println(pgDataPo.getChannelId());
+////		}
+////	}
+//	
+//	/**
+//	 * @description:
+//	 * @author:微族通道代码设计人 宁强
+//	 * @createTime:2017年11月9日 上午11:12:34
+//	 */
 //	@Test
-//	public void pg_list_for_purchase(){
-//		ChargeChannelParamsPo paramsPo = new ChargeChannelParamsPo(null, ServiceTypeEnum.PROVINCE.getValue(), PgTypeEnum.PGDATA.getValue(), PgValidityEnum.MONTH_DAY_DATA.getValue(), ChannelTypeEnum.ORDINARY.getValue());
-//		paramsPo.setOperatorType(OperatorTypeEnum.MOBILE.getValue());
-//		paramsPo.setScopeCityCode("26");
-//		List<PgDataPo> pgList = operatorPgAO.pg_list_for_purchase(paramsPo, 101);
-//		for (PgDataPo pgDataPo : pgList) {
-//			System.out.println(pgDataPo.getPgName());
-//			System.out.println(pgDataPo.getChannelId());
+//	public void getProductList(){
+//		Map<String,Object> map = new HashMap<String,Object>();
+//		map.put("agencyId", 2);
+//		map.put("bindState", 0);
+//		map.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+//		List<PgProductPo> pgList =  operatorPgDao.getProductPgList(map);
+////		System.out.println(JSON.toJSON(pgList));
+//		int size = 0;
+//		for (PgProductPo pgProductPo : pgList) {
+//			size += pgProductPo.getPgDataList().size();
+//			System.out.println("" + pgProductPo.getChannelName() + ":" + pgProductPo.getScopeCityCode() + "\t" + JSON.toJSONString(pgProductPo.getPgDataList()));
 //		}
+//		System.out.println(size);
 //	}
 //	
 ////	@Test

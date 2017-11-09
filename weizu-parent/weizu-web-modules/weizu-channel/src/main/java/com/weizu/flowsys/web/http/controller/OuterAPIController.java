@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.weizu.api.outter.enums.ChargeStatusEnum;
@@ -11,9 +12,11 @@ import org.weizu.api.outter.enums.ChargeStatusEnum;
 import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.api.singleton.BalanceDTO;
 import com.weizu.flowsys.api.weizu.charge.ChargeParams;
+import com.weizu.flowsys.api.weizu.charge.PgProductParams;
 import com.weizu.flowsys.api.weizu.facet.IBalanceFacet;
 import com.weizu.flowsys.api.weizu.facet.IChargeFacet;
 import com.weizu.flowsys.api.weizu.facet.IOrderFacet;
+import com.weizu.flowsys.api.weizu.facet.IPgProductFacet;
 import com.weizu.flowsys.api.weizu.order.QueryOrderParams;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
@@ -22,6 +25,7 @@ import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.web.http.entity.Charge;
 import com.weizu.flowsys.web.http.entity.Order;
+import com.weizu.flowsys.web.http.entity.PgProduct;
 import com.weizu.web.foundation.String.StringHelper;
 
 /**
@@ -42,6 +46,8 @@ public class OuterAPIController {
 	private IChargeFacet chargeImpl;
 	@Resource
 	private IOrderFacet orderFacade;
+	@Resource
+	private IPgProductFacet pgProductFacdeImpl;
 	
 	/**
 	 * @description:
@@ -151,6 +157,24 @@ public class OuterAPIController {
 		System.out.println(jsonResult);
 		return jsonResult;
 	}
+	
+	/**
+	 * @description: 获得流量产品列表
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月9日 下午2:15:56
+	 */
+	@ResponseBody
+	@RequestMapping(value=OuterApiURL.MY_PGPRODUCT_LIST,method=RequestMethod.GET)
+	public String myProductList(String userName,String sign,@RequestParam(value="operaterType", required=false)Integer operaterType){
+		PgProductParams pgParams = new PgProductParams(sign, userName);
+		pgParams.setOperaterType(operaterType);
+		PgProduct pgProduct = pgProductFacdeImpl.getPgProductList(pgParams);
+		String jsonResult = JSON.toJSON(pgProduct).toString();
+		System.out.println(jsonResult);
+		return jsonResult;
+	}
+//	public String
 	
 	
 }
