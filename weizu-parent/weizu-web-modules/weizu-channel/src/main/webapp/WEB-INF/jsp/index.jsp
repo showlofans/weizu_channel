@@ -115,6 +115,8 @@
 						</c:if>
 						<li><a data-href="/flowsys/channel/channel_add_page.do" data-title="通道添加" href="javascript:void(0)">通道添加</a></li>
 						<li><a data-href="/flowsys/channel/channel_list.do" data-title="通道列表" href="javascript:void(0)">通道列表</a></li>
+						<li><a data-href="/flowsys/tel_channel/telchannel_add_page.do" data-title="话费添加" href="javascript:void(0)">话费添加</a></li>
+						<!-- /flowsys/tel_channel/telchannel_list.do --><li><a data-href="#" data-title="话费通道" href="javascript:void(0)">话费通道</a></li>
 						<!-- <li><a data-href="/flowsys/rate/bind_channel_list.do?bindTag=bAgency" data-title="活动通道" href="javascript:void(0)">活动通道</a></li> -->
 					</ul>
 				</dd>

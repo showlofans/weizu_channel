@@ -3,6 +3,7 @@ package com.weizu.flowsys.web.channel.controller;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.aiyi.base.pojo.PageParam;
+import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgInServiceEnum;
@@ -24,8 +26,10 @@ import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
+import com.weizu.flowsys.web.channel.dao.IProcincesDAO;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
+import com.weizu.flowsys.web.channel.pojo.Provinces;
 import com.weizu.flowsys.web.channel.url.OperatorPgURL;
 import com.weizu.flowsys.web.http.ao.ValiUser;
 import com.weizu.web.foundation.String.StringHelper;
@@ -37,6 +41,8 @@ public class OperatorPgController {
 	private OperatorPgAO operatorPgAO;
 	@Resource
 	private ValiUser valiUser;
+	@Resource
+	private IProcincesDAO procincesDAO;
 	
 
 //	@RequestMapping(value = "initPg.do")
@@ -188,16 +194,20 @@ public class OperatorPgController {
 			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toHuaList());
 		}
 		
-//		resultMap.put("pgServiceType", pgServiceType);
-		Pagination<PgDataPo> pagination = operatorPgAO.listPg(operatorPgDataPo,pageParam);
 		resultMap.put("pgInEnums", PgInServiceEnum.toList());
 		resultMap.put("operatoerTypeEnums", OperatorTypeEnum.toList());
+		operatorPgDataPo.setPgServiceType(pgServiceType);
 		
 		resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());
-		
-		operatorPgDataPo.setPgServiceType(pgServiceType);
 		resultMap.put("params", operatorPgDataPo);
+//		resultMap.put("pgServiceType", pgServiceType);
+		Pagination<PgDataPo> pagination = operatorPgAO.listPg(operatorPgDataPo,pageParam);
 		resultMap.put("pagination", pagination);
+		
+		List<Provinces> provinces = procincesDAO.getProvinces();
+		resultMap.put("provinces", provinces);
+//		resultMap.put("provincesJson", JSON.toJSONString(provinces));
+		
 		return new ModelAndView("/channel/operatorPg_list", "resultMap", resultMap);
 	}
 	
