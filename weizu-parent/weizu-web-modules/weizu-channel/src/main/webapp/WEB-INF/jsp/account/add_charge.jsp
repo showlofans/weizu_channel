@@ -82,14 +82,15 @@
 			<label class="form-label col-xs-4 col-sm-3">充值额：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" class="input-text" required="required" style="width:100px;" autocomplete="off" placeholder="请输入double值" name="rechargeAmount" id="rechargeAmount">元
-				<c:choose>
+				<span style="display:none;" id="accountBalance">${resultMap.accountBalance }</span>
+				<%-- <c:choose>
 					<c:when test="${resultMap.accountPo.billType == 0 }">
 						<span style="display:none;" id="accountBalance">${resultMap.accountPo.accountBalance }</span>
 					</c:when>
 					<c:otherwise>
 						<span style="display:none;" id="accountBalance">${resultMap.accountPo.accountBalance }</span>
 					</c:otherwise>
-				</c:choose>
+				</c:choose> --%>
 				<input type="hidden" name="accountType" value="0"> <!-- 设置为充值 -->
 				<%-- <input type="hidden" name="agencyId" value="${resultMap.accountPo.agencyId }"> <!-- 代理商id --> --%>
 				<input type="hidden" id="contextRootId" value="${loginContext.rootAgencyId }"> <!-- 代理商id -->
@@ -150,12 +151,12 @@ $().ready(function() {
 	$("#charge-form").validate({
 		submitHandler : function(form) {
 			var rechargeAmount = parseFloat($('#rechargeAmount').val());
-			var accountAmount = parseFloat($('#accountBalance').html());
+			var accountBalance = parseFloat($('#accountBalance').html());
 			var contextRootId = $('#contextRootId').val();
 			//alert(contextRootId);
 			//alert(rechargeAmount);
-			//alert(accountAmount);
-			if(rechargeAmount > accountAmount && contextRootId != 0){
+			//alert(accountBalance);
+			if(rechargeAmount > accountBalance && contextRootId != 0){
 				layer.msg('余额不足，请重新输入充值额！');
 				$('#rechargeAmount').val('');
 				$('#rechargeAmount').focus();

@@ -3,6 +3,9 @@ package com.weizu.flowsys.web.trade.ao;
 import java.util.List;
 import java.util.Map;
 
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
 //import org.weizu.api.facet.orderState.PageOrder;
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
@@ -46,6 +49,16 @@ public interface PurchaseAO {
 	 * @createTime:2017年6月13日 下午12:52:58
 	 */
 	Pagination<PurchaseVO> getPurchase(Map<String, Object> resultMap,PurchaseVO purchaseVO,PageParam pageParam);
+	
+	/**
+	 * @description: 根据页面订单实体获得总记录数
+	 * @param purchaseVO
+	 * @param isCharged
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月3日 上午9:47:38
+	 */
+//	Long getTotalRecordByParams(PurchaseVO purchaseVO, Boolean isCharged);
 	/**
 	 * @description: 获得不分页列表
 	 * @param purchaseVO
@@ -53,7 +66,7 @@ public interface PurchaseAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年9月22日 上午9:53:53
 	 */
-	List<PurchaseVO> getPurchase(PurchaseVO purchaseVO);
+	Map<String,Object> getPurchaseMap(PurchaseVO purchaseVO);
 	
 	/**
 	 * @description:通过微族api充值
@@ -163,5 +176,32 @@ public interface PurchaseAO {
 	 * @createTime:2017年9月4日 上午10:18:03
 	 */
 	String ajaxCommitOrder(Long orderId,Integer accountId,String chargeTelDetail);
+	
+	/**
+	 * @description: 批量提交订单
+	 * @param purchaseVO
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月4日 上午9:56:37
+	 */
+	String batchCommitOrder(PurchaseVO purchaseVO);
+	
+	/**
+	 * @description: 批量推送订单
+	 * @param purchaseVO 查询推送的订单
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月7日 下午4:44:31
+	 */
+	String batchPushOrder(PurchaseVO purchaseVO);
+	
+	/**
+	 * @description: 导出充值成功列表
+	 * @param purchaseVO
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月7日 下午2:27:29
+	 */
+	HSSFWorkbook exportChargedList(PurchaseVO purchaseVO, Integer agencyTag);
 	
 }

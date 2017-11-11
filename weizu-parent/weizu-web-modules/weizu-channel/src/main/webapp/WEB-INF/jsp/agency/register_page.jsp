@@ -21,7 +21,7 @@
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
-<title>用户注册 - 维族通道系统</title>
+<title>用户注册-微族通道系统</title>
 <meta name="keywords" content="">
 <meta name="description" content="">
 </head>
@@ -30,7 +30,17 @@
 <div class="loginWraper">
   <div id="loginform" class="loginBox">
   <h3 class="title">欢迎注册</h3> 
-    <form class="form form-horizontal" id="lgForm" action="/flowsys/agency/register.do" method="post">
+    <form class="form form-horizontal" id="regForm" action="/flowsys/agency/register.do" method="post">
+      <div class="row cl">
+        <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe6cb;</i></label>
+        <div class="formControls col-xs-8">
+             <input id="verifyCode" name="verifyCode" value="${resultMap.reg.verifyCode }" required  autocomplete="off" type="text" placeholder="注册邀请码(最少四位)" class="input-text size-L">
+             <!-- <input id="verifyCode" name="verifyCode" value="" type="hidden"> --><!--  onblur="testHas()" -->
+             <c:if test="${not empty resultMap.msg}">
+    	  	  		<span id="errorMsg" style="color:red;" >${resultMap.msg}</span>
+    	  	  	</c:if>
+        </div>
+      </div>
       <div class="row cl" >
         <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
         <div class="formControls col-xs-8">
@@ -40,7 +50,7 @@
       <div class="row cl">
         <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60e;</i></label>
         <div class="formControls col-xs-8">
-        	<input id="userPass" name="userPass"  value="${resultMap.reg.userPass }" type="text" class="input-text size-L" placeholder="密码" >
+        	<input id="userPass" name="userPass"  value="${resultMap.reg.userPass }" type="text" required class="input-text size-L" placeholder="密码" >
         </div>
       </div>
       <div class="row cl">
@@ -55,16 +65,16 @@
                <input id="agencyTel" name="agencyTel" value="${resultMap.reg.agencyTel }" required  autocomplete="off" type="text" placeholder="联系电话" class="input-text size-L">
         </div>
       </div>
-      <div class="row cl">
+      <%-- <div class="row cl">
         <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe67b;</i></label>
         <div class="formControls col-xs-8">
-               <input id="otherContact" name="otherContact" value="${resultMap.reg.otherContact }" required  autocomplete="off" type="text" placeholder="其他联系方式：qq号" class="input-text size-L">
+               <input id="otherContact" name="otherContact" value="${resultMap.reg.otherContact }"  autocomplete="off" type="text" placeholder="qq号,可不填" class="input-text size-L">
         </div>
       </div>
       <div class="row cl">
         <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe68a;</i></label>
         <div class="formControls col-xs-8">
-                <input id="userEmail" name="userEmail" value="${resultMap.reg.userEmail }" required  autocomplete="off" type="email" placeholder="电子邮箱" class="input-text size-L">
+                <input id="userEmail" name="userEmail" value="${resultMap.reg.userEmail }"  autocomplete="off" type="email" placeholder="电子邮箱,可不填" class="input-text size-L">
         </div>
       </div>
       <div class="row cl">
@@ -72,16 +82,8 @@
         <div class="formControls col-xs-8">
                 <input id="agencyIp" name="agencyIp" value="${resultMap.reg.agencyIp }"  autocomplete="off" type="text"  placeholder="用户首页地址,可不填" class="input-text size-L">
         </div>
-      </div>
-      <div class="row cl">
-        <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe6cb;</i></label>
-        <div class="formControls col-xs-8">
-                <input id="verifyCode" name="verifyCode" value="${resultMap.reg.verifyCode }" required  autocomplete="off" type="text" placeholder="注册邀请码" class="input-text size-L">
-                <c:if test="${not empty resultMap.msg}">
-       	  	  		<span id="errorMsg" style="color:red;" >${resultMap.msg}</span>
-       	  	  	</c:if>
-        </div>
-      </div>
+      </div> --%>
+      
                
       <%-- <div class="row cl">
         <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60e;</i></label>
@@ -151,9 +153,24 @@ function startLogin(){
 	var userPass = $('#userPass').val();
 	window.location.href = "/flowsys/agency/login_page.do?userName="+userName+"&userPass="+userPass;
 }
+//测试邀请码是否存在
+function testHas(){
+	var thisVal = $('#verifyCode').val();
+	if(thisVal == '' || thisVal.length < 4){//邀请码长度
+		$('#verifyCode').val('');
+		alert('不合法的邀请码');
+		//layer.msg('不为空');
+	}
+	
+	//ajax请求设置正确的thisVal,
+}
 	$().ready(function() {
+		//$('#verifyCode').focus();
 	    $("#regForm").validate({
 	    	rules:{
+	    		verifyCode : {
+	    			required:true
+	    		},
 	    		userName : {
 		    			remote:{//验证用户名是否存在
 		    				  type:"get",
@@ -162,10 +179,20 @@ function startLogin(){
 		    	            	  userName :function(){return $("#userName").val().trim();}
 		    			}
 	    			}
-	    		}
+	    		},
+	    		verifyCode : {
+	    			remote:{//验证用户名是否存在
+	    				  type:"get",
+	    	               url:"/flowsys/agency/register_check_code.do",             //servlet
+	    	               data:{
+	    	            	   verifyCode :function(){return $("#verifyCode").val().trim();}
+			    			}
+		    			}
+		    		}
 	    	},
 	    	messages:{
-	    		userName:{ remote:jQuery.format("用户名已经被注册")}
+	    		userName:{ remote:jQuery.format("用户名已经被注册")},
+	    		verifyCode:{ remote:jQuery.format("邀请码不存在")}
 	    	}
 	    });
 	});

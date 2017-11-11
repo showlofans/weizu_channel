@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -73,6 +76,7 @@ import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 import com.weizu.flowsys.web.trade.pojo.TotalResult;
 import com.weizu.flowsys.web.trade.url.ChargePgURL;
+import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
 
 /**
@@ -343,7 +347,7 @@ public class ChargePgController {
 	private List<OperatorPgDataPo> initByPgList(List<PgDataPo> pgList) {
 		List<OperatorPgDataPo> dataList = new LinkedList<OperatorPgDataPo>();
 		for (PgDataPo pgDataPo : pgList) {
-			dataList.add(new OperatorPgDataPo(pgDataPo.getId(), pgDataPo.getOperatorType(), pgDataPo.getOperatorName(), pgDataPo.getPgSize(), pgDataPo.getPgPrice(), pgDataPo.getPgName(), pgDataPo.getPgInService(), pgDataPo.getServiceType(), pgDataPo.getPgType(), pgDataPo.getPgValidity(),pgDataPo.getCirculateWay()));
+			dataList.add(new OperatorPgDataPo(pgDataPo.getId(), pgDataPo.getOperatorType(), pgDataPo.getOperatorName(), pgDataPo.getPgSize(), pgDataPo.getPgPrice(), pgDataPo.getPgName(), pgDataPo.getPgInService(), pgDataPo.getServiceType(), pgDataPo.getPgType(), pgDataPo.getPgValidity(),pgDataPo.getCirculateWay(),pgDataPo.getPgServiceType()));
 		}
 		return dataList;
 	}
@@ -646,41 +650,71 @@ public class ChargePgController {
 		resultMap.put("orderPathEnums", OrderPathEnum.toList());
 		resultMap.put("orderStateEnums", OrderStateEnum.toList());
 		ModelAndView model = new ModelAndView("/trade/purchase_list", "resultMap", resultMap);
-		if(purchaseVO.getOrderState() == null){
+		
+		Boolean isSuper = agencyVO.getRootAgencyId() == 0;
+		Boolean getBackOringinal = (purchaseVO.getOrderState() == null && !isSuper) || (purchaseVO.getOrderResult() == null && isSuper);
+		
+		if(getBackOringinal){//状态为空的已经鸳鸯返回了
 			return model;
-		}else{
-			switch (purchaseVO.getOrderState()) {
+		}else{//状态应该都不为空
+			Integer state = null;
+			if(isSuper){
+				state = purchaseVO.getOrderResult();
+			}else{
+				state = purchaseVO.getOrderState();
+			}
+			switch (state) {
 			case 0://充值失败
 				model = new ModelAndView("/trade/charge_failure_list", "resultMap", resultMap);
 				break;
 			case 1://充值成功
 				int callTag = 0; 
-				if(httpSession.getAttribute("lastSearch") == null){
+				//不统计的情况：记录数一样，并且搜索条件也一样的，就不重新统计
+				///需要统计的情况：记录数不一样，搜索条件不一样
+				Map<String,Object> dataMap = purchaseAO.getPurchaseMap(purchaseVO);
+				Long totalRecord = 0l;
+				if(dataMap.get("totalRecord") != null){
+					totalRecord = Long.parseLong(dataMap.get("totalRecord").toString());
+				}
+				Long sessionTotal = 0l;
+				if(httpSession.getAttribute("sessionTotal") != null){
+					sessionTotal = Long.parseLong(httpSession.getAttribute("sessionTotal").toString());
+				}
+				
+				if(httpSession.getAttribute("lastSearch") == null){//统计最初的数据
+					if(totalRecord != 0){
+						httpSession.setAttribute("sessionTotal", totalRecord);
+					}
 					httpSession.setAttribute("lastSearch", purchaseVO);
 					//没有搜索过，就可以统计一遍
 					callTag = 1;
-				}else{
+				}else{//
 					PurchaseVO pvo = (PurchaseVO)httpSession.getAttribute("lastSearch");
 					PurchaseVO pvoC = pvo.clone();
 					PurchaseVO sample = purchaseVO.clone();
 					ignoreEndTime(pvoC,sample);
-					if(!ClassUtil.contrastObj(pvoC, sample)){
+					if(!ClassUtil.contrastObj(pvoC, sample) || !totalRecord.equals(sessionTotal)){//搜索参数不一样进行统计//看session中的总记录数和查出来的总记录数是否相等，不相等，就进行重新统计
 						callTag = 1;
 						//查询参数不相等，就把新的purhcaeVO放到lastSearch中
 						httpSession.setAttribute("lastSearch", purchaseVO);
+						httpSession.setAttribute("sessionTotal", totalRecord);
 					}
 				}
-				List<PurchaseVO> records = purchaseAO.getPurchase(purchaseVO);
-				if(callTag == 1 && records != null && records.size() > 0){
-					System.out.println(callTag +"-开始统计总扣款");
-					TotalResult tot = purchaseAO.getTotalResultFromSuccess(purchaseVO);
-					Double totalCost = 0.00d;
-					for (PurchaseVO purchaseVO2 : records) {
-						totalCost = NumberTool.add(totalCost, purchaseVO2.getOrderAmount());
+				
+				if(dataMap.get("records") != null){
+					List<PurchaseVO> records = (List<PurchaseVO>)dataMap.get("records");
+					//进行统计
+					if(callTag == 1  && records.size() > 0){
+						System.out.println(callTag +"-开始统计总扣款");
+						TotalResult tot = purchaseAO.getTotalResultFromSuccess(purchaseVO);
+						Double totalCost = 0.00d;
+						for (PurchaseVO purchaseVO2 : records) {
+							totalCost = NumberTool.add(totalCost, purchaseVO2.getOrderAmount());
+						}
+						tot.setTotalCost(totalCost);
+						System.out.println("总成本："+totalCost);
+						httpSession.setAttribute("tot", tot);
 					}
-					tot.setTotalCost(totalCost);
-					System.out.println("总成本："+totalCost);
-					httpSession.setAttribute("tot", tot);
 				}
 //				else{
 //					httpSession.setAttribute("tot", null);
@@ -850,11 +884,85 @@ public class ChargePgController {
 	 */
 	@ResponseBody
 	@RequestMapping(value=ChargePgURL.BATCH_COMMIT_ORDER)
-	public String batchCommitOrder(PurchaseVO purchaseVO){
-		
-		
-		return "error";
+	public String batchCommitOrder(PurchaseVO purchaseVO, HttpServletRequest request){
+		String res = "error";
+		HttpSession httpSession = request.getSession();
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)httpSession.getAttribute("loginContext");
+		if(agencyVO != null){
+			purchaseVO.setAgencyId(agencyVO.getId());//设置为当前登陆用户的订单
+			//只有待冲的单子可以批量提交
+			if(purchaseVO.getOrderResult().equals(OrderStateEnum.DAICHONG.getValue())){
+				res = purchaseAO.batchCommitOrder(purchaseVO);
+			}
+		}
+		return res;
 	}
+	/**
+	 * @description: 批量推送订单
+	 * @param purchaseVO
+	 * @param request
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月7日 下午5:31:59
+	 */
+	@ResponseBody
+	@RequestMapping(value=ChargePgURL.BATCH_PUSH_ORDER)
+	public String batchPushOrder(PurchaseVO purchaseVO, HttpServletRequest request){
+		String res = "error";
+		HttpSession httpSession = request.getSession();
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)httpSession.getAttribute("loginContext");
+		if(agencyVO != null){
+			purchaseVO.setAgencyId(agencyVO.getId());//设置为当前登陆用户的订单
+			res = purchaseAO.batchPushOrder(purchaseVO);
+		}
+		return res;
+	}
+	
+	
+	/**
+	 * @description: 导出订单列表
+	 * @param purchaseVO
+	 * @param response
+	 * @param request
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月7日 下午3:05:58
+	 */
+	@RequestMapping(value=ChargePgURL.EXPORT_CHARGED_LIST, method=RequestMethod.GET)
+	public void exportChargedList(PurchaseVO purchaseVO,HttpServletResponse response,HttpServletRequest request){
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession() .getAttribute("loginContext");
+		if(agencyVO != null){
+			purchaseVO.setAgencyId(agencyVO.getId());//设置为当前登陆用户的订单
+			HSSFWorkbook hbook = purchaseAO.exportChargedList(purchaseVO, agencyVO.getAgencyTag()); 
+			if (hbook != null)
+			{
+				try
+				{
+					request.setCharacterEncoding("UTF-8");
+					response.reset();
+					response.setCharacterEncoding("UTF-8");
+					response.setContentType("application/msexcel;charset=UTF-8");
+					response.addHeader("Content-Disposition", "attachment;filename=\"" + new String(("成功订单记录" + DateUtil.formatPramm(new Date(), "yyyy-MM-dd") + ".xls").getBytes("GBK"), "ISO8859_1")
+					+ "\"");
+					OutputStream outputStream = response.getOutputStream();
+					hbook.write(outputStream);
+					outputStream.flush();
+					outputStream.close();
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}else{
+			try {
+				response.getOutputStream().print("alert('导出失败，未登录')");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	
 	
 	

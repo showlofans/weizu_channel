@@ -15,6 +15,7 @@ import com.weizu.flowsys.web.channel.dao.OperatorPgDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
+import com.weizu.flowsys.web.http.entity.PgProductPo;
 import com.weizu.web.foundation.String.StringHelper;
 
 /**
@@ -193,8 +194,12 @@ public class OperatorPgDao extends DaoImpl<PgDataPo, Integer> implements Operato
 
 	@Override
 	public List<PgDataPo> pg_list_for_purchase(Map<String, Object> map) {
-		map.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
 		return sqlSessionTemplateASS.selectList("pg_list_for_purchase", map);
+	}
+
+	@Override
+	public List<PgProductPo> getProductPgList(Map<String, Object> map) {
+		return sqlSessionTemplateASS.selectList("getProductPgList", map);
 	}
 
 	

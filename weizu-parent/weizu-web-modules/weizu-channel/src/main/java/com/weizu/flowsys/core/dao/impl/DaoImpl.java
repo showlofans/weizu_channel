@@ -337,18 +337,28 @@ public class DaoImpl<T extends Po, PK extends Serializable> implements Dao<T, PK
 	public List<T> list(WherePrams where) {
 		// TODO Auto-generated method stub
 		
-		String sql = "select ";
+		StringBuffer sbSql = new StringBuffer("select ");
+		//String sql = "select ";
 		for (int i = 0; i < selectSqlParms.size(); i++) {
-			sql += selectSqlParms.get(i).getFile();
+			sbSql.append(selectSqlParms.get(i).getFile());
+			//sql += selectSqlParms.get(i).getFile();
 			if(i < selectSqlParms.size() -1){
-				sql += ",";
+				sbSql.append(",");
+				//sql += ",";
 			}else{
-				sql += " ";
+				sbSql.append(" ");
+//				sql += " ";
 			}
 		}
-		sql += "from " + tableName + where.getWherePrams() + ";";
+		sbSql.append("from "+tableName);
 		
-		List<Map<String, Object>> selectList = sqlSessionTemplateASS.selectList("selectList", sql);
+		if(where != null){
+			sbSql.append(where.getWherePrams());
+		}
+		sbSql.append(";");
+		//sql += "from " + tableName + where.getWherePrams() + ";";
+		
+		List<Map<String, Object>> selectList = sqlSessionTemplateASS.selectList("selectList", sbSql.toString());
 		
 		List<T> list = new ArrayList<>();
 		for (Map<String, Object> map : selectList) {
@@ -601,8 +611,10 @@ public class DaoImpl<T extends Po, PK extends Serializable> implements Dao<T, PK
 		// TODO Auto-generated method stub
 		
 		String sql = "select count(*) from ";
-		
-		sql += tableName + where.getWherePrams();
+		sql += tableName;
+		if(where != null){
+			sql +=  where.getWherePrams();
+		}
 		
 		long count = sqlSessionTemplateASS.selectOne("selectCountByParm", sql);
 		

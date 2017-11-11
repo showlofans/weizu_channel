@@ -25,6 +25,10 @@ public enum PgValidityEnum {
 	 */
 	MONTH_DAY_DATA("月包", "30"),
 	/**
+	 * 月包
+	 */
+	TWEENTY_DAY_DATA("20天包", "20"),
+	/**
 	 * 1日包
 	 */
 	ONE_DAY_DATA("今日包", "01"),
@@ -203,11 +207,12 @@ public enum PgValidityEnum {
 //        System.out.println("差集：" + result);
         
 		//根据两个集合获得差集
-		for (PgValidityEnum pgValidityEnum : enumArray) {
-			 Iterator<String> i = result.iterator();//先迭代出来  
-	        while(i.hasNext()){//遍历  
+		 Iterator<String> i = result.iterator();//先迭代出来  
+		 while(i.hasNext()){//遍历  
+			 String pgValidity =  i.next();
+			 for (PgValidityEnum pgValidityEnum : enumArray) {
 //	            System.out.println(i.next()); 
-	            if(i.next().equals(pgValidityEnum.getValue())){
+	            if(pgValidity.equals(pgValidityEnum.getValue())){
 	            	Map<String, Object> pgInServiceMap = new HashMap<String, Object>(2);
 	            	pgInServiceMap.put("desc", pgValidityEnum.getDesc());
 	            	pgInServiceMap.put("value", pgValidityEnum.getValue());

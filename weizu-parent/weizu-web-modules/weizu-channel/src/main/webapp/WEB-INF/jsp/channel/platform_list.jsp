@@ -49,7 +49,7 @@
 					<!-- <th width="80">流量包Id</th> -->
 					<th width="80">平台名称</th>
 					<th width="80">平台英文标识</th>
-					<th width="80">流量订购地址</th>
+					<th width="80">产品订购地址</th>
 					<th width="80">产品列表地址</th>
 					<!-- <th width="120">支持城市</th> -->
 					<th width="60">订单状态地址</th>
@@ -123,7 +123,7 @@
 /*平台-添加*/
 function platform_add(title,url){
 	//alert("sd");
-	layer.open({
+	var index = layer.open({
         type: 2,
         title: false,
         area: ['650px', '560px'],
@@ -134,6 +134,7 @@ function platform_add(title,url){
             location.reload();
         }
     });
+	layer.full(index);
 }
 /*平台-编辑*/
 function platform_edit(title,url,id,w,h){

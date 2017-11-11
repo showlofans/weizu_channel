@@ -15,10 +15,13 @@ import com.aiyi.base.pojo.PageParam;
 import com.aiyi.base.pojo.PageTag;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.weizu.flowsys.api.weizu.charge.PgProductParams;
 import com.weizu.flowsys.core.util.NumberTool;
+import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgInServiceEnum;
+import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgSizeEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
@@ -29,6 +32,7 @@ import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
+import com.weizu.flowsys.web.http.entity.PgProduct;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.web.foundation.String.StringHelper;
 
@@ -58,13 +62,13 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 		String name = "";
 		switch (type) {
 		case 0 :
-			name = OperatorNameEnum.CHINAMOBILE.getValue();
+			name = OperatorNameEnum.CHINAMOBILE.getDesc();
 			break;
 		case 1:
-			name = OperatorNameEnum.CHINALINK.getValue();
+			name = OperatorNameEnum.CHINALINK.getDesc();
 			break;
 		case 2:
-			name = OperatorNameEnum.CHINATELECOME.getValue();
+			name = OperatorNameEnum.CHINATELECOME.getDesc();
 			break;
 
 		default:
@@ -307,6 +311,13 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 		if(operatorPgDataPo.getPgType() != null)
 		{
 			params.put("pgType", operatorPgDataPo.getPgType());
+		}
+		if(operatorPgDataPo.getPgServiceType() != null)
+		{
+			params.put("pgServiceType", operatorPgDataPo.getPgServiceType());
+		}else{//默认
+			params.put("pgServiceType", PgServiceTypeEnum.PGCHARGE.getValue());
+			
 		}
 		if(StringHelper.isNotEmpty(operatorPgDataPo.getPgValidity()))
 		{
@@ -693,10 +704,23 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 		if(StringHelper.isNotEmpty(ccpp.getPgValidity())){
 			params.put("pgValidity", ccpp.getPgValidity());
 		}
-		
+		params.put("pgServiceType", PgServiceTypeEnum.PGCHARGE.getValue());
+		params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
 		List<PgDataPo> pgList = operatorPgDao.pg_list_for_purchase(params);
 		return pgList;
 	}
+
+//	@Override
+//	public PgProduct getPgProductList(PgProductParams pgParams) {
+//		Map<String,Object> map = new HashMap<String,Object>();
+////		map.put("agencyId", pgParams.get);
+//		map.put("bindState", );
+//		map.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+//		
+//		operatorPgDao.getProductPgList(map);
+//		
+//		return null;
+//	}
 	
 //	private Map<String,Object> getParamsByCCPP(ChargeChannelParamsPo ccpp){
 //		Map<String, Object> params = new HashMap<String, Object>();

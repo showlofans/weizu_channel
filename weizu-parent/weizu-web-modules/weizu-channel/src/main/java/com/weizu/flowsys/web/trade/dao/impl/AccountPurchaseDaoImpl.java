@@ -61,13 +61,13 @@ public class AccountPurchaseDaoImpl extends DaoImpl<AccountPurchasePo, Long> imp
 		return sqlSessionTemplate.update("batchUpdateState", params);
 	}
 
-	@Override
-	public Double getOrderAmount(Long purchaseId, Integer accountId) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("purchaseId", purchaseId);
-		params.put("accountId", accountId);
-		return sqlSessionTemplate.selectOne("getOrderAmount", params);
-	}
+//	@Override
+//	public Double getOrderAmount(Long purchaseId, Integer accountId,Integer) {
+//		Map<String, Object> params = new HashMap<String, Object>();
+//		params.put("purchaseId", purchaseId);
+//		params.put("accountId", accountId);
+//		return sqlSessionTemplate.selectOne("getOrderAmount", params);
+//	}
 
 	@Override
 	public AccountPurchasePo getAPByAccountType(Long purchaseId, Integer accountId,Integer accountType) {

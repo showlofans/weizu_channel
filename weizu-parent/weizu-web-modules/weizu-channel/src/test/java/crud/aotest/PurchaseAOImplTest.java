@@ -35,20 +35,21 @@
 ////		purchaseDAO.addPurchase(purchasePo);
 ////	}
 //	
-////	@Test
-////	public void testGetPurchase(){
-////		PurchaseVO purchaseVO = new PurchaseVO();
-////		purchaseVO.setAgencyId(4);
-////		purchaseVO.setOrderState(OrderStateEnum.CHARGING.getValue());
-////		Map<String, Object> params = new HashMap<String, Object>();
-////		Pagination<PurchaseVO> pagination = purchaseAO.getPurchase(params,purchaseVO, new PageParam(1, 10));
-////		List<PurchaseVO> records = pagination.getRecords();
-////		for (PurchaseVO purchaseVO2 : records) {
-//////			System.out.println(purchaseVO2.getEp().getEpName());
-////		}
-////		
-////		System.out.println(pagination.getTotalRecord());		
-////	}
+//	@Test
+//	public void testGetPurchase(){
+//		PurchaseVO purchaseVO = new PurchaseVO();
+//		purchaseVO.setAgencyId(2);
+//		purchaseVO.setOrderState(OrderStateEnum.CHARGED.getValue());
+//		Map<String, Object> params = new HashMap<String, Object>();
+//		Pagination<PurchaseVO> pagination = purchaseAO.getPurchase(params,purchaseVO, new PageParam(1L, 10));
+//		List<PurchaseVO> records = pagination.getRecords();
+//		for (PurchaseVO purchaseVO2 : records) {
+//			System.out.println(purchaseVO2.getApDiscount());
+////			System.out.println(purchaseVO2.getEp().getEpName());
+//		}
+//		
+//		System.out.println(pagination.getTotalRecordLong());		
+//	}
 //	/**
 //	 * @description:测试通过产品编码向原系统下单
 //	 * @author:POP产品研发部 宁强
@@ -222,12 +223,12 @@
 ////			System.out.println(pgList.size());
 ////		}
 ////	}
-//	@Test
-//	public void hastDoublePurchase(){
-//		PurchasePo purPo = purchaseDAO.hasDoublePurchase(null, "20171018101302237750");
-//		boolean hasD = purPo != null;
-//		if(hasD){
-//			System.out.println(purPo.getChargeTel());
-//		}
-//	}
+////	@Test
+////	public void hastDoublePurchase(){
+////		PurchasePo purPo = purchaseDAO.hasDoublePurchase(null, "20171018101302237750");
+////		boolean hasD = purPo != null;
+////		if(hasD){
+////			System.out.println(purPo.getChargeTel());
+////		}
+////	}
 //}

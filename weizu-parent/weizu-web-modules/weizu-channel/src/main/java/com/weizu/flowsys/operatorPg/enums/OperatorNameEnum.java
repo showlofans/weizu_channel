@@ -17,17 +17,17 @@ public enum OperatorNameEnum {
 	/**
 	 * 中国移动
 	 */
-	CHINAMOBILE("china_mobile","中国移动"),
+	CHINAMOBILE("中国移动",0),//china_mobile
 	
 	/**
 	 * 中国联通
 	 */
-	CHINALINK("china_link","中国联通"),
+	CHINALINK("中国联通",1),
 	
 	/**
 	 * 中国电信
 	 */
-	CHINATELECOME("china_telecome","中国电信");
+	CHINATELECOME("中国电信",2);//china_telecome
 	
 	/**
 	 * 枚举名称
@@ -36,9 +36,9 @@ public enum OperatorNameEnum {
 	/**
 	 * 枚举值
 	 */
-	private String value;
+	private int value;
 	
-	private OperatorNameEnum(String desc, String value) {
+	private OperatorNameEnum(String desc, int value) {
 		this.desc = desc;
 		this.value = value;
 	}
@@ -50,12 +50,8 @@ public enum OperatorNameEnum {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年4月26日 下午12:33:32
 	 */
-	public static OperatorNameEnum getEnum(String value)
+	public static OperatorNameEnum getEnum(int value)
 	{
-		if (value == null)
-		{
-			return null;
-		}
 
 		OperatorNameEnum resultEnum = null;
 
@@ -64,7 +60,7 @@ public enum OperatorNameEnum {
 
 		for (OperatorNameEnum OperatorNameEnum : enumArray)
 		{
-			if(value.equals(OperatorNameEnum.getValue()))
+			if(OperatorNameEnum.getValue() == value)
 			{
 				resultEnum = OperatorNameEnum;
 				break;
@@ -136,11 +132,11 @@ public enum OperatorNameEnum {
 		this.desc = desc;
 	}
 
-	public String getValue() {
+	public int getValue() {
 		return value;
 	}
 
-	public void setValue(String value) {
+	public void setValue(int value) {
 		this.value = value;
 	}
 }

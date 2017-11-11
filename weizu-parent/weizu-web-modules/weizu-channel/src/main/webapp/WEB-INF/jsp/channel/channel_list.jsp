@@ -341,7 +341,7 @@
 						</c:choose>
 						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="channel_stop('/flowsys/channel/channel_delete.do',${channel.id})" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
 						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="javascript:;" onclick="getRateList('/flowsys/rate/bind_rate_list.do',this)" data-title="折扣信息"><i class="Hui-iconfont">&#xe725;</i></a>
-						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="javascript:;" onclick="editChannel('/flowsys/channel/channel_edit_page.do?channelId=${channel.id}','编辑通道')" data-title="编辑通道"><i class="Hui-iconfont">&#xe6df;</i></a>
+						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="javascript:;" onclick="editChannel(this,'/flowsys/channel/channel_edit_page.do?channelId=${channel.id}','编辑通道')" data-title="编辑通道"><i class="Hui-iconfont">&#xe6df;</i></a>
 						</td>
 					</tr>
 				</c:forEach>
@@ -378,18 +378,20 @@ function getRateList(url,objt){
 		Hui_admin_tab(objt);
 }
 /**编辑通道页面*/
-function editChannel(url,title){
-	layer.open({
+function editChannel(obj,url,title){
+	$(obj).attr('data-href',url);
+	Hui_admin_tab(obj);
+	/* layer.open({
         type: 2,
         title: title,
-        area: ['530px', '510px'],
+        //area: ['530px', '510px'],
         maxmin: false,
         closeBtn: 1,
         content: url,
          end: function () {
             location.reload();
         }
-    });
+    }); */
 	//$(objt).attr('data-href',url); //+$('form').serialize()
 	//Hui_admin_tab(objt);
 }

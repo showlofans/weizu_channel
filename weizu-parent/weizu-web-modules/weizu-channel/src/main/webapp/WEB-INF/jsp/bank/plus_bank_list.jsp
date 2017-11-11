@@ -17,8 +17,8 @@
 </head>
 <body>
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页   <span class="c-gray en">&gt;</span> 账户管理 <span class="c-gray en">&gt;</span> 申请加款  <span class="c-gray en">&gt;</span> 在线充值<!-- <span class="c-gray en">&gt;</span> 银行卡<span class="c-gray en">&gt;</span> 卡充值  --><a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
-	<div class="pd-20">
-	<table class="table " style="float: left;margin-left: 100px;"><!-- table-border table-bordered table-bg -->
+	<div class="page-container">
+	<table class="table c"><!-- table-border table-bordered table-bg -->
 		<thead >
 			<tr  >
 				<th class="text-r" scope="col" width="300px">
@@ -88,9 +88,9 @@
 						<td width="150">
 							<%-- <input type="hidden" value="${bank.id }"><!--  id="toBankId" -->
 							<input type="hidden"  value="${bank.agencyId }"><!-- id="toAgencyId" --> --%>
-							<input type="text" value="" class="input-text commitAmount"  placeholder=" 转账金额" style="" width="120px"></td>
+							<input type="text" value="" class="input-text commitAmount"  placeholder=" 转账金额" style="" width="120"></td>
 						<td width="200">
-							<input style="width:180px" type="text" class="input-text Wdate realTime" value=""  onfocus="WdatePicker({isShowClear:false,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+							<input style="width:180" type="text" class="input-text Wdate realTime" value=""  onfocus="WdatePicker({isShowClear:false,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
 						</td>
 						<td width="100">
 							<!-- <div class="radio-box skin-minimal"> -->

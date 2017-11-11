@@ -24,6 +24,7 @@ import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
+import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.util.OrderUril;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
@@ -53,6 +54,7 @@ import com.weizu.flowsys.web.trade.dao.AccountPurchaseDao;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.AccountPurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
+import com.weizu.web.foundation.String.StringHelper;
 
 /**
  * @description: 下游充值接口实现（最新）
@@ -164,6 +166,12 @@ public class ChargeImpl implements IChargeFacet {
 				purchasePo = new PurchasePo(orderId, chargeParams.getOrderIdFrom(), accountId, chargeTel, pgData.getId(), 
 						System.currentTimeMillis(), chargeTelDetail, chargeTelCity, orderResult, channelPo.getChannelName(), 
 						orderResultDetail, orderAmount, billType);
+				if(StringHelper.isNotEmpty(chargeParams.getReportUrl())){//
+					purchasePo.setAgencyCallIp(chargeParams.getReportUrl());
+				}else{//传单没有传回调地址,使用系统固定的回调地址
+					purchasePo.setAgencyCallIp(backPo.getCallBackIp());
+				}
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -284,8 +292,15 @@ public class ChargeImpl implements IChargeFacet {
 		Map<String, Object> sqlMap = new HashMap<String, Object>();
 		
 		Charge charge = null;
-		AgencyBackwardPo backPo = valiUser.findAgency(chargeParams.getUsername(), chargeParams.getSign());
-		
+		AgencyBackwardPo backPo = valiUser.findAgency(chargeParams.getUserName(), chargeParams.getSign());
+		//充值用户不合法
+		if(backPo == null)
+		{
+			chargeEnum = ChargeStatusEnum.AUTHENTICATION_FAILURE;
+			charge = new Charge(chargeEnum.getValue(),chargeEnum.getDesc() , null);
+			sqlMap.put("exceptionDTO", charge);
+			return sqlMap;
+		}
 		//验证包体：运营商类型，业务范围，包体大小，包体
 		int otype = -1;
 		if(resMap == null){
@@ -295,7 +310,7 @@ public class ChargeImpl implements IChargeFacet {
 			return sqlMap;
 		}else{
 			otype = Integer.parseInt(resMap.get("operatorType").toString());
-			PgDataPo pgData = valiUser.findPg(new PgDataPo(otype,  chargeParams.getFlowsize(), chargeParams.getScope(), chargeParams.getPgType(), chargeParams.getPgValidity(),chargeParams.getChannelType()));//,,
+			PgDataPo pgData = valiUser.findPg(new PgDataPo(otype,  chargeParams.getFlowsize(), chargeParams.getScope(), chargeParams.getPgType(), chargeParams.getPgValidity(),chargeParams.getChannelType(),PgServiceTypeEnum.PGCHARGE.getValue()));//,,
 			
 			if(pgData == null)
 			{
@@ -315,51 +330,42 @@ public class ChargeImpl implements IChargeFacet {
 				sqlMap.put("exceptionDTO", charge);
 				return sqlMap;
 			}
-			//充值用户不合法
-			if(backPo == null)
-			{
-				chargeEnum = ChargeStatusEnum.AUTHENTICATION_FAILURE;
-				charge = new Charge(chargeEnum.getValue(),chargeEnum.getDesc() , null);
+			PurchasePo purPo = purchaseDAO.hasDoublePurchase(null, chargeParams.getOrderIdFrom());
+			boolean hasD = purPo != null;
+			if(hasD && purPo.getChargeTel().equals(chargeParams.getNumber())){
+				chargeEnum = ChargeStatusEnum.HAS_DOUBLE_PURCHAE;
+				charge = new Charge(chargeEnum.getValue(),chargeEnum.getDesc(), null);
+				sqlMap.put("exceptionDTO", charge);
+				return sqlMap;
+			}
+			sqlMap.put("backPo", backPo);
+			ChargeAccountPo accountPo =  chargeAccountAO.getAccountByAgencyId(backPo.getId(), billType);
+			if(accountPo == null){
+				chargeEnum = ChargeStatusEnum.INVALID_BILL_TYPE;
+				charge = new Charge(chargeEnum.getValue(),backPo.getUserName() +":没有开通该业务", null);
 				sqlMap.put("exceptionDTO", charge);
 				return sqlMap;
 			}else{
-				PurchasePo purPo = purchaseDAO.hasDoublePurchase(null, chargeParams.getOrderIdFrom());
-				boolean hasD = purPo != null;
-				if(hasD && purPo.getChargeTel().equals(chargeParams.getNumber())){
-					chargeEnum = ChargeStatusEnum.HAS_DOUBLE_PURCHAE;
+				sqlMap.put("accountPo", accountPo);
+				String chargeTelDetail = resMap.get("chargeTelDetail").toString();
+				//折扣是忽略包体大小的
+				RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo(chargeTelDetail, chargeParams.getScope(), null, null, null), accountPo.getId(),false);
+				if(ratePo == null){
+					chargeEnum = ChargeStatusEnum.SCOPE_RATE_UNDEFINED;
 					charge = new Charge(chargeEnum.getValue(),chargeEnum.getDesc(), null);
 					sqlMap.put("exceptionDTO", charge);
 					return sqlMap;
-				}
-				sqlMap.put("backPo", backPo);
-				ChargeAccountPo accountPo =  chargeAccountAO.getAccountByAgencyId(backPo.getId(), billType);
-				if(accountPo == null){
-					chargeEnum = ChargeStatusEnum.INVALID_BILL_TYPE;
-					charge = new Charge(chargeEnum.getValue(),backPo.getUserName() +":没有开通该业务", null);
-					sqlMap.put("exceptionDTO", charge);
-					return sqlMap;
 				}else{
-					sqlMap.put("accountPo", accountPo);
-					String chargeTelDetail = resMap.get("chargeTelDetail").toString();
-					//折扣是忽略包体大小的
-					RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo(chargeTelDetail, chargeParams.getScope(), null, null, null), accountPo.getId(),false);
-					if(ratePo == null){
-						chargeEnum = ChargeStatusEnum.SCOPE_RATE_UNDEFINED;
+					ChannelChannelPo channelPo = channelChannelDao.get(new WherePrams("id", "=", ratePo.getChannelId()));
+					boolean isChannelUseStateStoped = channelPo.getChannelUseState() == ChannelUseStateEnum.CLOSE.getValue();//通道状态停止
+					if(isChannelUseStateStoped){//通道使用状态暂停，不能提单
+						chargeEnum = ChargeStatusEnum.CHANNEL_CLOSED;
 						charge = new Charge(chargeEnum.getValue(),chargeEnum.getDesc(), null);
 						sqlMap.put("exceptionDTO", charge);
 						return sqlMap;
 					}else{
-						ChannelChannelPo channelPo = channelChannelDao.get(new WherePrams("id", "=", ratePo.getChannelId()));
-						boolean isChannelUseStateStoped = channelPo.getChannelUseState() == ChannelUseStateEnum.CLOSE.getValue();//通道状态停止
-						if(isChannelUseStateStoped){//通道使用状态暂停，不能提单
-							chargeEnum = ChargeStatusEnum.CHANNEL_CLOSED;
-							charge = new Charge(chargeEnum.getValue(),chargeEnum.getDesc(), null);
-							sqlMap.put("exceptionDTO", charge);
-							return sqlMap;
-						}else{
-							sqlMap.put("ratePo", ratePo);
-							sqlMap.put("channelPo", channelPo);
-						}
+						sqlMap.put("ratePo", ratePo);
+						sqlMap.put("channelPo", channelPo);
 					}
 				}
 			}

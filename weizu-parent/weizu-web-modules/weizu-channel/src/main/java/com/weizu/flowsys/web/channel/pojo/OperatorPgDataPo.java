@@ -37,6 +37,8 @@ public class OperatorPgDataPo extends Po {
     
     private String pgValidity;			//流量有效期(PgValidityEnum)
     
+    private Integer pgServiceType;		//包体业务类型 (PgServiceTypeEnum)
+    
     @TempField
     private Double pgDiscountPrice;		//流量包价格（折扣）
     @TempField
@@ -59,7 +61,7 @@ public class OperatorPgDataPo extends Po {
 	public OperatorPgDataPo(Integer id, Integer operatorType,
 			String operatorName, Integer pgSize, Double pgPrice, String pgName,
 			Integer pgInService, Integer serviceType, Integer pgType,
-			String pgValidity,Integer circulateWay) {
+			String pgValidity,Integer circulateWay,Integer pgServiceType) {
 		super();
 		this.id = id;
 		this.operatorType = operatorType;
@@ -72,8 +74,17 @@ public class OperatorPgDataPo extends Po {
 		this.pgType = pgType;
 		this.circulateWay = circulateWay;
 		this.pgValidity = pgValidity;
+		this.pgServiceType = pgServiceType;
 	}
 	
+	public Integer getPgServiceType() {
+		return pgServiceType;
+	}
+
+	public void setPgServiceType(Integer pgServiceType) {
+		this.pgServiceType = pgServiceType;
+	}
+
 	public Integer getCirculateWay() {
 		return circulateWay;
 	}

@@ -13,7 +13,7 @@
 <title>通道折扣编辑</title>
 </head>
 <body>
-	<article class="page-container">
+	<div class="page-container">
 	<form action="" method="" class="form form-horizontal" id="cnelEditForm">
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">通道名称：</label>
@@ -87,11 +87,11 @@
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
 				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
-				<button class="btn btn-primary radius" onClick="cancelEdit()">取消</button>
+				<button class="btn btn-primary radius" onClick="removeIframe();">取消</button>
 			</div>
 		</div>
 	</form>
-	</article>
+	</div>
 </body>
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
 <script type="text/javascript" src="/view/lib/layer/2.4/layer.js"></script>  

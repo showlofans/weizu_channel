@@ -3,6 +3,7 @@ package com.weizu.flowsys.web.channel.controller;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -15,16 +16,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.aiyi.base.pojo.PageParam;
+import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgInServiceEnum;
+import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.ao.OperatorPgAO;
+import com.weizu.flowsys.web.channel.dao.IProcincesDAO;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
+import com.weizu.flowsys.web.channel.pojo.Provinces;
 import com.weizu.flowsys.web.channel.url.OperatorPgURL;
 import com.weizu.flowsys.web.http.ao.ValiUser;
 import com.weizu.web.foundation.String.StringHelper;
@@ -36,6 +41,8 @@ public class OperatorPgController {
 	private OperatorPgAO operatorPgAO;
 	@Resource
 	private ValiUser valiUser;
+	@Resource
+	private IProcincesDAO procincesDAO;
 	
 
 //	@RequestMapping(value = "initPg.do")
@@ -174,17 +181,33 @@ public class OperatorPgController {
 		}else{
 			pageParam = new PageParam(1, 10);
 		}
-		Pagination<PgDataPo> pagination = operatorPgAO.listPg(operatorPgDataPo,pageParam);
+		Integer pgServiceType = operatorPgDataPo.getPgServiceType();
+		if(pgServiceType == null){
+			pgServiceType = PgServiceTypeEnum.PGCHARGE.getValue();
+		}
+		if(pgServiceType.equals(PgServiceTypeEnum.PGCHARGE.getValue())){//添加流量
+			resultMap.put("pgTypeEnums", PgTypeEnum.toList());
+			resultMap.put("pgValidityEnums", PgValidityEnum.toList());
+			resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());
+			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
+		}else{
+			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toHuaList());
+		}
+		
 		resultMap.put("pgInEnums", PgInServiceEnum.toList());
 		resultMap.put("operatoerTypeEnums", OperatorTypeEnum.toList());
+		operatorPgDataPo.setPgServiceType(pgServiceType);
 		
-		resultMap.put("pgTypeEnums", PgTypeEnum.toList());
-		resultMap.put("pgValidityEnums", PgValidityEnum.toList());
-		resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());
-		
-		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
+		resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());
 		resultMap.put("params", operatorPgDataPo);
+//		resultMap.put("pgServiceType", pgServiceType);
+		Pagination<PgDataPo> pagination = operatorPgAO.listPg(operatorPgDataPo,pageParam);
 		resultMap.put("pagination", pagination);
+		
+		List<Provinces> provinces = procincesDAO.getProvinces();
+		resultMap.put("provinces", provinces);
+//		resultMap.put("provincesJson", JSON.toJSONString(provinces));
+		
 		return new ModelAndView("/channel/operatorPg_list", "resultMap", resultMap);
 	}
 	
@@ -199,19 +222,26 @@ public class OperatorPgController {
 	 * @createTime:2017年6月5日 下午2:32:33
 	 */
 	@RequestMapping(value = OperatorPgURL.PG_ADD_PAGE)
-	public ModelAndView pg_add_page(@RequestParam(value = "pageTitle", required = false)String pageTitle) throws UnsupportedEncodingException{
+	public ModelAndView pg_add_page(Integer pgServiceType) throws UnsupportedEncodingException{
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		if(StringHelper.isNotEmpty(pageTitle)){
-//			resultMap.put("pageTitle", new String(pageTitle.getBytes("ISO8859-1"), "utf-8"));
-			resultMap.put("pageTitle", pageTitle);
+//		if(StringHelper.isNotEmpty(pageTitle)){
+////			resultMap.put("pageTitle", new String(pageTitle.getBytes("ISO8859-1"), "utf-8"));
+//			resultMap.put("pageTitle", pageTitle);
+//		}
+		
+		if(pgServiceType.equals(PgServiceTypeEnum.PGCHARGE.getValue())){//添加流量
+			resultMap.put("pgTypeEnums", PgTypeEnum.toList());
+			resultMap.put("pgValidityEnums", PgValidityEnum.toList());
+			resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());
+			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
+		}else{//添加话费
+			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toHuaList());
 		}
-		resultMap.put("pgTypeEnums", PgTypeEnum.toList());
-		resultMap.put("pgValidityEnums", PgValidityEnum.toList());
-		resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());
+		resultMap.put("pgServiceType", pgServiceType);
+		resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());
 		
 		resultMap.put("operatoerTypeEnums", OperatorTypeEnum.toList());
-		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 		resultMap.put("pgInServiceEnums", PgInServiceEnum.toList());
 		return new ModelAndView("/channel/pg_add_page", "resultMap", resultMap);
 	}

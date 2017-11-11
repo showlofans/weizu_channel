@@ -176,6 +176,15 @@ public class WherePrams {
 		return this;
 	}
 	
+	public WherePrams limit(long startNumLong, int length) {
+		// TODO Auto-generated constructor stub
+//		this.limit = " limit ? , ? ";
+		this.limit = " limit " + startNumLong + " , " + length + " ";
+//		limitParms.add(startNum);
+//		limitParms.add(length);
+		return this;
+	}
+	
 	public WherePrams orderBy(String order){
 		if(this.orderBy != null){
 			this.orderBy += "," + order;

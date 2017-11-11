@@ -81,7 +81,8 @@
 					<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 					<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
-					<input type="hidden" name="orderResult" value="${resultMap.searchParams.orderResult }"> 
+					<input type="hidden" name="orderResult" value="${resultMap.searchParams.orderResult }">
+					<input type="hidden" name="orderState" value="${resultMap.searchParams.orderState }">
 				</div>
 		</form>
 	</div>

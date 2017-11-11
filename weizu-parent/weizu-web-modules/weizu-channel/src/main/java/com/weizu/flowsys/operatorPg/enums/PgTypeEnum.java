@@ -179,10 +179,11 @@ public enum PgTypeEnum {
     		pgInServiceMap1.put("value", PgTypeEnum.PGDATA.getValue());
     		attachmentTypeMapList.add(pgInServiceMap1);
         }
-		for (PgTypeEnum pgTypeEnum : enumArray) {
-	        while(i.hasNext()){//遍历  
+        while(i.hasNext()){//遍历  
+        	Integer pgTypeEn =  i.next();
+        	for (PgTypeEnum pgTypeEnum : enumArray) {
 //	            System.out.println(i.next()); 
-	            if(i.next().equals(pgTypeEnum.getValue())){
+	            if(pgTypeEn.equals(pgTypeEnum.getValue())){
 	            	Map<String, Object> pgInServiceMap = new HashMap<String, Object>(2);
 	            	pgInServiceMap.put("desc", pgTypeEnum.getDesc());
 	            	pgInServiceMap.put("value", pgTypeEnum.getValue());

@@ -32,16 +32,16 @@
 </head>
 <body>
 <article class="page-container">
-	<h4>${resultMap.pageTitle }</h4>
+	<%-- <h4>${resultMap.pageTitle }</h4> --%>
 	<form action="" method="" class="form form-horizontal" id="form-pg-add">
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>流量包名称：</label>
+			<label class="form-label col-xs-4 col-sm-2">标准包名称：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" class="input-text" value="" placeholder="不填可用默认值" id="pgName" name="pgName">
 			</div>
 		</div>
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>运营商类型：</label>
+			<label class="form-label col-xs-4 col-sm-2">运营商类型：</label>
 			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
 				<select name="operatorType" class="select" id="operatorType" onchange="btnChange(this[selectedIndex].value);">
 					<option value="">运营商类型</option>
@@ -52,13 +52,13 @@
 				</span> </div>
 		</div>
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2">运营商名称：</label>
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>运营商名称：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" class="input-text" value="" readonly="readonly" placeholder="" id="operatorName" name="operatorName">
 			</div>
 		</div>
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>业务类型：</label>
+			<label class="form-label col-xs-4 col-sm-2">业务类型：</label>
 			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
 				<select id="serviceType" name="serviceType" class="select">
 					<option value="">业务类型</option>
@@ -68,13 +68,14 @@
 				</select>
 				</span> </div>
 		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2">流量大小：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" required="required" maxlength="6" onkeyup='this.value=this.value.replace(/\D/gi,"")' style="width:100px" value="" placeholder="" id="pgSize" name="pgSize">M
+		<c:if test="${resultMap.pgServiceType ==1 }">
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-2">流量大小：</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" required="required" maxlength="6" onkeyup='this.value=this.value.replace(/\D/gi,"")' style="width:100px" value="" placeholder="" id="pgSize" name="pgSize">M
+				</div>
 			</div>
-		</div>
-		
+		</c:if>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">原价：</label>
 			<div class="formControls col-xs-8 col-sm-9">
@@ -83,49 +84,67 @@
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否启用：</label>
-			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box inline">
 				<select  name="pgInService" class="select">
 					<%-- <c:forEach items="${resultMap.pgInServiceEnums }" var="pgInService" varStatus="vs1">
 						<option value="${pgInService.value }">${pgInService.desc }</option>
 					</c:forEach> --%>
 						<option value="1">开通</option>
 				</select>
-				</span> </div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>流量包有效期：</label>
-			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select id="pgValidity" name="pgValidity" class="select">
-					<!-- <option value="">流量包有效期</option> -->
-					<c:forEach items="${resultMap.pgValidityEnums }" var="pgValidity" varStatus="vs1">
-						<option value="${pgValidity.value }">${pgValidity.desc }</option>
+				</span> 
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<span class="c-red">*</span>属性：&nbsp;&nbsp;
+				 <span class="select-box inline">
+				<select  name="pgServiceType" class="select">
+					<c:forEach items="${resultMap.pgServiceTypeEnums }" var="pgServiceTypeEnum" varStatus="vs1">
+						 <c:if test="${pgServiceTypeEnum.value == resultMap.pgServiceType }">
+							<option value="${pgServiceTypeEnum.value }">${pgServiceTypeEnum.desc }</option>
+						 </c:if>
 					</c:forEach>
+						<!-- <option value="1">开通</option> -->
 				</select>
-				</span> </div>
+				</span>
+				</div>
 		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>流通方式：</label>
-			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select name="circulateWay" class="select" id="circulateWay">
-					<!-- <option value="">流量类型</option> -->
-					<c:forEach items="${resultMap.channelTypeEnums }" var="channelType" varStatus="vs1">
-						<option value="${channelType.value }">${channelType.desc }</option>
-					</c:forEach>
-				</select>
-				</span> </div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>流量类型：</label>
-			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select name="pgType" class="select" id="pgType">
-					<!-- <option value="">流量类型</option> -->
-					<c:forEach items="${resultMap.pgTypeEnums }" var="pgType" varStatus="vs1">
-						<option value="${pgType.value }">${pgType.desc }</option>
-					</c:forEach>
-				</select>
-				</span> </div>
-		</div>
-		<div class="row cl">
+		<c:if test="${resultMap.pgServiceType ==1 }">
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>流量包有效期：</label>
+				<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+					<select id="pgValidity" name="pgValidity" class="select">
+						<!-- <option value="">流量包有效期</option> -->
+						<c:forEach items="${resultMap.pgValidityEnums }" var="pgValidity" varStatus="vs1">
+							<option value="${pgValidity.value }">${pgValidity.desc }</option>
+						</c:forEach>
+					</select>
+					</span> </div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>流通方式：</label>
+				<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+					<select name="circulateWay" class="select" id="circulateWay">
+						<!-- <option value="">流量类型</option> -->
+						<c:forEach items="${resultMap.channelTypeEnums }" var="channelType" varStatus="vs1">
+							<option value="${channelType.value }">${channelType.desc }</option>
+						</c:forEach>
+					</select>
+					</span> </div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>流量类型：</label>
+				<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+					<select name="pgType" class="select" id="pgType">
+						<!-- <option value="">流量类型</option> -->
+						<c:forEach items="${resultMap.pgTypeEnums }" var="pgType" varStatus="vs1">
+							<option value="${pgType.value }">${pgType.desc }</option>
+						</c:forEach>
+					</select>
+					</span> </div>
+			</div>
+		</c:if>
+		
+		<div id="province"></div>
+		
+		<div class="row cl va-b">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
 				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button><!-- btn-secondary -->
 			</div>
@@ -141,13 +160,32 @@
 <!--/_footer /作为公共模版分离出去-->
 
 <!--请在下方写此页面业务相关的脚本-->
-<script type="text/javascript" src="/view/lib/My97DatePicker/4.8/WdatePicker.js"></script>
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/validate-methods.js"></script> 
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
-<script type="text/javascript" src="/view/lib/webuploader/0.1.5/webuploader.min.js"></script> 
-<script type="text/javascript" src="/view/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+
 <script type="text/javascript">
+/**获得城市列表*/
+function getCities(){
+	$.ajax({
+        type:"post",
+        url:"/flowsys/operatorPg/pg_add.do",
+        data: $('form').serialize(),//表单数据
+        async : false,
+        success:function(d){
+            
+        	if(d=="success"){
+                layer.msg('保存成功！');//保存成功提示
+            }
+            if(d=="error"){
+                layer.msg('保存异常!');
+            }
+            var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+            parent.layer.close(index); //执行关闭
+        }
+    });
+}
+
 $().ready(function() {
     $("#form-pg-add").validate({
     	rules:{

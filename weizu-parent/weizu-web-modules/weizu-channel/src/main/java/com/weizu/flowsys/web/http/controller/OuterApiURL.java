@@ -30,4 +30,9 @@ public class OuterApiURL extends BaseURL {
 	 * 真实地址：http://www.weizutec.top:28445/weizuAPI/my_order_state.do
 	 */
 	public static final String MY_ORDER_STATE = "/my_order_state";
+	/**
+	 * 下游查询产品列表接口<br>
+	 * 真实地址：http://www.weizutec.top:28445/weizuAPI/my_pgproduct_list.do
+	 */
+	public static final String MY_PGPRODUCT_LIST = "/my_pgproduct_list";
 }

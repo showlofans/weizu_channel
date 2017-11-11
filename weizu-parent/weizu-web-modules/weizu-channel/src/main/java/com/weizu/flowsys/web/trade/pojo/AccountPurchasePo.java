@@ -41,6 +41,8 @@ public class AccountPurchasePo extends Po implements Cloneable{
     
     private Integer fromAccountId;		//订单来源账户id
     
+    private Double apDiscount;			//折扣
+    
 //    private Long orderBackTime;			//订单返回结果
 //    @TempField
 //    private String orderBackTimeStr;	//订单返回时间
@@ -80,7 +82,13 @@ public class AccountPurchasePo extends Po implements Cloneable{
 		return pvo;
 	}
 
+	public Double getApDiscount() {
+		return apDiscount;
+	}
 
+	public void setApDiscount(Double apDiscount) {
+		this.apDiscount = apDiscount;
+	}
 
 	public Long getRecordId() {
 		return recordId;

@@ -28,7 +28,18 @@
 	    <result column="pg_type" jdbcType="INTEGER" property="pgType" />
 	    <result column="circulate_way" jdbcType="INTEGER" property="circulateWay" />
 	    <result column="pg_validity" jdbcType="VARCHAR" property="pgValidity" />
+	    <result column="pg_service_type" jdbcType="VARCHAR" property="pgServiceType" />
 	 </resultMap>
+	<resultMap id="OtherBaseMap" type="com.weizu.flowsys.web.http.entity.PgDataProduct">
+	    <!-- <result column="operator_type" jdbcType="INTEGER" property="operatorType" /> -->
+	    <!-- <result column="service_type" jdbcType="INTEGER" property="serviceType" /> -->
+	    <result column="operator_name" jdbcType="VARCHAR" property="operatorName" />
+	    <result column="pg_size" jdbcType="INTEGER" property="pgSize" />
+	    <!-- <result column="pg_price" jdbcType="DOUBLE" property="pgPrice" /> -->
+	    <result column="pg_name" jdbcType="VARCHAR" property="pgName" />
+	    <result column="product_code" jdbcType="VARCHAR" property="productCode" />
+	 </resultMap>
+	 <!-- 网页订购列表 -->
 	<resultMap id="PurchasePgMap" type="com.weizu.flowsys.web.channel.pojo.PgDataPo">
 	    <id column="id" jdbcType="INTEGER" property="id" />
 	    <result column="operator_type" jdbcType="INTEGER" property="operatorType" />
@@ -41,6 +52,12 @@
 	    <result column="pg_name" jdbcType="VARCHAR" property="pgName" />
 	    <result column="pg_in_service" jdbcType="INTEGER" property="pgInService" />
 	    <result column="channel_id" property="channelId" />
+	 </resultMap>
+	 <!-- 接口包体订购列表 -->
+	<resultMap id="PgProductMap" type="com.weizu.flowsys.web.http.entity.PgProductPo">
+	    <result column="scope_city_code" jdbcType="VARCHAR" property="scopeCityCode" />
+	    <result column="channel_name" jdbcType="VARCHAR" property="channelName" />
+	    <collection property="pgDataList" resultMap="OtherBaseMap"></collection>
 	 </resultMap>
 	<resultMap id="OtherMap" type="com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo">
 	   <id column="id" jdbcType="INTEGER" property="id" />
@@ -62,10 +79,13 @@
 	    <result column="rte_id" property="rteId" />
 	 </resultMap>
   <sql id="Base_Column_List">
-    pg.id,operator_type,operator_name,pg_in_service,pg.pg_name,pg_price,pg_size,service_type,pg_type,pg_validity,circulate_way
+    pg.id,operator_type,operator_name,pg_in_service,pg.pg_name,pg_price,pg_size,service_type,pg_type,pg_validity,circulate_way,pg_service_type
   </sql>
   <sql id="Purchase_Column_List">
     pg.id,pg.operator_type,pg.operator_name,pg_in_service,pg.pg_name,pg_price,pg_size,pg.service_type,pg_validity,pg_type,cbp.channel_id
+  </sql>
+  <sql id="PgProduct_Column_List">
+    cdis.scope_city_code,cbp.channel_name,opd.pg_name,opd.operator_name,opd.pg_size,pc.product_code
   </sql>
   <!-- 通过通道查询购买包体list -->
   <sql id="myCnelPg_Column_List">
@@ -275,6 +295,9 @@
 		<if test="pgType != null">
 			AND pg_type = #{pgType}
 		</if>
+		<if test="pgServiceType != null">
+			AND pg_service_type = #{pgServiceType}
+		</if>
 		<if test="pgValidity != null">
 			AND pg_validity = #{pgValidity}
 		</if>
@@ -408,9 +431,71 @@
 		<if test="pgValidity != null">
 			AND pg_validity = #{pgValidity}
 		</if>
+		<if test="pgServiceType != null">
+			AND pg_service_type = #{pgServiceType}
+		</if>
 		<if test="pgType != null">
 			AND pg_type = #{pgType}
 		</if>
+	 </where>
+ </select>
+ 
+ <!-- 获得代理商配置流量产品列表 -->
+ <select id="getProductPgList" parameterType="map" resultMap="PgProductMap">
+ 	SELECT <include refid="PgProduct_Column_List"></include>
+ 	 FROM <include refid="t_pg"></include> opd
+	 INNER JOIN <include refid="t_cbp"></include> cbp 
+	 ON cbp.pg_id=opd.id
+	  INNER JOIN <include refid="t_pCode"></include> pc
+	on pc.pg_id=opd.id
+	 INNER JOIN <include refid="t_cnel"></include> cnel
+	on cnel.id=cbp.channel_id
+	INNER JOIN <include refid="t_cd"></include> cdis
+	on cdis.channel_id=cnel.id
+	 <where>
+	 	cbp.channel_id in 
+	 	(SELECT rte.channel_id from rate_discount rte
+		INNER JOIN <include refid="t_cnel"></include> chnel
+		on chnel.id=rte.channel_id
+		INNER JOIN <include refid="t_cd"></include> cd
+		on cd.channel_id=chnel.id
+		INNER JOIN <include refid="t_aar"></include> aar
+		on aar.rate_discount_id=rte.id
+		INNER JOIN <include refid="t_act"></include> act
+		on aar.account_id=act.id
+		<where>
+			<if test="agencyId != null">
+				AND act.agency_id=#{agencyId}
+			</if>
+			<if test="channelUseState != null">
+				AND chnel.channel_use_state=#{channelUseState}
+			</if>
+			<if test="bindState != null">
+				AND aar.bind_state=#{bindState}
+			</if>
+			<!-- <if test="scopeCityCode != null">
+				AND cd.scope_city_code=#{scopeCityCode}
+			</if> -->
+			<!-- <if test="channelType != null">
+				AND cd.channel_type=#{channelType}
+			</if> -->
+		</where>)
+		AND opd.id=pc.pg_id AND cnel.ep_id=pc.ep_id AND pc.scope_city_code=cdis.scope_city_code
+		<if test="operatorType != null">
+			AND operator_type = #{operatorType}
+		</if>
+		<!-- <if test="serviceType != null">
+			AND service_type = #{serviceType}
+		</if>
+		<if test="pgValidity != null">
+			AND pg_validity = #{pgValidity}
+		</if>
+		<if test="pgServiceType != null">
+			AND pg_service_type = #{pgServiceType}
+		</if>
+		<if test="pgType != null">
+			AND pg_type = #{pgType}
+		</if> -->
 	 </where>
  </select>
 </mapper>

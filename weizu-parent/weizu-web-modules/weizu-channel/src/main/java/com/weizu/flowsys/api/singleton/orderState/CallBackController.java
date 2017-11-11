@@ -14,6 +14,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.web.agency.ao.AgencyAO;
@@ -161,29 +162,48 @@ public class CallBackController {
 	 */
 	@ResponseBody
 	@RequestMapping(value=CallBackURL.Weizu)
-	public String WeizuCallBack(Integer errcode, String transaction_id, String user_order_id, String number, Integer status){
-		String res = "";
-		if(errcode.equals(0)){
-			Long orderId = Long.parseLong(user_order_id);
-			String orderIdApi = transaction_id;
-			switch (status) {
-			case 4://成功:设置orderResult和orderState为成功
-				res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, null, System.currentTimeMillis(), OrderStateEnum.CHARGED.getValue(), null, OrderStateEnum.CHARGED.getDesc()));
-				break;
-			case 8://失败:设置orderResult为充值等待(设置回调缓冲时间限制)
-				res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, null, System.currentTimeMillis(), OrderStateEnum.DAICHONG.getValue(), null, OrderStateEnum.DAICHONG.getDesc()));
-				break;
-				
-			default:
-				break;
-			}
-		}
-		if(!"success".equals(res)){
-			System.out.println(errcode+":" +transaction_id+":"  +user_order_id+":"  +number+":"  + status);
-		}
-		//String failReason,String outTradeNo,String sign,int status,Long ts
-		System.out.println("ok");
-		return "ok";
+	public String WeizuCallBack(@RequestBody String key){
+		System.out.println("接收到的jsonStr："+key);
+		String res = "ok";
+		try {  
+            JSONObject obj = JSON.parseObject(key);
+            Integer errcode = obj.getInteger("errcode");
+            String transaction_id = obj.getString("transaction_id");
+            String user_order_id = obj.getString("user_order_id");//本地订单号
+            String number = obj.getString("number");
+            Integer status = obj.getInteger("status");
+            
+            if(errcode.equals(0)){
+    			Long orderId = Long.parseLong(user_order_id);
+    			PurchasePo purchasePo = purchaseDAO.get(orderId);
+    			Boolean hasCall = OrderResultEnum.SUCCESS.getCode().equals(purchasePo.getHasCallBack());
+    			if(!hasCall){//上一次没有回调成功
+    				String orderIdApi = transaction_id;
+    				switch (status) {
+    				case 4://成功:设置orderResult和orderState为成功
+    					res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, orderIdApi, System.currentTimeMillis(), OrderStateEnum.CHARGED.getValue(), null, OrderStateEnum.CHARGED.getDesc()));
+    					break;
+    				case 8://失败:设置orderResult为充值等待(设置回调缓冲时间限制)
+    					res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, orderIdApi, System.currentTimeMillis(), OrderStateEnum.DAICHONG.getValue(), null, OrderStateEnum.DAICHONG.getDesc()));
+    					break;
+    					
+    				default:
+    					break;
+    				}
+    			}
+    		}
+            if(!"success".equals(res)){
+            	System.out.println("状态回调失败");
+    			System.out.println(errcode+":" +transaction_id+":"  +user_order_id+":"  +number+":"  + status);
+    			res = "状态回调失败";
+    		}
+            //根据订单号去更新数据库，并返回回调结果
+  
+        } catch (JSONException e) { 
+        	e.printStackTrace();  
+        	res = "解析json异常";
+        }  
+		return res;
 	}
 	/**
 	 * @description: 乐疯回调接口
@@ -219,20 +239,28 @@ public class CallBackController {
             
             //初始化参数
             long orderId = Long.parseLong(msgId.trim());
-            Long orderBackTime = DateUtil.strToDate(report_time, null).getTime();
-            switch (err) {
-			case 0:
-				myStatus = OrderStateEnum.CHARGED.getValue();
-				statusDetail = OrderStateEnum.CHARGED.getDesc();
-				break;
-
-			default:
-				myStatus = OrderStateEnum.UNCHARGE.getValue();
-				statusDetail = fail_describe;
-				break;
-			}
             
-            successTag = sendCallBack.getCallBackResult(new PurchasePo(orderId, reqNo, orderBackTime, myStatus, null, statusDetail), successTag);	//不使用订单参数修改回调结果
+            PurchasePo purchasePo = purchaseDAO.get(orderId);
+			Boolean hasCall = OrderResultEnum.SUCCESS.getCode().equals(purchasePo.getHasCallBack());
+			String res = "";
+			if(!hasCall){//上一次没有回调成功
+	            //Long orderBackTime = DateUtil.strToDate(report_time, null).getTime();
+	            switch (err) {
+				case 0:
+					myStatus = OrderStateEnum.CHARGED.getValue();
+					statusDetail = OrderStateEnum.CHARGED.getDesc();
+					break;
+	
+				default:
+					myStatus = OrderStateEnum.UNCHARGE.getValue();
+					statusDetail = fail_describe;
+					break;
+				}
+	            res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, reqNo, System.currentTimeMillis(), myStatus,null , statusDetail));
+	            if(!"success".equals(res)){
+	            	successTag = res;
+	            }
+			}
             //根据订单号去更新数据库，并返回回调结果
   
         } catch (JSONException e) {  

@@ -62,9 +62,9 @@
     <div class="md-section-divider"></div>
     <h1 data-anchor-id="xbv3" id="南昌微族流量接口文档">平台接口文档</h1>
     <blockquote data-anchor-id="tger" class="white-blockquote"> 
-   <p><strong>南昌微族流量充值平台入口：<a href="http://120.55.162.224:8082" target="_blank">http://120.55.162.224:8082</a></strong></p> 
-   <p>接口使用前提：完成对公账户的认证</p> 
-   <p><!-- 版本:V1.0  -->更新时间：2017-11-01 17:59:00</p> 
+   <p><strong>南昌微族流量充值平台入口：<a href="http://120.55.162.224" target="_blank">http://120.55.162.224</a></strong></p> 
+   <p>接口使用前提：完成对公账户的认证，获得apikey</p> 
+   <p><!-- 版本:V1.0  -->更新时间：2017-11-08 17:59:00</p> 
    <p><!-- 版本:V1.0  -->接口对接咨询：3004599415#qq.com</p> 
     </blockquote>
     <div class="md-section-divider"></div>
@@ -87,7 +87,7 @@
     <h3 data-anchor-id="agyx" id="2apikey">2.apikey</h3>
     <blockquote data-anchor-id="yyp6" class="white-blockquote"> 
      <ol> 
-      <li><!-- 后台查看或者 -->询问管理员</li> 
+      <li>后台查看或者询问管理员</li> 
      </ol> 
     </blockquote>
     <table data-anchor-id="0d6i" class="table table-striped-white table-bordered"> 
@@ -114,8 +114,8 @@
     <ul data-anchor-id="ic13"> 
      <li>请求方式:
       <!-- POST/ -->GET</li> 
-     <li>举例地址:<a href="http://120.55.162.224:8082/flowsys/weizuAPI/charge?userName=xxxx&amp;number=13333333333&amp;pgSize=5&amp;userOrderId=123123&amp;sign=225345C671534666D1232ACE718A690B" target="_blank">http://120.55.162.224:8082/flowsys/weizuAPI/charge?userName=xxxx&amp;number=13333333333&amp;pgSize=5&amp;userOrderId=123123&amp;<!-- timestamp=1502677243503&amp; -->sign=225345C671534666D1232ACE718A690B</a></li> 
-     <li>请求地址:<a href="http://120.55.162.224:8082/flowsys/weizuAPI/charge" target="_blank">http://120.55.162.224:8082/flowsys/weizuAPI/charge </a></li> 
+     <li>举例地址:<a href="http://120.55.162.224/flowsys/weizuAPI/charge?userName=xxxx&amp;number=13333333333&amp;pgSize=5&amp;userOrderId=123123&amp;sign=225345C671534666D1232ACE718A690B" target="_blank">http://120.55.162.224/flowsys/weizuAPI/charge?userName=xxxx&amp;number=13333333333&amp;pgSize=5&amp;userOrderId=123123&amp;<!-- timestamp=1502677243503&amp; -->sign=225345C671534666D1232ACE718A690B</a></li> 
+     <li>请求地址:<a href="http://120.55.162.224/flowsys/weizuAPI/charge" target="_blank">http://120.55.162.224/flowsys/weizuAPI/charge </a></li> 
      <li>请求参数:</li> 
     </ul>
     <table data-anchor-id="3aar" class="table table-striped-white table-bordered"> 
@@ -168,7 +168,7 @@
        <td style="text-align:left;">pgType</td> 
        <td style="text-align:left;">int</td> 
        <td style="text-align:left;">否</td> 
-       <td style="text-align:left;">流量类型：值为0代表全国漫游流量，值为1代表流量包，值为2代表流量池。不传即默认为1</td> <!-- （1-流量包，2-流量池） -->
+       <td style="text-align:left;">流量类型：值为1代表流量包，值为2代表流量池。不传即默认为1</td> <!-- （1-流量包，2-流量池） -->
       </tr> 
       <tr> 
        <td style="text-align:left;">pgValidity</td> 
@@ -196,12 +196,13 @@
        <td style="text-align:left;">method</td> 
        <td style="text-align:left;">否</td> 
        <td style="text-align:left;">回调方式，默认POST。如果需要使用GET方式:method=GET</td> 
-      </tr> 
+      </tr>  -->
       <tr> 
-       <td style="text-align:left;">reporturl</td> 
+       <td style="text-align:left;">reportUrl</td> 
+       <td style="text-align:left;">String</td>
        <td style="text-align:left;">否</td> 
        <td style="text-align:left;">回调地址，可选参数，填则回调，不填则不回调（设置回调地址有两种方式:1.接口传入回调地址 2.后台配置固定回调地址。如果同时在接口传入回调地址和后台配置了固定回调地址，那么优先选择接口传入的回调地址）</td> 
-      </tr>  -->
+      </tr> 
       <tr> 
        <td style="text-align:left;">sign</td> 
        <td style="text-align:left;">String</td> 
@@ -265,8 +266,8 @@
     <div class="md-section-divider"></div> 
     <h3 data-anchor-id="cxt0" id="2充值结果回调">2.充值结果回调（待测试）</h3>
     <ul data-anchor-id="s0g1"> 
-     <li>请求方式:POST</li> 
-     <li>回调地址:用户设置的的reporturl</li> 
+     <li>请求方式：POST</li> 
+     <li>回调地址：用户设置的的reportUrl</li> 
      <li>响应内容: ok 为成功，其他则失败 </li>
      <!-- <li>响应说明: 超时或者非200状态码的 http 响应系统会判断回调失败，并且重新发起回调，共四次回调，间隔为30秒、60秒、120秒，300秒</li>  -->
     </ul>
@@ -316,7 +317,7 @@
     <h3 data-anchor-id="hju9" id="3获取账号余额">3.获取账号余额</h3>
     <ul data-anchor-id="cqrx"> 
      <li>请求方式:GET</li> 
-     <li>请求地址:<a href="http://120.55.162.224:8082/flowsys/weizuAPI/my_balance?userName=xxxx&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2&amp;billType=0" target="_blank">http://120.55.162.224:8082/flowsys/weizuAPI/my_balance?userName=xxxx&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2&amp;billType=0</a></li> 
+     <li>请求地址:<a href="http://120.55.162.224/flowsys/weizuAPI/my_balance?userName=xxxx&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2&amp;billType=0" target="_blank">http://120.55.162.224/flowsys/weizuAPI/my_balance?userName=xxxx&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2&amp;billType=0</a></li> 
      <li>数据格式:key=value</li> 
      <li>请求参数: 
       <table data-anchor-id="op24" class="table table-striped-white table-bordered"> 
@@ -352,7 +353,7 @@
      <li>返回JSON数据:</li> 
     </ul>
     <div class="md-section-divider"></div>
-    <pre class="prettyprint linenums prettyprinted" data-anchor-id="9eqf"><ol class="linenums"><li class="L0"><code><span class="pun">{</span></code></li><li class="L1"><code><span class="pln">    </span><span class="str">&quot;tipCode&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="lit">5001</span><span class="pun">,</span></code></li><li class="L2"><code><span class="pln">    </span><span class="str">&quot;tipMsg&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">&quot;用户验证成功&quot;</span><span class="pun">,</span></code></li><li class="L3"><code><span class="pln">    </span><span class="str">&quot;balance&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">&quot;20.05&quot;</span></code></li><li class="L4"><code><span class="pln">    </span><span class="str">&quot;billType&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">1</span></code></li><li class="L5"><code><span class="pun">}</span></code></li></ol></pre>
+    <pre class="prettyprint linenums prettyprinted" data-anchor-id="9eqf"><ol class="linenums"><li class="L0"><code><span class="pun">{</span></code></li><li class="L1"><code><span class="pln">    </span><span class="str">&quot;tipCode&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="lit">5001</span><span class="pun">,</span></code></li><li class="L2"><code><span class="pln">    </span><span class="str">&quot;tipMsg&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">&quot;用户验证成功&quot;</span><span class="pun">,</span></code></li><li class="L3"><code><span class="pln">    </span><span class="str">&quot;accountBalance&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">&quot;20.05&quot;</span></code></li><li class="L4"><code><span class="pln">    </span><span class="str">&quot;billType&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">1</span></code></li><li class="L5"><code><span class="pun">}</span></code></li></ol></pre>
     <ul data-anchor-id="jzht"> 
      <li>返回说明:</li> 
     </ul>
@@ -381,7 +382,7 @@
     <h3 data-anchor-id="scug" id="4获取某一订单详情">4.获取某一订单详情</h3>
     <ul data-anchor-id="jkh7"> 
      <li>请求方式:GET</li> 
-     <li>请求地址:<a href="http://120.55.162.224:8082/flowsys/weizuAPI/my_order_state?userName=xxxx&amp;orderId=745830224406515712&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2" target="_blank">http://120.55.162.224:8082/flowsys/weizuAPI/my_order_state?userName=xxxx&amp;orderId=745830224406515712&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2</a></li> 
+     <li>请求地址:<a href="http://120.55.162.224/flowsys/weizuAPI/my_order_state?userName=xxxx&amp;orderId=745830224406515712&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2" target="_blank">http://120.55.162.224/flowsys/weizuAPI/my_order_state?userName=xxxx&amp;orderId=745830224406515712&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2</a></li> 
      <li>数据格式:key=value</li> 
      <li>请求参数:</li> 
     </ul>
@@ -405,7 +406,7 @@
        <td style="text-align:left;">orderId</td> 
        <td style="text-align:left;">Long</td> 
        <td style="text-align:left;">是</td> 
-       <td style="text-align:left;">订单ID<!--， 即orderId（user_orderId 和 orderId 至少传一个值，同时传优先选择 orderId) --></td> 
+       <td style="text-align:left;">平台返的充值订单号<!--， 即orderId（user_orderId 和 orderId 至少传一个值，同时传优先选择 orderId) --></td> 
       </tr> 
      <!--  <tr> 
        <td style="text-align:left;">user_orderId</td> 
@@ -482,7 +483,7 @@
        <td style="text-align:left;">订单状态，0:充值失败，1:充值成功，2:正在充值<!-- ，4:等待充值，8:未充值 --></td> 
       </tr> 
       <tr> 
-       <td style="text-align:left;">msg</td> 
+       <td style="text-align:left;">statusMSg</td> 
        <td style="text-align:left;">String</td> 
        <td style="text-align:left;">订单状态信息</td> 
       </tr> 
