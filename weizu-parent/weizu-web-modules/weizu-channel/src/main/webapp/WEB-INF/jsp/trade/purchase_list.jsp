@@ -150,7 +150,7 @@
 						<td>
 							<c:forEach items="${resultMap.orderStateEnums }" var="orderStateEnum" varStatus="vs">
 								<c:if test="${purchase.orderResult == orderStateEnum.value }">
-									<span class="label label-defaunt radius">
+									<span class="label label-primary radius mark">
 										${orderStateEnum.desc }
 									</span>
 								</c:if>
@@ -168,7 +168,7 @@
 							</c:choose>
 						</td>
 						<td>
-							<span class="label label-defaunt radius">
+							<span class="label label-success radius">
 								${purchase.orderPrice }
 							</span>
 						</td>

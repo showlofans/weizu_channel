@@ -19,5 +19,5 @@ public interface AgencyEpAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月8日 下午1:14:32
 	 */
-	List<AgencyEpPo> getAgencyEpByAgencyId(int agencyId);
+//	List<AgencyEpPo> getAgencyEpByAgencyId(int agencyId);
 }

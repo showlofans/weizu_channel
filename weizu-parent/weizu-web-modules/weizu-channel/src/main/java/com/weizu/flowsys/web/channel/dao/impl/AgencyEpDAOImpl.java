@@ -22,8 +22,8 @@ import com.weizu.flowsys.web.channel.pojo.AgencyEpPo;
 @Repository(value = "agencyEpDAO")
 public class AgencyEpDAOImpl extends DaoImpl<AgencyEpPo, Long> implements IAgencyEpDAO {
 
-	@Resource
-	private SqlSessionTemplate sqlSessionTemplate;
+//	@Resource
+//	private SqlSessionTemplate sqlSessionTemplate;
 	
 	/**
 	 * @description:通过代理商ID获得所有平台列表
@@ -32,10 +32,10 @@ public class AgencyEpDAOImpl extends DaoImpl<AgencyEpPo, Long> implements IAgenc
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月8日 下午1:19:21
 	 */
-	@Override
-	public List<AgencyEpPo> getAgencyEpByAgencyId(int agencyId) {
-		
-		return sqlSessionTemplate.selectList("getAgencyEpByAgencyId", agencyId);
-	}
+//	@Override
+//	public List<AgencyEpPo> getAgencyEpByAgencyId(int agencyId) {
+//		
+//		return sqlSessionTemplate.selectList("getAgencyEpByAgencyId", agencyId);
+//	}
 
 }

@@ -21,8 +21,8 @@ import com.weizu.flowsys.web.channel.pojo.AgencyEpPo;
 @Service(value = "agencyEpAO")
 public class AgencyEpAOImpl implements AgencyEpAO {
 
-	@Resource
-	private IAgencyEpDAO agencyEpDAO;
+//	@Resource
+//	private IAgencyEpDAO agencyEpDAO;
 	/**
 	 * @description:通过代理商ID获得所有平台列表
 	 * @param agencyId
@@ -30,9 +30,9 @@ public class AgencyEpAOImpl implements AgencyEpAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月8日 下午1:23:43
 	 */
-	@Override
-	public List<AgencyEpPo> getAgencyEpByAgencyId(int agencyId) {
-		return agencyEpDAO.getAgencyEpByAgencyId(agencyId);
-	}
+//	@Override
+//	public List<AgencyEpPo> getAgencyEpByAgencyId(int agencyId) {
+//		return agencyEpDAO.getAgencyEpByAgencyId(agencyId);
+//	}
 
 }

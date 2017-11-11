@@ -34,11 +34,6 @@ public class TelChannelURL extends BaseURL {
 	 * <br>/flowsys/tel_channel/ajax_get_params.do
 	 */
 	public static final String AJAX_GET_PARAMS = "/ajax_get_params" + DYNAMIC_WEB_SUFFIX;
-	/**
-	 * 话费充值页面：异步加载话费编码和折扣价
-	 * <br>/flowsys/tel_channel/ajax_get_code.do
-	 */
-	public static final String AJAX_GET_CODE = "/ajax_get_code" + DYNAMIC_WEB_SUFFIX;
 	
 	/**
 	 * 话费通道列表

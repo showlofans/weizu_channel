@@ -13,48 +13,48 @@ import java.util.Map;
  * @createTime:2017年11月10日 下午4:18:28
  * @version 1.0
  */
-public enum ChargeTelEnum {
+public enum TelchannelTypeEnum {
 	
 	/**
 	 *  30元话费
 	 */
-	Thirty("30元",30),
+	THIRTY("30元",30),
 	/**
 	 *  50元话费
 	 */
-	fifty("50元",50),
+	FIFTY("50元",50),
 	/**
 	 *  100元话费
 	 */
-	one_hundred("100元",100),
+	ONE_HUNDRED("100元",100),
 	/**
 	 *  10元话费
 	 */
-	ten("10元",10),
+	TEN("10元",10),
 	/**
 	 *  20元话费
 	 */
-	tweenty("20元",20),
+	TWEENTY("20元",20),
 	/**
 	 *  200元话费
 	 */
-	two_hundred("200元",200),
+	TWO_HUNDRED("200元",200),
 	/**
 	 *  300元话费
 	 */
-	three_hundred("300元",300),
+	THREE_HUNDRED("300元",300),
 	/**
 	 *  400元话费
 	 */
-	four_hundred("400元",400),
+	FOUR_HUNDRED("400元",400),
 	/**
 	 * 500元话费
 	 */
-	five_hundred("500元",500),
+	FIVE_HUNDRED("500元",500),
 	/**
 	 * 任意价格：根据页面输入价格去设置任意价格的值
 	 */
-	INCREASE("任意价格",-1);
+	ANY_PRICE("任意价格",-1);
 	
 	private String desc;
 	private Integer value;
@@ -66,18 +66,18 @@ public enum ChargeTelEnum {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年4月26日 下午12:33:32
 	 */
-	public static ChargeTelEnum getEnum(Integer value)
+	public static TelchannelTypeEnum getEnum(Integer value)
 	{
 
 		if(value == null){
 			return null;
 		}
-		ChargeTelEnum resultEnum = null;
+		TelchannelTypeEnum resultEnum = null;
 
 		// 获取附件类型枚举数组
-		ChargeTelEnum[] enumArray = ChargeTelEnum.values();
+		TelchannelTypeEnum[] enumArray = TelchannelTypeEnum.values();
 
-		for (ChargeTelEnum accountTypeEnum : enumArray)
+		for (TelchannelTypeEnum accountTypeEnum : enumArray)
 		{
 			if(value == accountTypeEnum.getValue())
 			{
@@ -98,12 +98,12 @@ public enum ChargeTelEnum {
 	public static Map<String, Map<String, Object>> toMap()
 	{
 		// 获取附件类型枚举数组
-		ChargeTelEnum[] enumArray = ChargeTelEnum.values();
+		TelchannelTypeEnum[] enumArray = TelchannelTypeEnum.values();
 
 		// 定义枚举MAP
 		Map<String, Map<String, Object>> enumMap = new HashMap<String, Map<String, Object>>(enumArray.length);
 
-		for (ChargeTelEnum accountTypeEnum : enumArray)
+		for (TelchannelTypeEnum accountTypeEnum : enumArray)
 		{
 			String key = String.valueOf(getEnum(accountTypeEnum.getValue()));
 
@@ -126,12 +126,12 @@ public enum ChargeTelEnum {
 	public static List<Map<String, Object>> toList()
 	{
 		// 获取附件类型枚举数组
-		ChargeTelEnum[] enumArray = ChargeTelEnum.values();
+		TelchannelTypeEnum[] enumArray = TelchannelTypeEnum.values();
 
 		// 定义枚举list
 		List<Map<String, Object>> operatorNameMapList = new ArrayList<Map<String, Object>>(enumArray.length);
 
-		for (ChargeTelEnum accountTypeEnum : enumArray)
+		for (TelchannelTypeEnum accountTypeEnum : enumArray)
 		{
 			Map<String, Object> accountTypeMap = new HashMap<String, Object>(2);
 			accountTypeMap.put("desc", accountTypeEnum.getDesc());
@@ -148,31 +148,31 @@ public enum ChargeTelEnum {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年9月21日 上午11:48:21
 	 */
-	public static List<Map<String, Object>> toConsumeList()
-	{
-		// 获取附件类型枚举数组
-		ChargeTelEnum[] enumArray = ChargeTelEnum.values();
-		
-		// 定义枚举list
-		List<Map<String, Object>> operatorNameMapList = new ArrayList<Map<String, Object>>(enumArray.length);
-		
-		for (ChargeTelEnum accountTypeEnum : enumArray)
-		{
-			if(accountTypeEnum.getValue() == INCREASE.getValue()){
-				continue;
-			}
-			Map<String, Object> accountTypeMap = new HashMap<String, Object>(2);
-			accountTypeMap.put("desc", accountTypeEnum.getDesc());
-			accountTypeMap.put("value", accountTypeEnum.getValue());
-			
-			operatorNameMapList.add(accountTypeMap);
-		}
-		
-		return operatorNameMapList;
-	}
+//	public static List<Map<String, Object>> toConsumeList()
+//	{
+//		// 获取附件类型枚举数组
+//		TelchannelTypeEnum[] enumArray = TelchannelTypeEnum.values();
+//		
+//		// 定义枚举list
+//		List<Map<String, Object>> operatorNameMapList = new ArrayList<Map<String, Object>>(enumArray.length);
+//		
+//		for (TelchannelTypeEnum accountTypeEnum : enumArray)
+//		{
+//			if(accountTypeEnum.getValue() == ANY_PRICE.getValue()){
+//				continue;
+//			}
+//			Map<String, Object> accountTypeMap = new HashMap<String, Object>(2);
+//			accountTypeMap.put("desc", accountTypeEnum.getDesc());
+//			accountTypeMap.put("value", accountTypeEnum.getValue());
+//			
+//			operatorNameMapList.add(accountTypeMap);
+//		}
+//		
+//		return operatorNameMapList;
+//	}
 	
 	
-	private ChargeTelEnum(String desc, Integer value) {
+	private TelchannelTypeEnum(String desc, Integer value) {
 		this.desc = desc;
 		this.value = value;
 	}

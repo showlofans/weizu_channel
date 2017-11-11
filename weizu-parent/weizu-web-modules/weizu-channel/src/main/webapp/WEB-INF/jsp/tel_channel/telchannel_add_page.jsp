@@ -236,7 +236,8 @@
 						<!-- 输入两位折扣数字 -->
 						<input class="disscount" style="display: none; width:50px;" type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
 						<c:if test="${chargeTelEnum.value == -1 }">
-							&nbsp;&nbsp;<input class="disscount input-text" style=" width:100px;" type="text" maxlength="4" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="标准价">元
+							&nbsp;&nbsp;<input class="disscount input-text" style=" width:100px;" type="text" maxlength="4" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="最低限额">元
+							&nbsp;&nbsp;<input class="disscount input-text" style=" width:100px;" type="text" maxlength="4" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="最高限额">元
 						</c:if>
 						&nbsp;&nbsp;<input class="disscount input-text" style=" width:150px;" type="text"  placeholder="产品编码">
 						&nbsp;&nbsp;<input class="disscount input-text" style=" width:100px;" type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="折扣">

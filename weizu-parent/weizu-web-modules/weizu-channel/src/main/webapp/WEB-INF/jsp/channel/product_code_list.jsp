@@ -65,8 +65,8 @@
 			</c:forEach>
 		</select>
 		</span> 
-		&nbsp;&nbsp;
-		产品编码：<input type="text" value="${resultMap.searchParam.productCode }" name="productCode" id="" placeholder=" 产品编码" style="width:150px" class="input-text">&nbsp;&nbsp;
+		<%-- &nbsp;&nbsp;
+		产品编码：<input type="text" value="${resultMap.searchParam.productCode }" name="productCode" id="" placeholder=" 产品编码" style="width:150px" class="input-text">&nbsp;&nbsp; --%>
 		<%-- 对接平台：
 		<span class="select-box inline">
 			<select id="epId" name="epId" class="select" onchange="submitForm()">

@@ -62,13 +62,13 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 		String name = "";
 		switch (type) {
 		case 0 :
-			name = OperatorNameEnum.CHINAMOBILE.getValue();
+			name = OperatorNameEnum.CHINAMOBILE.getDesc();
 			break;
 		case 1:
-			name = OperatorNameEnum.CHINALINK.getValue();
+			name = OperatorNameEnum.CHINALINK.getDesc();
 			break;
 		case 2:
-			name = OperatorNameEnum.CHINATELECOME.getValue();
+			name = OperatorNameEnum.CHINATELECOME.getDesc();
 			break;
 
 		default:

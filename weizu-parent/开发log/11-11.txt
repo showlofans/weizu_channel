@@ -1,0 +1,46 @@
+
+#城市id 		对应城市表的id（外键不级联）city_id
+#业务类型       serviceType
+# 运营商 	operatorName
+#平台id 		epId
+
+一个话费通道只有一个编码，可以批量添加话费通道
+
+telchannel
+id
+商务类型 	bill_type
+通道价 		telchannel_discount
+通道状态 	telchannel_state
+通道使用状态  	telchannel_use_state
+通道使用量 	telchannel_total_use
+交易总金额 	telchannel_total_amount
+总利润 		telchannel_total_profit
+话费编码 	tel_product_id
+
+最后更新	last_access
+
+
+
+tel_product
+平台id 		epId
+平台名称	epName
+话费编码 	tel_code
+最低限额 	chare_limit_low
+最高限额 	charge_limit_high
+话费价值 	charge_value
+话费类型        free_charge(是否是任意价产品)
+城市id 		对应城市表的id（外键不级联）city_id
+充值速度 	charge_speed
+业务类型       serviceType
+ 运营商 	operatorName
+限制描述 	limit_description
+
+获得价值和编码列表
+
+
+绑定表 telchannel_product
+id
+话费通道 telchannel_id
+话费编码 tel_product_id
+通道编码 	telchannel_code
+

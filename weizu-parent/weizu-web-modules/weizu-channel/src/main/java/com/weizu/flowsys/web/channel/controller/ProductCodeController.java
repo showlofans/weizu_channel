@@ -49,8 +49,8 @@ public class ProductCodeController {
 	
 	@Resource
 	private ProductCodeAO productCodeAO;
-	@Resource
-	private AgencyEpAO agencyEpAO;
+//	@Resource
+//	private AgencyEpAO agencyEpAO;
 	
 	@Resource
 	private ExchangePlatformDaoInterface exchangePlatformDao;
