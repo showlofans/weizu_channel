@@ -126,9 +126,9 @@ public class SqlUtil<T extends Po> {
 		    			//�ж��Ƿ���boolean����
 		    			String getf = "get";
 		    			String fieldType = f.getGenericType().toString();
-		    			if (fieldType.indexOf("boolean") != -1 || fieldType.indexOf("Boolean") != -1) {
-		    				getf = "is";
-						}
+//		    			if (fieldType.indexOf("boolean") != -1 || fieldType.indexOf("Boolean") != -1) {
+//		    				getf = "is";
+//						}
 		    			if (f.isAnnotationPresent(FieldName.class)) {
 		    				String fieldName = f.getAnnotation(FieldName.class).name();
 		    				Method get = thisClass.getMethod(getf + fName.substring(0, 1).toUpperCase() + fName.substring(1));
@@ -182,9 +182,9 @@ public class SqlUtil<T extends Po> {
 		    			//�ж��Ƿ���boolean����
 		    			String getf = "get";
 		    			String fieldType = f.getGenericType().toString();
-		    			if (fieldType.indexOf("boolean") != -1 || fieldType.indexOf("Boolean") != -1) {
-		    				getf = "is";
-						}
+//		    			if (fieldType.indexOf("boolean") != -1 || fieldType.indexOf("Boolean") != -1) {
+//		    				getf = "is";
+//						}
 		    			if (f.isAnnotationPresent(FieldName.class)) {
 		    				String fieldName = f.getAnnotation(FieldName.class).name();
 		    				Method get = thisClass.getMethod(getf + fName.substring(0, 1).toUpperCase() + fName.substring(1));
@@ -291,9 +291,9 @@ public class SqlUtil<T extends Po> {
 	    				//�ж��Ƿ���boolean����
 		    			String getf = "get";
 		    			String fieldType = f.getGenericType().toString();
-		    			if (fieldType.indexOf("boolean") != -1 || fieldType.indexOf("Boolean") != -1) {
-		    				getf = "is";
-						}
+//		    			if (fieldType.indexOf("boolean") != -1 || fieldType.indexOf("Boolean") != -1) {
+//		    				getf = "is";
+//						}
 		    			if (f.isAnnotationPresent(FieldName.class)) {
 		    				String fieldName = f.getAnnotation(FieldName.class).name();
 		    				Method get = thisClass.getMethod(getf + fName.substring(0, 1).toUpperCase() + fName.substring(1));

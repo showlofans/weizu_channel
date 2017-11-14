@@ -18,7 +18,7 @@ public class CallBackURL extends BaseURL{
 	/**
 	 * 微族科技回调接口<br>
 	 * 真实地址：http://www.weizutec.top:28445/flowsys/callBack/weizu.do<br>
-	 * 真实地址：http://120.55.162.224:8082/flowsys/callBack/weizu.do<br>
+	 * 真实地址：http://120.55.162.224/flowsys/callBack/weizu.do<br>
 	 */
 	public static final String Weizu = "/weizu"+ DYNAMIC_WEB_SUFFIX;
 	/**

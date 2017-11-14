@@ -37,7 +37,7 @@
 		<label class="form-label col-xs-4 col-sm-3">平台</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<span class="select-box ">
-					<select id="selectEpId" name="epId" class="select">
+					<select id="selectEpId" name="epId" class="select" onchange="changeEpName()">
 						<c:forEach items="${resultMap.epList }" var="ep" varStatus="vs1">
 							<option value="${ep.id }" <c:if test="${ep.id == resultMap.epId }"> selected</c:if> >${ep.epName }</option>
 						</c:forEach>
@@ -45,6 +45,7 @@
 				</span>
 			</div>
 		</div>
+		<input type="hidden" name="epName" value="${resultMap.epList[0].epName }">
 		<div class="row cl">
 		<label class="form-label col-xs-4 col-sm-3">运营商类型：</label>
 			<div class="formControls col-xs-8 col-sm-9">
@@ -97,7 +98,7 @@
 			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
 				<select id="chargeSpeed" name="chargeSpeed" class="select" required >
 					<c:forEach items="${resultMap.telchargeSpeedEnums }" var="telchargeSpeedEnum" varStatus="vs1">
-						<option <c:if test="${product.chargeSpeed == telchargeSpeedEnum.value }">selected="selected"</c:if> value="${telchargeSpeedEnum.value }">${telchargeSpeedEnum.desc }</option>
+						<option <c:if test="${product.chargeSpeed == telchargeSpeedEnum.value }">selected</c:if> value="${telchargeSpeedEnum.value }">${telchargeSpeedEnum.desc }</option>
 					</c:forEach>
 				</select>
 				</span> </div>
@@ -106,7 +107,7 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">限制描述：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" required placeholder="" id="limitDescription" name="limitDescription">
+				<input type="text" class="input-text" placeholder="" id="limitDescription" name="limitDescription">
 			</div>
 		</div>
 		<div class="row cl">
@@ -159,6 +160,11 @@ function province_change(v){
             }
 	    }
 	});
+}
+/**修改平台名称*/
+function changeEpName(){
+	var epName = $('#selectEpId option:selected').text();
+	$('#epName').val(epName);
 }
 //保证非空
 $().ready(function() {

@@ -35,6 +35,14 @@ public interface TelProductAO {
 	 * @createTime:2017年11月11日 下午4:25:00
 	 */
 	public Pagination<TelProductPo> listTelProduct(TelProductPo telPo, PageParam pageParam);
+	/**
+	 * @description: 异步获得编码有编码的话费列表 
+	 * @param telPo
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月14日 下午12:45:19
+	 */
+	public List<TelProductPo> listTelProduct(TelProductPo telPo);
 	
 	/**
 	 * @description: 添加话费产品编码

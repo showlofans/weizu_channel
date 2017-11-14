@@ -111,10 +111,10 @@
 					<ul>
 						<c:if test="${power== 'no'}">
 							<li><a data-href="/flowsys/platform/platform_list.do" data-title="平台管理" href="javascript:void(0)">平台管理</a></li>
-							<li><a data-href="/flowsys/productCode/product_code_list.do" data-title="产品编码" href="javascript:void(0)">产品编码</a></li>
+							<li><a data-href="/flowsys/productCode/product_code_list.do" data-title="流量编码" href="javascript:void(0)">流量编码</a></li>
 						</c:if>
-						<li><a data-href="/flowsys/channel/channel_add_page.do" data-title="通道添加" href="javascript:void(0)">通道添加</a></li>
-						<li><a data-href="/flowsys/channel/channel_list.do" data-title="通道列表" href="javascript:void(0)">通道列表</a></li>
+						<li><a data-href="/flowsys/channel/channel_add_page.do" data-title="流量添加" href="javascript:void(0)">流量添加</a></li>
+						<li><a data-href="/flowsys/channel/channel_list.do" data-title="流量通道" href="javascript:void(0)">流量通道</a></li>
 						<li><a data-href="/flowsys/tel_product/telproduct_list.do" data-title="话费编码列表" href="javascript:void(0)">话费编码</a></li>
 						<li><a data-href="/flowsys/tel_channel/telchannel_add_page.do" data-title="话费通道添加" href="javascript:void(0)">话费添加</a></li>
 						<li><a data-href="/flowsys/tel_channel/telchannel_list.do" data-title="话费通道" href="javascript:void(0)">话费通道</a></li>

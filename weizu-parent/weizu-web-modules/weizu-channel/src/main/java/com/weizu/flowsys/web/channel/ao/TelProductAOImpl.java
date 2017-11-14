@@ -1,5 +1,6 @@
 package com.weizu.flowsys.web.channel.ao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,28 +44,43 @@ public class TelProductAOImpl implements TelProductAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年11月11日 下午3:17:57
 	 */
-//	private Map<String, Object> getParamsByPo(TelProductPo telPo){
-//		Map<String, Object> params = new HashMap<String, Object>();
-//		if(telPo.getEpId() != null){
-//			params.put("epId", telPo.getEpId());
-//		}
-//		if(telPo.getChargeSpeed() != null){
-//			params.put("chargeSpeed", telPo.getChargeSpeed());
-//		}
-//		if(telPo.getServiceType() != null){
-//			params.put("serviceType", telPo.getServiceType());
-//		}
-//		if(telPo.getOperatorName() != null){
-//			params.put("operatorName", telPo.getOperatorName());
-//		}
-//		if(StringHelper.isNotEmpty(telPo.getCityid())){
-//			params.put("cityid", telPo.getCityid());
-//		}
+	private Map<String, Object> getParamsByPo(TelProductPo telPo){
+		Map<String, Object> params = new HashMap<String, Object>();
+		if(telPo.getEpId() != null){
+			params.put("epId", telPo.getEpId());
+		}
+		if(StringHelper.isNotEmpty(telPo.getEpName())){
+			params.put("epName", telPo.getEpName());
+		}
+		if(StringHelper.isNotEmpty(telPo.getCityid())){
+			params.put("cityid", telPo.getCityid());
+		}
+		if(StringHelper.isNotEmpty(telPo.getProvinceid())){
+			params.put("provinceid", telPo.getProvinceid());
+		}
+		
+		if(telPo.getChargeSpeed() != null){
+			params.put("chargeSpeed", telPo.getChargeSpeed());
+		}
+		if(telPo.getServiceType() != null){
+			params.put("serviceType", telPo.getServiceType());
+		}
+		if(telPo.getOperatorName() != null){
+			params.put("operatorName", telPo.getOperatorName());
+		}
+		if(telPo.getChargeValue() != null){
+			params.put("chargeValue", telPo.getChargeValue());
+		}
+		if(StringHelper.isNotEmpty(telPo.getLimitDescription())){
+			params.put("limitDescription", telPo.getLimitDescription());
+		}
+		
+		
 //		if(telPo.getFreeCharge()){
 //			params.put("freeCharge", telPo.getFreeCharge().booleanValue());
 //		}
-//		return params;
-//	}
+		return params;
+	}
 	
 	public WherePrams getWhereByPo(TelProductPo telPo){
 		WherePrams where = new WherePrams("1", "=", 1);
@@ -144,19 +160,39 @@ public class TelProductAOImpl implements TelProductAO {
 
 	@Override
 	public Pagination<TelProductPo> listTelProduct(TelProductPo telPo, PageParam pageParam) {
-		WherePrams where = getWhereByPo(telPo);
-		long toatalRecord = telProductDao.count(where);
+//		WherePrams where = getWhereByPo(telPo);
+		Map<String,Object> params = getParamsByPo(telPo);
+//		long toatalRecord = telProductDao.count(where);
+		long toatalRecord = telProductDao.countTelPro(params);
 		int pageSize = 10;
 		Long pageNo = 1l;
+		
 		if(pageParam != null){
 			pageSize = pageParam.getPageSize();
 			pageNo = pageParam.getPageNoLong();
 			long startLongNum = (pageNo-1)*pageSize;
-			where.limit(startLongNum, pageSize);
+			params.put("start", startLongNum);
+			params.put("end", pageSize);
+//			where.limit(startLongNum, pageSize);
 		}
-		List<TelProductPo> records = telProductDao.list(where);
+//		List<TelProductPo> records = telProductDao.list(where);
+		List<TelProductPo> records = telProductDao.getTelProduct(params);
+		
+//		for (TelProductPo telProductPo : records) {
+//			
+//			
+//		}
+		
 		return new Pagination<TelProductPo>(records, toatalRecord, pageNo, pageSize);
 //			paramsMap.put("start", (pageNo-1)*pageSize);
 //			paramsMap.put("end", pageSize);
+	}
+
+	@Override
+	public List<TelProductPo> listTelProduct(TelProductPo telPo) {
+		Map<String,Object> params = getParamsByPo(telPo);
+//		long toatalRecord = telProductDao.countTelPro(params);
+		List<TelProductPo> records = telProductDao.getTelProduct(params);
+		return records;
 	}
 }

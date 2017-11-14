@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weizu.flowsys.web.channel.dao.ITelProductDao" >
+  <sql id="t_tel_product">tel_product</sql>
+  <sql id="t_cities">cities</sql>
+  <sql id="t_provinces">provinces</sql>
+  
+  <resultMap type="com.weizu.flowsys.web.channel.pojo.TelProductPo" id="BaseResultMap">
+  	<id column="id" property="id" jdbcType="BIGINT" />
+    <result column="ep_id" property="epId" jdbcType="INTEGER" />
+    <result column="ep_name" property="epName" jdbcType="VARCHAR" />
+    <result column="tel_code" property="telCode" jdbcType="VARCHAR" />
+    <result column="charge_limit_high" property="chargeLimitHigh" jdbcType="INTEGER" />
+    <result column="charge_limit_low" property="chargeLimitLow" jdbcType="INTEGER" />
+    <result column="charge_value" property="chargeValue" jdbcType="INTEGER" />
+    <result column="free_charge" property="freeCharge" jdbcType="INTEGER" />
+    <result column="cityid" property="cityid" jdbcType="VARCHAR" />
+    <result column="charge_speed" property="chargeSpeed" jdbcType="INTEGER" />
+    <result column="service_type" property="serviceType" jdbcType="INTEGER" />
+    <result column="operator_name" property="operatorName" jdbcType="INTEGER" />
+    <result column="limit_description" property="limitDescription" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List">
+  	tp.*,ct.city,pc.province 
+  </sql>
+  
+  <!-- 获得话费编码分页列表 -->
+  <select id="getTelProduct" parameterType="map" resultMap="BaseResultMap">
+  SELECT <include refid="Base_Column_List"></include>
+  FROM <include refid="t_tel_product"></include> tp
+	INNER JOIN <include refid="t_cities"></include> ct
+	ON tp.cityid=ct.cityid
+	INNER JOIN <include refid="t_provinces"></include> pc
+	on pc.provinceid=ct.provinceid
+	<where>
+		<include refid="conditon_sql"></include>
+	</where>
+		order by tp.id desc
+    <if test="start != null">
+	 	limit #{start}
+	 </if>
+	<if test="end != null">
+	 	, #{end}
+	 </if>
+	 <if test="start == null &amp; end == null">
+	 	limit 0,10
+	 </if>
+  </select>
+  
+  <!-- 获得话费编码列表总记录数 -->
+  <select id="countTelPro" parameterType="map" resultType="long">
+  SELECT count(*)
+  FROM <include refid="t_tel_product"></include> tp
+	INNER JOIN <include refid="t_cities"></include> ct
+	ON tp.cityid=ct.cityid
+	INNER JOIN <include refid="t_provinces"></include> pc
+	on pc.provinceid=ct.provinceid
+	<where>
+		<include refid="conditon_sql"></include>
+	</where>
+  </select>
+  
+  
+  <sql id="conditon_sql">
+  	<if test="epName != null">
+  		AND tp.ep_name like concat("%",trim(#{epName}),"%")
+  	</if>
+  	<if test="epId != null">
+  		AND tp.ep_id = #{epId}
+  	</if>
+  	<if test="chargeValue != null">
+  		AND tp.charge_value = #{chargeValue}
+  	</if>
+  	<if test="cityid != null">
+  		AND tp.cityid = #{cityid}
+  	</if>
+  	<if test="provinceid != null">
+  		AND ct.provinceid = #{provinceid}
+  	</if>
+  	<if test="chargeSpeed != null">
+  		AND tp.charge_speed = #{chargeSpeed}
+  	</if>
+  	<if test="serviceType != null">
+  		AND tp.service_type = #{serviceType}
+  	</if>
+  	<if test="operatorName != null">
+  		AND tp.operator_name = #{operatorName}
+  	</if>
+  	<if test="limitDescription != null">
+  		AND tp.limit_description like concat("%",trim(#{limitDescription}),"%")
+  	</if>
+  </sql>
+  
+</mapper>

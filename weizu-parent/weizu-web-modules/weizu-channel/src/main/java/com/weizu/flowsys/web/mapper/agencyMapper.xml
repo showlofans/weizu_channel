@@ -378,7 +378,7 @@ WHERE a2.root_agency_id=4 and active1.rate_discount_id=22 and active1.bind_state
  	<!-- 查询where语句块 -->
 	<sql id="condition_sql">
 		<if test="userName != null">
-			AND agb.user_name LIKE CONCAT('%', TRIM(#{userName}), '%')
+			AND (agb.user_name LIKE CONCAT('%', TRIM(#{userName}), '%') or agb.user_real_name LIKE CONCAT('%', TRIM(#{userName}), '%') )
 		</if>
 		<if test="rootAgencyId != null">
 			AND root_agency_id = #{rootAgencyId}

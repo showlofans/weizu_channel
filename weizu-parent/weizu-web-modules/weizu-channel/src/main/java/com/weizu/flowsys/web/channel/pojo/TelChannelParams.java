@@ -1,24 +1,20 @@
 package com.weizu.flowsys.web.channel.pojo;
 
-import com.weizu.flowsys.core.annotation.po.TableName;
 import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
 
 /**
- * @description: 产品编码实体
+ * @description: 话费通道查询(页面)参数
  * @projectName:weizu-channel
- * @className:TelProductPo.java
+ * @className:TelChannelParams.java
  * @author:微族通道代码设计人 宁强
- * @createTime:2017年11月11日 下午12:24:47
+ * @createTime:2017年11月14日 下午4:59:59
  * @version 1.0
  */
-@TableName(name="tel_product")
-public class TelProductPo extends Po {
+public class TelChannelParams extends Po {
 
 	private Long id;					//id
 		
-	private Integer epId;				//平台id
-	
 	private String epName;				//平台名称
 		
 	private String cityid;				//城市编码
@@ -35,23 +31,62 @@ public class TelProductPo extends Po {
 	
 	private String limitDescription;	//限制描述
 	
-	private String telCode;				//通道编码
+//	private String telCode;				//通道编码
 	
 	private Integer chargeLimitLow;		//最低限额
 	
 	private Integer chargeLimitHigh;	//最高限额
 	
+	private Integer telchannelState;			//通道状态
+
+    private Integer telchannelUseState;			//通道使用状态
+    
+    private Integer billType;					//商务类型
 	
+	private String city;					//城市名称：页面参数
 	
-	@TempField
-	private String city;				//城市名称：页面参数
-	@TempField
-	private String province;			//省份名称：页面参数
-	@TempField
-	private String provinceid;			//省份名称：查询参数
+	private String province;				//省份名称：页面参数
+	
+	private String provinceid;				//省份名称：查询参数
+	
+	private Double telchannelDiscount;			//通道价
+	
+	//private Long lastAccess;					//更新时间
 	
 	public String getProvinceid() {
 		return provinceid;
+	}
+
+	public Double getTelchannelDiscount() {
+		return telchannelDiscount;
+	}
+
+	public void setTelchannelDiscount(Double telchannelDiscount) {
+		this.telchannelDiscount = telchannelDiscount;
+	}
+
+	public Integer getTelchannelState() {
+		return telchannelState;
+	}
+
+	public void setTelchannelState(Integer telchannelState) {
+		this.telchannelState = telchannelState;
+	}
+
+	public Integer getTelchannelUseState() {
+		return telchannelUseState;
+	}
+
+	public void setTelchannelUseState(Integer telchannelUseState) {
+		this.telchannelUseState = telchannelUseState;
+	}
+
+	public Integer getBillType() {
+		return billType;
+	}
+
+	public void setBillType(Integer billType) {
+		this.billType = billType;
 	}
 
 	public void setProvinceid(String provinceid) {
@@ -74,13 +109,13 @@ public class TelProductPo extends Po {
 		this.province = province;
 	}
 
-	public String getTelCode() {
-		return telCode;
-	}
-
-	public void setTelCode(String telCode) {
-		this.telCode = telCode;
-	}
+//	public String getTelCode() {
+//		return telCode;
+//	}
+//
+//	public void setTelCode(String telCode) {
+//		this.telCode = telCode;
+//	}
 
 	public Integer getChargeLimitLow() {
 		return chargeLimitLow;
@@ -104,14 +139,6 @@ public class TelProductPo extends Po {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Integer getEpId() {
-		return epId;
-	}
-
-	public void setEpId(Integer epId) {
-		this.epId = epId;
 	}
 
 	public String getEpName() {

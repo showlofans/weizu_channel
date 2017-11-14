@@ -89,23 +89,23 @@
 ////	public void testBindStateEnum(){
 ////		System.out.println(BindStateEnum.toBindList().size());
 ////	}
-////	@Test
-////	public void testLogin(){
-////		String userName = "123";
-////		AgencyBackwardPo agencyPo = agencyVODao.get(new WherePrams("user_name", "=", userName));
-////		//得到密码
-////		String userPass = Hash.BASE_UTIL.decode(agencyPo.getUserPass());
+//	@Test
+//	public void testLogin(){
+//		String userName = "李晨";// l474705958
+//		AgencyBackwardPo agencyPo = agencyVODao.get(new WherePrams("user_name", "=", userName));
+//		//得到密码
+//		String userPass = Hash.BASE_UTIL.decode(agencyPo.getUserPass());
 ////		System.out.println("8a982a8a5f7bd4d7015f7bd4d7c90000".equals("8a982a8a5f7bd4d7015f7bd4d7c90000"));
-//////		System.out.println(userName);//15754715147
-////		System.out.println(userPass);
-//////		System.out.println(agencyPo.getCallBackIp());
-//////		System.out.println(agencyPo.getAgencyTag());
-////		System.out.println(agencyPo.getUserApiKey());
-//////		agencyPo.setUserPass(userPass);//948109abc
-//////		Map<String, Object> resultMap = agencyAO.login(agencyPo);
-//////		AgencyBackwardPo resultPo = (AgencyBackwardPo) resultMap.get("entity");// 获得返回的登陆实体
-//////		System.out.println(resultPo.getAgencyTel());
-////	}
+////		System.out.println(userName);//15754715147
+//		System.out.println(userPass);
+////		System.out.println(agencyPo.getCallBackIp());
+////		System.out.println(agencyPo.getAgencyTag());
+//		System.out.println(agencyPo.getUserApiKey());
+////		agencyPo.setUserPass(userPass);//948109abc
+////		Map<String, Object> resultMap = agencyAO.login(agencyPo);
+////		AgencyBackwardPo resultPo = (AgencyBackwardPo) resultMap.get("entity");// 获得返回的登陆实体
+////		System.out.println(resultPo.getAgencyTel());
+//	}
 ////	@Test
 ////	public void testCheckName(){
 ////		boolean isExist = agencyAO.checkName("xiao");
@@ -126,10 +126,10 @@
 ////		AgencyBackwardPo abPo = agencyVODao.getSecondAgency(4);
 ////		System.out.println(abPo == null);
 ////	}
-//	@Test
-//	public void findUser(){
-//		AgencyBackwardPo agencyPo = valiUser.findAgency("123", "3527956B61387FEF9919FAD2F85C55E8");//3527956B61387FEF9919FAD2F85C55E8
-//		System.out.println(agencyPo == null);
-//	}
+////	@Test
+////	public void findUser(){
+////		AgencyBackwardPo agencyPo = valiUser.findAgency("123", "3527956B61387FEF9919FAD2F85C55E8");//3527956B61387FEF9919FAD2F85C55E8
+////		System.out.println(agencyPo == null);
+////	}
 //
 //}

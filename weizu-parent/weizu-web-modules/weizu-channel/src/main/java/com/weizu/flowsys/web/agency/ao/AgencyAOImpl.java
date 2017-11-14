@@ -63,6 +63,7 @@ public class AgencyAOImpl implements AgencyAO {
 		Integer code = agencyVODao.getAgencyIdByVerifyCode(agencyBackward.getVerifyCode());
 		if(code != null){//注册商户之前绑定父代理商
 			agencyBackward.setRootAgencyId(code);
+			//把自己的代理商名称设为唯一邀请码，好像有风险，万一别人的代理商名称被
 			agencyBackward.setVerifyCode(agencyBackward.getUserName());//置空父级代理商的邀请码，以便绕过绕过非空验证，设置自己的邀请码
 			
 			agencyBackward.setCreateTime(System.currentTimeMillis());

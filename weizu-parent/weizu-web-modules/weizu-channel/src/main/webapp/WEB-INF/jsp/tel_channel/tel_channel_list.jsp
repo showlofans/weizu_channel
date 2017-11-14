@@ -28,13 +28,13 @@
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
-<title>话费编码列表</title>
+<title>话费通道列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 通道管理 <span class="c-gray en">&gt;</span> 话费编码列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 通道管理 <span class="c-gray en">&gt;</span> 话费通道列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
-	<form class="form form-horizontal" action="/flowsys/tel_product/telproduct_list.do" method="post" id="formD" name="dataListForm">
+	<form class="form form-horizontal" action="/flowsys/tel_channel/telchannel_list.do" method="post" id="formD" name="dataListForm">
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
 	<div class="row cl formControls">
 		<%-- <span class="select-box inline">
@@ -96,7 +96,6 @@
 				</c:forEach>
 			</select>
 		</span> 
-		
 		<%-- &nbsp;&nbsp;
 			<!-- 包状态 -->
 		<span class="select-box inline">
@@ -110,14 +109,33 @@
 	</div>
 	<!-- 第二行搜索 -->
 	<div class="row cl" style="margin-top: 30dp">
+		通道状态
+		<span class="select-box inline">
+			<select name="telchannelState" class="select" onchange="getChannelList()">
+			<option value="">请选择</option>
+			<c:forEach items="${resultMap.channelStateEnums }" var="cstate" varStatus="vs1">
+				<option value="${cstate.value }" <c:if test="${cstate.value == resultMap.searchParam.telchannelState }"> selected</c:if>>${cstate.desc }</option>
+			</c:forEach>
+		</select>
+		</span>
+		&nbsp;&nbsp;
+		通道使用状态
+		<span class="select-box inline">
+			<select name="telchannelUseState" class="select" onchange="getChannelList()">
+			<option value="">请选择</option>
+			<c:forEach items="${resultMap.channelUseStateEnums }" var="cstate" varStatus="vs1">
+				<option value="${cstate.value }" <c:if test="${cstate.value == resultMap.searchParam.telchannelUseState }"> selected</c:if>>${cstate.desc }</option>
+			</c:forEach>
+		</select>
+		</span>
 		&nbsp;&nbsp;
 		  话费价值:<input type="text" value="${resultMap.params.chargeValue }" name="chargeValue" id="" placeholder="话费价值" style="width:100px" class="input-text">
 		 限制描述:<input type="text" value="${resultMap.params.limitDescription }" name="limitDescription" id="" placeholder="限制描述" style="width:80px" class="input-text">
 		<%-- 流量大小:<input type="text" value="${resultMap.params.pgSize }" name="pgSize" id="" placeholder="大小" style="width:80px" class="input-text">
 		原价：<input type="text" value="${resultMap.params.pgPrice }" name="pgPrice" id="" placeholder=" 原价" style="width:80px" class="input-text">元 --%>
 		<button type="button" class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
-		<button name="" id=""  class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜编码</button>
-		<a style="text-decoration:none" class="btn btn-success" onClick="telPc_add('话费编码添加','/flowsys/tel_product/telproduct_add_page.do')" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i>添加</a>
+		<button name="" id=""  class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜话费</button>
+		<!-- <a style="text-decoration:none" class="btn btn-success" onClick="telPc_add('话费编码添加','/flowsys/tel_telchannel/teltelchannel_add_page.do')" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i>添加</a> -->
 		<input type="hidden" name="pageNoLong" value="${pagination.pageNoLong }"> 
 	</div>
 </form>
@@ -131,9 +149,8 @@
 					<!-- <th width="80">流量包Id</th> -->
 					<th width="30">ID</th>
 					<th width="80">平台名称</th>
-					<th width="80">产品编码</th>
 					<th width="80">话费价值</th>
-					<!-- <th width="120">支持城市</th> -->
+					<th width="120">通道折扣</th>
 					<th width="120">支持省份</th>
 					<th width="120">支持城市</th>
 					
@@ -143,45 +160,86 @@
 					<th width="60">运营商类型</th>
 					<th width="100">业务类型</th>
 					
-					<th width="30">操作</th>
+					<th width="80">通道状态</th>
+					<th width="80">通道使用状态</th>
+					<th width="100">操作</th>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${resultMap.pagination.records }" var="product" varStatus="vs">
+				<c:forEach items="${resultMap.pagination.records }" var="telchannel" varStatus="vs">
 					<tr class="text-c">
-						<td>${product.id }</td> 
-						<td>${product.epName }</td>
-						<td class="c-blue">${product.telCode }</td>
-						<td>${product.chargeValue }</td>
+						<td>${telchannel.id }</td> 
+						<td>${telchannel.epName }</td>
+						 <td class="c-blue">${telchannel.telchannelDiscount }</td>
+						<td>${telchannel.chargeValue }</td>
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
 						<td>
-							${product.province }
+							${telchannel.province }
 						<%-- <c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum">
-							<c:if test="${scopeCityEnum.value== product.cityid}">
-								<span data-toggle="tooltip" data-placement="right" title="${product.cityid }">${scopeCityEnum.desc }</span>
+							<c:if test="${scopeCityEnum.value== telchannel.cityid}">
+								<span data-toggle="tooltip" data-placement="right" title="${telchannel.cityid }">${scopeCityEnum.desc }</span>
 							</c:if>
 						</c:forEach> --%>
 						</td>
-						<td>${product.city }</td> 
+						<td>${telchannel.city }</td> 
 						<td>
 							<c:forEach items="${resultMap.telchargeSpeedEnums }" var="telchargeSpeedEnum" varStatus="vs1">
-							<c:if test="${product.chargeSpeed == telchargeSpeedEnum.value }"> ${telchargeSpeedEnum.desc }</c:if>
+							<c:if test="${telchannel.chargeSpeed == telchargeSpeedEnum.value }"> ${telchargeSpeedEnum.desc }</c:if>
 							</c:forEach>
 						</td>
-						<td>${product.limitDescription }</td> 
+						<td>${telchannel.limitDescription }</td> 
 						<td>
 							<c:forEach items="${resultMap.operatorNameEnums }" var="operatorNameEnum" varStatus="vs1">
-							<c:if test="${product.operatorName == operatorNameEnum.value }"> ${operatorNameEnum.desc }</c:if>
+							<c:if test="${telchannel.operatorName == operatorNameEnum.value }"> ${operatorNameEnum.desc }</c:if>
 							</c:forEach>
 						</td>
 						<td>
 							<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
-							<c:if test="${product.serviceType == serviceTypeEnum.value }"> ${serviceTypeEnum.desc }</c:if>
+							<c:if test="${telchannel.serviceType == serviceTypeEnum.value }"> ${serviceTypeEnum.desc }</c:if>
 							</c:forEach>
 						</td>
-						 
+						 <td class="td-status">
+							<c:forEach items="${resultMap.channelStateEnums }" var="cState" varStatus="vs1">
+								<c:if test="${telchannel.telchannelState == cState.value && telchannel.telchannelState==0  }"> <span class="label label-success radius">${cState.desc }</span></c:if>
+								<c:if test="${telchannel.telchannelState == cState.value && telchannel.telchannelState==1  }"> <span class="label radius">${cState.desc }</span></c:if>
+							</c:forEach>
+						</td>
+						<td class="td-status">
+							<c:forEach items="${resultMap.channelUseStateEnums }" var="cUseState" varStatus="vs1">
+								<c:if test="${telchannel.telchannelUseState == cUseState.value  && telchannel.telchannelUseState==0}"> <span class="label label-success radius">${cUseState.desc }</span></c:if>
+								<c:if test="${telchannel.telchannelUseState == cUseState.value  && telchannel.telchannelUseState==1}"> <span class="label radius">${cUseState.desc }</span></c:if>
+							</c:forEach>
+						</td>
 						<td class="f-14 td-manage">
-						<a style="text-decoration:none" class="ml-5" onClick="produce_del('/flowsys/productCode/productcode_delete.do',${product.id })" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+							<c:choose>
+								<c:when test="${telchannel.telchannelState == 1 }"><!-- 暂停 -->
+									<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeCState(this,'1')" href="javascript:;" title="运行">
+										<input type="hidden" value="${telchannel.id }" >
+										<i class="Hui-iconfont">&#xe6e6;</i>
+									</a> 
+								</c:when>
+								<c:when test="${telchannel.telchannelState == 0 }"><!-- 运行 -->
+									<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeCState(this,'0')" href="javascript:;" title="暂停">
+										<input type="hidden" value="${telchannel.id }" >
+										<i class="Hui-iconfont">&#xe6e5;</i>
+									</a> 
+								</c:when>
+							</c:choose>
+							<c:choose>
+							<c:when test="${telchannel.telchannelUseState == 1 }"><!-- 已暂停 -->
+								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeUseState(this,'1')" href="javascript:;" title="启用">
+									<input type="hidden" value="${telchannel.id }" >
+									<i class="Hui-iconfont">&#xe615;</i>
+								</a> 
+							</c:when>
+							<c:when test="${telchannel.telchannelUseState == 0 }"><!-- 已启用 -->
+								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeUseState(this,'0')" href="javascript:;" title="停用">
+									<input type="hidden" value="${telchannel.id }" >
+									<i class="Hui-iconfont">&#xe631;</i>
+								</a> 
+							</c:when>
+							</c:choose>
+						<a style="text-decoration:none" class="ml-5" onClick="produce_del('/flowsys/telchannelCode/telchannelcode_delete.do',${telchannel.id })" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
 						</td>
 					</tr>
 				</c:forEach>
@@ -262,23 +320,7 @@ function initCity(){
 function submitForm(){
 	$('form').submit();
 }
-/*话费编码-添加*/
-function telPc_add(title,url){
-	//alert("sd");pageTitle=' + title +"&
-	//var pgServiceType = $('#pgServiceType').val();
-	layer.open({
-        type: 2,
-        title: title,
-        area: ['500px', '600px'],
-        maxmin: false,
-        closeBtn: 1,
-        content: url,//+'?pgServiceType=' + pgServiceType,
-         end: function () {
-            location.reload();
-        }
-    });
-}
-/*包体-删除*/
+/*话费编码-删除*/
 function pg_del(obj,id){
 	layer.confirm("确认要删除该包体吗？",function(index){
 		//alert(index);

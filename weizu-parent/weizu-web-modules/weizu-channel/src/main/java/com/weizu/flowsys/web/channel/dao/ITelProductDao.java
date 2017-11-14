@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.channel.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.channel.pojo.TelProductPo;
@@ -15,6 +16,22 @@ import com.weizu.flowsys.web.channel.pojo.TelProductPo;
  */
 public interface ITelProductDao extends Dao<TelProductPo, Long> {
 	
-//	List<>
+	/**
+	 * @description:获得分页列表
+	 * @param params
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月13日 下午5:28:03
+	 */
+	List<TelProductPo>getTelProduct(Map<String,Object> params);
+	
+	/**
+	 * @description: 获得话费列表总记录数
+	 * @param params
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月13日 下午5:28:42
+	 */
+	Long countTelPro(Map<String,Object> params);
 	
 }

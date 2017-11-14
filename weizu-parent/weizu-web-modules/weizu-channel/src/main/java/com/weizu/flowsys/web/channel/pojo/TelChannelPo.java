@@ -1,5 +1,8 @@
 package com.weizu.flowsys.web.channel.pojo;
 
+import java.util.List;
+
+import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
 
 /**
@@ -20,26 +23,77 @@ public class TelChannelPo extends Po {
 	
 	private Integer billType;					//商务类型
 	
-	private Long lastAccess;					//商务类型
+	private Long lastAccess;					//更新时间
 	
-	private Integer channelTotalUse;			//通道使用量
+	private Integer channelTotalUse = 0;			//通道使用量
 
-    private Double channelTotalAmount;			//交易总金额
+    private Double channelTotalAmount = 0.00D;			//交易总金额
 
-    private Double channelTotalProfit;			//总利润
+    private Double channelTotalProfit = 0.0D;			//总利润
 	
-    private Integer channelState;				//通道状态
+    private Integer telchannelState;				//通道状态
 
-    private Integer channelUseState;			//通道使用状态
+    private Integer telchannelUseState;			//通道使用状态
+    @TempField
+    private String ids;							//页面实体：话费编码id列表
+    @TempField
+    private String discounts;					//页面实体：通道折扣列表
+//    private List<Long> ids;						//页面实体：话费编码id列表
 
+//	public List<Long> getIds() {
+//		return ids;
+//	}
+//
+//	public void setIds(List<Long> ids) {
+//		this.ids = ids;
+//	}
+
+    
+    
 	public Long getId() {
 		return id;
 	}
+	/** 批量添加构造函数
+	 * @param telchannelDiscount
+	 * @param telProductId
+	 * @param billType
+	 * @param lastAccess
+	 * @param channelUseState
+	 */
+	public TelChannelPo(Double telchannelDiscount, Long telProductId,
+		Integer billType, Long lastAccess, Integer telchannelUseState) {
+	super();
+	this.telchannelDiscount = telchannelDiscount;
+	this.telProductId = telProductId;
+	this.billType = billType;
+	this.lastAccess = lastAccess;
+	this.telchannelUseState = telchannelUseState;
+}
+	public TelChannelPo() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
+	public String getIds() {
+		return ids;
+	}
+	
+	public void setIds(String ids) {
+		this.ids = ids;
+	}
+	
+	public String getDiscounts() {
+		return discounts;
+	}
+	
+	public void setDiscounts(String discounts) {
+		this.discounts = discounts;
+	}
 	public Double getTelchannelDiscount() {
 		return telchannelDiscount;
 	}
@@ -96,19 +150,16 @@ public class TelChannelPo extends Po {
 		this.channelTotalProfit = channelTotalProfit;
 	}
 
-	public Integer getChannelState() {
-		return channelState;
+	public Integer getTelchannelState() {
+		return telchannelState;
 	}
-
-	public void setChannelState(Integer channelState) {
-		this.channelState = channelState;
+	public void setTelchannelState(Integer telchannelState) {
+		this.telchannelState = telchannelState;
 	}
-
-	public Integer getChannelUseState() {
-		return channelUseState;
+	public Integer getTelchannelUseState() {
+		return telchannelUseState;
 	}
-
-	public void setChannelUseState(Integer channelUseState) {
-		this.channelUseState = channelUseState;
+	public void setTelchannelUseState(Integer telchannelUseState) {
+		this.telchannelUseState = telchannelUseState;
 	}
 }
