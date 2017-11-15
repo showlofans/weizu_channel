@@ -175,7 +175,7 @@
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 				<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceEnum" varStatus="vs">
 					<div class="radio-box">
-						<input name="serviceType" class="radioItem" type="radio" id="serviceType-${vs.index }" value="${serviceEnum.value }" <c:if test="${vs.index==0 }">checked</c:if>>
+						<input name="serviceType" class="radioItem"  onclick="setVis(this)" type="radio" id="serviceType-${vs.index }" value="${serviceEnum.value }" <c:if test="${vs.index==0 }">checked</c:if>>
 						<label for="serviceType-${vs.index }">${serviceEnum.desc }</label>
 						<%-- <label for="operatorType-${vs.index }"></label> --%>
 					</div>
@@ -194,12 +194,12 @@
 				</c:forEach>
 			</div>
 		</div>
-		<div class="row cl">
+		<div class="row cl"  id="cityDiv">
 			<label class="form-label col-xs-4 col-sm-3">话费地区：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 				<!--  地区省份： -->
-				 <span class="select-box inline">
-					<select class="select" onchange="province_change(this.value);">
+				 <span class="select-box inline" id="provinceSpan">
+					<select class="select" id="province" onchange="province_change(this.value);">
 						<option value="">省份</option>
 						<c:forEach items="${resultMap.provinces }" var="province" varStatus="vs1">
 							<option value="${province.provinceid }" >${province.province }</option><!-- <c:if test="${serviceTypeEnum.value == resultMap.params.serviceType }"> selected</c:if> -->
@@ -207,7 +207,7 @@
 					</select>
 				</span> 
 				 <!--  地区城市： -->
-				 <span class="select-box inline">
+				 <span class="select-box inline"  id="citySpan">
 					<select class="select" required="required" id="city" onchange="getChargeTelEnum()"><!-- submitForm() -->
 						<option value="">城市</option>
 					</select>
@@ -270,6 +270,22 @@
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/validate-methods.js"></script> 
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script> 
 <script type="text/javascript">
+/**业务类型变化确定城市显示**/
+function setVis(vart){
+	var serviceType = $(vart).val();
+	//alert(serviceType);
+	if(serviceType == 0){//全国
+		$('#provinceSpan').hide();
+		$('#citySpan').hide();
+	}else if(serviceType == 1){//省内
+		$('#provinceSpan').show();
+		$('#citySpan').hide();
+	}else{//市内2 if(serviceType != '')
+		$('#provinceSpan').show();
+		$('#citySpan').show();
+	}
+}
+
 $(function(){
 	$('.skin-minimal input').iCheck({
 		radioClass: 'iradio-blue',
@@ -279,21 +295,25 @@ $(function(){
 })
 /**省份变化*/
 function province_change(v){
-	var ss;
-    var city = document.getElementById("city");
-	city.innerHTML = "";
-	$.getJSON("/view/mine/data/cityData.json",function(data){
-	    ss=data;
-	    //var html="<option value='-1'>==请选择==</option>";
-	    for(var i=0;i<ss.length;i++){
-	    	if(v==ss[i].provinceid){
-                var citys=ss[i].cities;
-                for(var j=0;j<citys.length;j++){
-                	city.add(new Option(citys[j].city,citys[j].cityid));
-                }
-            }
-	    }
-	});
+	var serviceType = $('input[name=serviceType]:checked').val();
+	alert(serviceType);
+	if(serviceType == 2){//市内
+		var ss;
+	    var city = document.getElementById("city");
+		city.innerHTML = "";
+		$.getJSON("/view/mine/data/cityData.json",function(data){
+		    ss=data;
+		    //var html="<option value='-1'>==请选择==</option>";
+		    for(var i=0;i<ss.length;i++){
+		    	if(v==ss[i].provinceid){
+	                var citys=ss[i].cities;
+	                for(var j=0;j<citys.length;j++){
+	                	city.add(new Option(citys[j].city,citys[j].cityid));
+	                }
+	            }
+		    }
+		});
+	}
 }
 /**异步获得可配置产品列表 */
 function getChargeTelEnum(){
@@ -302,13 +322,19 @@ function getChargeTelEnum(){
 	var cityid = $('#city').val();
 	var operatorName = $('input[name=operatorName]:checked').val();
 	var serviceType = $('input[name=serviceType]:checked').val();
-	if(cityid == ''){
-		layer.msg("城市不能为空!!");
+	//alert(serviceType);
+	if(serviceType == 1 && $('#province').val() == '' ){//省份为空
+        layer.msg('省份不能为空');
+        $('#province').focus();
+	}else if(serviceType == 2 && cityid == ''){
+		layer.msg('城市不能为空');
+        $('#city').focus();
 	}else if(epId == ''){
 		layer.msg("平台不能为空!!");
 		$('#epId').focus();
 	}
 	else{
+		alert($('#province').val());
 		//alert(chargeSpeed);
 		$.ajax({
 	         type:"post",
@@ -357,8 +383,8 @@ function getChargeTelEnum(){
 	      					appendData1 += "'>**/
 	      					appendData1 += chargeValue;
 	      					//&nbsp;&nbsp;<input class="disscount input-text" style=" width:150px;" type="text"  placeholder="产品编码">
-      						//&nbsp;&nbsp;<input class="disscount input-text" style=" width:100px;" type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="折扣">
-	      					appendData1 += "</label>&nbsp;&nbsp;<input type='text' type='text' class='input-text telDis' placeholder='折扣' maxlength='3' onkeyup='this.value=this.value.replace(/\D/gi,'')' style='width:100px;'></input>元";
+      						//&nbsp;&nbsp;<input class="disscount input-text" style=" width:100px;" type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="折扣"></label>
+	      					appendData1 += "元 &nbsp;&nbsp;<input type='text' type='text' class='input-text telDis' placeholder='折扣' maxlength='3' onkeyup='this.value=this.value.replace(/\D/gi,'')' style='width:100px;'></input>";
 	      					appendData1 += "&nbsp;&nbsp;<input type='text' class='input-text' readonly value='编码："
 	      					appendData1 +=  telCode
 	      					appendData1 += "'  style='width:150px;' ></input></div><br>";
@@ -400,7 +426,7 @@ $(document).ready(function(){
     		        	//alert(accountIds);
     		    });
     		if(!$('#ep_info').is(':visible')){
-    			layer.msg('没有选定平台')
+    			layer.msg('没有选定平台');
     			$('#channel_search').focus();
     		}
     		else if(tres > 0){
@@ -415,7 +441,7 @@ $(document).ready(function(){
  	            	   //alert(d);
  	                   if(d=="success"){
  	                        layer.msg('保存成功！');//保存成功提示
- 	                       //removeIframe();
+ 	                       removeIframe();
  	                   }
  	                   if(d=="error"){
  	                       layer.msg('保存异常!');
@@ -433,7 +459,7 @@ $(document).ready(function(){
 })
 
 /**checkBox的点击事件*/
-function checkBoxes(vart){
+/* function checkBoxes(vart){
 	if($(vart).next().is(':hidden')){
 		$(vart).next().show();
 		 if(!$('#ep_info').is(':visible')){
@@ -466,7 +492,7 @@ function checkBoxes(vart){
 	}else{
 		$(vart).next().hide();
 	}
-} 
+}  */
 
 /*监听平台 输入框的键盘事件 **/
 function ajaxGetEp(evt) {

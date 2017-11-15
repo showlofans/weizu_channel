@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.web.channel.dao.ITelChannelDao;
@@ -55,6 +56,7 @@ public class TelChannelAOImpl implements TelChannelAO {
 					telCD = StringUtil2.getDiscount(telCD);
 					
 					TelChannelPo telParams = new TelChannelPo(telCD, telProId, telChannelPo.getBillType(), lastAccess, telChannelPo.getTelchannelUseState());
+					telParams.setTelchannelState(ChannelStateEnum.CLOSE.getValue());
 					telChannelList.add(telParams);
 				}
 				addRes = telChannelDao.batchAddTelChannel(telChannelList);

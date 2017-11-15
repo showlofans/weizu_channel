@@ -30,7 +30,7 @@
 <![endif]-->
 <title>话费通道列表</title>
 </head>
-<body>
+<body onload="HtmlEditor.focus()">
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 通道管理 <span class="c-gray en">&gt;</span> 话费通道列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
@@ -47,6 +47,16 @@
 		</span>
 		&nbsp;&nbsp; --%>
 		 平台名称:<input type="text" value="${resultMap.params.epName }" name="epName" id="" placeholder="平台名称" style="width:80px" class="input-text">
+		&nbsp;&nbsp;
+		 <!--  业务类型： -->
+		 <span class="select-box inline">
+			<select name="serviceType" class="select" onchange="submitForm()">
+				<option value="">业务类型</option>
+				<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
+					<option value="${serviceTypeEnum.value }" <c:if test="${serviceTypeEnum.value == resultMap.params.serviceType }"> selected</c:if>>${serviceTypeEnum.desc }</option>
+				</c:forEach>
+			</select>
+		</span> 
 		&nbsp;&nbsp;
 		<!--  地区省份： -->
 		 <span class="select-box inline">
@@ -75,17 +85,6 @@
 				</c:forEach>
 			</select>
 		</span> 
-		&nbsp;&nbsp;
-		 <!--  业务类型： -->
-		 <span class="select-box inline">
-			<select name="serviceType" class="select" onchange="submitForm()">
-				<option value="">业务类型</option>
-				<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
-					<option value="${serviceTypeEnum.value }" <c:if test="${serviceTypeEnum.value == resultMap.params.serviceType }"> selected</c:if>>${serviceTypeEnum.desc }</option>
-				</c:forEach>
-			</select>
-		</span> 
-		
 		&nbsp;&nbsp;
 		 <!--  充值类型： -->
 		 <span class="select-box inline">
@@ -151,14 +150,14 @@
 					<th width="80">平台名称</th>
 					<th width="80">话费价值</th>
 					<th width="120">通道折扣</th>
+					<th width="60">运营商类型</th>
+					<th width="100">业务类型</th>
 					<th width="120">支持省份</th>
 					<th width="120">支持城市</th>
 					
 					<th width="60">充值速度</th>
 					<th width="120">限制描述</th>
 					
-					<th width="60">运营商类型</th>
-					<th width="100">业务类型</th>
 					
 					<th width="80">通道状态</th>
 					<th width="80">通道使用状态</th>
@@ -170,24 +169,9 @@
 					<tr class="text-c">
 						<td>${telchannel.id }</td> 
 						<td>${telchannel.epName }</td>
-						 <td class="c-blue">${telchannel.telchannelDiscount }</td>
 						<td>${telchannel.chargeValue }</td>
+						 <td class="c-blue">${telchannel.telchannelDiscount }</td>
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
-						<td>
-							${telchannel.province }
-						<%-- <c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum">
-							<c:if test="${scopeCityEnum.value== telchannel.cityid}">
-								<span data-toggle="tooltip" data-placement="right" title="${telchannel.cityid }">${scopeCityEnum.desc }</span>
-							</c:if>
-						</c:forEach> --%>
-						</td>
-						<td>${telchannel.city }</td> 
-						<td>
-							<c:forEach items="${resultMap.telchargeSpeedEnums }" var="telchargeSpeedEnum" varStatus="vs1">
-							<c:if test="${telchannel.chargeSpeed == telchargeSpeedEnum.value }"> ${telchargeSpeedEnum.desc }</c:if>
-							</c:forEach>
-						</td>
-						<td>${telchannel.limitDescription }</td> 
 						<td>
 							<c:forEach items="${resultMap.operatorNameEnums }" var="operatorNameEnum" varStatus="vs1">
 							<c:if test="${telchannel.operatorName == operatorNameEnum.value }"> ${operatorNameEnum.desc }</c:if>
@@ -198,6 +182,23 @@
 							<c:if test="${telchannel.serviceType == serviceTypeEnum.value }"> ${serviceTypeEnum.desc }</c:if>
 							</c:forEach>
 						</td>
+						<td>
+							${telchannel.province }
+						<%-- <c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum">
+							<c:if test="${scopeCityEnum.value== telchannel.cityid}">
+								<span data-toggle="tooltip" data-placement="right" title="${telchannel.cityid }">${scopeCityEnum.desc }</span>
+							</c:if>
+						</c:forEach> --%>
+						</td>
+						<td>${telchannel.city }</td> 
+						
+						<td>
+							<c:forEach items="${resultMap.telchargeSpeedEnums }" var="telchargeSpeedEnum" varStatus="vs1">
+							<c:if test="${telchannel.chargeSpeed == telchargeSpeedEnum.value }"> ${telchargeSpeedEnum.desc }</c:if>
+							</c:forEach>
+						</td>
+						<td>${telchannel.limitDescription }</td> 
+						
 						 <td class="td-status">
 							<c:forEach items="${resultMap.channelStateEnums }" var="cState" varStatus="vs1">
 								<c:if test="${telchannel.telchannelState == cState.value && telchannel.telchannelState==0  }"> <span class="label label-success radius">${cState.desc }</span></c:if>

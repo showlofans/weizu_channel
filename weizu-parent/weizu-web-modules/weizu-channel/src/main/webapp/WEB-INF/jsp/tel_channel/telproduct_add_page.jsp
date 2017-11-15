@@ -64,7 +64,7 @@
 			 <label class="form-label col-xs-4 col-sm-3">业务类型：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				 <span class="select-box">
-					<select name="serviceType" id="serviceType" class="select" required onchange="">
+					<select name="serviceType" id="serviceType" class="select" required onchange="setVis(this)">
 						<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
 							<option value="${serviceTypeEnum.value }" <c:if test="${serviceTypeEnum.value == resultMap.oneCodePo.serviceType }">selected="selected"</c:if> >${serviceTypeEnum.desc }</option>
 						</c:forEach>
@@ -72,12 +72,12 @@
 				</span> 
 			</div>
 		</div>
-		<div class="row cl">
+		<div class="row cl" id="cityDiv">
 			<label class="form-label col-xs-4 col-sm-3">话费城市:</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<!--  地区省份： -->
 				 <span class="select-box inline">
-					<select class="select" onchange="province_change(this.value);" >
+					<select class="select" id="province" name="provinceid"  onchange="province_change(this.value);" >
 						<option value="">省份</option>
 						<c:forEach items="${resultMap.provinces }" var="province" varStatus="vs1">
 							<option value="${province.provinceid }" >${province.province }</option><!-- <c:if test="${serviceTypeEnum.value == resultMap.params.serviceType }"> selected</c:if> -->
@@ -85,8 +85,8 @@
 					</select>
 				</span> 
 				 <!--  地区城市： -->
-				 <span class="select-box inline">
-					<select class="select" id="city" name="cityid" required>
+				 <span class="select-box inline" id="citySpan">
+					<select class="select" id="city" name="cityid">
 						<option value="">城市</option>
 					</select>
 				</span> 
@@ -143,23 +143,42 @@
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/validate-methods.js"></script> 
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 <script type="text/javascript">
+/**业务类型变化确定城市显示**/
+function setVis(vart){
+	var serviceType = $(vart).val();
+	//alert(serviceType);
+	if(serviceType == 0){//全国
+		$('#cityDiv').hide();
+	}else if(serviceType == 1){//省内
+		$('#cityDiv').show();
+		$('#citySpan').hide();
+	}else{//市内2 if(serviceType != '')
+		$('#cityDiv').show();
+		$('#citySpan').show();
+	}
+}
+
 /**省份变化*/
 function province_change(v){
-	var ss;
-    var city = document.getElementById("city");
-	city.innerHTML = "";
-	$.getJSON("/view/mine/data/cityData.json",function(data){
-	    ss=data;
-	    //var html="<option value='-1'>==请选择==</option>";
-	    for(var i=0;i<ss.length;i++){
-	    	if(v==ss[i].provinceid){
-                var citys=ss[i].cities;
-                for(var j=0;j<citys.length;j++){
-                	city.add(new Option(citys[j].city,citys[j].cityid));
-                }
-            }
-	    }
-	});
+	var serviceType = $('#serviceType').val();
+	//alert(serviceType);
+	if(serviceType == 2){//市内
+		var ss;
+		var city = document.getElementById("city");
+		city.innerHTML = "";
+		$.getJSON("/view/mine/data/cityData.json",function(data){
+		    ss=data;
+		    //var html="<option value='-1'>==请选择==</option>";
+		    for(var i=0;i<ss.length;i++){
+		    	if(v==ss[i].provinceid){
+		               var citys=ss[i].cities;
+		               for(var j=0;j<citys.length;j++){
+		               	city.add(new Option(citys[j].city,citys[j].cityid));
+		               }
+		           }
+		    }
+		});
+	}
 }
 /**修改平台名称*/
 function changeEpName(){
@@ -170,7 +189,16 @@ function changeEpName(){
 $().ready(function() {
     $("#product_form").validate({
     	submitHandler: function(){
-            save();
+    		var serviceType = $('#serviceType').val();
+    		if(serviceType == 1 && $('#province').val() == '' ){//省份为空
+	            layer.msg('请选择省份');
+	            $('#province').focus();
+    		}else if(serviceType == 2 && $('#city').val() == ''){
+    			layer.msg('请选择城市');
+	            $('#city').focus();
+    		}else{
+	    		save();
+    		}
         }
     });
 });

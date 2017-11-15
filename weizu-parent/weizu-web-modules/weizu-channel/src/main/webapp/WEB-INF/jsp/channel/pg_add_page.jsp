@@ -92,7 +92,7 @@
 						<option value="1">开通</option>
 				</select>
 				</span> 
-				&nbsp;&nbsp;&nbsp;&nbsp;
+				<%-- &nbsp;&nbsp;&nbsp;&nbsp;
 				<span class="c-red">*</span>属性：&nbsp;&nbsp;
 				 <span class="select-box inline">
 				<select  name="pgServiceType" class="select">
@@ -103,7 +103,7 @@
 					</c:forEach>
 						<!-- <option value="1">开通</option> -->
 				</select>
-				</span>
+				</span> --%>
 				</div>
 		</div>
 		<c:if test="${resultMap.pgServiceType ==1 }">
@@ -166,7 +166,7 @@
 
 <script type="text/javascript">
 /**获得城市列表*/
-function getCities(){
+/* function getCities(){
 	$.ajax({
         type:"post",
         url:"/flowsys/operatorPg/pg_add.do",
@@ -184,7 +184,7 @@ function getCities(){
             parent.layer.close(index); //执行关闭
         }
     });
-}
+} */
 
 $().ready(function() {
     $("#form-pg-add").validate({

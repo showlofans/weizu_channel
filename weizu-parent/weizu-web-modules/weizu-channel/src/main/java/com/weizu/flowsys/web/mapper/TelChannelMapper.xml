@@ -57,7 +57,8 @@
   <sql id="VO_Column_List">
   	td.id,td.bill_type,td.last_access,td.telchannel_discount,td.telchannel_state,td.telchannel_use_state
 	,tp.charge_speed,tp.charge_value,tp.ep_name,tp.free_charge,tp.limit_description,tp.service_type,tp.operator_name
-	,ct.city,pc.province
+	<if test="serviceType == 1 ">,pc.province</if> <!-- 省内和市内 -->
+  	<if test="serviceType == 2">,pc.province,ct.city</if><!-- 市内 -->
   </sql>
   
   <!-- 统计话费通道总记录 -->
@@ -65,10 +66,17 @@
   	select count(*) FROM <include refid="t_telchannel"></include> td
 	INNER JOIN <include refid="t_tel_product"></include> tp
 	on td.tel_product_id=tp.id
-	INNER JOIN <include refid="t_cities"></include> ct
-	on ct.cityid=tp.cityid
-	INNER JOIN <include refid="t_provinces"></include> pc
-	on pc.provinceid=ct.provinceid
+	<if test="serviceType == 1">
+		INNER JOIN <include refid="t_provinces"></include> pc
+		on pc.provinceid=tp.provinceid
+	</if>
+	<if test="serviceType == 2 ">
+		INNER JOIN <include refid="t_provinces"></include> pc
+		on pc.provinceid=tp.provinceid
+		INNER JOIN <include refid="t_cities"></include> ct
+		on ct.cityid=tp.cityid
+	</if>
+	
 	<where>
 		<include refid="conditon_sql"></include>
 	</where>
@@ -79,10 +87,16 @@
     FROM <include refid="t_telchannel"></include> td
 	INNER JOIN <include refid="t_tel_product"></include> tp
 	on td.tel_product_id=tp.id
-	INNER JOIN <include refid="t_cities"></include> ct
-	on ct.cityid=tp.cityid
-	INNER JOIN <include refid="t_provinces"></include> pc
-	on pc.provinceid=ct.provinceid
+	<if test="serviceType == 1">
+		INNER JOIN <include refid="t_provinces"></include> pc
+		on pc.provinceid=tp.provinceid
+	</if>
+	<if test="serviceType == 2 ">
+		INNER JOIN <include refid="t_provinces"></include> pc
+		on pc.provinceid=tp.provinceid
+		INNER JOIN <include refid="t_cities"></include> ct
+		on ct.cityid=tp.cityid
+	</if>
 	<where>
 		<include refid="conditon_sql"></include>
 	</where>
@@ -117,9 +131,9 @@
   	<if test="cityid != null">
   		AND tp.cityid = #{cityid}
   	</if>
-  	<!-- <if test="provinceid != null">
-  		AND ct.provinceid = #{provinceid}
-  	</if> -->
+  	<if test="provinceid != null">
+  		AND tp.provinceid = #{provinceid}
+  	</if>
   	<if test="chargeSpeed != null">
   		AND tp.charge_speed = #{chargeSpeed}
   	</if>

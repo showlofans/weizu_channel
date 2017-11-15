@@ -106,25 +106,26 @@
 	<div class="menu_dropdown bk_2">
 		<c:if test="${loginContext.rootAgencyId == 0 }">
 			<dl id="menu-product"><!-- menu_dropdown-arrow -->
-				<dt><i class="Hui-iconfont">&#xe679;</i> 通道管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+				<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe643;</i> 通道管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 				<dd>
 					<ul>
 						<c:if test="${power== 'no'}">
 							<li><a data-href="/flowsys/platform/platform_list.do" data-title="平台管理" href="javascript:void(0)">平台管理</a></li>
-							<li><a data-href="/flowsys/productCode/product_code_list.do" data-title="流量编码" href="javascript:void(0)">流量编码</a></li>
+							<li><a data-href="/flowsys/productCode/product_code_list.do" data-title="流量编码" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量编码</a></li>
 						</c:if>
-						<li><a data-href="/flowsys/channel/channel_add_page.do" data-title="流量添加" href="javascript:void(0)">流量添加</a></li>
-						<li><a data-href="/flowsys/channel/channel_list.do" data-title="流量通道" href="javascript:void(0)">流量通道</a></li>
-						<li><a data-href="/flowsys/tel_product/telproduct_list.do" data-title="话费编码列表" href="javascript:void(0)">话费编码</a></li>
-						<li><a data-href="/flowsys/tel_channel/telchannel_add_page.do" data-title="话费通道添加" href="javascript:void(0)">话费添加</a></li>
-						<li><a data-href="/flowsys/tel_channel/telchannel_list.do" data-title="话费通道" href="javascript:void(0)">话费通道</a></li>
+						<li><a data-href="/flowsys/channel/channel_add_page.do" data-title="流量添加" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量添加</a></li>
+						<li><a data-href="/flowsys/channel/channel_list.do" data-title="流量通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量通道</a></li>
+						
+						<li><a data-href="/flowsys/tel_product/telproduct_list.do" data-title="话费编码列表" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费编码</a></li>
+						<li><a data-href="/flowsys/tel_channel/telchannel_add_page.do" data-title="话费通道添加" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费添加</a></li>
+						<li><a data-href="/flowsys/tel_channel/telchannel_list.do" data-title="话费通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费通道</a></li>
 						<!-- <li><a data-href="/flowsys/rate/bind_channel_list.do?bindTag=bAgency" data-title="活动通道" href="javascript:void(0)">活动通道</a></li> -->
 					</ul>
 				</dd>
 			</dl>
 		</c:if>
 		<dl id="menu-product">
-			<dt><i class="Hui-iconfont">&#xe674;</i> 代理商管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe62b;</i> 代理商管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
 					<!-- <li><a data-href="/flowsys/rate/rate_add_page.do" data-title="费率添加" href="javascript:void(0)">费率添加</a></li>
@@ -138,7 +139,7 @@
 			</dd>
 		</dl>
 		<dl id="menu-comments">
-			<dt><i class="Hui-iconfont">&#xe687;</i> 订单管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dt><i class="Hui-iconfont"style="font-size:20px;">&#xe627;</i> 订单管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
 					<c:choose>
@@ -160,10 +161,11 @@
 		</dd>
 	</dl>
 	<dl id="menu-comments">
-		<dt><i class="Hui-iconfont">&#xe687;</i> 在线充值<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+		<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe726;</i> 在线充值<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 		<dd>
 			<ul>
-				<li><a data-href="/flowsys/chargePg/pg_charge_page.do" title="/flowsys/chargePg/pg_charge_page.do" data-title="流量充值" href="javascript:;">流量充值</a></li>
+				<li><a data-href="/flowsys/chargePg/pg_charge_page.do" title="/flowsys/chargePg/pg_charge_page.do" data-title="流量充值" href="javascript:;"><i class="Hui-iconfont">&#xe675;</i>  流量充值</a></li>
+				<li><a data-href="/flowsys/chargePg/pg_charge_page.do" title="/flowsys/chargePg/pg_charge_page.do" data-title="话费充值" href="javascript:;"><i class="Hui-iconfont">&#xe6c7;</i> 话费充值</a></li>
 				<!-- <li><a data-href="/flowsys/chargePg/pg_batch_charge_page.do" title="批量充值" data-title="批量充值" href="javascript:;">批量充值</a></li> -->
 				
 			</ul>
@@ -171,7 +173,7 @@
 	</dl>
 	<c:if test="${loginContext.rootAgencyId == 0 }">
 	<dl id="menu-article">
-			<dt><i class="Hui-iconfont">&#xe6c6;</i> 标准价管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe6c6;</i> 标准价管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
 					<li><a data-href="/flowsys/operatorPg/operatorPg_list.do" data-title="标准价管理" href="javascript:void(0)">标准价管理</a></li>
@@ -180,7 +182,7 @@
 	</dl>
 	</c:if>
 	<dl id="menu-member">
-		<dt><i class="Hui-iconfont">&#xe6c6;</i> 账户管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+		<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe670;</i> 账户管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 		<dd>
 			<ul>
 				<!-- <li><a data-href="/flowsys/account/open_company_account_page.do" data-title="认证信息" href="javascript:void(0)">认证信息</a></li> -->
@@ -199,7 +201,7 @@
 	</dl>
 	<!-- http://htmlify.wps.cn/doc/index.html?ksyun=UD4oMeA6/word.html&theme=clear -->
 	<dl id="menu-member">
-		<dt><i class="Hui-iconfont">&#xe6c6;</i> 平台相关<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+		<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe633;</i> 平台相关<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 		<dd>
 			<ul>
 			<%-- <c:if test="${loginContext.agencyTag == 1 }">

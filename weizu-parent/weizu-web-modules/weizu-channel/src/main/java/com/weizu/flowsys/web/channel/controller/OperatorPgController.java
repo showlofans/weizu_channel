@@ -181,32 +181,30 @@ public class OperatorPgController {
 		}else{
 			pageParam = new PageParam(1, 10);
 		}
-		Integer pgServiceType = operatorPgDataPo.getPgServiceType();
-		if(pgServiceType == null){
-			pgServiceType = PgServiceTypeEnum.PGCHARGE.getValue();
-		}
-		if(pgServiceType.equals(PgServiceTypeEnum.PGCHARGE.getValue())){//添加流量
+//		Integer pgServiceType = operatorPgDataPo.getPgServiceType();
+//		if(pgServiceType == null){
+//			pgServiceType = PgServiceTypeEnum.PGCHARGE.getValue();
+//		}
+//		if(pgServiceType.equals(PgServiceTypeEnum.PGCHARGE.getValue())){//添加流量
 			resultMap.put("pgTypeEnums", PgTypeEnum.toList());
 			resultMap.put("pgValidityEnums", PgValidityEnum.toList());
 			resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());
 			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
-		}else{
-			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toHuaList());
-		}
+//		}else{
+//			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toHuaList());
+//		}
 		
 		resultMap.put("pgInEnums", PgInServiceEnum.toList());
 		resultMap.put("operatoerTypeEnums", OperatorTypeEnum.toList());
-		operatorPgDataPo.setPgServiceType(pgServiceType);
+//		operatorPgDataPo.setPgServiceType(pgServiceType);
 		
 		resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());
 		resultMap.put("params", operatorPgDataPo);
-//		resultMap.put("pgServiceType", pgServiceType);
 		Pagination<PgDataPo> pagination = operatorPgAO.listPg(operatorPgDataPo,pageParam);
 		resultMap.put("pagination", pagination);
 		
 		List<Provinces> provinces = procincesDAO.getProvinces();
 		resultMap.put("provinces", provinces);
-//		resultMap.put("provincesJson", JSON.toJSONString(provinces));
 		
 		return new ModelAndView("/channel/operatorPg_list", "resultMap", resultMap);
 	}
@@ -230,16 +228,16 @@ public class OperatorPgController {
 //			resultMap.put("pageTitle", pageTitle);
 //		}
 		
-		if(pgServiceType.equals(PgServiceTypeEnum.PGCHARGE.getValue())){//添加流量
+//		if(pgServiceType.equals(PgServiceTypeEnum.PGCHARGE.getValue())){//添加流量
 			resultMap.put("pgTypeEnums", PgTypeEnum.toList());
 			resultMap.put("pgValidityEnums", PgValidityEnum.toList());
 			resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());
 			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
-		}else{//添加话费
-			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toHuaList());
-		}
-		resultMap.put("pgServiceType", pgServiceType);
-		resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());
+//		}else{//添加话费
+//			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toHuaList());
+//		}
+//		resultMap.put("pgServiceType", pgServiceType);
+//		resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());
 		
 		resultMap.put("operatoerTypeEnums", OperatorTypeEnum.toList());
 		resultMap.put("pgInServiceEnums", PgInServiceEnum.toList());

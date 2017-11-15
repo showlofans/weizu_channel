@@ -37,7 +37,7 @@
 	<form class="form form-horizontal" action="/flowsys/operatorPg/operatorPg_list.do" method="post" id="formD" name="dataListForm">
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
 	<div class="row cl formControls">
-		<span class="select-box inline">
+		<%-- <span class="select-box inline">
 			<select name="pgServiceType" id="pgServiceType" class="select c-green"  onchange="submitForm()">
 			<!-- <option value="">包体类型</option> -->
 			<c:forEach items="${resultMap.pgServiceTypeEnums }" var="pgServiceTypeEnum" varStatus="vs1">
@@ -45,7 +45,7 @@
 			</c:forEach>
 		</select>
 		</span>
-		&nbsp;&nbsp;
+		&nbsp;&nbsp; --%>
 		 
 		 <c:if test="${resultMap.params.pgServiceType ==1 }"><!-- 流量还是话费 -->
 			 <!--  包体有效期： -->
@@ -115,7 +115,7 @@
 	</div>
 	
 	<div class="row cl" style="margin-top: 30dp">
-		 <!--  地区省份： -->
+		<%--  <!--  地区省份： -->
 		 <span class="select-box inline">
 			<select class="select" onchange="province_change(this.value);">
 				<option value="">省份</option>
@@ -130,8 +130,8 @@
 				<option value="">城市</option>
 			</select>
 		</span> 
-		<%-- <input type="hidden" id="provincesJson" value="${resultMap.provincesJson }" /> --%>
-		&nbsp;&nbsp;
+		<input type="hidden" id="provincesJson" value="${resultMap.provincesJson }" />
+		&nbsp;&nbsp; --%>
 	
 		流量大小:<input type="text" value="${resultMap.params.pgSize }" name="pgSize" id="" placeholder="大小" style="width:80px" class="input-text">
 		原价：<input type="text" value="${resultMap.params.pgPrice }" name="pgPrice" id="" placeholder=" 原价" style="width:80px" class="input-text">元
@@ -157,16 +157,16 @@
 					<!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
 					<!-- <th width="80">流量包Id</th> -->
 					
-					<th width="80">属性</th>
+					<!-- <th width="80">属性</th> -->
 					<th width="200">包名称</th>
 					<th width="80">业务类型</th>
 					
-					<c:if test="${resultMap.params.pgServiceType ==1 }">
+					<%-- <c:if test="${resultMap.params.pgServiceType ==1 }"> --%>
 						<th width="80">有效期</th>
 						<th width="80">流通方式</th>
 						<!-- <th width="80">流量类型</th> -->
 						<th width="80">流量大小</th>
-					</c:if>
+					<%-- </c:if> --%>
 					<th width="80">运营商类型</th>
 					<!-- <th width="80">运营商名称</th> -->
 					<!-- <th width="120">支持城市</th> -->
@@ -203,7 +203,7 @@
 						<c:if test="${pg.serviceType == serviceType.value }"> ${serviceType.desc }</c:if>
 						</c:forEach>
 						</td>
-						<c:if test="${resultMap.params.pgServiceType ==1 }"><!-- 流量还是话费 -->
+						<%-- <c:if test="${resultMap.params.pgServiceType ==1 }"> --%><!-- 流量还是话费 -->
 							<td><c:forEach items="${resultMap.pgValidityEnums }" var="pgValidityEnum" varStatus="vs1">
 							<c:if test="${pg.pgValidity == pgValidityEnum.value }"> ${pgValidityEnum.desc }</c:if>
 							</c:forEach>
@@ -226,7 +226,7 @@
 									</c:if>
 								</c:forEach>
 							</td>
-						</c:if>
+						<%-- </c:if> --%>
 						
 						<td><c:forEach items="${resultMap.operatoerTypeEnums }" var="operatorType" varStatus="vs1">
 						<c:if test="${pg.operatorType == operatorType.value }">
@@ -264,7 +264,7 @@
 
 
 /**省份变化*/
-function province_change(v){
+/* function province_change(v){
 	var ss;
     var city = document.getElementById("city");
 	city.innerHTML = "";
@@ -277,16 +277,11 @@ function province_change(v){
                 var citys=ss[i].cities;
                 for(var j=0;j<citys.length;j++){
                 	city.add(new Option(citys[j].city,citys[j].cityid));
-                	//htmls+="<option value='"+a[j].c1+"'>"+a[j].c1+"</option>";
                 }
-                //$("#country").html(htmls);
             }
-	    	
-	     /// html+="<option value='"+ss[i].p+"'>"+ss[i].p+"</option>";
 	    }
-	    //$("#city").html(html);
 	});
-	
+} */	
 	
 	/* var areaList = $('#provincesJson').val();
 	var city = document.getElementById("city");
@@ -306,7 +301,7 @@ function province_change(v){
 	//alert(citys.length);	
 	//for(var i=0;i<citys.length;i++){
 	//city.add(new Option(citys[i].cityid,citys[i].city));
-}
+
 
 /**onchange提交表单*/
 function submitForm(){

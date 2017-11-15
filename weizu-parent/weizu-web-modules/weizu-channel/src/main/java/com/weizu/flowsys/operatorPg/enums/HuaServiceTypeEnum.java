@@ -6,57 +6,48 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @description:流量类型枚举
- * @projectName:crud
- * @className:ServiceTypeEnum.java
- * @author:POP产品研发部 宁强
- * @createTime:2017年5月3日 上午9:21:59
+ * @description: 话费类型枚举
+ * @projectName:weizu-channel
+ * @className:HuaServiceTypeEnum.java
+ * @author:微族通道代码设计人 宁强
+ * @createTime:2017年11月15日 下午3:46:10
  * @version 1.0
  */
-public enum ServiceTypeEnum {
+public enum HuaServiceTypeEnum {
 	/**
-	 * 全国流量
+	 * 市内话费-2
 	 */
-	NATION_WIDE("全国通用",0),
+	CITY("市内",2),
 	/**
-	 * 省内流量
+	 * 省内话费-1
 	 */
 	PROVINCE("省内",1),
-//	/**
-//	 * 转增流量
-//	 */
-//	TRANSFER("转增",3),
-//	/**
-//	 * 红包流量
-//	 */
-//	RED_PACKET("红包",4),
 	/**
-	 * 省漫游流量
+	 * 全国话费-0
 	 */
-	PROVINCE_ROAMING("省漫游",2);
-	
+	NATION_WIDE("全国",0);
 	
 	private String desc;
 	private int value;
 	
-	private ServiceTypeEnum(String desc, int value) {
+	private HuaServiceTypeEnum(String desc, int value) {
 		this.desc = desc;
 		this.value = value;
 	}
 
-	public static ServiceTypeEnum getEnum(Integer value)
+	public static HuaServiceTypeEnum getEnum(Integer value)
 	{
 		if (value == null)
 		{
 			return null;
 		}
 
-		ServiceTypeEnum resultEnum = null;
+		HuaServiceTypeEnum resultEnum = null;
 
 		// 获取附件类型枚举数组
-		ServiceTypeEnum[] enumArray = ServiceTypeEnum.values();
+		HuaServiceTypeEnum[] enumArray = HuaServiceTypeEnum.values();
 
-		for (ServiceTypeEnum serviceTypeEnum : enumArray)
+		for (HuaServiceTypeEnum serviceTypeEnum : enumArray)
 		{
 			if(value.equals(serviceTypeEnum.getValue()))
 			{
@@ -77,12 +68,12 @@ public enum ServiceTypeEnum {
 	public static Map<String, Map<String, Object>> toMap()
 	{
 		// 获取附件类型枚举数组
-		ServiceTypeEnum[] enumArray = ServiceTypeEnum.values();
+		HuaServiceTypeEnum[] enumArray = HuaServiceTypeEnum.values();
 
 		// 定义枚举MAP
 		Map<String, Map<String, Object>> enumMap = new HashMap<String, Map<String, Object>>(enumArray.length);
 
-		for (ServiceTypeEnum serviceTypeEnum : enumArray)
+		for (HuaServiceTypeEnum serviceTypeEnum : enumArray)
 		{
 			String key = String.valueOf(getEnum(serviceTypeEnum.getValue()));
 
@@ -105,12 +96,12 @@ public enum ServiceTypeEnum {
 	public static List<Map<String, Object>> toList()
 	{
 		// 获取附件类型枚举数组
-		ServiceTypeEnum[] enumArray = ServiceTypeEnum.values();
+		HuaServiceTypeEnum[] enumArray = HuaServiceTypeEnum.values();
 
 		// 定义枚举list
 		List<Map<String, Object>> attachmentTypeMapList = new ArrayList<Map<String, Object>>(enumArray.length);
 
-		for (ServiceTypeEnum serviceTypeEnum : enumArray)
+		for (HuaServiceTypeEnum serviceTypeEnum : enumArray)
 		{
 			Map<String, Object> serviceTypeMap = new HashMap<String, Object>(2);
 			serviceTypeMap.put("desc", serviceTypeEnum.getDesc());
@@ -121,33 +112,6 @@ public enum ServiceTypeEnum {
 
 		return attachmentTypeMapList;
 	}
-	/**
-	 * @description: 话费业务类型枚举列表
-	 * @return
-	 * @author:微族通道代码设计人 宁强
-	 * @createTime:2017年11月9日 下午3:53:04
-	 */
-//	public static List<Map<String, Object>> toHuaList()
-//	{
-//		// 获取附件类型枚举数组
-//		ServiceTypeEnum[] enumArray = ServiceTypeEnum.values();
-//		
-//		// 定义枚举list
-//		List<Map<String, Object>> attachmentTypeMapList = new ArrayList<Map<String, Object>>(enumArray.length);
-//		
-//		for (ServiceTypeEnum serviceTypeEnum : enumArray)
-//		{
-//			if(serviceTypeEnum.getValue() != PROVINCE_ROAMING.getValue()){
-//				Map<String, Object> serviceTypeMap = new HashMap<String, Object>(2);
-//				serviceTypeMap.put("desc", serviceTypeEnum.getDesc());
-//				serviceTypeMap.put("value", serviceTypeEnum.getValue());
-//				
-//				attachmentTypeMapList.add(serviceTypeMap);
-//			}
-//		}
-//		
-//		return attachmentTypeMapList;
-//	}
 	
 	public String getDesc() {
 		return desc;

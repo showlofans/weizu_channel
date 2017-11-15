@@ -17,6 +17,7 @@ import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
+import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
@@ -56,7 +57,7 @@ public class TelChannelController {
 		resultMap.put("chargeTelEnums", TelchannelTypeEnum.toList());			//话费基本类型枚举
 		resultMap.put("telchargeSpeedEnums", TelchargeSpeedEnum.toList());
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
-		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toHuaList());
+		resultMap.put("serviceTypeEnums", HuaServiceTypeEnum.toList());
 		
 		List<Provinces> provinces = procincesDAO.getProvinces();
 		resultMap.put("provinces", provinces);
@@ -85,7 +86,7 @@ public class TelChannelController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
-		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toHuaList());
+		resultMap.put("serviceTypeEnums", HuaServiceTypeEnum.toList());
 		resultMap.put("telchargeSpeedEnums", TelchargeSpeedEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		resultMap.put("channelStateEnums", ChannelStateEnum.toList());

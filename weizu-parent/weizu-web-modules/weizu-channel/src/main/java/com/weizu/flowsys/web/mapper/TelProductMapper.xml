@@ -15,6 +15,7 @@
     <result column="charge_value" property="chargeValue" jdbcType="INTEGER" />
     <result column="free_charge" property="freeCharge" jdbcType="INTEGER" />
     <result column="cityid" property="cityid" jdbcType="VARCHAR" />
+    <result column="provinceid" property="provinceid" jdbcType="VARCHAR" />
     <result column="charge_speed" property="chargeSpeed" jdbcType="INTEGER" />
     <result column="service_type" property="serviceType" jdbcType="INTEGER" />
     <result column="operator_name" property="operatorName" jdbcType="INTEGER" />
@@ -23,17 +24,26 @@
     <result column="province" property="province" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List">
-  	tp.*,ct.city,pc.province 
+  	tp.*
+	<if test="serviceType == 1 ">,pc.province</if> <!-- 省内和市内 -->
+  	<if test="serviceType == 2">,pc.province,ct.city</if><!-- 市内 -->
   </sql>
   
   <!-- 获得话费编码分页列表 -->
   <select id="getTelProduct" parameterType="map" resultMap="BaseResultMap">
   SELECT <include refid="Base_Column_List"></include>
   FROM <include refid="t_tel_product"></include> tp
-	INNER JOIN <include refid="t_cities"></include> ct
-	ON tp.cityid=ct.cityid
-	INNER JOIN <include refid="t_provinces"></include> pc
-	on pc.provinceid=ct.provinceid
+	
+	<if test="serviceType == 1">
+		INNER JOIN <include refid="t_provinces"></include> pc
+		on pc.provinceid=tp.provinceid
+	</if>
+	<if test="serviceType == 2 ">
+		INNER JOIN <include refid="t_provinces"></include> pc
+		on pc.provinceid=tp.provinceid
+		INNER JOIN <include refid="t_cities"></include> ct
+		on ct.cityid=tp.cityid
+	</if>
 	<where>
 		<include refid="conditon_sql"></include>
 	</where>
@@ -53,10 +63,16 @@
   <select id="countTelPro" parameterType="map" resultType="long">
   SELECT count(*)
   FROM <include refid="t_tel_product"></include> tp
-	INNER JOIN <include refid="t_cities"></include> ct
-	ON tp.cityid=ct.cityid
-	INNER JOIN <include refid="t_provinces"></include> pc
-	on pc.provinceid=ct.provinceid
+  	<if test="serviceType == 1">
+		INNER JOIN <include refid="t_provinces"></include> pc
+		on pc.provinceid=tp.provinceid
+	</if>
+	<if test="serviceType == 2 ">
+		INNER JOIN <include refid="t_cities"></include> ct
+		on ct.cityid=tp.cityid
+		INNER JOIN <include refid="t_provinces"></include> pc
+		on pc.provinceid=tp.provinceid
+	</if>
 	<where>
 		<include refid="conditon_sql"></include>
 	</where>
@@ -77,7 +93,7 @@
   		AND tp.cityid = #{cityid}
   	</if>
   	<if test="provinceid != null">
-  		AND ct.provinceid = #{provinceid}
+  		AND tp.provinceid = #{provinceid}
   	</if>
   	<if test="chargeSpeed != null">
   		AND tp.charge_speed = #{chargeSpeed}

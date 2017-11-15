@@ -47,7 +47,7 @@ public class TelProductPo extends Po {
 	private String city;				//城市名称：页面参数
 	@TempField
 	private String province;			//省份名称：页面参数
-	@TempField
+	
 	private String provinceid;			//省份名称：查询参数
 	
 	public String getProvinceid() {

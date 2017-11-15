@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.dao.ITelProductDao;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
@@ -96,6 +98,9 @@ public class TelProductAOImpl implements TelProductAO {
 		if(StringHelper.isNotEmpty(telPo.getCityid())){
 			where.and("cityid", "=", telPo.getCityid());
 		}
+		if(StringHelper.isNotEmpty(telPo.getProvinceid())){
+			where.and("provinceid", "=", telPo.getProvinceid());
+		}
 		if(telPo.getFreeCharge() != null){
 			where.and("free_charge", "=", telPo.getFreeCharge().booleanValue());
 		}
@@ -108,7 +113,6 @@ public class TelProductAOImpl implements TelProductAO {
 		if(telPo.getEpId() != null){
 			where.and("charge_value", "=", telPo.getChargeValue());
 		}
-		
 		return where;
 	}
 	
@@ -150,6 +154,11 @@ public class TelProductAOImpl implements TelProductAO {
 		if(resNum > 0){
 			result = "exist";
 		}else{
+			int serviceType = telPo.getServiceType();
+			if(serviceType == HuaServiceTypeEnum.PROVINCE.getValue()){
+				telPo.setCityid("");
+			}
+			
 			int res = telProductDao.add(telPo);
 			if(res > 0){
 				result = "success";

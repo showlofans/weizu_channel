@@ -48,6 +48,17 @@
 		&nbsp;&nbsp; --%>
 		 平台名称:<input type="text" value="${resultMap.params.epName }" name="epName" id="" placeholder="平台名称" style="width:80px" class="input-text">
 		&nbsp;&nbsp;
+		 <!--  业务类型： -->
+		 <span class="select-box inline">
+			<select name="serviceType" class="select" onchange="submitForm()">
+				<option value="">业务类型</option>
+				<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
+					<option value="${serviceTypeEnum.value }" <c:if test="${serviceTypeEnum.value == resultMap.params.serviceType }"> selected</c:if>>${serviceTypeEnum.desc }</option>
+				</c:forEach>
+			</select>
+		</span> 
+		
+		&nbsp;&nbsp;
 		<!--  地区省份： -->
 		 <span class="select-box inline">
 			<select name="provinceid" id="provinceid" class="select" onchange="province_change(this.value);">
@@ -75,17 +86,6 @@
 				</c:forEach>
 			</select>
 		</span> 
-		&nbsp;&nbsp;
-		 <!--  业务类型： -->
-		 <span class="select-box inline">
-			<select name="serviceType" class="select" onchange="submitForm()">
-				<option value="">业务类型</option>
-				<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
-					<option value="${serviceTypeEnum.value }" <c:if test="${serviceTypeEnum.value == resultMap.params.serviceType }"> selected</c:if>>${serviceTypeEnum.desc }</option>
-				</c:forEach>
-			</select>
-		</span> 
-		
 		&nbsp;&nbsp;
 		 <!--  充值类型： -->
 		 <span class="select-box inline">
@@ -134,6 +134,7 @@
 					<th width="80">产品编码</th>
 					<th width="80">话费价值</th>
 					<!-- <th width="120">支持城市</th> -->
+					<th width="100">业务类型</th>
 					<th width="120">支持省份</th>
 					<th width="120">支持城市</th>
 					
@@ -141,7 +142,6 @@
 					<th width="120">限制描述</th>
 					
 					<th width="60">运营商类型</th>
-					<th width="100">业务类型</th>
 					
 					<th width="30">操作</th>
 				</tr>
@@ -154,6 +154,11 @@
 						<td class="c-blue">${product.telCode }</td>
 						<td>${product.chargeValue }</td>
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
+						<td>
+							<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
+							<c:if test="${product.serviceType == serviceTypeEnum.value }"> ${serviceTypeEnum.desc }</c:if>
+							</c:forEach>
+						</td>
 						<td>
 							${product.province }
 						<%-- <c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum">
@@ -172,11 +177,6 @@
 						<td>
 							<c:forEach items="${resultMap.operatorNameEnums }" var="operatorNameEnum" varStatus="vs1">
 							<c:if test="${product.operatorName == operatorNameEnum.value }"> ${operatorNameEnum.desc }</c:if>
-							</c:forEach>
-						</td>
-						<td>
-							<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
-							<c:if test="${product.serviceType == serviceTypeEnum.value }"> ${serviceTypeEnum.desc }</c:if>
 							</c:forEach>
 						</td>
 						 
@@ -251,7 +251,7 @@ function province_change(v){
 	    }
 	});
    // city.options[0].selected=true;
-	//$('form').submit();
+	$('form').submit();
 }
 function initCity(){
 	$('form').submit();

@@ -235,7 +235,7 @@
  	var carrier;
     var getChargeTel=function(){
         //淘宝接口    
-        $.ajax({
+       /*  $.ajax({
              type: "get",
              url: 'http://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel='+tel,
              dataType: "jsonp",
@@ -251,15 +251,27 @@
                     num = data.telString; 
                //alert(province);
              $('#chargeTelDetail').val(carrier);  
-              //$('#chargeTelDetail').val(location);  
-                
-               /*  $('.num span').html(num);
-                
-                $('.province span').html(province);
-                $('.operators span').html(operators);
-                $('.carrier span').html(carrier); */
              },
-         });
+         }); */
+         //聚合接口
+    	$.ajax({
+            type: "get",
+            url: 'http://apis.juhe.cn/mobile/get?phone='+tel+'&key=59b0973a9e6d8642b987ac04c1eb2c07',
+            contentType: "application/x-www-form-urlencoded; charset=utf-8", 
+            dataType: 'jsonp',
+            crossDomain: true,
+            success: function(data){
+              // $('.error').css('display','none');
+              //alert(data);
+              var provinceIn = data.result.province;//广东
+              //alert(provinceIn);
+              var city = data.result.city;
+              var  company = data.result.company,//中国移动
+              carrier = provinceIn + city + company.substring(company.length-2);
+              //alert(province);
+            $('#chargeTelDetail').val(carrier);  
+            },
+        });
     };
     /**radio选中事件*/
     function changeValue(vart){
