@@ -98,6 +98,9 @@ public class TelChannelController {
 		}else{
 			pageParam = new PageParam(1l, 10);
 		}
+		if(telParams.getServiceType() == null){//默认加载市内的
+			telParams.setServiceType(HuaServiceTypeEnum.CITY.getValue());
+		}
 		Pagination<TelChannelParams> pagination = telChannelAO.getTelChannel(telParams, pageParam);
 		resultMap.put("pagination", pagination);
 		

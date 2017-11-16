@@ -448,25 +448,13 @@ public class RateController {
 	 * @createTime:2017年7月28日 下午5:38:02
 	 */
 	@RequestMapping(value=RateURL.MY_RATE_LIST)
-	public ModelAndView myRateList(@RequestParam(value = "pageNo", required = false) String pageNo,
+	public ModelAndView myRateList(@RequestParam(value = "pageNoLong", required = false) Long pageNoLong,
 			HttpServletRequest request,RateDiscountPo ratePo,String agencyName){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO == null){
 			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 		}
-		PageParam pageParam = null;
-		if(StringHelper.isNotEmpty(pageNo)){
-			pageParam = new PageParam(Integer.parseInt(pageNo), 10) ;
-		}else{
-			pageParam = new PageParam(1, 10);
-		}
-		int childAccountId = -1;
-//		Object obj = request.getSession().getAttribute("childAccountId");
-//		if(obj != null){
-//			childAccountId = Integer.parseInt(obj.toString());
-//		}else{
-//			
-//		}
+		Integer childAccountId = -1;
 		if(ratePo != null){
 			childAccountId = ratePo.getAccountId();
 //			request.getSession().setAttribute("childAccountId", childAccountId);
@@ -486,6 +474,12 @@ public class RateController {
 //			request.getSession().setAttribute("childAgencyId", childAgencyId);
 //		}
 		ratePo.setAgencyId(agencyVO.getId());
+		PageParam pageParam = null;
+		if(pageNoLong != null){
+			pageParam = new PageParam(pageNoLong, 10) ;
+		}else{
+			pageParam = new PageParam(1l, 10);
+		}
 		Pagination<RateDiscountPo> pagination = rateDiscountAO.getMyRateList(ratePo,childAccountId, pageParam);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());

@@ -34,6 +34,16 @@ public class PgChargeVO {
 	
 	private Long cdisId;					//通道折扣id
 	
+	private Integer chargeFor;				//PgServiceTypeEnum：充值业务类型
+	
+	public Integer getChargeFor() {
+		return chargeFor;
+	}
+
+	public void setChargeFor(Integer chargeFor) {
+		this.chargeFor = chargeFor;
+	}
+
 	public Long getCdisId() {
 		return cdisId;
 	}

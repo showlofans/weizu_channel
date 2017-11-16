@@ -37,6 +37,7 @@ import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
+import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
@@ -225,6 +226,9 @@ public class ChargePgController {
 			String pageMsg = "";
 			String referURL = "";
 			pcVO.setChannelId(channelId);
+			
+			//充值
+			pcVO.setChargeFor(PgServiceTypeEnum.PGCHARGE.getValue());
 			pageMsg = purchaseAO.purchase(pcVO, accountPo);
 			referURL = "/flowsys/chargePg/purchase_list.do?orderResult=2";
 			resultMap.put("referURL", referURL);

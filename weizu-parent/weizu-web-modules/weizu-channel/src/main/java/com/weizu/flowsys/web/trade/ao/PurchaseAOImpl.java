@@ -293,7 +293,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 					chargeAccountAO.updateAccount(chargeAccountPo);
 					int addRec = chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
 							agencyBeforeBalance, agencyAfterBalance, 
-							AccountTypeEnum.DECREASE.getValue(), accountId, 1 , orderId));
+							AccountTypeEnum.DECREASE.getValue(), accountId, pcVO.getChargeFor() , orderId));
 //					purchasePo.setOrderResult(OrderStateEnum.CHARGING.getValue());
 //					purchasePo.setOrderResultDetail(OrderStateEnum.CHARGING.getDesc());
 					purResult = purchaseDAO.addPurchase(purchasePo);
@@ -334,7 +334,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 						/** 向消费记录表插入登陆用户数据 */
 						chargeRecordDao.add(new ChargeRecordPo(currentTime, orderAmount,
 								agencyBeforeBalance, chargeAccountPo.getAccountBalance(), 
-								AccountTypeEnum.DECREASE.getValue(), chargeAccountPo.getId(), 1 , orderId));
+								AccountTypeEnum.DECREASE.getValue(), chargeAccountPo.getId(),  pcVO.getChargeFor() , orderId));
 						/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
 						int orderPath = OrderPathEnum.WEB_PAGE.getValue();
 						Long recordId = chargeRecordDao.nextId() -1;
@@ -389,7 +389,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 						agencyAfterBalance = NumberTool.sub(agencyBeforeBalance,minusAmount);
 						recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), minusAmount,
 								agencyBeforeBalance, agencyAfterBalance, 
-								AccountTypeEnum.DECREASE.getValue(), apAccountId,1, orderId));	
+								AccountTypeEnum.DECREASE.getValue(), apAccountId, pcVO.getChargeFor(), orderId));	
 						int orderPath = OrderPathEnum.CHILD_WEB_PAGE.getValue();
 						AccountPurchasePo app = new AccountPurchasePo(apAccountId, orderId, activeRatePo.getId(), minusAmount,from_accountPo.getId(), recordId, plusAmount, fromAgencyName, orderPath, orderState);
 						recordId++;
@@ -425,7 +425,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				chargeAccountAO.updateAccount(superAccountPo);
 				recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
 						agencyBeforeBalance, agencyAfterBalance, 
-						AccountTypeEnum.DECREASE.getValue(), superAccountPo.getId(), 1 , orderId));
+						AccountTypeEnum.DECREASE.getValue(), superAccountPo.getId(),  pcVO.getChargeFor() , orderId));
 				/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
 				int orderPath = OrderPathEnum.CHILD_WEB_PAGE.getValue();
 				//ChannelDiscountPo cdPo = channelDiscountDao.get(ratePo.getChannelDiscountId());

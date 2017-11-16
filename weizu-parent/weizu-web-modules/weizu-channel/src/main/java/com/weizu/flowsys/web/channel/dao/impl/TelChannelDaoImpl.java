@@ -42,6 +42,11 @@ public class TelChannelDaoImpl extends DaoImpl<TelChannelPo, Long> implements IT
 	public Long countTelChanenl(Map<String, Object> params) {
 		return sqlSessionTemplate.selectOne("countTelChanenl", params);
 	}
+
+	@Override
+	public TelChannelParams selectByIdType(Map<String, Object> params) {
+		return sqlSessionTemplate.selectOne("selectByIdType", params);
+	}
 	
 
 }

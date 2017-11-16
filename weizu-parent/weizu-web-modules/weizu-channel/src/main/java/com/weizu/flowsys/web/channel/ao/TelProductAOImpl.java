@@ -54,18 +54,34 @@ public class TelProductAOImpl implements TelProductAO {
 		if(StringHelper.isNotEmpty(telPo.getEpName())){
 			params.put("epName", telPo.getEpName());
 		}
-		if(StringHelper.isNotEmpty(telPo.getCityid())){
-			params.put("cityid", telPo.getCityid());
-		}
-		if(StringHelper.isNotEmpty(telPo.getProvinceid())){
-			params.put("provinceid", telPo.getProvinceid());
+		Integer serviceType = telPo.getServiceType();
+		if(serviceType != null){
+			params.put("serviceType", serviceType);
+
+			boolean cityProIn = StringHelper.isNotEmpty(telPo.getProvinceid()); //加入省市参数必须的条件
+			boolean cityIn = serviceType.equals(HuaServiceTypeEnum.CITY.getValue()) && StringHelper.isNotEmpty(telPo.getCityid());//加入市的条件
+			boolean provinceIn = serviceType.equals(HuaServiceTypeEnum.PROVINCE.getValue()) || cityIn ;//加入省份参数条件
+			
+			if(provinceIn && cityProIn){
+				params.put("provinceid", telPo.getProvinceid());
+			}
+			if(cityIn && cityProIn){
+				params.put("cityid", telPo.getCityid());
+			}
+			
+//			if(serviceType.equals(HuaServiceTypeEnum.CITY.getValue())){
+//				if(serviceType.equals(HuaServiceTypeEnum.CITY.getValue()) && StringHelper.isNotEmpty(telPo.getCityid()) && StringHelper.isNotEmpty(telPo.getProvinceid())){
+//					params.put("cityid", telPo.getCityid());
+//					params.put("provinceid", telPo.getProvinceid());
+//				}
+//			}else if(serviceType.equals(HuaServiceTypeEnum.PROVINCE.getValue()) && StringHelper.isNotEmpty(telPo.getProvinceid())){
+//				params.put("provinceid", telPo.getProvinceid());
+//			}
+			
 		}
 		
 		if(telPo.getChargeSpeed() != null){
 			params.put("chargeSpeed", telPo.getChargeSpeed());
-		}
-		if(telPo.getServiceType() != null){
-			params.put("serviceType", telPo.getServiceType());
 		}
 		if(telPo.getOperatorName() != null){
 			params.put("operatorName", telPo.getOperatorName());

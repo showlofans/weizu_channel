@@ -235,7 +235,7 @@
  	var carrier;
     var getChargeTel=function(){
         //淘宝接口    
-       /*  $.ajax({
+       $.ajax({
              type: "get",
              url: 'http://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel='+tel,
              dataType: "jsonp",
@@ -252,9 +252,9 @@
                //alert(province);
              $('#chargeTelDetail').val(carrier);  
              },
-         }); */
+         });
          //聚合接口
-    	$.ajax({
+    	 /* $.ajax({
             type: "get",
             url: 'http://apis.juhe.cn/mobile/get?phone='+tel+'&key=59b0973a9e6d8642b987ac04c1eb2c07',
             contentType: "application/x-www-form-urlencoded; charset=utf-8", 
@@ -271,7 +271,7 @@
               //alert(province);
             $('#chargeTelDetail').val(carrier);  
             },
-        });
+        }); */
     };
     /**radio选中事件*/
     function changeValue(vart){

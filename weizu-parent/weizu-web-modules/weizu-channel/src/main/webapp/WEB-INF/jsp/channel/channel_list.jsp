@@ -90,8 +90,9 @@
 			
 			<!-- <input type="hidden" value="" name="channelId" id="channelId"> -->
 			
-			<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
+			<input type="text" value="${resultMap.searchParam.pgSize }" name="pgSize" id="" placeholder=" 包体大小" style="width:80px" class="input-text">
 			<input value="查询" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
+			<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 		</div>
 		<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 		</form>
@@ -301,7 +302,14 @@
 								<c:if test="${channel.serviceType == serTypeEnum.value }">
 									<span data-toggle="tooltip" data-placement="top" title="${serTypeEnum.desc } ${channel.specialTag }">
 										<c:forEach items="${channel.pgList }"  var="pgData" varStatus="vst">
-											${pgData.pgSize }&
+											<c:choose>
+												<c:when test="${pgData.pgSize == resultMap.searchParam.pgSize }">
+													<mark>${pgData.pgSize }&</mark>
+												</c:when>
+												<c:otherwise>
+													${pgData.pgSize }&
+												</c:otherwise>
+											</c:choose>
 										</c:forEach>
 										<%-- ${channel.pgSize } --%>
 									</span>

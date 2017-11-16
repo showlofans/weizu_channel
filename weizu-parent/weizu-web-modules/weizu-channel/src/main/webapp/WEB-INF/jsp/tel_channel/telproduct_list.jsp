@@ -51,7 +51,7 @@
 		 <!--  业务类型： -->
 		 <span class="select-box inline">
 			<select name="serviceType" class="select" onchange="submitForm()">
-				<option value="">业务类型</option>
+				<!-- <option value="">业务类型</option> -->
 				<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
 					<option value="${serviceTypeEnum.value }" <c:if test="${serviceTypeEnum.value == resultMap.params.serviceType }"> selected</c:if>>${serviceTypeEnum.desc }</option>
 				</c:forEach>

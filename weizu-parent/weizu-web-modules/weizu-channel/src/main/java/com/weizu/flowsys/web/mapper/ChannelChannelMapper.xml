@@ -250,6 +250,9 @@
 		<if test="pgValidity != null">
 			AND opd.pg_validity=#{pgValidity}
 		</if>
+		<if test="pgSize != null">
+			AND opd.pg_size=#{pgSize}
+		</if>
 	</where>)
   	<if test="channelName != null">
   		AND channel.channel_name like CONCAT('%', TRIM(#{channelName}), '%')

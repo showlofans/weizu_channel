@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.channel.ao;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -132,7 +133,7 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 		List<CnelBindPgPo> cbpList = new LinkedList<CnelBindPgPo>();
 		String cnelName = channelPo.getChannelName();
 		
-		
+		/**根据包体规格字符串初始化通道包体列表*/
 		for (String pgStr : pgSize) {
 			int sType = channelPo.getServiceType();
 			int oType = channelPo.getOperatorType();
@@ -175,7 +176,7 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 		}
 		List<ChannelChannelPo> records = channelChannelDao.listChannel(paramsMap);
 		
-		initChannelDiscountStr(records);
+		initChannelDiscountStr(records);//, channelChannelPo.getPgSize(),toatalRecord
 		//初始化scopeCityName,引用类型直接
 //		for (ChannelChannelPo channelChannelPo2 : records) {
 //			String scopeCityName = "";
@@ -199,56 +200,75 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 	}
 
 	/**
-	 * @description: 初始化通道列表页面运营商的折扣
+	 * @description: 初始化通道列表页面运营商的折扣显示<br>
+	 * 查询包体规格列表
 	 * @param records
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月5日 下午12:49:30
 	 */
-	private void initChannelDiscountStr(List<ChannelChannelPo> records) {
+	private void initChannelDiscountStr(List<ChannelChannelPo> records) {//, String pgSize, int toatalRecord
+//		boolean isPgSize = StringHelper.isNotEmpty(pgSize);
 		for (ChannelChannelPo channelChannelPo : records) {
 			Map<String,Object> params = new HashMap<String, Object>();
+//			if(isPgSize){
+//				params.put("pgSize", Integer.parseInt(pgSize));
+//			}
 			params.put("channelId", channelChannelPo.getId());
+			//初始化包体规格列表参数
 			List<PgDataPo> pgList = operatorPgDao.getPgByChanel(params);
-			channelChannelPo.setPgList(pgList);
-			channelChannelPo.setPgType(pgList.get(0).getPgType());
-			channelChannelPo.setPgValidity(pgList.get(0).getPgValidity());
-			
-			List<ChannelDiscountPo>  list = channelChannelPo.getDiscountList();
-			StringBuffer discount0 = new StringBuffer("{");
-			StringBuffer discount1 = new StringBuffer("{");
-			StringBuffer discount2 = new StringBuffer("{");
-			if(list != null && list.size()>0){
-				channelChannelPo.setServiceType(list.get(0).getServiceType());//初始化业务类型
-				channelChannelPo.setOperatorType(list.get(0).getOperatorType());//初始化运营商类型
-				channelChannelPo.setChannelType(list.get(0).getChannelType());//初始化通道类型
-				for (ChannelDiscountPo channelDiscountPo : list) {
-					String code = channelDiscountPo.getScopeCityCode();
-					String ScopeCityName = ScopeCityEnum.getEnum(code).getDesc();	//城市名
-					int operatorType = channelDiscountPo.getOperatorType();
-					if(operatorType == OperatorTypeEnum.MOBILE.getValue())
-					{
-						discount0.append("\""+ScopeCityName+"\":\""+channelDiscountPo.getChannelDiscount()+"\",");
-					}else if(operatorType == OperatorTypeEnum.TELECOME.getValue())
-					{
-						discount2.append("\""+ScopeCityName+"\":\""+channelDiscountPo.getChannelDiscount()+"\",");
-					}else//联通
-					{
-						discount1.append("\""+ScopeCityName+"\":\""+channelDiscountPo.getChannelDiscount()+"\",");
+			boolean isRemoved = pgList == null || pgList.size() == 0;
+			if(isRemoved){
+//				Iterator<ChannelChannelPo> iterator = records.iterator();
+//		        while(iterator.hasNext()){
+//		        	ChannelChannelPo integer = iterator.next();
+//		            if(integer==channelChannelPo)
+//		                iterator.remove();   //注意这个地方
+//		        }
+//				toatalRecord--;//修改总记录数
+			}
+			else {//等同于包体不为空
+				channelChannelPo.setPgList(pgList);
+				channelChannelPo.setPgType(pgList.get(0).getPgType());
+				channelChannelPo.setPgValidity(pgList.get(0).getPgValidity());
+				List<ChannelDiscountPo>  list = channelChannelPo.getDiscountList();
+				StringBuffer discount0 = new StringBuffer("{");
+				StringBuffer discount1 = new StringBuffer("{");
+				StringBuffer discount2 = new StringBuffer("{");
+				if(list != null && list.size()>0){
+					channelChannelPo.setServiceType(list.get(0).getServiceType());//初始化业务类型
+					channelChannelPo.setOperatorType(list.get(0).getOperatorType());//初始化运营商类型
+					channelChannelPo.setChannelType(list.get(0).getChannelType());//初始化通道类型
+					for (ChannelDiscountPo channelDiscountPo : list) {
+						String code = channelDiscountPo.getScopeCityCode();
+						String ScopeCityName = ScopeCityEnum.getEnum(code).getDesc();	//城市名
+						int operatorType = channelDiscountPo.getOperatorType();
+						if(operatorType == OperatorTypeEnum.MOBILE.getValue())
+						{
+							discount0.append("\""+ScopeCityName+"\":\""+channelDiscountPo.getChannelDiscount()+"\",");
+						}else if(operatorType == OperatorTypeEnum.TELECOME.getValue())
+						{
+							discount2.append("\""+ScopeCityName+"\":\""+channelDiscountPo.getChannelDiscount()+"\",");
+						}else//联通
+						{
+							discount1.append("\""+ScopeCityName+"\":\""+channelDiscountPo.getChannelDiscount()+"\",");
+						}
 					}
+					
+					String dis0Str = discount0.append("}").toString();
+					//			String dis0 = dis0Str.substring(0,dis0Str.lastIndexOf(","));
+					//			channelChannelPo.setDiscount0(dis0);
+					String dis1Str = discount1.append("}").toString();
+					//			String dis1 = dis1Str.substring(0,dis1Str.lastIndexOf(","));
+					//			channelChannelPo.setDiscount0(dis0);
+					String dis2Str = discount2.append("}").toString();
+					//			String dis2 = dis2Str.substring(0,dis2Str.lastIndexOf(","));
+					channelChannelPo.setDiscountPo(new DiscountPo(dis0Str, dis1Str, dis2Str));
+					channelChannelPo.setBillType(list.get(0).getBillType());
 				}
-				
-				String dis0Str = discount0.append("}").toString();
-	//			String dis0 = dis0Str.substring(0,dis0Str.lastIndexOf(","));
-	//			channelChannelPo.setDiscount0(dis0);
-				String dis1Str = discount1.append("}").toString();
-	//			String dis1 = dis1Str.substring(0,dis1Str.lastIndexOf(","));
-	//			channelChannelPo.setDiscount0(dis0);
-				String dis2Str = discount2.append("}").toString();
-	//			String dis2 = dis2Str.substring(0,dis2Str.lastIndexOf(","));
-				channelChannelPo.setDiscountPo(new DiscountPo(dis0Str, dis1Str, dis2Str));
-				channelChannelPo.setBillType(list.get(0).getBillType());
+			
 			}
 		}
+//		return toatalRecord;
 	}
 
 	/**
@@ -311,7 +331,9 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 			if(StringHelper.isNotEmpty(channelPo.getPgValidity())){
 				paramsMap.put("pgValidity", channelPo.getPgValidity());
 			}
-			
+			if(StringHelper.isNotEmpty(channelPo.getPgSize())){
+				paramsMap.put("pgSize", Integer.parseInt(channelPo.getPgSize()));
+			}
 		}
 		
 		return paramsMap;

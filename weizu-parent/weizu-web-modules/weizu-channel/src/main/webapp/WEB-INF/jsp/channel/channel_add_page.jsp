@@ -121,7 +121,7 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><!-- <span class="c-red">*</span> -->平台搜索：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" onKeyUp="ajaxGet()" value="" required="required" placeholder="英文请用空格键结束" id="channel_search" name="epName">
+				<input type="text" class="input-text" onKeyUp="ajaxGet()" value="" required="required" placeholder="用空格键完成平台输入" id="channel_search" name="epName">
 			</div>
 		</div>
 		<!-- 平台ID -->
@@ -236,8 +236,8 @@
 				<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum" varStatus="vs">
 					<c:if test="${vs.index % 4==0 }"><tr></c:if>
 						<td> 
-							<div class="check-box f-16">
-								<input class="cbox" onClick="checkBoxes(this)" type="checkbox" id="scopeCityCode-${vs.index }" value="${scopeCityEnum.value }">
+							<div class="check-box f-16 ">
+								<input class="cbox icheckbox-blue" onClick="checkBoxes(this)" type="checkbox" id="scopeCityCode-${vs.index }" value="${scopeCityEnum.value }">
 								${scopeCityEnum.value }${scopeCityEnum.desc }  
 								<%-- <label for="scopeCityCode-${vs.index }"></label> --%> 
 								<!-- 输入两位折扣数字 -->
@@ -321,6 +321,7 @@
 <script type="text/javascript">
 $(function(){
 	$('.skin-minimal input').iCheck({
+		//checkboxClass: 'icheckbox-blue',
 		radioClass: 'iradio-blue',
 		increaseArea: '20%'
 	});

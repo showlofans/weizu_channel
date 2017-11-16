@@ -180,10 +180,10 @@
 					<tr class="text-c">
 						<!-- <td><input type="checkbox" value="" name=""></td> -->
 						<%-- <td>${pg.pgId }</td> --%>
-						<td><c:forEach items="${resultMap.pgServiceTypeEnums }" var="pgServiceType" varStatus="vs1">
+						<%-- <td><c:forEach items="${resultMap.pgServiceTypeEnums }" var="pgServiceType" varStatus="vs1">
 						<c:if test="${pg.pgServiceType == pgServiceType.value }"> ${pgServiceType.desc }</c:if>
 						</c:forEach>
-						</td>
+						</td> --%>
 						
 						<td>
 						<c:choose>
@@ -310,14 +310,14 @@ function submitForm(){
 /*包体-添加*/
 function pg_add(title,url){
 	//alert("sd");pageTitle=' + title +"&
-	var pgServiceType = $('#pgServiceType').val();
+	//var pgServiceType = $('#pgServiceType').val();
 	layer.open({
         type: 2,
         title: title,
         area: ['500px', '600px'],
         maxmin: false,
         closeBtn: 1,
-        content: url+'?pgServiceType=' + pgServiceType,
+        content: url,//+'?pgServiceType=' + pgServiceType,
          end: function () {
             location.reload();
         }

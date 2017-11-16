@@ -121,7 +121,7 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><!-- <span class="c-red">*</span> -->平台搜索：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" onKeyUp="ajaxGetEp()" value="" required="required" placeholder="英文请用空格键结束" id="channel_search" name="epName">
+				<input type="text" class="input-text" onKeyUp="ajaxGetEp()" value="" required="required" placeholder="用空格键完成平台输入" id="channel_search" name="epName">
 			</div>
 		</div>
 		<!-- 平台ID -->
@@ -159,11 +159,11 @@
 			</div>
 		</div> --%>
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><!-- <span class="c-red">*</span> -->运营商类型：</label>
+			<label class="form-label col-xs-4 col-sm-3"><!-- <span class="c-red">*</span> -->运营商名称：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 				<c:forEach items="${resultMap.operatorNameEnums }" var="operatorEnum" varStatus="vs">
 					<div class="radio-box">
-						<input name="operatorName" class="radioItem" type="radio" id="operatorType-${vs.index }" value="${operatorEnum.value }" <c:if test="${vs.index==0 }">checked</c:if> >
+						<input name="operatorName" class="radioItem" onclick="typeChange()" type="radio" id="operatorType-${vs.index }" value="${operatorEnum.value }" <c:if test="${vs.index==0 }">checked</c:if> >
 						<label for="operatorType-${vs.index }">${operatorEnum.desc }</label>
 						<%-- <label for="operatorType-${vs.index }"></label> --%>
 					</div>
@@ -185,9 +185,9 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><!-- <span class="c-red">*</span> -->充值类型：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
-				<c:forEach items="${resultMap.telchargeSpeedEnums }" var="telchargeSpeedEnum" varStatus="vs">
+				<c:forEach items="${resultMap.telchargeSpeedEnums }"  var="telchargeSpeedEnum" varStatus="vs">
 					<div class="radio-box">
-						<input name="telchargeSpeed" class="radioItem" type="radio" id="telchargeSpeed-${vs.index }" value="${telchargeSpeedEnum.value }" <c:if test="${vs.index==0 }">checked</c:if>>
+						<input name="telchargeSpeed" class="radioItem" onclick="typeChange()" type="radio" id="telchargeSpeed-${vs.index }" value="${telchargeSpeedEnum.value }" <c:if test="${vs.index==0 }">checked</c:if>>
 						<label for="telchargeSpeed-${vs.index }">${telchargeSpeedEnum.desc }</label>
 						<%-- <label for="operatorType-${vs.index }"></label> --%>
 					</div>
@@ -272,6 +272,7 @@
 <script type="text/javascript">
 /**业务类型变化确定城市显示**/
 function setVis(vart){
+	typeChange();//清空通道编码列表
 	var serviceType = $(vart).val();
 	//alert(serviceType);
 	if(serviceType == 0){//全国
@@ -285,6 +286,10 @@ function setVis(vart){
 		$('#citySpan').show();
 	}
 }
+/**清空编码列表信息*/
+function typeChange(){
+	$("#telchannelInsert").empty();
+}
 
 $(function(){
 	$('.skin-minimal input').iCheck({
@@ -296,7 +301,7 @@ $(function(){
 /**省份变化*/
 function province_change(v){
 	var serviceType = $('input[name=serviceType]:checked').val();
-	alert(serviceType);
+	//alert(serviceType);
 	if(serviceType == 2){//市内
 		var ss;
 	    var city = document.getElementById("city");
@@ -320,6 +325,7 @@ function getChargeTelEnum(){
 	var chargeSpeed = $('input[name=telchargeSpeed]:checked').val();
 	var epId = $('#epId').val();
 	var cityid = $('#city').val();
+	var provinceid = $('#province').val();
 	var operatorName = $('input[name=operatorName]:checked').val();
 	var serviceType = $('input[name=serviceType]:checked').val();
 	//alert(serviceType);
@@ -334,45 +340,23 @@ function getChargeTelEnum(){
 		$('#epId').focus();
 	}
 	else{
-		alert($('#province').val());
+		//alert($('#province').val());
 		//alert(chargeSpeed);
 		$.ajax({
 	         type:"post",
 	         url:"/flowsys/tel_product/ajax_get_code.do",
-	         data: {chargeSpeed:chargeSpeed,operatorName:operatorName,cityid:cityid,serviceType:serviceType,epId:epId},//表单数据
+	         data: {chargeSpeed:chargeSpeed,operatorName:operatorName,cityid:cityid,provinceid:provinceid,serviceType:serviceType,epId:epId},//表单数据
 	         async : false,
 	         success:function(data){
 	        	 var dataRole1 = eval(data);
 	          	  // alert(dataRole1.length);
-	          	  //if($(".pgNameType") == undefined || $(".pgNameType").length <= 0){
 	             var appendData1 = "<label class='form-label col-xs-4 col-sm-3'>设置通道折扣：</label><div class='formControls col-xs-8 col-sm-9 skin-minimal'>"; 
 	              if(dataRole1 != null && dataRole1.length > 0){
-	            	  <%-- <label class="form-label col-xs-4 col-sm-3">设置通道折扣：</label>
-	      			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
-	      				<c:forEach items="${resultMap.chargeTelEnums }" var="chargeTelEnum" varStatus="vs">
-	      					<div class="check-box f-16">
-	      						<input class="cbox" onClick="checkBoxes(this)" type="checkbox" id="scopeCityCode-${vs.index }" value="${chargeTelEnum.value }">
-	      						${chargeTelEnum.desc }  
-	      						<label for="scopeCityCode-${vs.index }"></label> 
-	      						<!-- 输入两位折扣数字 -->
-	      						<input class="disscount" style="display: none; width:50px;" type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
-	      						<c:if test="${chargeTelEnum.value == -1 }">
-	      							&nbsp;&nbsp;<input class="disscount input-text" style=" width:100px;" type="text" maxlength="4" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="最低限额">元
-	      							&nbsp;&nbsp;<input class="disscount input-text" style=" width:100px;" type="text" maxlength="4" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="最高限额">元
-	      						</c:if>
-	      						&nbsp;&nbsp;<input class="disscount input-text" style=" width:150px;" type="text"  placeholder="产品编码">
-	      						&nbsp;&nbsp;<input class="disscount input-text" style=" width:100px;" type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="折扣">
-	      					</div><br>
-	      				</c:forEach>
-	      			</div>--%>
 	            	  for(var i=0; i < dataRole1.length; i++){
 	            		  //编码id，编码价值，是否包涵任意价格，编码
 	                	   var chargeValue = dataRole1[i].chargeValue;
 	                	   var id = dataRole1[i].id;
 	                	   var telCode = dataRole1[i].telCode;
-	                	   //var cdis = dataRole1[i].cdis;
-	                	  // var cdisId = dataRole1[i].cdisId;
-	                	   //var pgDiscountPrice = dataRole1[i].pgDiscountPrice;
 	      					appendData1 += "<div class='check-box f-16'><input type='hidden' name='telProducId' value='";
 	      					appendData1 += id;
 	      					appendData1 += "'></input>";
@@ -391,7 +375,7 @@ function getChargeTelEnum(){
 	      				 }
 	                  appendData1 += "</div>";
 	              }else{
-	            	  appendData1 += "无法配置该地区产品！！";
+	            	  appendData1 += "未添加该地区类型编码！！";//无法配置该地区产品
 			           	appendData1 += "</div>";
 	          	  }
 	              $("#telchannelInsert").empty();
@@ -405,6 +389,27 @@ function getChargeTelEnum(){
 	}
 }
 $(document).ready(function(){
+	
+	/* var serviceType = $('input[name=serviceType]:checked').val();
+	var provinceid = $('#province').val();
+	//alert(serviceType);
+	if(serviceType == 2){//市内
+		var ss;
+	    var city = document.getElementById("city");
+		city.innerHTML = "";
+		$.getJSON("/view/mine/data/cityData.json",function(data){
+		    ss=data;
+		    //var html="<option value='-1'>==请选择==</option>";
+		    for(var i=0;i<ss.length;i++){
+		    	if(provinceid==ss[i].provinceid){
+	                var citys=ss[i].cities;
+	                for(var j=0;j<citys.length;j++){
+	                	city.add(new Option(citys[j].city,citys[j].cityid));
+	                }
+	            }
+		    }
+		});
+	} */
 	$("#form-channel-add").validate({
     	submitHandler : function(form) {
 		  	var ids = "";

@@ -46,12 +46,10 @@
 		</select>
 		</span>
 		&nbsp;&nbsp; --%>
-		 平台名称:<input type="text" value="${resultMap.params.epName }" name="epName" id="" placeholder="平台名称" style="width:80px" class="input-text">
-		&nbsp;&nbsp;
-		 <!--  业务类型： -->
+		 业务类型：
 		 <span class="select-box inline">
 			<select name="serviceType" class="select" onchange="submitForm()">
-				<option value="">业务类型</option>
+				<!-- <option value="">业务类型</option> -->
 				<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
 					<option value="${serviceTypeEnum.value }" <c:if test="${serviceTypeEnum.value == resultMap.params.serviceType }"> selected</c:if>>${serviceTypeEnum.desc }</option>
 				</c:forEach>
@@ -95,6 +93,8 @@
 				</c:forEach>
 			</select>
 		</span> 
+		
+		限制描述:<input type="text" value="${resultMap.params.limitDescription }" name="limitDescription" id="" placeholder="限制描述" style="width:80px" class="input-text">
 		<%-- &nbsp;&nbsp;
 			<!-- 包状态 -->
 		<span class="select-box inline">
@@ -108,20 +108,20 @@
 	</div>
 	<!-- 第二行搜索 -->
 	<div class="row cl" style="margin-top: 30dp">
-		通道状态
+		平台名称：<input type="text" value="${resultMap.params.epName }" name="epName" id="" placeholder="平台名称" style="width:80px" class="input-text">
+		&nbsp;&nbsp;
 		<span class="select-box inline">
 			<select name="telchannelState" class="select" onchange="getChannelList()">
-			<option value="">请选择</option>
+			<option value="">通道状态</option>
 			<c:forEach items="${resultMap.channelStateEnums }" var="cstate" varStatus="vs1">
 				<option value="${cstate.value }" <c:if test="${cstate.value == resultMap.searchParam.telchannelState }"> selected</c:if>>${cstate.desc }</option>
 			</c:forEach>
 		</select>
 		</span>
 		&nbsp;&nbsp;
-		通道使用状态
 		<span class="select-box inline">
 			<select name="telchannelUseState" class="select" onchange="getChannelList()">
-			<option value="">请选择</option>
+			<option value="">通道使用状态</option>
 			<c:forEach items="${resultMap.channelUseStateEnums }" var="cstate" varStatus="vs1">
 				<option value="${cstate.value }" <c:if test="${cstate.value == resultMap.searchParam.telchannelUseState }"> selected</c:if>>${cstate.desc }</option>
 			</c:forEach>
@@ -129,11 +129,10 @@
 		</span>
 		&nbsp;&nbsp;
 		  话费价值:<input type="text" value="${resultMap.params.chargeValue }" name="chargeValue" id="" placeholder="话费价值" style="width:100px" class="input-text">
-		 限制描述:<input type="text" value="${resultMap.params.limitDescription }" name="limitDescription" id="" placeholder="限制描述" style="width:80px" class="input-text">
 		<%-- 流量大小:<input type="text" value="${resultMap.params.pgSize }" name="pgSize" id="" placeholder="大小" style="width:80px" class="input-text">
 		原价：<input type="text" value="${resultMap.params.pgPrice }" name="pgPrice" id="" placeholder=" 原价" style="width:80px" class="input-text">元 --%>
-		<button type="button" class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 		<button name="" id=""  class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜话费</button>
+		<button type="button" class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 		<!-- <a style="text-decoration:none" class="btn btn-success" onClick="telPc_add('话费编码添加','/flowsys/tel_telchannel/teltelchannel_add_page.do')" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i>添加</a> -->
 		<input type="hidden" name="pageNoLong" value="${pagination.pageNoLong }"> 
 	</div>
@@ -150,6 +149,7 @@
 					<th width="80">平台名称</th>
 					<th width="80">话费价值</th>
 					<th width="120">通道折扣</th>
+					<th width="60">票务</th>
 					<th width="60">运营商类型</th>
 					<th width="100">业务类型</th>
 					<th width="120">支持省份</th>
@@ -171,6 +171,27 @@
 						<td>${telchannel.epName }</td>
 						<td>${telchannel.chargeValue }</td>
 						 <td class="c-blue">${telchannel.telchannelDiscount }</td>
+						 <td>
+						 	<c:choose>
+								<c:when test="${telchannel.billType == 0 }">
+									<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+										<c:if test="${billTypeEnum.value == 0 }">
+											<span data-toggle="tooltip"  class="c-red" data-placement="right" title="${billTypeEnum.desc }">
+											${billTypeEnum.desc }</span>
+										</c:if>
+									</c:forEach>
+								</c:when>
+								<c:otherwise>
+									<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+									<c:if test="${billTypeEnum.value == 1 }">
+										<span data-toggle="tooltip" class="c-green" data-placement="right" title="${billTypeEnum.desc }">
+										${billTypeEnum.desc }</span>
+									</c:if>
+									</c:forEach>
+								</c:otherwise>
+							</c:choose>
+						 </td>
+						 
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
 						<td>
 							<c:forEach items="${resultMap.operatorNameEnums }" var="operatorNameEnum" varStatus="vs1">
@@ -310,7 +331,7 @@ function province_change(v){
 	    }
 	});
    // city.options[0].selected=true;
-	//$('form').submit();
+	$('form').submit();
 }
 function initCity(){
 	$('form').submit();
