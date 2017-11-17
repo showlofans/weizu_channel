@@ -30,7 +30,17 @@ public class TelrateBindAccountPo extends Po {
     private Integer bindAgencyId;				//绑定人
     @TempField
     private String accountIds;					//页面参数：批量账户
+    @TempField
+    private String activeTimeStr;				//页面参数
     
+	public String getActiveTimeStr() {
+		return activeTimeStr;
+	}
+
+	public void setActiveTimeStr(String activeTimeStr) {
+		this.activeTimeStr = activeTimeStr;
+	}
+
 	public String getAccountIds() {
 		return accountIds;
 	}

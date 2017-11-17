@@ -42,6 +42,7 @@
     <result column="order_result" property="orderResult" jdbcType="INTEGER" />
     <result column="order_result_detail" property="orderResultDetail" jdbcType="VARCHAR" />
     <result column="operator_type" property="operatorType" />
+    <result column="service_type" property="serviceType" />
     <result column="pg_price" property="pgPrice" />
     <result column="agency_call_ip" property="agencyCallIp" jdbcType="VARCHAR" />
     <!-- 连接表信息 -->
@@ -85,7 +86,7 @@
     charge_tel_city,  channel_name 
   </sql>
   <sql id="VO_Column_List"><!-- 订单页面 -->
-  	ap.from_agency_name,ap.account_id, pur.order_id, pur.order_id_api, pur.order_id_from, pur.charge_tel, pg.pg_size, pg.operator_type, pg.pg_price, pur.order_arrive_time,
+  	ap.from_agency_name,ap.account_id, pur.order_id, pur.order_id_api, pur.order_id_from, pur.charge_tel, pg.pg_size, pg.operator_type,pg.service_type, pg.pg_price, pur.order_arrive_time,
   	pur.order_back_time, pur.charge_tel_detail, pur.charge_tel_city,ap.order_amount ap_order_amount,ap.order_price,pur.order_result,ap.order_state,ap.order_state_Detail,ap.order_platform_path,
   	 pur.order_result_detail,pur.channel_name,act.bill_type actBill_type,ap.rate_discount_id,ap.ap_discount, pur.agency_call_ip
   </sql>

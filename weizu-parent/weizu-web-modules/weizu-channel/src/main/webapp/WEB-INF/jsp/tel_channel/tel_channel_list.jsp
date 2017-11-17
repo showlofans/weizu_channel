@@ -30,8 +30,8 @@
 <![endif]-->
 <title>话费通道列表</title>
 </head>
-<body onload="HtmlEditor.focus()">
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 通道管理 <span class="c-gray en">&gt;</span> 话费通道列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 平台通道管理 <span class="c-gray en">&gt;</span> 话费通道列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
 	<form class="form form-horizontal" action="/flowsys/tel_channel/telchannel_list.do" method="post" id="formD" name="dataListForm">
@@ -77,7 +77,7 @@
 		 <!--  运营商类型： -->
 		 <span class="select-box inline">
 			<select name="operatorName" class="select"  onchange="submitForm()">
-				<option value="">运营商类型</option>
+				<option value="">运营商名称</option>
 				<c:forEach items="${resultMap.operatorNameEnums }" var="operatorNameEnum" varStatus="vs1">
 					<option value="${operatorNameEnum.value }" <c:if test="${operatorNameEnum.value == resultMap.params.operatorName }"> selected</c:if>>${operatorNameEnum.desc }</option>
 				</c:forEach>
@@ -87,7 +87,7 @@
 		 <!--  充值类型： -->
 		 <span class="select-box inline">
 			<select name="telchargeSpeed" class="select"  onchange="submitForm()">
-				<option value="">充值类型</option>
+				<option value="">充值速度</option>
 				<c:forEach items="${resultMap.telchargeSpeedEnums }" var="telchargeSpeedEnum" varStatus="vs1">
 					<option value="${telchargeSpeedEnum.value }" <c:if test="${telchargeSpeedEnum.value == resultMap.params.chargeSpeed }"> selected</c:if>>${telchargeSpeedEnum.desc }</option>
 				</c:forEach>
@@ -111,19 +111,19 @@
 		平台名称：<input type="text" value="${resultMap.params.epName }" name="epName" id="" placeholder="平台名称" style="width:80px" class="input-text">
 		&nbsp;&nbsp;
 		<span class="select-box inline">
-			<select name="telchannelState" class="select" onchange="getChannelList()">
+			<select name="telchannelState" class="select" onchange="submitForm()">
 			<option value="">通道状态</option>
 			<c:forEach items="${resultMap.channelStateEnums }" var="cstate" varStatus="vs1">
-				<option value="${cstate.value }" <c:if test="${cstate.value == resultMap.searchParam.telchannelState }"> selected</c:if>>${cstate.desc }</option>
+				<option value="${cstate.value }" <c:if test="${cstate.value == resultMap.params.telchannelState }"> selected</c:if>>${cstate.desc }</option>
 			</c:forEach>
 		</select>
 		</span>
 		&nbsp;&nbsp;
 		<span class="select-box inline">
-			<select name="telchannelUseState" class="select" onchange="getChannelList()">
+			<select name="telchannelUseState" class="select" onchange="submitForm()">
 			<option value="">通道使用状态</option>
 			<c:forEach items="${resultMap.channelUseStateEnums }" var="cstate" varStatus="vs1">
-				<option value="${cstate.value }" <c:if test="${cstate.value == resultMap.searchParam.telchannelUseState }"> selected</c:if>>${cstate.desc }</option>
+				<option value="${cstate.value }" <c:if test="${cstate.value == resultMap.params.telchannelUseState }"> selected</c:if>>${cstate.desc }</option>
 			</c:forEach>
 		</select>
 		</span>
@@ -150,7 +150,7 @@
 					<th width="80">话费价值</th>
 					<th width="120">通道折扣</th>
 					<th width="60">票务</th>
-					<th width="60">运营商类型</th>
+					<th width="60">运营商名称</th>
 					<th width="100">业务类型</th>
 					<th width="120">支持省份</th>
 					<th width="120">支持城市</th>
@@ -169,7 +169,7 @@
 					<tr class="text-c">
 						<td>${telchannel.id }</td> 
 						<td>${telchannel.epName }</td>
-						<td>${telchannel.chargeValue }</td>
+						<td>${telchannel.chargeValue }元</td>
 						 <td class="c-blue">${telchannel.telchannelDiscount }</td>
 						 <td>
 						 	<c:choose>
@@ -262,6 +262,7 @@
 							</c:when>
 							</c:choose>
 						<a style="text-decoration:none" class="ml-5" onClick="produce_del('/flowsys/telchannelCode/telchannelcode_delete.do',${telchannel.id })" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="javascript:;" onClick="getTelrateList(this,'/flowsys/telRate/bind_telRate_list.do',${telchannel.id },${telchannel.serviceType })" data-title="折扣信息"><i class="Hui-iconfont">&#xe725;</i></a>
 						</td>
 					</tr>
 				</c:forEach>
@@ -281,6 +282,8 @@
 <!-- jQuery -->
 <script type="text/javascript" src="/view/lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript">
+
+
 $(document).ready(function(){
 	var provinceid = $("#provinceid").val();
 	//alert($("#provinceid").val());
@@ -304,6 +307,21 @@ $(document).ready(function(){
 	    }
 	});
 })
+/** 获得费率列表**/
+function getTelrateList(objt,url,telchannelId,serType){
+	/* var telchannelId = $(objt).parent().parent().children(":first").html();
+	var serviceType = $(objt).parent().parent().children(":eq(3)").html();
+	var operatorType = $(objt).parent().parent().children(":eq(4)").html();
+	var specialTag = $(objt).parent().parent().children(":eq(5)").html();
+	//alert(specialTag)
+	//alert(serviceType);
+	//alert(operatorType);
+	//alert(channelId);
+	$("#channelId").val(channelId); */
+	layer.msg(url);
+	$(objt).attr('data-href',url+'?telchannelId='+ telchannelId + '&serviceType='+ serType);
+		Hui_admin_tab(objt);
+}
 
 /**省份变化*/
 function province_change(v){

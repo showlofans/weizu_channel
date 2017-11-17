@@ -748,7 +748,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 	@Override
 	public Pagination<PurchaseVO> getPurchase(Map<String, Object> resultMap,PurchaseVO purchaseVO,
 			PageParam pageParam) {
-		Boolean isCharged = purchaseVO.getOrderState() != null && (purchaseVO.getOrderState() == OrderStateEnum.CHARGED.getValue() ||purchaseVO.getOrderState() == OrderStateEnum.UNCHARGE.getValue());
+		Boolean isStateCharged = purchaseVO.getOrderState() != null && (purchaseVO.getOrderState() == OrderStateEnum.CHARGED.getValue() ||purchaseVO.getOrderState() == OrderStateEnum.UNCHARGE.getValue());
+		Boolean isResultCharged = purchaseVO.getOrderResult() != null && (purchaseVO.getOrderResult() == OrderStateEnum.CHARGED.getValue() ||purchaseVO.getOrderResult() == OrderStateEnum.UNCHARGE.getValue());
+		Boolean isCharged = isStateCharged || isResultCharged; 
 		Map<String, Object> paramsMap = getMapByPojo(purchaseVO,isCharged);
 		long totalRecord = purchaseDAO.countPurchase(paramsMap);//今天的订单数量
 		//设置总记录数和页面参数和查询参数
@@ -862,7 +864,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 
 	@Override
 	public Map<String,Object> getPurchaseMap(PurchaseVO purchaseVO) {
-		Boolean isCharged = purchaseVO.getOrderState() != null && (purchaseVO.getOrderState() == OrderStateEnum.CHARGED.getValue() ||purchaseVO.getOrderState() == OrderStateEnum.UNCHARGE.getValue());
+		Boolean isStateCharged = purchaseVO.getOrderState() != null && (purchaseVO.getOrderState() == OrderStateEnum.CHARGED.getValue() ||purchaseVO.getOrderState() == OrderStateEnum.UNCHARGE.getValue());
+		Boolean isResultCharged = purchaseVO.getOrderResult() != null && (purchaseVO.getOrderResult() == OrderStateEnum.CHARGED.getValue() ||purchaseVO.getOrderResult() == OrderStateEnum.UNCHARGE.getValue());
+		Boolean isCharged = isStateCharged || isResultCharged; 
+		
 		Map<String, Object> paramsMap = getMapByPojo(purchaseVO,isCharged);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		long totalRecord = purchaseDAO.countPurchase(paramsMap);//今天的订单数量
@@ -1294,7 +1299,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				hSheet.setColumnWidth(5, 35 * 100);
 				hSheet.setColumnWidth(6, 35 * 80);
 				hSheet.setColumnWidth(7, 35 * 200);
-				if(isDataUser){{
+				if(isDataUser){
 					hSheet.setColumnWidth(8, 35 * 200);
 				}
 				HSSFRow hRow = hSheet.createRow(0);
@@ -1382,9 +1387,6 @@ public class PurchaseAOImpl implements PurchaseAO {
 //					hRow.createCell(8).setCellValue("欠票票额：" + NumberTool.formatNumber(NumberUtils.sub(a.getPreBalance(), a.getBalance()), "###,###,##0.00"));
 //				}
 			
-			}
-
 			return hbook;
-		}
-
+			}
 }

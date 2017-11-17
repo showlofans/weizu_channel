@@ -484,7 +484,6 @@ public class AccountController {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月24日 下午3:08:52
 	 */
-	@ResponseBody
 	@RequestMapping(value=AccountURL.VERIFY_CREDENTIALS)
 	public void verifyCredentials(CompanyCredentialsPo ccpo, HttpServletResponse response, HttpServletRequest request){
 //		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");

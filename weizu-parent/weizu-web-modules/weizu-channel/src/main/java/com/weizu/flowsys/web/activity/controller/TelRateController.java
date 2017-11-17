@@ -15,6 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
+import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
@@ -53,13 +55,12 @@ public class TelRateController {
 		}
 		//初始化resultMap集合
 		telrateBindAccountAO.getBindList(resultMap, pageParam, tbaVO);
-		resultMap.put("otypeEnums", OperatorTypeEnum.toList());
-		resultMap.put("stypeEnums", ServiceTypeEnum.toList());
+		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
+		resultMap.put("huaServiceTypeEnums", HuaServiceTypeEnum.toList());
 		resultMap.put("bindStateEnums", BindStateEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
-		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 		
-		return new ModelAndView("/activity/telrate_bind_list","resultMap",resultMap);
+		return new ModelAndView("/activity/telRate_bind_list","resultMap",resultMap);
 	}
 
 }
