@@ -11,9 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.util.StringUtil2;
+import com.weizu.flowsys.web.activity.dao.ITelRateDao;
+import com.weizu.flowsys.web.activity.pojo.TelRatePo;
 import com.weizu.flowsys.web.channel.dao.ITelChannelDao;
 import com.weizu.flowsys.web.channel.pojo.TelChannelParams;
 import com.weizu.flowsys.web.channel.pojo.TelChannelPo;
@@ -32,6 +36,8 @@ public class TelChannelAOImpl implements TelChannelAO {
 
 	@Resource
 	private ITelChannelDao telChannelDao;
+	@Resource
+	private ITelRateDao telRateDao;
 	
 	@Transactional
 	@Override
@@ -123,6 +129,51 @@ public class TelChannelAOImpl implements TelChannelAO {
 			params.put("limitDescription", telParams.getLimitDescription());
 		}
 		return params;
+	}
+
+	@Override
+	public TelChannelParams selectByIdType(Long telChannelId,
+			Integer serviceType) {
+		Map<String,Object> telCParams = new HashMap<String, Object>();
+		if(telChannelId != null){
+			telCParams.put("id", telChannelId);
+		}
+		if(serviceType != null){
+			telCParams.put("serviceType", serviceType);
+		}
+		TelChannelParams telChannelParams = telChannelDao.selectByIdType(telCParams);
+		return telChannelParams;
+	}
+
+	@Transactional
+	@Override
+	public String editTelChannel(TelChannelPo telChannelPo, Integer ifUpdateRate) {
+		String resStr = "error";
+		Long telChannelId = telChannelPo.getId();
+		//更新话费通道信息
+		int res = telChannelDao.updateLocal(telChannelPo);
+		
+		//
+		List<TelRatePo> telRateList = telRateDao.list(new WherePrams("telchannel_id", "=", telChannelId));
+		if(telRateList != null && telRateList.size() > 0){
+			//批量更新折扣
+			TelChannelPo getTelChannel = telChannelDao.get(telChannelId);
+			//与数据库通道折扣不一样
+			boolean isUpdate = !getTelChannel.getTelchannelDiscount().equals(telChannelPo.getTelchannelDiscount()) && ifUpdateRate != null && ifUpdateRate == 1 && res > 0;
+			if(isUpdate){
+				for (TelRatePo telRatePo : telRateList) {
+					Double oldCd = getTelChannel.getTelchannelDiscount();
+					Double editDiscount = NumberTool.sub(telChannelPo.getTelchannelDiscount(), oldCd);//差数
+					telRatePo.setActiveDiscount(NumberTool.add(telRatePo.getActiveDiscount(), editDiscount));
+					res += telRateDao.updateLocal(telRatePo);
+				}
+				res -= 1;
+			}
+		}
+		if(res > 0){
+			resStr = "success";
+		}
+		return resStr;
 	}
 
 }

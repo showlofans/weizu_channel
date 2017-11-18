@@ -461,7 +461,10 @@ public class DaoImpl<T extends Po, PK extends Serializable> implements Dao<T, PK
 				}
 			}
 		}
-		sql += " where id='" + id +"';";
+		if(sql.lastIndexOf(",") >= 0){
+			sql = sql.substring(0,sql.lastIndexOf(","));
+		} 
+		sql += " where id=" + id +";";
 		
 		return sqlSessionTemplateASS.update("updateLocal", sql);
 	}
@@ -501,6 +504,9 @@ public class DaoImpl<T extends Po, PK extends Serializable> implements Dao<T, PK
 //				}
 			}
 		}
+		if(sql.lastIndexOf(",") >= 0){
+			sql = sql.substring(0,sql.lastIndexOf(","));
+		} 
 		sql += " where id=" + id +";";
 		
 		return sqlSessionTemplateASS.update("update", sql);
@@ -569,12 +575,16 @@ public class DaoImpl<T extends Po, PK extends Serializable> implements Dao<T, PK
 				}
 			}
 		}
+		if(sql.lastIndexOf(",") >= 0){
+			sql = sql.substring(0,sql.lastIndexOf(","));
+		} 
 		sql += where.getWherePrams() + ";";
 		
 		return sqlSessionTemplateASS.update("updateByPram", sql);
 		
 	}
 
+	@Transactional
 	@Override
 	public int del(PK id) {
 		// TODO Auto-generated method stub

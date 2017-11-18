@@ -34,6 +34,7 @@ import com.weizu.flowsys.web.channel.pojo.CnelBindPgPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.http.ao.ValiUser;
+import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
 
 @Service(value="channelChannelAO")
@@ -209,6 +210,10 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 	private void initChannelDiscountStr(List<ChannelChannelPo> records) {//, String pgSize, int toatalRecord
 //		boolean isPgSize = StringHelper.isNotEmpty(pgSize);
 		for (ChannelChannelPo channelChannelPo : records) {
+			if(channelChannelPo.getLastAccess() != null){
+				channelChannelPo.setLastAccessStr(DateUtil.formatAll(channelChannelPo.getLastAccess()));
+			}
+			
 			Map<String,Object> params = new HashMap<String, Object>();
 //			if(isPgSize){
 //				params.put("pgSize", Integer.parseInt(pgSize));
@@ -327,6 +332,9 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 			}
 			if(channelPo.getChannelType() != null){
 				paramsMap.put("channelType", channelPo.getChannelType());
+			}
+			if(channelPo.getOperatorType() != null){
+				paramsMap.put("operatorType", channelPo.getOperatorType());
 			}
 			if(StringHelper.isNotEmpty(channelPo.getPgValidity())){
 				paramsMap.put("pgValidity", channelPo.getPgValidity());

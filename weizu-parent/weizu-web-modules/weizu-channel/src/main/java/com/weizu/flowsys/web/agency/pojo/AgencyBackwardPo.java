@@ -27,7 +27,7 @@ public class AgencyBackwardPo extends Po{
 
     private String agencyTel;				//代理商电话
 
-    private String otherContact;			//其他联系方式，qq
+    private String otherContact;			//qq
 
     private String userEmail;				//代理商邮箱
 
@@ -50,6 +50,9 @@ public class AgencyBackwardPo extends Po{
 	private String verifyCode;				//注册邀请码
 	
 	private String userApiKey;				//用户对接系统的apikey
+	
+	private String agencyMark;				//用户备注
+	
 	@TempField
 	private int[] agencyIds;				//批量操作代理商
 	
@@ -78,7 +81,13 @@ public class AgencyBackwardPo extends Po{
 		this.userPass = userPass;
 	}
 
+	public String getAgencyMark() {
+		return agencyMark;
+	}
 
+	public void setAgencyMark(String agencyMark) {
+		this.agencyMark = agencyMark;
+	}
 
 	public String getCallBackIp() {
 		return callBackIp;

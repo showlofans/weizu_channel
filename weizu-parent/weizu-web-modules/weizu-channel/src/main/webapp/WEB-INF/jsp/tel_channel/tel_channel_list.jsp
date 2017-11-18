@@ -235,34 +235,32 @@
 						<td class="f-14 td-manage">
 							<c:choose>
 								<c:when test="${telchannel.telchannelState == 1 }"><!-- 暂停 -->
-									<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeCState(this,'1')" href="javascript:;" title="运行">
-										<input type="hidden" value="${telchannel.id }" >
+									<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeCState(${telchannel.id},'0','state')" href="javascript:;" title="运行">
 										<i class="Hui-iconfont">&#xe6e6;</i>
 									</a> 
 								</c:when>
 								<c:when test="${telchannel.telchannelState == 0 }"><!-- 运行 -->
-									<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeCState(this,'0')" href="javascript:;" title="暂停">
-										<input type="hidden" value="${telchannel.id }" >
+									<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeCState(${telchannel.id},'1','state')" href="javascript:;" title="暂停">
 										<i class="Hui-iconfont">&#xe6e5;</i>
 									</a> 
 								</c:when>
 							</c:choose>
 							<c:choose>
 							<c:when test="${telchannel.telchannelUseState == 1 }"><!-- 已暂停 -->
-								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeUseState(this,'1')" href="javascript:;" title="启用">
-									<input type="hidden" value="${telchannel.id }" >
+								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeCState(${telchannel.id},'0','useState')" href="javascript:;" title="启用">
 									<i class="Hui-iconfont">&#xe615;</i>
 								</a> 
 							</c:when>
 							<c:when test="${telchannel.telchannelUseState == 0 }"><!-- 已启用 -->
-								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeUseState(this,'0')" href="javascript:;" title="停用">
-									<input type="hidden" value="${telchannel.id }" >
+								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeCState(${telchannel.id},'1','useState')" href="javascript:;" title="停用">
 									<i class="Hui-iconfont">&#xe631;</i>
 								</a> 
 							</c:when>
 							</c:choose>
 						<a style="text-decoration:none" class="ml-5" onClick="produce_del('/flowsys/telchannelCode/telchannelcode_delete.do',${telchannel.id })" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
 						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="javascript:;" onClick="getTelrateList(this,'/flowsys/telRate/bind_telRate_list.do',${telchannel.id },${telchannel.serviceType })" data-title="折扣信息"><i class="Hui-iconfont">&#xe725;</i></a>
+						<a style="text-decoration:none" data-toggle="tooltip" data-href='/flowsys/tel_channel/telchannel_edit_page.do?id=${telchannel.id}&serviceType=${telchannel.serviceType }' data-placement="top" class="ml-5" onclick="Hui_admin_tab(this)" data-title="编辑通道"><i class="Hui-iconfont">&#xe6df;</i></a>
+						<%-- editChannel(this,'/flowsys/tel_channel/telchannel_edit_page.do?channelId=${telchannel.id}&serviceType='${telchannel.serviceType }) --%>
 						</td>
 					</tr>
 				</c:forEach>
@@ -282,8 +280,6 @@
 <!-- jQuery -->
 <script type="text/javascript" src="/view/lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript">
-
-
 $(document).ready(function(){
 	var provinceid = $("#provinceid").val();
 	//alert($("#provinceid").val());
@@ -307,6 +303,67 @@ $(document).ready(function(){
 	    }
 	});
 })
+
+/**编辑通道页面*/
+function editChannel(obj,url,title){
+	$(obj).attr('data-href',url);
+	Hui_admin_tab(obj);
+	/* layer.open({
+        type: 2,
+        title: title,
+        //area: ['530px', '510px'],
+        maxmin: false,
+        closeBtn: 1,
+        content: url,
+         end: function () {
+            location.reload();
+        }
+    }); */
+	//$(objt).attr('data-href',url); //+$('form').serialize()
+	//Hui_admin_tab(objt);
+}
+
+/*通道状态-修改*/
+function changeCState(telchannelId,state, tag){
+	var url = '/flowsys/tel_channel/update_telchannel_state.do';
+	var keyWord = '';
+	var resultMsg = '失败';
+	if(tag == 'state'){
+		if(state == '0'){
+			keyWord = '运行';
+		}else if(state == '0'){
+			keyWord = '暂停';
+		}
+	}else{
+		if(state == '1\0'){
+			keyWord = '启用';
+		}else{
+			keyWord = '停用';
+		}
+	}
+	var msg = '确定要' + keyWord + '该通道吗？';
+	layer.confirm(msg,function(index){
+		$.ajax({
+			type: 'POST',
+			url: '/flowsys/tel_channel/update_telchannel_state.do',
+			dataType: 'json',
+			data: {id:telchannelId, telchannelState:state, telchannelUseState:state, tag:tag },
+			async: false,
+			success: function(data){
+				tag = data;
+			},
+			error:function(data) {
+				console.log(data.msg);
+			},
+		});		
+		if(tag == "success"){
+			layer.msg(keyWord + '成功', {icon:5,time:1000});
+		}
+		layer.close(index);
+		location.reload();
+	});
+}
+
 /** 获得费率列表**/
 function getTelrateList(objt,url,telchannelId,serType){
 	/* var telchannelId = $(objt).parent().parent().children(":first").html();

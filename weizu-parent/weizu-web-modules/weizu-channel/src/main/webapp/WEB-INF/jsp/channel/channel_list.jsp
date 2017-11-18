@@ -51,12 +51,11 @@
 		</div>
 		
 		<div class="row cl" style="margin-top: 30dp">
-			
 			<span class="select-box inline">
-				<select name="channelState" class="select" onchange="getChannelList()">
-				<option value="">通道状态</option>
-				<c:forEach items="${resultMap.channelStateEnums }" var="cstate" varStatus="vs1">
-					<option value="${cstate.value }" <c:if test="${cstate.value == resultMap.searchParam.channelState }"> selected</c:if>>${cstate.desc }</option>
+				<select name="operatorType" class="select" onchange="getChannelList()">
+				<option value="">运营商</option>
+				<c:forEach items="${resultMap.operatorTypeEnums }" var="operatorTypeEnum" varStatus="vs1">
+					<option value="${operatorTypeEnum.value }" <c:if test="${operatorTypeEnum.value == resultMap.searchParam.operatorType }"> selected</c:if>>${operatorTypeEnum.desc }</option>
 				</c:forEach>
 			</select>
 			</span>
@@ -83,6 +82,14 @@
 					<option value="${pgValidityEnum.value }" <c:if test="${pgValidityEnum.value == resultMap.searchParam.pgValidity }"> selected</c:if>>${pgValidityEnum.desc }</option>
 				</c:forEach>
 			</select>
+			<span class="select-box inline">
+				<select name="channelState" class="select" onchange="getChannelList()">
+				<option value="">通道状态</option>
+				<c:forEach items="${resultMap.channelStateEnums }" var="cstate" varStatus="vs1">
+					<option value="${cstate.value }" <c:if test="${cstate.value == resultMap.searchParam.channelState }"> selected</c:if>>${cstate.desc }</option>
+				</c:forEach>
+			</select>
+			</span>
 			</span>
 			
 			<!-- <input type="hidden" value="" name="channelId" id="channelId"> -->
@@ -129,7 +136,11 @@
 					<tr class="text-c">
 						<td>${channel.id }</td>
 						<td>${channel.epName }</td>
-						<td>${channel.channelName }</td><!-- <span data-toggle="tooltip" data-placement="top" title="${channel.pgSize }"></span> -->
+						<td>
+						<span data-toggle="tooltip" data-placement="top" title="${channel.lastAccessStr }">
+							${channel.channelName }
+						</span>
+						</td><!-- <span data-toggle="tooltip" data-placement="top" title="${channel.pgSize }"></span> -->
 						<%-- <td><c:forEach items="${resultMap.serviceTypeEnums }" var="serTypeEnum" varStatus="vs1">
 								<c:if test="${channel.serviceType == serTypeEnum.value }">
 									<span>${serTypeEnum.desc }</span>

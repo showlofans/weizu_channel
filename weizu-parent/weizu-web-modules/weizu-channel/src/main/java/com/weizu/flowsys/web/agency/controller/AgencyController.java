@@ -463,7 +463,7 @@ public class AgencyController {
 	 */
 	@RequestMapping(value = AgencyURL.CHILD_AGENCY_LIST)
 	public ModelAndView getAgencyList(
-			@RequestParam(value = "pageNo", required = false) String pageNo,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo,
 			AgencyBackwardVO searchAgencyVO, HttpServletRequest request) {
 		
 		AgencyBackwardVO agencyBackwardVo = (AgencyBackwardVO) request.getSession()
@@ -472,8 +472,8 @@ public class AgencyController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
 		PageParam pageParam = null;
-		if (StringHelper.isNotEmpty(pageNo)) {
-			pageParam = new PageParam(Integer.parseInt(pageNo), 10);
+		if (pageNo != null) {
+			pageParam = new PageParam(pageNo, 10);
 		} else {
 			pageParam = new PageParam(1, 10);
 		}

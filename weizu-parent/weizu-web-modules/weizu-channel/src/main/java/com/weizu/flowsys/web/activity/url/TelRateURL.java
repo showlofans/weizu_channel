@@ -26,6 +26,7 @@ public class TelRateURL extends BaseURL {
 	public static final String TELRATE_EDIT_PAGE = "/telRate_edit_page" + DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 费率添加
+	 * <br> /flowsys/telRate/telRate_add
 	 */
 	public static final String TELRATE_ADD = "/telRate_add" + DYNAMIC_WEB_SUFFIX;
 	/**
@@ -95,7 +96,7 @@ public class TelRateURL extends BaseURL {
 	 * 绑定折扣添加页面
 	 * <br>/flowsys/telRate/bind_telRate_add_page.do
 	 */
-	public static final String BIND_TELRATE_ADD_PAGE = "/bind_telRate_add_page" + DYNAMIC_WEB_SUFFIX;
+	public static final String BIND_TELRATE_ADD_PAGE = "/telRate_add_page" + DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 绑定折扣添加
 	 * <br>/flowsys/telRate/bind_telRate_add.do
@@ -152,8 +153,9 @@ public class TelRateURL extends BaseURL {
 	public static final String DEL_AGENCY_ACTIVE_TELRATE = "/del_agency_active_telRate" + DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 删除折扣
+	 * <br> /flowsys/telRate/del_telRate.do
 	 */
-	public static final String DEL_TELRATE = "del_telRate" + DYNAMIC_WEB_SUFFIX;
+	public static final String DEL_TELRATE = "/del_telRate" + DYNAMIC_WEB_SUFFIX;
 	
 	
 }

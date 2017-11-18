@@ -24,4 +24,5 @@ public interface ITelRateDao extends Dao<TelRatePo, Long> {
 	 * @createTime:2017年11月16日 下午4:15:57
 	 */
 	List<TelRatePo> listByTelRatePo(TelRatePo telRatePo);
+	
 }

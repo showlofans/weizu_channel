@@ -11,10 +11,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
 <meta http-equiv="Cache-Control" content="no-siteapp" />
-<!--[if lt IE 9]>
-<script type="text/javascript" src="lib/html5shiv.js"></script>
-<script type="text/javascript" src="lib/respond.min.js"></script>
-<![endif]-->
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui/css/H-ui.min.css" />
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/H-ui.admin.css" />
 <!-- DataTables CSS -->
@@ -23,11 +19,6 @@
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/style.css" />
 <link rel="stylesheet" type="text/css" href="/view/mine/paging.css" />
 <link rel="stylesheet" href="/view/mine/bootstrap-datetimepicker.css">
-
-<!--[if IE 6]>
-<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
-<script>DD_belatedPNG.fix('*');</script>
-<![endif]-->
 <title>充值失败列表</title>
 </head>
 <body>
@@ -111,7 +102,18 @@
 			<tbody>
 				<c:forEach items="${resultMap.pagination.records }" var="purchase" varStatus="vs">
 					<tr class="text-c">
-						<td>${purchase.agencyName }</td>
+						<td>
+						<c:choose>
+							<c:when test="${purchase.agencyId == loginContext.id}">
+								${purchase.agencyName }
+							</c:when>
+							<c:otherwise>
+								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="editAgency(${purchase.agencyId})" href="javascript:;" title="查看代理商">
+									${purchase.agencyName }
+								</a>
+							</c:otherwise>
+						</c:choose>
+						</td>
 						<td>${purchase.orderId }</td>
 						<td>${purchase.chargeTel }</td>
 						 <td>${purchase.pgSize }</td>
@@ -183,6 +185,23 @@
 <script src="/view/lib/bootstrap-datetimepicker.min.js"></script>
 <script src="/view/lib/bootstrap-datetimepicker.zh-CN.js"></script> -->
 <script type="text/javascript">
+/*代理商-编辑*/
+function editAgency(id){
+	//var $agencyTr = $(obj).parent().parent();//tr标签
+	//var $id = $agencyTr.children(0);
+	layer.open({
+        type: 2,
+        title: '查看APIKey',
+        area: ['800px', '500px'],
+        maxmin: false,
+        closeBtn: 1,
+        content: '/flowsys/agency/child_agency_edit_page.do?id=' + id,
+        end: function () {
+            location.reload();
+        }
+    });
+}
+
 /**批量推送订单*/
 function batchPush(){
 	$.ajax({

@@ -116,7 +116,17 @@
 			<tbody>
 				<c:forEach items="${resultMap.pagination.records }" var="purchase" varStatus="vs">
 					<tr class="text-c">
-						<td>${purchase.agencyName }
+						<td>
+							<c:choose>
+								<c:when test="${purchase.agencyId == loginContext.id}">
+									${purchase.agencyName }
+								</c:when>
+								<c:otherwise>
+									<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="editAgency(${purchase.agencyId})" href="javascript:;" title="查看代理商">
+										${purchase.agencyName }
+									</a>
+								</c:otherwise>
+							</c:choose>
 						</td>
 						<td>${purchase.orderId }
 							<%-- <c:choose>
@@ -233,6 +243,23 @@ function formSub(){
 	$("input[name='pageNoLong']").val('');
 	$('form').submit();
 }
+/*代理商-编辑*/
+function editAgency(id){
+	//var $agencyTr = $(obj).parent().parent();//tr标签
+	//var $id = $agencyTr.children(0);
+	layer.open({
+        type: 2,
+        title: '查看APIKey',
+        area: ['800px', '500px'],
+        maxmin: false,
+        closeBtn: 1,
+        content: '/flowsys/agency/child_agency_edit_page.do?id=' + id,
+        end: function () {
+            location.reload();
+        }
+    });
+}
+
 $(document).ready(function() {
 	$('.select').change(function(){
 		//$('form').submit();

@@ -24,4 +24,24 @@ public interface TelChannelAO {
 	 * @createTime:2017年11月14日 下午5:29:45
 	 */
 	public Pagination<TelChannelParams> getTelChannel(TelChannelParams telParams, PageParam pageParams);
+	
+	/**
+	 * @description: 通过id和ServiceType获得通道的(含地区)详细信息
+	 * @param telChannelId
+	 * @param serviceType
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月18日 下午2:36:03
+	 */
+	public TelChannelParams selectByIdType(Long telChannelId, Integer serviceType);
+	
+	/**
+	 * @description: 编辑话费通道
+	 * @param telChannelPo
+	 * @param ifUpdateRate
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月18日 下午4:32:49
+	 */
+	public String editTelChannel(TelChannelPo telChannelPo, Integer ifUpdateRate);
 }

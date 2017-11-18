@@ -2,6 +2,7 @@ package com.weizu.flowsys.web.channel.pojo;
 
 import java.util.List;
 
+import com.weizu.flowsys.core.annotation.po.TableName;
 import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
 
@@ -13,6 +14,7 @@ import com.weizu.flowsys.core.beans.Po;
  * @createTime:2017年11月11日 上午10:27:49
  * @version 1.0
  */
+@TableName(name="telchannel")
 public class TelChannelPo extends Po {
 	
 	private Long id;							//id
@@ -25,11 +27,11 @@ public class TelChannelPo extends Po {
 	
 	private Long lastAccess;					//更新时间
 	
-	private Integer channelTotalUse = 0;			//通道使用量
+	private Integer telchannelTotalUse;			//通道使用量
 
-    private Double channelTotalAmount = 0.00D;			//交易总金额
+    private Double telchannelTotalAmount;			//交易总金额
 
-    private Double channelTotalProfit = 0.0D;			//总利润
+    private Double telchannelTotalProfit;			//总利润
 	
     private Integer telchannelState;				//通道状态
 
@@ -125,31 +127,24 @@ public class TelChannelPo extends Po {
 	public void setLastAccess(Long lastAccess) {
 		this.lastAccess = lastAccess;
 	}
-
-	public Integer getChannelTotalUse() {
-		return channelTotalUse;
+	public Integer getTelchannelTotalUse() {
+		return telchannelTotalUse;
 	}
-
-	public void setChannelTotalUse(Integer channelTotalUse) {
-		this.channelTotalUse = channelTotalUse;
+	public void setTelchannelTotalUse(Integer telchannelTotalUse) {
+		this.telchannelTotalUse = telchannelTotalUse;
 	}
-
-	public Double getChannelTotalAmount() {
-		return channelTotalAmount;
+	public Double getTelchannelTotalAmount() {
+		return telchannelTotalAmount;
 	}
-
-	public void setChannelTotalAmount(Double channelTotalAmount) {
-		this.channelTotalAmount = channelTotalAmount;
+	public void setTelchannelTotalAmount(Double telchannelTotalAmount) {
+		this.telchannelTotalAmount = telchannelTotalAmount;
 	}
-
-	public Double getChannelTotalProfit() {
-		return channelTotalProfit;
+	public Double getTelchannelTotalProfit() {
+		return telchannelTotalProfit;
 	}
-
-	public void setChannelTotalProfit(Double channelTotalProfit) {
-		this.channelTotalProfit = channelTotalProfit;
+	public void setTelchannelTotalProfit(Double telchannelTotalProfit) {
+		this.telchannelTotalProfit = telchannelTotalProfit;
 	}
-
 	public Integer getTelchannelState() {
 		return telchannelState;
 	}

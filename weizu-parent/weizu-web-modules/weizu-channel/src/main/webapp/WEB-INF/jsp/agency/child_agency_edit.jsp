@@ -67,9 +67,27 @@
 			<label class="form-label col-xs-4 col-sm-3">用户QQ：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<%-- <input type="text" readonly="readonly" style="width:200px" class="input-text"  value="${resultMap.agencyPo.agencyIp }" placeholder="" id="agencyIp" name="agencyIp"> --%>
-				${resultMap.agencyPo.otherContact }
+				<span class="isEmpty">${resultMap.agencyPo.otherContact }</span>
 			</div>
 		</div>
+		<!-- 回调地址编辑 -->
+		<c:if test="${resultMap.agencyPo.agencyTag == 1 && empty resultMap.agencyPo.callBackIp}">
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3">用户回调地址：</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" style="width:200px" class="input-text" placeholder="" id="callBackIp" name="callBackIp"> <!-- callBackIp -->
+				</div>
+			</div>
+		</c:if>
+		<!-- 用户其他备注信息  -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">用户备注：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" style="width:200px" class="input-text" value="${resultMap.agencyPo.agencyMark }" placeholder="" id="agencyMark" name="agencyMark"> <!-- callBackIp -->
+			</div>
+		</div>
+		
+		
 		<%-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">用户信用：</label>
 			<div class="formControls col-xs-8 col-sm-9">
@@ -98,15 +116,19 @@
 				</select>
 				</span> </div>
 		</div> --%>
-		<!-- <div class="row cl">
+		 <div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
 				<button class="btn btn-primary radius" type="submit" onclick="save()"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+				<button class="btn btn-primary radius" onClick="cancelEdit()">取消</button>
 			</div>
-		</div> -->
+		</div> 
 	</form>
 </body>
+
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
 <script type="text/javascript" src="/view/lib/layer/2.4/layer.js"></script>  
+<script type="text/javascript" src="/view/static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="/view/static/h-ui.admin/js/H-ui.admin.js"></script> 
 <script type="text/javascript">
 /* function setInfo(){
 	$(".isEmpty").each(function(){

@@ -35,6 +35,7 @@
   <resultMap id="VOResultMap" type="com.weizu.flowsys.web.trade.pojo.PurchaseVO" >
     <id column="order_id" property="orderId" jdbcType="BIGINT" />
     <result column="account_id" property="accountId" jdbcType="INTEGER" />
+    <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
     <result column="order_id_api" property="orderIdApi" jdbcType="VARCHAR" />
     <result column="order_id_from" property="orderIdFrom" jdbcType="VARCHAR" />
     <result column="charge_tel" property="chargeTel" jdbcType="VARCHAR" />
@@ -86,9 +87,9 @@
     charge_tel_city,  channel_name 
   </sql>
   <sql id="VO_Column_List"><!-- 订单页面 -->
-  	ap.from_agency_name,ap.account_id, pur.order_id, pur.order_id_api, pur.order_id_from, pur.charge_tel, pg.pg_size, pg.operator_type,pg.service_type, pg.pg_price, pur.order_arrive_time,
+  	ap.from_agency_name,ap.account_id, ap.from_account_id, pur.order_id, pur.order_id_api, pur.order_id_from, pur.charge_tel, pg.pg_size, pg.operator_type,pg.service_type, pg.pg_price, pur.order_arrive_time,
   	pur.order_back_time, pur.charge_tel_detail, pur.charge_tel_city,ap.order_amount ap_order_amount,ap.order_price,pur.order_result,ap.order_state,ap.order_state_Detail,ap.order_platform_path,
-  	 pur.order_result_detail,pur.channel_name,act.bill_type actBill_type,ap.rate_discount_id,ap.ap_discount, pur.agency_call_ip
+  	 pur.order_result_detail,pur.channel_name,act.bill_type actBill_type, act2.agency_id, ap.rate_discount_id,ap.ap_discount, pur.agency_call_ip
   </sql>
   
   
@@ -182,6 +183,8 @@
   	on crt.id=ap.record_id
 	 INNER join <include refid="t_account"></include> act
 	on ap.account_id=act.id 
+	 INNER join <include refid="t_account"></include> act2
+	on ap.from_account_id=act2.id 
 	INNER join <include refid="t_pg"></include> pg
 	on pg.id = pur.pg_id
 	<!-- inner join <include refid="t_channel"></include> channel

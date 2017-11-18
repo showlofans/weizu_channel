@@ -110,6 +110,61 @@ public class TelChannelController {
 		return new ModelAndView("/tel_channel/tel_channel_list", "resultMap", resultMap);
 	}
 	
+	/**
+	 * @description: 话费通道编辑页面
+	 * @param id
+	 * @param serviceType
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月18日 下午5:01:05
+	 */
+	@RequestMapping(value=TelChannelURL.TELCHANNEL_EDIT_PAGE)
+	public ModelAndView editTelchannelPage(Long id, Integer serviceType){
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		TelChannelParams telChannelParams = telChannelAO.selectByIdType(id, serviceType);
+		resultMap.put("telChannelParams", telChannelParams);					//通道信息
+		resultMap.put("billTypeEnums", BillTypeEnum.toList());					//商务类型
+		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
+		resultMap.put("serviceTypeEnums", HuaServiceTypeEnum.toList());
+		resultMap.put("telchargeSpeedEnums", TelchargeSpeedEnum.toList());
+		return new ModelAndView("/tel_channel/telchannel_edit_page", "resultMap", resultMap);
+	}
 	
+	/**
+	 * @description: 话费通道编辑
+	 * @param telChannelPo
+	 * @param ifUpdateRate
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月18日 下午5:04:57
+	 */
+	@ResponseBody
+	@RequestMapping(value=TelChannelURL.TELCHANNEL_EDIT)
+	public String editTelchannel(TelChannelPo telChannelPo, Integer ifUpdateRate){
+//		String res = "";
+		String res = telChannelAO.editTelChannel(telChannelPo, ifUpdateRate);
+		return res;
+	}
 	
+	/**
+	 * @description: 更新通道状态
+	 * @param telChannelPo
+	 * @param tag(选择更新哪个状态)
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月18日 下午5:42:45
+	 */
+	@ResponseBody
+	@RequestMapping(value=TelChannelURL.UPDATE_TELCHANNEL_STATE)
+	public String udpateState(TelChannelPo telChannelPo, String tag){
+		
+		if("state".equals(tag)){
+			telChannelPo.setTelchannelUseState(null);
+		}else if("useState".equals(tag)){
+			telChannelPo.setTelchannelState(null);
+		}
+		
+		String res = telChannelAO.editTelChannel(telChannelPo, 0);
+		return res;
+	}
 }

@@ -46,6 +46,9 @@ public class ChannelChannelPo extends Po {
     private Integer channelType;						//通道类型（页面参数：1-普通通道包，2-红包通道，3-转移包，4-共享包）
     
     private Long lastAccess;
+    
+    private String lastAccessStr;						//最后更新时间
+    
     @TempField
     private String epName;								//平台名字
     
@@ -85,7 +88,15 @@ public class ChannelChannelPo extends Po {
     @TempField
     private String scopeCityCode;				//省份编码（查询参数）
     
-    public String getPgSize() {
+    public String getLastAccessStr() {
+		return lastAccessStr;
+	}
+
+	public void setLastAccessStr(String lastAccessStr) {
+		this.lastAccessStr = lastAccessStr;
+	}
+
+	public String getPgSize() {
 		return pgSize;
 	}
 

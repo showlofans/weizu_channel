@@ -75,7 +75,7 @@ public interface AgencyAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月22日 上午10:57:15
 	 */
-	Map<String,Object> prepareParam(AgencyBackwardPo agBackwardPo);
+//	Map<String,Object> prepareParam(AgencyBackwardPo agBackwardPo);
 	
 	/**
 	 * @description:编辑代理商信息准备参数

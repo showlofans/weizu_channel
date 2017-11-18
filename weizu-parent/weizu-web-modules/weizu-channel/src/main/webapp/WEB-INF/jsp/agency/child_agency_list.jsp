@@ -37,7 +37,8 @@
 	<div class="text-c">
 		<form action="/flowsys/agency/child_agency_list.do" method="post" id="formD" name="dataListForm">
 				<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
-				代理商名称:<input type="text"  value="${resultMap.params.userName }" name="userName" id="" placeholder=" 代理商名称" style="width:250px" class="input-text">
+				代理商名称:<input type="text"  value="${resultMap.params.userName }" name="userName" id="" placeholder=" 代理商名称" style="width:150px" class="input-text">
+				备注信息:<input type="text"  value="${resultMap.params.agencyMark }" name="agencyMark"" placeholder=" 备注信息" style="width:150px" class="input-text">
 				<!-- <input type="text" style="width:150px" class="input-text" name="start_datetime"  value="2017-05-26 00:00:00"  onClick="WdatePicker({startDate:'%y-%M-%d 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
 	                  	<em class="inputto">至</em>
 	            <input style="width:150px" type="text" class="input-text" name="end_datetime"   value="2017-05-26 23:59:59"  onClick="WdatePicker({startDate:'%y-%M-%d 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/> -->
@@ -74,7 +75,7 @@
 					<th width="80">真实姓名</th>
 					<th width="80">联系电话</th>
 					<th width="80">邮箱</th>
-					<th width="75">地址</th>
+					<!-- <th width="75">地址</th> -->
 					<th width="60">余额</th>
 					<!-- <th width="60">信用</th> -->
 					<th width="60">账户类型</th>
@@ -87,8 +88,8 @@
 			</thead>
 			<tbody>
 				<c:forEach items="${resultMap.pagination.records }" var="agency" varStatus="vs">
-					<tr class="text-c font-red">
-						<td style="display:none">${agency.id }</td>
+					<tr class="text-c">
+						<%-- <td style="display:none">${agency.id }</td> --%>
 						<td>
 						<c:choose>
 							<c:when test="${agency.billType == 0 }">
@@ -109,11 +110,15 @@
 							</c:otherwise>
 						</c:choose>
 						</td>
-						<td>${agency.userRealName }</td>
+						<td>
+							<span data-toggle="tooltip" data-placement="top" title="${agency.agencyMark }">
+								${agency.userRealName }
+							</span>
+						</td>
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
 						<td>${agency.agencyTel }</td>
 						 <td>${agency.userEmail }</td>
-						<td>${agency.agencyIp }</td>
+						<%-- <td>${agency.agencyIp }</td> --%>
 						<td style="display:none">${loginContext.id }</td>
 						<!-- title="/flowsys/account/charge_list.do?agencyId=${agency.id }" -->
 						<td>
@@ -134,7 +139,7 @@
 						<c:if test="${agency.billType == billTypeEnum.value }"> ${billTypeEnum.desc }</c:if>
 						</c:forEach></td>
 						<td class="td-manage">
-							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="editRate(this)" href="javascript:;" title="查看APIKey"><i class="Hui-iconfont">&#xe60c;</i></a>
+							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="editAgency(${agency.id })" href="javascript:;" title="查看APIKey"><i class="Hui-iconfont">&#xe60c;</i></a>
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="resetPass('${agency.id}')" href="javascript:;" title="重置密码"><i class="Hui-iconfont">&#xe63f;</i></a>
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" onClick="account_charge('账户充值',${agency.accountId })" href="javascript:;" title="账户充值"><i class="Hui-iconfont">&#xe726;</i></a> 
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" data-title="设置充值卡" data-href="/flowsys/bankAccount/attach_bank_page.do?accountId=${agency.accountId }" onClick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe725;</i></a> 
@@ -226,16 +231,16 @@ function account_charge(title,accountId){
 	/* layer.full(index); */
 }
 /*代理商-编辑*/
-function editRate(obj){
-	var $agencyTr = $(obj).parent().parent();//tr标签
-	var $id = $agencyTr.children(0);
+function editAgency(id){
+	//var $agencyTr = $(obj).parent().parent();//tr标签
+	//var $id = $agencyTr.children(0);
 	layer.open({
         type: 2,
         title: '查看APIKey',
         area: ['800px', '500px'],
         maxmin: false,
         closeBtn: 1,
-        content: '/flowsys/agency/child_agency_edit_page.do?id=' + $id.html(),
+        content: '/flowsys/agency/child_agency_edit_page.do?id=' + id,
         end: function () {
             location.reload();
         }

@@ -44,6 +44,7 @@
 					${billEnum.desc } 
 				</c:if>
 			</c:forEach>
+			<input type="hidden" id="id" name="id" value="${resultMap.telChannelParams.id }">
 			<c:forEach items="${resultMap.huaServiceTypeEnums }" var="huaStype" varStatus="vs1">
 				<c:if test="${resultMap.telChannelParams.serviceType == huaStype.value }">
 					<input type="hidden" id="serviceType" name="serviceType" value="${huaStype.value }">
@@ -52,7 +53,6 @@
 			</c:forEach>
 			<c:forEach items="${resultMap.operatorNameEnums }" var="operatorNameEnum" varStatus="vs2">
 				<c:if test="${resultMap.telChannelParams.operatorName == operatorNameEnum.value }">
-					
 							${operatorNameEnum.desc } 
 						<input type="hidden" id="operatorName" name="operatorName" value="${operatorNameEnum.value }">
 				</c:if>
@@ -92,8 +92,8 @@
 				移动省份:<input type="text" value="${resultMap.params.ratePrice0 }" name="ratePrice0" id="" placeholder=" 移动省份" style="width:150px" class="input-text">
 				联通省份:<input type="text" value="${resultMap.params.ratePrice1 }" name="ratePrice1" id="" placeholder=" 联通省份" style="width:150px" class="input-text">
 				电信省份:<input type="text" value="${resultMap.params.ratePrice2 }" name="ratePrice2" id="" placeholder=" 电信省份" style="width:150px" class="input-text"> --%>
-				<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="addRate('/flowsys/rate/bind_rate_add_page.do','折扣添加')" href="javascript:;" > 添加折扣</a>
-				<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="editRate('/flowsys/rate/bind_rate_add_page.do','折扣编辑')" href="javascript:;" > 修改折扣</a>
+				<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="addRate('/flowsys/telRate/telRate_add_page.do','话费折扣添加')" href="javascript:;" > 添加折扣</a>
+				<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="editRate('/flowsys/telRate/telRate_add_page.do','折扣编辑')" href="javascript:;" > 修改折扣</a>
 				<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="delRateDiscount()" href="javascript:;" > 删除折扣</a> 
 				<br><br>
 				代理商名称： <input type="text" style="width:150px;" class="input-text ac_input" value="${resultMap.tbaVO.agencyName }" autocomplete="off" id="agencyName" name="agencyName">
@@ -171,15 +171,14 @@
 }); */
 /**删除折扣*/
 function delRateDiscount(){
-	var activeDiscount = $("#rateDiscountId option:selected").text();
+	var activeDiscount = $("#telRateId option:selected").text();
 	layer.confirm('确认删除<br>'+ activeDiscount +'折扣<br>并解除所有的绑定吗？',function(index){
-		var rateDiscountId = $("#rateDiscountId").val();
+		var id = $("#telRateId").val();
 		$.ajax({
 			type: 'POST',
 			async: false,
-			url: '/flowsys/rate/del_rate.do',
-			//dataType: 'json',
-			data: {rateDiscountId:rateDiscountId},
+			url: '/flowsys/telRate/del_telRate.do',
+			data: {id:id},
 			success: function(data){
 				//tag = data;
 				//alert(data);
@@ -189,17 +188,15 @@ function delRateDiscount(){
 					layer.msg('折扣删除成功', {icon:5,time:1000});
 					//alert(tag);
 					//location.reload();
-					var selectedVar = $("#rateDiscountId option:selected").next().val();
+					//var selectedVar = $("#activeDiscount option:selected").next().val();
 					//alert(selectedVar);
-					$("#rateDiscountId").val(selectedVar);
+					//$("#telRateId").val(selectedVar);
 					$('#pageNoLong').val("1");
 					$('#formD').submit();
+				}else{
+					layer.msg('折扣删除失败', {icon:2,time:1000});
+					
 				}
-				/* else if(data == "exist"){
-					layer.msg('该折扣已存在，所以更新绑定失败!',{icon:1,time:1000});
-				} else{
-					layer.msg('或许没有绑定代理商，所以更新绑定失败!',{icon:1,time:1000});
-				} */
 			},
 			error:function(data) {
 				console.log(data.msg);
@@ -305,8 +302,10 @@ function changeBState(url,activeId,agencyName,bindS){
 
 //onchange获得选中的option,设置折扣列表
 function setDiscount(){
+	$('#pageNoLong').val("1");
+    $('#formD').submit();
 	//var scopeCityCode = $('#selDiscount option:selected').val();
-	var scopeCityCode = $('#scopeCityCode').val();
+	/* var scopeCityCode = $('#scopeCityCode').val();
 	var serviceType = $('#serviceType').val();
 	var operatorType = $('#operatorType').val();
 	var billType = $('#billTypeRate').val();
@@ -343,13 +342,14 @@ function setDiscount(){
 		error:function(resp) {
 			console.log(resp.msg);
 		},
-	});	
+	});	 */
 }
 
 /*折扣-添加页面 */
 function addRate(url,title){
 	//alert("sd");
-	var cDId = $("#channelDiscountId").val();
+	var id = $("#id").val();
+	var serviceType = $("#serviceType").val();
 	//var billType = $("#billTypeRate").val();
 	//var cId = $('channelId').val();
 	//layer_show(title,url+'?channelDiscountId=' + cDId,'','510');
@@ -360,7 +360,7 @@ function addRate(url,title){
         area: ['530px', '510px'],
         maxmin: false,
         closeBtn: 1,
-        content: url+'?channelDiscountId=' + cDId + '&fromTag=add',
+        content: url+'?serviceType=' + serviceType + '&id=' + id ,
          end: function () {
             location.reload();
         }
@@ -369,18 +369,19 @@ function addRate(url,title){
 /*折扣-编辑页面 */
 function editRate(url,title){
 	//alert("sd");
-	var cDId = $("#channelDiscountId").val();
-	var rateDiscountId = $("#rateDiscountId").val();
-	if(rateDiscountId == ""){
+	var id = $("#id").val();
+	var serviceType = $("#serviceType").val();
+	var telRateId = $("#telRateId").val();
+	if(telRateId == ""){
 		alert("没有选择可修改的折扣！");
 	}else{
-		var rateDiscount = $("#rateDiscountId option:selected").text();
+		//var rateDiscount = $("#rateDiscountId option:selected").text();
 		//alert(rateDiscount);
-		var billType = $("#billTypeRate").val();
+		//var billType = $("#billTypeRate").val();
 		//layer_show(title,url+'?channelDiscountId=' + cDId,'','510');
 		//location.reload();
 		layer.confirm('要修改折扣必须先解除所有绑定了该折扣的代理商的绑定，\t确认要解除所有的绑定吗？',function(index){
-			$.ajax({
+			/* $.ajax({
 				type: 'POST',
 				async: false,
 				url: '/flowsys/rate/batch_update_bind_state.do',
@@ -392,7 +393,7 @@ function editRate(url,title){
 					if(data=="success")
 					{
 						layer.close(index);
-						layer.msg('更新绑定成功', {icon:5,time:1000});
+						layer.msg('更新绑定成功', {icon:5,time:1000}); */
 						//alert(tag);
 						layer.open({
 					        type: 2,
@@ -400,23 +401,23 @@ function editRate(url,title){
 					        area: ['530px', '510px'],
 					        maxmin: false,
 					        closeBtn: 1,
-					        content: url+'?rateDiscountId=' + rateDiscountId+ '&channelDiscountId='+cDId+ '&billType='+billType + '&fromTag=edit',  
+					        content: url+'?serviceType=' + serviceType + '&id=' + id + '&telRateId=' + telRateId,  
 					         end: function () {
 					          	  location.reload();
 					        }
 					    });
 						//location.reload();
-					}
-					/* else if(data == "exist"){
+						/* }
+					else if(data == "exist"){
 						layer.msg('该折扣已存在，所以更新绑定失败!',{icon:1,time:1000});
 					} else{
 						layer.msg('或许没有绑定代理商，所以更新绑定失败!',{icon:1,time:1000});
 					} */
-				},
+				/* },
 				error:function(data) {
 					console.log(data.msg);
 				},
-			});	
+			});	 */
 		});
 	}
 }

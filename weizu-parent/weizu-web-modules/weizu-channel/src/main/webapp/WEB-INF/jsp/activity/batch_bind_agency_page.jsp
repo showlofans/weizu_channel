@@ -85,8 +85,9 @@
 					</select>
 				</span>
 				
-				代理商名称:<input type="text"  value="${resultMap.aardto.agencyName }" name="agencyName" id="" placeholder=" 代理商名称" style="width:250px" class="input-text">
+				代理商名称:<input type="text"  value="${resultMap.aardto.agencyName }" name="agencyName" id="" placeholder=" 代理商名称" style="width:150px" class="input-text">
 				<!-- <button type="reset"class="btn btn-success" value="重置">重置</button> -->
+				备注信息:<input type="text"  value="${resultMap.aardto.agencyMark }" name="agencyMark" id="" placeholder=" 用户备注" style="width:150px" class="input-text">
 				<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 				<c:choose>
 					<c:when test="${resultMap.aardto.bindState==1 }"><!-- 已解绑：批量绑定 -->
@@ -112,7 +113,6 @@
 					<!-- <th width="80">流量包Id</th> -->
 					<th width="80">代理名称</th>
 					<th width="80">真实姓名</th>
-					<th width="80">联系电话</th>
 					<th width="80">邮箱</th>
 					<!-- <th width="60">费率</th>
 					<th width="60">带票费率</th> -->
@@ -125,6 +125,8 @@
 							<th width="120">创建时间</th>
 						</c:otherwise>
 					</c:choose>
+					<th width="80">用户备注</th>
+					<th width="80">联系电话</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -135,11 +137,12 @@
 						<td>${agency.userName }</td>
 						<td>${agency.userRealName }</td>
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
-						<td>${agency.agencyTel }</td>
 						 <td>${agency.userEmail }</td>
 						<%-- <td>${agency.agencyIp }</td> --%>
 						<td style="display:none">${loginContext.id }</td>
 						<td>${agency.createTimeStr }</td>
+						<td>${agency.agencyMark }</td>
+						<td>${agency.agencyTel }</td>
 					</tr>
 				</c:forEach>
 			</tbody>

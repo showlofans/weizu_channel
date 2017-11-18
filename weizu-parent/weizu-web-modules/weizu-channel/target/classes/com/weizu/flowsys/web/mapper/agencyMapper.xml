@@ -15,6 +15,7 @@
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="user_pass" jdbcType="VARCHAR" property="userPass" />
     <result column="user_real_name" jdbcType="VARCHAR" property="userRealName" />
+    <result column="agency_mark" jdbcType="VARCHAR" property="agencyMark" />
     <result column="agency_tel" jdbcType="VARCHAR" property="agencyTel" />
     <result column="other_contact" jdbcType="VARCHAR" property="otherContact" />
     <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
@@ -27,7 +28,7 @@
     <result column="call_back_ip" property="callBackIp" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, root_agency_id,user_api_key, user_name, user_pass, user_real_name, agency_tel, other_contact, user_email, 
+    id, root_agency_id,user_api_key, user_name, user_pass, user_real_name, agency_mark, agency_tel, other_contact, user_email, 
     agency_ip, agency_tag, call_back_ip, create_time, verify_code
   </sql>
   <sql id="AgencyAccount_Column_List">
@@ -69,6 +70,7 @@
     <!-- <result column="bill_rate_id" jdbcType="BIGINT" property="billRateId" /> -->
     <result column="account_credit" jdbcType="DOUBLE" property="accountCredit" />
     <result column="agency_tag" jdbcType="INTEGER" property="agencyTag" />
+    <result column="agency_mark" jdbcType="VARCHAR" property="agencyMark" />
     <result column="account_balance" jdbcType="DOUBLE" property="accountBalance" />
     <result column="create_time" property="createTime" />
      <result column="user_api_key" property="userApiKey" />
@@ -78,7 +80,7 @@
     <result column="call_back_ip" property="callBackIp" />
   </resultMap>
   <sql id="other_Column_List">
-    agb.id,agb.agency_tag, root_agency_id, user_name, user_real_name, agency_tel, user_email, 
+    agb.id,agb.agency_tag, root_agency_id, user_name,agb.agency_mark, user_real_name, agency_tel, user_email, 
     agency_ip, account_credit, account_balance, cac.create_time, cac.bill_type,cac.id cacId,call_back_ip
   </sql>
   <!-- 查询没有绑定的代理商 -->
@@ -86,6 +88,7 @@
     <!-- <id column="id" jdbcType="INTEGER" property="id" /> -->
     <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="user_real_name" jdbcType="VARCHAR" property="userRealName" />
+    <result column="agency_mark" jdbcType="VARCHAR" property="agencyMark" />
     <result column="agency_tel" jdbcType="VARCHAR" property="agencyTel" />
     <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
     <result column="account_id" jdbcType="INTEGER" property="accountId" />
@@ -93,10 +96,10 @@
     <result column="create_time" property="createTime" />
   </resultMap>
   <sql id="Unbind_Column_List">
-   act.id account_id,a2.user_name,a2.user_email,a2.user_real_name,active1.active_time
+   act.id account_id,a2.user_name,a2.user_email,a2.user_real_name,a2.agency_mark,active1.active_time
   </sql>
   <sql id="Nobind_Column_List">
-   act2.id account_id,a2.user_name,a2.user_email,a2.user_real_name,a2.create_time
+   act2.id account_id,a2.user_name,a2.user_email,a2.user_real_name,a2.agency_mark,a2.create_time
   </sql>
   <!-- 查看邀请码是否符合条件 -->
   <select id="checkVerifyCode" parameterType="map" resultType = "int">
@@ -138,7 +141,9 @@
  		<if test="billType != null">
  			AND act2.bill_type = #{billType}
  		</if>
-  	 	
+  	 	<if test="agencyMark != null">
+ 			AND a2.agency_mark like concat('%',#{agencyMark},'%')
+ 		</if>
   	 	<if test="start != null">
 		 	limit #{start}
 		 </if>
@@ -173,6 +178,9 @@
  		<if test="userName != null">
  			AND a2.user_name like concat('%',#{userName},'%') 
  		</if>
+ 		<if test="agencyMark != null">
+ 			AND a2.agency_mark like concat('%',#{agencyMark},'%')
+ 		</if>
  		<if test="agencyTag != null">
  			AND a2.agency_tag = #{agencyTag}
  		</if>
@@ -203,6 +211,9 @@
    		<if test="agencyTag != null">
  			AND a2.agency_tag = #{agencyTag}
  		</if>
+   		<if test="agencyMark != null">
+ 			AND a2.agency_mark like concat('%',#{agencyMark},'%')
+ 		</if>
    			AND active1.bind_state = 1
    		<!-- <if test="bindState != null">
    		</if> -->
@@ -227,6 +238,9 @@
    		</if>
    		<if test="agencyTag != null">
  			AND a2.agency_tag = #{agencyTag}
+ 		</if>
+ 		<if test="agencyMark != null">
+ 			AND a2.agency_mark like concat('%',#{agencyMark},'%')
  		</if>
  		<if test="billType != null">
    			AND act.bill_type = #{billType}
@@ -319,7 +333,7 @@ WHERE a2.root_agency_id=4 and active1.rate_discount_id=22 and active1.bind_state
   	</set>
   </sql> -->
   <!-- 查询代理商列表 -->
-  <select id="selectByAgencyVO" parameterType="com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO" resultMap="OtherMap">
+  <select id="selectByAgencyVO" parameterType="map" resultMap="OtherMap">
     select 
     <include refid="other_Column_List" />
     from <include refid="agency_backward"></include> agb
@@ -354,7 +368,7 @@ WHERE a2.root_agency_id=4 and active1.rate_discount_id=22 and active1.bind_state
   </select>
   <!-- 查询下级代理商的全部信息 -->
   <!-- 查询代理商个数 -->
-  <select id="countByAgencyVO" parameterType="com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO" resultType="java.lang.Integer">
+  <select id="countByAgencyVO" parameterType="map" resultType="java.lang.Integer">
     select 
     count(*)
     from <include refid="agency_backward"></include> agb
@@ -386,6 +400,9 @@ WHERE a2.root_agency_id=4 and active1.rate_discount_id=22 and active1.bind_state
 		<if test="agencyTag != null">
 			AND agb.agency_tag = #{agencyTag}
 		</if>
+		<if test="agencyMark != null">
+ 			AND agb.agency_mark like concat('%',#{agencyMark},'%')
+ 		</if>
 		<if test="billType != null">
 			AND cac.bill_type = #{billType}
 		</if>
