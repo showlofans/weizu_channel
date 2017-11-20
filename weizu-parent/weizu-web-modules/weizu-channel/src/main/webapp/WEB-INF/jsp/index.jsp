@@ -55,7 +55,7 @@
 				<ul class="cl">
 					<!-- <li>超级管理员</li> -->
 					<%-- <li>个人信用：<a href="#"><c:if test="${empty chargeAccount.accountCredit }">0.00</c:if> ${chargeAccount.accountCredit }</a></li> --%>
-					<li>余额：<a title="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-href="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-title="充值记录" onclick="Hui_admin_tab(this)"><c:if test="${empty chargeAccount.accountBalance && empty chargeAccount1.accountBalance }">0.00</c:if> ${chargeAccount.accountBalance + chargeAccount1.accountBalance}</a></li>
+					<li>余额：<a title="充值记录" data-href="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-title="充值记录" onclick="Hui_admin_tab(this)"><c:if test="${empty chargeAccount.accountBalance && empty chargeAccount1.accountBalance }">0.00</c:if> ${chargeAccount.accountBalance + chargeAccount1.accountBalance}</a></li>
 					<li class="dropDown dropDown_hover">
 						<a href="javascript:;" onClick="myselfinfo()" class="dropDown_A">${loginContext.userName} <i class="Hui-iconfont">&#xe6d5;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
@@ -201,27 +201,30 @@
 	</dl>
 	
 	<c:if test="${not empty telLogin }">
-	<dl>
- 	<dt></dt>
+	<%-- <dl>
+ 	<dt>余额：<a title="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-href="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-title="充值记录" onclick="Hui_admin_tab(this)"><c:if test="${empty chargeAccount.accountBalance && empty chargeAccount1.accountBalance }">0.00</c:if> ${chargeAccount.accountBalance + chargeAccount1.accountBalance}<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></a></dt>
  	<dd>  余额：<a title="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-href="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-title="充值记录" onclick="Hui_admin_tab(this)"><c:if test="${empty chargeAccount.accountBalance && empty chargeAccount1.accountBalance }">0.00</c:if> ${chargeAccount.accountBalance + chargeAccount1.accountBalance}</a>
- 	</dd></dl>
+ 	</dd></dl> --%>
 	<dl>
- 		 <dt><a href="javascript:;" onClick="myselfinfo()" class="dropDown_A"><%-- ${loginContext.userName} --%>个人信息 <i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></a>
+ 		 <dt>
+ 		 	<i class="Hui-iconfont" style="font-size:20px;">&#xe705;</i> 个人中心<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i>
  		 </dt> 
 	 	<dd>
  			<ul>
+ 				<li><a href="javascript:;" onClick="myselfinfo()"><!-- <a title="" data-href="/flowsys/agency/agency_info.do" data-title="个人信息" onclick="Hui_admin_tab(this)"> --><%-- ${loginContext.userName} --%>个人信息 </a></li>
+				<li><a title="" data-href="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-title="充值记录" onclick="Hui_admin_tab(this)">余额：<c:if test="${empty chargeAccount.accountBalance && empty chargeAccount1.accountBalance }">0.00</c:if> ${chargeAccount.accountBalance + chargeAccount1.accountBalance}</a></li>
 				<li><a href="/flowsys/agency/logout.do">切换账户</a></li>
 				 <li><a data-href="/flowsys/bankAccount/my_bank_list.do" data-title="申请加款" href="javascript:void(0)" onclick="Hui_admin_tab(this)">申请加款</a></li>
-				<li><a href="javascript:;" onClick="resetPass()">修改密码</a></li>
+ 				<li><a title="" data-href="/flowsys/agency/reset_pass_page.do?tag=1" data-title="修改密码" onclick="Hui_admin_tab(this)"><%-- ${loginContext.userName} --%>修改密码 </a></li>
+				<!-- <li><a href="javascript:;" onClick="resetPass()">修改密码</a></li> -->
 				<li><a href="/flowsys/agency/logout.do">退出</a></li>
 			</ul>
 		</dd>
 	 </dl>
 	<dl>
-	 <dt><a href="#" class="dropDown_A" title="消息"> 消息<c:if test="${msgNum != 0 }">
+	 <dt><i class="Hui-iconfont" style="font-size:20px;">&#xe68a;</i>  消息<c:if test="${msgNum != 0 }">
 			<span class="badge badge-danger">${msgNum }</span>
-			</c:if><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i>
-		</a> 
+			</c:if><i class="Hui-iconfont" style="font-size:18px">&#xe6d5; </i>
 	 </dt> 
 	<dd>
 		<ul >

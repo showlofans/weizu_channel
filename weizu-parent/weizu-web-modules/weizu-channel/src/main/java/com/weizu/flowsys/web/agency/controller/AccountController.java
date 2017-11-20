@@ -124,7 +124,11 @@ public class AccountController {
 		if(agencyVo != null){
 			chargeRecordPo.setAccountType(AccountTypeEnum.INCREASE.getValue());
 //			chargeRecordPo.setAgencyId(agencyVo.getId());
-			Pagination<ChargeRecordPo> pagination =  chargeRecordAO.listChargeRecord(resultMap, agencyVo.getId(), chargeRecordPo, pageParam);
+			Integer contextAgencyId = null;
+			if(agencyVo.getRootAgencyId() != 0){//超管
+				contextAgencyId = agencyVo.getId();
+			}
+			Pagination<ChargeRecordPo> pagination =  chargeRecordAO.listChargeRecord(resultMap, contextAgencyId, chargeRecordPo, pageParam);
 			resultMap.put("pagination", pagination);
 			resultMap.put("billTypeEnum", BillTypeEnum.toList());
 			resultMap.put("accountTypeEnum", AccountTypeEnum.toList());
