@@ -471,8 +471,7 @@ public class AgencyAOImpl implements AgencyAO {
 		int pageSize = 10;
 		int pageNo = 1;
 		
-		
-		if(aardto.getBindState() == BindStateEnum.NO.getValue()){
+		if(aardto.getBindState() == BindStateEnum.NO.getValue()){//未绑定
 			totalRecord = agencyVODao.countNoBAgency(paramsMap);
 			if(pageParam != null){
 				pageSize = pageParam.getPageSize();
@@ -498,6 +497,21 @@ public class AgencyAOImpl implements AgencyAO {
 			}
 		}
 		return new Pagination<AgencyBackwardVO>(records, totalRecord, pageNo, pageSize);
+	}
+	
+	@Override
+	public List<AgencyBackwardVO> getUnbindAgencyList(int billTypeRate,
+			int rootAgencyId, AccountActiveRateDTO aardto) {
+		Map<String, Object> paramsMap = getUnbindMapByEntity(aardto);
+//		paramsMap.put("billType", billTypeRate);
+		paramsMap.put("rootAgencyId", rootAgencyId);
+		List<AgencyBackwardVO> records = null;
+		if(aardto.getBindState() == BindStateEnum.NO.getValue()){
+			records = agencyVODao.getNoBAgency(paramsMap);
+		}else{//解绑列表
+			records = agencyVODao.getUnbindAgency(paramsMap);
+		}
+		return records;
 	}
 
 	/**
@@ -601,5 +615,4 @@ public class AgencyAOImpl implements AgencyAO {
 		}
 	}
 
-	
 }

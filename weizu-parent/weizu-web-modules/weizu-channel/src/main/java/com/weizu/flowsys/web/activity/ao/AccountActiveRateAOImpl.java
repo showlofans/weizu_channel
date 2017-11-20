@@ -3,6 +3,7 @@ package com.weizu.flowsys.web.activity.ao;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,9 @@ import com.weizu.flowsys.web.activity.pojo.AccountActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.AccountActiveRatePo;
 import com.weizu.flowsys.web.activity.pojo.DiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
+import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.dao.ChargeAccountDaoInterface;
+import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.channel.ao.ChannelDiscountAO;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.web.foundation.DateUtil;
@@ -46,6 +49,8 @@ public class AccountActiveRateAOImpl implements AccountActiveRateAO {
 	
 	@Resource
 	private ChannelDiscountAO channelDiscountAO;
+	@Resource
+	private AgencyAO agencyAO;
 	
 	@Override
 	public void getBindRateList(Map<String, Object> resultMap,
@@ -543,7 +548,7 @@ public class AccountActiveRateAOImpl implements AccountActiveRateAO {
 			
 			List<AccountActiveRateDTO> list = new LinkedList<AccountActiveRateDTO>();
 			for (int i = 0; i < agencyNames.length; i++) {
-				AccountActiveRateDTO aardtoq = new AccountActiveRateDTO(accountIds[i], agencyNames[i], rateDiscountId, System.currentTimeMillis(), 0, aardto.getBindAgencyId());
+				AccountActiveRateDTO aardtoq = new AccountActiveRateDTO(accountIds[i], agencyNames[i], rateDiscountId, System.currentTimeMillis(), BindStateEnum.BIND.getValue(), aardto.getBindAgencyId());
 				list.add(aardtoq);
 			}
 			return accountActiveRateDao.batch_bindList(list);
@@ -552,6 +557,33 @@ public class AccountActiveRateAOImpl implements AccountActiveRateAO {
 //			List<AgencyBackwardPo> list = agencyVODao.getBatchAgency(agencyPo);
 		}
 		return 0;
+	}
+	
+
+	@Override
+	public int batchBindAllAgency(int billTypeRate, int rootAgencyId,
+			AccountActiveRateDTO aardto, int updateBindState) {
+		int res = 0;
+		List<AgencyBackwardVO> agencyList = agencyAO.getUnbindAgencyList(billTypeRate, rootAgencyId, aardto);
+		if(agencyList != null && agencyList.size() > 0){
+			
+			if(BindStateEnum.UNBIND.getValue().equals(aardto.getBindState())){//原先的状态是解绑状态
+				int[] accountIds = new int[agencyList.size()];
+				for (int i = 0; i < agencyList.size(); i++) {
+					accountIds[i] = agencyList.get(i).getAccountId();
+				}
+				res = accountActiveRateDao.batchUpdateBindState(aardto.getRateDiscountId(), updateBindState, accountIds);
+			}else{
+				List<AccountActiveRateDTO> list = new LinkedList<AccountActiveRateDTO>();
+				for (AgencyBackwardVO agencyBackwardVO : agencyList) {
+					AccountActiveRateDTO aardtoq = new AccountActiveRateDTO(agencyBackwardVO.getAccountId(), agencyBackwardVO.getUserName(), aardto.getRateDiscountId(), System.currentTimeMillis(), updateBindState, aardto.getBindAgencyId());
+					list.add(aardtoq);
+				}
+				res = accountActiveRateDao.batch_bindList(list);
+			}
+		}
+		
+		return res;
 	}
 
 	@Override
@@ -563,7 +595,6 @@ public class AccountActiveRateAOImpl implements AccountActiveRateAO {
 		}
 		return "error";
 	}
-
 
 	/**
 	 * @description: 初始化费率折扣列表

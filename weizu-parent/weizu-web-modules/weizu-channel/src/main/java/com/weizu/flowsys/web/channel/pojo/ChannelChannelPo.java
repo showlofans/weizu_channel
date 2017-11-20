@@ -46,7 +46,7 @@ public class ChannelChannelPo extends Po {
     private Integer channelType;						//通道类型（页面参数：1-普通通道包，2-红包通道，3-转移包，4-共享包）
     
     private Long lastAccess;
-    
+    @TempField
     private String lastAccessStr;						//最后更新时间
     
     @TempField

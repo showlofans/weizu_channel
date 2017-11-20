@@ -82,6 +82,7 @@
 					<option value="${pgValidityEnum.value }" <c:if test="${pgValidityEnum.value == resultMap.searchParam.pgValidity }"> selected</c:if>>${pgValidityEnum.desc }</option>
 				</c:forEach>
 			</select>
+			</span>
 			<span class="select-box inline">
 				<select name="channelState" class="select" onchange="getChannelList()">
 				<option value="">通道状态</option>
@@ -89,7 +90,6 @@
 					<option value="${cstate.value }" <c:if test="${cstate.value == resultMap.searchParam.channelState }"> selected</c:if>>${cstate.desc }</option>
 				</c:forEach>
 			</select>
-			</span>
 			</span>
 			
 			<!-- <input type="hidden" value="" name="channelId" id="channelId"> -->

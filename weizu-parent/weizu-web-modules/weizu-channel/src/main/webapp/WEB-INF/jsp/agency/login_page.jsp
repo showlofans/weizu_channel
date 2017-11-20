@@ -63,9 +63,11 @@ line-height:220px;
       </div>
       <div class="row cl">
         <div class="formControls col-xs-8 col-xs-offset-3">
+          <input id="agencyIp" value="" name="agencyIp" type="hidden">
           <input name="" type="submit" class="btn btn-default radius size-L" value="&nbsp;登&nbsp;&nbsp;&nbsp;&nbsp;录&nbsp;">
           <input name="" type="button" onclick="startRegister()"  class="btn btn-success radius size-L" value="&nbsp;注&nbsp;&nbsp;&nbsp;&nbsp;册&nbsp;">
-          <a href="javascript:void(0);" onclick="AddFavorite('微族流量','120.55.162.224:8082')">收 藏 本 站</a>
+          <input name="" type="button" onclick="telLogin()" class="btn btn-default radius size-L" value="手机登陆">
+          <!-- <a href="javascript:void(0);" onclick="AddFavorite('微族流量','120.55.162.224:8082')">收 藏 本 站</a> -->
         </div>
       </div>
     </form>
@@ -132,6 +134,11 @@ function startRegister(){
 	var userName = $('#userName').val();
 	var userPass = $('#userPass').val();
 	window.location.href = "/flowsys/agency/register_page.do?userName="+userName+"&userPass="+userPass;
+}
+
+function telLogin(){
+	$('#agencyIp').val('telLogin');
+	$("#lgForm").submit();
 }
 /* 	$.validator.setDefaults({
 	    submitHandler: function() {

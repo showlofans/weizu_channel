@@ -93,13 +93,13 @@
     <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
     <result column="account_id" jdbcType="INTEGER" property="accountId" />
     <!-- <result column="agency_ip" jdbcType="VARCHAR" property="agencyIp" /> -->
-    <result column="create_time" property="createTime" />
+    <result column="active_time" property="createTime" />
   </resultMap>
   <sql id="Unbind_Column_List">
-   act.id account_id,a2.user_name,a2.user_email,a2.user_real_name,a2.agency_mark,active1.active_time
+   act.id account_id,a2.user_name,a2.user_email,a2.user_real_name,a2.agency_mark,active1.active_time,a2.agency_tel
   </sql>
   <sql id="Nobind_Column_List">
-   act2.id account_id,a2.user_name,a2.user_email,a2.user_real_name,a2.agency_mark,a2.create_time
+   act2.id account_id,a2.user_name,a2.user_email,a2.user_real_name,a2.agency_mark,a2.agency_tel
   </sql>
   <!-- 查看邀请码是否符合条件 -->
   <select id="checkVerifyCode" parameterType="map" resultType = "int">
@@ -122,11 +122,11 @@
   	on a2.id=act2.agency_id
   	 <where>
   	 	a2.root_agency_id = #{rootAgencyId}
-  	 	AND a2.id not in (select a1.id from <include refid="t_active"></include> active
+  	 	AND a2.id not in (select act.agency_id from <include refid="t_active"></include> active
   	 	inner join <include refid="t_account"></include> act
   		on active.account_id=act.id
-  		INNER join <include refid="agency_backward"></include> a1
-   		on a1.id = act.agency_id
+  		<!-- INNER join <include refid="agency_backward"></include> a1
+   		on a1.id = act.agency_id -->
   	 	<where>
  			<if test="rateDiscountId != null">
  				 AND active.rate_discount_id= #{rateDiscountId}
@@ -150,9 +150,6 @@
 		 <if test="end != null">
 		 	, #{end}
 		 </if>
-		 <if test="start == null &amp; end == null">
-		 	limit 0,10
-		 </if> 
   	 </where>
   </select>
   <select id="countNoBAgency" parameterType="map" resultType="int">
@@ -162,11 +159,11 @@
   	on a2.id=act2.agency_id
   	 <where>
   	 a2.root_agency_id = #{rootAgencyId}
-  	 AND a2.id not in (select a1.id from <include refid="t_active"></include> active
+  	 AND a2.id not in (select act.agency_id from <include refid="t_active"></include> active
   	 	inner join <include refid="t_account"></include> act
   		on active.account_id=act.id
-  		INNER join <include refid="agency_backward"></include> a1
-   		on a1.id = act.agency_id
+  		<!-- INNER join <include refid="agency_backward"></include> a1
+   		on a1.id = act.agency_id -->
   	 	<where>
  			<if test="rateDiscountId != null">
 				 AND active.rate_discount_id= #{rateDiscountId}
@@ -215,6 +212,12 @@
  			AND a2.agency_mark like concat('%',#{agencyMark},'%')
  		</if>
    			AND active1.bind_state = 1
+   		<if test="start != null">
+		 	limit #{start}
+		 </if>
+		 <if test="end != null">
+		 	, #{end}
+		 </if>
    		<!-- <if test="bindState != null">
    		</if> -->
    	</where>

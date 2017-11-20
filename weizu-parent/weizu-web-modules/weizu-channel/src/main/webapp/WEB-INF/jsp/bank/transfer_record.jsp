@@ -28,7 +28,7 @@
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
-<title>资讯列表</title>
+<title>银行卡转账记录</title>
 </head>
 <body>
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 银行卡管理  <span class="c-gray en">&gt;</span> 转账记录 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
@@ -48,8 +48,8 @@
 								</c:forEach>
 							</select>
 						</span>
-				银行卡：<span>${resultMap.bankPo.remittanceWay }</span>
-				账号：<span>${resultMap.bankPo.remittanceBankAccount }</span>
+				银行卡：<span class="c-success">${resultMap.bankPo.remittanceWay }</span>
+				账号：<span class="c-success">${resultMap.bankPo.remittanceBankAccount }</span>
 				<!-- <button name="" id="" class="btn btn-success"  type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button> -->
 				<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
 				<input type="hidden" name="bankId" value="${resultMap.bankPo.id }"> 

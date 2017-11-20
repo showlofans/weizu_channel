@@ -73,11 +73,12 @@ public class AccountActiveRateDaoImpl extends DaoImpl<AccountActiveRatePo, Long>
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("id", activeId);
 		paramsMap.put("bindState", bindState);
-		if(BindStateEnum.UNBIND.getValue() == bindState){
-			paramsMap.put("activeTime", 0);//解绑设置活动时间为0
-		}else{
-			paramsMap.put("activeTime", System.currentTimeMillis());//解绑设置活动时间为0
-		}
+//		if(BindStateEnum.UNBIND.getValue() == bindState){
+//			paramsMap.put("activeTime", 0);//解绑设置活动时间为0
+//		}else{
+//			paramsMap.put("activeTime", System.currentTimeMillis());//解绑设置活动时间为0
+//		}
+		paramsMap.put("activeTime", System.currentTimeMillis());
 		return sqlSessionTemplate.update("updateBindState", paramsMap);
 	}
 

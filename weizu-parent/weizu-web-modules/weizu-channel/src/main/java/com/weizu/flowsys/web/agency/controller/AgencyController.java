@@ -10,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.ws.spi.http.HttpContext;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -141,6 +142,12 @@ public class AgencyController {
 			//注册的时候已经保证了可以进行表连接
 			session.setAttribute("chargeAccount", chargeAccountPo);//对私
 			session.setAttribute("chargeAccount1", chargeAccountPo1);//对公
+			
+			String agencyIp = agencyBackward.getAgencyIp();
+			if(StringHelper.isNotEmpty(agencyIp) && "telLogin".equals(agencyIp)){
+				session.setAttribute("telLogin", agencyIp);//对公
+			}
+			
 //			List<RateBackwardPo> rateList = rateBackwardDao.selectByRootId(resultPo.getId());
 			session.setAttribute("loginContext", agencyVO);// 保存登陆实体到session中
 			

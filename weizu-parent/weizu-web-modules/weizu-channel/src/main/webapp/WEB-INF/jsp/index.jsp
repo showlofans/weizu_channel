@@ -65,8 +65,8 @@
 							 <li><a data-href="/flowsys/bankAccount/my_bank_list.do" data-title="申请加款" href="javascript:void(0)" onclick="Hui_admin_tab(this)">申请加款</a></li>
 							<li><a href="javascript:;" onClick="resetPass()">修改密码</a></li>
 							<li><a href="/flowsys/agency/logout.do">退出</a></li>
-					</ul>
-				</li>
+						</ul>
+					</li>
 					<li id="Hui-msg" class="dropDown right dropDown_hover"> <a href="#" class="dropDown_A" title="消息">
 						<c:if test="${msgNum != 0 }">
 							<span class="badge badge-danger">${msgNum }</span>
@@ -199,18 +199,89 @@
 			</ul>
 		</dd>
 	</dl>
+	
+	<c:if test="${not empty telLogin }">
+	<dl>
+ 	<dt></dt>
+ 	<dd>  余额：<a title="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-href="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-title="充值记录" onclick="Hui_admin_tab(this)"><c:if test="${empty chargeAccount.accountBalance && empty chargeAccount1.accountBalance }">0.00</c:if> ${chargeAccount.accountBalance + chargeAccount1.accountBalance}</a>
+ 	</dd></dl>
+	<dl>
+ 		 <dt><a href="javascript:;" onClick="myselfinfo()" class="dropDown_A"><%-- ${loginContext.userName} --%>个人信息 <i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></a>
+ 		 </dt> 
+	 	<dd>
+ 			<ul>
+				<li><a href="/flowsys/agency/logout.do">切换账户</a></li>
+				 <li><a data-href="/flowsys/bankAccount/my_bank_list.do" data-title="申请加款" href="javascript:void(0)" onclick="Hui_admin_tab(this)">申请加款</a></li>
+				<li><a href="javascript:;" onClick="resetPass()">修改密码</a></li>
+				<li><a href="/flowsys/agency/logout.do">退出</a></li>
+			</ul>
+		</dd>
+	 </dl>
+	<dl>
+	 <dt><a href="#" class="dropDown_A" title="消息"> 消息<c:if test="${msgNum != 0 }">
+			<span class="badge badge-danger">${msgNum }</span>
+			</c:if><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i>
+		</a> 
+	 </dt> 
+	<dd>
+		<ul >
+			<c:if test="${loginContext.rootAgencyId == 0 }">
+				<li><a data-href="/flowsys/account/confirm_company_account_page.do" data-title="认证审核" title="认证审核" onclick="Hui_admin_tab(this)">认证审核 &nbsp;&nbsp;&nbsp;&nbsp;  ${unconfirmSize }</a></li>
+			</c:if>
+			<c:forEach items="${transferMsgList }" var="transferMsg" varStatus="vst">
+				<li><a data-href="/flowsys/bankAccount/transfer_record.do?bankId=${transferMsg.id }&confirmState=2&direction=0" data-title="转账审核" title="转账审核" onclick="Hui_admin_tab(this)">${transferMsg.remmitanceBankAccount} &nbsp;&nbsp;&nbsp;&nbsp;  <span class="c-danger">${transferMsg.tfnum}</span></a></li>
+			</c:forEach>
+		</ul>
+	</dd>
+	 </dl>
+	</c:if>
+	<!-- <dl>
+	 <dt> <a href="javascript:;" class="dropDown_A" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i>换肤</a>
+	 </dt> 
+	<dd>
+		<ul>
+			<li><a href="javascript:;" data-val="default" title="默认（黑色）">默认（黑色）</a></li>
+			<li><a href="javascript:;" data-val="blue" title="蓝色">蓝色</a></li>
+			<li><a href="javascript:;" data-val="green" title="绿色">绿色</a></li>
+			<li><a href="javascript:;" data-val="red" title="红色">红色</a></li>
+			<li><a href="javascript:;" data-val="yellow" title="黄色">黄色</a></li>
+			<li><a href="javascript:;" data-val="orange" title="橙色">橙色</a></li>
+		</ul>
+	</dd>
+	 </dl> -->
+ 		<%--  <dl>
+ 		 <dt> <a href="javascript:;" class="dropDown_A" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a>
+		</dt>
+		 <dd> <c:if test="${loginContext.rootAgencyId == 0 }">
+				<dd><a data-href="/flowsys/account/confirm_company_account_page.do" data-title="认证审核" title="认证审核" onclick="Hui_admin_tab(this)">认证审核 &nbsp;&nbsp;&nbsp;&nbsp;  ${unconfirmSize }</a></dd>
+			</c:if>
+			<c:forEach items="${transferMsgList }" var="transferMsg" varStatus="vst">
+				<dd><a data-href="/flowsys/bankAccount/transfer_record.do?bankId=${transferMsg.id }&confirmState=2&direction=0" data-title="转账审核" title="转账审核" onclick="Hui_admin_tab(this)">${transferMsg.remmitanceBankAccount} &nbsp;&nbsp;&nbsp;&nbsp;  <span class="c-danger">${transferMsg.tfnum}</span></a></dd>
+			</c:forEach>
+		</dd>
+		</dl>
+		 <dl>
+ 		 <dt>  <a href="javascript:;" class="dropDown_A" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a></dt> 
+ 		  <dd><a href="javascript:;" data-val="default" title="默认（黑色）">默认（黑色）</a></dd>
+			<dd><a href="javascript:;" data-val="blue" title="蓝色">蓝色</a></dd>
+			<dd><a href="javascript:;" data-val="green" title="绿色">绿色</a></dd>
+			<dd><a href="javascript:;" data-val="red" title="红色">红色</a></dd>
+			<dd><a href="javascript:;" data-val="yellow" title="黄色">黄色</a></dd>
+			<dd><a href="javascript:;" data-val="orange" title="橙色">橙色</a></dd>
+		</dl>
+
 	<!-- http://htmlify.wps.cn/doc/index.html?ksyun=UD4oMeA6/word.html&theme=clear -->
 	<dl id="menu-member">
 		<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe633;</i> 平台相关<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 		<dd>
 			<ul>
-			<%-- <c:if test="${loginContext.agencyTag == 1 }">
-			</c:if> --%>
+			<c:if test="${loginContext.agencyTag == 1 }">
+			</c:if>
 				<li><a href="/view/mine/jk-doc/jk-doc.html" title="南昌微族接口文档" target="_blank">南昌微族接口文档</a></li>
 				<li><a data-href="http://htmlify.wps.cn/doc/index.html?ksyun=hPT1Afio/word.html&theme=clear" data-title="平台操作指南" href="javascript:void(0)">平台操作指南</a></li>
 			</ul>
 		</dd>
-	</dl>
+	</dl> --%>
 	<%-- <ul>
 		<c:if test="${loginContext.agencyTag == 1 }">
 			<!-- <li><a data-href="/view/mine/jk-doc/jk-doc.html" data-title="南昌微族接口文档" href="javascript:void(0)">南昌微族接口文档</a></li> -->
@@ -278,7 +349,7 @@
 		<div class="Hui-tabNav-wp">
 			<ul id="min_title_list" class="acrossTab cl">
 				<li class="active">
-					<span title="我的桌面" data-href="/flowsys/rate/welcome.do">我的桌面</span>
+					<span title="我的桌面" data-href="/flowsys/rate/welcome.do">我的通道</span>
 					<em></em></li>
 		</ul>
 	</div>
