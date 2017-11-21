@@ -112,13 +112,6 @@ public class AgencyController {
 	@RequestMapping(value = AgencyURL.LOGIN)
 	public ModelAndView login(AgencyBackwardPo agencyBackward,
 			HttpServletRequest request) {
-		int port = request.getLocalPort();
-		int portNum = 381;
-		if(port == 8082){
-			portNum = 382;
-		}
-		request.getSession().setAttribute("portNum", portNum);
-		System.out.println();
 		if (null == agencyBackward) {
 			System.out.println("执行goLogin");
 		}

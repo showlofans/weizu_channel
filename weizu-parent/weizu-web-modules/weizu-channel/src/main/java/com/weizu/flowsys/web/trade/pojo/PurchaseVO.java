@@ -1,5 +1,7 @@
 package com.weizu.flowsys.web.trade.pojo;
 
+import java.io.Serializable;
+
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 
 /**
@@ -10,7 +12,7 @@ import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
  * @createTime:2017年6月13日 下午12:16:36
  * @version 1.0
  */
-public class PurchaseVO implements Cloneable {
+public class PurchaseVO implements Cloneable,Serializable {
 	
     private Long orderId;						//订单号
     

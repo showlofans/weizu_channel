@@ -1,5 +1,7 @@
 package com.weizu.flowsys.web.agency.pojo;
 
+import java.io.Serializable;
+
 //import com.weizu.flowsys.core.annotation.po.TableName;
 //import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
@@ -12,7 +14,9 @@ import com.weizu.flowsys.core.beans.Po;
  * @createTime:2017年4月25日 上午11:42:07
  * @version 1.0
  */
-public class AgencyBackwardVO extends Po {
+public class AgencyBackwardVO extends Po implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private Integer id;
 

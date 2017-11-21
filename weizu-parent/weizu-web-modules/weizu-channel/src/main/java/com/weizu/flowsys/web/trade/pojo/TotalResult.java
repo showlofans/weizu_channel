@@ -1,5 +1,7 @@
 package com.weizu.flowsys.web.trade.pojo;
 
+import java.io.Serializable;
+
 /**
  * @description: 成功订单的统计信息
  * @projectName:weizu-channel
@@ -8,7 +10,7 @@ package com.weizu.flowsys.web.trade.pojo;
  * @createTime:2017年8月21日 下午5:11:27
  * @version 1.0
  */
-public class TotalResult {
+public class TotalResult implements Serializable {
 	private Integer totalRecords;		//总记录数
 	private Double totalPrice;			//原价
 	private Double totalAmount;			//总扣款

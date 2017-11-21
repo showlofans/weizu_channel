@@ -78,10 +78,10 @@ public class AccountController {
 
 		// String agencyId = request.getParameter("agencyId").trim().toString();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		ChargeAccountPo accountPo = chargeAccountAO.getAccountById(accountId);
+		ChargeAccountPo accountPo = chargeAccountAO.getAccountById(accountId);//待充值的账户
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVo != null && agencyVo.getRootAgencyId() != 0 && accountPo.getBillType() !=null){//不是超管，需要判断自己对应账户余额
-			ChargeAccountPo loginAccountPo =	chargeAccountAO.getAccountByAgencyId(agencyVo.getId(), accountPo.getBillType());
+			ChargeAccountPo loginAccountPo = chargeAccountAO.getAccountByAgencyId(agencyVo.getId(), accountPo.getBillType());
 			if(loginAccountPo != null){
 				resultMap.put("accountBalance", loginAccountPo.getAccountBalance()); // 代理商名字
 			}

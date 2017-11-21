@@ -92,7 +92,12 @@ public class WherePrams {
 			if ("like".equals(where)) {
 				this.pram += " and " + file + " " + where + " '%" + value + "%'";
 			}else{
-				this.pram += " and " + file + " " + where + " '" + value + "'";
+//				this.pram += " and " + file + " " + where + " '" + value + "'";
+				if(value instanceof Integer){
+					this.pram += " and " + file + where + value;
+				}else{
+					this.pram += " and " + file + where + " '" + value + "'";
+				}
 			}
 		}
 		

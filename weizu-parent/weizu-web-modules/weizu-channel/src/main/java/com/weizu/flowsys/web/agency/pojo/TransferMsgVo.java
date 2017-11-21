@@ -1,5 +1,7 @@
 package com.weizu.flowsys.web.agency.pojo;
 
+import java.io.Serializable;
+
 /**
  * @description: 转账消息展示实体
  * @projectName:weizu-channel
@@ -8,8 +10,9 @@ package com.weizu.flowsys.web.agency.pojo;
  * @createTime:2017年10月13日 下午1:00:11
  * @version 1.0
  */
-public class TransferMsgVo {
-	
+public class TransferMsgVo implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	private String remmitanceBankAccount;			//银行卡账号
 	
 	private Long id;								//银行卡id

@@ -37,6 +37,13 @@ public class PreloadListener implements ServletContextListener {
 		ServletContext application = arg0.getServletContext();
 		application.setAttribute("startupTime", DateUtil.formatAll());
 		
+		String portstr = System.getProperty("reyo.localPort");
+		int port = portstr == null ? 0: Integer.parseInt(portstr);
+		int portNum = 381;
+		if(port == 8082){
+			portNum = 382;
+		}
+		application.setAttribute("portNum", portNum);
 //		MBeanServer mb = ManagementFactory.getPlatformMBeanServer();
 		
 //		Set<ObjectName> objs = mb.queryNames(new ObjectName("*:type=Connector,*"),  

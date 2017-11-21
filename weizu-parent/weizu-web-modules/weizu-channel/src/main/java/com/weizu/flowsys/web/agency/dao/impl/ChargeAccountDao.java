@@ -1,5 +1,6 @@
 package com.weizu.flowsys.web.agency.dao.impl;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 

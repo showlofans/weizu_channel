@@ -224,7 +224,7 @@
 	<dl>
 	 <dt><i class="Hui-iconfont" style="font-size:20px;">&#xe68a;</i>  消息<c:if test="${msgNum != 0 }">
 			<span class="badge badge-danger">${msgNum }</span>
-			</c:if><i class="Hui-iconfont" style="font-size:18px">&#xe6d5; </i>
+			</c:if><i class="Hui-iconfont menu_dropdown-arrow" style="font-size:18px">&#xe6d5; </i>
 	 </dt> 
 	<dd>
 		<ul >
