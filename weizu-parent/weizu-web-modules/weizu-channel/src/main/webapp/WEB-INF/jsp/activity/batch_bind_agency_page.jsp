@@ -36,38 +36,38 @@
 	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
 	<div class="text-c">
 		<c:forEach items="${resultMap.scopeCityEnums }" var="scopeEnum" varStatus="vs">
-			<c:if test="${scopeEnum.value == resultMap.ratePo.scopeCityCode }">${scopeEnum.desc }</c:if>
+			<c:if test="${scopeEnum.value == ratePo.scopeCityCode }">${scopeEnum.desc }</c:if>
 		</c:forEach>
 		<c:forEach items="${resultMap.stypeEnums }" var="stype" varStatus="vs1">
-			<c:if test="${ stype.value == resultMap.ratePo.serviceType }">
+			<c:if test="${ stype.value == ratePo.serviceType }">
 				${stype.desc }
 			</c:if>
 		</c:forEach>
 		<c:forEach items="${resultMap.otypeEnums }" var="otype" varStatus="vs1">
-			 <c:if test="${resultMap.ratePo.operatorType == otype.value }">
+			 <c:if test="${ratePo.operatorType == otype.value }">
 				${otype.desc }
 			</c:if>	
 		</c:forEach>
 		<c:forEach items="${resultMap.billTypeEnums }" var="billEnum" varStatus="vs">
 			<span id="billTypeDesc"  class="c-red">
-			<c:if test="${resultMap.ratePo.billType==billEnum.value }">${billEnum.desc }</c:if>
+			<c:if test="${ratePo.billType==billEnum.value }">${billEnum.desc }</c:if>
 			</span>
 		</c:forEach>
 		<span id="billTypeDesc"  class="c-red">
-			${resultMap.ratePo.activeDiscount }  
+			${ratePo.activeDiscount }  
 		</span>
 		<span id="specialTag"  class="c-red">
-			 ${resultMap.ratePo.specialTag }
+			 ${ratePo.specialTag }
 		</span>
 	</div>
 	<div class="text-c">
 		<form action="/flowsys/rate/batch_bind_agency_page.do" method="post" id="formD" name="dataListForm">
 				<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
-				<input type="hidden" name="scopeCityCode" value="${resultMap.ratePo.scopeCityCode }" >
-				<input type="hidden" name="serviceType" value="${resultMap.ratePo.serviceType }" >
-				<input type="hidden" name="operatorType" value="${resultMap.ratePo.operatorType }" >
-				<input type="hidden" name="billType" value="${resultMap.ratePo.billType }" >
-				<input type="hidden" name="activeDiscount" value="${resultMap.ratePo.activeDiscount }" >
+				<%-- <input type="hidden" id="scopeCityCode" value="${resultMap.ratePo.scopeCityCode }" >
+				<input type="hidden" id="serviceType" value="${resultMap.ratePo.serviceType }" >
+				<input type="hidden" id="operatorType" value="${resultMap.ratePo.operatorType }" > --%>
+				<input type="hidden" id="billType" name="billType" value="${ratePo.billType }" >
+				<%-- <input type="hidden" id="activeDiscount" value="${resultMap.ratePo.activeDiscount }" > --%>
 				代理类型：<span class="select-box inline">
 						<select name="agencyTag" id="agencyTag" class="select" onchange="onSub()">
 						<!-- <option value="">请选择</option> -->
@@ -85,14 +85,17 @@
 					</select>
 				</span>
 				
-				代理商名称:<input type="text"  value="${resultMap.aardto.agencyName }" name="agencyName" id="" placeholder=" 代理商名称" style="width:250px" class="input-text">
+				代理商名称:<input type="text"  value="${resultMap.aardto.agencyName }" name="agencyName" id="" placeholder=" 代理商名称" style="width:150px" class="input-text">
 				<!-- <button type="reset"class="btn btn-success" value="重置">重置</button> -->
+				备注信息:<input type="text"  value="${resultMap.aardto.agencyMark }" name="agencyMark" id="" placeholder=" 用户备注" style="width:150px" class="input-text">
 				<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 				<c:choose>
 					<c:when test="${resultMap.aardto.bindState==1 }"><!-- 已解绑：批量绑定 -->
 						<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBState('/flowsys/rate/batch_update_bind_state.do',0)" href="javascript:;" title="批量绑定"><i class="Hui-iconfont">&#xe60e;</i>批量绑定</a>
+						<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBAllState('/flowsys/rate/batch_bind_allagency.do',1,0)" href="javascript:;" title="全量绑定"><i class="Hui-iconfont">&#xe60e;</i>全量绑定</a>
 					</c:when>
 					<c:otherwise><!-- 未绑定 -->
+						<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBAllState('/flowsys/rate/batch_bind_allagency.do',2,0)" href="javascript:;" title="全量增加"><i class="Hui-iconfont">&#xe60e;</i>全量增加</a>
 						<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="changeBState('/flowsys/rate/batch_bind_agency.do',0)" href="javascript:;" > 批量增加</a>
 					</c:otherwise>
 				</c:choose>
@@ -112,19 +115,23 @@
 					<!-- <th width="80">流量包Id</th> -->
 					<th width="80">代理名称</th>
 					<th width="80">真实姓名</th>
-					<th width="80">联系电话</th>
 					<th width="80">邮箱</th>
 					<!-- <th width="60">费率</th>
 					<th width="60">带票费率</th> -->
 					<!-- <th width="120">操作</th> -->
-					<c:choose>
-						<c:when test="${resultMap.aardto.bindState==1  }"><%-- || resultMap.aardto.bindState==null --%>
+					<c:if test="${resultMap.aardto.bindState==1  }">
+						<th width="120">解绑时间</th>
+					</c:if>
+					<%-- <c:choose>
+						<c:when test="${resultMap.aardto.bindState==1  }">|| resultMap.aardto.bindState==null
 							<th width="120">解绑时间</th>
 						</c:when>
 						<c:otherwise>
 							<th width="120">创建时间</th>
 						</c:otherwise>
-					</c:choose>
+					</c:choose> --%>
+					<th width="80">联系电话</th>
+					<th width="80">用户备注</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -135,11 +142,12 @@
 						<td>${agency.userName }</td>
 						<td>${agency.userRealName }</td>
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
-						<td>${agency.agencyTel }</td>
 						 <td>${agency.userEmail }</td>
 						<%-- <td>${agency.agencyIp }</td> --%>
 						<td style="display:none">${loginContext.id }</td>
-						<td>${agency.createTimeStr }</td>
+						<c:if test="${resultMap.aardto.bindState==1  }"><td>${agency.createTimeStr }</td></c:if>
+						<td>${agency.agencyTel }</td>
+						<td>${agency.agencyMark }</td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -168,6 +176,35 @@
 function onSub(){
 	$('form').submit();
 }
+/**绑定全部代理商**/
+function changeBAllState(url,bindState, updateBindState){
+	var rateDiscountId = $('#rateDiscountId').val();
+	var billType = $('#billType').val();
+	var agencyTag = $('#agencyTag').val();
+	//var bindState = $('#bindState').val();
+	var agencyName = $('#agencyName').val();
+	var agencyMark = $('#agencyMark').val();
+	$.ajax({
+		type: 'POST',
+		url: url,
+		//dataType: 'json',
+		data: {updateBindState:updateBindState,rateDiscountId:rateDiscountId,billType:billType,agencyTag:agencyTag,agencyName: agencyName,agencyMark: agencyMark,bindState: bindState},
+		success: function(resp){
+			//$(obj).parents("tr").remove();
+			//alert
+			if(resp=="success"){
+				//layer.msg('更新绑定成功',{icon:1,time:1000});
+				location.reload();
+           	 }else{
+				layer.msg('更新绑定失败',{icon:1,time:1000});
+           	 }
+		},
+		error:function(resp) {
+			console.log(resp.msg);
+		}
+	});
+}
+
 /**批量更新绑定状态*/
 function changeBState(url,bindState){
 	var rateDiscountId = $('#rateDiscountId').val();

@@ -1,5 +1,7 @@
 package com.weizu.flowsys.web.agency.pojo;
 
+import java.io.Serializable;
+
 import com.weizu.flowsys.core.annotation.po.TableName;
 import com.weizu.flowsys.core.beans.Po;
 import com.weizu.flowsys.core.util.NumberTool;
@@ -14,8 +16,10 @@ import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
  * @version 1.0
  */
 @TableName(name="charge_account")
-public class ChargeAccountPo extends Po implements Cloneable {
-    private Integer id;						//账户id
+public class ChargeAccountPo extends Po implements Cloneable,Serializable {
+//	private static final long serialVersionUID = 1L;
+
+	private Integer id;						//账户id
 
     private Integer agencyId;				//所属代理商id
     

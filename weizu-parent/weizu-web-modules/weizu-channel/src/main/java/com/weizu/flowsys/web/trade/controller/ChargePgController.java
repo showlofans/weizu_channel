@@ -37,6 +37,7 @@ import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
+import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
@@ -225,6 +226,9 @@ public class ChargePgController {
 			String pageMsg = "";
 			String referURL = "";
 			pcVO.setChannelId(channelId);
+			
+			//充值
+			pcVO.setChargeFor(PgServiceTypeEnum.PGCHARGE.getValue());
 			pageMsg = purchaseAO.purchase(pcVO, accountPo);
 			referURL = "/flowsys/chargePg/purchase_list.do?orderResult=2";
 			resultMap.put("referURL", referURL);
@@ -649,6 +653,7 @@ public class ChargePgController {
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		resultMap.put("orderPathEnums", OrderPathEnum.toList());
 		resultMap.put("orderStateEnums", OrderStateEnum.toList());
+		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 		ModelAndView model = new ModelAndView("/trade/purchase_list", "resultMap", resultMap);
 		
 		Boolean isSuper = agencyVO.getRootAgencyId() == 0;
@@ -906,7 +911,7 @@ public class ChargePgController {
 	 * @createTime:2017年11月7日 下午5:31:59
 	 */
 	@ResponseBody
-	@RequestMapping(value=ChargePgURL.BATCH_PUSH_ORDER)
+	@RequestMapping(value=ChargePgURL.BATCH_PUSH_ORDER,produces = "application/json;charset=utf-8")
 	public String batchPushOrder(PurchaseVO purchaseVO, HttpServletRequest request){
 		String res = "error";
 		HttpSession httpSession = request.getSession();
@@ -929,7 +934,7 @@ public class ChargePgController {
 	 */
 	@RequestMapping(value=ChargePgURL.EXPORT_CHARGED_LIST, method=RequestMethod.GET)
 	public void exportChargedList(PurchaseVO purchaseVO,HttpServletResponse response,HttpServletRequest request){
-		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession() .getAttribute("loginContext");
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO != null){
 			purchaseVO.setAgencyId(agencyVO.getId());//设置为当前登陆用户的订单
 			HSSFWorkbook hbook = purchaseAO.exportChargedList(purchaseVO, agencyVO.getAgencyTag()); 

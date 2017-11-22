@@ -293,7 +293,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 					chargeAccountAO.updateAccount(chargeAccountPo);
 					int addRec = chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
 							agencyBeforeBalance, agencyAfterBalance, 
-							AccountTypeEnum.DECREASE.getValue(), accountId, 1 , orderId));
+							AccountTypeEnum.DECREASE.getValue(), accountId, pcVO.getChargeFor() , orderId));
 //					purchasePo.setOrderResult(OrderStateEnum.CHARGING.getValue());
 //					purchasePo.setOrderResultDetail(OrderStateEnum.CHARGING.getDesc());
 					purResult = purchaseDAO.addPurchase(purchasePo);
@@ -334,7 +334,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 						/** 向消费记录表插入登陆用户数据 */
 						chargeRecordDao.add(new ChargeRecordPo(currentTime, orderAmount,
 								agencyBeforeBalance, chargeAccountPo.getAccountBalance(), 
-								AccountTypeEnum.DECREASE.getValue(), chargeAccountPo.getId(), 1 , orderId));
+								AccountTypeEnum.DECREASE.getValue(), chargeAccountPo.getId(),  pcVO.getChargeFor() , orderId));
 						/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
 						int orderPath = OrderPathEnum.WEB_PAGE.getValue();
 						Long recordId = chargeRecordDao.nextId() -1;
@@ -389,7 +389,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 						agencyAfterBalance = NumberTool.sub(agencyBeforeBalance,minusAmount);
 						recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), minusAmount,
 								agencyBeforeBalance, agencyAfterBalance, 
-								AccountTypeEnum.DECREASE.getValue(), apAccountId,1, orderId));	
+								AccountTypeEnum.DECREASE.getValue(), apAccountId, pcVO.getChargeFor(), orderId));	
 						int orderPath = OrderPathEnum.CHILD_WEB_PAGE.getValue();
 						AccountPurchasePo app = new AccountPurchasePo(apAccountId, orderId, activeRatePo.getId(), minusAmount,from_accountPo.getId(), recordId, plusAmount, fromAgencyName, orderPath, orderState);
 						recordId++;
@@ -425,7 +425,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				chargeAccountAO.updateAccount(superAccountPo);
 				recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
 						agencyBeforeBalance, agencyAfterBalance, 
-						AccountTypeEnum.DECREASE.getValue(), superAccountPo.getId(), 1 , orderId));
+						AccountTypeEnum.DECREASE.getValue(), superAccountPo.getId(),  pcVO.getChargeFor() , orderId));
 				/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
 				int orderPath = OrderPathEnum.CHILD_WEB_PAGE.getValue();
 				//ChannelDiscountPo cdPo = channelDiscountDao.get(ratePo.getChannelDiscountId());
@@ -748,7 +748,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 	@Override
 	public Pagination<PurchaseVO> getPurchase(Map<String, Object> resultMap,PurchaseVO purchaseVO,
 			PageParam pageParam) {
-		Boolean isCharged = purchaseVO.getOrderState() != null && (purchaseVO.getOrderState() == OrderStateEnum.CHARGED.getValue() ||purchaseVO.getOrderState() == OrderStateEnum.UNCHARGE.getValue());
+		Boolean isStateCharged = purchaseVO.getOrderState() != null && (purchaseVO.getOrderState() == OrderStateEnum.CHARGED.getValue() ||purchaseVO.getOrderState() == OrderStateEnum.UNCHARGE.getValue());
+		Boolean isResultCharged = purchaseVO.getOrderResult() != null && (purchaseVO.getOrderResult() == OrderStateEnum.CHARGED.getValue() ||purchaseVO.getOrderResult() == OrderStateEnum.UNCHARGE.getValue());
+		Boolean isCharged = isStateCharged || isResultCharged; 
 		Map<String, Object> paramsMap = getMapByPojo(purchaseVO,isCharged);
 		long totalRecord = purchaseDAO.countPurchase(paramsMap);//今天的订单数量
 		//设置总记录数和页面参数和查询参数
@@ -862,7 +864,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 
 	@Override
 	public Map<String,Object> getPurchaseMap(PurchaseVO purchaseVO) {
-		Boolean isCharged = purchaseVO.getOrderState() != null && (purchaseVO.getOrderState() == OrderStateEnum.CHARGED.getValue() ||purchaseVO.getOrderState() == OrderStateEnum.UNCHARGE.getValue());
+		Boolean isStateCharged = purchaseVO.getOrderState() != null && (purchaseVO.getOrderState() == OrderStateEnum.CHARGED.getValue() ||purchaseVO.getOrderState() == OrderStateEnum.UNCHARGE.getValue());
+		Boolean isResultCharged = purchaseVO.getOrderResult() != null && (purchaseVO.getOrderResult() == OrderStateEnum.CHARGED.getValue() ||purchaseVO.getOrderResult() == OrderStateEnum.UNCHARGE.getValue());
+		Boolean isCharged = isStateCharged || isResultCharged; 
+		
 		Map<String, Object> paramsMap = getMapByPojo(purchaseVO,isCharged);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		long totalRecord = purchaseDAO.countPurchase(paramsMap);//今天的订单数量
@@ -1294,7 +1299,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				hSheet.setColumnWidth(5, 35 * 100);
 				hSheet.setColumnWidth(6, 35 * 80);
 				hSheet.setColumnWidth(7, 35 * 200);
-				if(isDataUser){{
+				if(isDataUser){
 					hSheet.setColumnWidth(8, 35 * 200);
 				}
 				HSSFRow hRow = hSheet.createRow(0);
@@ -1382,9 +1387,6 @@ public class PurchaseAOImpl implements PurchaseAO {
 //					hRow.createCell(8).setCellValue("欠票票额：" + NumberTool.formatNumber(NumberUtils.sub(a.getPreBalance(), a.getBalance()), "###,###,##0.00"));
 //				}
 			
-			}
-
 			return hbook;
-		}
-
+			}
 }

@@ -141,8 +141,8 @@
 				<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="editRate('/flowsys/rate/bind_rate_add_page.do','折扣编辑')" href="javascript:;" > 修改折扣</a>
 				<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="delRateDiscount()" href="javascript:;" > 删除折扣</a>
 				<br><br>
-				代理商名称： <input type="text" style="width:150px;" class="input-text ac_input" value="${resultMap.searchParams.agencyName }" autocomplete="off" id="agencyName" name="agencyName">
-				
+				代理商名称： <input type="text" style="width:150px;" class="input-text ac_input" placeholder=" 代理商名称" value="${resultMap.searchParams.agencyName }" autocomplete="off" id="agencyName" name="agencyName">
+				<%-- 备注信息:<input type="text"  value="${resultMap.aardto.agencyMark }" name="agencyMark" id="" placeholder=" 用户备注" style="width:150px" class="input-text"> --%>
 				<!-- <button class="btn btn-success" type="reset"  value="重置">重置</button> -->
 				<button name="" id="" class="btn btn-success"  type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 				<%-- <input type="hidden" id="rateId" name="id" value="${resultMap.discountList[0].id }">  --%>
@@ -162,6 +162,7 @@
 				<tr class="text-c">
 					<!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
 					<th>代理商名称</th>
+					<!-- <th>用户备注</th> -->
 					<!-- <th>通道折扣</th>
 					<th>移动折率</th>
 					<th>联通折率</th>
@@ -176,6 +177,7 @@
 					<tr class="text-c">
 						<!-- <td><input type="checkbox" value="" name=""></td> -->
 						<td>${activePo.agencyName }</td>
+						<%-- <td>${activePo.agencyMark }</td> --%>
 						<td><c:forEach items="${resultMap.bindStateEnums }" var="bindStateEnum" varStatus="vs1">
 							<c:if test="${activePo.bindState == bindStateEnum.value }"> ${bindStateEnum.desc }</c:if>
 							</c:forEach>

@@ -1,7 +1,9 @@
 package com.weizu.flowsys.web.agency.pojo;
 
-import com.weizu.flowsys.core.annotation.po.TableName;
-import com.weizu.flowsys.core.annotation.po.TempField;
+import java.io.Serializable;
+
+//import com.weizu.flowsys.core.annotation.po.TableName;
+//import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
 
 /**
@@ -12,8 +14,9 @@ import com.weizu.flowsys.core.beans.Po;
  * @createTime:2017年4月25日 上午11:42:07
  * @version 1.0
  */
-@TableName(name = "agency_backward")
-public class AgencyBackwardVO extends Po {
+public class AgencyBackwardVO extends Po implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private Integer id;
 
@@ -33,9 +36,9 @@ public class AgencyBackwardVO extends Po {
 	
 	private String callBackIp;
 
-	@TempField
+	//@TempField
 	private Double accountBalance; // 账户余额
-	@TempField
+	//@TempField
 	private Double accountCredit; // 透支额
 
 //	private Long rateId;
@@ -49,7 +52,7 @@ public class AgencyBackwardVO extends Po {
 //	private String billRateName;
 
 	private Long createTime;		//注册时间
-	@TempField
+	//@TempField
 	private String createTimeStr;
 	
 //	private Long startTime
@@ -58,10 +61,12 @@ public class AgencyBackwardVO extends Po {
 	
 	private String userApiKey;				//用户对接系统的apikey
 	
-	@TempField
+	//@TempField
 	private Integer billType;				//费率类型
-	@TempField
+	//@TempField
 	private Integer accountId;				//账户id
+	
+	private String agencyMark;				//用户备注
 	
 	/**生成VO实体*/
 	public AgencyBackwardVO(Integer id, Integer rootAgencyId, String userName,
@@ -84,6 +89,14 @@ public class AgencyBackwardVO extends Po {
 		this.agencyTag = agencyTag;
 	}
 	
+	public String getAgencyMark() {
+		return agencyMark;
+	}
+
+	public void setAgencyMark(String agencyMark) {
+		this.agencyMark = agencyMark;
+	}
+
 	public String getCallBackIp() {
 		return callBackIp;
 	}

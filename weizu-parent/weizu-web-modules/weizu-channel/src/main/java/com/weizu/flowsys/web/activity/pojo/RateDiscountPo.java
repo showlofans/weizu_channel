@@ -1,5 +1,6 @@
 package com.weizu.flowsys.web.activity.pojo;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.weizu.flowsys.core.annotation.po.TableName;
@@ -15,7 +16,7 @@ import com.weizu.flowsys.core.beans.Po;
  * @version 1.0
  */
 @TableName(name="rate_discount")
-public class RateDiscountPo extends Po {
+public class RateDiscountPo extends Po implements Serializable{
     private Long id;
     
     private Double activeDiscount;

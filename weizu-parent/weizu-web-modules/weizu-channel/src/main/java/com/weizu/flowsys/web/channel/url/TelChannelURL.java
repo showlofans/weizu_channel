@@ -40,6 +40,29 @@ public class TelChannelURL extends BaseURL {
 	 * <br>/flowsys/tel_channel/telchannel_list.do
 	 */
 	public static final String TELCHANNEL_LIST = "/telchannel_list" + DYNAMIC_WEB_SUFFIX;
+
+	/**
+	 * 话费通道编辑页面
+	 * <br>/flowsys/tel_channel/telchannel_edit_page.do
+	 */
+	public static final String TELCHANNEL_EDIT_PAGE = "/telchannel_edit_page" + DYNAMIC_WEB_SUFFIX;
 	
+	/**
+	 * 话费通道更新
+	 * <br>/flowsys/tel_channel/telchannel_edit.do
+	 */
+	public static final String TELCHANNEL_EDIT = "/telchannel_edit" + DYNAMIC_WEB_SUFFIX;
+	
+	/**
+	 * 话费通道删除
+	 * <br>/flowsys/tel_channel/telchannel_del.do
+	 */
+	public static final String TELCHANNEL_DEL = "/telchannel_del" + DYNAMIC_WEB_SUFFIX;
+	
+	/**
+	 * 话费通道状态修改
+	 * <br>/flowsys/tel_channel/update_telchannel_state.do
+	 */
+	public static final String UPDATE_TELCHANNEL_STATE = "/update_telchannel_state" + DYNAMIC_WEB_SUFFIX;
 	
 }

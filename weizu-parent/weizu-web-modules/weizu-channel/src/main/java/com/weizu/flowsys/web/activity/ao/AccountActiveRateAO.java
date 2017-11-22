@@ -139,6 +139,19 @@ public interface AccountActiveRateAO {
 	 * @createTime:2017年7月18日 下午3:37:46
 	 */
 	int batchBindAgency(AccountActiveRateDTO aardto);
+
+	/**
+	 * @description: 通道价格批量绑定所有代理商
+	 * @param billTypeRate
+	 * @param rootAgencyId
+	 * @param aardto
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月20日 下午3:29:03
+	 */
+	int batchBindAllAgency(int billTypeRate, int rootAgencyId, AccountActiveRateDTO aardto, int updateBindState);
+	
+	
 	
 	/**
 	 * @description:删除代理商和通道的绑定

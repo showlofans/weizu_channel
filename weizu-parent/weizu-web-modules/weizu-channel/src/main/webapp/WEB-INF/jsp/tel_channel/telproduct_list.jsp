@@ -31,7 +31,7 @@
 <title>话费编码列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 通道管理 <span class="c-gray en">&gt;</span> 花非编码列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 平台通道管理 <span class="c-gray en">&gt;</span> 话费编码管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
 	<form class="form form-horizontal" action="/flowsys/tel_product/telproduct_list.do" method="post" id="formD" name="dataListForm">
@@ -48,38 +48,41 @@
 		&nbsp;&nbsp; --%>
 		 平台名称:<input type="text" value="${resultMap.params.epName }" name="epName" id="" placeholder="平台名称" style="width:80px" class="input-text">
 		&nbsp;&nbsp;
+		 <!--  业务类型： -->
+		 <span class="select-box inline">
+			<select name="serviceType" class="select" onchange="submitForm()">
+				<!-- <option value="">业务类型</option> -->
+				<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
+					<option value="${serviceTypeEnum.value }" <c:if test="${serviceTypeEnum.value == resultMap.params.serviceType }"> selected</c:if>>${serviceTypeEnum.desc }</option>
+				</c:forEach>
+			</select>
+		</span> 
+		
+		&nbsp;&nbsp;
 		<!--  地区省份： -->
 		 <span class="select-box inline">
-			<select class="select" onchange="province_change(this.value);">
+			<select name="provinceid" id="provinceid" class="select" onchange="province_change(this.value);">
 				<option value="">省份</option>
 				<c:forEach items="${resultMap.provinces }" var="province" varStatus="vs1">
-					<option value="${province.provinceid }" >${province.province }</option><!-- <c:if test="${serviceTypeEnum.value == resultMap.params.serviceType }"> selected</c:if> -->
+					<option <c:if test="${province.provinceid == resultMap.params.provinceid }"> selected</c:if> value="${province.provinceid }" >${province.province }</option><!-- <c:if test="${serviceTypeEnum.value == resultMap.params.serviceType }"> selected</c:if> -->
 				</c:forEach>
 			</select>
 		</span> 
 		 <!--  地区城市： -->
 		 <span class="select-box inline">
-			<select class="select" id="city" name="cityid" onchange="submitForm()">
+			<select class="select" id="city" name="cityid" onchange="initCity()">
 				<option value="">城市</option>
 			</select>
 		</span> 
+		 
+		<input type="hidden" value="${resultMap.params.cityid }" id="cityid" >
 		&nbsp;&nbsp;
 		 <!--  运营商类型： -->
 		 <span class="select-box inline">
 			<select name="operatorName" class="select"  onchange="submitForm()">
 				<option value="">运营商类型</option>
-				<c:forEach items="${resultMap.operatoerNameEnums }" var="operatorNameEnum" varStatus="vs1">
+				<c:forEach items="${resultMap.operatorNameEnums }" var="operatorNameEnum" varStatus="vs1">
 					<option value="${operatorNameEnum.value }" <c:if test="${operatorNameEnum.value == resultMap.params.operatorName }"> selected</c:if>>${operatorNameEnum.desc }</option>
-				</c:forEach>
-			</select>
-		</span> 
-		&nbsp;&nbsp;
-		 <!--  业务类型： -->
-		 <span class="select-box inline">
-			<select name="serviceType" class="select" onchange="submitForm()">
-				<option value="">业务类型</option>
-				<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
-					<option value="${serviceTypeEnum.value }" <c:if test="${serviceTypeEnum.value == resultMap.params.serviceType }"> selected</c:if>>${serviceTypeEnum.desc }</option>
 				</c:forEach>
 			</select>
 		</span> 
@@ -89,7 +92,7 @@
 			<select name="telchargeSpeed" class="select"  onchange="submitForm()">
 				<option value="">充值类型</option>
 				<c:forEach items="${resultMap.telchargeSpeedEnums }" var="telchargeSpeedEnum" varStatus="vs1">
-					<option value="${telchargeSpeedEnum.value }" <c:if test="${telchargeSpeedEnum.value == resultMap.params.telchargeSpeed }"> selected</c:if>>${telchargeSpeedEnum.desc }</option>
+					<option value="${telchargeSpeedEnum.value }" <c:if test="${telchargeSpeedEnum.value == resultMap.params.chargeSpeed }"> selected</c:if>>${telchargeSpeedEnum.desc }</option>
 				</c:forEach>
 			</select>
 		</span> 
@@ -113,7 +116,7 @@
 		<%-- 流量大小:<input type="text" value="${resultMap.params.pgSize }" name="pgSize" id="" placeholder="大小" style="width:80px" class="input-text">
 		原价：<input type="text" value="${resultMap.params.pgPrice }" name="pgPrice" id="" placeholder=" 原价" style="width:80px" class="input-text">元 --%>
 		<button type="button" class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
-		<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜编码</button>
+		<button name="" id=""  class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜编码</button>
 		<a style="text-decoration:none" class="btn btn-success" onClick="telPc_add('话费编码添加','/flowsys/tel_product/telproduct_add_page.do')" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i>添加</a>
 		<input type="hidden" name="pageNoLong" value="${pagination.pageNoLong }"> 
 	</div>
@@ -131,6 +134,7 @@
 					<th width="80">产品编码</th>
 					<th width="80">话费价值</th>
 					<!-- <th width="120">支持城市</th> -->
+					<th width="100">业务类型</th>
 					<th width="120">支持省份</th>
 					<th width="120">支持城市</th>
 					
@@ -138,7 +142,6 @@
 					<th width="120">限制描述</th>
 					
 					<th width="60">运营商类型</th>
-					<th width="100">业务类型</th>
 					
 					<th width="30">操作</th>
 				</tr>
@@ -149,16 +152,22 @@
 						<td>${product.id }</td> 
 						<td>${product.epName }</td>
 						<td class="c-blue">${product.telCode }</td>
-						<td>${product.chargeValue }</td>
+						<td>${product.chargeValue }元</td>
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
 						<td>
-						<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum">
+							<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
+							<c:if test="${product.serviceType == serviceTypeEnum.value }"> ${serviceTypeEnum.desc }</c:if>
+							</c:forEach>
+						</td>
+						<td>
+							${product.province }
+						<%-- <c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum">
 							<c:if test="${scopeCityEnum.value== product.cityid}">
 								<span data-toggle="tooltip" data-placement="right" title="${product.cityid }">${scopeCityEnum.desc }</span>
 							</c:if>
-						</c:forEach>
+						</c:forEach> --%>
 						</td>
-						<td>${product.cityid }</td> 
+						<td>${product.city }</td> 
 						<td>
 							<c:forEach items="${resultMap.telchargeSpeedEnums }" var="telchargeSpeedEnum" varStatus="vs1">
 							<c:if test="${product.chargeSpeed == telchargeSpeedEnum.value }"> ${telchargeSpeedEnum.desc }</c:if>
@@ -166,13 +175,8 @@
 						</td>
 						<td>${product.limitDescription }</td> 
 						<td>
-							<c:forEach items="${resultMap.operatorNameEnums }" var="operatorName" varStatus="vs1">
-							<c:if test="${product.operatorName == operatorName.value }"> ${operatorName.desc }</c:if>
-							</c:forEach>
-						</td>
-						<td>
-							<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
-							<c:if test="${product.serviceType == serviceTypeEnum.value }"> ${serviceTypeEnum.desc }</c:if>
+							<c:forEach items="${resultMap.operatorNameEnums }" var="operatorNameEnum" varStatus="vs1">
+							<c:if test="${product.operatorName == operatorNameEnum.value }"> ${operatorNameEnum.desc }</c:if>
 							</c:forEach>
 						</td>
 						 
@@ -194,28 +198,65 @@
 <!--/_footer 作为公共模版分离出去-->
 
 <!--请在下方写此页面业务相关的脚本-->
-<script type="text/javascript" src="/view/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
 <!-- jQuery -->
 <script type="text/javascript" src="/view/lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript">
+$(document).ready(function(){
+	var provinceid = $("#provinceid").val();
+	//alert($("#provinceid").val());
+	var ss;
+    var city = document.getElementById("city");
+    var cityid = $('#cityid').val();
+   $.getJSON("/view/mine/data/cityData.json",function(data){
+	    ss=data;
+	    //var html="<option value='-1'>==请选择==</option>";
+	    for(var i=0;i<ss.length;i++){
+	    	if(provinceid==ss[i].provinceid){
+                var citys=ss[i].cities;
+                city.innerHTML = "";
+                for(var j=0;j<citys.length;j++){
+                	city.add(new Option(citys[j].city,citys[j].cityid));
+                	if(cityid == citys[j].cityid){
+	   					city.options[j].selected=true;
+   					}
+                }
+            }
+	    }
+	});
+})
+
 /**省份变化*/
 function province_change(v){
 	var ss;
     var city = document.getElementById("city");
 	city.innerHTML = "";
+	//alert("1");
 	$.getJSON("/view/mine/data/cityData.json",function(data){
 	    ss=data;
 	    //var html="<option value='-1'>==请选择==</option>";
 	    for(var i=0;i<ss.length;i++){
 	    	if(v==ss[i].provinceid){
                 var citys=ss[i].cities;
-                for(var j=0;j<citys.length;j++){
-                	city.add(new Option(citys[j].city,citys[j].cityid));
-                }
+                //var arrLen = citys.length;
+               // if(arrLen > 0 ){
+                	//city.add(new Option(citys[0].city,citys[0].cityid),true);
+	                //if(citys.length > 1){
+		                for(var j=0;j<citys.length;j++){
+		                	city.add(new Option(citys[j].city,citys[j].cityid));
+		                	//city.append("<option value='"+citys[j].cityid+"'>"+citys[j].city+"</option>");
+		                }
+	               // }
+                //}
             }
 	    }
 	});
+   // city.options[0].selected=true;
+	$('form').submit();
 }
+function initCity(){
+	$('form').submit();
+}
+
 
 /**onchange提交表单*/
 function submitForm(){

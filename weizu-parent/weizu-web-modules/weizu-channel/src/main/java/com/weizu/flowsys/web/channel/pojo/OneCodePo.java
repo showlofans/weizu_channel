@@ -1,5 +1,7 @@
 package com.weizu.flowsys.web.channel.pojo;
 
+import java.io.Serializable;
+
 /**
  * @description:查詢參數封裝
  * @projectName:crud
@@ -8,7 +10,7 @@ package com.weizu.flowsys.web.channel.pojo;
  * @createTime:2017年6月10日 下午6:04:26
  * @version 1.0
  */
-public class OneCodePo {
+public class OneCodePo implements Serializable {
 	
 	private String scopeCityCode;
 	

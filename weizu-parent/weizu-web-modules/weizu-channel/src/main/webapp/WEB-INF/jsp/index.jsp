@@ -55,7 +55,7 @@
 				<ul class="cl">
 					<!-- <li>超级管理员</li> -->
 					<%-- <li>个人信用：<a href="#"><c:if test="${empty chargeAccount.accountCredit }">0.00</c:if> ${chargeAccount.accountCredit }</a></li> --%>
-					<li>余额：<a title="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-href="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-title="充值记录" onclick="Hui_admin_tab(this)"><c:if test="${empty chargeAccount.accountBalance && empty chargeAccount1.accountBalance }">0.00</c:if> ${chargeAccount.accountBalance + chargeAccount1.accountBalance}</a></li>
+					<li>余额：<a title="充值记录" data-href="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-title="充值记录" onclick="Hui_admin_tab(this)"><c:if test="${empty chargeAccount.accountBalance && empty chargeAccount1.accountBalance }">0.00</c:if> ${chargeAccount.accountBalance + chargeAccount1.accountBalance}</a></li>
 					<li class="dropDown dropDown_hover">
 						<a href="javascript:;" onClick="myselfinfo()" class="dropDown_A">${loginContext.userName} <i class="Hui-iconfont">&#xe6d5;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
@@ -65,8 +65,8 @@
 							 <li><a data-href="/flowsys/bankAccount/my_bank_list.do" data-title="申请加款" href="javascript:void(0)" onclick="Hui_admin_tab(this)">申请加款</a></li>
 							<li><a href="javascript:;" onClick="resetPass()">修改密码</a></li>
 							<li><a href="/flowsys/agency/logout.do">退出</a></li>
-					</ul>
-				</li>
+						</ul>
+					</li>
 					<li id="Hui-msg" class="dropDown right dropDown_hover"> <a href="#" class="dropDown_A" title="消息">
 						<c:if test="${msgNum != 0 }">
 							<span class="badge badge-danger">${msgNum }</span>
@@ -106,25 +106,26 @@
 	<div class="menu_dropdown bk_2">
 		<c:if test="${loginContext.rootAgencyId == 0 }">
 			<dl id="menu-product"><!-- menu_dropdown-arrow -->
-				<dt><i class="Hui-iconfont">&#xe679;</i> 通道管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+				<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe643;</i> 通道管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 				<dd>
 					<ul>
 						<c:if test="${power== 'no'}">
 							<li><a data-href="/flowsys/platform/platform_list.do" data-title="平台管理" href="javascript:void(0)">平台管理</a></li>
-							<li><a data-href="/flowsys/productCode/product_code_list.do" data-title="产品编码" href="javascript:void(0)">产品编码</a></li>
+							<li><a data-href="/flowsys/productCode/product_code_list.do" data-title="流量编码" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量编码</a></li>
 						</c:if>
-						<li><a data-href="/flowsys/channel/channel_add_page.do" data-title="通道添加" href="javascript:void(0)">通道添加</a></li>
-						<li><a data-href="/flowsys/channel/channel_list.do" data-title="通道列表" href="javascript:void(0)">通道列表</a></li>
-						<li><a data-href="/flowsys/tel_product/telproduct_list.do" data-title="话费编码列表" href="javascript:void(0)">话费编码</a></li>
-						<li><a data-href="/flowsys/tel_channel/telchannel_add_page.do" data-title="话费通道添加" href="javascript:void(0)">话费添加</a></li>
-						<li><a data-href="/flowsys/tel_channel/telchannel_list.do" data-title="话费通道" href="javascript:void(0)">话费通道</a></li>
+						<li><a data-href="/flowsys/channel/channel_add_page.do" data-title="流量添加" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量添加</a></li>
+						<li><a data-href="/flowsys/channel/channel_list.do" data-title="流量通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量通道</a></li>
+						
+						<li><a data-href="/flowsys/tel_product/telproduct_list.do" data-title="话费编码列表" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费编码</a></li>
+						<li><a data-href="/flowsys/tel_channel/telchannel_add_page.do" data-title="话费通道添加" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费添加</a></li>
+						<li><a data-href="/flowsys/tel_channel/telchannel_list.do" data-title="话费通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费通道</a></li>
 						<!-- <li><a data-href="/flowsys/rate/bind_channel_list.do?bindTag=bAgency" data-title="活动通道" href="javascript:void(0)">活动通道</a></li> -->
 					</ul>
 				</dd>
 			</dl>
 		</c:if>
 		<dl id="menu-product">
-			<dt><i class="Hui-iconfont">&#xe674;</i> 代理商管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe62b;</i> 代理商管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
 					<!-- <li><a data-href="/flowsys/rate/rate_add_page.do" data-title="费率添加" href="javascript:void(0)">费率添加</a></li>
@@ -138,7 +139,7 @@
 			</dd>
 		</dl>
 		<dl id="menu-comments">
-			<dt><i class="Hui-iconfont">&#xe687;</i> 订单管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dt><i class="Hui-iconfont"style="font-size:20px;">&#xe627;</i> 订单管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
 					<c:choose>
@@ -160,10 +161,11 @@
 		</dd>
 	</dl>
 	<dl id="menu-comments">
-		<dt><i class="Hui-iconfont">&#xe687;</i> 在线充值<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+		<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe726;</i> 在线充值<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 		<dd>
 			<ul>
-				<li><a data-href="/flowsys/chargePg/pg_charge_page.do" title="/flowsys/chargePg/pg_charge_page.do" data-title="流量充值" href="javascript:;">流量充值</a></li>
+				<li><a data-href="/flowsys/chargePg/pg_charge_page.do" title="/flowsys/chargePg/pg_charge_page.do" data-title="流量充值" href="javascript:;"><i class="Hui-iconfont">&#xe675;</i>  流量充值</a></li>
+				<!-- <li><a data-href="/flowsys/chargePg/pg_charge_page.do" title="/flowsys/chargePg/pg_charge_page.do" data-title="话费充值" href="javascript:;"><i class="Hui-iconfont">&#xe6c7;</i> 话费充值</a></li> -->
 				<!-- <li><a data-href="/flowsys/chargePg/pg_batch_charge_page.do" title="批量充值" data-title="批量充值" href="javascript:;">批量充值</a></li> -->
 				
 			</ul>
@@ -171,7 +173,7 @@
 	</dl>
 	<c:if test="${loginContext.rootAgencyId == 0 }">
 	<dl id="menu-article">
-			<dt><i class="Hui-iconfont">&#xe6c6;</i> 标准价管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe6c6;</i> 标准价管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
 					<li><a data-href="/flowsys/operatorPg/operatorPg_list.do" data-title="标准价管理" href="javascript:void(0)">标准价管理</a></li>
@@ -180,7 +182,7 @@
 	</dl>
 	</c:if>
 	<dl id="menu-member">
-		<dt><i class="Hui-iconfont">&#xe6c6;</i> 账户管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+		<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe670;</i> 账户管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 		<dd>
 			<ul>
 				<!-- <li><a data-href="/flowsys/account/open_company_account_page.do" data-title="认证信息" href="javascript:void(0)">认证信息</a></li> -->
@@ -197,18 +199,92 @@
 			</ul>
 		</dd>
 	</dl>
-	<!-- http://htmlify.wps.cn/doc/index.html?ksyun=UD4oMeA6/word.html&theme=clear -->
-	<dl id="menu-member">
-		<dt><i class="Hui-iconfont">&#xe6c6;</i> 平台相关<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-		<dd>
-			<ul>
-			<%-- <c:if test="${loginContext.agencyTag == 1 }">
-			</c:if> --%>
-				<li><a href="/view/mine/jk-doc/jk-doc.html" title="南昌微族接口文档" target="_blank">南昌微族接口文档</a></li>
-				<li><a data-href="http://htmlify.wps.cn/doc/index.html?ksyun=UD4oMeA6/word.html&theme=clear" data-title="平台操作指南" href="javascript:void(0)">平台操作指南</a></li>
+	
+	<c:if test="${not empty telLogin }">
+	<%-- <dl>
+ 	<dt>余额：<a title="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-href="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-title="充值记录" onclick="Hui_admin_tab(this)"><c:if test="${empty chargeAccount.accountBalance && empty chargeAccount1.accountBalance }">0.00</c:if> ${chargeAccount.accountBalance + chargeAccount1.accountBalance}<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></a></dt>
+ 	<dd>  余额：<a title="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-href="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-title="充值记录" onclick="Hui_admin_tab(this)"><c:if test="${empty chargeAccount.accountBalance && empty chargeAccount1.accountBalance }">0.00</c:if> ${chargeAccount.accountBalance + chargeAccount1.accountBalance}</a>
+ 	</dd></dl> --%>
+	<dl>
+ 		 <dt>
+ 		 	<i class="Hui-iconfont" style="font-size:20px;">&#xe705;</i> 个人中心<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i>
+ 		 </dt> 
+	 	<dd>
+ 			<ul>
+ 				<li><a href="javascript:;" onClick="myselfinfo()"><!-- <a title="" data-href="/flowsys/agency/agency_info.do" data-title="个人信息" onclick="Hui_admin_tab(this)"> --><%-- ${loginContext.userName} --%>个人信息 </a></li>
+				<li><a title="" data-href="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-title="充值记录" onclick="Hui_admin_tab(this)">余额：<c:if test="${empty chargeAccount.accountBalance && empty chargeAccount1.accountBalance }">0.00</c:if> ${chargeAccount.accountBalance + chargeAccount1.accountBalance}</a></li>
+				<li><a href="/flowsys/agency/logout.do">切换账户</a></li>
+				 <li><a data-href="/flowsys/bankAccount/my_bank_list.do" data-title="申请加款" href="javascript:void(0)" onclick="Hui_admin_tab(this)">申请加款</a></li>
+ 				<li><a title="" data-href="/flowsys/agency/reset_pass_page.do?tag=1" data-title="修改密码" onclick="Hui_admin_tab(this)"><%-- ${loginContext.userName} --%>修改密码 </a></li>
+				<!-- <li><a href="javascript:;" onClick="resetPass()">修改密码</a></li> -->
+				<li><a href="/flowsys/agency/logout.do">退出</a></li>
 			</ul>
 		</dd>
-	</dl>
+	 </dl>
+	<dl>
+	 <dt><i class="Hui-iconfont" style="font-size:20px;">&#xe68a;</i>  消息<c:if test="${msgNum != 0 }">
+			<span class="badge badge-danger">${msgNum }</span>
+			</c:if><i class="Hui-iconfont menu_dropdown-arrow" style="font-size:18px">&#xe6d5; </i>
+	 </dt> 
+	<dd>
+		<ul >
+			<c:if test="${loginContext.rootAgencyId == 0 }">
+				<li><a data-href="/flowsys/account/confirm_company_account_page.do" data-title="认证审核" title="认证审核" onclick="Hui_admin_tab(this)">认证审核 &nbsp;&nbsp;&nbsp;&nbsp;  ${unconfirmSize }</a></li>
+			</c:if>
+			<c:forEach items="${transferMsgList }" var="transferMsg" varStatus="vst">
+				<li><a data-href="/flowsys/bankAccount/transfer_record.do?bankId=${transferMsg.id }&confirmState=2&direction=0" data-title="转账审核" title="转账审核" onclick="Hui_admin_tab(this)">${transferMsg.remmitanceBankAccount} &nbsp;&nbsp;&nbsp;&nbsp;  <span class="c-danger">${transferMsg.tfnum}</span></a></li>
+			</c:forEach>
+		</ul>
+	</dd>
+	 </dl>
+	</c:if>
+	<!-- <dl>
+	 <dt> <a href="javascript:;" class="dropDown_A" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i>换肤</a>
+	 </dt> 
+	<dd>
+		<ul>
+			<li><a href="javascript:;" data-val="default" title="默认（黑色）">默认（黑色）</a></li>
+			<li><a href="javascript:;" data-val="blue" title="蓝色">蓝色</a></li>
+			<li><a href="javascript:;" data-val="green" title="绿色">绿色</a></li>
+			<li><a href="javascript:;" data-val="red" title="红色">红色</a></li>
+			<li><a href="javascript:;" data-val="yellow" title="黄色">黄色</a></li>
+			<li><a href="javascript:;" data-val="orange" title="橙色">橙色</a></li>
+		</ul>
+	</dd>
+	 </dl> -->
+ 		<%--  <dl>
+ 		 <dt> <a href="javascript:;" class="dropDown_A" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a>
+		</dt>
+		 <dd> <c:if test="${loginContext.rootAgencyId == 0 }">
+				<dd><a data-href="/flowsys/account/confirm_company_account_page.do" data-title="认证审核" title="认证审核" onclick="Hui_admin_tab(this)">认证审核 &nbsp;&nbsp;&nbsp;&nbsp;  ${unconfirmSize }</a></dd>
+			</c:if>
+			<c:forEach items="${transferMsgList }" var="transferMsg" varStatus="vst">
+				<dd><a data-href="/flowsys/bankAccount/transfer_record.do?bankId=${transferMsg.id }&confirmState=2&direction=0" data-title="转账审核" title="转账审核" onclick="Hui_admin_tab(this)">${transferMsg.remmitanceBankAccount} &nbsp;&nbsp;&nbsp;&nbsp;  <span class="c-danger">${transferMsg.tfnum}</span></a></dd>
+			</c:forEach>
+		</dd>
+		</dl>
+		 <dl>
+ 		 <dt>  <a href="javascript:;" class="dropDown_A" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a></dt> 
+ 		  <dd><a href="javascript:;" data-val="default" title="默认（黑色）">默认（黑色）</a></dd>
+			<dd><a href="javascript:;" data-val="blue" title="蓝色">蓝色</a></dd>
+			<dd><a href="javascript:;" data-val="green" title="绿色">绿色</a></dd>
+			<dd><a href="javascript:;" data-val="red" title="红色">红色</a></dd>
+			<dd><a href="javascript:;" data-val="yellow" title="黄色">黄色</a></dd>
+			<dd><a href="javascript:;" data-val="orange" title="橙色">橙色</a></dd>
+		</dl>
+
+	<!-- http://htmlify.wps.cn/doc/index.html?ksyun=UD4oMeA6/word.html&theme=clear -->
+	<dl id="menu-member">
+		<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe633;</i> 平台相关<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+		<dd>
+			<ul>
+			<c:if test="${loginContext.agencyTag == 1 }">
+			</c:if>
+				<li><a href="/view/mine/jk-doc/jk-doc.html" title="南昌微族接口文档" target="_blank">南昌微族接口文档</a></li>
+				<li><a data-href="http://htmlify.wps.cn/doc/index.html?ksyun=hPT1Afio/word.html&theme=clear" data-title="平台操作指南" href="javascript:void(0)">平台操作指南</a></li>
+			</ul>
+		</dd>
+	</dl> --%>
 	<%-- <ul>
 		<c:if test="${loginContext.agencyTag == 1 }">
 			<!-- <li><a data-href="/view/mine/jk-doc/jk-doc.html" data-title="南昌微族接口文档" href="javascript:void(0)">南昌微族接口文档</a></li> -->
@@ -276,7 +352,7 @@
 		<div class="Hui-tabNav-wp">
 			<ul id="min_title_list" class="acrossTab cl">
 				<li class="active">
-					<span title="我的桌面" data-href="/flowsys/rate/welcome.do">我的桌面</span>
+					<span title="我的桌面" data-href="/flowsys/rate/welcome.do">我的通道</span>
 					<em></em></li>
 		</ul>
 	</div>

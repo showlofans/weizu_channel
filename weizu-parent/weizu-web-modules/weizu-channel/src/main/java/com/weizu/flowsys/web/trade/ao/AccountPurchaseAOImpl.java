@@ -122,7 +122,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 		if(purchasePo != null){
 			AgencyBackwardPo agencyPo = agencyVODao.getAgencyByAccountId(purchasePo.getAccountId());
 			if(agencyPo != null && !orderResult.equals(OrderStateEnum.CHARGING.getValue())){//不是充值进行，才返回调
-				sendCallBack.sendCallBack(new ResponseJsonDTO(orderId, purchasePo.getOrderIdFrom(), orderResult, "（推送）"+orderResultDetail, System.currentTimeMillis(),purchasePo.getChargeTel()), agencyPo.getCallBackIp());
+				sendCallBack.sendCallBack(new ResponseJsonDTO(orderId, purchasePo.getOrderIdFrom(), orderResult, "（批量推送）"+orderResultDetail, System.currentTimeMillis(),purchasePo.getChargeTel()), agencyPo.getCallBackIp());
 			}
 		}
 		

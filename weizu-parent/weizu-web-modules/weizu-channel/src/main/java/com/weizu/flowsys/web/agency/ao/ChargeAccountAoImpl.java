@@ -185,7 +185,7 @@ public class ChargeAccountAoImpl implements ChargeAccountAo {
 	 * @createTime:2017年7月1日 下午5:55:20
 	 */
 	@Override
-	public ChargeAccountPo getAccountByAgencyId(int agencyId, int billType) {
+	public ChargeAccountPo getAccountByAgencyId(Integer agencyId, Integer billType) {
 		ChargeAccountPo accountPo = chargeAccountDao.get(new WherePrams("agency_id", "=", agencyId).and("bill_type", "=", billType));
 		return accountPo;
 	}

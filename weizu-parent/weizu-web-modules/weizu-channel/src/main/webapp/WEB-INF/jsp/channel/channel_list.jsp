@@ -30,7 +30,7 @@
 <title>通道列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 平台通道管理 <span class="c-gray en">&gt;</span> 通道列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 平台通道管理 <span class="c-gray en">&gt;</span> 流量通道列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
 	<form class="form form-horizontal" action="/flowsys/channel/channel_list.do" method="post" id="formD" name="dataListForm">
@@ -39,10 +39,10 @@
 			通道省份：<input type="text" value="${resultMap.searchParam.scopeCityName }" name="scopeCityName" id="" placeholder=" 通道省份" style="width:100px" class="input-text">
 			平台名称：<input type="text" value="${resultMap.searchParam.epName }" name="epName" id="" placeholder=" 平台名称" style="width:100px" class="input-text">
 			通道名称：<input type="text" value="${resultMap.searchParam.channelName }" name="channelName" id="" placeholder=" 通道名称" style="width:100px" class="input-text">
-			通道类型
+			
 			<span class="select-box inline">
 				<select name="channelType" class="select" onchange="getChannelList()">
-				<option value="">请选择</option>
+				<option value="">通道类型</option>
 				<c:forEach items="${resultMap.channelTypeEnums }" var="channelTypeEnum" varStatus="vs1">
 					<option value="${channelTypeEnum.value }" <c:if test="${channelTypeEnum.value == resultMap.searchParam.channelType }"> selected</c:if>>${channelTypeEnum.desc }</option>
 				</c:forEach>
@@ -51,47 +51,52 @@
 		</div>
 		
 		<div class="row cl" style="margin-top: 30dp">
-			通道状态
 			<span class="select-box inline">
-				<select name="channelState" class="select" onchange="getChannelList()">
-				<option value="">请选择</option>
-				<c:forEach items="${resultMap.channelStateEnums }" var="cstate" varStatus="vs1">
-					<option value="${cstate.value }" <c:if test="${cstate.value == resultMap.searchParam.channelState }"> selected</c:if>>${cstate.desc }</option>
+				<select name="operatorType" class="select" onchange="getChannelList()">
+				<option value="">运营商</option>
+				<c:forEach items="${resultMap.operatorTypeEnums }" var="operatorTypeEnum" varStatus="vs1">
+					<option value="${operatorTypeEnum.value }" <c:if test="${operatorTypeEnum.value == resultMap.searchParam.operatorType }"> selected</c:if>>${operatorTypeEnum.desc }</option>
 				</c:forEach>
 			</select>
 			</span>
-			业务类型：
 			<span class="select-box inline">
 				<select name="serviceType"  id="serviceType" class="select" onchange="getChannelList()">
-				<option value="">请选择</option>
+				<option value="">业务类型</option>
 				<c:forEach items="${resultMap.serviceTypeEnums }" var="sTypeEnum" varStatus="vs1">
 					<option value="${sTypeEnum.value }" <c:if test="${sTypeEnum.value == resultMap.searchParam.serviceType }"> selected</c:if>>${sTypeEnum.desc }</option>
 				</c:forEach>
 			</select>
 			</span>
-			流量类型：
 			<span class="select-box inline">
 				<select name="pgType"  id="pgType" class="select" onchange="getChannelList()">
-				<option value="">请选择</option>
+				<option value="">流量类型</option>
 				<c:forEach items="${resultMap.pgTypeEnums }" var="pgTypeEnum" varStatus="vs2">
 					<option value="${pgTypeEnum.value }" <c:if test="${pgTypeEnum.value == resultMap.searchParam.pgType }"> selected</c:if>>${pgTypeEnum.desc }</option>
 				</c:forEach>
 			</select>
 			</span>
-			有效期：
 			<span class="select-box inline">
 				<select name="pgValidity"  id="pgValidity" class="select" onchange="getChannelList()">
-				<option value="">请选择</option>
+				<option value="">有效期</option>
 				<c:forEach items="${resultMap.pgValidityEnums }" var="pgValidityEnum" varStatus="vs2">
 					<option value="${pgValidityEnum.value }" <c:if test="${pgValidityEnum.value == resultMap.searchParam.pgValidity }"> selected</c:if>>${pgValidityEnum.desc }</option>
+				</c:forEach>
+			</select>
+			</span>
+			<span class="select-box inline">
+				<select name="channelState" class="select" onchange="getChannelList()">
+				<option value="">通道状态</option>
+				<c:forEach items="${resultMap.channelStateEnums }" var="cstate" varStatus="vs1">
+					<option value="${cstate.value }" <c:if test="${cstate.value == resultMap.searchParam.channelState }"> selected</c:if>>${cstate.desc }</option>
 				</c:forEach>
 			</select>
 			</span>
 			
 			<!-- <input type="hidden" value="" name="channelId" id="channelId"> -->
 			
+			<input type="text" value="${resultMap.searchParam.pgSize }" name="pgSize" id="" placeholder=" 包体大小" style="width:80px" class="input-text">
+			<input value="搜通道" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
 			<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
-			<input value="查询" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
 		</div>
 		<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 		</form>
@@ -131,7 +136,11 @@
 					<tr class="text-c">
 						<td>${channel.id }</td>
 						<td>${channel.epName }</td>
-						<td>${channel.channelName }</td><!-- <span data-toggle="tooltip" data-placement="top" title="${channel.pgSize }"></span> -->
+						<td>
+						<span data-toggle="tooltip" data-placement="top" title="${channel.lastAccessStr }">
+							${channel.channelName }
+						</span>
+						</td><!-- <span data-toggle="tooltip" data-placement="top" title="${channel.pgSize }"></span> -->
 						<%-- <td><c:forEach items="${resultMap.serviceTypeEnums }" var="serTypeEnum" varStatus="vs1">
 								<c:if test="${channel.serviceType == serTypeEnum.value }">
 									<span>${serTypeEnum.desc }</span>
@@ -301,7 +310,14 @@
 								<c:if test="${channel.serviceType == serTypeEnum.value }">
 									<span data-toggle="tooltip" data-placement="top" title="${serTypeEnum.desc } ${channel.specialTag }">
 										<c:forEach items="${channel.pgList }"  var="pgData" varStatus="vst">
-											${pgData.pgSize }&
+											<c:choose>
+												<c:when test="${pgData.pgSize == resultMap.searchParam.pgSize }">
+													<mark>${pgData.pgSize }&</mark>
+												</c:when>
+												<c:otherwise>
+													${pgData.pgSize }&
+												</c:otherwise>
+											</c:choose>
 										</c:forEach>
 										<%-- ${channel.pgSize } --%>
 									</span>

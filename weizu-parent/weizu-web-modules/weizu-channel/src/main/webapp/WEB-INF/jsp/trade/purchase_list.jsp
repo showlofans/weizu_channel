@@ -44,16 +44,17 @@
 				</div>
 				
 				<div class="row cl" style="margin-top: 30dp">
-					运营商类型：
+					<!-- 运营商类型： -->
 					<span class="select-box inline">
 						<select name="operatorType" class="select">
-						<option value="">请选择</option>
+						<option value="">运营商类型</option>
 						<c:forEach items="${resultMap.operatorTypeEnums }" var="otypeEnum" varStatus="vs2">
 							<option value="${otypeEnum.value }" <c:if test="${otypeEnum.value == resultMap.searchParams.operatorType }"> selected</c:if>>${otypeEnum.desc }</option>
 						</c:forEach>
 					</select>
 					</span> 
-						扣款类型：
+					&nbsp;&nbsp;
+						<!-- 扣款类型： -->
 					<%-- <c:choose>
 					<c:when test="${loginContext.rootAgencyId == 0 }">
 						通道类型：
@@ -64,17 +65,18 @@
 					
 					<span class="select-box inline">
 						<select name="billType" class="select">
-						<option value="">请选择</option>
+						<option value="">扣款类型</option>
 						<c:forEach items="${resultMap.billTypeEnums }" var="bTypeEnum" varStatus="vs2">
 							<option value="${bTypeEnum.value }" <c:if test="${bTypeEnum.value == resultMap.searchParams.billType }"> selected</c:if>>${bTypeEnum.desc }</option>
 						</c:forEach>
 					</select>
 					</span> 
+					&nbsp;&nbsp;
 					<c:if test="${loginContext.rootAgencyId == 0 }">
 						通道名称:<input type="text"  value="${resultMap.searchParams.channelName }" name="channelName" id="" placeholder=" 通道名称" style="width:250px" class="input-text">
 					</c:if>
 					
-					 提交时间：
+					 提交时间:
 					 <input type="text" style="width:150px" id="arriveStartTimeStr" class="input-text" name="arriveStartTimeStr"  value="${resultMap.searchParams.arriveStartTimeStr }"  onfocus="var arriveEndTimeStr=$dp.$('arriveEndTimeStr');WdatePicker({onpicked:function(){arriveEndTimeStr.focus();formSub();},startDate:'%y-%M-%d 00:00:00',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
 		                  	<em class="inputto">至</em>
 		            <input style="width:150px" type="text" class="input-text" id="arriveEndTimeStr" name="arriveEndTimeStr"   value="${resultMap.searchParams.arriveEndTimeStr }"  onfocus="WdatePicker({startDate:'%y-%M-%d 23:59:59',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'arriveStartTimeStr\')}',onpicked:function(){formSub();}})"/>
@@ -95,6 +97,7 @@
 					<th width="150">订单号</th>
 					<th width="120">手机号</th>
 					<th width="80">流量大小</th>
+					<th width="80">业务类型</th>
 					<th width="70">面值</th>
 					<th width="150">提交时间</th>
 					<!-- <th width="150">充值时间</th> -->
@@ -113,7 +116,17 @@
 			<tbody>
 				<c:forEach items="${resultMap.pagination.records }" var="purchase" varStatus="vs">
 					<tr class="text-c">
-						<td>${purchase.agencyName }
+						<td>
+							<c:choose>
+								<c:when test="${purchase.agencyId == loginContext.id}">
+									${purchase.agencyName }
+								</c:when>
+								<c:otherwise>
+									<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="editAgency(${purchase.agencyId})" href="javascript:;" title="查看代理商">
+										${purchase.agencyName }
+									</a>
+								</c:otherwise>
+							</c:choose>
 						</td>
 						<td>${purchase.orderId }
 							<%-- <c:choose>
@@ -136,7 +149,12 @@
 							</c:choose> --%>
 						</td>
 						<td>${purchase.chargeTel }</td>
-						 <td>${purchase.pgSize }</td>
+						 <td>${purchase.pgSize }M</td>
+						 <td><c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs">
+								<c:if test="${purchase.serviceType == serviceTypeEnum.value }">
+									${serviceTypeEnum.desc }
+								</c:if>
+							</c:forEach></td><!-- serviceTypeEnums -->
 						<td>${purchase.pgPrice }</td>
 						<td>
 								${purchase.orderArriveTimeStr }
@@ -225,6 +243,23 @@ function formSub(){
 	$("input[name='pageNoLong']").val('');
 	$('form').submit();
 }
+/*代理商-编辑*/
+function editAgency(id){
+	//var $agencyTr = $(obj).parent().parent();//tr标签
+	//var $id = $agencyTr.children(0);
+	layer.open({
+        type: 2,
+        title: '查看APIKey',
+        area: ['800px', '500px'],
+        maxmin: false,
+        closeBtn: 1,
+        content: '/flowsys/agency/child_agency_edit_page.do?id=' + id,
+        end: function () {
+            location.reload();
+        }
+    });
+}
+
 $(document).ready(function() {
 	$('.select').change(function(){
 		//$('form').submit();

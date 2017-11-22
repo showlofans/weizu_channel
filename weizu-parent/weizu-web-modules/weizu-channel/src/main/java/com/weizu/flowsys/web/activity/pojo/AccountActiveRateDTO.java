@@ -20,6 +20,8 @@ public class AccountActiveRateDTO extends Po {
     
     private Integer bindAgencyId;				//绑定人 
     
+    private String agencyMark;					//代理商备注
+    
     @TempField
     private String accountIds;					//代理商id
     
@@ -40,7 +42,14 @@ public class AccountActiveRateDTO extends Po {
 		this.bindAgencyId = bindAgencyId;
 	}
 	
-	
+	public String getAgencyMark() {
+		return agencyMark;
+	}
+
+	public void setAgencyMark(String agencyMark) {
+		this.agencyMark = agencyMark;
+	}
+
 	public Integer getAgencyTag() {
 		return agencyTag;
 	}

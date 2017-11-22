@@ -63,6 +63,7 @@ public class AgencyAOImpl implements AgencyAO {
 		Integer code = agencyVODao.getAgencyIdByVerifyCode(agencyBackward.getVerifyCode());
 		if(code != null){//注册商户之前绑定父代理商
 			agencyBackward.setRootAgencyId(code);
+			//把自己的代理商名称设为唯一邀请码，好像有风险，万一别人的代理商名称被
 			agencyBackward.setVerifyCode(agencyBackward.getUserName());//置空父级代理商的邀请码，以便绕过绕过非空验证，设置自己的邀请码
 			
 			agencyBackward.setCreateTime(System.currentTimeMillis());
@@ -120,6 +121,7 @@ public class AgencyAOImpl implements AgencyAO {
 				agencyBackward.getAgencyIp(), agencyBackward.getCreateTime(), 
 				agencyBackward.getVerifyCode(),agencyBackward.getCallBackIp(),agencyBackward.getOtherContact(),agencyBackward.getAgencyTag());
 		agencyVO.setUserApiKey(agencyBackward.getUserApiKey());
+		agencyVO.setAgencyMark(agencyBackward.getAgencyMark());
 //		setOtherContact(agencyBackward.getRootAgencyId(),agencyVO);
 		
 //		if(agencyBackward.getRootAgencyId() != 0){
@@ -174,6 +176,7 @@ public class AgencyAOImpl implements AgencyAO {
 				System.currentTimeMillis(), agencyBackward.getVerifyCode());
 		agencyPo.setOtherContact(agencyBackward.getOtherContact());
 		agencyPo.setCallBackIp(agencyBackward.getCallBackIp());
+		agencyPo.setAgencyMark(agencyBackward.getAgencyMark());
 		return agencyPo;
 	}
 
@@ -234,28 +237,31 @@ public class AgencyAOImpl implements AgencyAO {
 	 */
 	@Override
 	public Map<String, Object> getSearchParam(AgencyBackwardVO agencyBackward) {
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
 		if(agencyBackward != null){
 			if(StringHelper.isNotEmpty(agencyBackward.getUserName())){
-				resultMap.put("userName", agencyBackward.getUserName());
+				paramsMap.put("userName", agencyBackward.getUserName());
 			}
 			if(agencyBackward.getAgencyTag() != null){
 				//认证代理商只查对公，平台代理商只查对私
 				if (AgencyTagEnum.DATA_USER.getValue().equals(agencyBackward.getAgencyTag())) {
-//					resultMap.put("billType", BillTypeEnum.CORPORATE_BUSINESS.getValue());
-					resultMap.put("agencyTag", agencyBackward.getAgencyTag());
+//					paramsMap.put("billType", BillTypeEnum.CORPORATE_BUSINESS.getValue());
+					paramsMap.put("agencyTag", agencyBackward.getAgencyTag());
 				}else if(AgencyTagEnum.PLATFORM_USER.getValue().equals(agencyBackward.getAgencyTag())){
-					resultMap.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+					paramsMap.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 				}
 			}
+			if(StringHelper.isNotEmpty(agencyBackward.getAgencyMark())){
+				paramsMap.put("agencyMark", agencyBackward.getAgencyMark());
+			}
 //			if(agencyBackward.getBillType() != null){
-//				resultMap.put("billType", agencyBackward.getBillType());
+//				paramsMap.put("billType", agencyBackward.getBillType());
 //			}
 //			else{//搜索平台用户列表中 不带票账户
-//				resultMap.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+//				paramsMap.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 //			}
 		}
-		return resultMap;
+		return paramsMap;
 	}
 
 	/**
@@ -281,14 +287,14 @@ public class AgencyAOImpl implements AgencyAO {
 //			String userName = searchMap.get("userName").toString();
 //			whereParams.and("user_name", "like", userName);
 //		}
-		agencyBackwardVO.setRootAgencyId(rootAgencyId);
-		int totalRecord = agencyVODao.countByAgencyVO(agencyBackwardVO);
+//		agencyBackwardVO.setRootAgencyId(rootAgencyId);
+		searchMap.put("rootAgencyId", rootAgencyId);
+		int totalRecord = agencyVODao.countByAgencyVO(searchMap);
 //		whereParams.limit(pageNo * pageSize, pageSize);
 		
 		/**得到分页记录*/
 		searchMap.put("start", (pageNo-1) * pageSize);
 		searchMap.put("end", pageSize);
-		searchMap.put("rootAgencyId", rootAgencyId);
 		List<AgencyBackwardVO> records = agencyVODao.selectByAgencyVO(searchMap);
 //		List<RateBackwardPo> rateList = rateBackwardDao.selectByRootId(rootAgencyId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());//查一遍rate列表
 //		List<RateBackwardPo> billRateList = rateBackwardDao.selectByRootId(rootAgencyId,BillTypeEnum.CORPORATE_BUSINESS.getValue());//查一遍rate列表
@@ -320,36 +326,36 @@ public class AgencyAOImpl implements AgencyAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月22日 上午10:58:05
 	 */
-	@Override
-	public Map<String, Object> prepareParam(AgencyBackwardPo agBackwardPo) {
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		if(agBackwardPo != null){
-//			Long rateId = agBackwardPo.getRateId();
-//			ChargeAccountPo accPo = chargeAccountDao.selectByAgencyId(agBackwardPo.getId());
-//			if(accPo != null){
-//				resultMap.put("accountCredit", accPo.getAccountCredit());
-//				//po.setAccountCredit(accPo.getAccountCredit());
+//	@Override
+//	public Map<String, Object> prepareParam(AgencyBackwardPo agBackwardPo) {
+//		Map<String, Object> resultMap = new HashMap<String, Object>();
+//		if(agBackwardPo != null){
+////			Long rateId = agBackwardPo.getRateId();
+////			ChargeAccountPo accPo = chargeAccountDao.selectByAgencyId(agBackwardPo.getId());
+////			if(accPo != null){
+////				resultMap.put("accountCredit", accPo.getAccountCredit());
+////				//po.setAccountCredit(accPo.getAccountCredit());
+////			}
+////			RateBackwardPo rateBackPo = rateBackwardDao.get(rateId);
+////			if(rateBackPo != null){
+//////				po.setRateName(rateBackPo.getRateName());
+////				resultMap.put("rateName", rateBackPo.getRateName());
+////			}
+//			try {
+//				if(StringHelper.isNotEmpty(agBackwardPo.getUserRealName())){
+//					agBackwardPo.setUserRealName(new String(agBackwardPo.getUserRealName().getBytes("iso-8859-1"), "utf-8"));
+//				}
+//			} catch (UnsupportedEncodingException e) {
+//				e.printStackTrace();
 //			}
-//			RateBackwardPo rateBackPo = rateBackwardDao.get(rateId);
-//			if(rateBackPo != null){
-////				po.setRateName(rateBackPo.getRateName());
-//				resultMap.put("rateName", rateBackPo.getRateName());
-//			}
-			try {
-				if(StringHelper.isNotEmpty(agBackwardPo.getUserRealName())){
-					agBackwardPo.setUserRealName(new String(agBackwardPo.getUserRealName().getBytes("iso-8859-1"), "utf-8"));
-				}
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-			List<RateBackwardPo> rateList = rateBackwardDao.selectByRootId(agBackwardPo.getRootAgencyId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());//查一遍rate列表
-			List<RateBackwardPo> billRateList = rateBackwardDao.selectByRootId(agBackwardPo.getRootAgencyId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());//查一遍rate列表
-			resultMap.put("rateList", rateList);//费率列表
-			resultMap.put("billRateList", billRateList);//费率列表
-			resultMap.put("agencyPo", agBackwardPo);
-		}
-		return resultMap;
-	}
+//			List<RateBackwardPo> rateList = rateBackwardDao.selectByRootId(agBackwardPo.getRootAgencyId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());//查一遍rate列表
+//			List<RateBackwardPo> billRateList = rateBackwardDao.selectByRootId(agBackwardPo.getRootAgencyId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());//查一遍rate列表
+//			resultMap.put("rateList", rateList);//费率列表
+//			resultMap.put("billRateList", billRateList);//费率列表
+//			resultMap.put("agencyPo", agBackwardPo);
+//		}
+//		return resultMap;
+//	}
 
 	/**
 	 * @description:编辑代理商信息准备参数
@@ -465,8 +471,7 @@ public class AgencyAOImpl implements AgencyAO {
 		int pageSize = 10;
 		int pageNo = 1;
 		
-		
-		if(aardto.getBindState() == BindStateEnum.NO.getValue()){
+		if(aardto.getBindState() == BindStateEnum.NO.getValue()){//未绑定
 			totalRecord = agencyVODao.countNoBAgency(paramsMap);
 			if(pageParam != null){
 				pageSize = pageParam.getPageSize();
@@ -493,6 +498,21 @@ public class AgencyAOImpl implements AgencyAO {
 		}
 		return new Pagination<AgencyBackwardVO>(records, totalRecord, pageNo, pageSize);
 	}
+	
+	@Override
+	public List<AgencyBackwardVO> getUnbindAgencyList(int billTypeRate,
+			int rootAgencyId, AccountActiveRateDTO aardto) {
+		Map<String, Object> paramsMap = getUnbindMapByEntity(aardto);
+//		paramsMap.put("billType", billTypeRate);
+		paramsMap.put("rootAgencyId", rootAgencyId);
+		List<AgencyBackwardVO> records = null;
+		if(aardto.getBindState() == BindStateEnum.NO.getValue()){
+			records = agencyVODao.getNoBAgency(paramsMap);
+		}else{//解绑列表
+			records = agencyVODao.getUnbindAgency(paramsMap);
+		}
+		return records;
+	}
 
 	/**
 	 * @description: 封装查询参数
@@ -512,6 +532,9 @@ public class AgencyAOImpl implements AgencyAO {
 //		if(aardto.getBindState() != null){
 //			paramsMap.put("bindState", aardto.getBindState());
 //		}
+		if(StringHelper.isNotEmpty(aardto.getAgencyMark())){
+			paramsMap.put("agencyMark", aardto.getAgencyMark());
+		}
 		if(StringHelper.isNotEmpty(aardto.getAgencyName())){
 			paramsMap.put("userName", aardto.getAgencyName());
 		}
@@ -592,5 +615,4 @@ public class AgencyAOImpl implements AgencyAO {
 		}
 	}
 
-	
 }

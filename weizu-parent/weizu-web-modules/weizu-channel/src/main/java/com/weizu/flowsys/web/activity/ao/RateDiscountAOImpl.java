@@ -65,11 +65,11 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		Map<String, Object> paramsMap = getMapByRate(ratePo);
 		long toatalRecord = rateDiscountDao.countMyRate(paramsMap);
 		int pageSize = 10;
-		int pageNo = 1;
+		Long pageNoLong = 1l;
 		if(pageParam != null){
 			pageSize = pageParam.getPageSize();
-			pageNo = pageParam.getPageNo();
-			paramsMap.put("start", (pageNo-1)*pageSize);
+			pageNoLong = pageParam.getPageNoLong();
+			paramsMap.put("start", (pageNoLong-1)*pageSize);
 			paramsMap.put("end", pageSize);
 		}
 		List<RateDiscountPo> records = rateDiscountDao.getMyRate(paramsMap);
@@ -88,7 +88,7 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 //			}
 //			ratePo1.setDiscountList(list);
 		}
-		return new Pagination<RateDiscountPo>(records, toatalRecord, pageNo, pageSize);
+		return new Pagination<RateDiscountPo>(records, toatalRecord, pageNoLong, pageSize);
 	}
 
 	/**

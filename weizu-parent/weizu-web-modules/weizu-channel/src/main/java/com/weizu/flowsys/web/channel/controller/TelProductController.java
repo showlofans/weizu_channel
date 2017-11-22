@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,6 +21,7 @@ import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
+import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
@@ -67,9 +69,9 @@ public class TelProductController {
 	@ResponseBody
 	@RequestMapping(value=TelProductURL.AJAX_GET_CODE)
 	public String ajaxGetProductList(TelProductPo telProductPo){
-		
-		List<TelProductPo> paramsList = telProductAO.listParamsProductPo(telProductPo);
+		List<TelProductPo> paramsList = telProductAO.listTelProduct(telProductPo);
 		String jsonStr = JSON.toJSON(paramsList).toString();
+		System.out.println(jsonStr);
 		return jsonStr;
 	}
 	
@@ -83,8 +85,8 @@ public class TelProductController {
 	public ModelAndView telProductAddPage(TelProductPo telProductPo){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
-		resultMap.put("operatoerNameEnums", OperatorTypeEnum.toList());
-		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toHuaList());
+		resultMap.put("operatoerNameEnums", OperatorNameEnum.toList());
+		resultMap.put("serviceTypeEnums", HuaServiceTypeEnum.toList());
 		resultMap.put("telchargeSpeedEnums", TelchargeSpeedEnum.toList());
 		WherePrams whereEp = null;
 		if(StringHelper.isNotEmpty(telProductPo.getEpName())){
@@ -112,8 +114,8 @@ public class TelProductController {
 	public ModelAndView telProductList(TelProductPo telProductPo,@RequestParam(value = "pageNoLong", required = false)Long pageNoLong){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
-		resultMap.put("operatoerNameEnums", OperatorNameEnum.toList());
-		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
+		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
+		resultMap.put("serviceTypeEnums", HuaServiceTypeEnum.toList());
 		resultMap.put("telchargeSpeedEnums", TelchargeSpeedEnum.toList());
 		resultMap.put("chargeTelEnums", TelchannelTypeEnum.toList());			//话费基本类型枚举
 		PageParam pageParam = null;
@@ -122,11 +124,16 @@ public class TelProductController {
 		}else{
 			pageParam = new PageParam(1l, 10);
 		}
+		if(telProductPo.getServiceType() == null){//默认加载市内的
+			telProductPo.setServiceType(HuaServiceTypeEnum.CITY.getValue());
+		}
+		
 		Pagination<TelProductPo> pagination = telProductAO.listTelProduct(telProductPo, pageParam);
 		resultMap.put("pagination", pagination);
 		
 		List<Provinces> provinces = procincesDAO.getProvinces();
 		resultMap.put("provinces", provinces);
+		resultMap.put("params", telProductPo);
 //		resultMap.put("provincesJson", JSON.toJSONString(provinces));
 		return new ModelAndView("/tel_channel/telproduct_list", "resultMap", resultMap);
 	}
@@ -140,13 +147,29 @@ public class TelProductController {
 	 * @createTime:2017年11月11日 下午4:07:21
 	 */
 	@RequestMapping(value = TelProductURL.TELPRODUCT_ADD)
-	public void addtelProduct(TelProductPo telProductPo,HttpServletResponse response,HttpServletRequest request){
+	public void addTelProduct(TelProductPo telProductPo,HttpServletResponse response,HttpServletRequest request){
 		String result = telProductAO.addTelProduct(telProductPo);
 		try {
 			response.getWriter().print(result);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * @description: 异步获得编码有编码的话费列表 
+	 * @param telProductPo
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月14日 下午12:49:47
+	 */
+	@RequestMapping(value=TelProductURL.AJAX_GET_CODE,method=RequestMethod.GET)
+	@ResponseBody
+	public String ajaxGetCode(TelProductPo telProductPo){
+		List<TelProductPo> telProList = telProductAO.listTelProduct(telProductPo);
+		String jsonStr = JSON.toJSONString(telProList);
+		
+		return jsonStr;
 	}
 	
 //	@RequestMapping(value = TelProductURL.TELPRODUCT_EXIST)
@@ -159,6 +182,8 @@ public class TelProductController {
 //			e.printStackTrace();
 //		}
 //	}
+	
+	
 	
 	
 	

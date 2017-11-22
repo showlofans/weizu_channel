@@ -1,5 +1,7 @@
 package com.weizu.flowsys.web.agency.pojo;
 
+import java.io.Serializable;
+
 import com.weizu.flowsys.core.annotation.po.TableName;
 import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
@@ -13,7 +15,10 @@ import com.weizu.flowsys.core.beans.Po;
  * @version 1.0
  */
 @TableName(name="company_credentials")
-public class CompanyCredentialsPo extends Po{
+public class CompanyCredentialsPo extends Po implements Serializable {
+
+	@TempField
+	private static final long serialVersionUID = 1L;
     private Integer id;
 
     private Integer agencyId;							//待验证代理商id 
@@ -88,7 +93,11 @@ public class CompanyCredentialsPo extends Po{
 		this.confirmState = confirmState;
 	}
     
-    public void initBase(Integer agencyId,String agencyName, Integer confirmAgencyId,
+    public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	public void initBase(Integer agencyId,String agencyName, Integer confirmAgencyId,
 			Integer confirmState){
     	this.agencyId = agencyId;
 		this.confirmAgencyId = confirmAgencyId;

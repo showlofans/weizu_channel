@@ -53,7 +53,7 @@ public interface AgencyVODaoInterface extends Dao<AgencyBackwardPo, Integer> {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月22日 下午5:40:13
 	 */
-	int countByAgencyVO(AgencyBackwardVO agencyBackwardVO);
+	int countByAgencyVO(Map<String,Object> paramsMap);
 	
 	/**
 	 * @description:通过邀请码查询（父级）代理商 id

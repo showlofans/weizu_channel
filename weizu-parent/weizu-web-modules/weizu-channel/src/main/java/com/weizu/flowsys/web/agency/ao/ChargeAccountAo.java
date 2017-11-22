@@ -81,7 +81,7 @@ public interface ChargeAccountAo {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月1日 下午5:54:08
 	 */
-	ChargeAccountPo getAccountByAgencyId(int agencyId, int billType);
+	ChargeAccountPo getAccountByAgencyId(Integer agencyId, Integer billType);
 	
 	/**
 	 * @description: 获得父级代理商相关账户

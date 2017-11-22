@@ -28,7 +28,7 @@
 	<link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/style.css" />
  </head>
  <body>
- <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 在线充值 <span class="c-gray en">&gt;</span> 单号充值<!--  <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> --></nav>
+ <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 在线充值 <span class="c-gray en">&gt;</span> 流量充值 <span class="c-gray en">&gt;</span> 单号充值<!--  <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> --></nav>
 <article class="page-container">
  	<form class="form form-horizontal" action="" method=""  id="form-charge">
  	<input type="hidden" name="channelId" id="channelId">
@@ -235,7 +235,7 @@
  	var carrier;
     var getChargeTel=function(){
         //淘宝接口    
-        $.ajax({
+       $.ajax({
              type: "get",
              url: 'http://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel='+tel,
              dataType: "jsonp",
@@ -251,15 +251,27 @@
                     num = data.telString; 
                //alert(province);
              $('#chargeTelDetail').val(carrier);  
-              //$('#chargeTelDetail').val(location);  
-                
-               /*  $('.num span').html(num);
-                
-                $('.province span').html(province);
-                $('.operators span').html(operators);
-                $('.carrier span').html(carrier); */
              },
          });
+         //聚合接口
+    	 /* $.ajax({
+            type: "get",
+            url: 'http://apis.juhe.cn/mobile/get?phone='+tel+'&key=59b0973a9e6d8642b987ac04c1eb2c07',
+            contentType: "application/x-www-form-urlencoded; charset=utf-8", 
+            dataType: 'jsonp',
+            crossDomain: true,
+            success: function(data){
+              // $('.error').css('display','none');
+              //alert(data);
+              var provinceIn = data.result.province;//广东
+              //alert(provinceIn);
+              var city = data.result.city;
+              var  company = data.result.company,//中国移动
+              carrier = provinceIn + city + company.substring(company.length-2);
+              //alert(province);
+            $('#chargeTelDetail').val(carrier);  
+            },
+        }); */
     };
     /**radio选中事件*/
     function changeValue(vart){

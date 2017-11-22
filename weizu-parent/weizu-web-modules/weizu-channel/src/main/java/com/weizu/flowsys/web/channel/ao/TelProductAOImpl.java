@@ -1,5 +1,6 @@
 package com.weizu.flowsys.web.channel.ao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.dao.ITelProductDao;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
@@ -43,28 +46,59 @@ public class TelProductAOImpl implements TelProductAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年11月11日 下午3:17:57
 	 */
-//	private Map<String, Object> getParamsByPo(TelProductPo telPo){
-//		Map<String, Object> params = new HashMap<String, Object>();
-//		if(telPo.getEpId() != null){
-//			params.put("epId", telPo.getEpId());
-//		}
-//		if(telPo.getChargeSpeed() != null){
-//			params.put("chargeSpeed", telPo.getChargeSpeed());
-//		}
-//		if(telPo.getServiceType() != null){
-//			params.put("serviceType", telPo.getServiceType());
-//		}
-//		if(telPo.getOperatorName() != null){
-//			params.put("operatorName", telPo.getOperatorName());
-//		}
-//		if(StringHelper.isNotEmpty(telPo.getCityid())){
-//			params.put("cityid", telPo.getCityid());
-//		}
+	private Map<String, Object> getParamsByPo(TelProductPo telPo){
+		Map<String, Object> params = new HashMap<String, Object>();
+		if(telPo.getEpId() != null){
+			params.put("epId", telPo.getEpId());
+		}
+		if(StringHelper.isNotEmpty(telPo.getEpName())){
+			params.put("epName", telPo.getEpName());
+		}
+		Integer serviceType = telPo.getServiceType();
+		if(serviceType != null){
+			params.put("serviceType", serviceType);
+
+			boolean cityProIn = StringHelper.isNotEmpty(telPo.getProvinceid()); //加入省市参数必须的条件
+			boolean cityIn = serviceType.equals(HuaServiceTypeEnum.CITY.getValue()) && StringHelper.isNotEmpty(telPo.getCityid());//加入市的条件
+			boolean provinceIn = serviceType.equals(HuaServiceTypeEnum.PROVINCE.getValue()) || cityIn ;//加入省份参数条件
+			
+			if(provinceIn && cityProIn){
+				params.put("provinceid", telPo.getProvinceid());
+			}
+			if(cityIn && cityProIn){
+				params.put("cityid", telPo.getCityid());
+			}
+			
+//			if(serviceType.equals(HuaServiceTypeEnum.CITY.getValue())){
+//				if(serviceType.equals(HuaServiceTypeEnum.CITY.getValue()) && StringHelper.isNotEmpty(telPo.getCityid()) && StringHelper.isNotEmpty(telPo.getProvinceid())){
+//					params.put("cityid", telPo.getCityid());
+//					params.put("provinceid", telPo.getProvinceid());
+//				}
+//			}else if(serviceType.equals(HuaServiceTypeEnum.PROVINCE.getValue()) && StringHelper.isNotEmpty(telPo.getProvinceid())){
+//				params.put("provinceid", telPo.getProvinceid());
+//			}
+			
+		}
+		
+		if(telPo.getChargeSpeed() != null){
+			params.put("chargeSpeed", telPo.getChargeSpeed());
+		}
+		if(telPo.getOperatorName() != null){
+			params.put("operatorName", telPo.getOperatorName());
+		}
+		if(telPo.getChargeValue() != null){
+			params.put("chargeValue", telPo.getChargeValue());
+		}
+		if(StringHelper.isNotEmpty(telPo.getLimitDescription())){
+			params.put("limitDescription", telPo.getLimitDescription());
+		}
+		
+		
 //		if(telPo.getFreeCharge()){
 //			params.put("freeCharge", telPo.getFreeCharge().booleanValue());
 //		}
-//		return params;
-//	}
+		return params;
+	}
 	
 	public WherePrams getWhereByPo(TelProductPo telPo){
 		WherePrams where = new WherePrams("1", "=", 1);
@@ -80,6 +114,9 @@ public class TelProductAOImpl implements TelProductAO {
 		if(StringHelper.isNotEmpty(telPo.getCityid())){
 			where.and("cityid", "=", telPo.getCityid());
 		}
+		if(StringHelper.isNotEmpty(telPo.getProvinceid())){
+			where.and("provinceid", "=", telPo.getProvinceid());
+		}
 		if(telPo.getFreeCharge() != null){
 			where.and("free_charge", "=", telPo.getFreeCharge().booleanValue());
 		}
@@ -92,7 +129,6 @@ public class TelProductAOImpl implements TelProductAO {
 		if(telPo.getEpId() != null){
 			where.and("charge_value", "=", telPo.getChargeValue());
 		}
-		
 		return where;
 	}
 	
@@ -134,6 +170,11 @@ public class TelProductAOImpl implements TelProductAO {
 		if(resNum > 0){
 			result = "exist";
 		}else{
+			int serviceType = telPo.getServiceType();
+			if(serviceType == HuaServiceTypeEnum.PROVINCE.getValue()){
+				telPo.setCityid("");
+			}
+			
 			int res = telProductDao.add(telPo);
 			if(res > 0){
 				result = "success";
@@ -144,19 +185,39 @@ public class TelProductAOImpl implements TelProductAO {
 
 	@Override
 	public Pagination<TelProductPo> listTelProduct(TelProductPo telPo, PageParam pageParam) {
-		WherePrams where = getWhereByPo(telPo);
-		long toatalRecord = telProductDao.count(where);
+//		WherePrams where = getWhereByPo(telPo);
+		Map<String,Object> params = getParamsByPo(telPo);
+//		long toatalRecord = telProductDao.count(where);
+		long toatalRecord = telProductDao.countTelPro(params);
 		int pageSize = 10;
 		Long pageNo = 1l;
+		
 		if(pageParam != null){
 			pageSize = pageParam.getPageSize();
 			pageNo = pageParam.getPageNoLong();
 			long startLongNum = (pageNo-1)*pageSize;
-			where.limit(startLongNum, pageSize);
+			params.put("start", startLongNum);
+			params.put("end", pageSize);
+//			where.limit(startLongNum, pageSize);
 		}
-		List<TelProductPo> records = telProductDao.list(where);
+//		List<TelProductPo> records = telProductDao.list(where);
+		List<TelProductPo> records = telProductDao.getTelProduct(params);
+		
+//		for (TelProductPo telProductPo : records) {
+//			
+//			
+//		}
+		
 		return new Pagination<TelProductPo>(records, toatalRecord, pageNo, pageSize);
 //			paramsMap.put("start", (pageNo-1)*pageSize);
 //			paramsMap.put("end", pageSize);
+	}
+
+	@Override
+	public List<TelProductPo> listTelProduct(TelProductPo telPo) {
+		Map<String,Object> params = getParamsByPo(telPo);
+//		long toatalRecord = telProductDao.countTelPro(params);
+		List<TelProductPo> records = telProductDao.getTelProduct(params);
+		return records;
 	}
 }

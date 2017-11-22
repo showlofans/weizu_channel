@@ -73,7 +73,7 @@
 		
 		<div class="row cl">
 			<span class="verifyCodeHidden" style="display:none">${loginContext.verifyCode }</span>
-			<label class="form-label col-xs-4 col-sm-2">注册邀请码：</label>
+			<label class="form-label col-xs-4 col-sm-2">注册邀请码：<br></label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<!-- 重新生成 -->
 				<div class="verifyDiv"  style="display:none">
@@ -89,6 +89,7 @@
 				</div>
 				<!-- 直接获取 -->
 				<input type="text" style="width:200px" class="input-text" onkeyup="checkVerify()"  value="${loginContext.verifyCode }" placeholder="" id="verifyCode" name="verifyCode">
+				<br>（编辑可重新生成）
 				 <button id="copy-button" class="btn btn-primary" data-clipboard-text="Copy Me!" title="Click to copy me." data-clipboard-target="verifyCode">复制</button>
 			</div>
 		</div>

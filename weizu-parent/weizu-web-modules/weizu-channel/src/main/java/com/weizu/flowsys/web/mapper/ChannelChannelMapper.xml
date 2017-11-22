@@ -247,8 +247,14 @@
 		<if test="pgType != null">
 			AND opd.pg_type=#{pgType}
 		</if>
+		<if test="operatorType != null">
+			AND opd.operator_type=#{operatorType}
+		</if>
 		<if test="pgValidity != null">
 			AND opd.pg_validity=#{pgValidity}
+		</if>
+		<if test="pgSize != null">
+			AND opd.pg_size=#{pgSize}
 		</if>
 	</where>)
   	<if test="channelName != null">

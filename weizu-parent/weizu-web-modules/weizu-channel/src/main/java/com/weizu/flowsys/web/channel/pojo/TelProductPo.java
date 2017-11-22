@@ -1,5 +1,7 @@
 package com.weizu.flowsys.web.channel.pojo;
 
+import com.weizu.flowsys.core.annotation.po.TableName;
+import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
 
 /**
@@ -10,6 +12,7 @@ import com.weizu.flowsys.core.beans.Po;
  * @createTime:2017年11月11日 下午12:24:47
  * @version 1.0
  */
+@TableName(name="tel_product")
 public class TelProductPo extends Po {
 
 	private Long id;					//id
@@ -37,8 +40,40 @@ public class TelProductPo extends Po {
 	private Integer chargeLimitLow;		//最低限额
 	
 	private Integer chargeLimitHigh;	//最高限额
-
 	
+	
+	
+	@TempField
+	private String city;				//城市名称：页面参数
+	@TempField
+	private String province;			//省份名称：页面参数
+	
+	private String provinceid;			//省份名称：查询参数
+	
+	public String getProvinceid() {
+		return provinceid;
+	}
+
+	public void setProvinceid(String provinceid) {
+		this.provinceid = provinceid;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
 	public String getTelCode() {
 		return telCode;
 	}

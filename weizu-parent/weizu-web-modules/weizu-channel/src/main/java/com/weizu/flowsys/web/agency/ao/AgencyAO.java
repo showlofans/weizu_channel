@@ -75,7 +75,7 @@ public interface AgencyAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月22日 上午10:57:15
 	 */
-	Map<String,Object> prepareParam(AgencyBackwardPo agBackwardPo);
+//	Map<String,Object> prepareParam(AgencyBackwardPo agBackwardPo);
 	
 	/**
 	 * @description:编辑代理商信息准备参数
@@ -201,6 +201,17 @@ public interface AgencyAO {
 	 * @createTime:2017年7月17日 下午3:21:21
 	 */
 	Pagination<AgencyBackwardVO> getUnbindAgency(int billTypeRate, int rootAgencyId, AccountActiveRateDTO aardto, PageParam pageParam);
+	
+	/**
+	 * @description: 查询没有绑定或者已经解绑的的代理商不分页列表
+	 * @param billTypeRate
+	 * @param rootAgencyId
+	 * @param aardto
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月20日 下午3:24:09
+	 */
+	List<AgencyBackwardVO> getUnbindAgencyList(int billTypeRate, int rootAgencyId, AccountActiveRateDTO aardto);
 	
 	/**
 	 * @description:查看邀请码是否符合条件

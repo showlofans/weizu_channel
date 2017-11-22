@@ -95,6 +95,7 @@
 					<th width="150">订单号</th>
 					<th width="120">手机号</th>
 					<th width="80">流量大小</th>
+					<th width="80">业务类型</th>
 					<th width="70">面值</th>
 					<th width="200">提交时间</th>
 					<th width="200">充值时间</th>
@@ -120,6 +121,11 @@
 						<td>${purchase.orderId }</td>
 						<td>${purchase.chargeTel }</td>
 						 <td>${purchase.pgSize }</td>
+						 <td><c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs">
+								<c:if test="${purchase.serviceType == serviceTypeEnum.value }">
+									${serviceTypeEnum.desc }
+								</c:if>
+							</c:forEach></td>
 						<td>${purchase.pgPrice }</td>
 						<td>${purchase.orderArriveTimeStr }</td>
 						 <td>${purchase.orderBackTimeStr }</td>

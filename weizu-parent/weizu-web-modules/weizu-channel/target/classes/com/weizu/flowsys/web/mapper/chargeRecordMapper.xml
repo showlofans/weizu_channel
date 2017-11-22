@@ -124,8 +124,8 @@
 		<if test="accountId != null">
 			AND record.account_id = #{accountId}
 		</if>
-		<if test="agencyId != null">
-			AND act.agency_id = #{agencyId}
+		<if test="contextAgencyId != null">
+			AND act.agency_id = #{contextAgencyId}
 		</if>
 		<!-- <choose>
 			<when test=""></when>

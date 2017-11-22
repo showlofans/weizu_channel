@@ -448,25 +448,13 @@ public class RateController {
 	 * @createTime:2017年7月28日 下午5:38:02
 	 */
 	@RequestMapping(value=RateURL.MY_RATE_LIST)
-	public ModelAndView myRateList(@RequestParam(value = "pageNo", required = false) String pageNo,
+	public ModelAndView myRateList(@RequestParam(value = "pageNoLong", required = false) Long pageNoLong,
 			HttpServletRequest request,RateDiscountPo ratePo,String agencyName){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO == null){
 			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 		}
-		PageParam pageParam = null;
-		if(StringHelper.isNotEmpty(pageNo)){
-			pageParam = new PageParam(Integer.parseInt(pageNo), 10) ;
-		}else{
-			pageParam = new PageParam(1, 10);
-		}
-		int childAccountId = -1;
-//		Object obj = request.getSession().getAttribute("childAccountId");
-//		if(obj != null){
-//			childAccountId = Integer.parseInt(obj.toString());
-//		}else{
-//			
-//		}
+		Integer childAccountId = -1;
 		if(ratePo != null){
 			childAccountId = ratePo.getAccountId();
 //			request.getSession().setAttribute("childAccountId", childAccountId);
@@ -486,6 +474,12 @@ public class RateController {
 //			request.getSession().setAttribute("childAgencyId", childAgencyId);
 //		}
 		ratePo.setAgencyId(agencyVO.getId());
+		PageParam pageParam = null;
+		if(pageNoLong != null){
+			pageParam = new PageParam(pageNoLong, 10) ;
+		}else{
+			pageParam = new PageParam(1l, 10);
+		}
 		Pagination<RateDiscountPo> pagination = rateDiscountAO.getMyRateList(ratePo,childAccountId, pageParam);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
@@ -883,7 +877,8 @@ public class RateController {
 		PageParam pageParam = null;
 		if(StringHelper.isNotEmpty(pageNo)){
 			pageParam = new PageParam(Integer.parseInt(pageNo), 10) ;
-		}else{
+		}else{//第一次进入页面
+			request.getSession().setAttribute("ratePo", ratePo);
 			pageParam = new PageParam(1, 10);
 		}
 		//初始化绑定状态
@@ -896,7 +891,10 @@ public class RateController {
 		}
 		
 		Pagination<AgencyBackwardVO> pagination = agencyAO.getUnbindAgency(ratePo.getBillType(), rootAgencyId,aardto, pageParam);
-		resultMap.put("ratePo", ratePo);
+//		resultMap.put("ratePo", ratePo);
+//		if(request.getSession().getAttribute("ratePo") != null){
+//			request.getSession().setAttribute("ratePo", ratePo);
+//		}
 		resultMap.put("aardto", aardto);
 		resultMap.put("pagination", pagination);
 		resultMap.put("bindStateEnums", BindStateEnum.toBindList());
@@ -931,16 +929,32 @@ public class RateController {
 		}else{
 			msg = "error"; 
 		}
-//		try {
-//			if(res>0){
-//				response.getWriter().print("success"); 
-//			}else{
-//				response.getWriter().print("error"); 
-//			}
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		return msg;
+	}
+	/**
+	 * @description:来源：batch_bind_agency_page.jsp changeBAllState函数
+	 * <br>通道批量绑定（解绑）全部代理商 
+	 * @param aardto
+	 * @param request
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月20日 下午3:38:01
+	 */
+	@ResponseBody
+	@RequestMapping(value=RateURL.BATCH_BIND_ALLAGENCY)
+	public String batchBindAllAgency(AccountActiveRateDTO aardto,Integer billType,Integer updateBindState, HttpServletRequest request){
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		if(agencyVO == null){
+			return "error";
+		}
+		aardto.setBindAgencyId(agencyVO.getId());
+		int res = accountActiveRateAO.batchBindAllAgency(billType, agencyVO.getId(), aardto, updateBindState);
+		String msg = "";
+		if(res>0){
+			msg = "success"; 
+		}else{
+			msg = "error"; 
+		}
 		return msg;
 	}
 	

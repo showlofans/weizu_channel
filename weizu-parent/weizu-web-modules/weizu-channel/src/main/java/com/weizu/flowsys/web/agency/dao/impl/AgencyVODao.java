@@ -54,9 +54,9 @@ public class AgencyVODao extends DaoImpl<AgencyBackwardPo, Integer> implements A
 	 * @createTime:2017年5月22日 下午5:40:50
 	 */
 	@Override
-	public int countByAgencyVO(AgencyBackwardVO agencyBackwardVO) {
+	public int countByAgencyVO(Map<String,Object> paramsMap) {
 		
-		return sqlSessionTemplateASS.selectOne("countByAgencyVO",agencyBackwardVO);
+		return sqlSessionTemplateASS.selectOne("countByAgencyVO",paramsMap);
 	}
 
 	/**

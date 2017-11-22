@@ -10,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.ws.spi.http.HttpContext;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -111,13 +112,6 @@ public class AgencyController {
 	@RequestMapping(value = AgencyURL.LOGIN)
 	public ModelAndView login(AgencyBackwardPo agencyBackward,
 			HttpServletRequest request) {
-		int port = request.getLocalPort();
-		int portNum = 381;
-		if(port == 8082){
-			portNum = 382;
-		}
-		request.getSession().setAttribute("portNum", portNum);
-		System.out.println();
 		if (null == agencyBackward) {
 			System.out.println("执行goLogin");
 		}
@@ -141,6 +135,12 @@ public class AgencyController {
 			//注册的时候已经保证了可以进行表连接
 			session.setAttribute("chargeAccount", chargeAccountPo);//对私
 			session.setAttribute("chargeAccount1", chargeAccountPo1);//对公
+			
+			String agencyIp = agencyBackward.getAgencyIp();
+			if(StringHelper.isNotEmpty(agencyIp) && "telLogin".equals(agencyIp)){
+				session.setAttribute("telLogin", agencyIp);//对公
+			}
+			
 //			List<RateBackwardPo> rateList = rateBackwardDao.selectByRootId(resultPo.getId());
 			session.setAttribute("loginContext", agencyVO);// 保存登陆实体到session中
 			
@@ -463,7 +463,7 @@ public class AgencyController {
 	 */
 	@RequestMapping(value = AgencyURL.CHILD_AGENCY_LIST)
 	public ModelAndView getAgencyList(
-			@RequestParam(value = "pageNo", required = false) String pageNo,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo,
 			AgencyBackwardVO searchAgencyVO, HttpServletRequest request) {
 		
 		AgencyBackwardVO agencyBackwardVo = (AgencyBackwardVO) request.getSession()
@@ -472,8 +472,8 @@ public class AgencyController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
 		PageParam pageParam = null;
-		if (StringHelper.isNotEmpty(pageNo)) {
-			pageParam = new PageParam(Integer.parseInt(pageNo), 10);
+		if (pageNo != null) {
+			pageParam = new PageParam(pageNo, 10);
 		} else {
 			pageParam = new PageParam(1, 10);
 		}

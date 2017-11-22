@@ -78,10 +78,10 @@ public class AccountController {
 
 		// String agencyId = request.getParameter("agencyId").trim().toString();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		ChargeAccountPo accountPo = chargeAccountAO.getAccountById(accountId);
+		ChargeAccountPo accountPo = chargeAccountAO.getAccountById(accountId);//待充值的账户
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVo != null && agencyVo.getRootAgencyId() != 0 && accountPo.getBillType() !=null){//不是超管，需要判断自己对应账户余额
-			ChargeAccountPo loginAccountPo =	chargeAccountAO.getAccountByAgencyId(agencyVo.getId(), accountPo.getBillType());
+			ChargeAccountPo loginAccountPo = chargeAccountAO.getAccountByAgencyId(agencyVo.getId(), accountPo.getBillType());
 			if(loginAccountPo != null){
 				resultMap.put("accountBalance", loginAccountPo.getAccountBalance()); // 代理商名字
 			}
@@ -124,7 +124,11 @@ public class AccountController {
 		if(agencyVo != null){
 			chargeRecordPo.setAccountType(AccountTypeEnum.INCREASE.getValue());
 //			chargeRecordPo.setAgencyId(agencyVo.getId());
-			Pagination<ChargeRecordPo> pagination =  chargeRecordAO.listChargeRecord(resultMap, agencyVo.getId(), chargeRecordPo, pageParam);
+			Integer contextAgencyId = null;
+			if(agencyVo.getRootAgencyId() != 0){//超管
+				contextAgencyId = agencyVo.getId();
+			}
+			Pagination<ChargeRecordPo> pagination =  chargeRecordAO.listChargeRecord(resultMap, contextAgencyId, chargeRecordPo, pageParam);
 			resultMap.put("pagination", pagination);
 			resultMap.put("billTypeEnum", BillTypeEnum.toList());
 			resultMap.put("accountTypeEnum", AccountTypeEnum.toList());
@@ -484,7 +488,6 @@ public class AccountController {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月24日 下午3:08:52
 	 */
-	@ResponseBody
 	@RequestMapping(value=AccountURL.VERIFY_CREDENTIALS)
 	public void verifyCredentials(CompanyCredentialsPo ccpo, HttpServletResponse response, HttpServletRequest request){
 //		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");

@@ -1,5 +1,7 @@
 package com.weizu.flowsys.web.trade.pojo;
 
+import java.io.Serializable;
+
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 
 /**
@@ -10,7 +12,7 @@ import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
  * @createTime:2017年6月13日 下午12:16:36
  * @version 1.0
  */
-public class PurchaseVO implements Cloneable {
+public class PurchaseVO implements Cloneable,Serializable {
 	
     private Long orderId;						//订单号
     
@@ -27,6 +29,10 @@ public class PurchaseVO implements Cloneable {
     private Double pgPrice;						//包体原价
     
     private Integer operatorType;				//运营商名称
+    
+    private Integer serviceType;				//业务范围
+    
+    private Integer pgServiceType;				//业务类型：pgServiceTypeEnum
 
     private Long orderArriveTime;				//提交时间（本平台获得该数据请求的时间）
     
@@ -92,6 +98,14 @@ public class PurchaseVO implements Cloneable {
 		return pvo;
 	}
     
+	public Integer getPgServiceType() {
+		return pgServiceType;
+	}
+
+	public void setPgServiceType(Integer pgServiceType) {
+		this.pgServiceType = pgServiceType;
+	}
+
 	public String getAgencyCallIp() {
 		return agencyCallIp;
 	}
@@ -100,7 +114,13 @@ public class PurchaseVO implements Cloneable {
 		this.agencyCallIp = agencyCallIp;
 	}
 
+	public Integer getServiceType() {
+		return serviceType;
+	}
 
+	public void setServiceType(Integer serviceType) {
+		this.serviceType = serviceType;
+	}
 
 	public Double getApDiscount() {
 		return apDiscount;
