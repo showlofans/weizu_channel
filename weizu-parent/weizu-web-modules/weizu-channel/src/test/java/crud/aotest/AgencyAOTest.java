@@ -91,7 +91,8 @@
 ////	}
 //	@Test
 //	public void testLogin(){
-//		String userName = "博爱小强";// Lxq19930620
+////		String userName = "博爱小强";// Lxq19930620
+//		String userName = "流量代理";// xing081500
 //		AgencyBackwardPo agencyPo = agencyVODao.get(new WherePrams("user_name", "=", userName));
 //		//得到密码
 //		String userPass = Hash.BASE_UTIL.decode(agencyPo.getUserPass());

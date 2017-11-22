@@ -17,9 +17,19 @@ public class TelRateURL extends BaseURL {
 	 */
 	public static final String MODOE_NAME = "/flowsys/telRate";
 	/**
-	 * 费率添加页面
+	 * 话费折扣添加页面
 	 */
 	public static final String TELRATE_ADD_PAGE = "/telRate_add_page" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 话费折扣添加页面(平台用户)
+	 * <br> /flowsys/telRate/telRate_add_page_plat.do
+	 */
+	public static final String TELRATE_ADD_PAGE_PLAT = "/telRate_add_page_plat" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 话费折扣添加页面(平台用户)：异步获得折扣
+	 * <br> /flowsys/telRate/ajax_telrate_plat.do
+	 */
+	public static final String AJAX_TELRATE_PLAT = "/ajax_telrate_plat" + DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 费率编辑页面
 	 */

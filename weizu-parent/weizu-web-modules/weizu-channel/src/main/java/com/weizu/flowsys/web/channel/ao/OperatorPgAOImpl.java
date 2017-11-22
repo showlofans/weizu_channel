@@ -23,6 +23,7 @@ import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgInServiceEnum;
 import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgSizeEnum;
+import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
@@ -690,9 +691,13 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 		}
 		if(ccpp.getServiceType() != null){
 			params.put("serviceType", ccpp.getServiceType());
-		}
-		if(ccpp.getScopeCityCode() != null){
-			params.put("scopeCityCode", ccpp.getScopeCityCode());
+			if(ServiceTypeEnum.NATION_WIDE.getValue() != ccpp.getServiceType()){
+				if(ccpp.getScopeCityCode() != null){
+					params.put("scopeCityCode", ccpp.getScopeCityCode());
+				}
+			}else{
+				params.put("scopeCityCode", ScopeCityEnum.QG.getValue());
+			}
 		}
 		
 		if(ccpp.getChannelType() != null){

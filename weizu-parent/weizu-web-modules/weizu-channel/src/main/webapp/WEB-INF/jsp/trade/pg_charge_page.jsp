@@ -415,13 +415,13 @@
 	   //alert(channelId);
 	   var pgId = $(vart).prev().val();
 	   var pprice = $(vart).parent().next().val();
-	   
+	   var serviceType = $("#select-servce-type").val();
        $("#pgId").val(pgId);//包体id
        var carrier = $('#chargeTelDetail').val();
        
        $.ajax({
            type: "get",
-           url: '/flowsys/chargePg/ajax_purchase_price.do?pgPrice=' + pprice + '&pgId='+pgId+ '&channelId='+channelId+ '&carrier='+carrier,
+           url: '/flowsys/chargePg/ajax_purchase_price.do?pgPrice=' + pprice + '&pgId='+pgId+ '&channelId='+channelId+ '&carrier='+carrier+ '&serviceType='+serviceType,
            async: false,
            dataType: "json",
            contentType: "application/x-www-form-urlencoded; charset=utf-8", 
@@ -517,8 +517,6 @@
 	
 	/** 通道异步获得充值包体列表*/
 	function togglelePg(vart){
-		
-		
 		var cnelId =  $(vart).prev().val();
 		$('#channelId').val(cnelId);
 		
@@ -548,6 +546,8 @@
                    for(var i=0; i < dataRole1.length; i++){
                  	   var price = dataRole1[i].pgPrice;
                  	   var name = dataRole1[i].pgName;
+                 	   //var serviceType = dataRole1[i].serviceType;
+                 	   //alert(serviceType);
                  	   //alert(name);
                  	   var pgSize = dataRole1[i].pgSize;
                  	   var productCode = dataRole1[i].productCode;
@@ -740,6 +740,8 @@
 		                    	   var price = dataRole[i].pgPrice;
 		                    	   var name = dataRole[i].pgName;
 		                    	   var pgSize = dataRole[i].pgSize;
+		                    	   var serviceType = dataRole[i].serviceType;
+		                    	   //alert(serviceType);
 		                    	   //var productCode = dataRole[i].productCode;
 		                    	   //var pgDiscountPrice = dataRole[i].pgDiscountPrice;
 		                    	   //var rteDis = dataRole[i].rteDis;

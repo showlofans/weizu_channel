@@ -43,6 +43,7 @@
 	<resultMap id="PurchasePgMap" type="com.weizu.flowsys.web.channel.pojo.PgDataPo">
 	    <id column="id" jdbcType="INTEGER" property="id" />
 	    <result column="operator_type" jdbcType="INTEGER" property="operatorType" />
+	    <result column="service_type" jdbcType="INTEGER" property="serviceType" />
 	    <result column="pg_type" jdbcType="INTEGER" property="pgType" />
 	    <result column="circulate_way" jdbcType="INTEGER" property="circulateWay" />
 	    <result column="pg_validity" jdbcType="VARCHAR" property="pgValidity" />
@@ -52,6 +53,7 @@
 	    <result column="pg_name" jdbcType="VARCHAR" property="pgName" />
 	    <result column="pg_in_service" jdbcType="INTEGER" property="pgInService" />
 	    <result column="channel_id" property="channelId" />
+	    
 	 </resultMap>
 	 <!-- 接口包体订购列表 -->
 	<resultMap id="PgProductMap" type="com.weizu.flowsys.web.http.entity.PgProductPo">

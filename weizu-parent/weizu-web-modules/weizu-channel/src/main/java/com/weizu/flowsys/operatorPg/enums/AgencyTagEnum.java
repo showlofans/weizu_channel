@@ -15,13 +15,13 @@ import java.util.Map;
  */
 public enum AgencyTagEnum {
 	/**
-	 * 平台用户
-	 */
-	PLATFORM_USER("平台用户",0),
-	/**
 	 * 数据用户
 	 */
-	DATA_USER("数据用户",1);
+	DATA_USER("数据用户",1),
+	/**
+	 * 平台用户
+	 */
+	PLATFORM_USER("平台用户",0);
 	/**
 	 * 枚举名称
 	 */

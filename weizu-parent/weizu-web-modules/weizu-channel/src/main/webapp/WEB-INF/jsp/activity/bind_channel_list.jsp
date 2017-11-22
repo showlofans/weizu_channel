@@ -49,7 +49,7 @@
 	<div class="text-c" style="display:none;">
 		<form action="/flowsys/rate/bind_channel_list.do" method="post" id="formD" name="dataListForm">
 			<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
-			<input type="hidden" name="agencyId" value="${childAccountPo.agencyId }"> 
+			<input type="hidden" name="accountId" value="${childAccountPo.id }"> 
 			<input type="hidden" name="agencyName" value="${childAccountPo.agencyName }"> 
 		</form>
 	</div>

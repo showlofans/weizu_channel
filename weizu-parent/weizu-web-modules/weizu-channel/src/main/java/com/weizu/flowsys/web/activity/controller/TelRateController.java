@@ -14,8 +14,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.aiyi.base.pojo.PageParam;
+import com.alibaba.fastjson.JSON;
+import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
+import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
@@ -73,17 +77,19 @@ public class TelRateController {
 		return new ModelAndView("/activity/telRate_bind_list","resultMap",resultMap);
 	}
 	/**
-	 * @description: 话费折扣添加页面
+	 * @description: 话费折扣（数据用户）添加页面<br>
+	 * 来源：telRate_bind_list
 	 * @param telchannelId
 	 * @return
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年11月18日 下午2:31:23
 	 */
 	@RequestMapping(value=TelRateURL.TELRATE_ADD_PAGE)
-	public ModelAndView telRateBindPage(Long id, Integer serviceType,@RequestParam(value="telRateId",required=false)Long telRateId){//, String fromTag
+	public ModelAndView telRateAddPage(Long id, Integer serviceType,@RequestParam(value="telRateId",required=false)Long telRateId){//, String fromTag
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		TelChannelParams telChannelParams = telChannelAO.selectByIdType(id, serviceType);
 		resultMap.put("telChannelParams", telChannelParams);//通道信息展示参数
+		resultMap.put("rateFor", AgencyTagEnum.DATA_USER.getValue());//费率折扣信息
 		if(telRateId != null){
 			TelRatePo telRatePo = telRateDao.get(telRateId);
 			resultMap.put("telRatePo", telRatePo);//费率折扣信息
@@ -91,10 +97,59 @@ public class TelRateController {
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
 		resultMap.put("huaServiceTypeEnums", HuaServiceTypeEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
+		resultMap.put("agencyTagEnums", AgencyTagEnum.toList());
 		
 //		resultMap.put("fromTag", fromTag);//
 		return new ModelAndView("/activity/telRate_add_page","resultMap",resultMap);
 	}
+	/**
+	 * @description:  话费折扣添加页面(平台用户)
+	 * @param id
+	 * @param serviceType
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月22日 下午4:47:00
+	 */
+	@RequestMapping(value=TelRateURL.TELRATE_ADD_PAGE_PLAT)
+	public ModelAndView telRateAddPagePlat(Long id, Integer serviceType){//, String fromTag
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		TelChannelParams telChannelParams = telChannelAO.selectByIdType(id, serviceType);
+		
+//		if(billType == null){
+//			billType = BillTypeEnum.BUSINESS_INDIVIDUAL.getValue();
+//		}
+		//一条通道只能配置一个平台折扣
+		TelRatePo telRatePo = telRateDao.get(new WherePrams("telchannel_id", "=", id).and("rate_for", "=", AgencyTagEnum.PLATFORM_USER.getValue()).and("bill_type", "=", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
+		resultMap.put("telRatePo", telRatePo);//费率折扣信息
+		resultMap.put("rateFor", AgencyTagEnum.PLATFORM_USER.getValue());//费率折扣信息
+		
+		resultMap.put("telChannelParams", telChannelParams);//通道信息展示参数
+		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
+		resultMap.put("huaServiceTypeEnums", HuaServiceTypeEnum.toList());
+		resultMap.put("billTypeEnums", BillTypeEnum.toList());
+		resultMap.put("agencyTagEnums", AgencyTagEnum.toList());
+		
+//		resultMap.put("fromTag", fromTag);//
+		return new ModelAndView("/activity/telRate_add_page","resultMap",resultMap);
+	}
+	
+	/**
+	 * @description: 异步获得平台用户折扣
+	 * @param id
+	 * @param serviceType
+	 * @param billType
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月22日 下午5:46:18
+	 */
+	@ResponseBody
+	@RequestMapping(value=TelRateURL.AJAX_TELRATE_PLAT)
+	public String ajaxTelRatePlat(Long telChannelId, Integer billType){
+		TelRatePo telRatePo = telRateDao.get(new WherePrams("telchannel_id", "=", telChannelId).and("rate_for", "=", AgencyTagEnum.PLATFORM_USER.getValue()).and("bill_type", "=", billType));
+		String telRateJsonStr = JSON.toJSONString(telRatePo);
+		return telRateJsonStr;
+	}
+	
 	
 	/**
 	 * @description: 话费折扣添加和编辑
@@ -111,7 +166,7 @@ public class TelRateController {
 		if(telRatePo.getId() != null){//编辑话费折扣
 			res = telRateDao.updateLocal(telRatePo);
 		}else{//添加折扣
-			telRatePo.setRateFor(PgServiceTypeEnum.TELCHARGE.getValue());
+			telRatePo.setRateType(PgServiceTypeEnum.TELCHARGE.getValue());
 			res = telRateDao.add(telRatePo);
 		}
 		if(res > 0){

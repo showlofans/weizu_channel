@@ -24,7 +24,9 @@ public class TelRatePo extends Po {
     
     private Long telchannelId;					//话费通道id
     
-    private Integer rateFor;				//费率属性：PgServiceTypeEnum
+    private Integer rateFor;				//平台用户，接口用户AgencyTagEnum
+    
+    private Integer rateType;				//费率属性：PgServiceTypeEnum
     
 	/** 话费折扣列表查询参数
 	 * @param billType
@@ -41,6 +43,14 @@ public class TelRatePo extends Po {
 	public TelRatePo() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	public Integer getRateType() {
+		return rateType;
+	}
+
+	public void setRateType(Integer rateType) {
+		this.rateType = rateType;
 	}
 
 	public Integer getRateFor() {
