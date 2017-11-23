@@ -1,5 +1,7 @@
 package com.weizu.flowsys.web.channel.pojo;
 
+import java.io.Serializable;
+
 import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
 
@@ -11,7 +13,7 @@ import com.weizu.flowsys.core.beans.Po;
  * @createTime:2017年11月14日 下午4:59:59
  * @version 1.0
  */
-public class TelChannelParams extends Po {
+public class TelChannelParams extends Po implements Serializable {
 
 	private Long id;					//id
 		

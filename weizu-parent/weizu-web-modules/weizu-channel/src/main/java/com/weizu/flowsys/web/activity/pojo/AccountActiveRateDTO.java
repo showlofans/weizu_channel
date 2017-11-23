@@ -20,6 +20,7 @@ public class AccountActiveRateDTO extends Po {
     
     private Integer bindAgencyId;				//绑定人 
     
+    @TempField
     private String agencyMark;					//代理商备注
     
     @TempField

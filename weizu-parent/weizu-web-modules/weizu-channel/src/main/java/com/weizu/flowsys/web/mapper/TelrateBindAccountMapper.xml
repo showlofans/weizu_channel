@@ -10,11 +10,12 @@
     <result column="tel_rate_id" property="telRateId" jdbcType="BIGINT" />
     <result column="active_time" property="activeTime" jdbcType="INTEGER" />
     <result column="bind_state" property="bindState" jdbcType="INTEGER" />
+    <result column="bind_side" property="bindSide" jdbcType="INTEGER" />
     <result column="bind_agency_id" property="bindAgencyId" jdbcType="INTEGER" />
   </resultMap>
   
   <sql id="Base_Column_List">
-  	account_id, agency_name, tel_rate_id, active_time, bind_state, bind_agency_id
+  	account_id, agency_name, tel_rate_id, active_time, bind_state, bind_side,bind_agency_id
   </sql>
   
   <!-- 绑定列表 -->
@@ -37,7 +38,29 @@
   	from
   	
   </select> -->
-  
+  <!-- 更新绑定状态 -->
+  <update id="updateBindTelState" parameterType="map">
+  	update <include refid="t_tba"></include>
+  	<set>
+  		<if test="bindState != null">
+  			bind_state = #{bindState},
+  		</if>
+  		<if test="activeTime != null">
+  			active_time = #{activeTime}
+  		</if>
+  	</set>
+  	<where>
+  		<if test="id != null">
+  			AND id = #{id}
+  		</if>
+  		<if test="telRateId != null">
+  			AND tel_rate_id = #{telRateId}
+  		</if>
+  		<if test="accountIds != null">
+  			AND account_id in <foreach item="accountId" index="index" collection="accountIds" open="(" separator="," close=")">#{accountId}</foreach>
+  		</if>
+  	</where>
+  </update>
    <!-- 批量绑定一个折扣 -->
   <insert id="batchInsertTBA" useGeneratedKeys="true" parameterType="java.util.List">
   	insert into <include refid="t_tba"></include>
@@ -45,7 +68,7 @@
   	values
   	<foreach collection="list" separator="," item="tba" index="index">
   		(#{tba.accountId},#{tba.agencyName},#{tba.telRateId},#{tba.activeTime},
-  		#{tba.bindState},#{tba.bindAgencyId})
+  		#{tba.bindState},#{tba.bindSide},#{tba.bindAgencyId})
   	</foreach>
   </insert>
 </mapper>

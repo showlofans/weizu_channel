@@ -132,9 +132,9 @@ public class TelRateURL extends BaseURL {
 	public static final String BIND_AGENCY_PAGE = "/bind_agency_page" + DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 通道批量绑定代理商页面
-	 * <br>/flowsys/telRate/batch_bind_agency_page.do
+	 * <br>/flowsys/telRate/batch_bindtel_agency_page.do
 	 */
-	public static final String BATCH_BIND_AGENCY_PAGE = "/batch_bind_agency_page" + DYNAMIC_WEB_SUFFIX;
+	public static final String BATCH_BINDTEL_AGENCY_PAGE = "/batch_bindtel_agency_page" + DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 通道批量绑定代理商
 	 * <br>/flowsys/telRate/batch_bind_agency.do

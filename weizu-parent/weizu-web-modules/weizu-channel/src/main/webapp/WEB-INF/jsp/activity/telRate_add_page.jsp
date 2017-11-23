@@ -86,7 +86,14 @@
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
 				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
-				<button class="btn btn-primary radius" onClick="removeIframe()">取消</button>
+				<%-- <c:choose>
+					<c:when test="${resultMap.rateFor ==1 }">
+					</c:when>
+					<c:otherwise>
+						
+					</c:otherwise>
+				</c:choose> --%>
+						<button class="btn btn-primary radius" type="button" onClick="removeIframe()">取消</button>
 			</div>
 		</div>
 	</form>

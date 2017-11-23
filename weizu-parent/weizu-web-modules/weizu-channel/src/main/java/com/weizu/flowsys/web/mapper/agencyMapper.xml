@@ -8,6 +8,8 @@
 <sql id="agency_backward">agency_backward</sql>
 <sql id="t_account">charge_account</sql>
 <sql id="t_active">account_active_rate</sql>
+<sql id="t_tba">telrate_bind_account</sql>
+
 
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo">
     <id column="id" jdbcType="INTEGER" property="id" />
@@ -114,6 +116,76 @@
   	</where>
   </select>
   
+  <!-- 查询没有绑定话费折扣的代理商 -->
+  <select id="getNoBTelAgency" parameterType="map" resultMap="UnbindMap">
+  	SELECT <include refid="Nobind_Column_List"></include> 
+  	 FROM <include refid="agency_backward"></include> a2
+  	 inner join <include refid="t_account"></include> act2
+  	on a2.id=act2.agency_id
+  	 <where>
+  	 	a2.root_agency_id = #{rootAgencyId}
+  	 	AND a2.id not in (select act.agency_id from <include refid="t_tba"></include> active
+  	 	inner join <include refid="t_account"></include> act
+  		on active.account_id=act.id
+  		<!-- INNER join <include refid="agency_backward"></include> a1
+   		on a1.id = act.agency_id -->
+  	 	<where>
+ 			<if test="telRateId != null">
+ 				 AND active.tel_rate_id= #{telRateId}
+ 			</if>
+  	 	</where>)
+ 		<if test="userName != null">
+ 			AND a2.user_name like concat('%',#{userName},'%') 
+ 		</if>
+ 		<if test="agencyTag != null">
+ 			AND a2.agency_tag = #{agencyTag}
+ 		</if>
+ 		<if test="billType != null">
+ 			AND act2.bill_type = #{billType}
+ 		</if>
+  	 	<if test="agencyMark != null">
+ 			AND a2.agency_mark like concat('%',#{agencyMark},'%')
+ 		</if>
+  	 	<if test="start != null">
+		 	limit #{start}
+		 </if>
+		 <if test="end != null">
+		 	, #{end}
+		 </if>
+  	 </where>
+  </select>
+  <!-- 查询没有绑定话费折扣的代理商 -->
+  <select id="countNoBTelAgency" parameterType="map" resultType="int">
+  	SELECT count(*)
+  	 FROM <include refid="agency_backward"></include> a2
+  	 inner join <include refid="t_account"></include> act2
+  	on a2.id=act2.agency_id
+  	 <where>
+  	 	a2.root_agency_id = #{rootAgencyId}
+  	 	AND a2.id not in (select act.agency_id from <include refid="t_tba"></include> active
+  	 	inner join <include refid="t_account"></include> act
+  		on active.account_id=act.id
+  		<!-- INNER join <include refid="agency_backward"></include> a1
+   		on a1.id = act.agency_id -->
+  	 	<where>
+ 			<if test="telRateId != null">
+ 				 AND active.tel_rate_id= #{telRateId}
+ 			</if>
+  	 	</where>)
+ 		<if test="userName != null">
+ 			AND a2.user_name like concat('%',#{userName},'%') 
+ 		</if>
+ 		<if test="agencyTag != null">
+ 			AND a2.agency_tag = #{agencyTag}
+ 		</if>
+ 		<if test="billType != null">
+ 			AND act2.bill_type = #{billType}
+ 		</if>
+  	 	<if test="agencyMark != null">
+ 			AND a2.agency_mark like concat('%',#{agencyMark},'%')
+ 		</if>
+  	 </where>
+  </select>
   <!-- 查询没有绑定的代理商 -->
   <select id="getNoBAgency" parameterType="map" resultMap="UnbindMap">
   	SELECT <include refid="Nobind_Column_List"></include> 
@@ -220,6 +292,71 @@
 		 </if>
    		<!-- <if test="bindState != null">
    		</if> -->
+   	</where>
+  </select>
+  <!-- 查询与该话费折扣解绑的代理商 -->
+  <select id="getUnbindTelAgency" parameterType="map" resultMap="UnbindMap">
+  	SELECT <include refid="Unbind_Column_List"></include>  
+  	from  <include refid="t_tba"></include> active1
+  	inner join <include refid="t_account"></include> act
+  	on active1.account_id=act.id
+  	INNER join <include refid="agency_backward"></include> a2
+   	on a2.id = act.agency_id
+   	<where>
+   		<if test="rootAgencyId != null">
+   			AND active1.bind_agency_id = #{rootAgencyId}
+   		</if>
+   		<if test="telRateId != null">
+   			AND active1.tel_rate_id = #{telRateId}
+   		</if>
+   		<if test="userName != null">
+   			AND act.user_name like concat('%',#{userName},'%')
+   		</if>
+   		<if test="billType != null">
+   			AND act.bill_type = #{billType}
+   		</if>
+   		<if test="agencyTag != null">
+ 			AND a2.agency_tag = #{agencyTag}
+ 		</if>
+   		<if test="agencyMark != null">
+ 			AND a2.agency_mark like concat('%',#{agencyMark},'%')
+ 		</if>
+   			AND active1.bind_state = 1
+   		<if test="start != null">
+		 	limit #{start}
+		 </if>
+		 <if test="end != null">
+		 	, #{end}
+		 </if>
+   	</where>
+  </select>
+  <select id="countUnbindTelAgency" parameterType="map" resultType="int">
+  	SELECT count(*) 
+  	from  <include refid="t_tba"></include> active1
+  	inner join <include refid="t_account"></include> act
+  	on active1.account_id=act.id
+  	INNER join <include refid="agency_backward"></include> a2
+   	on a2.id = act.agency_id
+   	<where>
+   		<if test="rootAgencyId != null">
+   			AND active1.bind_agency_id = #{rootAgencyId}
+   		</if>
+   		<if test="telRateId != null">
+   			AND active1.tel_rate_id = #{telRateId}
+   		</if>
+   		<if test="userName != null">
+   			AND act.user_name like concat('%',#{userName},'%')
+   		</if>
+   		<if test="billType != null">
+   			AND act.bill_type = #{billType}
+   		</if>
+   		<if test="agencyTag != null">
+ 			AND a2.agency_tag = #{agencyTag}
+ 		</if>
+   		<if test="agencyMark != null">
+ 			AND a2.agency_mark like concat('%',#{agencyMark},'%')
+ 		</if>
+   			AND active1.bind_state = 1
    	</where>
   </select>
   

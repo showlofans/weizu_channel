@@ -16,7 +16,7 @@ public class TelrateBindAccountVO extends Po {
 	
 	private Long id;
 
-//    private Integer accountId;					//子代理商账户id
+    private Integer accountId;					//子代理商账户id
 
     private String agencyName;					//子代理商名称
 
@@ -25,6 +25,8 @@ public class TelrateBindAccountVO extends Po {
     private Long activeTime;					//更新时间
     
     private Integer bindState;					//绑定状态：0-已绑定，1-已解绑，2-未绑定
+    
+    private Integer bindSide;					//绑定方向：CallBackEnum 0-反向绑定 1-正向绑定
     
     private Integer bindAgencyId;				//绑定人
     
@@ -37,6 +39,44 @@ public class TelrateBindAccountVO extends Po {
     
     private Integer billType;					//查询参数：话费票务类型
     
+    private String activeTimeStr;				//页面参数
+    
+    private String agencyMark;					//代理商备注
+    
+    private String activeDiscount;				//页面显示参数:话费折扣
+    
+	public Integer getBindSide() {
+		return bindSide;
+	}
+
+	public void setBindSide(Integer bindSide) {
+		this.bindSide = bindSide;
+	}
+
+	public String getActiveDiscount() {
+		return activeDiscount;
+	}
+
+	public void setActiveDiscount(String activeDiscount) {
+		this.activeDiscount = activeDiscount;
+	}
+
+	public String getActiveTimeStr() {
+		return activeTimeStr;
+	}
+
+	public void setActiveTimeStr(String activeTimeStr) {
+		this.activeTimeStr = activeTimeStr;
+	}
+
+	public String getAgencyMark() {
+		return agencyMark;
+	}
+
+	public void setAgencyMark(String agencyMark) {
+		this.agencyMark = agencyMark;
+	}
+
 	public Integer getBillType() {
 		return billType;
 	}
@@ -77,13 +117,13 @@ public class TelrateBindAccountVO extends Po {
 		this.id = id;
 	}
 
-//	public Integer getAccountId() {
-//		return accountId;
-//	}
-//
-//	public void setAccountId(Integer accountId) {
-//		this.accountId = accountId;
-//	}
+	public Integer getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(Integer accountId) {
+		this.accountId = accountId;
+	}
 
 	public String getAgencyName() {
 		return agencyName;

@@ -883,7 +883,7 @@ public class RateController {
 		}
 		//初始化绑定状态
 		if(aardto.getBindState() == null){
-			aardto.setBindState(BindStateEnum.UNBIND.getValue());
+			aardto.setBindState(BindStateEnum.NO.getValue());
 		}
 		//初始化代理商类型
 		if(aardto.getAgencyTag() == null){
@@ -971,7 +971,7 @@ public class RateController {
 		if(agencyVO == null){
 			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 		}
-		List<RateDiscountShowDTO> rateList = rateDiscountAO.getIndexShowRate(agencyVO.getId());
+		List<RateDiscountShowDTO> rateList = rateDiscountAO.getIndexShowRate(agencyVO.getId(), agencyVO.getRootAgencyId().equals(0));
 //		resultMap.put("map", map);
 		resultMap.put("rateList", rateList);
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());

@@ -8,6 +8,8 @@ import javax.servlet.http.HttpSession;
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.pojo.AccountActiveRateDTO;
+import com.weizu.flowsys.web.activity.pojo.TelrateBindAccountPo;
+import com.weizu.flowsys.web.activity.pojo.TelrateBindAccountVO;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 
@@ -203,6 +205,20 @@ public interface AgencyAO {
 	Pagination<AgencyBackwardVO> getUnbindAgency(int billTypeRate, int rootAgencyId, AccountActiveRateDTO aardto, PageParam pageParam);
 	
 	/**
+	 * @description: 查询没有绑定话费折扣的代理商
+	 * @param billTypeRate
+	 * @param rootAgencyId
+	 * @param telrateBindAccountPo
+	 * @param pageParam
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月23日 下午3:57:13
+	 */
+	Pagination<AgencyBackwardVO> getUnbindTelAgency( int rootAgencyId, TelrateBindAccountVO telrateBindAccountVO, PageParam pageParam);
+	
+	
+	
+	/**
 	 * @description: 查询没有绑定或者已经解绑的的代理商不分页列表
 	 * @param billTypeRate
 	 * @param rootAgencyId
@@ -212,6 +228,18 @@ public interface AgencyAO {
 	 * @createTime:2017年11月20日 下午3:24:09
 	 */
 	List<AgencyBackwardVO> getUnbindAgencyList(int billTypeRate, int rootAgencyId, AccountActiveRateDTO aardto);
+	/**
+	 * @description: 查询没有绑定或者已经解绑话费折扣的代理商不分页列表
+	 * @param billTypeRate
+	 * @param rootAgencyId
+	 * @param aardto
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月20日 下午3:24:09
+	 */
+	List<AgencyBackwardVO> getUnbindTelAgencyList(int rootAgencyId, TelrateBindAccountVO telrateBindAccountVO);
+	
+	
 	
 	/**
 	 * @description:查看邀请码是否符合条件

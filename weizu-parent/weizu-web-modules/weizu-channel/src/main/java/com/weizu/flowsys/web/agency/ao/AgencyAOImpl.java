@@ -1,6 +1,5 @@
 package com.weizu.flowsys.web.agency.ao;
 
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,21 +17,17 @@ import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.operatorPg.enums.PgInServiceEnum;
 import com.weizu.flowsys.util.Pagination;
-import com.weizu.flowsys.util.UUIDGenerator;
 import com.weizu.flowsys.web.activity.dao.impl.RateBackwardDaoImpl;
 import com.weizu.flowsys.web.activity.pojo.AccountActiveRateDTO;
-import com.weizu.flowsys.web.activity.pojo.RateBackwardPo;
+import com.weizu.flowsys.web.activity.pojo.TelrateBindAccountVO;
 import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
-import com.weizu.flowsys.web.agency.dao.impl.AgencyVODao;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.web.foundation.DateUtil;
-import com.weizu.web.foundation.MD5;
 import com.weizu.web.foundation.String.StringHelper;
 import com.weizu.web.foundation.hash.Hash;
-import com.weizu.web.foundation.hash.base64.Base64Util;
 
 @Service("agencyAO")
 public class AgencyAOImpl implements AgencyAO {
@@ -499,6 +494,86 @@ public class AgencyAOImpl implements AgencyAO {
 		return new Pagination<AgencyBackwardVO>(records, totalRecord, pageNo, pageSize);
 	}
 	
+
+	@Override
+	public Pagination<AgencyBackwardVO> getUnbindTelAgency(
+			int rootAgencyId, TelrateBindAccountVO telrateBindAccountVO,
+			PageParam pageParam) {
+		Map<String, Object> paramsMap = getUnbindTelMapByEntity(telrateBindAccountVO);
+		paramsMap.put("billType", telrateBindAccountVO.getBillType());
+		paramsMap.put("rootAgencyId", rootAgencyId);
+		List<AgencyBackwardVO> records = null;
+		int totalRecord = 0;
+		int pageSize = 10;
+		int pageNo = 1;
+		if(BindStateEnum.NO.getValue().equals(telrateBindAccountVO.getBindState())){
+			totalRecord = agencyVODao.countNoBTelAgency(paramsMap);
+			if(pageParam != null){
+				pageSize = pageParam.getPageSize();
+				pageNo = pageParam.getPageNo();
+			}
+			paramsMap.put("start", (pageNo-1)*pageSize);
+			paramsMap.put("end", pageSize);
+			records = agencyVODao.getNoBTelAgency(paramsMap);
+		}else{
+			totalRecord = agencyVODao.countUnbindTelAgency(paramsMap);
+			if(pageParam != null){
+				pageSize = pageParam.getPageSize();
+				pageNo = pageParam.getPageNo();
+			}
+			paramsMap.put("start", (pageNo-1)*pageSize);
+			paramsMap.put("end", pageSize);
+			records = agencyVODao.getUnbindTelAgency(paramsMap);
+		}
+		for (AgencyBackwardVO agencyBackwardVO2 : records) {
+			if(agencyBackwardVO2.getCreateTime() != null){
+				agencyBackwardVO2.setCreateTimeStr(DateUtil.formatAll(agencyBackwardVO2.getCreateTime()));
+			}
+		}
+		return new Pagination<AgencyBackwardVO>(records, totalRecord, pageNo, pageSize);
+	}
+	
+	@Override
+	public List<AgencyBackwardVO> getUnbindTelAgencyList(
+			int rootAgencyId, TelrateBindAccountVO telrateBindAccountVO) {
+		Map<String, Object> paramsMap = getUnbindTelMapByEntity(telrateBindAccountVO);
+		paramsMap.put("rootAgencyId", rootAgencyId);
+		List<AgencyBackwardVO> records = null;
+		if(BindStateEnum.NO.getValue().equals(telrateBindAccountVO.getBindState())){
+			records = agencyVODao.getNoBTelAgency(paramsMap);
+		}else{//与话费折扣解绑列表
+			records = agencyVODao.getUnbindTelAgency(paramsMap);
+		}
+		return records;
+	}
+
+	/**
+	 * @description: 封装话费绑定查询参数
+	 * @param aardto
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月23日 下午3:51:15
+	 */
+	private Map<String, Object> getUnbindTelMapByEntity(TelrateBindAccountVO telrateBindAccountVO) {
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		if(telrateBindAccountVO.getTelRateId() != null){
+			paramsMap.put("telRateId", telrateBindAccountVO.getTelRateId());
+		}
+//		if(telrateBindAccountVO.getAgencyTag() != null){
+			paramsMap.put("agencyTag", AgencyTagEnum.DATA_USER.getValue());
+//		}
+//		if(aardto.getBindState() != null){
+//			paramsMap.put("bindState", aardto.getBindState());
+//		}
+		if(StringHelper.isNotEmpty(telrateBindAccountVO.getAgencyMark())){
+			paramsMap.put("agencyMark", telrateBindAccountVO.getAgencyMark());
+		}
+		if(StringHelper.isNotEmpty(telrateBindAccountVO.getAgencyName())){
+			paramsMap.put("userName", telrateBindAccountVO.getAgencyName());
+		}
+		return paramsMap;
+	}
+	
 	@Override
 	public List<AgencyBackwardVO> getUnbindAgencyList(int billTypeRate,
 			int rootAgencyId, AccountActiveRateDTO aardto) {
@@ -513,9 +588,9 @@ public class AgencyAOImpl implements AgencyAO {
 		}
 		return records;
 	}
-
+	
 	/**
-	 * @description: 封装查询参数
+	 * @description: 封装流量绑定查询参数
 	 * @param aardto
 	 * @return
 	 * @author:POP产品研发部 宁强
@@ -614,5 +689,4 @@ public class AgencyAOImpl implements AgencyAO {
 			return null;
 		}
 	}
-
 }

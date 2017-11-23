@@ -31,7 +31,7 @@
 </head>
 <body>
 <div class="page-container">
-	<p class="f-20 text-success">欢迎使用微族通道系统 <span title="最后更新时间：${startupTime }" class="f-14">Beta</span>版本</p>
+	<p class="f-20 text-success">欢迎使用微族通道系统 <span title="最后更新时间：${startupTime }" class="f-14">Beta</span>版本 &nbsp;&nbsp; <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></p>
 	<p>最后更新时间：${startupTime }</p>
 	<!-- <p>登录次数：18 </p>
 	<p>上次登录IP：222.35.131.79.1  上次登录时间：2014-6-14 11:19:55</p> -->

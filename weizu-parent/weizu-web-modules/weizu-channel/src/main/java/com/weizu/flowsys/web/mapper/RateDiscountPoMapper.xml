@@ -148,6 +148,39 @@
 	 	order by active.active_time DESC) b 
 	 	<!-- GROUP BY b.scope_city_code -->
   </select>
+  <!-- 超管获得首页折扣信息 -->
+ <!--  <select id="getRootShowRate" parameterType="map" resultMap="BaseResultMap">
+  	select <include refid="Show_Rate_List"></include>
+  	from (select <include refid="Get_My_Rate"></include>
+	  	from <include refid="t_active"></include> active
+	  	INNER join <include refid="t_account"></include> act
+		on active.account_id=act.id
+	  	inner join <include refid="t_rateD"></include> rate
+	  	ON active.rate_discount_id=rate.id
+	  	INNER JOIN <include refid="t_cDiscount"></include> cd
+	 	on rate.channel_discount_id=cd.id
+	 	INNER JOIN <include refid="t_cnel"></include> cnel
+	 	on cnel.id=cd.channel_id
+	 	<where>
+	 		<if test="agencyId != null">
+	 			AND act.agency_id = #{agencyId}
+	 		</if>
+	 		<if test="billType != null">
+	 			AND rate.bill_type = #{billType}
+	 		</if>
+	 		<if test="serviceType != null">
+	 			AND cd.service_type = #{serviceType}
+	 		</if>
+	 		<if test="bindState != null">
+	 			AND active.bind_state = #{bindState}
+	 		</if>
+	 		<if test="channelUseState != null">
+	 			AND cnel.channel_use_state = #{channelUseState}
+	 		</if>
+	 	</where>
+	 	order by active.active_time DESC) b 
+	 	GROUP BY b.scope_city_code
+  </select> -->
   
   <!-- 获得充值的折扣 -->
   <select id="getRateForCharge" parameterType="map" resultMap="BaseResultMap">

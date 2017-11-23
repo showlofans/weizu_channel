@@ -2,6 +2,7 @@ package com.weizu.flowsys.web.activity.ao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,14 +12,21 @@ import org.springframework.stereotype.Service;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
+import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
+import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.dao.ITelRateDao;
 import com.weizu.flowsys.web.activity.dao.ITelrateBindAccountDao;
+import com.weizu.flowsys.web.activity.dao.ITelrateBindAccountVODao;
+import com.weizu.flowsys.web.activity.pojo.AccountActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.AccountActiveRatePo;
 import com.weizu.flowsys.web.activity.pojo.TelRatePo;
 import com.weizu.flowsys.web.activity.pojo.TelrateBindAccountPo;
 import com.weizu.flowsys.web.activity.pojo.TelrateBindAccountVO;
+import com.weizu.flowsys.web.agency.ao.AgencyAO;
+import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.channel.dao.ITelChannelDao;
 import com.weizu.flowsys.web.channel.dao.ITelProductDao;
 import com.weizu.flowsys.web.channel.pojo.TelChannelParams;
@@ -44,24 +52,18 @@ public class TelrateBindAccountAOImpl implements TelrateBindAccountAO {
 	private ITelChannelDao telChannelDao;
 	@Resource
 	private ITelrateBindAccountDao telrateBindAccountDao;
+	@Resource
+	private ITelrateBindAccountVODao telrateBindAccountVODao;
 	
+	@Resource
+	private AgencyAO agencyAO;
 	
 	@Override
 	public void getBindList(Map<String, Object> resultMap, PageParam pageParam,
 			TelrateBindAccountVO tbaVO) {
-		//页面通道信息
-		Map<String,Object> telCParams = new HashMap<String, Object>();
-		if(tbaVO.getTelchannelId() != null){
-			telCParams.put("id", tbaVO.getTelchannelId());
-		}
-		if(tbaVO.getServiceType() != null){
-			telCParams.put("serviceType", tbaVO.getServiceType());
-		}
-		TelChannelParams telChannelParams = telChannelDao.selectByIdType(telCParams);
-		resultMap.put("telChannelParams", telChannelParams);//通道信息展示参数
 		
 		//加载费率列表
-		List<TelRatePo> telrateList = telRateDao.listByTelRatePo(new TelRatePo(tbaVO.getBillType(), tbaVO.getTelchannelId(), PgServiceTypeEnum.TELCHARGE.getValue()));
+		List<TelRatePo> telrateList = telRateDao.listByTelRatePo(new TelRatePo(tbaVO.getBillType(), tbaVO.getTelchannelId(), AgencyTagEnum.DATA_USER.getValue()));
 		resultMap.put("telrateList", telrateList);
 		
 		//默认使用第一个费率加载列表
@@ -100,5 +102,57 @@ public class TelrateBindAccountAOImpl implements TelrateBindAccountAO {
 			resultMap.put("pagination", pagination);
 		}
 		resultMap.put("tbaVO", tbaVO);//利用费率搜索参数
+	}
+
+//	@Override
+//	public int batchBindAllAgency(int rootAgencyId, TelrateBindAccountVO tbaVO,
+//			int updateBindState) {
+//		int res = 0;
+//		List<AgencyBackwardVO> agencyList = agencyAO.getUnbindTelAgencyList(rootAgencyId, tbaVO);
+//		if(agencyList != null && agencyList.size() > 0){
+//			if(BindStateEnum.UNBIND.getValue().equals(tbaVO.getBindState())){//原先的状态是解绑状态
+//				int[] accountIds = new int[agencyList.size()];
+//				for (int i = 0; i < agencyList.size(); i++) {
+//					accountIds[i] = agencyList.get(i).getAccountId();
+//				}
+//				res = telrateBindAccountDao.batchUpdateBindTelState(tbaVO.getTelRateId(), updateBindState, accountIds);
+//			}else{
+//				List<TelrateBindAccountPo> list = new LinkedList<TelrateBindAccountPo>();
+//				for (AgencyBackwardVO agencyBackwardVO : agencyList) {
+//					TelrateBindAccountPo telBindPo = new TelrateBindAccountPo(agencyBackwardVO.getAccountId(), agencyBackwardVO.getUserName(), tbaVO.getTelRateId(),  System.currentTimeMillis(), updateBindState, CallBackEnum.POSITIVE.getValue(),tbaVO.getBindAgencyId());
+////					AccountActiveRateDTO aardtoq = new AccountActiveRateDTO(agencyBackwardVO.getAccountId(), agencyBackwardVO.getUserName(), aardto.getRateDiscountId(), System.currentTimeMillis(), updateBindState, aardto.getBindAgencyId());
+//					list.add(telBindPo);
+//				}
+//				res = telrateBindAccountDao.batchInsert(list);
+//			}
+//		}
+//		return res;
+//	}
+
+	@Override
+	public int batchBindAllTelAgency(int rootAgencyId,
+			TelrateBindAccountVO tbaVO, int updateBindState) {
+		int res = 0;
+		List<AgencyBackwardVO> agencyList = agencyAO.getUnbindTelAgencyList(rootAgencyId, tbaVO);
+		if(agencyList != null && agencyList.size() > 0){
+			
+			if(BindStateEnum.UNBIND.getValue().equals(tbaVO.getBindState())){//原先的状态是解绑状态
+				int[] accountIds = new int[agencyList.size()];
+				for (int i = 0; i < agencyList.size(); i++) {
+					accountIds[i] = agencyList.get(i).getAccountId();
+				}
+				res = telrateBindAccountDao.batchUpdateBindTelState(tbaVO.getTelRateId(), updateBindState, accountIds);
+			}else{
+				List<TelrateBindAccountPo> list = new LinkedList<TelrateBindAccountPo>();
+				for (AgencyBackwardVO agencyBackwardVO : agencyList) {
+					TelrateBindAccountPo telBindPo = new TelrateBindAccountPo(agencyBackwardVO.getAccountId(), agencyBackwardVO.getUserName(), tbaVO.getTelRateId(),  System.currentTimeMillis(), updateBindState, CallBackEnum.POSITIVE.getValue(),tbaVO.getBindAgencyId());
+//					AccountActiveRateDTO aardtoq = new AccountActiveRateDTO(agencyBackwardVO.getAccountId(), agencyBackwardVO.getUserName(), aardto.getRateDiscountId(), System.currentTimeMillis(), updateBindState, aardto.getBindAgencyId());
+					list.add(telBindPo);
+				}
+				res = telrateBindAccountDao.batchInsert(list);
+			}
+		}
+		
+		return res;
 	}
 }

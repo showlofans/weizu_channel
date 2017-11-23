@@ -7,6 +7,14 @@ import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 
+/**
+ * @description:
+ * @projectName:weizu-channel
+ * @className:AgencyVODaoInterface.java
+ * @author:微族通道代码设计人 宁强
+ * @createTime:2017年11月23日 下午3:59:29
+ * @version 1.0
+ */
 public interface AgencyVODaoInterface extends Dao<AgencyBackwardPo, Integer> {
 	/**
 	 * @description:查询代理商列表
@@ -74,22 +82,40 @@ public interface AgencyVODaoInterface extends Dao<AgencyBackwardPo, Integer> {
 	int checkSecondAgency(int agencyId);
 	
 	/**
-	 * @description:  查询解绑的代理商 
+	 * @description:  查询解绑流量折扣的代理商 
 	 * @param map
 	 * @return
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月17日 下午2:52:44
 	 */
 	List<AgencyBackwardVO> getUnbindAgency(Map<String,Object> paramsMap);
+	/**
+	 * @description:  查询解绑话费折扣的代理商 
+	 * @param map
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月17日 下午2:52:44
+	 */
+	List<AgencyBackwardVO> getUnbindTelAgency(Map<String,Object> paramsMap);
 	
 	/**
-	 * @description: 查询没有绑定的代理商
+	 * @description: 查询没有绑定流量折扣的代理商
 	 * @param paramsMap
 	 * @return
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月18日 上午11:07:08
 	 */
 	List<AgencyBackwardVO> getNoBAgency(Map<String,Object> paramsMap);
+	/**
+	 * @description: 查询没有绑定话费折扣的代理商
+	 * @param paramsMap
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年7月18日 上午11:07:08
+	 */
+	List<AgencyBackwardVO> getNoBTelAgency(Map<String,Object> paramsMap);
+	
+	
 	
 	/**
 	 * @description:  查询解绑的代理商个数
@@ -101,6 +127,16 @@ public interface AgencyVODaoInterface extends Dao<AgencyBackwardPo, Integer> {
 	int countUnbindAgency(Map<String, Object> paramsMap);
 	
 	/**
+	 * @description:查询解绑话费折扣的代理商个数
+	 * @param paramsMap
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月23日 下午3:59:07
+	 */
+	int countUnbindTelAgency(Map<String, Object> paramsMap);
+	
+	
+	/**
 	 * @description: 查询没有绑定的代理商个数
 	 * @param paramsMap
 	 * @return
@@ -109,6 +145,14 @@ public interface AgencyVODaoInterface extends Dao<AgencyBackwardPo, Integer> {
 	 */
 	int countNoBAgency(Map<String, Object> paramsMap);
 	
+	/**
+	 * @description:查询没有绑定话费折扣的代理商个数
+	 * @param paramsMap
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月23日 下午3:59:35
+	 */
+	int countNoBTelAgency(Map<String, Object> paramsMap);
 	/**
 	 * @description: 获得名字列表
 	 * @param params
