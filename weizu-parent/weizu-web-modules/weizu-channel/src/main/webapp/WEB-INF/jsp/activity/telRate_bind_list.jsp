@@ -132,10 +132,10 @@
 						<td class="td-manage">
 						<c:choose>
 							<c:when test="${activePo.bindState == 0 }">
-								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top"  onClick="changeBState('/flowsys/rate/update_bind_state.do',${activePo.id },'${activePo.agencyName }',1)" href="javascript:;" title="解绑"><i class="Hui-iconfont">&#xe605;</i></a> 
+								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top"  onClick="changeBState('/flowsys/telRate/update_bindtel_state.do',${activePo.id },1)" href="javascript:;" title="解绑"><i class="Hui-iconfont">&#xe605;</i></a> 
 							</c:when>
 							<c:otherwise>
-								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top"  onClick="changeBState('/flowsys/rate/update_bind_state.do',${activePo.id },'${activePo.agencyName }',0)" href="javascript:;" title="绑定"><i class="Hui-iconfont">&#xe60e;</i></a> 
+								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top"  onClick="changeBState('/flowsys/telRate/update_bindtel_state.do',${activePo.id },0)" href="javascript:;" title="绑定"><i class="Hui-iconfont">&#xe60e;</i></a> 
 							</c:otherwise>
 						</c:choose>
 						</td>
@@ -242,8 +242,30 @@ function dischange(){
 	$('#pageNoLong').val("1");
 	$('#formD').submit();
 }
+
+function changeBState(url,activeId,bindS){
+	$.ajax({
+		type: 'POST',
+		url: url,
+		data: {id:activeId, bindState:bindS},
+		async: false,
+		success: function(data){
+			//alert(data);
+			if(data=="success")
+			{
+				location.reload();
+			}else{
+				layer.msg('更新绑定状态!',{icon:1,time:1000});
+			} 
+		},
+		error:function(data) {
+			console.log(data.msg);
+		},
+	});
+}
+
 //更新绑定状态
-function changeBState(url,activeId,agencyName,bindS){
+/* function changeBState(url,activeId,agencyName,bindS){
 	//alert(agencyName);
 	var cDId = $("#channelDiscountId").val();
 	var activeDiscount = $("#rateDiscountId option:selected").text(); 
@@ -297,7 +319,7 @@ function changeBState(url,activeId,agencyName,bindS){
             //右上角关闭回调
         }
     });
-}
+} */
 
 
 //onchange获得选中的option,设置折扣列表

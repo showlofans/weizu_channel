@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.activity.ao;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,6 +27,7 @@ import com.weizu.flowsys.web.activity.pojo.TelRatePo;
 import com.weizu.flowsys.web.activity.pojo.TelrateBindAccountPo;
 import com.weizu.flowsys.web.activity.pojo.TelrateBindAccountVO;
 import com.weizu.flowsys.web.agency.ao.AgencyAO;
+import com.weizu.flowsys.web.agency.dao.ChargeAccountDaoInterface;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.channel.dao.ITelChannelDao;
 import com.weizu.flowsys.web.channel.dao.ITelProductDao;
@@ -80,6 +82,7 @@ public class TelrateBindAccountAOImpl implements TelrateBindAccountAO {
 			if(StringHelper.isNotEmpty(tbaVO.getAgencyName())){
 				where.and("agency_name", "like", tbaVO.getAgencyName());
 			}
+			where.and("bind_state", "=", BindStateEnum.BIND.getValue());
 			
 			//初始化分页信息
 			Long totalRecord = telrateBindAccountDao.count(where);
@@ -153,6 +156,69 @@ public class TelrateBindAccountAOImpl implements TelrateBindAccountAO {
 			}
 		}
 		
+		return res;
+	}
+	
+	@Resource
+	private ChargeAccountDaoInterface chargeAccountDao;
+
+	@Override
+	public int batchBindAgency(TelrateBindAccountVO telrateBindAccountVO) {
+		String accountIdst = telrateBindAccountVO.getAccountIds();
+		if(StringHelper.isNotEmpty(accountIdst)){
+			String [] accountIdsi = accountIdst.split(",");
+			int[] accountIds = new int[accountIdsi.length];
+			String[]agencyNames = new String[accountIdsi.length];
+			Long telRateId = telrateBindAccountVO.getTelRateId();
+			for (int i = 0; i < accountIdsi.length; i++) {
+				accountIds[i] = Integer.parseInt(accountIdsi[i]);
+				agencyNames[i] = chargeAccountDao.get(accountIds[i]).getAgencyName();
+				//判断是否已经添加了该绑定
+				TelrateBindAccountPo telRateBindPo = telrateBindAccountDao.get(new WherePrams("account_id", "=", accountIds[i]).and("tel_rate_id", "=", telRateId).and("bind_state", "=", BindStateEnum.BIND.getValue()));
+				if(telRateBindPo != null){//已经添加过，就不再往list中添加了
+					accountIds[i] = accountIds[accountIds.length-1];//把最后一个元素替代指定的元素
+					accountIds = Arrays.copyOf(accountIds, accountIds.length-1);//数组缩容
+					agencyNames[i] = agencyNames[accountIds.length-1];
+					agencyNames = Arrays.copyOf(agencyNames, agencyNames.length-1);//数组缩容
+				}
+			}
+			
+			List<TelrateBindAccountPo> list = new LinkedList<TelrateBindAccountPo>();
+			for (int i = 0; i < agencyNames.length; i++) {
+//				TelrateBindAccountPo telRateBindPo = new AccountActiveRateDTO(accountIds[i], agencyNames[i], rateDiscountId, System.currentTimeMillis(), BindStateEnum.BIND.getValue(), aardto.getBindAgencyId());
+				TelrateBindAccountPo telRateBindPo = new TelrateBindAccountPo(accountIds[i], agencyNames[i], telRateId, System.currentTimeMillis(), BindStateEnum.BIND.getValue(), CallBackEnum.POSITIVE.getValue(), telrateBindAccountVO.getBindAgencyId());
+				list.add(telRateBindPo);
+			}
+			return telrateBindAccountDao.batchInsert(list);
+//			AgencyBackwardPo agencyPo = new AgencyBackwardPo();
+//			agencyPo.setAgencyIds(agencyIds);
+//			List<AgencyBackwardPo> list = agencyVODao.getBatchAgency(agencyPo);
+		}
+		return 0;
+	}
+
+	@Override
+	public int batchUpdateBindState(TelrateBindAccountVO telrateBindAccountVO) {
+		if(telrateBindAccountVO.getBindState() == BindStateEnum.BIND.getValue()){//绑定
+			String accountIdst = telrateBindAccountVO.getAccountIds();
+			if(StringHelper.isNotEmpty(accountIdst)){
+				String [] accountIdsi = accountIdst.split(",");
+				int[] accountIds = new int[accountIdsi.length];
+				for (int i = 0; i < accountIds.length; i++) {
+					accountIds[i] = Integer.parseInt(accountIdsi[i]);
+				}
+				return telrateBindAccountDao.batchUpdateBindTelState(telrateBindAccountVO.getTelRateId(), telrateBindAccountVO.getBindState(), accountIds);
+			}else{
+				return -1;
+			}
+		}else{//解绑
+			return telrateBindAccountDao.batchUpdateBindTelState(telrateBindAccountVO.getTelRateId(), telrateBindAccountVO.getBindState());
+		}
+	}
+
+	@Override
+	public int updateBindState(TelrateBindAccountPo telrateBindAccountPo) {
+		int res = telrateBindAccountDao.updateLocal(telrateBindAccountPo);
 		return res;
 	}
 }

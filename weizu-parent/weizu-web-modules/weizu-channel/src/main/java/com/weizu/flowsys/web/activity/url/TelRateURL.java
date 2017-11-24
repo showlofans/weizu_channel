@@ -77,14 +77,14 @@ public class TelRateURL extends BaseURL {
 	public static final String BIND_CHANNEL = "/bind_channel" + DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 更新绑定状态<br>
-	 * /flowsys/telRate/update_bind_state.do
+	 * /flowsys/telRate/update_bindtel_state.do
 	 */
-	public static final String UPDATE_BIND_STATE = "/update_bind_state" + DYNAMIC_WEB_SUFFIX;
+	public static final String UPDATE_BINDTEL_STATE = "/update_bindtel_state" + DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 批量更新绑定状态（根据折扣id，批量解除绑定）
-	 * <br>/flowsys/telRate/batch_update_bind_state.do
+	 * <br>/flowsys/telRate/batch_update_bindtel_state.do
 	 */
-	public static final String BATCH_UPDATE_BIND_STATE = "/batch_update_bind_state" + DYNAMIC_WEB_SUFFIX;
+	public static final String BATCH_UPDATE_BINDTEL_STATE = "/batch_update_bindtel_state" + DYNAMIC_WEB_SUFFIX;
 	
 	/**
 	 * 更新绑定状态提示页面<br>
@@ -141,10 +141,10 @@ public class TelRateURL extends BaseURL {
 	 */
 	public static final String BATCH_BIND_AGENCY = "/batch_bind_agency" + DYNAMIC_WEB_SUFFIX;
 	/**
-	 * 欢迎界面
-	 * <br>/flowsys/telRate/welcome.do
+	 * 话费折扣全量绑定代理商
+	 * <br>/flowsys/telRate/batch_bind_allagency.do
 	 */
-	public static final String WELCOME = "/welcome" + DYNAMIC_WEB_SUFFIX;
+	public static final String BATCH_BIND_ALLAGENCY = "/batch_bind_allagency" + DYNAMIC_WEB_SUFFIX;
 	
 	/**
 	 * 费率配置列表

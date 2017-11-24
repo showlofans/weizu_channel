@@ -50,6 +50,14 @@ public class TelrateBindAccountDaoImpl extends DaoImpl<TelrateBindAccountPo, Lon
 		return sqlSessionTemplate.insert("batchInsertTBA", tbapList);
 	}
 
+	@Override
+	public int batchUpdateBindTelState(long telRateId, int bindState) {
+		Map<String, Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("telRateId", telRateId);
+		paramsMap.put("bindState", bindState);
+		return sqlSessionTemplate.update("updateBindTelState", paramsMap);
+	}
+
 //	@Override
 //	public int batch_bindTelList(List<TelrateBindAccountPo> list) {
 //		// TODO Auto-generated method stub

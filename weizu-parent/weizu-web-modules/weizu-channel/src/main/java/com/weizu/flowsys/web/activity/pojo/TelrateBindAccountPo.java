@@ -68,9 +68,30 @@ public class TelrateBindAccountPo extends Po {
 //		this.activeTimeStr = activeTimeStr;
 //	}
     
+    
+    
 	public Integer getBindSide() {
 		return bindSide;
 	}
+
+	
+	
+	/** 更新话费绑定状态
+	 * @param accountId
+	 * @param telRateId
+	 * @param activeTime
+	 * @param bindState
+	 */
+	public TelrateBindAccountPo(Integer accountId, Long telRateId, Long activeTime,
+		Integer bindState) {
+		super();
+		this.accountId = accountId;
+		this.telRateId = telRateId;
+		this.activeTime = activeTime;
+		this.bindState = bindState;
+	}
+	
+	
 
 	public TelrateBindAccountPo(Integer accountId, String agencyName,
 		Long telRateId, Long activeTime, Integer bindState, Integer bindSide,

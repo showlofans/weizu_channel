@@ -26,6 +26,18 @@ public interface TelChannelAO {
 	public Pagination<TelChannelParams> getTelChannel(TelChannelParams telParams, PageParam pageParams);
 	
 	/**
+	 * @description: 获得分页的我的话费通道
+	 * @param pageParams
+	 * @param telChannelParams
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月24日 下午2:31:53
+	 */
+	public Pagination<TelChannelParams> getAgencyTelChannel(PageParam pageParams, TelChannelParams telChannelParams);
+	
+//	public Pagination<TelChannelParams> getTelChannel(TelChannelParams telParams, PageParam pageParams);
+	
+	/**
 	 * @description: 通过id和ServiceType获得通道的(含地区)详细信息
 	 * @param telChannelId
 	 * @param serviceType

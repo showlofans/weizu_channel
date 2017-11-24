@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
+import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.util.StringUtil2;
@@ -89,6 +90,30 @@ public class TelChannelAOImpl implements TelChannelAO {
 			params.put("end", pageSize);
 		}
 		List<TelChannelParams> records = telChannelDao.getTelChannel(params);
+		return new Pagination<TelChannelParams>(records, totalRecord, pageNoLong, pageSize);
+	}
+	
+
+	@Override
+	public Pagination<TelChannelParams> getAgencyTelChannel(
+			PageParam pageParams, TelChannelParams telChannelParams) {
+		Map<String,Object> params = getParamsByPo(telChannelParams);
+		params.put("rateFor", AgencyTagEnum.PLATFORM_USER.getValue());
+		long totalRecord = telChannelDao.countMyTelChannel(params);
+		int pageSize = 10;
+		long pageNoLong = 1l;
+		if(pageParams != null){
+			pageSize = pageParams.getPageSize();
+			pageNoLong = pageParams.getPageNoLong();
+			long startLongNum = (pageNoLong-1)*pageSize;
+			params.put("start", startLongNum);
+			params.put("end", pageSize);
+		}
+		List<TelChannelParams> records = telChannelDao.getMyTelChannel(params);
+		for (TelChannelParams telChannelParams2 : records) {
+			telChannelParams2.setTelchannelPrice(NumberTool.mul(telChannelParams2.getTelchannelDiscount(), telChannelParams2.getChargeValue()));
+		}
+		
 		return new Pagination<TelChannelParams>(records, totalRecord, pageNoLong, pageSize);
 	}
 	
@@ -175,5 +200,6 @@ public class TelChannelAOImpl implements TelChannelAO {
 		}
 		return resStr;
 	}
+
 
 }

@@ -562,6 +562,10 @@ public class AgencyAOImpl implements AgencyAO {
 //		if(telrateBindAccountVO.getAgencyTag() != null){
 			paramsMap.put("agencyTag", AgencyTagEnum.DATA_USER.getValue());
 //		}
+			
+		if(telrateBindAccountVO.getBillType() != null){
+			paramsMap.put("billType", telrateBindAccountVO.getBillType());
+		}
 //		if(aardto.getBindState() != null){
 //			paramsMap.put("bindState", aardto.getBindState());
 //		}

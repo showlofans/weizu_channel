@@ -94,14 +94,15 @@
     <result column="agency_tel" jdbcType="VARCHAR" property="agencyTel" />
     <result column="user_email" jdbcType="VARCHAR" property="userEmail" />
     <result column="account_id" jdbcType="INTEGER" property="accountId" />
+    <result column="bill_type" jdbcType="INTEGER" property="billType" />
     <!-- <result column="agency_ip" jdbcType="VARCHAR" property="agencyIp" /> -->
     <result column="active_time" property="createTime" />
   </resultMap>
   <sql id="Unbind_Column_List">
-   act.id account_id,a2.user_name,a2.user_email,a2.user_real_name,a2.agency_mark,active1.active_time,a2.agency_tel
+   act.id account_id,a2.user_name,a2.user_email,a2.user_real_name,a2.agency_mark,active1.active_time,a2.agency_tel,act.bill_type
   </sql>
   <sql id="Nobind_Column_List">
-   act2.id account_id,a2.user_name,a2.user_email,a2.user_real_name,a2.agency_mark,a2.agency_tel
+   act2.id account_id,a2.user_name,a2.user_email,a2.user_real_name,a2.agency_mark,a2.agency_tel,act2.bill_type
   </sql>
   <!-- 查看邀请码是否符合条件 -->
   <select id="checkVerifyCode" parameterType="map" resultType = "int">

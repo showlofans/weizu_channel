@@ -87,16 +87,16 @@
 				<!-- <button type="reset"class="btn btn-success" value="重置">重置</button> -->
 				备注信息:<input type="text"  value="${resultMap.telrateBindAccountVO.agencyMark }" name="agencyMark" id="" placeholder=" 用户备注" style="width:150px" class="input-text">
 				<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
-				<%-- <c:choose>
+				<c:choose>
 					<c:when test="${resultMap.telrateBindAccountVO.bindState==1 }"><!-- 已解绑：批量绑定 -->
-						<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBState('/flowsys/rate/batch_update_bind_state.do',0)" href="javascript:;" title="批量绑定"><i class="Hui-iconfont">&#xe60e;</i>批量绑定</a>
-						<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBAllState('/flowsys/rate/batch_bind_allagency.do',1,0)" href="javascript:;" title="全量绑定"><i class="Hui-iconfont">&#xe60e;</i>全量绑定</a>
+						<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBState('/flowsys/telRate/batch_update_bindtel_state.do',0)" href="javascript:;" title="批量绑定"><i class="Hui-iconfont">&#xe60e;</i>批量绑定</a>
+						<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBAllState('/flowsys/telRate/batch_bind_allagency.do',1,0)" href="javascript:;" title="全量绑定"><i class="Hui-iconfont">&#xe60e;</i>全量绑定</a>
 					</c:when>
 					<c:otherwise><!-- 未绑定 -->
-						<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBAllState('/flowsys/rate/batch_bind_allagency.do',2,0)" href="javascript:;" title="全量增加"><i class="Hui-iconfont">&#xe60e;</i>全量增加</a>
-						<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="changeBState('/flowsys/rate/batch_bind_agency.do',0)" href="javascript:;" > 批量增加</a>
+						<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBAllState('/flowsys/telRate/batch_bind_allagency.do',2,0)" href="javascript:;" title="全量增加"><i class="Hui-iconfont">&#xe60e;</i>全量增加</a>
+						<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="changeBState('/flowsys/telRate/batch_bind_agency.do',0)" href="javascript:;" > 批量增加</a>
 					</c:otherwise>
-				</c:choose> --%>
+				</c:choose>
 				<%-- <c:forEach items="${resultMap.bindStateEnums }" var="bState" varStatus="vst">
 					<c:if test="${bState.value == resultMap.searchParams.bindState }"> selected</c:if>
 				</c:forEach> --%>

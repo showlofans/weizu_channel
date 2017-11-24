@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.web.activity.pojo.AccountActiveRateDTO;
+import com.weizu.flowsys.web.activity.pojo.TelrateBindAccountPo;
 import com.weizu.flowsys.web.activity.pojo.TelrateBindAccountVO;
 
 /**
@@ -48,5 +49,32 @@ public interface TelrateBindAccountAO {
 	 * @createTime:2017年11月20日 下午3:29:03
 	 */
 	int batchBindAllTelAgency( int rootAgencyId, TelrateBindAccountVO tbaVO, int updateBindState);
+	
+	/**
+	 * @description: 话费折扣批量绑定
+	 * @param telrateBindAccountVO
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月24日 上午10:32:23
+	 */
+	int batchBindAgency(TelrateBindAccountVO telrateBindAccountVO);
+	
+	/**
+	 * @description: 批量更新绑定状态
+	 * @param telrateBindAccountVO
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月24日 上午10:45:09
+	 */
+	int batchUpdateBindState(TelrateBindAccountVO telrateBindAccountVO);
+	
+	/**
+	 * @description: 更新绑定（状态）
+	 * @param telrateBindAccountPo
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月24日 下午3:13:01
+	 */
+	int updateBindState(TelrateBindAccountPo telrateBindAccountPo);
 	
 }

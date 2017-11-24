@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -266,7 +267,7 @@ public class TelRateController {
 	
 	/**
 	 * @description: :来源：batch_bindtel_agency_page.jsp changeBAllState函数
-	 * <br>话费折扣批量绑定（解绑）全部代理商 
+	 * <br>话费折扣全量绑定全部代理商 
 	 * @param telVO
 	 * @param updateBindState
 	 * @param request
@@ -275,7 +276,7 @@ public class TelRateController {
 	 * @createTime:2017年11月23日 下午6:22:41
 	 */
 	@ResponseBody
-	@RequestMapping(value=RateURL.BATCH_BIND_ALLAGENCY)
+	@RequestMapping(value=TelRateURL.BATCH_BIND_ALLAGENCY)
 	public String batchBindAllAgency(TelrateBindAccountVO telrateBindAccountVO,Integer updateBindState, HttpServletRequest request){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO == null){
@@ -292,5 +293,73 @@ public class TelRateController {
 		}
 		return msg;
 	}
+	
+	/**
+	 * @description: 话费折扣批量绑定代理商
+	 * @param telrateBindAccountVO
+	 * @param request
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月24日 上午10:42:10
+	 */
+	@ResponseBody
+	@RequestMapping(value=TelRateURL.BATCH_BIND_AGENCY)
+	public String batchBindAgency(TelrateBindAccountVO telrateBindAccountVO,HttpServletRequest request){
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		if(agencyVO == null){
+			return "error";
+		}
+		telrateBindAccountVO.setBindAgencyId(agencyVO.getId());
+		int res = telrateBindAccountAO.batchBindAgency(telrateBindAccountVO);
+//		int res = accountActiveRateAO.batchBindAgency(aardto);
+		String msg = "";
+		if(res>0){
+			msg = "success"; 
+		}else{
+			msg = "error"; 
+		}
+		return msg;
+	}
+	
+	/**
+	 * @description: 批量更新绑定状态（根据折扣id，批量解除绑定）
+	 * @param telrateBindAccountVO
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月24日 上午10:52:53
+	 */
+	@RequestMapping(value=TelRateURL.BATCH_UPDATE_BINDTEL_STATE)
+	@ResponseBody
+	public String batchUpdateBindState(TelrateBindAccountVO telrateBindAccountVO)
+	{
+		int res = telrateBindAccountAO.batchUpdateBindState(telrateBindAccountVO);
+		String result = "";
+		if(res >= 0){
+			result = "success";
+		}else{
+			result = "error";
+		}
+		return result;
+	}
+	
+	/**
+	 * @description: 更新话费折扣与账户的绑定状态(接口用户)
+	 * @param telrateBindAccountPo
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月24日 下午3:17:51
+	 */
+	@ResponseBody
+	@RequestMapping(value=TelRateURL.UPDATE_BINDTEL_STATE)
+	public String updateBindTelState(TelrateBindAccountPo telrateBindAccountPo){
+		String result = "error";
+		 int res = telrateBindAccountAO.updateBindState(telrateBindAccountPo);
+		 if(res > 0){
+			 result = "success";
+		 }
+		return result;
+	}
+	
+	
 
 }

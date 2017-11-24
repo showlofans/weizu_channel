@@ -24,7 +24,7 @@ public class TelRatePo extends Po {
     
     private Long telchannelId;					//话费通道id
     
-    private Integer rateFor;				//平台用户，接口用户AgencyTagEnum
+    private Integer rateFor;				//平台用户0，接口用户1AgencyTagEnum
     
     private Integer rateType;				//费率属性：PgServiceTypeEnum
     

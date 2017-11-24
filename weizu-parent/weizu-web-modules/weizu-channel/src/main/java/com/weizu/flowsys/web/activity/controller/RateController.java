@@ -644,20 +644,16 @@ public class RateController {
 	 */
 	@RequestMapping(value=RateURL.BATCH_UPDATE_BIND_STATE)
 	@ResponseBody
-	public String batchUpdateBindState(AccountActiveRateDTO aardto, HttpServletResponse response)
+	public String batchUpdateBindState(AccountActiveRateDTO aardto)
 	{
 		int res = accountActiveRateAO.batchUpdateBindState(aardto);
+		String result = "";
 		if(res >= 0){
-			return "success";
+			result = "success";
 		}else{
-			return "error";
-			
+			result = "error";
 		}
-//		try {
-//			response.getWriter().print("success");
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		return result;
 	}
 	/**
 	 * @description: 更新绑定的折扣

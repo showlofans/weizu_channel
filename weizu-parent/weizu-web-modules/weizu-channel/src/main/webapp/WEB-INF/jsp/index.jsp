@@ -104,26 +104,37 @@
 </header>
 <aside class="Hui-aside">
 	<div class="menu_dropdown bk_2">
-		<c:if test="${loginContext.rootAgencyId == 0 }">
-			<dl id="menu-product"><!-- menu_dropdown-arrow -->
-				<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe643;</i> 通道管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+		<dl id="menu-product"><!-- menu_dropdown-arrow -->
+		<c:choose>
+			<c:when test="${loginContext.rootAgencyId == 0 }">
+					<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe643;</i> 通道管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+					<dd>
+						<ul>
+							<c:if test="${power== 'no'}">
+								<li><a data-href="/flowsys/platform/platform_list.do" data-title="平台管理" href="javascript:void(0)">平台管理</a></li>
+								<li><a data-href="/flowsys/productCode/product_code_list.do" data-title="流量编码" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量编码</a></li>
+							</c:if>
+							<li><a data-href="/flowsys/channel/channel_add_page.do" data-title="流量添加" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量添加</a></li>
+							<li><a data-href="/flowsys/channel/channel_list.do" data-title="流量通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量通道</a></li>
+							
+							<li><a data-href="/flowsys/tel_product/telproduct_list.do" data-title="话费编码列表" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费编码</a></li>
+							<li><a data-href="/flowsys/tel_channel/telchannel_add_page.do" data-title="话费通道添加" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费添加</a></li>
+							<li><a data-href="/flowsys/tel_channel/telchannel_list.do" data-title="话费通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费通道</a></li>
+							<!-- <li><a data-href="/flowsys/rate/bind_channel_list.do?bindTag=bAgency" data-title="活动通道" href="javascript:void(0)">活动通道</a></li> -->
+						</ul>
+					</dd>
+			</c:when>
+			<c:otherwise>
+				 <dt><i class="Hui-iconfont" style="font-size:20px;">&#xe643;</i> 我的通道<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 				<dd>
 					<ul>
-						<c:if test="${power== 'no'}">
-							<li><a data-href="/flowsys/platform/platform_list.do" data-title="平台管理" href="javascript:void(0)">平台管理</a></li>
-							<li><a data-href="/flowsys/productCode/product_code_list.do" data-title="流量编码" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量编码</a></li>
-						</c:if>
-						<li><a data-href="/flowsys/channel/channel_add_page.do" data-title="流量添加" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量添加</a></li>
-						<li><a data-href="/flowsys/channel/channel_list.do" data-title="流量通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量通道</a></li>
-						
-						<li><a data-href="/flowsys/tel_product/telproduct_list.do" data-title="话费编码列表" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费编码</a></li>
-						<li><a data-href="/flowsys/tel_channel/telchannel_add_page.do" data-title="话费通道添加" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费添加</a></li>
-						<li><a data-href="/flowsys/tel_channel/telchannel_list.do" data-title="话费通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费通道</a></li>
-						<!-- <li><a data-href="/flowsys/rate/bind_channel_list.do?bindTag=bAgency" data-title="活动通道" href="javascript:void(0)">活动通道</a></li> -->
+						<!-- <li><a data-href="/flowsys/channel/channel_list.do" data-title="流量通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量通道</a></li> -->
+						<li><a data-href="/flowsys/my_channel/tel_channel_list.do" data-title="话费通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费通道</a></li>
 					</ul>
-				</dd>
-			</dl>
-		</c:if>
+				</dd> 
+			</c:otherwise>
+		</c:choose>
+		</dl>
 		<dl id="menu-product">
 			<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe62b;</i> 代理商管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>

@@ -35,6 +35,21 @@ public interface ITelrateBindAccountDao extends Dao<TelrateBindAccountPo, Long> 
 	 * @createTime:2017年11月23日 下午6:04:14
 	 */
 	int batchUpdateBindTelState(long telRateId, int bindState, int[] accountIds);
+
+	
+	/**
+	 * @description: 删除折扣（根据折扣id，批量解除绑定）
+	 * @param telRateId
+	 * @param bindState
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月24日 上午10:49:40
+	 */
+	int batchUpdateBindTelState(long telRateId, int bindState);
+	
+	
+	
+	
 	
 	/**
 	 * @description: 批量添加话费折扣

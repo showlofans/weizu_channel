@@ -15,6 +15,8 @@ import com.weizu.flowsys.core.beans.Po;
  */
 public class TelChannelParams extends Po implements Serializable {
 
+	private static final long serialVersionUID = 8819348486219792468L;
+
 	private Long id;					//id
 		
 	private String epName;				//平台名称
@@ -51,12 +53,22 @@ public class TelChannelParams extends Po implements Serializable {
 	
 	private String provinceid;				//省份名称：查询参数
 	
-	private Double telchannelDiscount;			//通道价
+	private Double telchannelDiscount;			//通道折扣
+	
+	private Double telchannelPrice;				//通道价格
 	
 	//private Long lastAccess;					//更新时间
 	
 	public String getProvinceid() {
 		return provinceid;
+	}
+
+	public Double getTelchannelPrice() {
+		return telchannelPrice;
+	}
+
+	public void setTelchannelPrice(Double telchannelPrice) {
+		this.telchannelPrice = telchannelPrice;
 	}
 
 	public Double getTelchannelDiscount() {
