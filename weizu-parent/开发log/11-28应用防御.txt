@@ -1,0 +1,41 @@
+病毒维护（定期看一下阿里云后台被攻击信息）
+tomcat用户管理-密码的修改
+修改了ssh（远程登陆的信息）：1433 mysshd用户
+
+客户关系管理：专门收集客户与公司联系的所有信息
+一个是报价，怎么收集报价信息(业务交流)
+一个是新客户吸收，怎么找到更有效的上端用户和下端用户
+然后是老客户的维护,满足老客户的需求
+
+突出的问题
+打款协同问题：商务要求打款，管理负责打款（通道打款，预警打款）
+第一，打款渠道与通道平台的绑定，指定通道（平台，公司）之后，
+自然发送相关的打款渠道和金额给负责打款的人（打款记录，手机不能没电）
+和打电话通知相比
+1.系统的管理，不会有忘记打了多少的顾虑
+2.节省话费的支出
+3.缺点，不知道对方看到消息没有，无法及时联系到对方
+
+/sshd_config
+service sshd restart
+#useradd uploader
+#passwd uploader
+查看当前终端情况
+[root@linuxidc ~]# w
+查看哪个属于此时自己的终端（我开了两个连接）
+[root@linuxidc ~]# who am i
+
+ 修改 /etc/sudoers 文件，找到下面一行，在root下面添加一行，如下所示：
+
+## Allow root to run any commands anywhere
+root    ALL=(ALL)     ALL
+tommy   ALL=(ALL)     ALL
+
+usermod -g root mysshd //添加到root组
+su--
+切换用户
+sudo 执行操作
+显示提示信息
+
+上传不了文件
+chown -R mysshd /usr/local
