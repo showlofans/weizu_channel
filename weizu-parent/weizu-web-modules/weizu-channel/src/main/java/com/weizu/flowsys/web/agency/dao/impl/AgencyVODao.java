@@ -96,6 +96,30 @@ public class AgencyVODao extends DaoImpl<AgencyBackwardPo, Integer> implements A
 		return sqlSessionTemplateASS.selectOne("checkSecondAgency",agencyId);//asset-只有一个结果
 	}
 
+	@Override
+	public List<AgencyBackwardVO> getUnbindTelAgency(
+			Map<String, Object> paramsMap) {
+		return sqlSessionTemplateASS.selectList("getUnbindTelAgency", paramsMap);
+	}
+
+	@Override
+	public List<AgencyBackwardVO> getNoBTelAgency(Map<String, Object> paramsMap) {
+		return sqlSessionTemplateASS.selectList("getNoBTelAgency", paramsMap);
+	}
+	
+
+	@Override
+	public int countUnbindTelAgency(Map<String, Object> paramsMap) {
+		// TODO Auto-generated method stub
+		return sqlSessionTemplateASS.selectOne("countUnbindTelAgency", paramsMap);
+	}
+
+	@Override
+	public int countNoBTelAgency(Map<String, Object> paramsMap) {
+		return sqlSessionTemplateASS.selectOne("countNoBTelAgency", paramsMap);
+	}
+	
+	
 	/**
 	 * @description:  查询没有绑定的代理商 
 	 * @param map

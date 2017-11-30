@@ -20,9 +20,12 @@
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>通道类型：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<c:forEach items="${resultMap.billTypeEnums }" var="billEnum" varStatus="vs">
-					<c:if test="${resultMap.telChannelParams.billType==billEnum.value }">
-						<input type="text" style="width:200px"  readonly="readonly" class="input-text" value="${billEnum.desc }" placeholder="">
+				<%-- <c:forEach items="${resultMap.agencyTagEnums }" var="agencyTagEnum" varStatus="vs1"> --%>
+					<c:if test="${resultMap.telChannelParams.billType==billEnum.value }"><!-- && agencyTagEnum.value == resultMap.rateFor -->
+						<input type="text" style="width:200px"  readonly="readonly" class="input-text" value="${billEnum.desc } " placeholder="">
+						<%-- <input type="hidden" class="input-text" name="rateFor"  value="${agencyTagEnum.value }" placeholder=""> --%>
 					</c:if>
+				<%-- </c:forEach> --%>
 				</c:forEach>
 			</div>
 		</div>
@@ -53,26 +56,44 @@
 			<label class="form-label col-xs-4 col-sm-3">设置折扣：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" style="width:200px" required class="input-text"  value="${resultMap.telRatePo.activeDiscount}" placeholder='按照上面格式填写' id="activeDiscount" name="activeDiscount">
+				<span class="select-box inline">
+					<select name="rateFor" disabled="disabled" id="rateFor" rate class="select">
+							<c:forEach items="${resultMap.agencyTagEnums }" var="agencyTagEnum" varStatus="vs1">
+								<option value="${agencyTagEnum.value }" <c:if test="${agencyTagEnum.value == resultMap.rateFor }"> selected</c:if>>${agencyTagEnum.desc }</option>
+							</c:forEach>
+					</select>
+					<input type="hidden" class="input-text" name="rateFor" id="rateFor"  value="${resultMap.rateFor }" placeholder="">
+				</span>
 			</div>
 		</div>
+		
+		
+		
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">折扣类型：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<c:forEach items="${resultMap.billTypeEnums }" var="billEnum" varStatus="vs">
 					<div class="radio-box">
-						<input name="billType" class="radioItem"  type="radio" value="${billEnum.value }" <c:if test="${resultMap.telRatePo.billType==billEnum.value || (empty resultMap.telRatePo.billType && vs.index == 0) }">checked</c:if>><!-- <c:if test="${not empty rateDisocunt }">readonly</c:if> -->
+						<input name="billType" class="radioItem" onclick="getTelRate(this)"  type="radio" value="${billEnum.value }" <c:if test="${resultMap.telRatePo.billType==billEnum.value || (empty resultMap.telRatePo && vs.index == 0) }">checked</c:if>><!-- <c:if test="${not empty rateDisocunt }">readonly</c:if> -->
 						${billEnum.desc }
 					</div>
 				</c:forEach>
 			</div>
 		</div>
-		<input type="hidden" name="telchannelId" value="${resultMap.telChannelParams.id }">
+		<input type="hidden" id="telchannelId" name="telchannelId" value="${resultMap.telChannelParams.id }">
 		<input type="hidden" name="id" id="id" value="${resultMap.telRatePo.id }">
 		
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
 				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
-				<button class="btn btn-primary radius" onClick="cancelEdit()">取消</button>
+				<%-- <c:choose>
+					<c:when test="${resultMap.rateFor ==1 }">
+					</c:when>
+					<c:otherwise>
+						
+					</c:otherwise>
+				</c:choose> --%>
+						<button class="btn btn-primary radius" type="button" onClick="removeIframe()">取消</button>
 			</div>
 		</div>
 	</form>
@@ -85,6 +106,35 @@
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 <script type="text/javascript">
+/**平台用户设置折扣+ '&rateFor=' + rateFor*/
+function getTelRate(vart){
+	var rateFor = $('#rateFor').val();
+	if(rateFor == 0){
+		var telchannelId = $("#telchannelId").val();
+		var billType = $(vart).val();
+		$.ajax({
+		    type: "post",
+		    url: '/flowsys/telRate/ajax_telrate_plat.do?telChannelId='+ telchannelId + '&billType=' + billType,
+		    dataType: "json",
+		    async: false,
+		    contentType: "application/x-www-form-urlencoded; charset=utf-8", 
+		    success: function(data){
+		  	  //alert(data.pgList.length);
+		  	  //alert(data);
+		  	  if(data == null){
+		  		$('#id').val("");
+			  	  $('#activeDiscount').val("");
+		  	  }else{
+			  	  var dataRole1 = eval(data);
+			  	  $('#id').val(dataRole1.id);
+			  	  $('#activeDiscount').val(dataRole1.activeDiscount);
+		  	  }
+		    }
+		});
+	}
+}
+
+
 $().ready(function() {
     $("#bindRateForm").validate({
     	submitHandler : function(form) {
@@ -95,7 +145,7 @@ $().ready(function() {
     		/* else if(fromTag == "editChannel"){
     			url = "/flowsys/channel/edit_channel_discount.do"
     		} */
-    		var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+    		//var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
     		var url = "/flowsys/telRate/telRate_add.do";
     		$.ajax({
     	        type: "post",
@@ -106,7 +156,7 @@ $().ready(function() {
     	        	//alert(d);
     	            if(d == 'success'){
     	                layer.msg('保存成功！');//保存成功提示
-	    	            parent.layer.close(index); ////执行关闭
+    	                removeIframe();
     	            }else if(d == "exist"){
     	            	 layer.msg('该折扣已存在！');
     	            }else{

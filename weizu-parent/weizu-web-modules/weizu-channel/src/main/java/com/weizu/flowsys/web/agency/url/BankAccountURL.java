@@ -79,7 +79,4 @@ public class BankAccountURL extends BaseURL {
 	 */
 	public static final String TRANSFER_CONFIRM = "/transfer_confirm" + DYNAMIC_WEB_SUFFIX;
 	
-	
-	
-	
 }

@@ -470,7 +470,7 @@ public class ChargePgController {
 	 */
 	@ResponseBody
 	@RequestMapping(value= ChargePgURL.AJAX_PURCHASE_PRICE)
-	public String ajaxPurchassPrice(HttpServletRequest request, Double pgPrice,String carrier,Long channelId, Integer pgId, HttpServletResponse response){
+	public String ajaxPurchassPrice(HttpServletRequest request, Double pgPrice,Integer serviceType,String carrier,Long channelId, Integer pgId, HttpServletResponse response){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO != null){
@@ -484,7 +484,10 @@ public class ChargePgController {
 					
 					ExchangePlatformPo platformPo = exchangePlatformDao.getEpByCDiscountId(cdPo.getId());
 					if(platformPo != null){
-						String scopeCityCode = ScopeCityEnum.getValueByCarrier(carrier);
+						String scopeCityCode = ScopeCityEnum.QG.getValue();
+						if(serviceType != ServiceTypeEnum.NATION_WIDE.getValue()){
+							scopeCityCode = ScopeCityEnum.getValueByCarrier(carrier);
+						}
 						ProductCodePo code = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, platformPo.getId(), pgId));
 						resultMap.put("productCode", code.getProductCode());
 					}
@@ -506,7 +509,10 @@ public class ChargePgController {
 							
 							ExchangePlatformPo platformPo = exchangePlatformDao.getEpByRateId(ratePo.getId());
 							if(platformPo != null){
-								String scopeCityCode = ScopeCityEnum.getValueByCarrier(carrier);
+								String scopeCityCode = ScopeCityEnum.QG.getValue();
+								if(serviceType != ServiceTypeEnum.NATION_WIDE.getValue()){
+									scopeCityCode = ScopeCityEnum.getValueByCarrier(carrier);
+								}
 								ProductCodePo code = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, platformPo.getId(), pgId));
 								resultMap.put("productCode", code.getProductCode());
 							}

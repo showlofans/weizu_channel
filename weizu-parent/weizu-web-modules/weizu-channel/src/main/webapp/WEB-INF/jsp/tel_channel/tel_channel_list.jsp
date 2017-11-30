@@ -260,6 +260,7 @@
 						<a style="text-decoration:none" class="ml-5" onClick="produce_del('/flowsys/telchannelCode/telchannelcode_delete.do',${telchannel.id })" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
 						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="javascript:;" onClick="getTelrateList(this,'/flowsys/telRate/bind_telRate_list.do',${telchannel.id },${telchannel.serviceType })" data-title="折扣信息"><i class="Hui-iconfont">&#xe725;</i></a>
 						<a style="text-decoration:none" data-toggle="tooltip" data-href='/flowsys/tel_channel/telchannel_edit_page.do?id=${telchannel.id}&serviceType=${telchannel.serviceType }' data-placement="top" class="ml-5" onclick="Hui_admin_tab(this)" data-title="编辑通道"><i class="Hui-iconfont">&#xe6df;</i></a>
+						<a style="text-decoration:none" data-toggle="tooltip" data-href='/flowsys/telRate/telRate_add_page_plat.do?id=${telchannel.id}&serviceType=${telchannel.serviceType }' data-placement="top" class="ml-5" onclick="Hui_admin_tab(this)" data-title="平台用户折扣"><i class="Hui-iconfont">&#xe72b;</i></a>
 						<%-- editChannel(this,'/flowsys/tel_channel/telchannel_edit_page.do?channelId=${telchannel.id}&serviceType='${telchannel.serviceType }) --%>
 						</td>
 					</tr>

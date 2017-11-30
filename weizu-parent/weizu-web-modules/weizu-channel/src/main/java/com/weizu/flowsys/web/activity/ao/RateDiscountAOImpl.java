@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
-import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
@@ -30,8 +29,10 @@ import com.weizu.flowsys.web.activity.pojo.AccountActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.DiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountShowDTO;
+import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
+import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
+import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
-import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
 import com.weizu.web.foundation.String.StringHelper;
@@ -427,70 +428,197 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 //		
 //		return dtoMap;
 //	}
+	@Resource
+	private ChannelChannelDao channelChannelDao;
 	@Override
-	public List<RateDiscountShowDTO> getIndexShowRate(Integer agencyId) {
+	public List<RateDiscountShowDTO> getIndexShowRate(Integer agencyId, Boolean isRoot) {
 		Map<String, Object> params = new HashMap<String, Object>();
 //		Map<String,Object> dtoMap = new HashMap<String, Object>();
 		List<RateDiscountShowDTO> dtoList = new LinkedList<RateDiscountShowDTO>();
-		params.put("agencyId", agencyId);
-		
+		params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+		if(isRoot){
+			params.put("channelState", ChannelStateEnum.OPEN.getValue());
+			
+		}else{
+			params.put("agencyId", agencyId);
+			params.put("bindState", BindStateEnum.BIND.getValue());
+		}
 		BillTypeEnum[] bTypeEnums = BillTypeEnum.values();	
 		ServiceTypeEnum [] sTypeEnums = ServiceTypeEnum.values();
 		for (ServiceTypeEnum serviceTypeEnum : sTypeEnums) {
 			for (BillTypeEnum billTypeEnum : bTypeEnums) {
 				params.put("billType", billTypeEnum.getValue());
 				params.put("serviceType", serviceTypeEnum.getValue());
-				params.put("bindState", BindStateEnum.BIND.getValue());
-				params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
-				//分类查询，然后合并
-				List<RateDiscountPo> rateListBill = rateDiscountDao.getShowRate(params);
-				initRateList(rateListBill, dtoList, billTypeEnum.getValue(), serviceTypeEnum.getValue());
+				if(isRoot){
+					List<ChannelChannelPo> channelList = channelChannelDao.listChannel(params);
+					initChannelList(channelList, dtoList, billTypeEnum.getValue(), serviceTypeEnum.getValue());
+				}else{
+					//分类查询，然后合并
+					List<RateDiscountPo> rateListBill = rateDiscountDao.getShowRate(params);
+					initRateList(rateListBill, dtoList, billTypeEnum.getValue(), serviceTypeEnum.getValue());
+				}
+				
 			}
 		}
 		return dtoList;
 	}
 	
 	/**
-	 * @description: 看传入的地区参数是否符合折扣信息
-	 * @param loginAgencyId
-	 * @param scopeCityName
-	 * @return
-	 * @author:POP产品研发部 宁强
-	 * @createTime:2017年8月1日 下午5:54:59
+	 * @description: 把带票业务区分开来
+	 * @param rateList
+	 * @param dtoMap
+	 * @param billType
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年9月1日 下午4:41:56
 	 */
-	@Override
-	public boolean checkScopeIsAccept(Integer accountId,
-			String scopeCityName) {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("accountId", accountId);
-		String scopeCityCode = ScopeCityEnum.getValueByDesc(scopeCityName);
-		params.put("scopeCityCode", scopeCityCode);
-		params.put("bindState", BindStateEnum.BIND.getValue());
-		params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
-		params.put("channelType", ChannelTypeEnum.ORDINARY.getValue());
-		params.put("pgType", PgTypeEnum.PGDATA.getValue());
-		params.put("pgValidity", PgValidityEnum.MONTH_DAY_DATA.getValue());
-		RateDiscountPo ratePo = rateDiscountDao.getRateForCharge(params);
-		if(ratePo != null){
-			return true;
+	private void initChannelList(List<ChannelChannelPo> cnelList,List<RateDiscountShowDTO> showList,int billType,int serviceType) {
+//		List<RateDiscountShowDTO> dtoList = new LinkedList<RateDiscountShowDTO>();
+//		String key = "";
+		if(cnelList != null && cnelList.size()>0){//有对公的费率
+//			DiscountPo dpo = null;
+			int i = 0;
+			int j = 0;
+			int k = 0;
+			
+			for (ChannelChannelPo channelPo : cnelList) {
+				List<ChannelDiscountPo>  cdlist = channelPo.getDiscountList();
+				for (ChannelDiscountPo channelDiscountPo : cdlist) {
+					int operatorType = channelDiscountPo.getOperatorType();
+					if(operatorType == OperatorTypeEnum.MOBILE.getValue())
+					{
+						i++;
+					}else if(operatorType == OperatorTypeEnum.TELECOME.getValue())
+					{
+						k++;
+					}else//联通
+					{
+						j++;
+					}
+				}
+			}
+			StringBuffer discount0 = null;
+			StringBuffer discount1 = null;
+			StringBuffer discount2 = null;
+//			StringBuffer discountTag0 = null;
+//			StringBuffer discountTag1 = null;
+//			StringBuffer discountTag2 = null;
+			if(i > 0){
+				discount0 = new StringBuffer("{");
+//				discountTag0 = new StringBuffer("{");
+			}
+			if(j > 0){
+				discount1 = new StringBuffer("{");
+//				discountTag1 = new StringBuffer("{");
+			}
+			if(k > 0){
+				discount2 = new StringBuffer("{");
+//				discountTag2 = new StringBuffer("{");
+			}
+			
+			int m = 0;
+			
+			int listSize = cnelList.size();
+			for (ChannelChannelPo channelPo : cnelList) {
+				List<ChannelDiscountPo>  cdlist = channelPo.getDiscountList();
+				boolean hasSpecialTag = StringHelper.isEmpty(channelPo.getSpecialTag());
+				for (ChannelDiscountPo channelDiscountPo : cdlist) {
+					String code = channelDiscountPo.getScopeCityCode();
+					String ScopeCityName = ScopeCityEnum.getEnum(code).getDesc();	//城市名
+					int operatorType = channelDiscountPo.getOperatorType();
+					if(hasSpecialTag){
+						
+						if(operatorType == OperatorTypeEnum.MOBILE.getValue())
+						{
+//						channelPo.
+							discount0.append("\""+ScopeCityName+"\":\""+channelDiscountPo.getChannelDiscount()+"\"");
+							if(m != listSize-1){
+								discount0.append(",");
+							}
+						}else if(operatorType == OperatorTypeEnum.TELECOME.getValue())
+						{
+							discount2.append("\""+ScopeCityName+"\":\""+channelDiscountPo.getChannelDiscount()+"\"");
+							if(m != listSize-1){
+								discount2.append(",");
+							}
+						}else//联通
+						{
+							discount1.append("\""+ScopeCityName+"\":\""+channelDiscountPo.getChannelDiscount()+"\"");
+							if(m != listSize-1){
+								discount1.append(",");
+							}
+						}
+					}else{
+						StringBuffer discountTag = new StringBuffer("{");
+						DiscountPo dpo = null;
+						if(operatorType == OperatorTypeEnum.MOBILE.getValue())
+						{
+//							discountTag0.append("\""+ScopeCityName+"\":\""+channelDiscountPo.getChannelDiscount()+"\"");
+							discountTag.append("\""+ScopeCityName+"\":\""+channelDiscountPo.getChannelDiscount()+"\"");
+							discountTag.append("}");
+							dpo = new DiscountPo(discountTag.toString(), null, null);
+//							if(m != listSize-1){
+//								discountTag1.append(",");
+//							}
+						}else if(operatorType == OperatorTypeEnum.TELECOME.getValue())
+						{
+//							discountTag2.append("\""+ScopeCityName+"\":\""+channelDiscountPo.getChannelDiscount()+"\"");
+							discountTag.append("\""+ScopeCityName+"\":\""+channelDiscountPo.getChannelDiscount()+"\"");
+							discountTag.append("}");
+							dpo = new DiscountPo(null, null, discountTag.toString());
+//							if(m != listSize-1){
+//								discountTag2.append(",");
+//							}
+						}else//联通
+						{
+//							discountTag1.append("\""+ScopeCityName+"\":\""+channelDiscountPo.getChannelDiscount()+"\"");
+							discountTag.append("\""+ScopeCityName+"\":\""+channelDiscountPo.getChannelDiscount()+"\"");
+							discountTag.append("}");
+							dpo = new DiscountPo(null, discountTag.toString(), null );
+//							if(m != listSize-1){
+//								discountTag1.append(",");
+//							}
+						}
+						if(m != listSize-1){
+							discountTag.append(",");
+						}
+						String specialTag = channelPo.getSpecialTag();
+						RateDiscountShowDTO showDTO = new RateDiscountShowDTO(dpo, billType,serviceType);
+						showDTO.setSpecialTag(specialTag);
+						showList.add(showDTO);
+					}
+					
+				}
+				m++;
+			}
+			String dis0Str = "";
+			String dis1Str = "";
+			String dis2Str = "";
+			if(i > 0){
+				if( discount0.length() == 1){
+					dis0Str = null;
+				}else{
+					dis0Str = discount0.append("}").toString();
+				}
+			}
+			if(j > 0){
+				if( discount1.length() == 1){
+					dis1Str = null;
+				}else{
+					dis1Str = discount1.append("}").toString();
+				}
+			}
+			if(k > 0){
+				if( discount2.length() == 1){
+					dis2Str = null;
+				}else{
+					dis2Str = discount2.append("}").toString();
+				}
+			}
+			DiscountPo dpo = new DiscountPo(dis0Str, dis1Str, dis2Str);
+			RateDiscountShowDTO showDTO = new RateDiscountShowDTO(dpo, billType,serviceType);
+			showList.add(showDTO);
 		}
-		
-//		List<RateDiscountPo> rateList = rateDiscountDao.getShowRate(params);//参考地区
-//		ScopeCityEnum[] enumAry = ScopeCityEnum.values();
-//		//验证是否存在该地区的折扣
-//		if(rateList == null || rateList.size()==0){
-//			return false;
-//		}
-//		for (RateDiscountPo rateDiscountPo : rateList) {
-//			for (ScopeCityEnum scopeCityEnum : enumAry) {
-//				if(scopeCityEnum.getValue().equals(rateDiscountPo.getScopeCityCode()) && scopeCityEnum.getDesc().contains(scopeCityName) ){//得到参考地区
-//					return true;
-//				}
-//			}
-//		}
-		return false;
 	}
-
 	/**
 	 * @description: 把带票业务区分开来
 	 * @param rateList
@@ -500,8 +628,8 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	 * @createTime:2017年9月1日 下午4:41:56
 	 */
 	private void initRateList(List<RateDiscountPo> rateList,List<RateDiscountShowDTO> showList,int billType,int serviceType) {
-		List<RateDiscountShowDTO> dtoList = new LinkedList<RateDiscountShowDTO>();
-		String key = "";
+//		List<RateDiscountShowDTO> dtoList = new LinkedList<RateDiscountShowDTO>();
+//		String key = "";
 		if(rateList != null && rateList.size()>0){//有对公的费率
 //			DiscountPo dpo = null;
 			int i = 0;
@@ -615,7 +743,8 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 			DiscountPo dpo = new DiscountPo(dis0Str, dis1Str, dis2Str);
 			RateDiscountShowDTO showDTO = new RateDiscountShowDTO(dpo, billType,serviceType);
 			showList.add(showDTO);
-			
+		}
+	}
 //			Map<String,Object> bMap = new HashMap<String, Object>();
 //			if(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue() == billType){
 //				bMap.put("noDTO", new RateDiscountShowDTO(dpo, 1,serviceType));
@@ -630,7 +759,7 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 //				key = "province";
 //			}
 //			dtoMap.put(key, bMap);
-		}
+		
 //		if(rateList != null && rateList.size()>0){
 ////			DiscountPo dpo = null;
 //			StringBuffer discount0 = new StringBuffer("{");
@@ -688,6 +817,46 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 //			}
 //			
 //		}
+	
+	/**
+	 * @description: 看传入的地区参数是否符合折扣信息
+	 * @param loginAgencyId
+	 * @param scopeCityName
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年8月1日 下午5:54:59
+	 */
+	@Override
+	public boolean checkScopeIsAccept(Integer accountId,
+			String scopeCityName) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("accountId", accountId);
+		String scopeCityCode = ScopeCityEnum.getValueByDesc(scopeCityName);
+		params.put("scopeCityCode", scopeCityCode);
+		params.put("bindState", BindStateEnum.BIND.getValue());
+		params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+		params.put("channelType", ChannelTypeEnum.ORDINARY.getValue());
+		params.put("pgType", PgTypeEnum.PGDATA.getValue());
+		params.put("pgValidity", PgValidityEnum.MONTH_DAY_DATA.getValue());
+		RateDiscountPo ratePo = rateDiscountDao.getRateForCharge(params);
+		if(ratePo != null){
+			return true;
+		}
+		
+//		List<RateDiscountPo> rateList = rateDiscountDao.getShowRate(params);//参考地区
+//		ScopeCityEnum[] enumAry = ScopeCityEnum.values();
+//		//验证是否存在该地区的折扣
+//		if(rateList == null || rateList.size()==0){
+//			return false;
+//		}
+//		for (RateDiscountPo rateDiscountPo : rateList) {
+//			for (ScopeCityEnum scopeCityEnum : enumAry) {
+//				if(scopeCityEnum.getValue().equals(rateDiscountPo.getScopeCityCode()) && scopeCityEnum.getDesc().contains(scopeCityName) ){//得到参考地区
+//					return true;
+//				}
+//			}
+//		}
+		return false;
 	}
 	/**
 	 * @description: 获得充值价格

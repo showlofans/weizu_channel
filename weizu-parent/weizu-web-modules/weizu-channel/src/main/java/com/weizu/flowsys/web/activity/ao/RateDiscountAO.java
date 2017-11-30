@@ -124,7 +124,7 @@ public interface RateDiscountAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年9月11日 下午3:46:10
 	 */
-	List<RateDiscountShowDTO> getIndexShowRate (Integer agencyId);
+	List<RateDiscountShowDTO> getIndexShowRate (Integer agencyId, Boolean isRoot);
 	
 	/**
 	 * @description: 看传入的地区参数是否符合折扣信息

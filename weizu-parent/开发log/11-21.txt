@@ -1,0 +1,23 @@
+redis添加的序列化对象
+rateDiscountPo
+purchaseVO
+agencyVO
+CompanyCredentialsPo
+chargeAccountPo
+OneCodePo
+TotalResult
+
+spring整合redis，实现缓存
+redis:6379端口（防火墙需要开放的端口）
+设置开机自启动脚本
+#打开服务
+service redisd start
+#关闭服务
+service redisd stop
+
+删除session中的port
+从tomcat，catalina.sh中得到application中的端口号
+
+ cd /usr/local/webserver/redis
+redis-cli -a 333221
+del portNum

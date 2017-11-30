@@ -245,7 +245,7 @@ function editAgency(id){
         closeBtn: 1,
         content: '/flowsys/agency/child_agency_edit_page.do?id=' + id,
         end: function () {
-            location.reload();
+            //location.reload();
         }
     });
 }

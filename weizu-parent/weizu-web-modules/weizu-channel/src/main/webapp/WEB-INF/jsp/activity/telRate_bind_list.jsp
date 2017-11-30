@@ -40,19 +40,19 @@
 			话费类型:
 		<span class="c-red">
 			<c:forEach items="${resultMap.billTypeEnums }" var="billEnum" varStatus="vs">
-				<c:if test="${resultMap.telChannelParams.billType == billEnum.value }">
+				<c:if test="${telChannelParams.billType == billEnum.value }">
 					${billEnum.desc } 
 				</c:if>
 			</c:forEach>
-			<input type="hidden" id="id" name="id" value="${resultMap.telChannelParams.id }">
+			<input type="hidden" id="id" name="id" value="${telChannelParams.id }">
 			<c:forEach items="${resultMap.huaServiceTypeEnums }" var="huaStype" varStatus="vs1">
-				<c:if test="${resultMap.telChannelParams.serviceType == huaStype.value }">
+				<c:if test="${telChannelParams.serviceType == huaStype.value }">
 					<input type="hidden" id="serviceType" name="serviceType" value="${huaStype.value }">
 					${huaStype.desc } 
 				</c:if>
 			</c:forEach>
 			<c:forEach items="${resultMap.operatorNameEnums }" var="operatorNameEnum" varStatus="vs2">
-				<c:if test="${resultMap.telChannelParams.operatorName == operatorNameEnum.value }">
+				<c:if test="${telChannelParams.operatorName == operatorNameEnum.value }">
 							${operatorNameEnum.desc } 
 						<input type="hidden" id="operatorName" name="operatorName" value="${operatorNameEnum.value }">
 				</c:if>
@@ -60,10 +60,10 @@
 		</span>
 			
 			
-			通道折扣：<span id=""  class="c-red">${resultMap.telChannelParams.telchannelDiscount }</span>
-			话费价值：<span id=""  class="c-red">${resultMap.telChannelParams.chargeValue }</span>
+			通道折扣：<span id=""  class="c-red">${telChannelParams.telchannelDiscount }</span>
+			话费价值：<span id=""  class="c-red">${telChannelParams.chargeValue }</span>
 			</sapn>
-				地区：<span id=""  class="c-red">${resultMap.telChannelParams.province } &nbsp;${resultMap.telChannelParams.city } </span>
+				地区：<span id=""  class="c-red">${telChannelParams.province } &nbsp;${telChannelParams.city } </span>
 				<br>
 			<br>
 			<!-- 搜索条件 -->
@@ -92,7 +92,8 @@
 				移动省份:<input type="text" value="${resultMap.params.ratePrice0 }" name="ratePrice0" id="" placeholder=" 移动省份" style="width:150px" class="input-text">
 				联通省份:<input type="text" value="${resultMap.params.ratePrice1 }" name="ratePrice1" id="" placeholder=" 联通省份" style="width:150px" class="input-text">
 				电信省份:<input type="text" value="${resultMap.params.ratePrice2 }" name="ratePrice2" id="" placeholder=" 电信省份" style="width:150px" class="input-text"> --%>
-				<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="addRate('/flowsys/telRate/telRate_add_page.do','话费折扣添加')" href="javascript:;" > 添加折扣</a>
+				<!-- <a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="addRate('/flowsys/telRate/telRate_add_page.do','话费折扣添加')" href="javascript:;" > 添加折扣</a> -->
+				<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-href='/flowsys/telRate/telRate_add_page.do?id=${telChannelParams.id}&serviceType=${telChannelParams.serviceType }' data-placement="top" class="ml-5" onclick="Hui_admin_tab(this)" data-title="添加折扣">添加折扣</a>
 				<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="editRate('/flowsys/telRate/telRate_add_page.do','折扣编辑')" href="javascript:;" > 修改折扣</a>
 				<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="delRateDiscount()" href="javascript:;" > 删除折扣</a> 
 				<br><br>
@@ -102,7 +103,7 @@
 		</form>
 	</div> 
 		<div class="mt-20">
-			 <a style="text-decoration:none" class="btn btn-success" onClick="batch_bind('绑定代理商',' /flowsys/rate/batch_bind_agency_page.do','10001')" href="javascript:;" title="绑定代理商"><i class="Hui-iconfont">&#xe6df;</i>绑定代理商</a>
+			 <a style="text-decoration:none" class="btn btn-success" onClick="batch_bind('绑定代理商','/flowsys/telRate/batch_bindtel_agency_page.do','10001')" href="javascript:;" title="绑定代理商"><i class="Hui-iconfont">&#xe6df;</i>绑定代理商</a>
 		<table class="table table-border table-bordered table-bg table-hover table-sort">
 			<thead>
 				<tr class="text-c">
@@ -131,10 +132,10 @@
 						<td class="td-manage">
 						<c:choose>
 							<c:when test="${activePo.bindState == 0 }">
-								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top"  onClick="changeBState('/flowsys/rate/update_bind_state.do',${activePo.id },'${activePo.agencyName }',1)" href="javascript:;" title="解绑"><i class="Hui-iconfont">&#xe605;</i></a> 
+								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top"  onClick="changeBState('/flowsys/telRate/update_bindtel_state.do',${activePo.id },1)" href="javascript:;" title="解绑"><i class="Hui-iconfont">&#xe605;</i></a> 
 							</c:when>
 							<c:otherwise>
-								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top"  onClick="changeBState('/flowsys/rate/update_bind_state.do',${activePo.id },'${activePo.agencyName }',0)" href="javascript:;" title="绑定"><i class="Hui-iconfont">&#xe60e;</i></a> 
+								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top"  onClick="changeBState('/flowsys/telRate/update_bindtel_state.do',${activePo.id },0)" href="javascript:;" title="绑定"><i class="Hui-iconfont">&#xe60e;</i></a> 
 							</c:otherwise>
 						</c:choose>
 						</td>
@@ -212,18 +213,17 @@ function delRateDiscount(){
 
 /*批量绑定代理商页面 */
 function batch_bind(title,url,id,w,h){
-	var rateDiscountId = $("#rateDiscountId").val();
-	var activeDiscount = $("#rateDiscountId option:selected").text();
-	var scopeCityCode = $('#scopeCityCode').val();
+	var telRateId = $("#telRateId").val();
+	var activeDiscount = $("#telRateId option:selected").text();
 	var serviceType = $('#serviceType').val();
 	var operatorType = $('#operatorType').val();
-	var billType = $('#billTypeRate').val();
-	var specialTag = $('#specialTag').val();
+	var billType = $('#billType').val();
+	//var specialTag = $('#specialTag').val();
 	//alert(rateDiscountId);
-	if(rateDiscountId == ""){
+	if(telRateId == ""){
 		alert("没有可选的折扣！");
 	}else{
-		url = url + '?scopeCityCode='+scopeCityCode+'&serviceType='+serviceType+'&specialTag='+specialTag+'&operatorType='+operatorType+'&billType='+billType + '&rateDiscountId=' + rateDiscountId + '&activeDiscount=' + activeDiscount; 
+		url = url + '?serviceType='+serviceType+'&operatorType='+operatorType+'&billType='+billType + '&telRateId=' + telRateId + '&activeDiscount=' + activeDiscount; 
 		var index = layer.open({
 			type: 2,
 			title: title,
@@ -242,8 +242,30 @@ function dischange(){
 	$('#pageNoLong').val("1");
 	$('#formD').submit();
 }
+
+function changeBState(url,activeId,bindS){
+	$.ajax({
+		type: 'POST',
+		url: url,
+		data: {id:activeId, bindState:bindS},
+		async: false,
+		success: function(data){
+			//alert(data);
+			if(data=="success")
+			{
+				location.reload();
+			}else{
+				layer.msg('更新绑定状态!',{icon:1,time:1000});
+			} 
+		},
+		error:function(data) {
+			console.log(data.msg);
+		},
+	});
+}
+
 //更新绑定状态
-function changeBState(url,activeId,agencyName,bindS){
+/* function changeBState(url,activeId,agencyName,bindS){
 	//alert(agencyName);
 	var cDId = $("#channelDiscountId").val();
 	var activeDiscount = $("#rateDiscountId option:selected").text(); 
@@ -297,7 +319,7 @@ function changeBState(url,activeId,agencyName,bindS){
             //右上角关闭回调
         }
     });
-}
+} */
 
 
 //onchange获得选中的option,设置折扣列表
@@ -362,7 +384,7 @@ function addRate(url,title){
         closeBtn: 1,
         content: url+'?serviceType=' + serviceType + '&id=' + id ,
          end: function () {
-            location.reload();
+            //location.reload();
         }
     });
 }
@@ -403,7 +425,7 @@ function editRate(url,title){
 					        closeBtn: 1,
 					        content: url+'?serviceType=' + serviceType + '&id=' + id + '&telRateId=' + telRateId,  
 					         end: function () {
-					          	  location.reload();
+					          	  //location.reload();
 					        }
 					    });
 						//location.reload();

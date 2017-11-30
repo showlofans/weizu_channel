@@ -5,6 +5,7 @@
   <sql id="t_cities">cities</sql>
   <sql id="t_provinces">provinces</sql>
   <sql id="t_telchannel">telchannel</sql>
+  <sql id="t_telrate">tel_rate</sql>
   
   <resultMap type="com.weizu.flowsys.web.channel.pojo.TelChannelPo" id="BaseResultMap">
   	<id column="id" property="id" jdbcType="BIGINT" />
@@ -60,6 +61,88 @@
 	<if test="serviceType == 1 ">,pc.province</if> <!-- 省内和市内 -->
   	<if test="serviceType == 2">,pc.province,ct.city</if><!-- 市内 -->
   </sql>
+  <!-- 话费通道页面 -->
+  <resultMap type="com.weizu.flowsys.web.channel.pojo.TelChannelParams" id="MyVOResultMap">
+  	<id column="id" property="id" jdbcType="BIGINT" />
+    <result column="bill_type" property="billType" jdbcType="INTEGER" />
+    <result column="active_discount" property="telchannelDiscount" jdbcType="DOUBLE" />
+    <!-- <result column="telchannel_total_profit" property="channelTotalProfit" jdbcType="DOUBLE" />
+    <result column="telchannel_total_amount" property="channelTotalAmount" jdbcType="DOUBLE" />
+    <result column="telchannel_total_use" property="channelTotalUse" jdbcType="INTEGER" /> -->
+    <!-- <result column="telchannel_state" property="telchannelState" jdbcType="INTEGER" />
+    <result column="telchannel_use_state" property="telchannelUseState" jdbcType="INTEGER" />
+    <result column="last_access" property="lastAccess" jdbcType="BIGINT" /> -->
+    <!-- 话费编码 -->
+    <result column="charge_speed" property="chargeSpeed" jdbcType="INTEGER" />
+    <result column="charge_value" property="chargeValue" jdbcType="INTEGER" />
+    <result column="ep_name" property="epName" jdbcType="VARCHAR" />
+    <result column="free_charge" property="freeCharge" jdbcType="INTEGER" />
+    <result column="limit_description" property="limitDescription" jdbcType="VARCHAR" />
+    <result column="service_type" property="serviceType" jdbcType="INTEGER" />
+    <result column="operator_name" property="operatorName" jdbcType="INTEGER" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="MyVO_Column_List">
+  	tt.id,tt.bill_type,tt.active_discount
+	,tp.charge_speed,tp.charge_value,tp.ep_name,tp.free_charge,tp.limit_description,tp.service_type,tp.operator_name
+	<if test="serviceType == 1 ">,pc.province</if> <!-- 省内和市内 -->
+  	<if test="serviceType == 2">,pc.province,ct.city</if><!-- 市内 -->
+  </sql>
+  
+  
+  
+  <!-- 统计我的话费通道总记录 -->
+  <select id="countMyTelChannel" parameterType="map" resultType="long">
+  	select count(*) FROM <include refid="t_telrate"></include> tt
+	INNER JOIN <include refid="t_telchannel"></include> td
+	on tt.telchannel_id=td.id
+	INNER JOIN <include refid="t_tel_product"></include> tp
+	on td.tel_product_id=tp.id
+	<if test="serviceType == 1">
+		INNER JOIN <include refid="t_provinces"></include> pc
+		on pc.provinceid=tp.provinceid
+	</if>
+	<if test="serviceType == 2 ">
+		INNER JOIN <include refid="t_provinces"></include> pc
+		on pc.provinceid=tp.provinceid
+		INNER JOIN <include refid="t_cities"></include> ct
+		on ct.cityid=tp.cityid
+	</if>
+	<where>
+		<include refid="my_conditon_sql"></include>
+	</where>
+  </select>
+  <!-- 查询我的话费通道列表 -->
+  <select id="getMyTelChannel" parameterType="map" resultMap="MyVOResultMap">
+  	select <include refid="MyVO_Column_List"></include>
+  	FROM <include refid="t_telrate"></include> tt
+	INNER JOIN <include refid="t_telchannel"></include> td
+	on tt.telchannel_id=td.id
+	INNER JOIN <include refid="t_tel_product"></include> tp
+	on td.tel_product_id=tp.id
+	<if test="serviceType == 1">
+		INNER JOIN <include refid="t_provinces"></include> pc
+		on pc.provinceid=tp.provinceid
+	</if>
+	<if test="serviceType == 2 ">
+		INNER JOIN <include refid="t_provinces"></include> pc
+		on pc.provinceid=tp.provinceid
+		INNER JOIN <include refid="t_cities"></include> ct
+		on ct.cityid=tp.cityid
+	</if>
+	<where>
+		<include refid="my_conditon_sql"></include>
+	</where>
+	order by tt.id desc
+    <if test="start != null">
+	 	limit #{start}
+	 </if>
+	<if test="end != null">
+	 	, #{end}
+	 </if>
+  </select>
+  
   
   <!-- 统计话费通道总记录 -->
   <select id="countTelChanenl" parameterType="map" resultType="long">
@@ -76,7 +159,6 @@
 		INNER JOIN <include refid="t_cities"></include> ct
 		on ct.cityid=tp.cityid
 	</if>
-	
 	<where>
 		<include refid="conditon_sql"></include>
 	</where>
@@ -146,6 +228,41 @@
   	</if>
   	<if test="telchannelUseState != null">
   		AND td.telchannel_use_state = #{telchannelUseState}
+  	</if>
+  	<!-- <if test="epId != null">
+  		AND tp.ep_id = #{epId}
+  	</if> -->
+  	<if test="chargeValue != null">
+  		AND tp.charge_value = #{chargeValue}
+  	</if>
+  	<if test="cityid != null">
+  		AND tp.cityid = #{cityid}
+  	</if>
+  	<if test="provinceid != null">
+  		AND tp.provinceid = #{provinceid}
+  	</if>
+  	<if test="chargeSpeed != null">
+  		AND tp.charge_speed = #{chargeSpeed}
+  	</if>
+  	<if test="serviceType != null">
+  		AND tp.service_type = #{serviceType}
+  	</if>
+  	<if test="operatorName != null">
+  		AND tp.operator_name = #{operatorName}
+  	</if>
+  	<if test="limitDescription != null">
+  		AND tp.limit_description like concat('%',trim(#{limitDescription}),'%')
+  	</if>
+  	<if test="epName != null">
+  		AND tp.ep_name like concat("%",trim(#{epName}),"%")
+  	</if>
+  </sql>
+  <sql id="my_conditon_sql">
+  	<if test="billType != null">
+  		AND tt.bill_type = #{billType}
+  	</if>
+  	<if test="rateFor != null">
+  		AND tt.rate_for like concat("%",trim(#{rateFor}),"%")
   	</if>
   	<!-- <if test="epId != null">
   		AND tp.ep_id = #{epId}

@@ -52,10 +52,10 @@ public class TelChannelController {
 	public ModelAndView telChannelAddPage(){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
-		resultMap.put("billTypes", BillTypeEnum.toList());					//商务类型
 		resultMap.put("channelUseStateEnums", ChannelUseStateEnum.toList());
 		resultMap.put("chargeTelEnums", TelchannelTypeEnum.toList());			//话费基本类型枚举
 		resultMap.put("telchargeSpeedEnums", TelchargeSpeedEnum.toList());
+		resultMap.put("billTypeEnums", BillTypeEnum.toList());					//商务类型
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
 		resultMap.put("serviceTypeEnums", HuaServiceTypeEnum.toList());
 		
@@ -85,12 +85,12 @@ public class TelChannelController {
 	public ModelAndView getTelChannel(TelChannelParams telParams,@RequestParam(value = "pageNoLong", required = false)Long pageNoLong){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
-		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
-		resultMap.put("serviceTypeEnums", HuaServiceTypeEnum.toList());
-		resultMap.put("telchargeSpeedEnums", TelchargeSpeedEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		resultMap.put("channelStateEnums", ChannelStateEnum.toList());
 		resultMap.put("channelUseStateEnums", ChannelUseStateEnum.toList());
+		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
+		resultMap.put("serviceTypeEnums", HuaServiceTypeEnum.toList());
+		resultMap.put("telchargeSpeedEnums", TelchargeSpeedEnum.toList());
 //		resultMap.put("chargeTelEnums", TelchannelTypeEnum.toList());			//话费基本类型枚举
 		PageParam pageParam = null;
 		if(pageNoLong != null){
