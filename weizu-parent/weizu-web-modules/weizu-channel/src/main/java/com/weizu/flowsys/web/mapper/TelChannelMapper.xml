@@ -220,6 +220,10 @@
 	</select>
   
   <sql id="conditon_sql">
+  	
+  	<if test="telProductId != null">
+  		AND td.tel_product_id = #{telProductId}
+  	</if>
   	<if test="billType != null">
   		AND td.bill_type = #{billType}
   	</if>

@@ -224,7 +224,7 @@
 			<label class="form-label col-xs-4 col-sm-3">商务类型：</label>
 			<!-- billTypes -->
 			<div class="formControls col-xs-8 col-sm-9">
-				<c:forEach items="${resultMap.billTypes }" var="billEnum" varStatus="vs">
+				<c:forEach items="${resultMap.billTypeEnums }" var="billEnum" varStatus="vs">
 					<c:choose>
 						<c:when test="${vs.index == 0 }">
 							<div class="radio-box">
@@ -450,7 +450,7 @@ $(document).ready(function(){
  	                       removeIframe();
  	                   }
  	                   if(d=="error"){
- 	                       layer.msg('保存异常!');
+ 	                       layer.msg('保存异常!查看是否已添加过该类型在使用状态的通道');
  	                   }
  	               },
     			 "error":function(msg){

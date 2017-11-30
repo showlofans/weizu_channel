@@ -145,8 +145,8 @@
 			<thead>
 				<tr class="text-c">
 					<!-- <th width="80">流量包Id</th> -->
-					<th width="30">ID</th>
-					<th width="80">平台名称</th>
+					<!-- <th width="30">ID</th> -->
+					<!-- <th width="80">平台名称</th> -->
 					<th width="80">话费价值</th>
 					<th width="120">通道折扣</th>
 					<th width="120">折扣价格</th>
@@ -162,14 +162,14 @@
 					
 					<!-- <th width="80">通道状态</th>
 					<th width="80">通道使用状态</th> -->
-					<th width="100">操作</th>
+					<!-- <th width="100">操作</th> -->
 				</tr>
 			</thead>
 			<tbody>
 				<c:forEach items="${resultMap.pagination.records }" var="telchannel" varStatus="vs">
 					<tr class="text-c">
-						<td>${telchannel.id }</td> 
-						<td>${telchannel.epName }</td>
+						<%-- <td>${telchannel.id }</td> 
+						<td>${telchannel.epName }</td> --%>
 						<td>${telchannel.chargeValue }元</td>
 					 	<td class="c-blue">${telchannel.telchannelDiscount }</td>
 						<td class="c-blue">${telchannel.telchannelPrice }</td>
@@ -234,7 +234,7 @@
 								<c:if test="${telchannel.telchannelUseState == cUseState.value  && telchannel.telchannelUseState==1}"> <span class="label radius">${cUseState.desc }</span></c:if>
 							</c:forEach>
 						</td> --%>
-						<td class="f-14 td-manage">
+						<!-- <td class="f-14 td-manage"> -->
 							<%-- <c:choose>
 								<c:when test="${telchannel.telchannelState == 1 }"><!-- 暂停 -->
 									<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeCState(${telchannel.id},'0','state')" href="javascript:;" title="运行">
@@ -264,7 +264,7 @@
 						<a style="text-decoration:none" data-toggle="tooltip" data-href='/flowsys/tel_channel/telchannel_edit_page.do?id=${telchannel.id}&serviceType=${telchannel.serviceType }' data-placement="top" class="ml-5" onclick="Hui_admin_tab(this)" data-title="编辑通道"><i class="Hui-iconfont">&#xe6df;</i></a>
 						<a style="text-decoration:none" data-toggle="tooltip" data-href='/flowsys/telRate/telRate_add_page_plat.do?id=${telchannel.id}&serviceType=${telchannel.serviceType }' data-placement="top" class="ml-5" onclick="Hui_admin_tab(this)" data-title="平台用户折扣"><i class="Hui-iconfont">&#xe72b;</i></a> --%>
 						<%-- editChannel(this,'/flowsys/tel_channel/telchannel_edit_page.do?channelId=${telchannel.id}&serviceType='${telchannel.serviceType }) --%>
-						</td>
+						<!-- </td> -->
 					</tr>
 				</c:forEach>
 			</tbody>

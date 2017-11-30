@@ -55,7 +55,7 @@ public class AgencyChannelController {
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
 		resultMap.put("serviceTypeEnums", HuaServiceTypeEnum.toList());
 		resultMap.put("telchargeSpeedEnums", TelchargeSpeedEnum.toList());
-		resultMap.put("billTypes", BillTypeEnum.toList());					//商务类型
+		resultMap.put("billTypeEnums", BillTypeEnum.toList());					//商务类型
 //		resultMap.put("chargeTelEnums", TelchannelTypeEnum.toList());			//话费基本类型枚举
 		PageParam pageParam = null;
 		if(pageNoLong != null){
