@@ -20,4 +20,10 @@ public class ChargeTelURL extends BaseURL {
 	 * 话费充值页面
 	 */
 	public static final String TEL_CHARGE_PAGE = "/tel_charge_page" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 异步获得话费充值编码和折扣
+	 */
+	public static final String AJAX_CHARGE_TELPC = "/ajax_charge_telpc" + DYNAMIC_WEB_SUFFIX;
+	
+	
 }

@@ -138,8 +138,8 @@
  		<if test="userName != null">
  			AND a2.user_name like concat('%',#{userName},'%') 
  		</if>
- 		<if test="agencyTag != null">
- 			AND a2.agency_tag = #{agencyTag}
+ 		<if test="rateFor != null">
+ 			AND a2.agency_tag = #{rateFor}
  		</if>
  		<if test="billType != null">
  			AND act2.bill_type = #{billType}

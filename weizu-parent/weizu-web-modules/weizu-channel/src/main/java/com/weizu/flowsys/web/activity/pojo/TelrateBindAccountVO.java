@@ -45,6 +45,16 @@ public class TelrateBindAccountVO extends Po {
     
     private String activeDiscount;				//页面显示参数:话费折扣
     
+    private Integer rateFor;					//agencyTagEnum 接口，平台
+    
+	public Integer getRateFor() {
+		return rateFor;
+	}
+
+	public void setRateFor(Integer rateFor) {
+		this.rateFor = rateFor;
+	}
+
 	public Integer getBindSide() {
 		return bindSide;
 	}

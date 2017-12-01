@@ -34,7 +34,8 @@
  	<input type="hidden" name="channelId" id="channelId">
  	<input type="hidden" name="billType" id="billType">
  	<input type="hidden" name="pgId" id="pgId">
- 	<input type="hidden" name="productCode" id="productCode">
+ 	
+ 	<input type="hidden" name="pgId" id="pgId">
  	<input style="display: none;" type="text" value="${resultMap.pageMsg }" id="pageMsg">
 	
 	<div class="row cl">
@@ -95,7 +96,7 @@
 			<label class="form-label col-xs-4 col-sm-3">有效期：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 				<span class="select-box inline">
-					<select name="pgValidity"  id="pgValidity" class="select" style="width:150px;"  onchange="ifAjaxPg()">
+					<select name="pgValidity"  id="pgValidity" class="select" onchange="ifAjaxPg()" style="width:150px;" ><!--  onchange="ifAjaxPg()" -->
 					<!-- <option value="">请选择</option> -->
 					<c:forEach items="${resultMap.pgValidityEnums }" var="pgValidityEnum" varStatus="vs2">
 						<option value="${pgValidityEnum.value }">${pgValidityEnum.desc }</option>
@@ -109,7 +110,7 @@
 		<label class="form-label col-xs-4 col-sm-3"><!--<span class="c-red">*</span>-->业务类型：</label>
 		<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 				<span class="select-box inline">
-					<select id="select-servce-type" name="serviceType" onchange="ifAjaxPg()" style="width:150px;" class="select">
+					<select id="select-servce-type" name="serviceType" onchange="ifAjaxPg()"  style="width:150px;" class="select"><!-- onchange="ifAjaxPg()" -->
 						<option value="">请选择</option>
 						<c:forEach items="${resultMap.huaServiceTypeEnum }" var="typeEnum" varStatus="vs1">
 							<option value="${typeEnum.value }" <c:if test="${typeEnum.value == resultMap.params.serviceType }"> selected</c:if>>${typeEnum.desc }</option>
@@ -493,8 +494,57 @@
 		$("#pgPrice").val("");//重置参数
   	 	 $("#orderAmount").val("");
   	 	var sType1 = $("#select-servce-type").val();
+  	 	//异步获得价格折扣的时候
   	 	if(sType1 != null && sType1 != ''){
-	  		ajaxPg();
+	  		//alert("1");
+	  		var chargeTelDetail = $('#chargeTelDetail').val();//新疆乌鲁木齐联通
+	  		if(chargeTelDetail != ''){
+		  		$.getJSON("/view/mine/data/cityData.json",function(data){
+		  		    ss=data;
+		  		    //var html="<option value='-1'>==请选择==</option>";
+		  		    var sb = '';
+		  		    var itag2 = 0;
+		  		    for(var i=0;i<ss.length;i++){
+		  		    	var provinceName = ss[i].province;
+		  		    	provinceName = provinceName.substring(0,2);
+		  		    	//alert(provinceName);
+		  		    	sb += provinceName;
+		  		    	if(chargeTelDetail.indexOf(provinceName) != -1){
+		  	                var citys=ss[i].cities;
+		  	              	$('#provinceid').val(ss[i].provinceid);
+		  	              alert(ss[i].province);
+		  	              	itag2 = itag2 + 1;
+		  	                for(var j=0;j<citys.length;j++){
+		  	                	var cityName = citys[j].city;
+		  	                	cityName = cityName.substring(0,cityName.length-1);
+		  	                	sb += cityName;
+		  	                	if(chargeTelDetail.indexOf(cityName) != -1){
+		  	                		//有市级名称
+		  	                		$('#cityid').val(citys[j].cityid);
+		  	                		alert(citys[j].cityid);
+		  	                		
+		  	                		//$('#provinceid').val(citys[j].provinceid);
+		  	                	}else{//只有省级名称：设置只能选省内话费或者市内话费
+		  	                		
+		  	                		//$('#provinceid').val(citys[j].provinceid);
+		  	                	}
+		  	                	
+		  	                	/* city.add(new Option(citys[j].city,citys[j].cityid));
+		  	                	if(cityid == citys[j].cityid){
+		  		   					city.options[j].selected=true;
+		  	   					} */
+		  	                }
+		  		    	}
+		  		    }
+		  		    	//alert(itag2);
+		  		    if(itag2 > 0){//得到了省份名称
+		  		    	//alert(sb);
+		  		    }else{
+		  		    	alert('该地区不在服务范围');
+		  		    }
+		  		});
+	  		}
+  	 		//ajaxPg();
   	 	}
 	}
 	/**

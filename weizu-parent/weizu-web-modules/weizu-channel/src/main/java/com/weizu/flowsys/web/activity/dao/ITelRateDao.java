@@ -1,9 +1,11 @@
 package com.weizu.flowsys.web.activity.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.activity.pojo.TelRatePo;
+import com.weizu.flowsys.web.trade.pojo.GetTelRatePo;
 
 /**
  * @description: 话费折扣Dao
@@ -24,5 +26,16 @@ public interface ITelRateDao extends Dao<TelRatePo, Long> {
 	 * @createTime:2017年11月16日 下午4:15:57
 	 */
 	List<TelRatePo> listByTelRatePo(TelRatePo telRatePo);
+	
+	/**
+	 * @description: : 异步获得的价格折扣信息
+	 * @param map
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月1日 下午4:56:18
+	 */
+	List<GetTelRatePo> getTelRateForCharge(Map<String,Object> map);
+	
+	
 	
 }

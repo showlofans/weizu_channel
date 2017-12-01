@@ -256,7 +256,7 @@ public class TelRateController {
 		resultMap.put("telrateBindAccountVO", telrateBindAccountVO);
 		resultMap.put("pagination", pagination);
 		resultMap.put("bindStateEnums", BindStateEnum.toBindList());
-//		resultMap.put("agencyTagEnums", AgencyTagEnum.toList());
+		resultMap.put("agencyTagEnums", AgencyTagEnum.toList());
 		resultMap.put("onameEnums", OperatorNameEnum.toList());
 		resultMap.put("stypeEnums", ServiceTypeEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());

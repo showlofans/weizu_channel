@@ -66,14 +66,14 @@
 				<input type="hidden" id="operatorType" value="${resultMap.ratePo.operatorType }" > --%>
 				<input type="hidden" id="billType" name="billType" value="${resultMap.telrateBindAccountVO.billType }" >
 				<%-- <input type="hidden" id="activeDiscount" value="${resultMap.ratePo.activeDiscount }" > --%>
-				<%-- 代理类型：<span class="select-box inline">
-						<select name="agencyTag" id="agencyTag" class="select" onchange="onSub()">
+				 代理类型：<span class="select-box inline">
+						<select name="rateFor" id="rateFor" class="select" onchange="onSub()">
 						<!-- <option value="">请选择</option> -->
 						<c:forEach items="${resultMap.agencyTagEnums }" var="agencyTagEnum" varStatus="vst">
 							<option value="${agencyTagEnum.value }" <c:if test="${agencyTagEnum.value == resultMap.telrateBindAccountVO.agencyTag }"> selected</c:if>>${agencyTagEnum.desc }</option>
 						</c:forEach>
 					</select>
-				</span> --%>
+				</span>
 				绑定状态：<span class="select-box inline">
 						<select name="bindState" id="bindState" class="select" onchange="onSub()">
 						<!-- <option value="">请选择</option> -->

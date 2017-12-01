@@ -198,26 +198,27 @@
 	 }
  } */
  $().ready(function() {
-	 if($('#pageMsg').val() != ''){
-		 alert($('#pageMsg').val());
-	 }
 	    $("#form-charge").validate({
 	    	submitHandler : function(form) {
-	    		$.ajax({
-			        type:"post",
-			        url:"/flowsys/chargePg/pg_charge.do",
-			        data: $('form').serialize(),//表单数据
-			        async : false,
-			        success:function(d){
-			        	removeIframe();
-			           /* if(d=="success"){
-			                layer.msg('提交成功！');//保存成功提示
-			            }
-			            if(d=="error"){
-			                layer.msg('提交异常!');
-			            } */
-			        }
-			    });
+	    		if($('#pageMsg').val() != ''){
+	    			 alert($('#pageMsg').val());
+	    		 }else if($('#productCode').val() != ''){
+		    		$.ajax({
+				        type:"post",
+				        url:"/flowsys/chargePg/pg_charge.do",
+				        data: $('form').serialize(),//表单数据
+				        async : false,
+				        success:function(d){
+				        	removeIframe();
+				           /* if(d=="success"){
+				                layer.msg('提交成功！');//保存成功提示
+				            }
+				            if(d=="error"){
+				                layer.msg('提交异常!');
+				            } */
+				        }
+				    });
+	    		 }
 			}
 	    });
 });
@@ -437,7 +438,8 @@
         		alert('账户余额不足');
         		$("#orderAmount").val('');
         		$("#pgPrice").val('');
-        	}else{
+        	}else if(data.msg != '' || data.msg != null){
+        		
 	         	 $("#orderAmount").val(data.price);
 	         	
 	         	 $('#channelId').val(data.channelId);
@@ -450,7 +452,9 @@
 	      	   $("#productCode").val(data.productCode);
 	      	   $("#pgPrice").val(pprice);//改变包体原价
 	      	   //alert($(vart).prev().val());
-	      	   
+        	}
+        	else{
+        		$('#pageMsg').val(data.msg);
         	}
          	 $('#rateDiscount').html(data.rateDiscount);
         		

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.TelchargeSpeedEnum;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.url.AgencyChannelURL;
 import com.weizu.flowsys.web.channel.ao.TelChannelAO;
 import com.weizu.flowsys.web.channel.dao.IProcincesDAO;
@@ -50,7 +52,9 @@ public class AgencyChannelController {
 	 * @createTime:2017年11月24日 下午5:43:47
 	 */
 	@RequestMapping(value=AgencyChannelURL.TEL_CHANNEL_LIST)
-	public ModelAndView getMyTelChannel(TelChannelParams telParams,@RequestParam(value = "pageNoLong", required = false)Long pageNoLong){
+	public ModelAndView getMyTelChannel(HttpServletRequest request, TelChannelParams telParams,@RequestParam(value = "pageNoLong", required = false)Long pageNoLong){
+		//AgencyBackwardVO agencyVO = (AgencyBackwardVO) request.getSession().getAttribute("loginContext");
+		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
 		resultMap.put("serviceTypeEnums", HuaServiceTypeEnum.toList());

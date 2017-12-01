@@ -514,7 +514,12 @@ public class ChargePgController {
 									scopeCityCode = ScopeCityEnum.getValueByCarrier(carrier);
 								}
 								ProductCodePo code = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, platformPo.getId(), pgId));
-								resultMap.put("productCode", code.getProductCode());
+								if(code != null){
+									resultMap.put("productCode", code.getProductCode());
+								}else{
+									resultMap.put("price", pgPrice);
+									resultMap.put("msg", "未配置产品编码");//
+								}
 							}
 						}else{
 							resultMap.put("price", pgPrice);
