@@ -20,13 +20,15 @@
   <!-- 异步获得的话费价格折扣信息 -->
   <resultMap type="com.weizu.flowsys.web.trade.pojo.GetTelRatePo" id="CTRResultMap">
   	<id column="id" property="id" jdbcType="BIGINT" />
+  	<result column="telchannel_id" property="telchannelId" jdbcType="BIGINT" />
+  	<result column="tel_product_id" property="telProductId" jdbcType="BIGINT" />
     <result column="active_discount" property="activeDiscount" jdbcType="DOUBLE" />
     <result column="bill_type" property="billType" jdbcType="INTEGER" />
     <result column="charge_value" property="chargeValue" jdbcType="INTEGER" />
     <result column="tel_code" property="telCode" jdbcType="VARCHAR" />
   </resultMap>
    <sql id="Charge_Column_List">	
-   	tt.id,tt.active_discount,tt.bill_type,tp.charge_value,tp.tel_code
+   	tt.id,tt.active_discount,tt.bill_type,tp.charge_value,tp.tel_code,tt.telchannel_id,tp.id tel_product_id
    </sql>
    <!-- 获得话费充值折扣 -->
    <select id="getTelRateForCharge" parameterType="map" resultMap="CTRResultMap">

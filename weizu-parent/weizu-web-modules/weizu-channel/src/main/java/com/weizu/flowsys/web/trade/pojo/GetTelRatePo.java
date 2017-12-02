@@ -21,6 +21,26 @@ public class GetTelRatePo extends Po {
     private Integer chargeValue;			//话费价值
     
     private String telCode;					//话费产品编码
+    
+    private Long telchannelId;				//话费通道折扣id
+    
+    private Long telProductId;				//话费产品id
+    
+	public Long getTelProductId() {
+		return telProductId;
+	}
+
+	public void setTelProductId(Long telProductId) {
+		this.telProductId = telProductId;
+	}
+
+	public Long getTelchannelId() {
+		return telchannelId;
+	}
+
+	public void setTelchannelId(Long telchannelId) {
+		this.telchannelId = telchannelId;
+	}
 
 	public Long getId() {
 		return id;

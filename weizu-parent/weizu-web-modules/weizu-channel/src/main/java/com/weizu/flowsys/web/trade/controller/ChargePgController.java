@@ -34,6 +34,8 @@ import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
@@ -42,6 +44,7 @@ import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.TelchargeSpeedEnum;
 import com.weizu.flowsys.util.ClassUtil;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
@@ -657,14 +660,26 @@ public class ChargePgController {
 			
 			pageParam = new PageParam(1l, 10);
 		}
+		if(purchaseVO.getPgServiceType() == null){
+			purchaseVO.setPgServiceType(PgServiceTypeEnum.PGCHARGE.getValue());
+		}
+		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		pagination = purchaseAO.getPurchase(resultMap,purchaseVO, pageParam);//
 		resultMap.put("pagination", pagination);
 		resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
+		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
+		resultMap.put("telChargeSpeedEnums",  TelchargeSpeedEnum.toList());
+		
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		resultMap.put("orderPathEnums", OrderPathEnum.toList());
 		resultMap.put("orderStateEnums", OrderStateEnum.toList());
 		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
+		resultMap.put("huaServiceTypeEnums", HuaServiceTypeEnum.toList());  //话费业务类型
+		resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());	//充值业务类型
+		resultMap.put("pgcharge", PgServiceTypeEnum.PGCHARGE.getValue());	//充值业务类型
+		
+		
 		ModelAndView model = new ModelAndView("/trade/purchase_list", "resultMap", resultMap);
 		
 		Boolean isSuper = agencyVO.getRootAgencyId() == 0;

@@ -25,7 +25,7 @@ public class PurchasePo extends Po {
 
     private String chargeTel;					//手机号
 
-    private Integer pgId;						//流量包id（外键）
+    private String pgId;						//流量包id（外键）
 
     private Long orderArriveTime;				//提交时间（本平台获得该数据请求的时间）
     
@@ -53,6 +53,16 @@ public class PurchasePo extends Po {
     private Integer billType;					//票务类型
     
     private String agencyCallIp;				//代理商回调地址
+    
+    private Double chargeValue;					//订单原价
+
+    public Double getChargeValue() {
+    	return chargeValue;
+    }
+    
+    public void setChargeValue(Double chargeValue) {
+    	this.chargeValue = chargeValue;
+    }
 	
 	public PurchasePo() {
 		super();
@@ -65,7 +75,7 @@ public class PurchasePo extends Po {
  * @param chargeTelDetail
  * @param orderAmount
  */
-public PurchasePo(String chargeTel, Integer pgId,
+public PurchasePo(String chargeTel, String pgId,
 			String chargeTelDetail) {
 		super();
 		this.chargeTel = chargeTel;
@@ -110,7 +120,7 @@ public void setPgPrice(Double pgPrice) {
  */
 public PurchasePo(Long orderId, String orderIdFrom, 
 		Integer accountId,
-		String chargeTel, Integer pgId, Long orderArriveTime,
+		String chargeTel, String pgId, Long orderArriveTime,
 		String chargeTelDetail, String chargeTelCity, Integer orderResult,
 		String channelName,
 		String orderResultDetail, Double orderAmount,
@@ -134,7 +144,7 @@ public PurchasePo(Long orderId, String orderIdFrom,
 
 public PurchasePo(Long orderId, String orderIdApi, String orderIdFrom,
 		Integer accountId, 
-		String chargeTel, Integer pgId, Long orderArriveTime,
+		String chargeTel, String pgId, Long orderArriveTime,
 		Long orderBackTime, String chargeTelDetail, String chargeTelCity,
 		String channelName,
 		String orderResultDetail) {
@@ -257,11 +267,11 @@ public void setHasCallBack(Integer hasCallBack) {
         this.chargeTel = chargeTel == null ? null : chargeTel.trim();
     }
 
-    public Integer getPgId() {
+    public String getPgId() {
         return pgId;
     }
 
-    public void setPgId(Integer pgId) {
+    public void setPgId(String pgId) {
         this.pgId = pgId;
     }
 

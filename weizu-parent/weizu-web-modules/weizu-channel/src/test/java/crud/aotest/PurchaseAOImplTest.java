@@ -13,6 +13,7 @@
 //
 //import com.aiyi.base.pojo.PageParam;
 //import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
+//import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 //import com.weizu.flowsys.util.Pagination;
 //import com.weizu.flowsys.web.trade.ao.PurchaseAO;
 //import com.weizu.flowsys.web.trade.dao.PurchaseDao;
@@ -39,10 +40,13 @@
 //	public void testGetPurchase(){
 //		PurchaseVO purchaseVO = new PurchaseVO();
 //		purchaseVO.setAgencyId(1);
+////		purchaseVO.setPgServiceType(PgServiceTypeEnum.PGCHARGE.getValue());
+//		purchaseVO.setPgServiceType(PgServiceTypeEnum.TELCHARGE.getValue());
 ////		purchaseVO.setOrderState(OrderStateEnum.CHARGED.getValue());
 //		Map<String, Object> params = new HashMap<String, Object>();
 //		Pagination<PurchaseVO> pagination = purchaseAO.getPurchase(params,purchaseVO, new PageParam(1L, 10));
 //		List<PurchaseVO> records = pagination.getRecords();
+//		
 //		for (PurchaseVO purchaseVO2 : records) {
 ////			System.out.println(purchaseVO2.getApDiscount());
 //			System.out.println(purchaseVO2.getAgencyId());

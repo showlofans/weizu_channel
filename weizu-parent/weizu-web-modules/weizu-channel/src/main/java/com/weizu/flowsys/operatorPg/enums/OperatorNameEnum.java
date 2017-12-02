@@ -42,6 +42,29 @@ public enum OperatorNameEnum {
 		this.desc = desc;
 		this.value = value;
 	}
+	
+	/**
+	 * @description: 根据移动得到中国移动
+	 * @param desct
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月2日 下午2:44:30
+	 */
+	public static String getDescBy(String desct){
+		String desc = "中国移动";
+		// 获取附件类型枚举数组
+		OperatorNameEnum[] enumArray = OperatorNameEnum.values();
+
+		for (OperatorNameEnum OperatorNameEnum : enumArray)
+		{
+			if(OperatorNameEnum.getDesc().indexOf(desct) != -1)
+			{
+				desc = OperatorNameEnum.getDesc();
+				break;
+			}
+		}
+		return desc;
+	}
 
 	/**
 	 * @description:通过枚举值获取枚举

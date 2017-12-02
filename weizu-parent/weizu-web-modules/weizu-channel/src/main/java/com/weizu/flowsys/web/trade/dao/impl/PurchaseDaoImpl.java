@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
+import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseStateParams;
@@ -69,6 +70,8 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePo, Long> implements Purcha
 	public List<PurchaseVO> getPurchase(Map<String, Object> paramsMap) {
 		//不查补款记录，只查扣款记录
 		paramsMap.put("accountType", AccountTypeEnum.DECREASE.getValue());
+		paramsMap.put("pgcharge", PgServiceTypeEnum.PGCHARGE.getValue());
+		
 		return sqlSessionTemplate.selectList("getPurchase", paramsMap);
 	}
 

@@ -35,8 +35,8 @@ public class PurchasePo extends Po {
     private Integer channelId;					//通道id（外键）
 
     private String orderResultDetail;			//结果描述
-
-    public Long getOrderId() {
+    
+	public Long getOrderId() {
         return orderId;
     }
 

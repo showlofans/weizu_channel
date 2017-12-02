@@ -243,6 +243,9 @@ public class TelRateController {
 		if(telrateBindAccountVO.getBindState() == null){
 			telrateBindAccountVO.setBindState(BindStateEnum.NO.getValue());
 		}
+		if(telrateBindAccountVO.getRateFor() == null){
+			telrateBindAccountVO.setRateFor(AgencyTagEnum.DATA_USER.getValue());
+		}
 		//初始化代理商类型
 //		if(aardto.getAgencyTag() == null){
 //			aardto.setAgencyTag(AgencyTagEnum.PLATFORM_USER.getValue());
@@ -257,6 +260,7 @@ public class TelRateController {
 		resultMap.put("pagination", pagination);
 		resultMap.put("bindStateEnums", BindStateEnum.toBindList());
 		resultMap.put("agencyTagEnums", AgencyTagEnum.toList());
+		resultMap.put("platformUser", AgencyTagEnum.PLATFORM_USER.getValue());
 		resultMap.put("onameEnums", OperatorNameEnum.toList());
 		resultMap.put("stypeEnums", ServiceTypeEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());

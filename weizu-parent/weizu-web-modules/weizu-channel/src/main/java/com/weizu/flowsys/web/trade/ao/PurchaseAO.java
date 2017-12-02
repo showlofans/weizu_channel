@@ -3,7 +3,6 @@ package com.weizu.flowsys.web.trade.ao;
 import java.util.List;
 import java.util.Map;
 
-
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 //import org.weizu.api.facet.orderState.PageOrder;
@@ -19,18 +18,30 @@ import com.weizu.flowsys.web.http.weizu.OrderStateResult;
 import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
+import com.weizu.flowsys.web.trade.pojo.TelChargeVO;
 import com.weizu.flowsys.web.trade.pojo.TotalResult;
 
 public interface PurchaseAO {
 	
 	/**
-	 * @description:页面上充值
+	 * @description:页面上充值流量
 	 * @param purchasePo
 	 * @return
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月12日 下午5:34:23
 	 */
 	String purchase(PgChargeVO pcVO, ChargeAccountPo accoutPo);
+	
+	/**
+	 * @description: 页面上充值话费
+	 * @param tcVO
+	 * @param accoutPo
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月2日 下午2:15:34
+	 */
+	String purchase(TelChargeVO tcVO, ChargeAccountPo accoutPo);
+	
 	
 	/**
 	 * @description:封装查询参数

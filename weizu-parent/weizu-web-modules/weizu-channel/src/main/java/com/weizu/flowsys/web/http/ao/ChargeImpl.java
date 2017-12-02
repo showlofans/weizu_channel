@@ -163,7 +163,7 @@ public class ChargeImpl implements IChargeFacet {
 				OrderUril ou1 = new OrderUril(1);
 				orderId = ou1.nextId();
 				String chargeTelCity = resMap.get("chargeTelCity").toString();
-				purchasePo = new PurchasePo(orderId, chargeParams.getOrderIdFrom(), accountId, chargeTel, pgData.getId(), 
+				purchasePo = new PurchasePo(orderId, chargeParams.getOrderIdFrom(), accountId, chargeTel, pgData.getId().toString(), 
 						System.currentTimeMillis(), chargeTelDetail, chargeTelCity, orderResult, channelPo.getChannelName(), 
 						orderResultDetail, orderAmount, billType);
 				if(StringHelper.isNotEmpty(chargeParams.getReportUrl())){//

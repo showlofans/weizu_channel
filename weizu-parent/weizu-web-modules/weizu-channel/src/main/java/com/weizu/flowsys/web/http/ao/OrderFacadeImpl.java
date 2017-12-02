@@ -88,7 +88,7 @@ public class OrderFacadeImpl implements IOrderFacet {
 			}
 			else{//通过api更新订单状态
 				oscEnum = OrderStateCheckEnum.PARAMS_SUCCESS;
-				PgDataPo pgPo = operatorPgDao.get(purchasePo.getPgId());
+				PgDataPo pgPo = operatorPgDao.get(Integer.parseInt(purchasePo.getPgId()));
 //			AgencyPurchasePo agencyPurPo = accountPurchaseDao.get(new WherePrams("agency_id", "=", agencyPo.getId()).and("purchase_id", "=", purchasePo.getOrderId()));
 				if(pgPo != null){
 					String orderArriveTime = DateUtil.formatAll(purchasePo.getOrderArriveTime());

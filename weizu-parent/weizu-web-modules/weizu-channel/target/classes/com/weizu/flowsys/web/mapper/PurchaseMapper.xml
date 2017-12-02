@@ -6,6 +6,7 @@
   <sql id="t_account">charge_account</sql>
   <sql id="t_crt">charge_record</sql>
   <sql id="t_pg">operator_pg_data</sql>
+  <sql id="t_tp">tel_product</sql>
   <!-- <sql id="t_channel">channel_channel</sql>
   <sql id="t_ep">exchange_platform</sql> -->
   
@@ -16,7 +17,7 @@
     <result column="order_id_from" property="orderIdFrom" jdbcType="VARCHAR" />
     <result column="account_id" property="accountId" jdbcType="INTEGER" />
     <result column="charge_tel" property="chargeTel" jdbcType="VARCHAR" />
-    <result column="pg_id" property="pgId" jdbcType="INTEGER" />
+    <result column="pg_id" property="pgId" jdbcType="VARCHAR" />
     <result column="order_arrive_time" property="orderArriveTime" jdbcType="BIGINT" />
     <result column="order_back_time" property="orderBackTime" jdbcType="BIGINT" />
     <result column="charge_tel_detail" property="chargeTelDetail" jdbcType="VARCHAR" />
@@ -27,6 +28,7 @@
     <result column="has_call_back" property="hasCallBack" jdbcType="INTEGER" />
     <result column="channel_name" property="channelName" jdbcType="BIGINT" />
     <result column="order_amount" property="orderAmount" jdbcType="DOUBLE" />
+    <result column="charge_value" property="chargeValue" jdbcType="DOUBLE" />
     <result column="bill_type" property="billType" jdbcType="INTEGER" />
     
     <result column="pg_price" property="pgPrice" jdbcType="DOUBLE" />
@@ -62,6 +64,7 @@
     <result column="rate_discount_id" property="rateDiscountId" jdbcType="BIGINT" />
     <result column="ap_discount" property="apDiscount" jdbcType="DOUBLE" />
     
+    <result column="charge_speed" property="chargeSpeed" jdbcType="INTEGER" />
     <!-- 平台相关信息 -->
     <!-- <result column="id" jdbcType="INTEGER" property="ep.id" />
     <result column="ep_name" jdbcType="VARCHAR" property="ep.epName" />
@@ -80,14 +83,23 @@
   </resultMap>
    <sql id="Base_Column_List" >
     order_id,order_id_api, order_id_from, account_id, charge_tel, pg_id, order_amount, order_arrive_time,charge_tel_detail, 
-    charge_tel_city, order_result, channel_name, order_result_detail,has_call_back,agency_call_ip
+    charge_tel_city, order_result, channel_name, order_result_detail,has_call_back,agency_call_ip,charge_value
   </sql>
    <sql id="get_base_Column_List" >
     order_id,order_id_api, order_id_from, ap.account_id,ap.order_state order_result,ap.order_state_detail order_result_detail, pur.charge_tel, pg_id, ap.order_amount, order_arrive_time,charge_tel_detail, 
     charge_tel_city,  channel_name 
   </sql>
   <sql id="VO_Column_List"><!-- 订单页面 -->
-  	ap.from_agency_name,ap.account_id, ap.from_account_id, pur.order_id, pur.order_id_api, pur.order_id_from, pur.charge_tel, pg.pg_size, pg.operator_type,pg.service_type, pg.pg_price, pur.order_arrive_time,
+  	ap.from_agency_name,ap.account_id, ap.from_account_id, pur.order_id, pur.order_id_api, pur.order_id_from, pur.charge_tel, 
+  	pg.pg_size, pg.operator_type,pg.service_type, pg.pg_price, 
+  	pur.order_arrive_time,
+  	pur.order_back_time, pur.charge_tel_detail, pur.charge_tel_city,ap.order_amount ap_order_amount,ap.order_price,pur.order_result,ap.order_state,ap.order_state_Detail,ap.order_platform_path,
+  	 pur.order_result_detail,pur.channel_name,act.bill_type actBill_type, act2.agency_id, ap.rate_discount_id,ap.ap_discount, pur.agency_call_ip
+  </sql>
+  <sql id="VO2_Column_List"><!-- 订单页面 -->
+  	ap.from_agency_name,ap.account_id, ap.from_account_id, pur.order_id, pur.order_id_api, pur.order_id_from, pur.charge_tel, 
+  	tp.charge_value pg_price, tp.operator_name operator_type,tp.service_type, tp.charge_speed, 
+  	pur.order_arrive_time,
   	pur.order_back_time, pur.charge_tel_detail, pur.charge_tel_city,ap.order_amount ap_order_amount,ap.order_price,pur.order_result,ap.order_state,ap.order_state_Detail,ap.order_platform_path,
   	 pur.order_result_detail,pur.channel_name,act.bill_type actBill_type, act2.agency_id, ap.rate_discount_id,ap.ap_discount, pur.agency_call_ip
   </sql>
@@ -125,10 +137,27 @@
   
   <!-- 通过订单号查询订单 -->
   <select id="getOnePurchase" parameterType="java.lang.Long" resultMap="BaseResultMap">
-  	select <include refid="Base_Column_List"></include>,pg.pg_price
+  	select <include refid="Base_Column_List"></include>
+  	<!-- <choose>
+		<when test="pgcharge == pgServiceType">流量充值
+			 ,pg.pg_price
+		</when>
+		<otherwise>
+			,tp.charge_value
+		</otherwise>
+	</choose> -->
+		
   	from <include refid="t_purchase"></include> pur
-  	inner join <include refid="t_pg"></include> pg
-  	on pg.id = pur.pg_id
+  	<!-- <choose>
+		<when test="pgcharge == pgServiceType">流量充值
+			INNER join <include refid="t_pg"></include> pg
+			on pg.id = pur.pg_id
+		</when>
+		<otherwise>
+			INNER join <include refid="t_tp"></include> tp
+			on tp.id = pur.pg_id
+		</otherwise>
+	</choose> -->
   	where order_id = #{_parameter}
   </select>
   <!-- 任意一个条件查询是否存在重复订单:优先取订单号去判断 -->
@@ -175,7 +204,14 @@
   <!-- 查询订单分页 -->
    <select id="getPurchase" resultMap="VOResultMap" parameterType="map" >
     select 
-    <include refid="VO_Column_List" />
+    <choose>
+		<when test="pgcharge == pgServiceType"><!-- 流量充值 -->
+			<include refid="VO_Column_List" />
+		</when>
+		<otherwise>
+			<include refid="VO2_Column_List" />
+		</otherwise>
+	</choose>
      FROM <include refid="t_purchase"></include> pur
 	 inner join <include refid="t_ap"></include> ap
      on pur.order_id = ap.purchase_id
@@ -185,8 +221,16 @@
 	on ap.account_id=act.id 
 	 INNER join <include refid="t_account"></include> act2
 	on ap.from_account_id=act2.id 
-	INNER join <include refid="t_pg"></include> pg
-	on pg.id = pur.pg_id
+	<choose>
+		<when test="pgcharge == pgServiceType"><!-- 流量充值 -->
+			INNER join <include refid="t_pg"></include> pg
+			on pg.id = pur.pg_id
+		</when>
+		<otherwise>
+			INNER join <include refid="t_tp"></include> tp
+			on tp.id = pur.pg_id
+		</otherwise>
+	</choose>
 	<!-- inner join <include refid="t_channel"></include> channel
 	on pur.channel_id = channel.id
 	inner join <include refid="t_ep"></include> ep
@@ -248,8 +292,16 @@
 	on ap.account_id=act.id 
 	inner join <include refid="t_crt"></include> crt
   	on crt.id=ap.record_id
-	INNER join <include refid="t_pg"></include> pg
-	on pg.id = pur.pg_id
+	<choose>
+		<when test="pgcharge == pgServiceType"><!-- 流量充值 -->
+			INNER join <include refid="t_pg"></include> pg
+			on pg.id = pur.pg_id
+		</when>
+		<otherwise>
+			INNER join <include refid="t_tp"></include> tp
+			on tp.id = pur.pg_id
+		</otherwise>
+	</choose>
 	<!-- inner join <include refid="t_channel"></include> channel
 	on pur.channel_id = channel.id -->
     <where>
@@ -260,6 +312,9 @@
   	<if test="accountType != null">
   		AND crt.account_type = #{accountType}
   	</if>
+  	<if test="pgServiceType != null">
+		AND crt.charge_for = #{pgServiceType}
+	</if>
   	<if test="chargeTel != null">
   		AND pur.charge_tel LIKE concat("%",trim(#{chargeTel}) ,"%") 
   	</if>
@@ -287,8 +342,23 @@
   	<if test="chargeTelDetail != null">
   		AND pur.charge_tel_detail LIKE concat("%",trim(#{chargeTelDetail}) ,"%")
   	</if>
+	 <!-- <choose>
+		<when test="pgcharge == pgServiceType">流量充值
+			
+		</when>
+		<otherwise>
+			INNER join <include refid="t_tp"></include> tp
+			on tp.id = pur.pg_id
+		</otherwise>
+	</choose> -->
   	<if test="operatorType != null">
   		AND pg.operator_type = #{operatorType}
+  	</if>
+  	<if test="operatorName != null">
+  		AND tp.operator_name = #{operatorName}
+  	</if>
+  	<if test="chargeSpeed != null">
+  		AND tp.charge_speed = #{chargeSpeed}
   	</if>
   	<if test="channelName != null">
   		AND pur.channel_name LIKE concat("%",trim(#{channelName}) ,"%")
@@ -317,7 +387,7 @@
   	insert into <include refid="t_purchase"></include>
   	( <include refid="Base_Column_List"></include> )
   	values (#{orderId},#{orderIdApi},#{orderIdFrom},#{accountId},#{chargeTel},#{pgId},#{orderAmount},#{orderArriveTime},
-  	#{chargeTelDetail},#{chargeTelCity},#{orderResult},#{channelName},#{orderResultDetail},#{hasCallBack}, #{agencyCallIp} ) 
+  	#{chargeTelDetail},#{chargeTelCity},#{orderResult},#{channelName},#{orderResultDetail},#{hasCallBack}, #{agencyCallIp}, #{chargeValue} ) 
   </insert>
   
 </mapper>

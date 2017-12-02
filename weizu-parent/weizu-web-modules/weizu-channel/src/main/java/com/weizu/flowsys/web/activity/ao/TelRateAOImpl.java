@@ -14,6 +14,14 @@ import com.weizu.flowsys.web.channel.pojo.TelProductPo;
 import com.weizu.flowsys.web.trade.pojo.GetTelRatePo;
 import com.weizu.web.foundation.String.StringHelper;
 
+/**
+ * @description: 话费折扣业务层实现
+ * @projectName:weizu-channel
+ * @className:TelRateAOImpl.java
+ * @author:微族通道代码设计人 宁强
+ * @createTime:2017年12月2日 上午9:36:47
+ * @version 1.0
+ */
 @Service(value="telRateAO")
 public class TelRateAOImpl implements TelRateAO {
 

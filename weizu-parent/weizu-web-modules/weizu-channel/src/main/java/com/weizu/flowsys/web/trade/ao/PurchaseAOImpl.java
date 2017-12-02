@@ -41,6 +41,7 @@ import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
+import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
@@ -51,8 +52,11 @@ import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.OrderUril;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
+import com.weizu.flowsys.web.activity.ao.TelRateAO;
+import com.weizu.flowsys.web.activity.dao.ITelRateDao;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
+import com.weizu.flowsys.web.activity.pojo.TelRatePo;
 import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
@@ -66,6 +70,8 @@ import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
 import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 import com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface;
+import com.weizu.flowsys.web.channel.dao.ITelChannelDao;
+import com.weizu.flowsys.web.channel.dao.ITelProductDao;
 import com.weizu.flowsys.web.channel.dao.OperatorPgDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
@@ -76,6 +82,8 @@ import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
+import com.weizu.flowsys.web.channel.pojo.TelChannelPo;
+import com.weizu.flowsys.web.channel.pojo.TelProductPo;
 import com.weizu.flowsys.web.http.ParamsEntityWeiZu;
 import com.weizu.flowsys.web.http.weizu.OrderStateResult;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
@@ -85,6 +93,7 @@ import com.weizu.flowsys.web.trade.pojo.AccountPurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
+import com.weizu.flowsys.web.trade.pojo.TelChargeVO;
 import com.weizu.flowsys.web.trade.pojo.TotalResult;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
@@ -92,6 +101,15 @@ import com.weizu.web.foundation.http.HttpRequest;
 
 @Service(value="purchaseAO")
 public class PurchaseAOImpl implements PurchaseAO {
+	//话费通道
+	@Resource
+	private ITelChannelDao telChannelDao;
+	@Resource
+	private TelRateAO telRateAO;
+	@Resource
+	private ITelRateDao telRateDao;
+	@Resource
+	private ITelProductDao telProductDao;
 
 	@Resource
 	private PurchaseDao purchaseDAO;
@@ -107,6 +125,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 //	private ChannelForwardDaoInterface channelForwardDao;
 	@Resource
 	private ChannelChannelDao channelChannelDao; 
+	
 	@Resource
 	private ChannelDiscountDao channelDiscountDao;
 	@Resource
@@ -149,7 +168,307 @@ public class PurchaseAOImpl implements PurchaseAO {
 	 * @createTime:2017年8月4日 下午3:16:02
 	 */
 	private PurchasePo initPurchase(PgChargeVO pcVO) {
-		return new PurchasePo(pcVO.getChargeTel(), pcVO.getPgId(), pcVO.getChargeTelDetail());
+		return new PurchasePo(pcVO.getChargeTel(), pcVO.getPgId().toString(), pcVO.getChargeTelDetail());
+	}
+	private PurchasePo initPurchase(TelChargeVO tcVO) {
+		return new PurchasePo(tcVO.getChargeTel(), tcVO.getTelProductId().toString(), tcVO.getChargeTelDetail());
+	}
+	
+	@Override
+	public String purchase(TelChargeVO tcVO, ChargeAccountPo chargeAccountPo) {
+		/****************完成对所有上级代理商包括自己的订单与代理商的绑定********************/
+		boolean isNotSupperAgency = agencyVODao.getRootAgencyById(chargeAccountPo.getAgencyId()) != null ;//不是超管
+		//在二级代理商的情况下才去判断余额
+		boolean ifLackBalance = isNotSupperAgency && tcVO.getOrderAmount() > chargeAccountPo.getAccountBalance();
+		if(ifLackBalance){//订单价格大于余额
+			return "余额不足，下单失败";
+		}
+		//已经当前登陆用户余额充足，开始充值流程
+		//在订单信息完全添加完之后，再调用接口进行充值
+		//先添加一个基本的，再批量添加父级代理商和订单的绑定
+		PurchasePo purchasePo = initPurchase(tcVO);
+		int accountId = tcVO.getAccountId();		//订单产生方代理商
+		Integer orderResult = null;		//默认订单状态
+		String orderResultDetail = null;		//默认订单状态
+		int purResult = 0;
+		/**充值前余额*/
+		double agencyBeforeBalance = 0d;
+		/**充值额（）*/
+		Double orderAmount = null;
+		
+		double agencyAfterBalance = 0d;
+		/**话费原价*/
+		Double chargeValue = tcVO.getChargeValue();
+		TelChannelPo telchannel = telChannelDao.get(tcVO.getTelchannelId());
+//		ChannelChannelPo channel = channelChannelDao.get(new WherePrams("id", "=", pcVO.getChannelId()));
+		ExchangePlatformPo epPo = null;
+		TelProductPo dataPo = telProductDao.get(tcVO.getTelProductId());
+		if(dataPo == null){
+			logger.config("编码未配置");
+			System.out.println("编码未配置");
+			return "产品待更新，产品暂不支持购买！！";
+		}else if (telchannel == null){
+			logger.config("通道不存在");
+			System.out.println("通道不存在");
+			return "产品待更新，产品暂不支持购买！！";
+		}else if(dataPo != null && telchannel != null){
+			epPo = exchangePlatformAO.getEpById(dataPo.getEpId());
+			boolean isChannelUseStateStoped = telchannel.getTelchannelUseState() == ChannelUseStateEnum.CLOSE.getValue();//通道状态停止
+			if(isChannelUseStateStoped){//通道使用状态暂停，不能提单
+				logger.config("通道使用状态暂停");
+				System.out.println("通道使用状态暂停");
+				return "产品待更新，产品暂不支持购买！！";
+			}else{
+//				String scopeCityCode = ScopeCityEnum.QG.getValue();
+//				if(!pcVO.getServiceType().equals(ServiceTypeEnum.NATION_WIDE.getValue())){
+//					Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(purchasePo.getChargeTelDetail());
+//					scopeCityCode = scopeMap.get("scopeCityCode").toString();
+//				}
+				
+			}
+		}
+		
+		Long orderId = null;
+		Long currentTime = System.currentTimeMillis();
+		ChargeDTO chargeDTO = null;
+		try {
+			OrderUril ou1 = new OrderUril(1);
+			orderId = ou1.nextId();
+			purchasePo.setOrderId(orderId);//设置订单号
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "订单添加异常";
+		}
+		purchasePo.setChargeValue(chargeValue);
+		purchasePo.setOrderAmount(tcVO.getOrderAmount());
+		purchasePo.setAccountId(accountId);
+		purchasePo.setOrderArriveTime(currentTime);
+//		Map<String, Object> telMap = PurchaseUtil.getOperatorsByTel(purchasePo.getChargeTel());
+//		String chargeTelCity = null;
+//		if(telMap != null)
+//		{
+//			chargeTelCity = telMap.get("chargeTelCity").toString();
+//		}else{
+//			return "调用接口异常";
+//		}
+		String chargeTelDetail = tcVO.getChargeTelDetail();
+		chargeTelDetail = chargeTelDetail.substring(0, chargeTelDetail.length()-2);//去掉运营商,得到归属地
+		String desct = chargeTelDetail.substring(chargeTelDetail.length()-2);
+		String operatorNameDesc = OperatorNameEnum.getDescBy(desct);			//运营商名称
+		purchasePo.setChargeTelCity(chargeTelDetail);
+		Boolean isChannelStateCanceled = telchannel.getTelchannelState() == ChannelStateEnum.CLOSE.getValue();
+		if(isChannelStateCanceled){
+			orderResult = OrderStateEnum.DAICHONG.getValue();
+			orderResultDetail = "通道暂停等待";
+		}else{//通道没有暂停
+			chargeDTO = chargeByBI(epPo, orderId, tcVO.getChargeTel(),tcVO.getServiceType(), dataPo.getTelCode());
+			if(chargeDTO != null){
+				if(chargeDTO.getTipCode().equals(OrderResultEnum.SUCCESS.getCode()) ){
+					orderResult = OrderStateEnum.CHARGING.getValue();
+					orderResultDetail = OrderStateEnum.CHARGING.getDesc();
+					ChargeOrder co = chargeDTO.getChargeOrder();
+					if(co != null){
+						purchasePo.setOrderIdApi(co.getOrderIdApi());
+					}
+				}else{
+					orderResult = OrderStateEnum.DAICHONG.getValue();
+					orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+chargeDTO.getTipMsg();
+				}
+			}else{
+				orderResult = OrderStateEnum.DAICHONG.getValue();
+				orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+"平台直接返失败";
+			}
+		}
+		purchasePo.setOrderResult(orderResult);
+		purchasePo.setOrderResultDetail(orderResultDetail);
+		//话费通道名称组成规则：索朗 市内 话费
+		String telChannelName = epPo.getEpName() + ServiceTypeEnum.getEnum(tcVO.getServiceType()).getDesc() + PgServiceTypeEnum.TELCHARGE.getDesc();
+		purchasePo.setChannelName(telChannelName);
+		if(tcVO.getTelRateId() == null && tcVO.getTelchannelId() != null){//通过通道折扣充值
+			String fromAgencyName = tcVO.getFromAgencyName();
+//			ChannelDiscountPo cdisPo = null;
+//			
+//			cdisPo = channelDiscountDao.get(tcVO.getCdisId());
+			/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
+			int orderPath = OrderPathEnum.WEB_PAGE.getValue();
+			//一般不会出现
+			if(telchannel.getTelchannelState() == ChannelStateEnum.CLOSE.getValue()){//通道暂停，把系统级用户的订单状态设置为充值失败
+				purchasePo.setOrderResult(OrderStateEnum.UNCHARGE.getValue());
+				purchasePo.setOrderResultDetail(OrderStateEnum.UNCHARGE.getDesc());
+				purResult = purchaseDAO.addPurchase(purchasePo);
+				return "充值失败，通道暂停";
+			}else{
+				if(chargeDTO == null ){//充值返充值进行
+					//通道折扣充值，不去添加订单
+					return "订单提交失败";
+				}else{
+					agencyBeforeBalance = chargeAccountPo.getAccountBalance();
+					orderAmount = NumberTool.mul(chargeValue, telchannel.getTelchannelDiscount());//成本
+					agencyAfterBalance = NumberTool.sub(agencyBeforeBalance, orderAmount);
+					chargeAccountPo.setAccountBalance(agencyAfterBalance);
+					chargeAccountAO.updateAccount(chargeAccountPo);
+					int addRec = chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
+							agencyBeforeBalance, agencyAfterBalance, 
+							AccountTypeEnum.DECREASE.getValue(), accountId, tcVO.getChargeFor() , orderId));
+//					purchasePo.setOrderResult(OrderStateEnum.CHARGING.getValue());
+//					purchasePo.setOrderResultDetail(OrderStateEnum.CHARGING.getDesc());
+					purResult = purchaseDAO.addPurchase(purchasePo);
+					if(addRec > 0){
+						Long recordId = chargeRecordDao.nextId() -1;
+//						orderResult = OrderStateEnum.CHARGING.getValue();
+						AccountPurchasePo app = new AccountPurchasePo(accountId, orderId,tcVO.getTelchannelId(), orderAmount,tcVO.getAccountId(), recordId, orderAmount, fromAgencyName, orderPath, orderResult);
+						app.setOrderStateDetail(orderResultDetail);
+						app.setApDiscount(telchannel.getTelchannelDiscount());
+						int aarAdd = accountPurchaseDao.add(app);
+						if(aarAdd > 0){
+							return "订单提交成功";
+						}
+					}
+				}
+			}
+		}else{//页面通过费率折扣充值
+			//先把订单加上
+			int orderState = OrderStateEnum.CHARGING.getValue();
+			String orderStateDetail = OrderStateEnum.CHARGING.getDesc();
+			purResult = purchaseDAO.addPurchase(purchasePo);
+			TelRatePo telRatePo = telRateDao.get(tcVO.getTelRateId());
+			if(telRatePo != null){
+//			RateDiscountPo ratePo = rateDiscountDao.get(tcVO.getRateId());
+//			if(ratePo != null){
+				int billType = telRatePo.getBillType();//票务全部使用费率配置的票务
+				//更新消费记录表（先更新账户余额，再更新订单，最后更新记录）
+				/**账户信息的更新结果*/
+				int recordRes = 0;
+				/**充值前余额*/
+				agencyBeforeBalance = chargeAccountPo.getAccountBalance();
+				/**充值额（）*/
+				orderAmount = NumberTool.mul(telRatePo.getActiveDiscount(), chargeValue);
+				chargeAccountPo.addBalance(orderAmount,-1);
+				/** 更新登录用户账户信息**/
+				recordRes = chargeAccountAO.updateAccount(chargeAccountPo);
+				if(recordRes > 0){
+					Long rateDiscountId = telRatePo.getId();			//折扣id
+					if(recordRes > 0){//开始把第一个消费记录，连接加上，
+						/** 向消费记录表插入登陆用户数据 */
+						chargeRecordDao.add(new ChargeRecordPo(currentTime, orderAmount,
+								agencyBeforeBalance, chargeAccountPo.getAccountBalance(), 
+								AccountTypeEnum.DECREASE.getValue(), chargeAccountPo.getId(),  tcVO.getChargeFor() , orderId));
+						/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
+						int orderPath = OrderPathEnum.WEB_PAGE.getValue();
+						Long recordId = chargeRecordDao.nextId() -1;
+						AccountPurchasePo app = new AccountPurchasePo(accountId, orderId, rateDiscountId, orderAmount, tcVO.getAccountId(), recordId, orderAmount, tcVO.getFromAgencyName(), orderPath, orderState);
+						app.setOrderStateDetail(orderStateDetail);
+						app.setApDiscount(telRatePo.getActiveDiscount());
+						int aapAddRes = accountPurchaseDao.add(app);
+					}
+				}else{
+					logger.config("更新账户表失败");
+				}
+				// 开始迭代添加父级代理商的账户扣款和消费记录，以及批量添加父级代理商和订单的绑定
+//				if(purResult > 0){//订单添加好了,开始迭代添加父级代理商的账户扣款和消费记录
+				List<AccountPurchasePo> apPoList = new LinkedList<AccountPurchasePo>();
+				List<ChargeRecordPo> recordPoList = new LinkedList<ChargeRecordPo>();
+				
+				TelRatePo activeRatePo = null;		//父级费率对象
+				TelRatePo ratePo1 = telRatePo;		//子级费率对象
+				ChargeAccountPo ap_accountPo = chargeAccountPo.clone();
+				ChargeAccountPo from_accountPo = ap_accountPo;	//起始账户
+				
+				int contextAccountId = chargeAccountPo.getId();
+				int apAccountId = contextAccountId;
+				
+				//得到当前代理商和折扣的绑定实体，
+				//然后根据父级得到父级折扣
+				Double balance = 0d;//差额:父费率减去子费率乘以价格
+				long recordId = chargeRecordDao.nextId();//没添加的消费记录Id
+				while(ratePo1.getActiveId() != null){//没有找到第二级代理商，开始添加代理商和订单
+					//重置ratePo为父级费率折扣;不为空
+					//查询父级操作对象
+					activeRatePo = telRateDao.get(ratePo1.getActiveId());		
+					String fromAgencyName = from_accountPo.getAgencyName();
+					int apBillType = activeRatePo.getBillType();
+					ap_accountPo  = chargeAccountDao.getRootAccountById(contextAccountId, apBillType) ;//重置为父级代理商的账户（无论是对公和对私都是有的）
+					apAccountId = ap_accountPo.getId();
+					
+					/**业务判断和添加**/
+					/**充值额（）*/
+					/**充值前余额*/
+					agencyBeforeBalance = ap_accountPo.getAccountBalance();
+					/**父费率减去子费率乘以价格，就是差价*/
+					balance = NumberTool.mul(NumberTool.sub(ratePo1.getActiveDiscount(), activeRatePo.getActiveDiscount()), chargeValue);
+					ap_accountPo.addBalance(balance,1);
+					/** 更新父级代理商账户信息**/
+					recordRes = chargeAccountAO.updateAccount(ap_accountPo);
+					if(recordRes > 0){
+						/** 向消费记录表插入登陆用户数据 */
+						Double plusAmount = NumberTool.mul(ratePo1.getActiveDiscount(),chargeValue);
+						Double minusAmount = NumberTool.mul(activeRatePo.getActiveDiscount(),chargeValue);
+						agencyBeforeBalance = NumberTool.add(plusAmount, agencyBeforeBalance);	//重置充值前的余额为补款后的余额
+						agencyAfterBalance = NumberTool.sub(agencyBeforeBalance,minusAmount);
+						recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), minusAmount,
+								agencyBeforeBalance, agencyAfterBalance, 
+								AccountTypeEnum.DECREASE.getValue(), apAccountId, tcVO.getChargeFor(), orderId));	
+						int orderPath = OrderPathEnum.CHILD_WEB_PAGE.getValue();
+						AccountPurchasePo app = new AccountPurchasePo(apAccountId, orderId, activeRatePo.getId(), minusAmount,from_accountPo.getId(), recordId, plusAmount, fromAgencyName, orderPath, orderState);
+						recordId++;
+						app.setOrderStateDetail(orderStateDetail);
+						app.setApDiscount(activeRatePo.getActiveDiscount());
+						apPoList.add(app);
+					}
+					//由父变成子，进行迭代
+					ratePo1 = activeRatePo;	
+//							contextAgencyId = ap_agency_id;
+					accountId = apAccountId;
+					from_accountPo = ap_accountPo;
+				}
+				//把超级管理员的记录加上
+//						if(rootAgencyPo == null){
+//							rootAgencyPo = agencyVODao.getRootAgencyById(contextAgencyId);
+//							ap_agency_id = rootAgencyPo.getId();
+//						}else{
+//							ap_agency_id = rootAgencyPo.getRootAgencyId();
+//						}
+				String fromAgencyName = from_accountPo.getAgencyName();
+//				ChannelDiscountPo cdisPo = channelDiscountDao.get(ratePo1.getChannelDiscountId());
+				billType = telchannel.getBillType();
+				
+				ChargeAccountPo superAccountPo = chargeAccountDao.getRootAccountById(from_accountPo.getId(), billType);
+				
+				agencyBeforeBalance = superAccountPo.getAccountBalance();
+				Double orderPrice = NumberTool.mul(chargeValue, ratePo1.getActiveDiscount());//价格
+				orderAmount = NumberTool.mul(chargeValue, telchannel.getTelchannelDiscount());//成本
+				agencyBeforeBalance = NumberTool.add(agencyBeforeBalance, orderPrice);//之前加上价格
+				agencyAfterBalance = NumberTool.sub(agencyBeforeBalance, orderAmount);
+				superAccountPo.setAccountBalance(agencyAfterBalance);
+				chargeAccountAO.updateAccount(superAccountPo);
+				recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
+						agencyBeforeBalance, agencyAfterBalance, 
+						AccountTypeEnum.DECREASE.getValue(), superAccountPo.getId(),  tcVO.getChargeFor() , orderId));
+				/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
+				int orderPath = OrderPathEnum.CHILD_WEB_PAGE.getValue();
+				//ChannelDiscountPo cdPo = channelDiscountDao.get(ratePo.getChannelDiscountId());
+				AccountPurchasePo app = new AccountPurchasePo(superAccountPo.getId(), orderId, telchannel.getId(), orderAmount,from_accountPo.getId(),recordId, orderPrice, fromAgencyName, orderPath, orderState);
+				app.setOrderStateDetail(orderStateDetail);
+				app.setApDiscount(telchannel.getTelchannelDiscount());
+				apPoList.add(app);
+				
+				int batchAddCrt = chargeRecordDao.crt_addList(recordPoList);		//批量添加扣款记录信息
+				int batchAddApp = accountPurchaseDao.ap_addList(apPoList);		//批量添加连接信息
+				if(batchAddApp + batchAddCrt > 1){
+					return "订单提交成功";
+				}
+//					if(batchAddApp > 0 && batchAddCrt > 0 && !isChannelStateCanceled){//开始走接口
+//						return chargeByBI(epPo, orderId, pcVO.getChargeTel(),pcVO.getServiceType(), dataPo.getProductCode());
+//							//判断是否正常提单,
+//							
+//							//充值之后更新订单的orderIdApi
+//					}
+//				}else{//第一批代理商和订单没有添加成功
+//					return "订单添加失败！";
+//				}
+			}//费率存在
+		}
+		return "添加失败";
 	}
 	
 	/**
@@ -202,7 +521,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 					Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(purchasePo.getChargeTelDetail());
 					scopeCityCode = scopeMap.get("scopeCityCode").toString();
 				}
-				dataPo = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode,channel.getEpId(), purchasePo.getPgId()));
+				dataPo = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode,channel.getEpId(), Integer.parseInt(purchasePo.getPgId())));
 				if(dataPo == null){
 					logger.config("编码未配置");
 					System.out.println("编码未配置");
@@ -225,10 +544,11 @@ public class PurchaseAOImpl implements PurchaseAO {
 			e.printStackTrace();
 			return "订单添加异常";
 		}
-		
+		purchasePo.setChargeValue(pgPrice);
 		purchasePo.setOrderAmount(pcVO.getOrderAmount());
 		purchasePo.setAccountId(accountId);
 		purchasePo.setOrderArriveTime(currentTime);
+		
 		Map<String, Object> telMap = PurchaseUtil.getOperatorsByTel(purchasePo.getChargeTel());
 		String chargeTelCity = null;
 		if(telMap != null)
@@ -268,11 +588,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 		if(pcVO.getRateId() == null && pcVO.getCdisId() != null){//通过通道折扣充值
 			String fromAgencyName = pcVO.getFromAgencyName();
 			ChannelDiscountPo cdisPo = null;
-			if(pcVO.getCdisId() != null ){
-				cdisPo = channelDiscountDao.get(pcVO.getCdisId());
-			}else{
-				logger.config("通道折扣缺失");
-			}
+			cdisPo = channelDiscountDao.get(pcVO.getCdisId());
 			/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
 			int orderPath = OrderPathEnum.WEB_PAGE.getValue();
 			//一般不会出现
@@ -551,7 +867,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				
 				ExchangePlatformPo epPo = channelChannelDao.getEpByChannelId(ratePo.getChannelId());
 				String scopeCityCode = StringHelper.isNotEmpty(chargeTelDetail)?PurchaseUtil.getScopeCityByCarrier(chargeTelDetail).get("scopeCityCode").toString():null;
-				ProductCodePo pc = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, epPo.getId(), purchasePo.getPgId()));
+				ProductCodePo pc = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, epPo.getId(), Integer.parseInt(purchasePo.getPgId())));
 //			if(!channelPo.getChannelState() == ChannelStateEnum.CLOSE.getValue()){
 				ChargeDTO chargeDTO= chargeByBI(epPo, orderId, purchasePo.getChargeTel(),cd.getServiceType(), pc.getProductCode());
 				String orderResultDetail = null;
@@ -663,6 +979,16 @@ public class PurchaseAOImpl implements PurchaseAO {
 			if(StringHelper.isNotEmpty(purchaseVO.getChannelName())){
 				paramsMap.put("channelName", purchaseVO.getChannelName().trim());
 			}
+			if(purchaseVO.getPgServiceType() != null){
+				paramsMap.put("pgServiceType", purchaseVO.getPgServiceType());
+			}
+			if(purchaseVO.getChargeSpeed() != null){
+				paramsMap.put("chargeSpeed", purchaseVO.getChargeSpeed());
+			}
+			if(purchaseVO.getOperatorName() != null){
+				paramsMap.put("operatorName", purchaseVO.getOperatorName());
+			}
+			
 			if(purchaseVO.getAgencyId() != null){
 				paramsMap.put("agencyId", purchaseVO.getAgencyId());
 				//超管使用订单的orderResult进行分类查询

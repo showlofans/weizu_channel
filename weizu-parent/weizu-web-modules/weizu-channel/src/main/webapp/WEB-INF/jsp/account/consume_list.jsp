@@ -36,6 +36,14 @@
 	<form action="/flowsys/account/consume_list.do" method="post" id="formD" name="dataListForm">
 		<div class="text-c">
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
+			消费类型:
+			<span class="select-box inline">
+			<select name="chargeFor" class="select" onchange="getConsume()" >
+				<c:forEach items="${resultMap.pgServiceTypeEnums }" var="pgServiceTypeEnum" varStatus="vs1">
+					<option value="${pgServiceTypeEnum.value }" <c:if test="${resultMap.searchParams.chargeFor == pgServiceTypeEnum.value }"> selected</c:if>>${pgServiceTypeEnum.desc }</option>
+				</c:forEach>
+			</select>
+			</span>
 			提交时间：
 			<input type="text" style="width:150px" class="input-text" name="startTimeStr"  value="${resultMap.searchParams.startTimeStr }"  onfocus="var endTimeStr=$dp.$('endTimeStr');WdatePicker({onpicked:function(){endTimeStr.focus();getConsume()},autoPickDate:true,startDate:'%y-%M-%d 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss' })"/>
 	            <em class="inputto">至</em>
@@ -49,6 +57,14 @@
 				<option value="">交易类型</option>
 				<c:forEach items="${resultMap.accountTypeEnums }" var="accountTypeE" varStatus="vs1">
 					<option value="${accountTypeE.value }" <c:if test="${resultMap.searchParams.accountType == accountTypeE.value }"> selected</c:if>>${accountTypeE.desc }</option>
+				</c:forEach>
+			</select>
+			</span>
+			<span class="select-box inline">
+			<select name="billType" class="select" onchange="getConsume()" >
+				<option value="">账户类型</option>
+				<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+					<option value="${billTypeEnum.value }" <c:if test="${resultMap.searchParams.billType == billTypeEnum.value }"> selected</c:if>>${billTypeEnum.desc }</option>
 				</c:forEach>
 			</select>
 			</span>

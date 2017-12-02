@@ -195,9 +195,16 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		if(consumeRecordPo.getPurchaseId() != null){
 			params.put("purchaseId", consumeRecordPo.getPurchaseId());
 		}
-		if(contextAgencyId != null){
-			params.put("agencyId", contextAgencyId);
+//		if(contextAgencyId != null){
+//			params.put("agencyId", contextAgencyId);
+//		}
+		if(consumeRecordPo.getChargeFor() != null){
+			params.put("chargeFor", consumeRecordPo.getChargeFor());
 		}
+		if(consumeRecordPo.getBillType() != null){
+			params.put("billType", consumeRecordPo.getBillType());
+		}
+		
 		return params;
 	}
 

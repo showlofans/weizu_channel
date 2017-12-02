@@ -30,6 +30,8 @@ public class PurchaseVO implements Cloneable,Serializable {
     
     private Integer operatorType;				//运营商名称
     
+    private Integer operatorName;				//运营商
+    
     private Integer serviceType;				//业务范围
     
     private Integer pgServiceType;				//业务类型：pgServiceTypeEnum
@@ -87,6 +89,8 @@ public class PurchaseVO implements Cloneable,Serializable {
     
     private String agencyCallIp;				//代理商回调地址
     
+    private Integer chargeSpeed;				//充值速度
+    
     @Override
 	public PurchaseVO clone() {
     	PurchaseVO pvo = null;
@@ -98,6 +102,25 @@ public class PurchaseVO implements Cloneable,Serializable {
 		return pvo;
 	}
     
+    
+	public Integer getOperatorName() {
+		return operatorName;
+	}
+
+	public void setOperatorName(Integer operatorName) {
+		this.operatorName = operatorName;
+	}
+
+
+
+	public Integer getChargeSpeed() {
+		return chargeSpeed;
+	}
+
+	public void setChargeSpeed(Integer chargeSpeed) {
+		this.chargeSpeed = chargeSpeed;
+	}
+	
 	public Integer getPgServiceType() {
 		return pgServiceType;
 	}

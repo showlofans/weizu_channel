@@ -31,7 +31,7 @@
 <title>话费折扣批量绑定代理商</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 通道列表 <span class="c-gray en">&gt;</span> 话费折扣列表 <span class="c-gray en">&gt;</span>绑定代理商 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> </nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 话费通道列表 <span class="c-gray en">&gt;</span> 话费折扣列表 <span class="c-gray en">&gt;</span>绑定代理商 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> </nav>
 <div class="page-container">
 	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
 	<div class="text-c">
@@ -70,7 +70,7 @@
 						<select name="rateFor" id="rateFor" class="select" onchange="onSub()">
 						<!-- <option value="">请选择</option> -->
 						<c:forEach items="${resultMap.agencyTagEnums }" var="agencyTagEnum" varStatus="vst">
-							<option value="${agencyTagEnum.value }" <c:if test="${agencyTagEnum.value == resultMap.telrateBindAccountVO.agencyTag }"> selected</c:if>>${agencyTagEnum.desc }</option>
+							<option value="${agencyTagEnum.value }" <c:if test="${agencyTagEnum.value == resultMap.telrateBindAccountVO.rateFor }"> selected</c:if>>${agencyTagEnum.desc }</option>
 						</c:forEach>
 					</select>
 				</span>
@@ -90,10 +90,21 @@
 				<c:choose>
 					<c:when test="${resultMap.telrateBindAccountVO.bindState==1 }"><!-- 已解绑：批量绑定 -->
 						<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBState('/flowsys/telRate/batch_update_bindtel_state.do',0)" href="javascript:;" title="批量绑定"><i class="Hui-iconfont">&#xe60e;</i>批量绑定</a>
-						<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBAllState('/flowsys/telRate/batch_bind_allagency.do',1,0)" href="javascript:;" title="全量绑定"><i class="Hui-iconfont">&#xe60e;</i>全量绑定</a>
+						<c:if test="${resultMap.platformUser != resultMap.telrateBindAccountVO.rateFor }">
+							<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBAllState('/flowsys/telRate/batch_bind_allagency.do',1,0)" href="javascript:;" title="全量绑定"><i class="Hui-iconfont">&#xe60e;</i>全量绑定</a>
+						</c:if>
+						<%-- <c:choose>
+							<c:when test="${resultMap.platformUser == resultMap.telrateBindAccountVO.rateFor }">
+								<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBAllState('/flowsys/telRate/batch_bind_allagency.do',1,0)" href="javascript:;" title="全量绑定"><i class="Hui-iconfont">&#xe60e;</i>全量绑定</a>
+							</c:when>
+							<c:otherwise>
+							</c:otherwise>
+						</c:choose> --%>
 					</c:when>
 					<c:otherwise><!-- 未绑定 -->
-						<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBAllState('/flowsys/telRate/batch_bind_allagency.do',2,0)" href="javascript:;" title="全量增加"><i class="Hui-iconfont">&#xe60e;</i>全量增加</a>
+						<c:if test="${resultMap.platformUser != resultMap.telrateBindAccountVO.rateFor }">
+							<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBAllState('/flowsys/telRate/batch_bind_allagency.do',2,0)" href="javascript:;" title="全量增加"><i class="Hui-iconfont">&#xe60e;</i>全量增加</a>
+						</c:if>
 						<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="changeBState('/flowsys/telRate/batch_bind_agency.do',0)" href="javascript:;" > 批量增加</a>
 					</c:otherwise>
 				</c:choose>
