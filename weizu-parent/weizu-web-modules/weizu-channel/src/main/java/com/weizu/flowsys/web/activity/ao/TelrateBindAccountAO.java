@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.web.activity.pojo.AccountActiveRateDTO;
+import com.weizu.flowsys.web.activity.pojo.TelRatePo;
 import com.weizu.flowsys.web.activity.pojo.TelrateBindAccountPo;
 import com.weizu.flowsys.web.activity.pojo.TelrateBindAccountVO;
 
@@ -76,5 +77,14 @@ public interface TelrateBindAccountAO {
 	 * @createTime:2017年11月24日 下午3:13:01
 	 */
 	int updateBindState(TelrateBindAccountPo telrateBindAccountPo);
+	
+	/**
+	 * @description: 通过接口费率折扣得到，相应话费通道的平台折扣
+	 * @param telRateId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月4日 下午4:59:20
+	 */
+//	TelRatePo getPlatTelRateById(Long telRateId);
 	
 }

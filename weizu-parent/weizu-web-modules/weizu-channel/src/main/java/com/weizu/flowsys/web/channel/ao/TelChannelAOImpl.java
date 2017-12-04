@@ -122,6 +122,9 @@ public class TelChannelAOImpl implements TelChannelAO {
 	@Override
 	public Pagination<TelChannelParams> getTelChannel(
 			TelChannelParams telParams, PageParam pageParams) {
+//		if(telParams.getRateFor() == null){//超管通道
+//			telParams.setRateFor(AgencyTagEnum.DATA_USER.getValue());
+//		}
 		Map<String,Object> params = getParamsByTelPara(telParams);
 		long totalRecord = telChannelDao.countTelChanenl(params);
 		int pageSize = 10;
@@ -142,7 +145,7 @@ public class TelChannelAOImpl implements TelChannelAO {
 	public Pagination<TelChannelParams> getAgencyTelChannel(
 			PageParam pageParams, TelChannelParams telChannelParams) {
 		Map<String,Object> params = getParamsByTelPara(telChannelParams);
-		params.put("rateFor", AgencyTagEnum.PLATFORM_USER.getValue());
+//		params.put("rateFor", AgencyTagEnum.PLATFORM_USER.getValue());
 		long totalRecord = telChannelDao.countMyTelChannel(params);
 		int pageSize = 10;
 		long pageNoLong = 1l;
@@ -196,6 +199,13 @@ public class TelChannelAOImpl implements TelChannelAO {
 		}
 		if(StringHelper.isNotEmpty(telParams.getLimitDescription())){
 			params.put("limitDescription", telParams.getLimitDescription());
+		}
+		if(telParams.getRateFor() != null){
+			if(AgencyTagEnum.PLATFORM_USER.getValue().equals(telParams.getRateFor())){
+				params.put("platformUser", AgencyTagEnum.PLATFORM_USER.getValue());
+			}else if(AgencyTagEnum.DATA_USER.getValue().equals(telParams.getRateFor())){
+				params.put("dataUser", AgencyTagEnum.DATA_USER.getValue());//添加接口绑定的时候设置
+			}
 		}
 		return params;
 	}

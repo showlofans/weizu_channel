@@ -31,9 +31,21 @@
 <meta name="description" content="">
 </head>
 <body>
+<!-- <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 平台通道管理 <span class="c-gray en">&gt;</span>平台管理 <span class="c-gray en">&gt;</span>平台信息添加</nav> -->
 <article class="page-container">
-	<h3>${pageTitle }</h3>
+	<%-- <h3>${pageTitle }</h3> --%>
 	<form action="" method=""  class="form form-horizontal" id="platfrom">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">平台类型：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<c:forEach items="${resultMap.pgServiceTypeEnums }" var="pgServiceTypeEnum" varStatus="vs">
+					<div class="radio-box">
+						<input name="epFor" class="radioItem" type="radio" id="epFor-${vs.index }" value="${pgServiceTypeEnum.value }" <c:if test="${vs.index==0 }">checked</c:if>>
+						<label for="epFor-${vs.index }">${pgServiceTypeEnum.desc }</label>
+					</div>
+				</c:forEach>
+			</div>
+		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>平台名称：</label>
 			<div class="formControls col-xs-8 col-sm-9">
@@ -61,7 +73,7 @@
 			</div>
 		</div>
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2">订单状态地址：</label>
+			<label class="form-label col-xs-4 col-sm-2">状态查询地址：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" class="input-text required" value="" placeholder="" id="epOrderStateIp" name="epOrderStateIp">
 			</div>
@@ -70,7 +82,7 @@
 			<label class="form-label col-xs-4 col-sm-3">是否支持回调：</label>
 			<div class="formControls col-xs-7 col-sm-9 skin-minimal">
 				<div class="check-box">
-					<input name="epCallBack" type="checkbox"  value="1" id="checkbox-1">
+					<input name="epCallBack" class="callBack" type="checkbox"  value="1" id="checkbox-1">
 					<label for="checkbox-1">&nbsp;</label>
 				</div>
 			</div>
@@ -153,7 +165,7 @@ $('.skin-minimal input').iCheck({
 	radioClass: 'iradio-blue',
 	increaseArea: '20%'
 });
-$('input').on('ifClicked', function(event){  
+$('.callBack').on('ifClicked', function(event){  
 		if(!$(this).is(':checked')){
 			//alert(1);
 			$('.callBackIp').show();
@@ -210,12 +222,12 @@ $().ready(function() {
 	               success:function(d){
 	                   if(d=="success"){
 	                       layer.msg('保存成功！');//保存成功提示
-	                       var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
-	                       if($("h3").html().trim() != ""){//列表打开
-	                   		parent.layer.close(index); // 执行关闭
-	                       }else{
+	                       //if($("h3").html().trim() != ""){//列表打开
+	                   		var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+	                        parent.layer.close(index);// 执行关闭
+	                       /* }else{
 	                       	window.location.pathname = "/flowsys/platform/platform_list.do";
-	                       }
+	                       } */
 	                   }
 	                   if(d=="error"){
 	                       layer.msg('保存异常!');

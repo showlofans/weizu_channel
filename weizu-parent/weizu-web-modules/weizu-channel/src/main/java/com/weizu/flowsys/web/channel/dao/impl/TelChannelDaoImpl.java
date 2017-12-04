@@ -9,6 +9,10 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
+import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
+import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
+import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
+import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.web.channel.dao.ITelChannelDao;
 import com.weizu.flowsys.web.channel.pojo.TelChannelParams;
 import com.weizu.flowsys.web.channel.pojo.TelChannelPo;
@@ -55,6 +59,10 @@ public class TelChannelDaoImpl extends DaoImpl<TelChannelPo, Long> implements IT
 
 	@Override
 	public Long countMyTelChannel(Map<String, Object> params) {
+		params.put("positive", CallBackEnum.POSITIVE.getValue());//bindSide
+		params.put("negative", CallBackEnum.NEGATIVE.getValue());//话费折扣添加黑名单用户
+		params.put("bind", BindStateEnum.BIND.getValue());//绑定状态
+		params.put("useOpen", ChannelUseStateEnum.OPEN.getValue());
 		return sqlSessionTemplate.selectOne("countMyTelChannel",params);
 	}
 	

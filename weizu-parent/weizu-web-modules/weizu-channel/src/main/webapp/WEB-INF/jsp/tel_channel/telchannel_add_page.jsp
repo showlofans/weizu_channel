@@ -127,6 +127,7 @@
 		</div>
 		<!-- 平台ID -->
 		<input type="hidden" class="input-text" value="" placeholder="" id="epId" name="epId">
+		<input type="hidden" class="input-text" value="${resultMap.epFor }" id="epFor">
 		<!-- <input type="hidden" class="input-text" value="" placeholder="" id="ep_id"> -->
 		<!-- 批量添加的折扣 -->
 		<div id="channel_discount_list" style="display:none">
@@ -516,16 +517,19 @@ function ajaxGetEp(evt) {
 	        "url": "/flowsys/channel/search_platform.do?epName="+epName,     
 	        "dataType": "json",    
 	        "success": function(resp) {  
-	        	if(resp == null){
+	        	if(resp == null ){
 	        		$("#ep_info").hide();
+	        	}else if($('#epFor').val() != resp.epFor){
+	        		layer.msg('该平台不包含话费业务!')
+	        	}else{
+		        	$("#ep_info").show();
+		        	$("#ep_name").val(resp.epUserName);
+		        	$("#ep_pass").val(resp.epUserPass);
+		        	$("#epApikey").val(resp.epApikey);
+		        	$("#epPurchaseIp").val(resp.epPurchaseIp);
+		        	$("#epName").val(resp.epName);
+		        	$("#epId").val(resp.id);
 	        	}
-	        	$("#ep_info").show();
-	        	$("#ep_name").val(resp.epUserName);
-	        	$("#ep_pass").val(resp.epUserPass);
-	        	$("#epApikey").val(resp.epApikey);
-	        	$("#epPurchaseIp").val(resp.epPurchaseIp);
-	        	$("#epName").val(resp.epName);
-	        	$("#epId").val(resp.id);
 	        	//alert(resp.id);
 	        },
 	        "error":function(msg){

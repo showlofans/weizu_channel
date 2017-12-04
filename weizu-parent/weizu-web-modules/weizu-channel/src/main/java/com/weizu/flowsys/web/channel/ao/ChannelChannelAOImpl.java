@@ -327,6 +327,8 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 			if(StringHelper.isNotEmpty(channelPo.getEpName())){
 				paramsMap.put("epName", channelPo.getEpName());
 			}
+			paramsMap.put("epFor", PgServiceTypeEnum.PGCHARGE.getValue());
+			
 			if(channelPo.getPgType() != null){
 				paramsMap.put("pgType", channelPo.getPgType());
 			}

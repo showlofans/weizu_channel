@@ -34,7 +34,7 @@
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 订单管理 <span class="c-gray en">&gt;</span> 订单列表-充值进行 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
-		<form class="form form-horizontal" action="/flowsys/chargePg/purchase_list.do?orderState=2" method="post" id="formD" name="dataListForm">
+		<form class="form form-horizontal" action="/flowsys/chargePg/purchase_list.do" method="post" id="formD" name="dataListForm">
 				<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
 				<div class="row cl formControls">
 					<span class="select-box inline">
@@ -102,13 +102,17 @@
 					<th width="80">所属代理商</th>
 					<th width="150">订单号</th>
 					<th width="120">手机号</th>
-					<th width="80">流量大小</th>
+					<c:if test="${resultMap.pgcharge == resultMap.searchParams.pgServiceType }">
+						<th width="80">流量大小</th>
+					</c:if>
 					<th width="80">业务类型</th>
 					<th width="70">面值</th>
 					<th width="200">提交时间</th>
 					<th width="200">充值时间</th>
 					<th width="100">号码归属</th>
-					<th width="60">城市</th>
+					<c:if test="${resultMap.pgcharge == resultMap.searchParams.pgServiceType }">
+						<th width="60">城市</th>
+					</c:if>
 					<th width="60">充值方式</th>
 					<c:if test="${loginContext.rootAgencyId == 0 }">
 						<th width="60">操作</th>
@@ -128,17 +132,34 @@
 						<td>${purchase.agencyName }</td>
 						<td>${purchase.orderId }</td>
 						<td>${purchase.chargeTel }</td>
-						 <td>${purchase.pgSize }</td>
-						 <td><c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs">
-								<c:if test="${purchase.serviceType == serviceTypeEnum.value }">
-									${serviceTypeEnum.desc }
-								</c:if>
-							</c:forEach></td>
+						 <c:if test="${resultMap.pgcharge == resultMap.searchParams.pgServiceType }">
+						 	<td>${purchase.pgSize }M</td>
+						 </c:if>
+						 <td>
+						 	<c:choose>
+						 		<c:when test="${resultMap.pgcharge == resultMap.searchParams.pgServiceType }"><!-- 流量订单 -->
+									 <c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs">
+										<c:if test="${purchase.serviceType == serviceTypeEnum.value }">
+											${serviceTypeEnum.desc }
+										</c:if>
+									</c:forEach>
+						 		</c:when>
+						 		<c:otherwise>
+									 <c:forEach items="${resultMap.huaServiceTypeEnums }" var="huaServiceTypeEnum" varStatus="vs">
+										<c:if test="${purchase.serviceType == huaServiceTypeEnum.value }">
+											${huaServiceTypeEnum.desc }
+										</c:if>
+									</c:forEach>
+						 		</c:otherwise>
+						 	</c:choose>
+						</td>
 						<td>${purchase.pgPrice }</td>
 						<td>${purchase.orderArriveTimeStr }</td>
 						 <td>${purchase.orderBackTimeStr }</td>
 						<td>${purchase.chargeTelDetail }</td>
-						<td>${purchase.chargeTelCity }</td>
+						<c:if test="${resultMap.pgcharge == resultMap.searchParams.pgServiceType }">
+							 <td>${purchase.chargeTelCity }</td>
+						</c:if>
 						<!-- 充值方式 -->
 						<td>
 						<c:forEach items="${resultMap.orderPathEnums }" var="orderPathEnum" varStatus="vsp">
@@ -252,6 +273,7 @@ function changeState(vart,state){
 }
 function formSub(){
 	$("input[name='pageNoLong']").val('');
+	$('#arriveStartTimeStr').val('');
 	$('form').submit();
 }
 $(document).ready(function() {

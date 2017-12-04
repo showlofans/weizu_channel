@@ -167,6 +167,9 @@
 	 	<if test="epName != null">
 	 		AND ep.ep_name = #{epName}
 	 	</if>
+	 	<!-- <if test="epFor != null">
+	 		AND ep.ep_for = #{epFor}
+	 	</if> -->
 	 	<if test="channelType != null">
 	  		AND cd.channel_type = #{channelType}
 	  	</if>
@@ -263,6 +266,9 @@
   	<if test="epName != null">
   		AND ep.ep_name like CONCAT('%', TRIM(#{epName}), '%')
   	</if>
+  	<!-- <if test="epFor != null">
+  		AND ep.ep_for = #{epFor}
+  	</if> -->
   	<if test="epEngId != null">
   		AND ep.ep_eng_id = #{epEngId}
   	</if>

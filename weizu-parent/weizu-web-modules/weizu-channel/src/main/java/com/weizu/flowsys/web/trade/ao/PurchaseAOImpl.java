@@ -25,6 +25,7 @@ import org.weizu.api.outter.enums.ChargeStatusEnum;
 
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
+import com.weizu.flowsys.api.hsingleton.HSingletonFactory;
 import com.weizu.flowsys.api.singleton.BaseInterface;
 import com.weizu.flowsys.api.singleton.BaseP;
 import com.weizu.flowsys.api.singleton.OrderDTO;
@@ -945,19 +946,32 @@ public class PurchaseAOImpl implements PurchaseAO {
 	 * @createTime:2017年8月17日 下午5:36:19
 	 */
 	public ChargeDTO chargeByBI(ExchangePlatformPo epPo,Long orderId,String chargeTel,Integer serviceType,String productCode) {
-		BaseInterface bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(productCode,orderId,chargeTel,serviceType,epPo));
-		ChargeDTO chargeDTO = bi.charge();
-		if(chargeDTO != null){
+		BaseInterface bi = null;
+		Integer epFor = epPo.getEpFor();
+		String epEngId = epPo.getEpEngId();
+		if(PgServiceTypeEnum.PGCHARGE.getValue().equals(epFor)){//调用流量接口仓库
+			bi = SingletonFactory.getSingleton(epEngId, new BaseP(productCode,orderId,chargeTel,serviceType,epPo));
+		}else if(PgServiceTypeEnum.TELCHARGE.getValue().equals(epFor)){
+			bi = HSingletonFactory.getSingleton(epEngId, new BaseP(productCode,orderId,chargeTel,serviceType,epPo));
+		}
+		ChargeDTO chargeDTO = null;
+		if(bi != null && bi.charge() != null){
+			chargeDTO = bi.charge();
 			System.out.println(chargeDTO.getChargeOrder().getOrderIdApi());//测试打印出对应平台的提单地址
 			logger.config("上游返回的订单号："+ chargeDTO.getChargeOrder().getOrderIdApi());//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
-//			int upRes = 0;
-//			if(upRes > 0){
-//			if(chargeDTO.getTipCode().equals(OrderStateEnum.CHARGING.getValue())){
-//				updatePurchase(chargeDTO, orderId);
-//			}
-//				return "订单添加成功";
-//			}
 		}
+//		ChargeDTO chargeDTO = bi.charge();
+//		if(chargeDTO != null){
+//			System.out.println(chargeDTO.getChargeOrder().getOrderIdApi());//测试打印出对应平台的提单地址
+//			logger.config("上游返回的订单号："+ chargeDTO.getChargeOrder().getOrderIdApi());//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
+////			int upRes = 0;
+////			if(upRes > 0){
+////			if(chargeDTO.getTipCode().equals(OrderStateEnum.CHARGING.getValue())){
+////				updatePurchase(chargeDTO, orderId);
+////			}
+////				return "订单添加成功";
+////			}
+//		}
 		return chargeDTO;
 	}
 
@@ -988,6 +1002,23 @@ public class PurchaseAOImpl implements PurchaseAO {
 			if(purchaseVO.getOperatorName() != null){
 				paramsMap.put("operatorName", purchaseVO.getOperatorName());
 			}
+//			Integer pgServiceType = purchaseVO.getPgServiceType();
+			//默认查询流量订单
+			Boolean isPgcharge = PgServiceTypeEnum.PGCHARGE.getValue().equals(purchaseVO.getPgServiceType()) || purchaseVO.getPgServiceType() == null;
+			if(isPgcharge){
+				paramsMap.put("pgcharge", PgServiceTypeEnum.PGCHARGE.getValue());
+			}
+//			Integer pgcharge = 
+////			if(pgServiceType != null)
+//			switch (pgServiceType) {
+//			case PgServiceTypeEnum.PGCHARGE.getValue():
+//				
+//				break;
+//
+//			default:
+//				break;
+//			}
+			
 			
 			if(purchaseVO.getAgencyId() != null){
 				paramsMap.put("agencyId", purchaseVO.getAgencyId());
@@ -1128,10 +1159,20 @@ public class PurchaseAOImpl implements PurchaseAO {
 						if(purchaseEp != null){
 							boolean negCallBack = CallBackEnum.NEGATIVE.getValue().equals(purchaseEp.getEpCallBack());
 							if(negCallBack){//不支持回调就用主动查询，查询订单状态
-								BaseInterface bi = SingletonFactory.getSingleton(purchaseEp.getEpEngId(), new BaseP(null,purchaseVO2.getOrderIdApi(),purchaseVO2.getChargeTel(),null,purchaseEp));//查订单状态用api订单号对象去查
-								OrderDTO orderDTO = bi.getOrderState();
+								//BaseInterface bi = SingletonFactory.getSingleton(purchaseEp.getEpEngId(), new BaseP(null,purchaseVO2.getOrderIdApi(),purchaseVO2.getChargeTel(),null,purchaseEp));//查订单状态用api订单号对象去查
+								BaseInterface bi = null;
+								Integer epFor = purchaseEp.getEpFor();
+								String epEngId = purchaseEp.getEpEngId();
+								if(PgServiceTypeEnum.PGCHARGE.getValue().equals(epFor)){//调用流量接口仓库
+									bi = SingletonFactory.getSingleton(epEngId, new BaseP(null,purchaseVO2.getOrderIdApi(),purchaseVO2.getChargeTel(),null,purchaseEp));
+								}else if(PgServiceTypeEnum.TELCHARGE.getValue().equals(epFor)){
+									bi = HSingletonFactory.getSingleton(epEngId, new BaseP(null,purchaseVO2.getOrderIdApi(),purchaseVO2.getChargeTel(),null,purchaseEp));
+								}
+								
+//								OrderDTO orderDTO = bi.getOrderState();
 								//是否需要更新订单状态条件
-								if(orderDTO != null){
+								if(bi != null && bi.getOrderState() != null){
+									OrderDTO orderDTO = bi.getOrderState();
 									OrderIn orderIn = orderDTO.getOrderIn();
 									boolean updateCondition = orderIn!= null && !purchaseVO2.getOrderResult().equals(orderIn.getStatus());
 									if(updateCondition){
@@ -1259,6 +1300,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 			}else{//其他列表
 				if(StringHelper.isEmpty(purchaseVO.getArriveStartTimeStr())){
 					paramsMap.put("startTime",null);
+					//purchaseVO.setArriveStartTimeStr(null);
 				}
 				if(StringHelper.isEmpty(purchaseVO.getArriveEndTimeStr())){
 					paramsMap.put("endTime", currentTime);
@@ -1283,16 +1325,20 @@ public class PurchaseAOImpl implements PurchaseAO {
 					purchaseVO.setBackEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
 				}
 			}else{
-				if(purchaseVO.getArriveStartTimeStr() == null){
+				if(StringHelper.isEmpty(purchaseVO.getArriveStartTimeStr())){
 					dateUtilStartTime = Long.parseLong(paramsMap.get("startTime").toString());
 					purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
-				}else{
-					//为空或者值重新设置
-					if("".equals(purchaseVO.getArriveStartTimeStr().trim())){
-						paramsMap.put("startTime", null);
-						totalRecord = purchaseDAO.countPurchase(paramsMap);
-					}
 				}
+//				if(purchaseVO.getArriveStartTimeStr() == null){
+//				dateUtilStartTime = Long.parseLong(paramsMap.get("startTime").toString());
+//				purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+//				}else{
+//					//为空或者值重新设置
+//					if("".equals(purchaseVO.getArriveStartTimeStr().trim())){
+//						paramsMap.put("startTime", null);
+//						totalRecord = purchaseDAO.countPurchase(paramsMap);
+//					}
+//				}
 				if(StringHelper.isEmpty(purchaseVO.getArriveEndTimeStr())){
 					dateUtilEndTime = Long.parseLong(paramsMap.get("endTime").toString());
 					purchaseVO.setArriveEndTimeStr(DateUtil.formatAll(dateUtilEndTime));

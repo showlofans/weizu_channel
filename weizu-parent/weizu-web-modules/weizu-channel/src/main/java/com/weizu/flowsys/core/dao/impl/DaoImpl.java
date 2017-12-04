@@ -432,6 +432,7 @@ public class DaoImpl<T extends Po, PK extends Serializable> implements Dao<T, PK
 		return resultMap;
 	}
 
+	@Transactional
 	@Override
 	public int updateLocal(T po) {
 		// TODO Auto-generated method stub

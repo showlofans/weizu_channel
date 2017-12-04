@@ -30,14 +30,22 @@
 <title>平台列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 平台通道管理 <span class="c-gray en">&gt;</span>平台列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 平台通道管理 <span class="c-gray en">&gt;</span>平台管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
 	<form action="/flowsys/platform/platform_list.do" method="post" id="formD" name="dataListForm">
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
 		平台名称：<input type="text" value="${resultMap.searchParam.epName }" name="epName" id="" placeholder=" 平台名称" style="width:250px" class="input-text">
+		<span class="select-box inline">
+			<select name="epFor" class="select" onchange="formSub()">
+				<option value="">平台类型</option>
+				<c:forEach items="${resultMap.pgServiceTypeEnums }" var="pgServiceTypeEnum" varStatus="vs1">
+					<option value="${pgServiceTypeEnum.value }" <c:if test="${pgServiceTypeEnum.value == resultMap.searchParam.epFor }"> selected</c:if>>${pgServiceTypeEnum.desc }</option>
+				</c:forEach>
+			</select>
+		</span>
 		<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
-		<a style="text-decoration:none" class="btn btn-success" onClick="platform_add('平台添加','/flowsys/platform/platform_add_page.do')" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i> 添加</a>
+		<a style="text-decoration:none" class="btn btn-success" onClick="platform_add('平台信息添加','/flowsys/platform/platform_add_page.do')" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i> 添加</a>
 		<input value="搜平台" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
 		<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 		</form>
@@ -49,20 +57,21 @@
 					<!-- <th width="80">流量包Id</th> -->
 					<th width="80">平台名称</th>
 					<th width="80">平台英文标识</th>
-					<th width="80">产品订购地址</th>
-					<th width="80">产品列表地址</th>
-					<!-- <th width="120">支持城市</th> -->
+					<th width="80">平台类型</th>
+					<!-- <th width="80">产品列表地址</th>
+					<th width="120">支持城市</th>
 					<th width="60">订单状态地址</th>
-					<th width="60">余额查询地址</th>
+					<th width="60">余额查询地址</th> -->
 					<th width="75">账号</th>
-					<th width="60">密码</th>
+					<!-- <th width="60">密码</th> -->
 					<!-- <th width="60">平台余额</th> -->
 					<th width="60">apikey</th>
-					<th width="60">平台官网地址</th>
-					<th width="80">平台其他参数</th>
+					<!-- <th width="60">平台官网地址</th> -->
 					<th width="60">最后更新</th>
 					<th width="60">回调支持</th>
 					<th width="60">操作</th>
+					<th width="80">产品订购地址</th>
+					<th width="80">平台其他参数</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -70,29 +79,32 @@
 					<tr class="text-c">
 						<td class="f-14 td-manage">${platform.epName }</td>
 						<td class="f-14 td-manage">${platform.epEngId }</td>
-						<td><div class="f-12 c-999">
-						<span data-toggle="tooltip" data-placement="top" title="${platform.epPurchaseIp }">${fn:substring(platform.epPurchaseIp,0,10)}</span>
-						</div></td>
-						<td><div class="f-12 c-999">
+						<td class="f-14">
+							<c:forEach items="${resultMap.pgServiceTypeEnums }" var="pgServiceTypeEnum" varStatus="vs1">
+								<c:if test="${pgServiceTypeEnum.value == platform.epFor }">
+									${pgServiceTypeEnum.desc }
+								</c:if>
+							</c:forEach>
+						</td>
+						<%-- <td><div class="f-12 c-999">
 						<span data-toggle="tooltip" data-placement="top" title="${platform.productListIp }">${fn:substring(platform.productListIp,0,10)}</span>
-						<%-- <a href="${platform.productListIp }">${platform.productListIp }</a> --%>
+						<a href="${platform.productListIp }">${platform.productListIp }</a>
 						</div></td>
 						<td><div class="f-12 c-999">
 						<span data-toggle="tooltip" data-placement="top" title="${platform.epOrderStateIp }">${fn:substring(platform.epOrderStateIp,0,10)}</span>
 						</div></td>
 						<td><div class="f-12 c-999">
 						<span data-toggle="tooltip" data-placement="top" title="${platform.epBalanceIp }">${fn:substring(platform.epBalanceIp,0,10)}</span>
-						<%-- <a href="${platform.epBalanceIp }">${platform.epBalanceIp }</a> --%>
-						</div></td>
+						<a href="${platform.epBalanceIp }">${platform.epBalanceIp }</a>
+						</div></td> --%>
 						<td class="f-14 td-manage">${platform.epUserName }</td>
-						<td class="f-14 td-manage">${platform.epUserPass }</td>
-						<td class="f-14 td-manage">${platform.epApikey }</td>
-						<td><div class="f-12 c-999">
+						<%-- <td class="f-14 td-manage">${platform.epUserPass }</td> --%>
+						<td class="f-14 td-manage"><div class="f-12 c-999">
+						<span data-toggle="tooltip" data-placement="top" title="${platform.epApikey }">${fn:substring(platform.epApikey,0,10)}</span>
+						</div></td>
+						<%-- <td><div class="f-12 c-999">
 						<a title="${platform.epIp }" href="${platform.epIp }" target="_blank">${fn:substring(platform.epIp,0,10)}</a><!--  onclick="Hui_admin_tab(this)" -->
-						</div></td> 
-						<td>
-							${platform.epOtherParams }
-						</td>
+						</div></td>  --%>
 						<td class="f-14 td-manage">${platform.lastAccessStr }</td>
 						<td class="f-14 td-manage">
 							<c:forEach items="${resultMap.callBackEnums }" varStatus="vs" var="cbEnum">
@@ -102,6 +114,12 @@
 							</c:forEach>
 						</td>
 						<td class="f-14 td-manage"> <a style="text-decoration:none" onClick="platform_del('/flowsys/platform/platform_del.do','${platform.id}','${platform.epName }')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> <a style="text-decoration:none" class="ml-5" onClick="platform_edit('平台信息编辑','/flowsys/platform/platform_edit_page.do?epId=${platform.id}','10001')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> <!-- <a style="text-decoration:none" class="ml-5" onClick="platform_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a> --></td>
+						<td><div class="f-12 c-999">
+						<span data-toggle="tooltip" data-placement="top" style="text-decoration: none;" title="${platform.epIp }"><a title="${platform.epIp }" href="${platform.epIp }" target="_blank">${platform.epPurchaseIp }</a></span>
+						</div></td>
+						<td>
+							${platform.epOtherParams }
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -125,10 +143,9 @@ function platform_add(title,url){
 	//alert("sd");
 	var index = layer.open({
         type: 2,
-        title: false,
-        area: ['650px', '560px'],
-        maxmin: false,
-        closeBtn: 1,
+        title: title,
+        //area: ['650px', '560px'],
+        //closeBtn: 1,
         content: url+'?pageTitle=' + title,
          end: function () {
             location.reload();
@@ -136,6 +153,10 @@ function platform_add(title,url){
     });
 	layer.full(index);
 }
+function formSub(){
+	$('form').submit();
+}
+
 /*平台-编辑*/
 function platform_edit(title,url,id,w,h){
 	var index = layer.open({

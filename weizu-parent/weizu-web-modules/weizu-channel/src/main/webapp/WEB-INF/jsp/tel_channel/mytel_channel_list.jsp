@@ -108,8 +108,18 @@
 	</div>
 	<!-- 第二行搜索 -->
 	<div class="row cl" style="margin-top: 30dp">
-		平台名称：<input type="text" value="${resultMap.params.epName }" name="epName" id="" placeholder="平台名称" style="width:80px" class="input-text">
+		<%-- <c:if test="${loginContext.rootAgencyId == 0 }"> --%>
+		<%-- 平台名称：<input type="text" value="${resultMap.params.epName }" name="epName" id="" placeholder="平台名称" style="width:80px" class="input-text"> --%>
 		&nbsp;&nbsp;
+		<span class="select-box inline">
+			<select name="rateFor" id="rateFor" class="select">
+				<option value="">折扣类型</option>
+				<c:forEach items="${resultMap.telChannelTagEnums }" var="telChannelTagEnum" varStatus="vs1">
+					<option value="${telChannelTagEnum.value }" <c:if test="${telChannelTagEnum.value == resultMap.params.rateFor }"> selected</c:if>>${telChannelTagEnum.desc }</option>
+				</c:forEach>
+			</select>
+			<%-- <input type="hidden" class="input-text" name="rateFor" id="rateFor"  value="${resultMap.rateFor }" placeholder=""> --%>
+		</span>
 		<%-- <span class="select-box inline">
 			<select name="telchannelState" class="select" onchange="submitForm()">
 			<option value="">通道状态</option>

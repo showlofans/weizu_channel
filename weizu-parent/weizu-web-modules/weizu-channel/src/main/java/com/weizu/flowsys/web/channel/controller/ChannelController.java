@@ -24,6 +24,7 @@ import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
@@ -101,6 +102,8 @@ public class ChannelController {
 		resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());
 		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 		resultMap.put("serviceTypes", ServiceTypeEnum.toList());
+		resultMap.put("epFor", PgServiceTypeEnum.PGCHARGE.getValue());
+		
 		
 		//查看代理商有没有对公的账户
 		//默认对私通道

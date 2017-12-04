@@ -90,13 +90,17 @@
 					<th width="100">所属代理商</th>
 					<th width="150">订单号</th>
 					<th width="120">手机号</th>
-					<th width="80">流量大小</th>
+					<c:if test="${resultMap.pgcharge == resultMap.searchParams.pgServiceType }">
+						<th width="80">流量大小</th>
+					</c:if>
 					<th width="80">业务类型</th>
 					<th width="70">面值</th>
 					<th width="150">提交时间</th>
 					<th width="150">失败时间</th>
 					<th width="100">号码归属</th>
-					<th width="60">城市</th>
+					<c:if test="${resultMap.pgcharge == resultMap.searchParams.pgServiceType }">
+						<th width="60">城市</th>
+					</c:if>
 					<th width="60">充值方式</th>
 					<th width="80">结果</th>
 					<th width="80">结果描述</th>
@@ -124,17 +128,34 @@
 						</td>
 						<td>${purchase.orderId }</td>
 						<td>${purchase.chargeTel }</td>
-						 <td>${purchase.pgSize }</td>
-						 <td><c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs">
-								<c:if test="${purchase.serviceType == serviceTypeEnum.value }">
-									${serviceTypeEnum.desc }
-								</c:if>
-							</c:forEach></td>
+						  <c:if test="${resultMap.pgcharge == resultMap.searchParams.pgServiceType }">
+						 	<td>${purchase.pgSize }M</td>
+						 </c:if>
+						 <td>
+						 	<c:choose>
+						 		<c:when test="${resultMap.pgcharge == resultMap.searchParams.pgServiceType }"><!-- 流量订单 -->
+									 <c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs">
+										<c:if test="${purchase.serviceType == serviceTypeEnum.value }">
+											${serviceTypeEnum.desc }
+										</c:if>
+									</c:forEach>
+						 		</c:when>
+						 		<c:otherwise>
+									 <c:forEach items="${resultMap.huaServiceTypeEnums }" var="huaServiceTypeEnum" varStatus="vs">
+										<c:if test="${purchase.serviceType == huaServiceTypeEnum.value }">
+											${huaServiceTypeEnum.desc }
+										</c:if>
+									</c:forEach>
+						 		</c:otherwise>
+						 	</c:choose>
+						</td>
 						<td>${purchase.pgPrice }</td>
 						<td>${purchase.orderArriveTimeStr }</td>
 						 <td>${purchase.orderBackTimeStr }</td>
 						<td>${purchase.chargeTelDetail }</td>
-						<td>${purchase.chargeTelCity }</td>
+						<c:if test="${resultMap.pgcharge == resultMap.searchParams.pgServiceType }">
+							 <td>${purchase.chargeTelCity }</td>
+						</c:if>
 						<!-- 充值方式 -->
 						<td>
 						<c:forEach items="${resultMap.orderPathEnums }" var="orderPathEnum" varStatus="vsp">
@@ -235,6 +256,7 @@ function batchPush(){
 }
 function formSub(){
 	$("input[name='pageNoLong']").val('');
+	$('#backStartTimeStr').val('');
 	$('form').submit();
 }
 $(document).ready(function() {

@@ -1,5 +1,6 @@
 package com.weizu.flowsys.web.activity.dao.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
+import com.weizu.flowsys.operatorPg.enums.TelChannelTagEnum;
 import com.weizu.flowsys.web.activity.dao.ITelRateDao;
 import com.weizu.flowsys.web.activity.pojo.TelRatePo;
 import com.weizu.flowsys.web.trade.pojo.GetTelRatePo;
@@ -56,6 +58,14 @@ public class TelRateDaoImpl extends DaoImpl<TelRatePo, Long> implements ITelRate
 		map.put("dataUser", AgencyTagEnum.DATA_USER.getValue());//添加接口绑定的时候设置
 		map.put("useOpen", ChannelUseStateEnum.OPEN.getValue());
 		return sqlSessionTemplate.selectList("getTelRateForCharge", map);
+	}
+
+	@Override
+	public TelRatePo getPlatTelRateById(Long telRateId) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("telRateId", telRateId);
+		map.put("platformUser", TelChannelTagEnum.PLATFORM_USER.getValue());
+		return sqlSessionTemplate.selectOne("getPlatTelRateById", map);
 	}
 
 

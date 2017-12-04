@@ -184,24 +184,27 @@ function changeBAllState(url,bindState, updateBindState){
 	//var bindState = $('#bindState').val();
 	var agencyName = $('#agencyName').val();
 	var agencyMark = $('#agencyMark').val();
-	$.ajax({
-		type: 'POST',
-		url: url,
-		//dataType: 'json',
-		data: {updateBindState:updateBindState,rateDiscountId:rateDiscountId,billType:billType,agencyTag:agencyTag,agencyName: agencyName,agencyMark: agencyMark,bindState: bindState},
-		success: function(resp){
-			//$(obj).parents("tr").remove();
-			//alert
-			if(resp=="success"){
-				//layer.msg('更新绑定成功',{icon:1,time:1000});
-				location.reload();
-           	 }else{
-				layer.msg('更新绑定失败',{icon:1,time:1000});
-           	 }
-		},
-		error:function(resp) {
-			console.log(resp.msg);
-		}
+	var msg = "确认要全量绑定所有查询得到的代理商？";
+	layer.confirm(msg,function(index){
+		$.ajax({
+			type: 'POST',
+			url: url,
+			//dataType: 'json',
+			data: {updateBindState:updateBindState,rateDiscountId:rateDiscountId,billType:billType,agencyTag:agencyTag,agencyName: agencyName,agencyMark: agencyMark,bindState: bindState},
+			success: function(resp){
+				//$(obj).parents("tr").remove();
+				//alert
+				if(resp=="success"){
+					//layer.msg('更新绑定成功',{icon:1,time:1000});
+					location.reload();
+	           	 }else{
+					layer.msg('更新绑定失败',{icon:1,time:1000});
+	           	 }
+			},
+			error:function(resp) {
+				console.log(resp.msg);
+			}
+		});
 	});
 }
 

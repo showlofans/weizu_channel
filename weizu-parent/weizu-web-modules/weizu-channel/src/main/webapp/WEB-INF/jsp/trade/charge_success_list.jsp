@@ -36,6 +36,14 @@
 	<div class="text-c">
 		<form class="form form-horizontal" action="/flowsys/chargePg/purchase_list.do" method="post" id="formD" name="dataListForm">
 				<div class="row cl formControls">
+					<span class="select-box inline">
+						<select name="pgServiceType" class="select">
+						<!-- <option value="">充值业务</option> -->
+						<c:forEach items="${resultMap.pgServiceTypeEnums }" var="pgServicetypeEnum" varStatus="vs2">
+							<option value="${pgServicetypeEnum.value }" <c:if test="${pgServicetypeEnum.value == resultMap.searchParams.pgServiceType }"> selected</c:if>>${pgServicetypeEnum.desc }</option>
+						</c:forEach>
+					</select>
+					</span> 
 					手机号:<input type="text"  value="${resultMap.searchParams.chargeTel }" name="chargeTel" id="" placeholder=" 手机号" style="width:150px" class="input-text">
 					所属代理商:<input type="text"  value="${resultMap.searchParams.agencyName }" name="agencyName" id="" placeholder=" 代理商名称" style="width:100px" class="input-text">
 					订单号:<input type="text"  value="${resultMap.searchParams.orderId }" name="orderId" id="" placeholder=" 订单号" style="width:250px" class="input-text">
@@ -112,13 +120,17 @@
 					<th width="100">所属代理商</th>
 					<th width="150">订单号</th>
 					<th width="120">手机号</th>
-					<th width="80">流量大小</th>
+					<c:if test="${resultMap.pgcharge == resultMap.searchParams.pgServiceType }">
+						<th width="80">流量大小</th>
+					</c:if>
 					<th width="80">业务类型</th>
 					<th width="70">面值</th>
 					<th width="140">提交时间</th>
 					<th width="140">充值时间</th>
 					<th width="100">号码归属</th>
-					<th width="60">城市</th>
+					<c:if test="${resultMap.pgcharge == resultMap.searchParams.pgServiceType }">
+						<th width="60">城市</th>
+					</c:if>
 					<th width="60">充值方式</th>
 					<th width="80">结果</th>
 					<th width="80">结果描述</th>
@@ -145,17 +157,34 @@
 						</c:choose></td>
 						<td>${purchase.orderId }</td>
 						<td>${purchase.chargeTel }</td>
-						 <td>${purchase.pgSize }</td>
-						 <td><c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs">
-								<c:if test="${purchase.serviceType == serviceTypeEnum.value }">
-									${serviceTypeEnum.desc }
-								</c:if>
-							</c:forEach></td>
+						 <c:if test="${resultMap.pgcharge == resultMap.searchParams.pgServiceType }">
+						 	<td>${purchase.pgSize }M</td>
+						 </c:if>
+						 <td>
+						 	<c:choose>
+						 		<c:when test="${resultMap.pgcharge == resultMap.searchParams.pgServiceType }"><!-- 流量订单 -->
+									 <c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs">
+										<c:if test="${purchase.serviceType == serviceTypeEnum.value }">
+											${serviceTypeEnum.desc }
+										</c:if>
+									</c:forEach>
+						 		</c:when>
+						 		<c:otherwise>
+									 <c:forEach items="${resultMap.huaServiceTypeEnums }" var="huaServiceTypeEnum" varStatus="vs">
+										<c:if test="${purchase.serviceType == huaServiceTypeEnum.value }">
+											${huaServiceTypeEnum.desc }
+										</c:if>
+									</c:forEach>
+						 		</c:otherwise>
+						 	</c:choose>
+						</td>
 						<td>${purchase.pgPrice }</td>
 						<td>${purchase.orderArriveTimeStr }</td>
 						 <td>${purchase.orderBackTimeStr }</td>
 						<td>${purchase.chargeTelDetail }</td>
-						<td>${purchase.chargeTelCity }</td>
+						<c:if test="${resultMap.pgcharge == resultMap.searchParams.pgServiceType }">
+							 <td>${purchase.chargeTelCity }</td>
+						</c:if>
 						<!-- 充值方式 -->
 						<td>
 						<c:forEach items="${resultMap.orderPathEnums }" var="orderPathEnum" varStatus="vsp">
@@ -199,10 +228,10 @@
 					<td colspan="4"  class="text-l c-warning">${tot.totalCost}</td>
 					<c:choose>
 						<c:when test="${loginContext.rootAgencyId == 0 }">
-							<td colspan="3"></td>
+							<td colspan="4"></td>
 						</c:when>
 						<c:otherwise>
-							<td colspan="2"></td>
+							<td colspan="3"></td>
 						</c:otherwise>
 					</c:choose>
 				</tr>
@@ -293,12 +322,14 @@ function batchPush(){
     });
 } */
 function formSub(){
+	$("input[name='pageNoLong']").val('');
+	$('#backStartTimeStr').val('');
 	$('form').submit();
 }
 $(document).ready(function() {
 	$('.select').change(function(){
 		//$('form').submit();
-		$('form').submit();
+		formSub();
 	})
 }); 
 

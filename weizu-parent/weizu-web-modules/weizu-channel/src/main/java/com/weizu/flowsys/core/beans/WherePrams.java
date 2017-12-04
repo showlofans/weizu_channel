@@ -73,6 +73,10 @@ public class WherePrams {
 		return this;
 	}*/
 	
+	public WherePrams() {
+		super();
+	}
+
 	/**
 	 * and条件
 	 * @param file

@@ -25,6 +25,7 @@ import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.TelChannelTagEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.TelrateBindAccountAO;
 import com.weizu.flowsys.web.activity.dao.ITelRateDao;
@@ -145,7 +146,7 @@ public class TelRateController {
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
 		resultMap.put("huaServiceTypeEnums", HuaServiceTypeEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
-		resultMap.put("agencyTagEnums", AgencyTagEnum.toList());
+		resultMap.put("telChannelTagEnums", TelChannelTagEnum.toList());
 		
 //		resultMap.put("fromTag", fromTag);//
 		return new ModelAndView("/activity/telRate_add_page","resultMap",resultMap);
@@ -243,9 +244,9 @@ public class TelRateController {
 		if(telrateBindAccountVO.getBindState() == null){
 			telrateBindAccountVO.setBindState(BindStateEnum.NO.getValue());
 		}
-		if(telrateBindAccountVO.getRateFor() == null){
-			telrateBindAccountVO.setRateFor(AgencyTagEnum.DATA_USER.getValue());
-		}
+//		if(telrateBindAccountVO.getRateFor() == null){
+//			telrateBindAccountVO.setRateFor(AgencyTagEnum.DATA_USER.getValue());
+//		}
 		//初始化代理商类型
 //		if(aardto.getAgencyTag() == null){
 //			aardto.setAgencyTag(AgencyTagEnum.PLATFORM_USER.getValue());

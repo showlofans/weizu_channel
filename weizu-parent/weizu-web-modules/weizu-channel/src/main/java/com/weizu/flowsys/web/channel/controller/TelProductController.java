@@ -24,6 +24,7 @@ import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.TelchannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.TelchargeSpeedEnum;
@@ -88,9 +89,9 @@ public class TelProductController {
 		resultMap.put("operatoerNameEnums", OperatorNameEnum.toList());
 		resultMap.put("serviceTypeEnums", HuaServiceTypeEnum.toList());
 		resultMap.put("telchargeSpeedEnums", TelchargeSpeedEnum.toList());
-		WherePrams whereEp = null;
+		WherePrams whereEp = new WherePrams("ep_for", "=", PgServiceTypeEnum.TELCHARGE.getValue());
 		if(StringHelper.isNotEmpty(telProductPo.getEpName())){
-			whereEp = new WherePrams("ep_name", "like", telProductPo.getEpName());
+			whereEp.and("ep_name", "like", telProductPo.getEpName());
 		}
 		List<ExchangePlatformPo> epList = exchangePlatformDao.list(whereEp);
 		if(epList != null && epList.size() > 0 ){

@@ -50,10 +50,20 @@ public class ExchangePlatformPo extends Po {
     
     private String epOtherParams;		//平台其他参数
     
+    private Integer epFor;				//PgServiceTypeEnum 平台类型
+    
     @TempField
     private String lastAccessStr;		//页面展示时间
     
-    public Integer getEpCallBack() {
+    public Integer getEpFor() {
+		return epFor;
+	}
+
+	public void setEpFor(Integer epFor) {
+		this.epFor = epFor;
+	}
+
+	public Integer getEpCallBack() {
 		return epCallBack;
 	}
 

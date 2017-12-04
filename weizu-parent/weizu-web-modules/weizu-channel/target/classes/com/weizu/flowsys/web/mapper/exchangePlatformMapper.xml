@@ -26,14 +26,16 @@
     <result column="ep_other_params" jdbcType="VARCHAR" property="epOtherParams" />
     <result column="ep_call_back" jdbcType="INTEGER" property="epCallBack" />
     <result column="last_access" jdbcType="BIGINT" property="lastAccess" />
+    <result column="ep_for" jdbcType="INTEGER" property="epFor" />
+    
   </resultMap>
   <sql id="Base_Column_List">
     id, ep_name, ep_purchase_ip, product_list_ip, ep_order_state_ip,ep_call_back_ip, ep_balance_ip, <!-- ep_order_state_ip, -->
-    ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip, ep_eng_id,ep_other_params, ep_call_back, last_access
+    ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip, ep_eng_id,ep_other_params, ep_call_back, last_access, ep_for
   </sql>
   <sql id="EpByRteId_Column_List">
     ep.id, ep_name, ep_purchase_ip, product_list_ip, ep_order_state_ip,ep_call_back_ip, ep_balance_ip, <!-- ep_order_state_ip, -->
-    ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip, ep_eng_id,ep_other_params, ep_call_back, ep.last_access
+    ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip, ep_eng_id,ep_other_params, ep_call_back, ep.last_access, ep.ep_for
   </sql>
   <!-- <sql id="Other_Column_List">
     ep.id, ep.ep_name, ep_purchase_ip, product_list_ip, pgdata_check_ip, ep_balance_ip, 
@@ -142,6 +144,9 @@
    		</if>
    		<if test="epEngId != null">
    			AND ep_eng_id = #{epEngId}
+   		</if>
+   		<if test="epFor != null">
+   			AND  ep_for = #{epFor}
    		</if>
    		<!-- <if test="agencyId != null">
    			AND aep.agency_id = #{agencyId}

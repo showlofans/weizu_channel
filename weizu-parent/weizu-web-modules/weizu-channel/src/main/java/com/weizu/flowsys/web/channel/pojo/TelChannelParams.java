@@ -57,10 +57,20 @@ public class TelChannelParams extends Po implements Serializable {
 	
 	private Double telchannelPrice;				//通道价格
 	
+	private Integer rateFor;					//折扣类型 AgencyTagEnum //我的话费
+	
 	//private Long lastAccess;					//更新时间
 	
 	public String getProvinceid() {
 		return provinceid;
+	}
+
+	public Integer getRateFor() {
+		return rateFor;
+	}
+
+	public void setRateFor(Integer rateFor) {
+		this.rateFor = rateFor;
 	}
 
 	public Double getTelchannelPrice() {

@@ -294,6 +294,7 @@
 <script type="text/javascript">
 function formSub(){
 	$("input[name='pageNoLong']").val('');
+	$('#arriveStartTimeStr').val('');
 	$('form').submit();
 }
 /*代理商-编辑*/

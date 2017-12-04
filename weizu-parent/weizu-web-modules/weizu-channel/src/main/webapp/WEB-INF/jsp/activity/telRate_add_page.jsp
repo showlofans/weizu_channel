@@ -58,8 +58,8 @@
 				<input type="text" style="width:200px" required class="input-text"  value="${resultMap.telRatePo.activeDiscount}" placeholder='按照上面格式填写' id="activeDiscount" name="activeDiscount">
 				<span class="select-box inline">
 					<select name="rateFor" disabled="disabled" id="rateFor" rate class="select">
-							<c:forEach items="${resultMap.agencyTagEnums }" var="agencyTagEnum" varStatus="vs1">
-								<option value="${agencyTagEnum.value }" <c:if test="${agencyTagEnum.value == resultMap.rateFor }"> selected</c:if>>${agencyTagEnum.desc }</option>
+							<c:forEach items="${resultMap.telChannelTagEnums }" var="telChannelTagEnum" varStatus="vs1">
+								<option value="${telChannelTagEnum.value }" <c:if test="${telChannelTagEnum.value == resultMap.rateFor }"> selected</c:if>>${telChannelTagEnum.desc }</option>
 							</c:forEach>
 					</select>
 					<input type="hidden" class="input-text" name="rateFor" id="rateFor"  value="${resultMap.rateFor }" placeholder="">

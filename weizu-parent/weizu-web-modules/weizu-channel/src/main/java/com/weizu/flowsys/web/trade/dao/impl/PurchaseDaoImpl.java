@@ -70,8 +70,6 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePo, Long> implements Purcha
 	public List<PurchaseVO> getPurchase(Map<String, Object> paramsMap) {
 		//不查补款记录，只查扣款记录
 		paramsMap.put("accountType", AccountTypeEnum.DECREASE.getValue());
-		paramsMap.put("pgcharge", PgServiceTypeEnum.PGCHARGE.getValue());
-		
 		return sqlSessionTemplate.selectList("getPurchase", paramsMap);
 	}
 

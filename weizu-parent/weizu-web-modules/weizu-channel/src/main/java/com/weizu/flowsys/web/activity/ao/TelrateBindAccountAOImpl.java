@@ -187,6 +187,12 @@ public class TelrateBindAccountAOImpl implements TelrateBindAccountAO {
 			for (int i = 0; i < agencyNames.length; i++) {
 //				TelrateBindAccountPo telRateBindPo = new AccountActiveRateDTO(accountIds[i], agencyNames[i], rateDiscountId, System.currentTimeMillis(), BindStateEnum.BIND.getValue(), aardto.getBindAgencyId());
 				TelrateBindAccountPo telRateBindPo = new TelrateBindAccountPo(accountIds[i], agencyNames[i], telRateId, System.currentTimeMillis(), BindStateEnum.BIND.getValue(), CallBackEnum.POSITIVE.getValue(), telrateBindAccountVO.getBindAgencyId());
+				
+				TelRatePo negtelRatePo = telRateDao.getPlatTelRateById(telRateId);
+				if(negtelRatePo != null){//添加负极折扣绑定
+					TelrateBindAccountPo negtelRateBindPo = new TelrateBindAccountPo(accountIds[i], agencyNames[i], negtelRatePo.getId(), System.currentTimeMillis(), BindStateEnum.BIND.getValue(), CallBackEnum.NEGATIVE.getValue(), telrateBindAccountVO.getBindAgencyId());
+					list.add(negtelRateBindPo);
+				}
 				list.add(telRateBindPo);
 			}
 			return telrateBindAccountDao.batchInsert(list);
@@ -221,4 +227,9 @@ public class TelrateBindAccountAOImpl implements TelrateBindAccountAO {
 		int res = telrateBindAccountDao.updateLocal(telrateBindAccountPo);
 		return res;
 	}
+
+//	@Override
+//	public TelRatePo getPlatTelRateById(Long telRateId) {
+//		return telRateDao.getPlatTelRateById(telRateId);
+//	}
 }

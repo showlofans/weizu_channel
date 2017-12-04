@@ -115,7 +115,7 @@ public class ChargeTelController {
 	 * @createTime:2017年12月2日 下午1:53:10
 	 */
 	@RequestMapping(value = ChargeTelURL.TEL_CHARGE)
-	public ModelAndView pgCharge(HttpServletRequest request,TelChargeVO tcVO){
+	public ModelAndView telCharge(HttpServletRequest request,TelChargeVO tcVO){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO != null){
 //			String scopeCityCode = ScopeCityEnum.QG.getValue();

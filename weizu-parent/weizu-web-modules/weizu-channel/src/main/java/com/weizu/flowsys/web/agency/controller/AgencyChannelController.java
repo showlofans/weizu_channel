@@ -16,6 +16,7 @@ import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
+import com.weizu.flowsys.operatorPg.enums.TelChannelTagEnum;
 import com.weizu.flowsys.operatorPg.enums.TelchargeSpeedEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
@@ -53,13 +54,16 @@ public class AgencyChannelController {
 	 */
 	@RequestMapping(value=AgencyChannelURL.TEL_CHANNEL_LIST)
 	public ModelAndView getMyTelChannel(HttpServletRequest request, TelChannelParams telParams,@RequestParam(value = "pageNoLong", required = false)Long pageNoLong){
-		//AgencyBackwardVO agencyVO = (AgencyBackwardVO) request.getSession().getAttribute("loginContext");
-		
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO) request.getSession().getAttribute("loginContext");
+		if(agencyVO == null){
+			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+		}
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
 		resultMap.put("serviceTypeEnums", HuaServiceTypeEnum.toList());
 		resultMap.put("telchargeSpeedEnums", TelchargeSpeedEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());					//商务类型
+		resultMap.put("telChannelTagEnums", TelChannelTagEnum.toList());
 //		resultMap.put("chargeTelEnums", TelchannelTypeEnum.toList());			//话费基本类型枚举
 		PageParam pageParam = null;
 		if(pageNoLong != null){
@@ -69,6 +73,9 @@ public class AgencyChannelController {
 		}
 		if(telParams.getServiceType() == null){//默认加载市内的
 			telParams.setServiceType(HuaServiceTypeEnum.CITY.getValue());
+		}
+		if(telParams.getRateFor() == null){
+			telParams.setRateFor(agencyVO.getAgencyTag());
 		}
 		Pagination<TelChannelParams> pagination = telChannelAO.getAgencyTelChannel(pageParam, telParams);
 		resultMap.put("pagination", pagination);
