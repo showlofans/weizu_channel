@@ -33,7 +33,7 @@ public interface TelChannelAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年11月24日 下午2:31:53
 	 */
-	public Pagination<TelChannelParams> getAgencyTelChannel(PageParam pageParams, TelChannelParams telChannelParams);
+	public Pagination<TelChannelParams> getAgencyTelChannel(PageParam pageParams, TelChannelParams telChannelParams, Integer agencyId);
 	
 //	public Pagination<TelChannelParams> getTelChannel(TelChannelParams telParams, PageParam pageParams);
 	
@@ -56,4 +56,13 @@ public interface TelChannelAO {
 	 * @createTime:2017年11月18日 下午4:32:49
 	 */
 	public String editTelChannel(TelChannelPo telChannelPo, Integer ifUpdateRate);
+	
+	/**
+	 * @description: 通过id删除话费通道
+	 * @param telChannelId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月5日 下午3:36:47
+	 */
+	public String delTelChannelById(Long telChannelId);
 }

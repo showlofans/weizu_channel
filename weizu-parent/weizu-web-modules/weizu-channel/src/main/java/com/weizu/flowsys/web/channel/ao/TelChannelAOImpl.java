@@ -143,9 +143,10 @@ public class TelChannelAOImpl implements TelChannelAO {
 
 	@Override
 	public Pagination<TelChannelParams> getAgencyTelChannel(
-			PageParam pageParams, TelChannelParams telChannelParams) {
+			PageParam pageParams, TelChannelParams telChannelParams, Integer agencyId) {
 		Map<String,Object> params = getParamsByTelPara(telChannelParams);
 //		params.put("rateFor", AgencyTagEnum.PLATFORM_USER.getValue());
+		params.put("agencyId", agencyId);
 		long totalRecord = telChannelDao.countMyTelChannel(params);
 		int pageSize = 10;
 		long pageNoLong = 1l;
@@ -206,6 +207,8 @@ public class TelChannelAOImpl implements TelChannelAO {
 			}else if(AgencyTagEnum.DATA_USER.getValue().equals(telParams.getRateFor())){
 				params.put("dataUser", AgencyTagEnum.DATA_USER.getValue());//添加接口绑定的时候设置
 			}
+		}else{
+			
 		}
 		return params;
 	}
@@ -249,6 +252,16 @@ public class TelChannelAOImpl implements TelChannelAO {
 				res -= 1;
 			}
 		}
+		if(res > 0){
+			resStr = "success";
+		}
+		return resStr;
+	}
+
+	@Override
+	public String delTelChannelById(Long telChannelId) {
+		int res = telChannelDao.del(telChannelId);
+		String resStr = "error";
 		if(res > 0){
 			resStr = "success";
 		}

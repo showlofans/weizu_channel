@@ -34,7 +34,7 @@
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 我的通道 <span class="c-gray en">&gt;</span> 话费通道列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
-	<form class="form form-horizontal" action="/flowsys/tel_channel/telchannel_list.do" method="post" id="formD" name="dataListForm">
+	<form class="form form-horizontal" action="/flowsys/my_channel/tel_channel_list.do" method="post" id="formD" name="dataListForm">
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
 	<div class="row cl formControls">
 		<%-- <span class="select-box inline">
@@ -67,7 +67,7 @@
 		</span> 
 		 <!--  地区城市： -->
 		 <span class="select-box inline">
-			<select class="select" id="city" name="cityid" onchange="initCity()">
+			<select class="select" id="city" name="cityid" onchange="submitForm()">
 				<option value="">城市</option>
 			</select>
 		</span> 
@@ -110,16 +110,17 @@
 	<div class="row cl" style="margin-top: 30dp">
 		<%-- <c:if test="${loginContext.rootAgencyId == 0 }"> --%>
 		<%-- 平台名称：<input type="text" value="${resultMap.params.epName }" name="epName" id="" placeholder="平台名称" style="width:80px" class="input-text"> --%>
-		&nbsp;&nbsp;
+		折扣类型:
 		<span class="select-box inline">
-			<select name="rateFor" id="rateFor" class="select">
-				<option value="">折扣类型</option>
+			<select name="rateFor" id="rateFor" class="select" onchange="submitForm()">
+				<!-- <option value="">折扣类型</option> -->
 				<c:forEach items="${resultMap.telChannelTagEnums }" var="telChannelTagEnum" varStatus="vs1">
 					<option value="${telChannelTagEnum.value }" <c:if test="${telChannelTagEnum.value == resultMap.params.rateFor }"> selected</c:if>>${telChannelTagEnum.desc }</option>
 				</c:forEach>
 			</select>
 			<%-- <input type="hidden" class="input-text" name="rateFor" id="rateFor"  value="${resultMap.rateFor }" placeholder=""> --%>
 		</span>
+		&nbsp;&nbsp;
 		<%-- <span class="select-box inline">
 			<select name="telchannelState" class="select" onchange="submitForm()">
 			<option value="">通道状态</option>

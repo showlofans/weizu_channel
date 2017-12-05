@@ -13,14 +13,14 @@ public class SingletonFactory {
 	 * @createTime:2017年8月26日 上午9:43:04
 	 */
 	public static BaseInterface getSingleton(String epEngId,BaseP baseParams){
-//		if(MyConstants.WEIZU_ENG.equals(epEngId))
-//		{
-//			return Weizu.getInstance(epEngId, baseParams);
-//		}else if(MyConstants.LLJYPT_ENG.equals(epEngId) || MyConstants.LLJYPT_ENG_0.equals(epEngId)){
-//			return Lljypt.getInstance(epEngId, baseParams);
-//		}else if(MyConstants.LEFENG_ENG.equals(epEngId)){
-//			return Lefeng.getInstance(epEngId, baseParams);
-//		}
+		if(MyConstants.WEIZU_ENG.equals(epEngId))
+		{
+			return Weizu.getInstance(epEngId, baseParams);
+		}else if(MyConstants.LLJYPT_ENG.equals(epEngId) || MyConstants.LLJYPT_ENG_0.equals(epEngId)){
+			return Lljypt.getInstance(epEngId, baseParams);
+		}else if(MyConstants.LEFENG_ENG.equals(epEngId)){
+			return Lefeng.getInstance(epEngId, baseParams);
+		}
 		
 		return null;
 	}

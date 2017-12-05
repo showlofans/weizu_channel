@@ -76,6 +76,21 @@ public class TelChannelController {
 		String res = telChannelAO.addTelChannel(telChannelPo);
 		return res;
 	}
+	/**
+	 * @description: 删除话费通道
+	 * @param id
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月5日 下午3:39:35
+	 */
+	@RequestMapping(value=TelChannelURL.TELCHANNEL_DEL)
+	@ResponseBody
+	public String delTelChannel(Long id){
+		String res = telChannelAO.delTelChannelById(id);
+		return res;
+	}
+	
+	
 	
 	/**
 	 * @description: 获得话费通道分页列表

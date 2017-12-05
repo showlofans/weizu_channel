@@ -8,7 +8,9 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<c:choose>
+	<span class="c-blue">${resultMap.pageMsg }</span>
+	<a data-href="${resultMap.referURL}" data-title="${resultMap.moduleName }" href="javascript:;" onclick="Hui_admin_tab(this)" style="text-decoration:none;">${resultMap.moduleName }</a>
+	<%-- <c:choose>
 		<c:when test="${resultMap.pageMsg == 'success' }">
 			<span class="c-blue">订单提交成功</span>
 			<a data-href="${resultMap.referURL}" data-title="订单列表" href="javascript:;" onclick="Hui_admin_tab(this)" style="text-decoration:none;">订单列表</a>
@@ -16,7 +18,7 @@
 		<c:otherwise>
 			<span class="c-red">${resultMap.pageMsg }</span>
 		</c:otherwise>
-	</c:choose>
+	</c:choose> --%>
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
 <script type="text/javascript" src="/view/lib/layer/2.4/layer.js"></script>
 <script type="text/javascript" src="/view/static/h-ui/js/H-ui.min.js"></script>

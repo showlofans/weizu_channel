@@ -207,7 +207,7 @@
   		AND tp.ep_name like concat("%",trim(#{epName}),"%")
   	</if>
   	<if test="dataUser != null">
-	  	or tt.id in(
+	  	AND tt.id in(
 	  		SELECT tt3.id from <include refid="t_telrate"></include> tt3
 	  		INNER JOIN <include refid="t_telchannel"></include> tc2
 			on tt3.telchannel_id=tc2.id

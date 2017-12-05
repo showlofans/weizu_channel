@@ -98,6 +98,7 @@ import com.weizu.flowsys.web.trade.pojo.TelChargeVO;
 import com.weizu.flowsys.web.trade.pojo.TotalResult;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
+import com.weizu.web.foundation.hash.Hash;
 import com.weizu.web.foundation.http.HttpRequest;
 
 @Service(value="purchaseAO")
@@ -775,11 +776,15 @@ public class PurchaseAOImpl implements PurchaseAO {
 	public String ajaxCommitOrder(Long orderId,Integer accountId,String chargeTelDetail) {
 		String res = "error";
 		
-		ChannelDiscountPo cd = channelDiscountDao.getCDbyAP(orderId, accountId);
+//		ChannelDiscountPo cd = channelDiscountDao.getCDbyAP(orderId, accountId);
+		
+		PgDataPo pgDataPo =  operatorPgDao.getPgByOrderId(orderId);
+		
 		/**todo*///超管的单子是不会有充值等待的；只有下级代理商的单子才有充值等待
-		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo(chargeTelDetail, cd.getServiceType(), null, null, null) , accountId,true);
+		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo(chargeTelDetail, pgDataPo.getServiceType(), null, null, null) , accountId,true);
 		
 		if(ratePo != null){
+			ChannelDiscountPo cd = channelDiscountDao.get(ratePo.getChannelDiscountId());
 			ChannelChannelPo cnelPo = channelChannelDao.get(ratePo.getChannelId());
 			if(cnelPo != null && cnelPo.getChannelState().equals(ChannelStateEnum.OPEN.getValue())){//通道是开启的
 				PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
@@ -949,16 +954,22 @@ public class PurchaseAOImpl implements PurchaseAO {
 		BaseInterface bi = null;
 		Integer epFor = epPo.getEpFor();
 		String epEngId = epPo.getEpEngId();
+		//初始化平台密码
+		String dataUserPass = Hash.BASE_UTIL.decode(epPo.getEpUserPass());
+		epPo.setEpUserPass(dataUserPass);
+		
 		if(PgServiceTypeEnum.PGCHARGE.getValue().equals(epFor)){//调用流量接口仓库
 			bi = SingletonFactory.getSingleton(epEngId, new BaseP(productCode,orderId,chargeTel,serviceType,epPo));
 		}else if(PgServiceTypeEnum.TELCHARGE.getValue().equals(epFor)){
 			bi = HSingletonFactory.getSingleton(epEngId, new BaseP(productCode,orderId,chargeTel,serviceType,epPo));
 		}
 		ChargeDTO chargeDTO = null;
-		if(bi != null && bi.charge() != null){
+		if(bi != null){
 			chargeDTO = bi.charge();
-			System.out.println(chargeDTO.getChargeOrder().getOrderIdApi());//测试打印出对应平台的提单地址
-			logger.config("上游返回的订单号："+ chargeDTO.getChargeOrder().getOrderIdApi());//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
+			if(chargeDTO != null){
+				System.out.println(chargeDTO.getChargeOrder().getOrderIdApi());//测试打印出对应平台的提单地址
+				logger.config("上游返回的订单号："+ chargeDTO.getChargeOrder().getOrderIdApi());//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
+			}
 		}
 //		ChargeDTO chargeDTO = bi.charge();
 //		if(chargeDTO != null){

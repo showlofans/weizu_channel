@@ -37,14 +37,12 @@ public interface ITelRateDao extends Dao<TelRatePo, Long> {
 	List<GetTelRatePo> getTelRateForCharge(Map<String,Object> map);
 	
 	/**
-	 * @description: 通过接口费率折扣得到，相应话费通道的平台折扣
+	 * @description: 通过接口费率折扣得到，相应需要反向绑定的话费通道的平台折扣
 	 * @param telRateId
 	 * @return
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年12月4日 下午4:59:20
 	 */
 	TelRatePo getPlatTelRateById(Long telRateId);
-	
-	
 	
 }

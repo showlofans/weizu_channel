@@ -257,7 +257,7 @@
 								</a> 
 							</c:when>
 							</c:choose>
-						<a style="text-decoration:none" class="ml-5" onClick="produce_del('/flowsys/telchannelCode/telchannelcode_delete.do',${telchannel.id })" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+						<a style="text-decoration:none" class="ml-5" onClick="produce_del('/flowsys/tel_channel/telchannel_del.do',${telchannel.id })" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
 						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="javascript:;" onClick="getTelrateList(this,'/flowsys/telRate/bind_telRate_list.do',${telchannel.id },${telchannel.serviceType })" data-title="折扣信息"><i class="Hui-iconfont">&#xe725;</i></a>
 						<a style="text-decoration:none" data-toggle="tooltip" data-href='/flowsys/tel_channel/telchannel_edit_page.do?id=${telchannel.id}&serviceType=${telchannel.serviceType }' data-placement="top" class="ml-5" onclick="Hui_admin_tab(this)" data-title="编辑通道"><i class="Hui-iconfont">&#xe6df;</i></a>
 						<a style="text-decoration:none" data-toggle="tooltip" data-href='/flowsys/telRate/telRate_add_page_plat.do?id=${telchannel.id}&serviceType=${telchannel.serviceType }' data-placement="top" class="ml-5" onclick="Hui_admin_tab(this)" data-title="平台用户折扣"><i class="Hui-iconfont">&#xe72b;</i></a>
@@ -418,29 +418,27 @@ function initCity(){
 function submitForm(){
 	$('form').submit();
 }
-/*话费编码-删除*/
-function pg_del(obj,id){
-	layer.confirm("确认要删除该包体吗？",function(index){
-		//alert(index);
-		var tag = "";
-		/* $.ajax({
-			type: "post",
-			url: "/flowsys/operatorPg/pg_delete.do?pgId="+ id,
-			dataType: "json",
-			async: false,
-			success: function(data){	
-				tag = data;
+/*话费通道-删除*/
+function produce_del(url,chnelId){
+	layer.confirm('确认要删除该通道吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			url: url,
+			data: {id:chnelId},
+			//dataType: 'json',
+			success: function(data){
+				if(data=="success")
+				{
+					layer.msg('删除通道成功!',{icon:1,time:1000});
+					location.reload();
+				}else{
+					layer.msg('删除通道失败!',{icon:1,time:1000});
+				}
 			},
 			error:function(data) {
-				tag = data;
 				console.log(data.msg);
-			},
-		});	 */
-		if(tag == "success"){
-			layer.msg('删除成功', {icon:5,time:1000});
-		}
-		layer.close(index);
-		location.reload();
+			}
+		});		
 	});
 }
 </script> 

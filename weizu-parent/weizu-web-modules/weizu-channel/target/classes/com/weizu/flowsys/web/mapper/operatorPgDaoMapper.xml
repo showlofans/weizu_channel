@@ -14,6 +14,8 @@
 	<sql id="t_ep">exchange_platform</sql>
 	<sql id="t_cbp">cnel_bind_pg</sql>
 	<sql id="t_act">charge_account</sql>
+	
+	<sql id="t_purchase">purchase</sql>
 	<!-- <sql id="t_scope">service_scope</sql> -->
 	
 	<resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.PgDataPo">
@@ -133,6 +135,19 @@
    		 	limit 0,10
    		 </if> 
 	</select>
+	<!-- 通过订单号获得包体信息 -->
+	<select id="getPgByOrderId" parameterType="Long" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"></include>
+		from <include refid="t_pg"></include> pg
+		inner join <include refid="t_purchase"></include> pur
+		on pur.pg_id = pg.id
+		<where>
+			<if test="_parameter != null">
+				AND pur.id = #{_parameter}
+			</if>
+		</where>
+	</select>
+	
 	<!-- 通过运营商类型查询购买包体list -->
 	<select id="pgList_forPurchase_type" resultMap="OtherMap" parameterType="java.lang.Integer" >
 		 select 

@@ -59,6 +59,8 @@ public class TelChannelParams extends Po implements Serializable {
 	
 	private Integer rateFor;					//折扣类型 AgencyTagEnum //我的话费
 	
+//	private Integer agencyId;					//
+	
 	//private Long lastAccess;					//更新时间
 	
 	public String getProvinceid() {

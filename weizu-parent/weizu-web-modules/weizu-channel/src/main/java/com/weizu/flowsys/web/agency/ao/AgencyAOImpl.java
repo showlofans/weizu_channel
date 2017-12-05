@@ -16,6 +16,7 @@ import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.operatorPg.enums.PgInServiceEnum;
+import com.weizu.flowsys.operatorPg.enums.TelChannelTagEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.dao.impl.RateBackwardDaoImpl;
 import com.weizu.flowsys.web.activity.pojo.AccountActiveRateDTO;
@@ -186,27 +187,33 @@ public class AgencyAOImpl implements AgencyAO {
 	public Map<String,Object> login(AgencyBackwardPo agencyBackward) {
 		String userPass = agencyBackward.getUserPass(); 
 		Map<String,Object> resultMap = new HashMap<String, Object>();
-		AgencyBackwardPo resultAgency = agencyVODao.get(new WherePrams("user_name", "=", agencyBackward
-				.getUserName()));
-		if(resultAgency != null)
-		{
-			String dataUserPass = Hash.BASE_UTIL.decode(resultAgency.getUserPass());
+		if(StringHelper.isNotEmpty(agencyBackward.getUserName())){
+			AgencyBackwardPo resultAgency = agencyVODao.get(new WherePrams("user_name", "=", agencyBackward
+					.getUserName()));
 			
-			if(dataUserPass.equals(userPass))
+			if(resultAgency != null)
 			{
-				resultMap.put("msg", "success");
-				resultMap.put("entity", resultAgency);
-				return resultMap;
+				String dataUserPass = Hash.BASE_UTIL.decode(resultAgency.getUserPass());
+				
+				if(dataUserPass.equals(userPass))
+				{
+					resultMap.put("msg", "success");
+					resultMap.put("entity", resultAgency);
+					return resultMap;
+				}
+				else
+				{
+					resultMap.put("msg", "登录密码不正确!!");
+					return resultMap;
+				}
 			}
 			else
 			{
-				resultMap.put("msg", "登录密码不正确!!");
+				resultMap.put("msg", "该用户名不存在！");
 				return resultMap;
 			}
-		}
-		else
-		{
-			resultMap.put("msg", "该用户名不存在！");
+		}else{
+			resultMap.put("msg", "请重新登陆");
 			return resultMap;
 		}
 	}
@@ -561,6 +568,9 @@ public class AgencyAOImpl implements AgencyAO {
 		}
 		if(telrateBindAccountVO.getRateFor() != null){
 			paramsMap.put("rateFor", telrateBindAccountVO.getRateFor());
+		}else{
+			paramsMap.put("rateFor", TelChannelTagEnum.DATA_USER.getValue());
+			
 		}
 		///paramsMap.put("rateFor", TelChannelTagEnum.DATA_USER.getValue());
 			

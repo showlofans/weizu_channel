@@ -10,6 +10,7 @@
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
 //import com.aiyi.base.pojo.PageParam;
+//import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 //import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
 //import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 //import com.weizu.flowsys.util.Pagination;
@@ -29,16 +30,28 @@
 //	@Resource
 //	private TelChannelAO telChannelAO;
 //	
+////	@Test
+////	public void testList(){
+////		TelChannelParams telParams = new TelChannelParams();
+////		telParams.setEpName("123");
+////		telParams.setServiceType(HuaServiceTypeEnum.CITY.getValue());
+////		Pagination<TelChannelParams> pagination = telChannelAO.getTelChannel (telParams, new PageParam(1l,10));
+////		List<TelChannelParams> telProductList =  pagination.getRecords();
+//////		for (TelChannelParams telProductPo : telProductList) {
+////////			System.out.println(TelChannelParams.getCity() + ":" + TelChannelParams.get);
+//////		}
+////		System.out.println(telProductList==null ? 0:telProductList.size());
+////	}
 //	@Test
-//	public void testList(){
+//	public void testMyList(){
+//		//{negative=0, positive=1, serviceType=2, bind=0, useOpen=0}
 //		TelChannelParams telParams = new TelChannelParams();
-//		telParams.setEpName("123");
+////		telParams.setEpName("123");
 //		telParams.setServiceType(HuaServiceTypeEnum.CITY.getValue());
-//		Pagination<TelChannelParams> pagination = telChannelAO.getTelChannel (telParams, new PageParam(1l,10));
+//		telParams.setRateFor(AgencyTagEnum.DATA_USER.getValue());
+////		telParams.set
+//		Pagination<TelChannelParams> pagination = telChannelAO.getAgencyTelChannel(new PageParam(1l,10), telParams, 2);
 //		List<TelChannelParams> telProductList =  pagination.getRecords();
-////		for (TelChannelParams telProductPo : telProductList) {
-//////			System.out.println(TelChannelParams.getCity() + ":" + TelChannelParams.get);
-////		}
 //		System.out.println(telProductList==null ? 0:telProductList.size());
 //	}
 //}

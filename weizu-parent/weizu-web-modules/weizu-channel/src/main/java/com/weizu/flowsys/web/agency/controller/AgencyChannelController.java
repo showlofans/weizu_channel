@@ -77,7 +77,7 @@ public class AgencyChannelController {
 		if(telParams.getRateFor() == null){
 			telParams.setRateFor(agencyVO.getAgencyTag());
 		}
-		Pagination<TelChannelParams> pagination = telChannelAO.getAgencyTelChannel(pageParam, telParams);
+		Pagination<TelChannelParams> pagination = telChannelAO.getAgencyTelChannel(pageParam, telParams, agencyVO.getId());
 		resultMap.put("pagination", pagination);
 		
 		

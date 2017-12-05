@@ -42,7 +42,7 @@
   <sql id="My_Rate_List">
   	rate.id, rate.active_id, active_discount,channel_discount_id,rate.bill_type 
   </sql>
-  
+  <!-- 根据包体id通道id获得绑定的折扣 -->
   <select id="getPriceByPg" parameterType="map" resultMap="MyRateResultMap">
   	select <include refid="My_Rate_List"></include> 
   	from <include refid="t_rateD"></include> rate
@@ -50,12 +50,22 @@
 	on aar.rate_discount_id=rate.id
 	INNER JOIN <include refid="t_account"></include> act
 	on aar.account_id=act.id
+	INNER JOIN <include refid="t_cnel"></include> chnel
+	on chnel.id = rate.channel_id
+	INNER JOIN <include refid="t_cbp"></include> cbp
+	on cbp.channel_id=chnel.id
 	<where>
 		<if test="agencyId != null">
 			AND act.agency_id = #{agencyId}
 		</if>
 		<if test="channelId != null">
 			AND rate.channel_id = #{channelId}
+		</if>
+		<if test="bindState != null">
+			AND aar.bind_state = #{bindState}
+		</if>
+		<if test="pgId != null">
+			AND cbp.pg_id=#{pgId}
 		</if>
 		<!-- AND rate.channel_id IN
 		(
@@ -70,7 +80,7 @@
 					AND chnel.channel_use_state=#{channelUseState}
 				</if>
 			</where>
-		) -->
+		)  -->
 	</where>
   </select>
   

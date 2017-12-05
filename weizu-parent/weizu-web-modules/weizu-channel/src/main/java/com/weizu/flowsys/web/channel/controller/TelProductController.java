@@ -97,13 +97,21 @@ public class TelProductController {
 		if(epList != null && epList.size() > 0 ){
 			resultMap.put("epList", epList);
 			resultMap.put("epId", epList.get(0).getId());
+			List<Provinces> provinces = procincesDAO.getProvinces();
+			resultMap.put("telProductPo", telProductPo);
+			resultMap.put("provinces", provinces);
+//		resultMap.put("provincesJson", JSON.toJSONString(provinces));
+			return new ModelAndView("/tel_channel/telproduct_add_page", "resultMap", resultMap);
+		}else{
+			resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());
+			resultMap.put("referURL", "/channel/platform_add_page");
+			
+			resultMap.put("pageMsg", "没有相关平台");
+			resultMap.put("moduleName", "去添加相关平台");
+			
+			return new ModelAndView("/trade/charge_result_page", "resultMap", resultMap);
 		}
 		
-		List<Provinces> provinces = procincesDAO.getProvinces();
-		resultMap.put("telProductPo", telProductPo);
-		resultMap.put("provinces", provinces);
-//		resultMap.put("provincesJson", JSON.toJSONString(provinces));
-		return new ModelAndView("/tel_channel/telproduct_add_page", "resultMap", resultMap);
 	}
 	/**
 	 * @description:话费编码列表
@@ -158,6 +166,27 @@ public class TelProductController {
 	}
 	
 	/**
+	 * @description: 删除话费编码
+	 * @param telProductPo
+	 * @param response
+	 * @param request
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月5日 上午10:58:54
+	 */
+	@RequestMapping(value = TelProductURL.TELPRODUCT_DEL)
+	public void delTelProduct(Long id,HttpServletResponse response,HttpServletRequest request){
+		int res = telProductDao.del(id);
+		String result = "error";
+		if(res > 0){
+			result = "success";
+		}
+		try {
+			response.getWriter().print(result);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	/**
 	 * @description: 异步获得编码有编码的话费列表 
 	 * @param telProductPo
 	 * @return
@@ -172,6 +201,8 @@ public class TelProductController {
 		
 		return jsonStr;
 	}
+	
+	
 	
 //	@RequestMapping(value = TelProductURL.TELPRODUCT_EXIST)
 //	public void ajaxPcExist(TelProductPo telProductPo, HttpServletResponse response){

@@ -44,7 +44,7 @@
 				<select name="channelType" class="select" onchange="getChannelList()">
 				<option value="">通道类型</option>
 				<c:forEach items="${resultMap.channelTypeEnums }" var="channelTypeEnum" varStatus="vs1">
-					<option value="${channelTypeEnum.value }" <c:if test="${channelTypeEnum.value == resultMap.searchParam.channelType }"> selected</c:if>>${channelTypeEnum.desc }</option>
+					<option value="${channelTypeEnum.value }" <c:if test="${channelTypeEnum.value == resultMap.searchParam.channelType }"> class='c-blue' selected</c:if>>${channelTypeEnum.desc }</option>
 				</c:forEach>
 			</select>
 			</span>
@@ -415,6 +415,9 @@ function editChannel(obj,url,title){
 function getChannelList(){
 	//alert($(vart).val());
 	$('form').submit();
+	/* if($(vart).val() != ''){
+		$(vart).addClass('c-blue');
+	} */
 }
 
 /*通道状态-修改*/

@@ -38,6 +38,11 @@
 			<div class="formControls col-xs-8 col-sm-9">
 				<span class="select-box ">
 					<select id="selectEpId" name="epId" class="select" onchange="changeEpName()">
+						<%-- <c:choose>
+							<c:when test="${empty resultMap.epList }">
+								<option value="">无相关平台无法配置</option>
+							</c:when>
+						</c:choose> --%>
 						<c:forEach items="${resultMap.epList }" var="ep" varStatus="vs1">
 							<option value="${ep.id }" <c:if test="${ep.id == resultMap.epId }"> selected</c:if> >${ep.epName }</option>
 						</c:forEach>

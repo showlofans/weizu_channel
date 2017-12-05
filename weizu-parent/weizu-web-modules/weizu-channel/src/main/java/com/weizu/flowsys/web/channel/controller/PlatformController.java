@@ -153,11 +153,11 @@ public class PlatformController {
 	{
 //		try {
 		Map<String,Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());
 //		if(StringHelper.isNotEmpty(pageTitle)){
 ////				pageTitle = new String(pageTitle.getBytes("iso-8859-1"), "utf-8");
 //				return new ModelAndView("/channel/platform_add_page","pageTitle",pageTitle);
 //			}else{
+				resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());
 				return new ModelAndView("/channel/platform_add_page","resultMap", resultMap);
 //			}
 //		} catch (UnsupportedEncodingException e) {

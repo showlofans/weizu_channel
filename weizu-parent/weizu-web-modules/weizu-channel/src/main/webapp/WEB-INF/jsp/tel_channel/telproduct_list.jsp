@@ -181,7 +181,7 @@
 						</td>
 						 
 						<td class="f-14 td-manage">
-						<a style="text-decoration:none" class="ml-5" onClick="produce_del('/flowsys/productCode/productcode_delete.do',${product.id })" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+						<a style="text-decoration:none" class="ml-5" onClick="produce_del('/flowsys/tel_product/telproduct_del.do',${product.id })" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
 						</td>
 					</tr>
 				</c:forEach>
@@ -278,29 +278,27 @@ function telPc_add(title,url){
         }
     });
 }
-/*包体-删除*/
-function pg_del(obj,id){
-	layer.confirm("确认要删除该包体吗？",function(index){
-		//alert(index);
-		var tag = "";
-		/* $.ajax({
-			type: "post",
-			url: "/flowsys/operatorPg/pg_delete.do?pgId="+ id,
-			dataType: "json",
-			async: false,
-			success: function(data){	
-				tag = data;
+/*话费编码-删除*/
+function produce_del(url,id){
+	layer.confirm('确认要删除吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			url: url,
+			data: {id:id},
+			//dataType: 'json',
+			success: function(data){
+				if(data=="success")
+				{
+					layer.msg('删除编码成功!',{icon:1,time:1000});
+					location.reload();
+				}else{
+					layer.msg('删除编码失败!',{icon:1,time:1000});
+				}
 			},
 			error:function(data) {
-				tag = data;
 				console.log(data.msg);
-			},
-		});	 */
-		if(tag == "success"){
-			layer.msg('删除成功', {icon:5,time:1000});
-		}
-		layer.close(index);
-		location.reload();
+			}
+		});		
 	});
 }
 </script> 

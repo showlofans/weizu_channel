@@ -37,6 +37,7 @@
 	<div class="text-c">
 		<form action="/flowsys/agency/child_agency_list.do" method="post" id="formD" name="dataListForm">
 				<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
+				<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 				代理商名称:<input type="text"  value="${resultMap.params.userName }" name="userName" id="" placeholder=" 代理商名称" style="width:150px" class="input-text">
 				备注信息:<input type="text"  value="${resultMap.params.agencyMark }" name="agencyMark"" placeholder=" 备注信息" style="width:150px" class="input-text">
 				<!-- <input type="text" style="width:150px" class="input-text" name="start_datetime"  value="2017-05-26 00:00:00"  onClick="WdatePicker({startDate:'%y-%M-%d 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
@@ -53,9 +54,11 @@
 						</span>
 				</c:if>
 				<button name="" id="" class="btn btn-success"  type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜代理</button>
-				<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button> 
 				<c:if test="${loginContext.rootAgencyId == 0 }">
 					<a class="c-red" style="text-decoration:none" data-href="/flowsys/account/confirm_company_account_page.do" data-title="认证审核" title="认证审核" onclick="Hui_admin_tab(this)">认证审核</a>
+				</c:if>
+				<c:if test="${empty resultMap.pagination.records }">
+					<a  style="text-decoration:none" data-toggle="tooltip" data-href='/view/mine/html/agency_help.html' data-placement="top" class="ml-5 c-red" onclick="Hui_admin_tab(this)" data-title="代理商指南">代理商指南</a>
 				</c:if>
 				<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 				<input type="hidden" name="agencyTag" value="${resultMap.params.agencyTag }"> 
@@ -87,6 +90,8 @@
 				</tr>
 			</thead>
 			<tbody>
+				<!-- <tr class="text-c">
+				</tr> -->
 				<c:forEach items="${resultMap.pagination.records }" var="agency" varStatus="vs">
 					<tr class="text-c">
 						<%-- <td style="display:none">${agency.id }</td> --%>
@@ -139,7 +144,7 @@
 						<c:if test="${agency.billType == billTypeEnum.value }"> ${billTypeEnum.desc }</c:if>
 						</c:forEach></td>
 						<td class="td-manage">
-							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="editAgency(${agency.id })" href="javascript:;" title="查看APIKey"><i class="Hui-iconfont">&#xe60c;</i></a>
+							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="editAgency(${agency.id })" href="javascript:;" title="查看信息"><i class="Hui-iconfont">&#xe60c;</i></a>
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="resetPass('${agency.id}')" href="javascript:;" title="重置密码"><i class="Hui-iconfont">&#xe63f;</i></a>
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" onClick="account_charge('账户充值',${agency.accountId })" href="javascript:;" title="账户充值"><i class="Hui-iconfont">&#xe726;</i></a> 
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" data-title="设置充值卡" data-href="/flowsys/bankAccount/attach_bank_page.do?accountId=${agency.accountId }" onClick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe725;</i></a> 

@@ -64,6 +64,7 @@ public class ChannelDiscountDaoImpl extends DaoImpl<ChannelDiscountPo, Long> imp
 		return sqlSessionTemplate.selectList("listSimpleChannel",paramsMap);
 	}
 
+	@Deprecated
 	@Override
 	public ChannelDiscountPo getCDbyAP(Long purchaseId, Integer accountId) {
 		Map<String, Object> paramsMap = new HashMap<String, Object>();

@@ -189,7 +189,7 @@ public class TelrateBindAccountAOImpl implements TelrateBindAccountAO {
 				TelrateBindAccountPo telRateBindPo = new TelrateBindAccountPo(accountIds[i], agencyNames[i], telRateId, System.currentTimeMillis(), BindStateEnum.BIND.getValue(), CallBackEnum.POSITIVE.getValue(), telrateBindAccountVO.getBindAgencyId());
 				
 				TelRatePo negtelRatePo = telRateDao.getPlatTelRateById(telRateId);
-				if(negtelRatePo != null){//添加负极折扣绑定
+				if(negtelRatePo != null){//添加负极折扣绑定//平台折扣
 					TelrateBindAccountPo negtelRateBindPo = new TelrateBindAccountPo(accountIds[i], agencyNames[i], negtelRatePo.getId(), System.currentTimeMillis(), BindStateEnum.BIND.getValue(), CallBackEnum.NEGATIVE.getValue(), telrateBindAccountVO.getBindAgencyId());
 					list.add(negtelRateBindPo);
 				}
@@ -205,7 +205,7 @@ public class TelrateBindAccountAOImpl implements TelrateBindAccountAO {
 
 	@Override
 	public int batchUpdateBindState(TelrateBindAccountVO telrateBindAccountVO) {
-		if(telrateBindAccountVO.getBindState() == BindStateEnum.BIND.getValue()){//绑定
+		if(telrateBindAccountVO.getBindState() == BindStateEnum.BIND.getValue()){//绑定:需要账户id
 			String accountIdst = telrateBindAccountVO.getAccountIds();
 			if(StringHelper.isNotEmpty(accountIdst)){
 				String [] accountIdsi = accountIdst.split(",");

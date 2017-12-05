@@ -226,7 +226,7 @@ function batch_bind(title,url,id,w,h){
 		url = url + '?serviceType='+serviceType+'&operatorType='+operatorType+'&billType='+billType + '&telRateId=' + telRateId + '&activeDiscount=' + activeDiscount; 
 		var index = layer.open({
 			type: 2,
-			title: title,
+			title: false,
 			content: url,
 			 end: function () {
 	            location.reload();

@@ -299,7 +299,7 @@ function batchCommit(){
 				type: 'POST',
 				url: "/flowsys/chargePg/batch_commit_order.do",
 				//dataType: 'json',
-				data: {purchaseIds:purchaseIds,accountIds:accountIds},
+				data: $('form').serialize(),
 				success: function(resp){
 					//$(obj).parents("tr").remove();
 					//alert
@@ -354,7 +354,7 @@ $(document).ready(function() {
 }); 
 /**手动提交订单*/
 function ajaxCommit(vart,orderId,chargeTelDetail,accountId,billType){
-	alert(orderId +'<br>' + chargeTelDetail + "<br>" + accountId + "<br>" + billType );
+	//alert(orderId +'<br>' + chargeTelDetail + "<br>" + accountId + "<br>" + billType );
 	
 	var msg='确认提交订单吗？';
 	var msgStr = '手动提交';

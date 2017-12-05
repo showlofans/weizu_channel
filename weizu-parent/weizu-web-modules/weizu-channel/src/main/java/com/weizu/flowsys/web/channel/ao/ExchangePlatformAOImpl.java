@@ -189,8 +189,6 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 	@Override
 	public ExchangePlatformPo getEpById(Integer id) {
 		ExchangePlatformPo exchangePlatformPo = exchangePlatformDao.get(id);
-		String dataUserPass = Hash.BASE_UTIL.decode(exchangePlatformPo.getEpUserPass());
-		exchangePlatformPo.setEpUserPass(dataUserPass);
 		return exchangePlatformPo;
 	}
 	/**
