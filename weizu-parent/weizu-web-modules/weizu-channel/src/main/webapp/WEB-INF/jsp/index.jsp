@@ -59,7 +59,7 @@
 					<li class="dropDown dropDown_hover">
 						<a href="javascript:;" onClick="myselfinfo()" class="dropDown_A">${loginContext.userName} <i class="Hui-iconfont">&#xe6d5;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
-							<li><a href="javascript:;" onClick="myselfinfo()">个人信息</a>
+							<li><a title="" data-href="/flowsys/agency/agency_info.do" data-title="个人信息" onclick="Hui_admin_tab(this)">个人信息 </a>
 							</li>
 							<li><a href="/flowsys/agency/logout.do">切换账户</a></li>
 							 <li><a data-href="/flowsys/bankAccount/my_bank_list.do" data-title="申请加款" href="javascript:void(0)" onclick="Hui_admin_tab(this)">申请加款</a></li>
@@ -222,7 +222,7 @@
  		 </dt> 
 	 	<dd>
  			<ul>
- 				<li><a href="javascript:;" onClick="myselfinfo()"><!-- <a title="" data-href="/flowsys/agency/agency_info.do" data-title="个人信息" onclick="Hui_admin_tab(this)"> --><%-- ${loginContext.userName} --%>个人信息 </a></li>
+ 				<li><a title="" data-href="/flowsys/agency/agency_info.do" data-title="个人信息" onclick="Hui_admin_tab(this)">个人信息 </a></li>
 				<li><a title="" data-href="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-title="充值记录" onclick="Hui_admin_tab(this)">余额：<c:if test="${empty chargeAccount.accountBalance && empty chargeAccount1.accountBalance }">0.00</c:if> ${chargeAccount.accountBalance + chargeAccount1.accountBalance}</a></li>
 				<li><a href="/flowsys/agency/logout.do">切换账户</a></li>
 				 <li><a data-href="/flowsys/bankAccount/my_bank_list.do" data-title="申请加款" href="javascript:void(0)" onclick="Hui_admin_tab(this)">申请加款</a></li>
@@ -425,7 +425,7 @@ $(function(){
 	});
 });
 /**个人信息*/
-function myselfinfo(){
+/* function myselfinfo(){
 	layer.open({
         type: 2,
         title: "个人信息",
@@ -437,9 +437,9 @@ function myselfinfo(){
             //location.reload();
         }
     });
-}
+} */
 /**修改密码*/
-function resetPass(){
+/* function resetPass(){
 	layer.open({
         type: 2,
         title: "重置密码",
@@ -451,7 +451,7 @@ function resetPass(){
            // location.reload();
         }
     });
-}
+} */
 
 </script> 
 </body>

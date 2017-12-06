@@ -252,10 +252,11 @@ public class AgencyController {
 	@RequestMapping(value = AgencyURL.RESET_PASS)
 	public void resetPass(HttpServletRequest request, String enterPass,String tag, @RequestParam(value="agencyId",required = false)String agencyId, HttpServletResponse response){
 		int aid = 0;
+		AgencyBackwardVO agencyVo = null;
 		if(tag != "1" && StringHelper.isNotEmpty(agencyId)){//修改下级代理商
 			aid = Integer.parseInt(agencyId);
-		}else{
- 			AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		}else{//修改自己的密码
+ 			agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 			aid = agencyVo.getId();
 		}
 		int res = agencyAO.updatePass(aid, enterPass);
@@ -263,6 +264,10 @@ public class AgencyController {
 			if(res < 1){
 				response.getWriter().print("error");
 			}else{
+				if(agencyVo != null){//修改自己的密码
+					agencyVo.setUserPass(enterPass);
+					request.getSession().setAttribute("loginContext", agencyVo);
+				}
 				response.getWriter().print("success");
 			}
 		} catch (IOException e) {

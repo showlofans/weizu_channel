@@ -16,6 +16,7 @@ import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
+import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.web.activity.dao.ITelRateDao;
@@ -126,7 +127,25 @@ public class TelChannelAOImpl implements TelChannelAO {
 //			telParams.setRateFor(AgencyTagEnum.DATA_USER.getValue());
 //		}
 		Map<String,Object> params = getParamsByTelPara(telParams);
-		long totalRecord = telChannelDao.countTelChanenl(params);
+		long totalRecord = 0;
+		Integer serviceType = telParams.getServiceType();
+		//没有结果重新设置查询参数和页面参数
+		if(serviceType == null){//默认没有市内，加载省内，没有省内，加载全国
+			serviceType = HuaServiceTypeEnum.CITY.getValue();
+			do{
+				params.put("serviceType", serviceType);
+				totalRecord = telChannelDao.countTelChanenl(params);
+				if(serviceType == 0){//到全国就设置退出
+					totalRecord = totalRecord == 0 ? 1:totalRecord;
+				}
+				serviceType-- ;
+			}while(totalRecord == 0);
+			serviceType++;
+			telParams.setServiceType(serviceType); //设置页面参数
+		}else{
+			params.put("serviceType", telParams.getServiceType());
+			totalRecord = telChannelDao.countTelChanenl(params);
+		}
 		int pageSize = 10;
 		long pageNoLong = 1l;
 		if(pageParams != null){
@@ -137,6 +156,7 @@ public class TelChannelAOImpl implements TelChannelAO {
 			params.put("end", pageSize);
 		}
 		List<TelChannelParams> records = telChannelDao.getTelChannel(params);
+//		Pagination<TelChannelParams> pagination = new Pagination<TelChannelParams>(records, totalRecord, pageNoLong, pageSize);
 		return new Pagination<TelChannelParams>(records, totalRecord, pageNoLong, pageSize);
 	}
 	
@@ -145,9 +165,60 @@ public class TelChannelAOImpl implements TelChannelAO {
 	public Pagination<TelChannelParams> getAgencyTelChannel(
 			PageParam pageParams, TelChannelParams telChannelParams, Integer agencyId) {
 		Map<String,Object> params = getParamsByTelPara(telChannelParams);
+		if(AgencyTagEnum.PLATFORM_USER.getValue().equals(telChannelParams.getRateFor())){
+			params.put("platformUser", AgencyTagEnum.PLATFORM_USER.getValue());
+		}else if(AgencyTagEnum.DATA_USER.getValue().equals(telChannelParams.getRateFor())){
+			params.put("dataUser", AgencyTagEnum.DATA_USER.getValue());//添加接口绑定的时候设置
+		}
 //		params.put("rateFor", AgencyTagEnum.PLATFORM_USER.getValue());
 		params.put("agencyId", agencyId);
-		long totalRecord = telChannelDao.countMyTelChannel(params);
+		long totalRecord = 0;
+		Integer serviceType = telChannelParams.getServiceType();
+		int rateFor = telChannelParams.getRateFor();
+		boolean isPlatUser = AgencyTagEnum.PLATFORM_USER.getValue().equals(telChannelParams.getRateFor());
+		//没有结果重新设置查询参数和页面参数
+		if(serviceType == null){//默认没有市内，加载省内，没有省内，加载全国
+			serviceType = HuaServiceTypeEnum.CITY.getValue();
+			AgencyTagEnum[] agencyEs = AgencyTagEnum.values();
+			do{
+				params.put("serviceType", serviceType);
+				for (int i = 0; i < agencyEs.length; i++) {
+					if(isPlatUser){
+						rateFor = AgencyTagEnum.PLATFORM_USER.getValue();
+						params.put("platformUser", AgencyTagEnum.PLATFORM_USER.getValue());
+						params.put("dataUser", null);
+					}else{
+						rateFor = AgencyTagEnum.DATA_USER.getValue();
+						params.put("dataUser", AgencyTagEnum.DATA_USER.getValue());
+						params.put("platformUser", null);
+					}
+					
+					totalRecord = telChannelDao.countMyTelChannel(params);
+					if(totalRecord != 0){
+						telChannelParams.setRateFor(rateFor);
+						break;
+					}else{
+						isPlatUser = !isPlatUser;
+					}
+				}
+				
+				if(serviceType == 0){//到全国就设置退出
+					break;
+//					totalRecord = totalRecord == 0 ? 1:totalRecord;
+				}
+				serviceType-- ;
+			}while(totalRecord == 0);
+			if(totalRecord > 0){
+				serviceType++;
+			}else{
+				serviceType = HuaServiceTypeEnum.PROVINCE.getValue();
+			}
+			telChannelParams.setServiceType(serviceType); //设置页面参数
+		}else{
+			params.put("serviceType", telChannelParams.getServiceType());
+			totalRecord = telChannelDao.countMyTelChannel(params);
+		}
+		
 		int pageSize = 10;
 		long pageNoLong = 1l;
 		if(pageParams != null){
@@ -189,9 +260,9 @@ public class TelChannelAOImpl implements TelChannelAO {
 		if(telParams.getChargeSpeed() != null){
 			params.put("chargeSpeed", telParams.getChargeSpeed());
 		}
-		if(telParams.getServiceType() != null){
-			params.put("serviceType", telParams.getServiceType());
-		}
+//		if(telParams.getServiceType() != null){
+//			params.put("serviceType", telParams.getServiceType());
+//		}
 		if(telParams.getOperatorName() != null){
 			params.put("operatorName", telParams.getOperatorName());
 		}
@@ -201,15 +272,10 @@ public class TelChannelAOImpl implements TelChannelAO {
 		if(StringHelper.isNotEmpty(telParams.getLimitDescription())){
 			params.put("limitDescription", telParams.getLimitDescription());
 		}
-		if(telParams.getRateFor() != null){
-			if(AgencyTagEnum.PLATFORM_USER.getValue().equals(telParams.getRateFor())){
-				params.put("platformUser", AgencyTagEnum.PLATFORM_USER.getValue());
-			}else if(AgencyTagEnum.DATA_USER.getValue().equals(telParams.getRateFor())){
-				params.put("dataUser", AgencyTagEnum.DATA_USER.getValue());//添加接口绑定的时候设置
-			}
-		}else{
-			
-		}
+//		if(telParams.getRateFor() != null){
+//		}else{
+//			
+//		}
 		return params;
 	}
 

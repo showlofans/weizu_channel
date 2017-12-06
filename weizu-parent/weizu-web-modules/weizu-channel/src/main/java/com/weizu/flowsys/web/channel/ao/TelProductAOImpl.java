@@ -185,32 +185,38 @@ public class TelProductAOImpl implements TelProductAO {
 
 	@Override
 	public Pagination<TelProductPo> listTelProduct(TelProductPo telPo, PageParam pageParam) {
-//		WherePrams where = getWhereByPo(telPo);
 		Map<String,Object> params = getParamsByPo(telPo);
-//		long toatalRecord = telProductDao.count(where);
-		long toatalRecord = telProductDao.countTelPro(params);
+		long totalRecord = 0;
+		Integer serviceType = telPo.getServiceType();
+		//没有结果重新设置查询参数和页面参数
+		if(serviceType == null){//默认没有市内，加载省内，没有省内，加载全国
+			serviceType = HuaServiceTypeEnum.CITY.getValue();
+			do{
+				params.put("serviceType", serviceType);
+				totalRecord = telProductDao.countTelPro(params);
+				if(serviceType == 0){//到全国就设置退出
+					totalRecord = totalRecord == 0 ? 1:totalRecord;
+				}
+				serviceType-- ;
+			}while(totalRecord == 0);
+			serviceType++;
+			telPo.setServiceType(serviceType); //设置页面参数
+		}else{
+			params.put("serviceType", telPo.getServiceType());
+			totalRecord = telProductDao.countTelPro(params);
+		}
 		int pageSize = 10;
-		Long pageNo = 1l;
-		
+		long pageNoLong = 1l;
 		if(pageParam != null){
 			pageSize = pageParam.getPageSize();
-			pageNo = pageParam.getPageNoLong();
-			long startLongNum = (pageNo-1)*pageSize;
+			pageNoLong = pageParam.getPageNoLong();
+			long startLongNum = (pageNoLong-1)*pageSize;
 			params.put("start", startLongNum);
 			params.put("end", pageSize);
-//			where.limit(startLongNum, pageSize);
 		}
-//		List<TelProductPo> records = telProductDao.list(where);
 		List<TelProductPo> records = telProductDao.getTelProduct(params);
 		
-//		for (TelProductPo telProductPo : records) {
-//			
-//			
-//		}
-		
-		return new Pagination<TelProductPo>(records, toatalRecord, pageNo, pageSize);
-//			paramsMap.put("start", (pageNo-1)*pageSize);
-//			paramsMap.put("end", pageSize);
+		return new Pagination<TelProductPo>(records, totalRecord, pageNoLong, pageSize);
 	}
 
 	@Override

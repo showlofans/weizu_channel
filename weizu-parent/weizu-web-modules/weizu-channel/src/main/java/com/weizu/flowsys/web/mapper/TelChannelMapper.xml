@@ -14,9 +14,9 @@
   	<id column="id" property="id" jdbcType="BIGINT" />
     <result column="bill_type" property="billType" jdbcType="INTEGER" />
     <result column="telchannel_discount" property="telchannelDiscount" jdbcType="DOUBLE" />
-    <result column="telchannel_total_profit" property="channelTotalProfit" jdbcType="DOUBLE" />
-    <result column="telchannel_total_amount" property="channelTotalAmount" jdbcType="DOUBLE" />
-    <result column="telchannel_total_use" property="channelTotalUse" jdbcType="INTEGER" />
+    <result column="telchannel_total_profit" property="telchannelTotalProfit" jdbcType="DOUBLE" />
+    <result column="telchannel_total_amount" property="telchannelTotalAmount" jdbcType="DOUBLE" />
+    <result column="telchannel_total_use" property="telchannelTotalUse" jdbcType="INTEGER" />
     <result column="telchannel_state" property="telchannelState" jdbcType="INTEGER" />
     <result column="telchannel_use_state" property="telchannelUseState" jdbcType="INTEGER" />
     <result column="tel_product_id" property="telProductId" jdbcType="BIGINT" />
@@ -31,8 +31,8 @@
   	(<include refid="Base_Column_List"></include>)
   	values
   	<foreach collection="list" separator="," item="telChannel" index="index">
-  		(#{telChannel.billType},#{telChannel.telchannelDiscount},#{telChannel.channelTotalProfit},#{telChannel.channelTotalAmount},
-  		#{telChannel.channelTotalUse},#{telChannel.telchannelState},#{telChannel.telchannelUseState},#{telChannel.telProductId},#{telChannel.lastAccess})
+  		(#{telChannel.billType},#{telChannel.telchannelDiscount},#{telChannel.telchannelTotalProfit},#{telChannel.telchannelTotalAmount},
+  		#{telChannel.telchannelTotalUse},#{telChannel.telchannelState},#{telChannel.telchannelUseState},#{telChannel.telProductId},#{telChannel.lastAccess})
   	</foreach>
   </insert>
   

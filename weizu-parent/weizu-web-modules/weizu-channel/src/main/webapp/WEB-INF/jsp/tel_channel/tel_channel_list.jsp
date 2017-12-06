@@ -31,7 +31,7 @@
 <title>话费通道列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 平台通道管理 <span class="c-gray en">&gt;</span> 话费通道列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 平台通道管理 <span class="c-gray en">&gt;</span> 话费通道列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" ><i class="Hui-iconfont">&#xe6a6;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
 	<form class="form form-horizontal" action="/flowsys/tel_channel/telchannel_list.do" method="post" id="formD" name="dataListForm">
@@ -66,11 +66,13 @@
 			</select>
 		</span> 
 		 <!--  地区城市： -->
-		 <span class="select-box inline">
-			<select class="select" id="city" name="cityid" onchange="initCity()">
-				<option value="">城市</option>
-			</select>
-		</span> 
+		 <c:if test="${resultMap.city ==  resultMap.params.serviceType}">
+			 <span class="select-box inline">
+				<select class="select" id="city" name="cityid" onchange="initCity()">
+					<option value="">城市</option>
+				</select>
+			</span> 
+		</c:if>
 		 
 		<input type="hidden" value="${resultMap.params.cityid }" id="cityid" >
 		&nbsp;&nbsp;
@@ -153,8 +155,9 @@
 					<th width="60">运营商名称</th>
 					<th width="100">业务类型</th>
 					<th width="120">支持省份</th>
+					<c:if test="${resultMap.city ==  resultMap.params.serviceType}">
 					<th width="120">支持城市</th>
-					
+					</c:if>
 					<th width="60">充值速度</th>
 					<th width="120">限制描述</th>
 					
@@ -211,7 +214,9 @@
 							</c:if>
 						</c:forEach> --%>
 						</td>
+						<c:if test="${resultMap.city ==  telchannel.serviceType}">
 						<td>${telchannel.city }</td> 
+						</c:if>
 						
 						<td>
 							<c:forEach items="${resultMap.telchargeSpeedEnums }" var="telchargeSpeedEnum" varStatus="vs1">

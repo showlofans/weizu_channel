@@ -120,7 +120,7 @@ public class TelProductController {
 	 * @createTime:2017年11月11日 下午3:59:09
 	 */
 	@RequestMapping(value=TelProductURL.TELPRODUCT_LIST)
-	public ModelAndView telProductList(TelProductPo telProductPo,@RequestParam(value = "pageNoLong", required = false)Long pageNoLong){
+	public ModelAndView getTelProductList(TelProductPo telProductPo,@RequestParam(value = "pageNoLong", required = false)Long pageNoLong){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
@@ -133,10 +133,11 @@ public class TelProductController {
 		}else{
 			pageParam = new PageParam(1l, 10);
 		}
-		if(telProductPo.getServiceType() == null){//默认加载市内的
-			telProductPo.setServiceType(HuaServiceTypeEnum.CITY.getValue());
-		}
+//		if(telProductPo.getServiceType() == null){//默认加载市内的
+//			telProductPo.setServiceType(HuaServiceTypeEnum.CITY.getValue());
+//		}
 		
+		resultMap.put("city", HuaServiceTypeEnum.CITY.getValue());
 		Pagination<TelProductPo> pagination = telProductAO.listTelProduct(telProductPo, pageParam);
 		resultMap.put("pagination", pagination);
 		

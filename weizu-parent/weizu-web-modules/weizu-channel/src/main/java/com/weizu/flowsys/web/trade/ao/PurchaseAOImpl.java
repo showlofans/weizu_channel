@@ -1019,18 +1019,6 @@ public class PurchaseAOImpl implements PurchaseAO {
 			if(isPgcharge){
 				paramsMap.put("pgcharge", PgServiceTypeEnum.PGCHARGE.getValue());
 			}
-//			Integer pgcharge = 
-////			if(pgServiceType != null)
-//			switch (pgServiceType) {
-//			case PgServiceTypeEnum.PGCHARGE.getValue():
-//				
-//				break;
-//
-//			default:
-//				break;
-//			}
-			
-			
 			if(purchaseVO.getAgencyId() != null){
 				paramsMap.put("agencyId", purchaseVO.getAgencyId());
 				//超管使用订单的orderResult进行分类查询
@@ -1073,12 +1061,15 @@ public class PurchaseAOImpl implements PurchaseAO {
 			Long dateUtilStartTime = DateUtil.getStartTime().getTime();
 			Long dateUtilEndTime = DateUtil.getEndTime().getTime();
 			if(isCharged){//充值成功列表使用充值时间查询
-				if(StringHelper.isEmpty(purchaseVO.getBackStartTimeStr())){//默认打开列表
+				if(purchaseVO.getBackStartTimeStr() == null){//默认打开列表
 					paramsMap.put("startTimeBack", dateUtilStartTime);
+				}else if("".equals(purchaseVO.getBackStartTimeStr())){
+					paramsMap.put("startTimeBack", null);
 				}else{
 					startTime = DateUtil.strToDate(purchaseVO.getBackStartTimeStr(), null).getTime();
 					paramsMap.put("startTimeBack", startTime);
 				}
+				
 				if(StringHelper.isEmpty(purchaseVO.getBackEndTimeStr())){//默认打开列表
 					paramsMap.put("endTimeBack", dateUtilEndTime);
 				}else{
@@ -1086,10 +1077,13 @@ public class PurchaseAOImpl implements PurchaseAO {
 					paramsMap.put("endTimeBack", endTime);
 				}
 			}else{//其他状态使用订单到达时间
-				if(StringHelper.isEmpty(purchaseVO.getArriveStartTimeStr())){//默认打开列表
+				if(purchaseVO.getArriveStartTimeStr() == null){//默认打开列表
 					paramsMap.put("startTime", dateUtilStartTime);
+				}else if("".equals(purchaseVO.getArriveStartTimeStr())){
+					paramsMap.put("startTime", null);
 				}else{
 					startTime = DateUtil.strToDate(purchaseVO.getArriveStartTimeStr(), null).getTime();
+					//System.out.println(purchaseVO.getArriveStartTimeStr());
 					paramsMap.put("startTime", startTime);
 				}
 				if(StringHelper.isEmpty(purchaseVO.getArriveEndTimeStr())){//默认打开列表
@@ -1301,18 +1295,22 @@ public class PurchaseAOImpl implements PurchaseAO {
 		if(totalRecord == 0){
 			Long currentTime = System.currentTimeMillis();
 			if(isCharged){
-				if(StringHelper.isEmpty(purchaseVO.getBackStartTimeStr())){
-					paramsMap.put("startTimeBack",null);
-				}
+				paramsMap.put("startTimeBack",null);
+				purchaseVO.setBackStartTimeStr("");
+//				if(StringHelper.isEmpty(purchaseVO.getBackStartTimeStr())){
+//					paramsMap.put("startTimeBack",null);
+//				}
 				if(StringHelper.isEmpty(purchaseVO.getBackEndTimeStr())){
 					purchaseVO.setBackEndTimeStr(DateUtil.formatAll(currentTime));
 					paramsMap.put("endTimeBack", currentTime);
 				}
 			}else{//其他列表
-				if(StringHelper.isEmpty(purchaseVO.getArriveStartTimeStr())){
-					paramsMap.put("startTime",null);
-					//purchaseVO.setArriveStartTimeStr(null);
-				}
+				paramsMap.put("startTime",null);
+				purchaseVO.setArriveStartTimeStr("");
+//				if(StringHelper.isEmpty(purchaseVO.getArriveStartTimeStr())){
+//					paramsMap.put("startTime",null);
+//					//purchaseVO.setArriveStartTimeStr(null);
+//				}
 				if(StringHelper.isEmpty(purchaseVO.getArriveEndTimeStr())){
 					paramsMap.put("endTime", currentTime);
 					purchaseVO.setArriveEndTimeStr(DateUtil.formatAll(currentTime));
@@ -1323,30 +1321,48 @@ public class PurchaseAOImpl implements PurchaseAO {
 			Long dateUtilStartTime = null;
 			Long dateUtilEndTime = null;
 			if(isCharged){
+//				if(StringHelper.isEmpty(purchaseVO.getBackStartTimeStr())){
+//					dateUtilStartTime = Long.parseLong(paramsMap.get("startTimeBack").toString());
+//					purchaseVO.setBackStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+//				}
 				if(purchaseVO.getBackStartTimeStr() == null){
 					dateUtilStartTime = Long.parseLong(paramsMap.get("startTimeBack").toString());
 					purchaseVO.setBackStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
 				}else if("".equals(purchaseVO.getBackStartTimeStr().trim())){
-					//为空或者值重新设置	
-					paramsMap.put("startTimeBack", null);
-					totalRecord = purchaseDAO.countPurchase(paramsMap);
+					paramsMap.put("startTimeBack", dateUtilStartTime);
+					dateUtilStartTime = DateUtil.getStartTime().getTime();
+					purchaseVO.setBackStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
 				}
+				//purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+//				if(purchaseVO.getBackStartTimeStr() == null){
+//					dateUtilStartTime = Long.parseLong(paramsMap.get("startTimeBack").toString());
+//					purchaseVO.setBackStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+//				}else if("".equals(purchaseVO.getBackStartTimeStr().trim())){
+//					//为空或者值重新设置	
+//					paramsMap.put("startTimeBack", null);
+//					totalRecord = purchaseDAO.countPurchase(paramsMap);
+//				}
 				if(StringHelper.isEmpty(purchaseVO.getBackEndTimeStr())){
 					dateUtilEndTime = Long.parseLong(paramsMap.get("endTimeBack").toString());
 					purchaseVO.setBackEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
 				}
 			}else{
-				if(StringHelper.isEmpty(purchaseVO.getArriveStartTimeStr())){
+//				if(StringHelper.isEmpty(purchaseVO.getArriveStartTimeStr())){
+//					dateUtilStartTime = Long.parseLong(paramsMap.get("startTime").toString());
+//					purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+//				}
+				if(purchaseVO.getArriveStartTimeStr() == null){
 					dateUtilStartTime = Long.parseLong(paramsMap.get("startTime").toString());
 					purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+				}else if("".equals(purchaseVO.getArriveStartTimeStr().trim())){
+					dateUtilStartTime = DateUtil.getStartTime().getTime();
+					paramsMap.put("startTime", dateUtilStartTime);
+					purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
 				}
-//				if(purchaseVO.getArriveStartTimeStr() == null){
-//				dateUtilStartTime = Long.parseLong(paramsMap.get("startTime").toString());
-//				purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
-//				}else{
-//					//为空或者值重新设置
+//				else{
+					//为空或者值重新设置:什么都不需要做，因为已经有记录，并且在第一次搜索的时候，就已经重置了搜索条件
 //					if("".equals(purchaseVO.getArriveStartTimeStr().trim())){
-//						paramsMap.put("startTime", null);
+//						//paramsMap.put("startTime", null);
 //						totalRecord = purchaseDAO.countPurchase(paramsMap);
 //					}
 //				}

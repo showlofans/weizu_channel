@@ -31,7 +31,7 @@
 <title>充值进行列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 订单管理 <span class="c-gray en">&gt;</span> 订单列表-充值进行 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 订单管理 <span class="c-gray en">&gt;</span> 订单列表-充值进行 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" ><i class="Hui-iconfont">&#xe6a6;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
 		<form class="form form-horizontal" action="/flowsys/chargePg/purchase_list.do" method="post" id="formD" name="dataListForm">
@@ -273,14 +273,18 @@ function changeState(vart,state){
 }
 function formSub(){
 	$("input[name='pageNoLong']").val('');
-	$('#arriveStartTimeStr').val('');
 	$('form').submit();
 }
 $(document).ready(function() {
 	$('.select').change(function(){
 		//$('form').submit();
 		formSub();
-	})
+	});
+	/* $('.pgServiceType').change(function(){//特殊需求
+		$("input[name='pageNoLong']").val('');
+		$('#arriveStartTimeStr').val('');
+		$('form').submit();
+	}); */
 }); 
 </script> 
 </body>

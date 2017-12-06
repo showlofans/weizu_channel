@@ -16,7 +16,8 @@
 <title>加款申请页面页面</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页   <span class="c-gray en">&gt;</span> 账户管理 <span class="c-gray en">&gt;</span> 申请加款  <span class="c-gray en">&gt;</span> 在线充值<!-- <span class="c-gray en">&gt;</span> 银行卡<span class="c-gray en">&gt;</span> 卡充值  --><a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#
+xe67f;</i> 首页   <span class="c-gray en">&gt;</span> 账户管理 <span class="c-gray en">&gt;</span> 申请加款  <span class="c-gray en">&gt;</span> 请求充值<!-- <span class="c-gray en">&gt;</span> 银行卡<span class="c-gray en">&gt;</span> 卡充值  --><a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" >请求充值<i class="Hui-iconfont">&#xe6a6;</i></a></nav>
 	<div class="page-container">
 	<table class="table c"><!-- table-border table-bordered table-bg -->
 		<thead >

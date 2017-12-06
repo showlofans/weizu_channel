@@ -438,7 +438,6 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
 		if(isRoot){
 			params.put("channelState", ChannelStateEnum.OPEN.getValue());
-			
 		}else{
 			params.put("agencyId", agencyId);
 			params.put("bindState", BindStateEnum.BIND.getValue());

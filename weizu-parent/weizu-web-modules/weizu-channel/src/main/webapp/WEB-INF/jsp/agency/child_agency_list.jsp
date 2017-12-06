@@ -31,7 +31,7 @@
 <title>资讯列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 代理商管理 <span class="c-gray en">&gt;</span> 代理商列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 代理商管理 <span class="c-gray en">&gt;</span> 代理商列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" ><i class="Hui-iconfont">&#xe6a6;</i></a></nav>
 <div class="page-container">
 	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
 	<div class="text-c">
@@ -145,7 +145,8 @@
 						</c:forEach></td>
 						<td class="td-manage">
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="editAgency(${agency.id })" href="javascript:;" title="查看信息"><i class="Hui-iconfont">&#xe60c;</i></a>
-							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="resetPass('${agency.id}')" href="javascript:;" title="重置密码"><i class="Hui-iconfont">&#xe63f;</i></a>
+							<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="resetPass('/flowsys/agency/reset_pass_page.do?tag=0&agencyId=${agency.id}')" href="javascript:;" title="重置密码"><i class="Hui-iconfont">&#xe63f;</i></a> --%>
+							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none"  data-href="/flowsys/agency/reset_pass_page.do" data-title="重置密码" onclick="Hui_admin_tab(this)" title="重置密码"><i class="Hui-iconfont">&#xe63f;</i></a>
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" onClick="account_charge('账户充值',${agency.accountId })" href="javascript:;" title="账户充值"><i class="Hui-iconfont">&#xe726;</i></a> 
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" data-title="设置充值卡" data-href="/flowsys/bankAccount/attach_bank_page.do?accountId=${agency.accountId }" onClick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe725;</i></a> 
 							<%-- <a title="/flowsys/rate/rate_add_page.do?rateId=${agency.rateId }&agencyId=${agency.id}" data-href="/flowsys/rate/rate_add_page.do?rateId=${agency.rateId }&agencyId=${agency.id}" data-title="费率添加" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe6df;</i></a> --%>
@@ -206,7 +207,7 @@ function formSub(){
 	$('form').submit();
 }
 /**重置密码*/
-function resetPass(agencyId){
+/* function resetPass(agencyId){
 	layer.open({
         type: 2,
         title: "重置密码",
@@ -218,7 +219,7 @@ function resetPass(agencyId){
             location.reload();
         }
     });
-}
+} */
 
 /**账户-充值 */
 function account_charge(title,accountId){

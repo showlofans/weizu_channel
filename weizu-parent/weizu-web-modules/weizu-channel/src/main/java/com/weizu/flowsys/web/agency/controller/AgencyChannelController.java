@@ -71,16 +71,13 @@ public class AgencyChannelController {
 		}else{
 			pageParam = new PageParam(1l, 10);
 		}
-		if(telParams.getServiceType() == null){//默认加载市内的
-			telParams.setServiceType(HuaServiceTypeEnum.CITY.getValue());
-		}
 		if(telParams.getRateFor() == null){
 			telParams.setRateFor(agencyVO.getAgencyTag());
 		}
 		Pagination<TelChannelParams> pagination = telChannelAO.getAgencyTelChannel(pageParam, telParams, agencyVO.getId());
 		resultMap.put("pagination", pagination);
 		
-		
+		resultMap.put("city", HuaServiceTypeEnum.CITY.getValue());
 		List<Provinces> provinces = procincesDAO.getProvinces();
 		resultMap.put("provinces", provinces);
 		resultMap.put("params", telParams);

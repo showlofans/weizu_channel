@@ -28,7 +28,7 @@
 	<link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/style.css" />
  </head>
  <body>
- <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 在线充值 <span class="c-gray en">&gt;</span> 流量充值 <span class="c-gray en">&gt;</span> 单号充值<!--  <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> --></nav>
+ <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 在线充值 <span class="c-gray en">&gt;</span> 流量充值 <span class="c-gray en">&gt;</span> 单号充值<!--  <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> --><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" ><i class="Hui-iconfont">&#xe6a6;</i></a></nav>
 <article class="page-container">
  	<form class="form form-horizontal" action="" method=""  id="form-charge">
  	<input type="hidden" name="channelId" id="channelId">
@@ -155,6 +155,7 @@
 	<div class="row cl">
 		<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
 			<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			<input class="btn btn-primary radius" type="button" onclick="removeIframe();" value="&nbsp;&nbsp;取消&nbsp;&nbsp;">
 		</div>
 	</div>
 	<div class="row cl" id="pg">

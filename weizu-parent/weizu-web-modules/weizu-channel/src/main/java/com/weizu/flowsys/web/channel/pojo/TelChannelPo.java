@@ -40,6 +40,8 @@ public class TelChannelPo extends Po {
     private String ids;							//页面实体：话费编码id列表
     @TempField
     private String discounts;					//页面实体：通道折扣列表
+    
+    //private 
 //    private List<Long> ids;						//页面实体：话费编码id列表
 
 //	public List<Long> getIds() {

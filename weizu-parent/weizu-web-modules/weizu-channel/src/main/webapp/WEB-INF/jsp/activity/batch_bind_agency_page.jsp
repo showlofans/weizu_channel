@@ -31,7 +31,7 @@
 <title>批量绑定代理商</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 通道列表 <span class="c-gray en">&gt;</span> 费率列表 <span class="c-gray en">&gt;</span>绑定代理商 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> </nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 通道列表 <span class="c-gray en">&gt;</span> 费率列表 <span class="c-gray en">&gt;</span>绑定代理商 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:closeContextFrame();" title="关闭" >绑定页面<i class="Hui-iconfont">&#xe6a6;</i></a> </nav>
 <div class="page-container">
 	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
 	<div class="text-c">
@@ -175,6 +175,11 @@
 <script type="text/javascript">
 function onSub(){
 	$('form').submit();
+}
+//关闭当前弹出层
+function closeContextFrame(){
+	 var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+	parent.layer.close(index); // 执行关闭
 }
 /**绑定全部代理商**/
 function changeBAllState(url,bindState, updateBindState){

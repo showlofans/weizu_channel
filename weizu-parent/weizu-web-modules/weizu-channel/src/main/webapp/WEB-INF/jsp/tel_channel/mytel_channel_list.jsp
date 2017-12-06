@@ -66,11 +66,13 @@
 			</select>
 		</span> 
 		 <!--  地区城市： -->
+		 <c:if test="${resultMap.city ==  resultMap.params.serviceType}">
 		 <span class="select-box inline">
 			<select class="select" id="city" name="cityid" onchange="submitForm()">
 				<option value="">城市</option>
 			</select>
 		</span> 
+		</c:if>
 		 
 		<input type="hidden" value="${resultMap.params.cityid }" id="cityid" >
 		&nbsp;&nbsp;
@@ -165,8 +167,9 @@
 					<th width="60">运营商名称</th>
 					<th width="100">业务类型</th>
 					<th width="120">支持省份</th>
+					<c:if test="${resultMap.city ==  resultMap.params.serviceType}">
 					<th width="120">支持城市</th>
-					
+					</c:if>
 					<th width="60">充值速度</th>
 					<th width="120">限制描述</th>
 					
@@ -224,8 +227,9 @@
 							</c:if>
 						</c:forEach> --%>
 						</td>
+						<c:if test="${resultMap.city ==  telchannel.serviceType}">
 						<td>${telchannel.city }</td> 
-						
+						</c:if>
 						<td>
 							<c:forEach items="${resultMap.telchargeSpeedEnums }" var="telchargeSpeedEnum" varStatus="vs1">
 							<c:if test="${telchannel.chargeSpeed == telchargeSpeedEnum.value }"> ${telchargeSpeedEnum.desc }</c:if>

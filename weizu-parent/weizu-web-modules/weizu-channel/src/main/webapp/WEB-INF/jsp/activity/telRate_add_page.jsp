@@ -85,15 +85,11 @@
 		
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
-				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
-				<%-- <c:choose>
-					<c:when test="${resultMap.rateFor ==1 }">
-					</c:when>
-					<c:otherwise>
-						
-					</c:otherwise>
-				</c:choose> --%>
-						<button class="btn btn-primary radius" type="button" onClick="removeIframe()">取消</button>
+				<button class="btn btn-primary radius" type="submit">&nbsp;&nbsp;&nbsp;<i class="Hui-iconfont">&#xe632;</i>保存&nbsp;&nbsp;&nbsp;</button>
+				<button class="btn btn-primary radius" type="button" onClick="removeIframe()">&nbsp;&nbsp;&nbsp;取消&nbsp;&nbsp;&nbsp;</button>
+				<c:if test="${not empty resultMap.telRatePo.id}">
+					<button class="btn btn-danger radius" type="button" onClick="delTelRate('/flowsys/telRate/del_telRate.do',${resultMap.telRatePo.id})"><i class="Hui-iconfont">&#xe6e2;删除</i></button>
+				</c:if>
 			</div>
 		</div>
 	</form>
@@ -167,6 +163,28 @@ $().ready(function() {
     	}
     });
 })
+function delTelRate(url, id){
+	layer.confirm('确认要删除该话费折扣吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			url: url,
+			data: {id:id},
+			//dataType: 'json',
+			success: function(data){
+				if(data=="success")
+				{
+					layer.msg('删除折扣成功!',{icon:1,time:1000});
+					removeIframe();
+				}else{
+					layer.msg('删除折扣失败!',{icon:2,time:1000});
+				}
+			},
+			error:function(data) {
+				console.log(data.msg);
+			}
+		});		
+	});
+}
 /* ///更新信息
 function save(){
 	var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引

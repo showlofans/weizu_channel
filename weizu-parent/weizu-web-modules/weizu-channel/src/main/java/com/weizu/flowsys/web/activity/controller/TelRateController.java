@@ -179,7 +179,7 @@ public class TelRateController {
 	 */
 	@ResponseBody
 	@RequestMapping(value=TelRateURL.TELRATE_ADD)
-	public String telRateAdd(TelRatePo telRatePo){
+	public String addTelRate(TelRatePo telRatePo){
 		String resStr = "error";
 		int res = 0;
 		if(telRatePo.getId() != null){//编辑话费折扣
@@ -204,7 +204,7 @@ public class TelRateController {
 	 */
 	@ResponseBody
 	@RequestMapping(value=TelRateURL.DEL_TELRATE)
-	public String telRateDel(Long id){
+	public String delTelRate(Long id){
 		int res = telRateDao.del(id);
 		String resStr = "error";
 		if(res > 0){
