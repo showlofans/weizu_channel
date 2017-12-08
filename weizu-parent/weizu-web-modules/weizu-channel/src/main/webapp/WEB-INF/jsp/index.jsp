@@ -439,7 +439,7 @@ $(function(){
     });
 } */
 /**修改密码*/
-/* function resetPass(){
+ function resetPass(){
 	layer.open({
         type: 2,
         title: "重置密码",
@@ -451,7 +451,7 @@ $(function(){
            // location.reload();
         }
     });
-} */
+} 
 
 </script> 
 </body>

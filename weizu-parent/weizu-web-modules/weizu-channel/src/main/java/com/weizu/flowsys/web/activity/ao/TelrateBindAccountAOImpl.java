@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
@@ -132,6 +133,7 @@ public class TelrateBindAccountAOImpl implements TelrateBindAccountAO {
 //		return res;
 //	}
 
+	@Transactional
 	@Override
 	public int batchBindAllTelAgency(int rootAgencyId,
 			TelrateBindAccountVO tbaVO, int updateBindState) {
@@ -162,8 +164,9 @@ public class TelrateBindAccountAOImpl implements TelrateBindAccountAO {
 	@Resource
 	private ChargeAccountDaoInterface chargeAccountDao;
 
+	@Transactional
 	@Override
-	public int batchBindAgency(TelrateBindAccountVO telrateBindAccountVO) {
+	public int batchBindAgency(TelrateBindAccountVO telrateBindAccountVO) {//批量增加绑定
 		String accountIdst = telrateBindAccountVO.getAccountIds();
 		if(StringHelper.isNotEmpty(accountIdst)){
 			String [] accountIdsi = accountIdst.split(",");
@@ -203,9 +206,11 @@ public class TelrateBindAccountAOImpl implements TelrateBindAccountAO {
 		return 0;
 	}
 
+	@Transactional
 	@Override
 	public int batchUpdateBindState(TelrateBindAccountVO telrateBindAccountVO) {
-		if(telrateBindAccountVO.getBindState() == BindStateEnum.BIND.getValue()){//绑定:需要账户id
+		int res = updatePlatBindState(telrateBindAccountVO);
+		if(telrateBindAccountVO.getBindState() == BindStateEnum.BIND.getValue()){//绑定:需要账户id(批量绑定)
 			String accountIdst = telrateBindAccountVO.getAccountIds();
 			if(StringHelper.isNotEmpty(accountIdst)){
 				String [] accountIdsi = accountIdst.split(",");
@@ -213,19 +218,58 @@ public class TelrateBindAccountAOImpl implements TelrateBindAccountAO {
 				for (int i = 0; i < accountIds.length; i++) {
 					accountIds[i] = Integer.parseInt(accountIdsi[i]);
 				}
-				return telrateBindAccountDao.batchUpdateBindTelState(telrateBindAccountVO.getTelRateId(), telrateBindAccountVO.getBindState(), accountIds);
+				res += telrateBindAccountDao.batchUpdateBindTelState(telrateBindAccountVO.getTelRateId(), telrateBindAccountVO.getBindState(), accountIds);
 			}else{
-				return -1;
+				res = -1;
 			}
-		}else{//解绑
-			return telrateBindAccountDao.batchUpdateBindTelState(telrateBindAccountVO.getTelRateId(), telrateBindAccountVO.getBindState());
+		}else{//批量绑定页面，没有批量解绑选项,只有更新绑定折扣的时候有
+			res +=telrateBindAccountDao.batchUpdateBindTelState(telrateBindAccountVO.getTelRateId(), telrateBindAccountVO.getBindState());
 		}
+		return res-1;
 	}
 
+	@Transactional
 	@Override
 	public int updateBindState(TelrateBindAccountPo telrateBindAccountPo) {
 		int res = telrateBindAccountDao.updateLocal(telrateBindAccountPo);
-		return res;
+		res += updatePlatBindState(new TelrateBindAccountVO(telrateBindAccountPo.getAccountId(), telrateBindAccountPo.getTelRateId(), telrateBindAccountPo.getActiveTime(), telrateBindAccountPo.getBindState()));
+		return res-1;
+	}
+	
+	/**
+	 * @description: 根据更新的绑定设置相应黑绑定的绑定状态
+	 * @param telrateBindAccountPo
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月8日 下午3:12:17
+	 */
+	private int updatePlatBindState(TelrateBindAccountVO telrateBindAccountVO){
+//		int res = 0;
+		Map<String, Object> params = new HashMap<String, Object>();
+		if(telrateBindAccountVO.getAccountId() != null){
+			params.put("accountId", telrateBindAccountVO.getAccountId());
+		}
+		if(telrateBindAccountVO.getTelRateId() != null){
+			TelRatePo negtelRatePo = telRateDao.getPlatTelRateById(telrateBindAccountVO.getTelRateId());
+			params.put("telRateId", negtelRatePo.getId());
+		}
+		params.put("activeTime", System.currentTimeMillis());
+		if(telrateBindAccountVO.getBindState() != null){
+			params.put("bindState", telrateBindAccountVO.getBindState());
+		}
+		String accountIdst = telrateBindAccountVO.getAccountIds();
+		if(StringHelper.isNotEmpty(accountIdst)){
+			String [] accountIdsi = accountIdst.split(",");
+			int[] accountIds = new int[accountIdsi.length];
+			for (int i = 0; i < accountIds.length; i++) {
+				accountIds[i] = Integer.parseInt(accountIdsi[i]);
+			}
+			params.put("accountIds", accountIds);
+		}
+		//解绑，黑绑定也设为解绑。
+		//TODO 绑定,有统一的批量绑定逻辑
+//		int res = telrateBindAccountDao.updateBindState(params);
+		return telrateBindAccountDao.updateBindState(params);
 	}
 
 //	@Override

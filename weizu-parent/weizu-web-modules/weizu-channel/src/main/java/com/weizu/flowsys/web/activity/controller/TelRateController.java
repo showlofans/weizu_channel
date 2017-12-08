@@ -116,7 +116,7 @@ public class TelRateController {
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
 		resultMap.put("huaServiceTypeEnums", HuaServiceTypeEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
-		resultMap.put("agencyTagEnums", AgencyTagEnum.toList());
+		resultMap.put("telChannelTagEnums", TelChannelTagEnum.toList());
 		
 //		resultMap.put("fromTag", fromTag);//
 		return new ModelAndView("/activity/telRate_add_page","resultMap",resultMap);

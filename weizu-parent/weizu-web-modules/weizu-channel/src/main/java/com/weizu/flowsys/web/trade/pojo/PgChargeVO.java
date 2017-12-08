@@ -20,7 +20,7 @@ public class PgChargeVO {
 	
 	private Double orderAmount;				//充值额 
 	
-	private Double pgPrice; 				//面值
+	private Double chargeValue; 				//面值
 	
 	private Integer pgId;					//充值包体id
 	
@@ -116,13 +116,14 @@ public class PgChargeVO {
 		this.orderAmount = orderAmount;
 	}
 
-	public Double getPgPrice() {
-		return pgPrice;
+	public Double getChargeValue() {
+		return chargeValue;
 	}
 
-	public void setPgPrice(Double pgPrice) {
-		this.pgPrice = pgPrice;
+	public void setChargeValue(Double chargeValue) {
+		this.chargeValue = chargeValue;
 	}
+
 
 	public Integer getPgId() {
 		return pgId;

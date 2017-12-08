@@ -47,6 +47,20 @@ public class TelrateBindAccountVO extends Po {
     
     private Integer rateFor;					//agencyTagEnum 接口，平台
     
+	public TelrateBindAccountVO(Integer accountId, Long telRateId,
+			Long activeTime, Integer bindState) {
+		super();
+		this.accountId = accountId;
+		this.telRateId = telRateId;
+		this.activeTime = activeTime;
+		this.bindState = bindState;
+	}
+
+	public TelrateBindAccountVO() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	public Integer getRateFor() {
 		return rateFor;
 	}

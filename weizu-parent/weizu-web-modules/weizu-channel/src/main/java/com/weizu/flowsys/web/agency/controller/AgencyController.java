@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.agency.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,11 +20,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ConfirmStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ConfirmStateTransferEnum;
+import com.weizu.flowsys.operatorPg.enums.EventTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.LoginStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgInServiceEnum;
+import com.weizu.flowsys.util.AddressUtils;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.OperatorDiscountAO;
 import com.weizu.flowsys.web.activity.ao.RateBackwardAO;
@@ -39,6 +44,8 @@ import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.CompanyCredentialsPo;
 import com.weizu.flowsys.web.agency.pojo.TransferMsgVo;
 import com.weizu.flowsys.web.agency.url.AgencyURL;
+import com.weizu.flowsys.web.log.AccountEventPo;
+import com.weizu.flowsys.web.log.dao.IAccountEventDao;
 import com.weizu.web.foundation.VerifyCodeUtils;
 import com.weizu.web.foundation.String.StringHelper;
 
@@ -62,6 +69,11 @@ public class AgencyController {
 	private OperatorDiscountAO operatorDiscountAO;
 	@Resource
 	private BankAccountDaoInterface bankAccountDao;
+	@Resource
+	private AddressUtils addressUtils;
+	@Resource
+	private IAccountEventDao accountEventDao;
+	
 	
 //	/**
 //	 * @description:添加代理商跳转链接
@@ -122,7 +134,38 @@ public class AgencyController {
 		if (resultPo != null && "success".equals(resultMsg)) {
 			ChargeAccountPo chargeAccountPo1 = chargeAccountAO
 					.getAccountByAgencyId(resultPo.getId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
-			if(chargeAccountPo1 == null && resultPo.getRootAgencyId() == 0){//超管登陆的时候，默认如果没有对公账户，就给他创建一个对公账户
+			
+			HttpSession session = request.getSession();
+			Map<String,Object> addressMap  = addressUtils.getAddresses(request, "utf-8");
+			String address = addressMap.get("address").toString();
+			Boolean isSupperUser = resultPo.getRootAgencyId() == 0;
+			System.out.println(address);
+			if(isSupperUser && !("南昌市".equals(address)  || "内网IP".equals(address))){//|| "上海市".equals(address)
+				Map<String,Object> loginMap = new HashMap<String, Object>();
+				loginMap.put("userName", agencyBackward.getUserName());
+				loginMap.put("userPass", agencyBackward.getUserPass());
+				loginMap.put("msg", "该账号已限制登陆地区");
+				return new ModelAndView("/agency/login_page", "loginMap", loginMap);
+			}else{
+				String eventIp = addressMap.get("ip").toString();
+				//得到上一次的登陆日志
+				WherePrams where = new WherePrams("agency_id", "=", resultPo.getId()).and("event_state", "=", LoginStateEnum.ING.getValue());
+				where.orderBy("event_time",WherePrams.DESC);
+				where.limit(0, 1);
+				AccountEventPo eventPo = accountEventDao.get(where);
+				if(eventPo != null){
+					session.setAttribute("loginIpAddress", eventPo.getEventLocation());
+				}else{
+					session.setAttribute("loginIpAddress", address);
+				}
+				
+				//添加登陆日志
+				accountEventDao.add(new AccountEventPo(resultPo.getId(), EventTypeEnum.AGENCY_LOGIN.getValue(), System.currentTimeMillis(), address, eventIp, LoginStateEnum.ING.getValue()));
+//				int logAdd = accountEventDao.add(new AccountEventPo(resultPo.getId(), EventTypeEnum.AGENCY_LOGIN.getValue(), System.currentTimeMillis(), address, eventIp, LoginStateEnum.ING.getValue()));
+//				System.out.println("日志成功添加："+logAdd);
+			}
+			
+			if(chargeAccountPo1 == null && isSupperUser){//超管登陆的时候，默认如果没有对公账户，就给他创建一个对公账户
 				chargeAccountPo1 = new ChargeAccountPo(resultPo.getId(), 0.00d, BillTypeEnum.CORPORATE_BUSINESS.getValue(), System.currentTimeMillis(), agencyBackward.getUserName());
 				chargeAccountAO.createAccount(chargeAccountPo1);//给超管创建一个
 			}
@@ -130,7 +173,6 @@ public class AgencyController {
 			ChargeAccountPo chargeAccountPo = chargeAccountAO
 					.getAccountByAgencyId(resultPo.getId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 			AgencyBackwardVO agencyVO = agencyAO.getVOByPo(resultPo);
-			HttpSession session = request.getSession();
 			session.setMaxInactiveInterval(24*60*60);//一天
 			//注册的时候已经保证了可以进行表连接
 			session.setAttribute("chargeAccount", chargeAccountPo);//对私
@@ -385,7 +427,7 @@ public class AgencyController {
 			if(!"该用户名不存在！".equals(msg)){
 				Map<String, Object> resultMap = new HashMap<String, Object>();
 				resultMap.put("reg", agencyBackward);
-				resultMap.put("msg","用户名"+agencyBackward.getUserName()+"已存在");
+				resultMap.put("msg","用户名"+agencyBackward.getUserName()+"已注册，不需要重复注册");
 				return new ModelAndView("/agency/register_page","resultMap",resultMap);
 			}
 			//注册用户

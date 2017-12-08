@@ -31,7 +31,7 @@
 <title>批量绑定代理商</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 通道列表 <span class="c-gray en">&gt;</span> 费率列表 <span class="c-gray en">&gt;</span>绑定代理商 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:closeContextFrame();" title="关闭" >绑定页面<i class="Hui-iconfont">&#xe6a6;</i></a> </nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页  <div class="titleMore"><span class="c-gray en">&gt;</span> 平台通道管理</div> <span class="c-gray en">&gt;</span> 流量通道 <span class="c-gray en">&gt;</span> 配置列表 <div class="titleMore"><span class="c-gray en">&gt;</span>绑定代理商</div> <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:closeContextFrame();" title="关闭" >绑定页面<i class="Hui-iconfont">&#xe6a6;</i></a> </nav>
 <div class="page-container">
 	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
 	<div class="text-c">

@@ -33,6 +33,9 @@
 <div class="page-container">
 	<p class="f-20 text-success">欢迎使用微族通道系统 <span title="最后更新时间：${startupTime }" class="f-14">Beta</span>版本 &nbsp;&nbsp; <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></p>
 	<p>最后更新时间：${startupTime }</p>
+	<c:if test="${not empty loginIpAddress }">
+		<p>上一次登陆地区：${loginIpAddress }</p>
+	</c:if>
 	<!-- <p>登录次数：18 </p>
 	<p>上次登录IP：222.35.131.79.1  上次登录时间：2014-6-14 11:19:55</p> -->
 	<!-- <iframe width='738' height='523' class='preview-iframe' scrolling='no' frameborder='0' src='http://download.csdn.net/source/preview/2453923/e55ebbf1b3ddcc48ccaa5684a663488d' ></iframe> -->

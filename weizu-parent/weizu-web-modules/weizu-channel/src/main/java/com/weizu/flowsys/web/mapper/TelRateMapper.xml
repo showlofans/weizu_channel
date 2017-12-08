@@ -43,7 +43,7 @@
 		on tt1.telchannel_id=tt2.telchannel_id
 		<where>
 			<if test="telRateId != null">
-				AND stt2.id=#{telRateId}
+				AND tt2.id=#{telRateId}
 			</if>
 			<if test="platformUser != null">
 				AND tt1.rate_for=#{platformUser}

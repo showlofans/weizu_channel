@@ -59,6 +59,9 @@
   		<if test="accountIds != null">
   			AND account_id in <foreach item="accountId" index="index" collection="accountIds" open="(" separator="," close=")">#{accountId}</foreach>
   		</if>
+  		<if test="accountId != null">
+  			AND account_id = #{accountId}
+  		</if>
   	</where>
   </update>
    <!-- 批量绑定一个折扣 -->

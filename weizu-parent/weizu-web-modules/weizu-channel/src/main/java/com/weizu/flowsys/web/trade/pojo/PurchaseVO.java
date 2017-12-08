@@ -26,7 +26,7 @@ public class PurchaseVO implements Cloneable,Serializable {
 
     private Integer pgSize;						//包体大小
     
-    private Double pgPrice;						//包体原价
+    private Double chargeValue;						//包体原价
     
     private Integer operatorType;				//运营商名称
     
@@ -34,7 +34,7 @@ public class PurchaseVO implements Cloneable,Serializable {
     
     private Integer serviceType;				//业务范围
     
-    private Integer pgServiceType;				//业务类型：pgServiceTypeEnum
+    private Integer purchaseFor;				//业务类型：pgServiceTypeEnum
 
     private Long orderArriveTime;				//提交时间（本平台获得该数据请求的时间）
     
@@ -121,17 +121,27 @@ public class PurchaseVO implements Cloneable,Serializable {
 		this.chargeSpeed = chargeSpeed;
 	}
 	
-	public Integer getPgServiceType() {
-		return pgServiceType;
-	}
-
-	public void setPgServiceType(Integer pgServiceType) {
-		this.pgServiceType = pgServiceType;
-	}
+//	public Integer getPgServiceType() {
+//		return pgServiceType;
+//	}
+//
+//	public void setPgServiceType(Integer pgServiceType) {
+//		this.pgServiceType = pgServiceType;
+//	}
 
 	public String getAgencyCallIp() {
 		return agencyCallIp;
 	}
+
+	public Integer getPurchaseFor() {
+		return purchaseFor;
+	}
+
+
+	public void setPurchaseFor(Integer purchaseFor) {
+		this.purchaseFor = purchaseFor;
+	}
+
 
 	public void setAgencyCallIp(String agencyCallIp) {
 		this.agencyCallIp = agencyCallIp;
@@ -200,10 +210,6 @@ public class PurchaseVO implements Cloneable,Serializable {
 		this.orderStateDetail = orderStateDetail;
 	}
 
-	public void setPgPrice(Double pgPrice) {
-		this.pgPrice = pgPrice;
-	}
-
 	public String getBackEndTimeStr() {
 		return backEndTimeStr;
 	}
@@ -268,12 +274,12 @@ public class PurchaseVO implements Cloneable,Serializable {
 		this.pgSize = pgSize;
 	}
 
-	public Double getPgPrice() {
-		return pgPrice;
+	public Double getChargeValue() {
+		return chargeValue;
 	}
 
-	public void setPgPrice(double pgPrice) {
-		this.pgPrice = pgPrice;
+	public void setChargeValue(Double chargeValue) {
+		this.chargeValue = chargeValue;
 	}
 
 	public String getAgencyName() {

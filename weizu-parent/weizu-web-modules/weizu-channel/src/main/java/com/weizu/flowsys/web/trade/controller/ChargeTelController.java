@@ -114,8 +114,10 @@ public class ChargeTelController {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年12月2日 下午1:53:10
 	 */
-	@RequestMapping(value = ChargeTelURL.TEL_CHARGE)
-	public ModelAndView telCharge(HttpServletRequest request,TelChargeVO tcVO){
+	@ResponseBody
+	@RequestMapping(value = ChargeTelURL.TEL_CHARGE,produces = "text/text;charset=UTF-8")
+	public String telCharge(HttpServletRequest request,TelChargeVO tcVO){
+		String res = "error";
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO != null){
 //			String scopeCityCode = ScopeCityEnum.QG.getValue();
@@ -140,7 +142,8 @@ public class ChargeTelController {
 			}
 			boolean isAccess = agencyAO.checkIdByPass(agencyVO.getId(), agencyVO.getUserPass());
 			if(!isAccess || !agencyVO.getId().equals(accountPo.getAgencyId())){
-				return new ModelAndView("error", "errorMsg", "当前登陆用户不合法");
+				res = "当前登陆用户不合法";
+//				return new ModelAndView("error", "errorMsg", "当前登陆用户不合法");
 			}
 			tcVO.setAccountId(accountPo.getId());
 			tcVO.setFromAgencyName(agencyVO.getUserName());
@@ -153,20 +156,23 @@ public class ChargeTelController {
 //			{
 //				accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
 //			}
-			Map<String, Object> resultMap = new HashMap<String, Object>();
-			String pageMsg = "";
-			String referURL = "";
+//			Map<String, Object> resultMap = new HashMap<String, Object>();
+//			String pageMsg = "";
+//			String referURL = "";
 			tcVO.setTelchannelId(telchannelId);
 			
 			//充值
 			tcVO.setChargeFor(PgServiceTypeEnum.TELCHARGE.getValue());
-			pageMsg = purchaseAO.purchase(tcVO, accountPo);
-			referURL = "/flowsys/chargePg/purchase_list.do?orderResult=2";
-			resultMap.put("referURL", referURL);
-			resultMap.put("pageMsg", pageMsg);
-			return new ModelAndView("/trade/charge_result_page", "resultMap", resultMap);
+			res = purchaseAO.purchase(tcVO, accountPo);
+//			referURL = "/flowsys/chargePg/purchase_list.do?orderResult=2";
+//			resultMap.put("referURL", referURL);
+//			resultMap.put("pageMsg", pageMsg);
+//			return new ModelAndView("/trade/charge_result_page", "resultMap", resultMap);
+		}else{
+			res = "系统维护之后，用户未登陆！！";
 		}
-		return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+		
+		return res;
 	}
 
 }

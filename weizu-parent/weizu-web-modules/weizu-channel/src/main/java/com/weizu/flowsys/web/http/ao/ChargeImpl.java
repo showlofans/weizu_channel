@@ -164,8 +164,8 @@ public class ChargeImpl implements IChargeFacet {
 				orderId = ou1.nextId();
 				String chargeTelCity = resMap.get("chargeTelCity").toString();
 				purchasePo = new PurchasePo(orderId, chargeParams.getOrderIdFrom(), accountId, chargeTel, pgData.getId().toString(), 
-						System.currentTimeMillis(), chargeTelDetail, chargeTelCity, orderResult, channelPo.getChannelName(), 
-						orderResultDetail, orderAmount, billType);
+						pgData.getPgPrice(),System.currentTimeMillis(), chargeTelDetail, chargeTelCity, orderResult, channelPo.getChannelName(), 
+						orderResultDetail, orderAmount, billType,PgServiceTypeEnum.PGCHARGE.getValue());
 				if(StringHelper.isNotEmpty(chargeParams.getReportUrl())){//
 					purchasePo.setAgencyCallIp(chargeParams.getReportUrl());
 				}else{//传单没有传回调地址,使用系统固定的回调地址
@@ -190,7 +190,7 @@ public class ChargeImpl implements IChargeFacet {
 					//添加消费记录
 					chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
 							agencyBeforeBalance, accountPo.getAccountBalance(), 
-							AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), 1 , orderId));
+							AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), PgServiceTypeEnum.PGCHARGE.getValue() , orderId));
 					recordId = chargeRecordDao.nextId() -1;
 				}
 				/** 通道暂停也更新超管账户信息**/

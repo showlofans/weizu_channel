@@ -189,6 +189,14 @@ public class PurchaseAOImpl implements PurchaseAO {
 		//在订单信息完全添加完之后，再调用接口进行充值
 		//先添加一个基本的，再批量添加父级代理商和订单的绑定
 		PurchasePo purchasePo = initPurchase(tcVO);
+		purchasePo.setPurchaseFor(tcVO.getChargeFor());
+		PurchasePo latestPurchasePo = purchaseDAO.getLatestOneByTel(tcVO.getChargeTel(), tcVO.getChargeFor());
+		if(latestPurchasePo != null){
+			int minutes = (int) ((System.currentTimeMillis() - latestPurchasePo.getOrderArriveTime()) / (1000*60));
+			if(minutes <= 5){
+				return "出现重复订单";
+			}
+		}
 		int accountId = tcVO.getAccountId();		//订单产生方代理商
 		Integer orderResult = null;		//默认订单状态
 		String orderResultDetail = null;		//默认订单状态
@@ -490,10 +498,19 @@ public class PurchaseAOImpl implements PurchaseAO {
 		if(ifLackBalance){//订单价格大于余额
 			return "余额不足，下单失败";
 		}
+		PurchasePo latestPurchasePo = purchaseDAO.getLatestOneByTel(pcVO.getChargeTel(), pcVO.getChargeFor());
+		if(latestPurchasePo != null){
+			int minutes = (int) ((System.currentTimeMillis() - latestPurchasePo.getOrderArriveTime()) / (1000*60));
+			if(minutes <= 5){
+				return "出现重复订单";
+			}
+		}
+		
 		//已经当前登陆用户余额充足，开始充值流程
 		//在订单信息完全添加完之后，再调用接口进行充值
 		//先添加一个基本的，再批量添加父级代理商和订单的绑定
 		PurchasePo purchasePo = initPurchase(pcVO);
+		purchasePo.setPurchaseFor(pcVO.getChargeFor());
 		int accountId = pcVO.getAccountId();		//订单产生方代理商
 		Integer orderResult = null;		//默认订单状态
 		String orderResultDetail = null;		//默认订单状态
@@ -506,7 +523,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 		double agencyAfterBalance = 0d;
 		
 		/**包体原价*/
-		Double pgPrice = pcVO.getPgPrice();
+		Double chargeValue = pcVO.getChargeValue();
 		ChannelChannelPo channel = channelChannelDao.get(new WherePrams("id", "=", pcVO.getChannelId()));
 		ExchangePlatformPo epPo = null;
 		ProductCodePo dataPo = null;
@@ -546,7 +563,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 			e.printStackTrace();
 			return "订单添加异常";
 		}
-		purchasePo.setChargeValue(pgPrice);
+		purchasePo.setChargeValue(chargeValue);
 		purchasePo.setOrderAmount(pcVO.getOrderAmount());
 		purchasePo.setAccountId(accountId);
 		purchasePo.setOrderArriveTime(currentTime);
@@ -605,7 +622,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 					return "订单提交失败";
 				}else{
 					agencyBeforeBalance = chargeAccountPo.getAccountBalance();
-					orderAmount = NumberTool.mul(pgPrice, cdisPo.getChannelDiscount());//成本
+					orderAmount = NumberTool.mul(chargeValue, cdisPo.getChannelDiscount());//成本
 					agencyAfterBalance = NumberTool.sub(agencyBeforeBalance, orderAmount);
 					chargeAccountPo.setAccountBalance(agencyAfterBalance);
 					chargeAccountAO.updateAccount(chargeAccountPo);
@@ -642,7 +659,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				/**充值前余额*/
 				agencyBeforeBalance = chargeAccountPo.getAccountBalance();
 				/**充值额（）*/
-				orderAmount = NumberTool.mul(ratePo.getActiveDiscount(), pgPrice);
+				orderAmount = NumberTool.mul(ratePo.getActiveDiscount(), chargeValue);
 				chargeAccountPo.addBalance(orderAmount,-1);
 				/** 更新登录用户账户信息**/
 				recordRes = chargeAccountAO.updateAccount(chargeAccountPo);
@@ -695,14 +712,14 @@ public class PurchaseAOImpl implements PurchaseAO {
 					/**充值前余额*/
 					agencyBeforeBalance = ap_accountPo.getAccountBalance();
 					/**父费率减去子费率乘以价格，就是差价*/
-					balance = NumberTool.mul(NumberTool.sub(ratePo1.getActiveDiscount(), activeRatePo.getActiveDiscount()), pgPrice);
+					balance = NumberTool.mul(NumberTool.sub(ratePo1.getActiveDiscount(), activeRatePo.getActiveDiscount()), chargeValue);
 					ap_accountPo.addBalance(balance,1);
 					/** 更新父级代理商账户信息**/
 					recordRes = chargeAccountAO.updateAccount(ap_accountPo);
 					if(recordRes > 0){
 						/** 向消费记录表插入登陆用户数据 */
-						Double plusAmount = NumberTool.mul(ratePo1.getActiveDiscount(),pgPrice);
-						Double minusAmount = NumberTool.mul(activeRatePo.getActiveDiscount(),pgPrice);
+						Double plusAmount = NumberTool.mul(ratePo1.getActiveDiscount(),chargeValue);
+						Double minusAmount = NumberTool.mul(activeRatePo.getActiveDiscount(),chargeValue);
 						agencyBeforeBalance = NumberTool.add(plusAmount, agencyBeforeBalance);	//重置充值前的余额为补款后的余额
 						agencyAfterBalance = NumberTool.sub(agencyBeforeBalance,minusAmount);
 						recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), minusAmount,
@@ -735,8 +752,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 				ChargeAccountPo superAccountPo = chargeAccountDao.getRootAccountById(from_accountPo.getId(), billType);
 				
 				agencyBeforeBalance = superAccountPo.getAccountBalance();
-				Double orderPrice = NumberTool.mul(pgPrice, ratePo1.getActiveDiscount());//价格
-				orderAmount = NumberTool.mul(pgPrice, cdisPo.getChannelDiscount());//成本
+				Double orderPrice = NumberTool.mul(chargeValue, ratePo1.getActiveDiscount());//价格
+				orderAmount = NumberTool.mul(chargeValue, cdisPo.getChannelDiscount());//成本
 				agencyBeforeBalance = NumberTool.add(agencyBeforeBalance, orderPrice);//之前加上价格
 				agencyAfterBalance = NumberTool.sub(agencyBeforeBalance, orderAmount);
 				superAccountPo.setAccountBalance(agencyAfterBalance);
@@ -795,7 +812,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				int recordRes = 0;
 				
 				/**重置充值额（）*/
-				Double orderAmount = NumberTool.mul(ratePo.getActiveDiscount(), purchasePo.getPgPrice());
+				Double orderAmount = NumberTool.mul(ratePo.getActiveDiscount(), purchasePo.getChargeValue());
 				purchasePo.setOrderAmount(orderAmount);
 				
 				
@@ -1004,8 +1021,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 			if(StringHelper.isNotEmpty(purchaseVO.getChannelName())){
 				paramsMap.put("channelName", purchaseVO.getChannelName().trim());
 			}
-			if(purchaseVO.getPgServiceType() != null){
-				paramsMap.put("pgServiceType", purchaseVO.getPgServiceType());
+			Integer purchaseFor = purchaseVO.getPurchaseFor();
+			if(purchaseFor != null){
+				paramsMap.put("purchaseFor", purchaseFor);
 			}
 			if(purchaseVO.getChargeSpeed() != null){
 				paramsMap.put("chargeSpeed", purchaseVO.getChargeSpeed());
@@ -1015,7 +1033,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 			}
 //			Integer pgServiceType = purchaseVO.getPgServiceType();
 			//默认查询流量订单
-			Boolean isPgcharge = PgServiceTypeEnum.PGCHARGE.getValue().equals(purchaseVO.getPgServiceType()) || purchaseVO.getPgServiceType() == null;
+			Boolean isPgcharge = PgServiceTypeEnum.PGCHARGE.getValue().equals(purchaseFor) || purchaseFor == null;
 			if(isPgcharge){
 				paramsMap.put("pgcharge", PgServiceTypeEnum.PGCHARGE.getValue());
 			}
@@ -1747,7 +1765,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 					//"面值", "折扣", "扣款金额" , "代理商订单号", "订单完成时间
 				
 					// 面值
-					hRow.createCell(4).setCellValue(r.getPgPrice());
+					hRow.createCell(4).setCellValue(r.getChargeValue());
 
 					// 折扣
 					hRow.createCell(5).setCellValue(r.getApDiscount()==null?0d:r.getApDiscount());

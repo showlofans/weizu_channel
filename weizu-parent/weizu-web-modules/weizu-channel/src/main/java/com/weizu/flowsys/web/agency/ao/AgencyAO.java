@@ -3,6 +3,7 @@ package com.weizu.flowsys.web.agency.ao;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.aiyi.base.pojo.PageParam;
@@ -249,5 +250,14 @@ public interface AgencyAO {
 	 * @createTime:2017年9月23日 上午11:47:05
 	 */
 	Boolean checkVerifyCode(String verifyCode,String userName);
+	
+	/**
+	 * @description: 获得客户端登陆ip地址
+	 * @param request
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月7日 上午9:14:26
+	 */
+//	String getLoginIpAddress(HttpServletRequest request);
 	
 }

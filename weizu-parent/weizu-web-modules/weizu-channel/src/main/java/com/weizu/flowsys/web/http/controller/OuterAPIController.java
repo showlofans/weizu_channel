@@ -82,8 +82,8 @@ public class OuterAPIController {
 	 */
 	@RequestMapping(value=OuterApiURL.CHARGE,produces = "text/json;charset=UTF-8")
 	@ResponseBody
-	public String chargePg(String userName, String number,Integer pgSize,
-			@RequestParam(value="scope",required=false)Integer scope, String sign,
+	public String chargePg(String userName, String number,Integer pgSize, String sign,
+			@RequestParam(value="scope",required=false)Integer scope,
 			@RequestParam(value="billType",required=false) Integer billType,
 			@RequestParam(value="channelType",required=false) Integer channelType,
 			@RequestParam(value="pgType",required=false) Integer pgType,

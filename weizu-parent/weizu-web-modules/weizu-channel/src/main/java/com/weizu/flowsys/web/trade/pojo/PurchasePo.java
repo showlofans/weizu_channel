@@ -46,7 +46,7 @@ public class PurchasePo extends Po {
     
     private Double orderAmount;					//扣款:用与判断订单价格是否高于余额
 
-    private Double pgPrice;					//扣款:用与判断订单价格是否高于余额
+    //private Double pgPrice;					//扣款:用与判断订单价格是否高于余额
 //    @TempField
 //    private Long recordId;						//消费记录id-外键
     @TempField
@@ -55,6 +55,8 @@ public class PurchasePo extends Po {
     private String agencyCallIp;				//代理商回调地址
     
     private Double chargeValue;					//订单原价
+    
+    private Integer purchaseFor;				//订单属性 PgServiceTypeEnum
 
     public Double getChargeValue() {
     	return chargeValue;
@@ -67,6 +69,7 @@ public class PurchasePo extends Po {
 	public PurchasePo() {
 		super();
 	}
+	
 	
 	
 /**  根据页面订单参数初始化订单实体用
@@ -82,6 +85,13 @@ public PurchasePo(String chargeTel, String pgId,
 		this.pgId = pgId;
 		this.chargeTelDetail = chargeTelDetail;
 	}
+public Integer getPurchaseFor() {
+	return purchaseFor;
+}
+
+public void setPurchaseFor(Integer purchaseFor) {
+	this.purchaseFor = purchaseFor;
+}
 
 public String getAgencyCallIp() {
 	return agencyCallIp;
@@ -93,14 +103,14 @@ public void setAgencyCallIp(String agencyCallIp) {
 }
 
 
-public Double getPgPrice() {
-	return pgPrice;
-}
-
-
-public void setPgPrice(Double pgPrice) {
-	this.pgPrice = pgPrice;
-}
+//public Double getPgPrice() {
+//	return pgPrice;
+//}
+//
+//
+//public void setPgPrice(Double pgPrice) {
+//	this.pgPrice = pgPrice;
+//}
 
 
 /** 接口充值构造订单
@@ -120,17 +130,18 @@ public void setPgPrice(Double pgPrice) {
  */
 public PurchasePo(Long orderId, String orderIdFrom, 
 		Integer accountId,
-		String chargeTel, String pgId, Long orderArriveTime,
+		String chargeTel, String pgId,Double chargeValue, Long orderArriveTime,
 		String chargeTelDetail, String chargeTelCity, Integer orderResult,
 		String channelName,
 		String orderResultDetail, Double orderAmount,
-		Integer billType) {
+		Integer billType,Integer purchaseFor) {
 	super();
 	this.orderId = orderId;
 	this.orderIdFrom = orderIdFrom;
 	this.accountId = accountId;
 	this.chargeTel = chargeTel;
 	this.pgId = pgId;
+	this.chargeValue = chargeValue;
 	this.orderArriveTime = orderArriveTime;
 	this.chargeTelDetail = chargeTelDetail;
 	this.chargeTelCity = chargeTelCity;
@@ -139,6 +150,7 @@ public PurchasePo(Long orderId, String orderIdFrom,
 	this.orderResultDetail = orderResultDetail;
 	this.orderAmount = orderAmount;
 	this.billType = billType;
+	this.purchaseFor = purchaseFor;
 }
 
 

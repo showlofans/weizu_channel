@@ -51,7 +51,7 @@
 			代理商名称:<input type="text" value="${resultMap.searchParams.userName }" name="userName" id="" placeholder=" 代理商名称" style="width:150px" class="input-text">
 			订单号:<input type="text" value="${resultMap.searchParams.purchaseId }" name="purchaseId" id="" placeholder=" 订单号" style="width:150px" class="input-text">
 			手机号:<input type="text" value="${resultMap.searchParams.chargeTel }" name="chargeTel" id="" placeholder=" 手机号" style="width:100px" class="input-text">
-			交易类型:
+			<!-- 交易类型: -->
 			<span class="select-box inline">
 			<select name="accountType" class="select" onchange="getConsume()" >
 				<option value="">交易类型</option>

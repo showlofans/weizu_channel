@@ -49,7 +49,14 @@ line-height:220px;
 <body style="overflow:hidden;">
 	<div class="loginWraper">
   <div id="loginform" class="loginBox">
-  <h3 class="title">欢迎登陆</h3> 
+  <c:choose>
+  	<c:when test="${empty loginMap.msg }">
+	  <h3 class="title">欢迎登陆</h3> 
+  	</c:when>
+  	<c:otherwise>
+  		<h3 class="title c-red">${loginMap.msg }</h3> 
+  	</c:otherwise>
+  </c:choose>
     <form class="form form-horizontal" id="lgForm" action="/flowsys/agency/login" method="post">
       <div class="row cl">
         <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>

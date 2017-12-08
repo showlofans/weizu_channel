@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.operatorPg.enums.PgInServiceEnum;
 import com.weizu.flowsys.operatorPg.enums.TelChannelTagEnum;
+import com.weizu.flowsys.util.AddressUtils;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.dao.impl.RateBackwardDaoImpl;
 import com.weizu.flowsys.web.activity.pojo.AccountActiveRateDTO;
@@ -43,6 +45,8 @@ public class AgencyAOImpl implements AgencyAO {
 	private ChargeAccountDao chargeAccountDao;
 	@Resource
 	private ChargeAccountAo chargeAccountAO;
+//	@Resource
+//	private AddressUtils addressUtils;
 
 	/**
 	 * @description:注册平台代理商（账户）
@@ -188,8 +192,12 @@ public class AgencyAOImpl implements AgencyAO {
 		String userPass = agencyBackward.getUserPass(); 
 		Map<String,Object> resultMap = new HashMap<String, Object>();
 		if(StringHelper.isNotEmpty(agencyBackward.getUserName())){
-			AgencyBackwardPo resultAgency = agencyVODao.get(new WherePrams("user_name", "=", agencyBackward
-					.getUserName()));
+			WherePrams where = new WherePrams("user_name", "=", agencyBackward.getUserName());
+			AgencyBackwardPo resultAgency = null;
+			if(StringHelper.isNotEmpty(agencyBackward.getAgencyTel())){//注册使用电话验证
+				where = where.or("agency_tel", "=", agencyBackward.getAgencyTel());
+			}
+			resultAgency = agencyVODao.get(where);
 			
 			if(resultAgency != null)
 			{
@@ -704,4 +712,10 @@ public class AgencyAOImpl implements AgencyAO {
 			return null;
 		}
 	}
+
+//	@Override
+//	public String getLoginIpAddress(HttpServletRequest request) {
+//		String address = addressUtils.getAddresses(request, "utf-8");
+//		return null;
+//	}
 }

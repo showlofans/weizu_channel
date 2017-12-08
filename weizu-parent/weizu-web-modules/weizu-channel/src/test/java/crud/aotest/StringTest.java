@@ -10,8 +10,10 @@ import org.junit.Test;
 
 
 
+
 import com.alibaba.fastjson.JSONObject;
 import com.weizu.flowsys.core.util.NumberTool;
+import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 //import com.weizu.flowsys.util.ClassUtil;
 //import com.weizu.flowsys.util.StringUtil2;
 //import com.weizu.flowsys.util.UUIDGenerator;
@@ -168,7 +170,8 @@ public class StringTest {
 //		JSONObject params = new JSONObject();
 //		params.put("sorry", 123);
 //		System.out.println(params.toString());
-		System.out.println("123");
+//		System.out.println("123");
+//		int days = (int) ((System.currentTimeMillis() - date1.getTime()) / (1000*3600*24));
 //		String text = MD5.getMd5("456"+"&098f6bcd4621d373cade4e832627b4f6");
 //		System.out.println(text);
 //		System.out.println(text.equals(text1));

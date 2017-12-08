@@ -177,7 +177,12 @@
 			        data: $('form').serialize(),//表单数据
 			        async : false,
 			        success:function(d){
-			        	removeIframe();
+			        	if(d == '订单提交成功'){
+				        	removeIframe();
+			        	}else{
+			        		alert(d + "充值失败");
+			        		removeIframe();
+			        	}
 			           /* if(d=="success"){
 			                layer.msg('提交成功！');//保存成功提示
 			            }
@@ -313,7 +318,7 @@
        	if(data.msg == 5002){
        		alert('账户余额不足');
        		$("#orderAmount").val('');
-       		$("#pgPrice").val('');
+       		$("#").val('');
        	}else{
          	 $("#orderAmount").val(data.price);
          	
@@ -325,7 +330,7 @@
          	 //}
       	   //alert(productCode);
       	   $("#productCode").val(data.productCode);
-      	   $("#pgPrice").val(pprice);//改变包体原价
+      	   $("#").val(pprice);//改变包体原价
       	   //alert($(vart).prev().val());
       	   
        	}
@@ -348,7 +353,7 @@
 	}); */
 	/**改变业务类型Onchange方法*/
 	function ifAjaxPg(){
-		/* var priceT = $("#pgPrice").val();
+		/* var priceT = $("#").val();
 		if(priceT != "" || priceT != null){//
 			ajaxPg();//重新发送一次请求
 		} */
