@@ -46,9 +46,12 @@ line-height:220px;
 <meta name="keywords" content="">
 <meta name="description" content="">
 </head>
-<body style="overflow:hidden;">
+<body onload="ifIndex()" style="overflow:hidden;">
 	<div class="loginWraper">
   <div id="loginform" class="loginBox">
+  <%-- <c:if test="${not empty loginContext }">
+  </c:if> --%>
+  	<input type="hidden" id="id" value="${loginContext.id }">
   <c:choose>
   	<c:when test="${empty loginMap.msg }">
 	  <h3 class="title">欢迎登陆</h3> 
@@ -194,6 +197,14 @@ function telLogin(){
 		         } 
 	    });*/
 	});})
+//
+function ifIndex(){
+	var $id = $('#id').val();
+	//alert($id);
+	if($id != ''){
+		window.location.href='/home';
+	}
+}
 </script>
 </body>
 </html>

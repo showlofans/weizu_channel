@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import javax.xml.ws.spi.http.HttpContext;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -46,6 +47,7 @@ import com.weizu.flowsys.web.agency.pojo.TransferMsgVo;
 import com.weizu.flowsys.web.agency.url.AgencyURL;
 import com.weizu.flowsys.web.log.AccountEventPo;
 import com.weizu.flowsys.web.log.dao.IAccountEventDao;
+import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.VerifyCodeUtils;
 import com.weizu.web.foundation.String.StringHelper;
 
@@ -122,8 +124,8 @@ public class AgencyController {
 	 * @createTime:2017年5月6日 下午12:17:07
 	 */
 	@RequestMapping(value = AgencyURL.LOGIN)
-	public ModelAndView login(AgencyBackwardPo agencyBackward,
-			HttpServletRequest request) {
+	public String login(AgencyBackwardPo agencyBackward,
+			HttpServletRequest request, Model model) {
 		if (null == agencyBackward) {
 			System.out.println("执行goLogin");
 		}
@@ -145,7 +147,9 @@ public class AgencyController {
 				loginMap.put("userName", agencyBackward.getUserName());
 				loginMap.put("userPass", agencyBackward.getUserPass());
 				loginMap.put("msg", "该账号已限制登陆地区");
-				return new ModelAndView("/agency/login_page", "loginMap", loginMap);
+//				return new ModelAndView("/agency/login_page", "loginMap", loginMap);
+				model.addAttribute(loginMap);
+				return "/agency/login_page";
 			}else{
 				String eventIp = addressMap.get("ip").toString();
 				//得到上一次的登陆日志
@@ -155,6 +159,7 @@ public class AgencyController {
 				AccountEventPo eventPo = accountEventDao.get(where);
 				if(eventPo != null){
 					session.setAttribute("loginIpAddress", eventPo.getEventLocation());
+					session.setAttribute("loginTime", eventPo.getEventTime()==null?System.currentTimeMillis():DateUtil.formatAll(eventPo.getEventTime()));
 				}else{
 					session.setAttribute("loginIpAddress", address);
 				}
@@ -220,15 +225,34 @@ public class AgencyController {
 			
 			session.setAttribute("msgNum", msgNum);
 			
-			return new ModelAndView("/index");// 返回登录人主要账户信息（余额，透支额）
+//			return new ModelAndView("/agency/login_page");// 返回登录人主要账户信息（余额，透支额）
+			return "/agency/login_page";
 		} else {//保留参数
 			Map<String,Object> loginMap = new HashMap<String, Object>();
 			loginMap.put("userName", agencyBackward.getUserName());
 			loginMap.put("userPass", agencyBackward.getUserPass());
 			loginMap.put("msg", resultMsg);
-			return new ModelAndView("/agency/login_page", "loginMap", loginMap);
+			model.addAttribute(loginMap);
+			return "/agency/login_page";
+//			return new ModelAndView("/agency/login_page", "loginMap", loginMap);
 		}
 	}
+	/**
+	 * @description: 首页控制
+	 * @param request
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月9日 上午9:08:19
+	 */
+//	@RequestMapping(value=AgencyURL.INDEX)
+//	public String goIndex(HttpServletRequest request) {
+////		request.get
+//		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//		if(agencyVo == null){
+//			return "/agency/login_page";
+//		}
+//		return "index";
+//	}
 
 	/**
 	 * @description: 跳转到注册页面
