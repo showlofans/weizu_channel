@@ -11,6 +11,7 @@
 //import com.weizu.flowsys.operatorPg.enums.EventTypeEnum;
 //import com.weizu.flowsys.operatorPg.enums.LoginStateEnum;
 //import com.weizu.flowsys.web.log.AccountEventPo;
+//import com.weizu.flowsys.web.log.ao.AccountEventAO;
 //import com.weizu.flowsys.web.log.dao.IAccountEventDao;
 //
 ///**
@@ -26,6 +27,8 @@
 //public class AccountEventDaoTest {
 //	@Resource
 //	private IAccountEventDao accountEventDao;
+//	@Resource
+//	private AccountEventAO accountEventAO;
 //	
 //	@Test
 //	public void testLogin(){
@@ -42,4 +45,9 @@
 //			accountEventDao.add(eventPo);
 //		}
 //	}
+//	@Test
+//	public void testUpdate(){
+//		int res = accountEventAO.updateLastByAgency(2, EventTypeEnum.AGENCY_LOGIN.getValue(), LoginStateEnum.ED.getValue());	
+//		System.out.println(res);
+//		}
 //}

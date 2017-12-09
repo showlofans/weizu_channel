@@ -322,11 +322,11 @@ $(document).ready(function() {
 		//$('form').submit();
 		formSub();
 	})
-	//$('.purchaseFor').change(function(){//特殊需求
-		//$("input[name='pageNoLong']").val('');
-		//$('#arriveStartTimeStr').val('');
-		//$('form').submit();
-	//})
+	/* $('.purchaseFor').change(function(){//特殊需求
+		$("input[name='pageNoLong']").val('');
+		$('#arriveStartTimeStr').val(null);
+		$('form').submit();
+	}) */
 }); 
 </script> 
 </body>

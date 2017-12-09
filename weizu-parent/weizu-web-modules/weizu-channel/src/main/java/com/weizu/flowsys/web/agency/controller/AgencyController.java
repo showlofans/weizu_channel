@@ -46,6 +46,7 @@ import com.weizu.flowsys.web.agency.pojo.CompanyCredentialsPo;
 import com.weizu.flowsys.web.agency.pojo.TransferMsgVo;
 import com.weizu.flowsys.web.agency.url.AgencyURL;
 import com.weizu.flowsys.web.log.AccountEventPo;
+import com.weizu.flowsys.web.log.ao.AccountEventAO;
 import com.weizu.flowsys.web.log.dao.IAccountEventDao;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.VerifyCodeUtils;
@@ -75,6 +76,9 @@ public class AgencyController {
 	private AddressUtils addressUtils;
 	@Resource
 	private IAccountEventDao accountEventDao;
+	
+	@Resource
+	private AccountEventAO accountEventAO;
 	
 	
 //	/**
@@ -124,7 +128,7 @@ public class AgencyController {
 	 * @createTime:2017年5月6日 下午12:17:07
 	 */
 	@RequestMapping(value = AgencyURL.LOGIN)
-	public String login(AgencyBackwardPo agencyBackward,
+	public ModelAndView login(AgencyBackwardPo agencyBackward,
 			HttpServletRequest request, Model model) {
 		if (null == agencyBackward) {
 			System.out.println("执行goLogin");
@@ -147,16 +151,18 @@ public class AgencyController {
 				loginMap.put("userName", agencyBackward.getUserName());
 				loginMap.put("userPass", agencyBackward.getUserPass());
 				loginMap.put("msg", "该账号已限制登陆地区");
-//				return new ModelAndView("/agency/login_page", "loginMap", loginMap);
-				model.addAttribute(loginMap);
-				return "/agency/login_page";
+				return new ModelAndView("/agency/login_page", "loginMap", loginMap);
+//				model.addAttribute(loginMap);
+//				return "/agency/login_page";
 			}else{
 				String eventIp = addressMap.get("ip").toString();
 				//得到上一次的登陆日志
+				
 				WherePrams where = new WherePrams("agency_id", "=", resultPo.getId()).and("event_state", "=", LoginStateEnum.ING.getValue());
 				where.orderBy("event_time",WherePrams.DESC);
 				where.limit(0, 1);
-				AccountEventPo eventPo = accountEventDao.get(where);
+				//已经拦截了等出去的登陆
+				AccountEventPo eventPo = accountEventAO.getLastByAgency(resultPo.getId(), EventTypeEnum.AGENCY_LOGIN.getValue());
 				if(eventPo != null){
 					session.setAttribute("loginIpAddress", eventPo.getEventLocation());
 					session.setAttribute("loginTime", eventPo.getEventTime()==null?System.currentTimeMillis():DateUtil.formatAll(eventPo.getEventTime()));
@@ -165,7 +171,7 @@ public class AgencyController {
 				}
 				
 				//添加登陆日志
-				accountEventDao.add(new AccountEventPo(resultPo.getId(), EventTypeEnum.AGENCY_LOGIN.getValue(), System.currentTimeMillis(), address, eventIp, LoginStateEnum.ING.getValue()));
+				accountEventDao.add(new AccountEventPo(resultPo.getId(), EventTypeEnum.AGENCY_LOGIN.getValue(), System.currentTimeMillis(), address, eventIp, LoginStateEnum.ING.getValue()+""));
 //				int logAdd = accountEventDao.add(new AccountEventPo(resultPo.getId(), EventTypeEnum.AGENCY_LOGIN.getValue(), System.currentTimeMillis(), address, eventIp, LoginStateEnum.ING.getValue()));
 //				System.out.println("日志成功添加："+logAdd);
 			}
@@ -225,16 +231,16 @@ public class AgencyController {
 			
 			session.setAttribute("msgNum", msgNum);
 			
-//			return new ModelAndView("/agency/login_page");// 返回登录人主要账户信息（余额，透支额）
-			return "/agency/login_page";
+			return new ModelAndView("/agency/login_page");// 返回登录人主要账户信息（余额，透支额）
+//			return "/agency/login_page";
 		} else {//保留参数
 			Map<String,Object> loginMap = new HashMap<String, Object>();
 			loginMap.put("userName", agencyBackward.getUserName());
 			loginMap.put("userPass", agencyBackward.getUserPass());
 			loginMap.put("msg", resultMsg);
-			model.addAttribute(loginMap);
-			return "/agency/login_page";
-//			return new ModelAndView("/agency/login_page", "loginMap", loginMap);
+//			model.addAttribute(loginMap);
+//			return "/agency/login_page";
+			return new ModelAndView("/agency/login_page", "loginMap", loginMap);
 		}
 	}
 	/**
@@ -518,7 +524,10 @@ public class AgencyController {
 		AgencyBackwardVO agencyBackwardVO = (AgencyBackwardVO) request.getSession()
 				.getAttribute("loginContext");
 		if (agencyBackwardVO != null) {
-			request.getSession().removeAttribute("loginContext");
+			int res = accountEventAO.updateLastByAgency(agencyBackwardVO.getId(), EventTypeEnum.AGENCY_LOGIN.getValue(), LoginStateEnum.ED.getValue()+"");
+			if(res > 0){
+				request.getSession().removeAttribute("loginContext");
+			}
 		}
 		return new ModelAndView("/agency/login_page");
 	}

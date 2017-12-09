@@ -88,6 +88,19 @@
 				</span>
 		</div>
 	</div>
+	<div class="row cl" id="rateForDiv" style="display:none">
+		<label class="form-label col-xs-4 col-sm-3">折扣类型：</label>
+		<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<span class="select-box inline">
+					<select onchange="ifAjaxPg()" id="rateFor" style="width:150px;" class="select">
+						<!-- <option value="">请选择</option> -->
+						<c:forEach items="${resultMap.telChannelTagEnums }" var="telChannelTagEnum" varStatus="vs1">
+							<option value="${telChannelTagEnum.value }" <c:if test="${telChannelTagEnum.value == resultMap.params.rateFor }"> selected</c:if>>${telChannelTagEnum.desc }</option>
+						</c:forEach>
+					</select>
+				</span>
+		</div>
+	</div>
 	
 		
 		
@@ -358,9 +371,10 @@
 			ajaxPg();//重新发送一次请求
 		} */
 		//
-		/* $("#chargeValue").val("");//重置参数
-  	 	 $("#orderAmount").val("");
-  	 	 $("#orderAmount").val(""); */
+		$("#chargeValue").val("");//重置参数
+		 $("#orderAmount").val("");
+		 $("#rateDiscount").html("");
+		 /*  $("#orderAmount").val(""); */
   	 	var sType1 = $("#select-servce-type").val();
   	 	//异步获得价格折扣的时候
   	 	if(sType1 != null && sType1 != ''){
@@ -420,6 +434,10 @@
 		  		  		url += '&chargeSpeed=';
 		  		  		url += chargeSpeed;
 		  		  		//alert(itag2);
+		  		  	if($('#rateForDiv').is(':visible')){
+			  		  	url += '&rateFor=';
+		  		  		url += $('#rateFor').val();
+		  			}
 		  		  		if(itag2 != 0){//省份合法，开始发送请求
 		  		  			//alert(url);
 		  		  			$.ajax({
@@ -432,6 +450,12 @@
 		  		                	var dataList = data.getRateList;
 		  		                	var appendData1 = "<label class='form-label col-xs-4 col-sm-3'>话费价值：</label><div class='formControls col-xs-8 col-sm-9 skin-minimal'>"; 
 		  		                    if(dataList != null && dataList.length > 0){
+		  		                    	if(data.dataUser == 'yes'){
+		  		                    		$('#rateForDiv').show();
+		  		                    	}else{
+		  		                    		$('#rateForDiv').hide();
+		  		                    	}
+		  		                    	
 		  		                        for(var i=0; i < dataList.length; i++){
 		  		                      	   var chargeValue = dataList[i].chargeValue;
 		  		                      	   var discount = dataList[i].activeDiscount;

@@ -15,13 +15,13 @@ import java.util.Map;
  */
 public enum TelChannelTagEnum {
 	/**
-	 * 数据用户
+	 * 平台用户-0
 	 */
-	DATA_USER("数据级",1),
+	PLATFORM_USER("平台级",0),
 	/**
-	 * 平台用户
+	 * 数据用户-1
 	 */
-	PLATFORM_USER("平台级",0);
+	DATA_USER("数据级",1);
 	/**
 	 * 枚举名称
 	 */

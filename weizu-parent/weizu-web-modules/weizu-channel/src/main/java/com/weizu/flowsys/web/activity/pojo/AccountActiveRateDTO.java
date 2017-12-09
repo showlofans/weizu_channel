@@ -4,7 +4,7 @@ import com.weizu.flowsys.core.annotation.po.TableName;
 import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
 
-@TableName(name="agency_active_rate")
+@TableName(name="account_active_rate")
 public class AccountActiveRateDTO extends Po {
 	private Long id;
 

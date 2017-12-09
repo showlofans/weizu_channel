@@ -187,6 +187,14 @@ public class WherePrams {
 //		limitParms.add(length);
 		return this;
 	}
+	public WherePrams limit(int startNum) {
+		// TODO Auto-generated constructor stub
+//		this.limit = " limit ? , ? ";
+		this.limit = " limit " + startNum + " ";
+//		limitParms.add(startNum);
+//		limitParms.add(length);
+		return this;
+	}
 	
 	public WherePrams limit(long startNumLong, int length) {
 		// TODO Auto-generated constructor stub

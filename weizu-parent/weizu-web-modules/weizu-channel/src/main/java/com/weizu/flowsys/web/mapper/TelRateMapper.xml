@@ -63,7 +63,28 @@
 		<where>
 			<if test="platformUser != null">
 				 AND tt.rate_for = #{platformUser}
+				AND tt.id NOT IN(
+					SELECT tt2.id from <include refid="t_telrate"></include> tt2
+					INNER JOIN <include refid="t_tba"></include> tba
+					on tt2.id = tba.tel_rate_id
+					INNER JOIN <include refid="t_cat"></include> cat
+					on cat.id=tba.account_id
+					<where>
+						<if test="agencyId != null">
+							AND cat.agency_id = #{agencyId}
+						</if>
+						<if test="bind != null">
+							AND tba.bind_state = #{bind}
+						</if>
+						<if test="negative != null">
+							AND tba.bind_side = #{negative}
+						</if>
+			<!-- 		AND tba.bind_state=1 and tba.bind_side = 0 -->
+				</where>)
 			</if>
+			<!-- <if test="platformUser != null">
+				 AND tt.rate_for = #{platformUser}
+			</if> -->
 			<if test="provinceid != null">
 				AND tp.provinceid = #{provinceid}
 			</if>
@@ -73,7 +94,7 @@
 			<if test="useOpen != null">
 				AND tc.telchannel_use_state = #{useOpen}
 			</if>
-			AND tt.id NOT IN(
+<!-- 			AND tt.id NOT IN(
 				SELECT tt2.id from <include refid="t_telrate"></include> tt2
 				INNER JOIN <include refid="t_tba"></include> tba
 				on tt2.id = tba.tel_rate_id
@@ -89,8 +110,8 @@
 					<if test="negative != null">
 						AND tba.bind_side = #{negative}
 					</if>
-<!-- 		AND tba.bind_state=1 and tba.bind_side = 0 -->
-				</where>)
+		AND tba.bind_state=1 and tba.bind_side = 0
+				</where>) -->			
 			<if test="chargeSpeed != null">
 		  		AND tp.charge_speed = #{chargeSpeed}
 		  	</if>
@@ -100,7 +121,32 @@
 		  	<if test="operatorName != null">
 		  		AND tp.operator_name = #{operatorName}
 		  	</if>
-		  	or tt.id in(
+		  	<if test="dataUser != null">
+			  	AND tt.id in(
+			  		SELECT tt3.id from <include refid="t_telrate"></include> tt3
+			  		INNER JOIN <include refid="t_telchannel"></include> tc2
+					on tt3.telchannel_id=tc2.id
+					INNER JOIN <include refid="t_tba"></include> tba2
+					on tt3.id = tba2.tel_rate_id
+					INNER JOIN <include refid="t_cat"></include> cat
+					on cat.id=tba2.account_id
+					<where>
+						AND tt3.rate_for = #{dataUser} 
+						<if test="agencyId != null">
+							AND cat.agency_id = #{agencyId}
+						</if>
+						<if test="bind != null">
+							AND tba2.bind_state = #{bind}
+						</if>
+						<if test="positive != null">
+							AND tba2.bind_side = #{positive}
+						</if>
+						<if test="useOpen != null">
+							AND tc2.telchannel_use_state = #{useOpen}
+						</if>
+					</where>)
+			</if>
+		  <!-- 	or tt.id in(
 		  		SELECT tt3.id from <include refid="t_telrate"></include> tt3
 		  		INNER JOIN <include refid="t_telchannel"></include> tc2
 				on tt3.telchannel_id=tc2.id
@@ -124,7 +170,7 @@
 					<if test="useOpen != null">
 						AND tc2.telchannel_use_state = #{useOpen}
 					</if>
-				</where>)
+				</where>) -->
 		</where>
    </select>
   

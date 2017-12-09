@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +18,7 @@ import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.TelChannelTagEnum;
 import com.weizu.flowsys.operatorPg.enums.TelchargeSpeedEnum;
 import com.weizu.flowsys.web.activity.ao.TelRateAO;
 import com.weizu.flowsys.web.activity.dao.ITelRateDao;
@@ -28,6 +30,7 @@ import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.channel.dao.ITelChannelDao;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
+import com.weizu.flowsys.web.channel.pojo.TelChannelParams;
 import com.weizu.flowsys.web.channel.pojo.TelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.TelProductPo;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
@@ -77,6 +80,7 @@ public class ChargeTelController {
 		if(agencyVO != null){
 			resultMap.put("telchargeSpeedEnums", TelchargeSpeedEnum.toList());
 			resultMap.put("huaServiceTypeEnum", HuaServiceTypeEnum.toList());
+			resultMap.put("telChannelTagEnums", TelChannelTagEnum.toList());
 			return new ModelAndView("/trade/tel_charge_page","resultMap",resultMap);
 		}else{
 			return new ModelAndView("error", "errorMsg", "当前登录用户不合法");
@@ -93,16 +97,26 @@ public class ChargeTelController {
 	 */
 	@ResponseBody
 	@RequestMapping(value=ChargeTelURL.AJAX_CHARGE_TELPC)
-	public String ajaxTelpc(TelProductPo telProductPo,HttpServletRequest request){
+	public String ajaxTelpc(HttpServletRequest request,TelChannelParams telParams){
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		String jsonStr = "";
-		Map<String,Object> resultMap = new HashMap<String, Object>();
-		List<GetTelRatePo> getRateList = telRateAO.getRateForCharge(telProductPo);
-		if(getRateList != null && getRateList.size() > 0){
-			resultMap.put("getRateList", getRateList);
+		if(agencyVO != null){
+			Map<String,Object> resultMap = new HashMap<String, Object>();
+			if(telParams.getRateFor() == null){
+				telParams.setRateFor(agencyVO.getAgencyTag());
+			}
+			telRateAO.getRateForCharge(resultMap,telParams,agencyVO.getId());
+//			if(getRateList != null && getRateList.size() > 0){
+//				resultMap.put("getRateList", getRateList);
+//			}else{
+//				resultMap.put("msg", "没有该话费折扣");
+//			}
+			jsonStr = JSON.toJSONString(resultMap);
+			
 		}else{
-			resultMap.put("msg", "没有该话费折扣");
+			//model.addAttribute("errorMsg", "当前登录用户不合法");
+			jsonStr = "error";
 		}
-		jsonStr = JSON.toJSONString(resultMap);
 		return jsonStr;
 	}
 	

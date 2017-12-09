@@ -29,9 +29,13 @@ public enum EventTypeEnum {
 	 */
 	PURCHASE_CHARGE("订单充值",3),
 	/**
-	 * 有新代理商注册-4
+	 * 订单退款-4
 	 */
-	AGENCY_REGISTER("新代理商注册",4),
+	PURCHASE_FAIL("订单退款",4),
+	/**
+	 * 有新代理商注册-5
+	 */
+	AGENCY_REGISTER("新代理商注册",5),
 	/**
 	 * 修改密码-8
 	 */

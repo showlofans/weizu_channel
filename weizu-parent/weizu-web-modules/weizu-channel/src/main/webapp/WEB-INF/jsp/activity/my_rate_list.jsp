@@ -255,7 +255,7 @@ function addUp(vart){//vart是提交按钮
 						success: function(data){
 							layer.close(index);
 							layer.msg('更新成功', {icon:1,time:1000});
-							location.reload();
+							//location.reload();
 						},
 						error:function(data) {
 							console.log(data.msg);

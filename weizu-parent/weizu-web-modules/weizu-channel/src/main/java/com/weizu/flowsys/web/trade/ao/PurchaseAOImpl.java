@@ -1079,11 +1079,15 @@ public class PurchaseAOImpl implements PurchaseAO {
 			Long dateUtilStartTime = DateUtil.getStartTime().getTime();
 			Long dateUtilEndTime = DateUtil.getEndTime().getTime();
 			if(isCharged){//充值成功列表使用充值时间查询
-				if(purchaseVO.getBackStartTimeStr() == null){//默认打开列表
+//				if(purchaseVO.getBackStartTimeStr() == null){//默认打开列表
+//					paramsMap.put("startTimeBack", dateUtilStartTime);
+//				}else if("".equals(purchaseVO.getBackStartTimeStr())){
+//					paramsMap.put("startTimeBack", dateUtilStartTime);
+//				}
+				if(StringHelper.isEmpty(purchaseVO.getBackStartTimeStr())){
 					paramsMap.put("startTimeBack", dateUtilStartTime);
-				}else if("".equals(purchaseVO.getBackStartTimeStr())){
-					paramsMap.put("startTimeBack", null);
-				}else{
+				}
+				else{
 					startTime = DateUtil.strToDate(purchaseVO.getBackStartTimeStr(), null).getTime();
 					paramsMap.put("startTimeBack", startTime);
 				}
@@ -1095,11 +1099,15 @@ public class PurchaseAOImpl implements PurchaseAO {
 					paramsMap.put("endTimeBack", endTime);
 				}
 			}else{//其他状态使用订单到达时间
-				if(purchaseVO.getArriveStartTimeStr() == null){//默认打开列表
+//				if(purchaseVO.getArriveStartTimeStr() == null){//默认打开列表
+//					paramsMap.put("startTime", dateUtilStartTime);
+//				}else if("".equals(purchaseVO.getArriveStartTimeStr())){
+//					paramsMap.put("startTime", null);
+//				}
+				if(StringHelper.isEmpty(purchaseVO.getArriveStartTimeStr())){
 					paramsMap.put("startTime", dateUtilStartTime);
-				}else if("".equals(purchaseVO.getArriveStartTimeStr())){
-					paramsMap.put("startTime", null);
-				}else{
+				}
+				else{
 					startTime = DateUtil.strToDate(purchaseVO.getArriveStartTimeStr(), null).getTime();
 					//System.out.println(purchaseVO.getArriveStartTimeStr());
 					paramsMap.put("startTime", startTime);

@@ -26,22 +26,22 @@ public class AccountEventPo extends Po {
 	
 	private String eventIp;				//来源ip
 	
-	private Integer eventState;			//事件类型 loginStateEnum
+	private String eventKey;			//事件核心关键字
 	
 	private Integer billType;			//事件账户类型
 
 	public AccountEventPo(Integer agencyId, Integer eventType, Long eventTime,
-			String eventLocation, String eventIp, Integer eventState) {
+			String eventLocation, String eventIp, String eventKey) {
 		super();
 		this.agencyId = agencyId;
 		this.eventType = eventType;
 		this.eventTime = eventTime;
 		this.eventLocation = eventLocation;
 		this.eventIp = eventIp;
-		this.eventState = eventState;
+		this.eventKey = eventKey;
 	}
 	public AccountEventPo(Integer agencyId, Integer eventType, Long eventTime,
-			String eventLocation, String eventIp, Integer eventState,
+			String eventLocation, String eventIp, String eventKey,
 			Integer billType) {
 		super();
 		this.agencyId = agencyId;
@@ -49,7 +49,7 @@ public class AccountEventPo extends Po {
 		this.eventTime = eventTime;
 		this.eventLocation = eventLocation;
 		this.eventIp = eventIp;
-		this.eventState = eventState;
+		this.eventKey = eventKey;
 		this.billType = billType;
 	}
 
@@ -107,14 +107,12 @@ public class AccountEventPo extends Po {
 		this.eventIp = eventIp;
 	}
 
-	public Integer getEventState() {
-		return eventState;
+	public String getEventKey() {
+		return eventKey;
 	}
-
-	public void setEventState(Integer eventState) {
-		this.eventState = eventState;
+	public void setEventKey(String eventKey) {
+		this.eventKey = eventKey;
 	}
-
 	public Integer getBillType() {
 		return billType;
 	}
