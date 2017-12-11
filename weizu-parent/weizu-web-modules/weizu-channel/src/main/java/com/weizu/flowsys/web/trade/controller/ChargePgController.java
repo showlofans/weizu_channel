@@ -514,7 +514,7 @@ public class ChargePgController {
 							resultMap.put("rateDiscountId", ratePo.getId());			//	折扣id
 							resultMap.put("billType", ratePo.getBillType());
 							
-							ExchangePlatformPo platformPo = exchangePlatformDao.getEpByRateId(ratePo.getId());
+							ExchangePlatformPo platformPo = exchangePlatformDao.getEpByCDiscountId(ratePo.getChannelDiscountId());
 							if(platformPo != null){
 								String scopeCityCode = ScopeCityEnum.QG.getValue();
 								if(serviceType != ServiceTypeEnum.NATION_WIDE.getValue()){

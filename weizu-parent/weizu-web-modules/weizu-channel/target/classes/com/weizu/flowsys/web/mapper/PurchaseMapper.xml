@@ -50,6 +50,9 @@
     <result column="charge_value" property="chargeValue" />
     <result column="agency_call_ip" property="agencyCallIp" jdbcType="VARCHAR" />
     <result column="purchase_for" property="purchaseFor" jdbcType="INTEGER" />
+    <result column="has_call_back" property="hasCallBack" jdbcType="INTEGER" />
+    
+    
     <!-- 连接表信息 -->
     <result column="order_arrive_time" property="orderArriveTime" jdbcType="BIGINT" />
     <result column="order_back_time" property="orderBackTime" jdbcType="BIGINT" />
@@ -63,7 +66,7 @@
     <result column="order_price" property="orderPrice" jdbcType="DOUBLE" />
     <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
     <result column="actBill_type" property="billType" jdbcType="INTEGER" />
-    <result column="rate_discount_id" property="rateDiscountId" jdbcType="BIGINT" />
+    <result column="channel_discount_id" property="channelDiscountId" jdbcType="BIGINT" />
     <result column="ap_discount" property="apDiscount" jdbcType="DOUBLE" />
     
     <result column="charge_speed" property="chargeSpeed" jdbcType="INTEGER" />
@@ -93,17 +96,17 @@
   </sql>
   <sql id="VO_Column_List"><!-- 订单页面 -->
   	ap.from_agency_name,ap.account_id, ap.from_account_id, pur.order_id, pur.order_id_api, pur.order_id_from, pur.charge_tel, 
-  	pg.pg_size, pg.operator_type,pg.service_type, pur.charge_value, 
+  	pg.pg_size, pg.operator_type,pg.service_type, pur.charge_value, pur.has_call_back,pur.purchase_for,
   	pur.order_arrive_time,
   	pur.order_back_time, pur.charge_tel_detail, pur.charge_tel_city,ap.order_amount ap_order_amount,ap.order_price,pur.order_result,ap.order_state,ap.order_state_Detail,ap.order_platform_path,
-  	 pur.order_result_detail,pur.channel_name,act.bill_type actBill_type, act2.agency_id, ap.rate_discount_id,ap.ap_discount, pur.agency_call_ip
+  	 pur.order_result_detail,pur.channel_name,act.bill_type actBill_type, act2.agency_id, ap.channel_discount_id,ap.ap_discount, pur.agency_call_ip
   </sql>
   <sql id="VO2_Column_List"><!-- 订单页面 -->
   	ap.from_agency_name,ap.account_id, ap.from_account_id, pur.order_id, pur.order_id_api, pur.order_id_from, pur.charge_tel, 
-  	 pur.charge_value, tp.operator_name operator_type,tp.service_type, tp.charge_speed, 
+  	 pur.charge_value, tp.operator_name operator_type,tp.service_type, tp.charge_speed, pur.has_call_back,pur.purchase_for,
   	pur.order_arrive_time,
   	pur.order_back_time, pur.charge_tel_detail, pur.charge_tel_city,ap.order_amount ap_order_amount,ap.order_price,pur.order_result,ap.order_state,ap.order_state_Detail,ap.order_platform_path,
-  	 pur.order_result_detail,pur.channel_name,act.bill_type actBill_type, act2.agency_id, ap.rate_discount_id,ap.ap_discount, pur.agency_call_ip
+  	 pur.order_result_detail,pur.channel_name,act.bill_type actBill_type, act2.agency_id, ap.channel_discount_id,ap.ap_discount, pur.agency_call_ip
   </sql>
   
   

@@ -78,20 +78,26 @@
 ////			System.out.println(epPO.getEpName());
 ////		}
 ////	}
-//	@Test
-//	public void updateEpUserPass(){
-//		List<ExchangePlatformPo> list = exchangePlatformDao.list(new WherePrams("1", "=", "1"));
-//		int upd = 0;
-//		for (ExchangePlatformPo exchangePlatformPo : list) {
-//			String epUserPass = exchangePlatformPo.getEpUserPass();
-////			epUserPass = Hash.BASE_UTIL.decode(epUserPass);
-//			epUserPass = Hash.BASE_UTIL.encode(epUserPass);
-//			exchangePlatformPo.setEpUserPass(epUserPass);
-//			exchangePlatformPo.setEpFor(PgServiceTypeEnum.TELCHARGE.getValue());
-//			upd += exchangePlatformDao.updateLocal(exchangePlatformPo);
-////			System.out.println(epUserPass);
-//		}
-//		System.out.println(upd);
-//	}
+////	@Test
+////	public void updateEpUserPass(){
+////		List<ExchangePlatformPo> list = exchangePlatformDao.list(new WherePrams("1", "=", "1"));
+////		int upd = 0;
+////		for (ExchangePlatformPo exchangePlatformPo : list) {
+////			String epUserPass = exchangePlatformPo.getEpUserPass();
+//////			epUserPass = Hash.BASE_UTIL.decode(epUserPass);
+////			epUserPass = Hash.BASE_UTIL.encode(epUserPass);
+////			exchangePlatformPo.setEpUserPass(epUserPass);
+////			exchangePlatformPo.setEpFor(PgServiceTypeEnum.TELCHARGE.getValue());
+////			upd += exchangePlatformDao.updateLocal(exchangePlatformPo);
+//////			System.out.println(epUserPass);
+////		}
+////		System.out.println(upd);
+////	}
+//	
+////	@Test
+////	public void getEpByChannelD(){
+////		ExchangePlatformPo epPo = exchangePlatformDao.getEpByCDiscountId(46l);
+////		System.out.println(epPo == null?"12":epPo.getEpName());
+////	}
 //
 //}

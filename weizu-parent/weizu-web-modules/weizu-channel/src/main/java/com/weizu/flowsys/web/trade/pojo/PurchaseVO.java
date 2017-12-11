@@ -83,13 +83,15 @@ public class PurchaseVO implements Cloneable,Serializable {
     
     private Integer billType;					//账户类型（搜索和展示参数）
     
-    private Long rateDiscountId;						//费率折扣id
+    private Long channelDiscountId;						//通道折扣id
     
     private Double apDiscount;					//实际折扣
     
     private String agencyCallIp;				//代理商回调地址
     
     private Integer chargeSpeed;				//充值速度
+    
+    private Integer hasCallBack;				//是否已经接收到了回调(枚举：orderResultEnum)
     
     @Override
 	public PurchaseVO clone() {
@@ -102,7 +104,14 @@ public class PurchaseVO implements Cloneable,Serializable {
 		return pvo;
 	}
     
-    
+	public Integer getHasCallBack() {
+		return hasCallBack;
+	}
+
+	public void setHasCallBack(Integer hasCallBack) {
+		this.hasCallBack = hasCallBack;
+	}
+
 	public Integer getOperatorName() {
 		return operatorName;
 	}
@@ -171,12 +180,12 @@ public class PurchaseVO implements Cloneable,Serializable {
 		this.agencyId = agencyId;
 	}
 
-	public Long getRateDiscountId() {
-		return rateDiscountId;
+	public Long getChannelDiscountId() {
+		return channelDiscountId;
 	}
 
-	public void setRateDiscountId(Long rateDiscountId) {
-		this.rateDiscountId = rateDiscountId;
+	public void setChannelDiscountId(Long channelDiscountId) {
+		this.channelDiscountId = channelDiscountId;
 	}
 
 	public Integer getAccountId() {

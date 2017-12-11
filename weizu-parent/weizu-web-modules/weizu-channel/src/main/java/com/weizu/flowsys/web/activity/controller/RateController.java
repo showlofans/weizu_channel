@@ -516,7 +516,8 @@ public class RateController {
 //				String agencyName = request.getSession().getAttribute("childAgencyName").toString();
 //				String agencyIdStr = request.getSession().getAttribute("childAgencyId").toString();
 				int bindAgencyId = agencyVO.getId();
-				ratePo.setAgencyId(childAccountPo.getAgencyId());
+//				ratePo.setAgencyId();
+				ratePo.setAccountId(childAccountPo.getId());
 				resAddDis = rateDiscountAO.addRateDiscount(ratePo, childAccountPo.getAgencyName(), bindAgencyId);
 			}
 		}

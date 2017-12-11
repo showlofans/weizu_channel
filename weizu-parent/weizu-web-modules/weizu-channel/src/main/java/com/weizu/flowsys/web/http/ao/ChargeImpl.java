@@ -239,7 +239,7 @@ public class ChargeImpl implements IChargeFacet {
 			}
 			purResult = purchaseDAO.addPurchase(purchasePo);
 			if(recordId != 0){
-				AccountPurchasePo app = new AccountPurchasePo(accountId, orderId,ratePo.getId(), orderAmount,accountPo.getId(),recordId, orderAmount, backPo.getUserName(), orderPath, orderState);
+				AccountPurchasePo app = new AccountPurchasePo(accountId, orderId,ratePo.getChannelDiscountId(), orderAmount,accountPo.getId(),recordId, orderAmount, backPo.getUserName(), orderPath, orderState);
 				app.setOrderStateDetail(orderStateDetail);
 				accountPurchaseDao.add(app);
 			}

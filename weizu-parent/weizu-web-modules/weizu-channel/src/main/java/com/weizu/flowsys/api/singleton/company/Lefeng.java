@@ -37,6 +37,7 @@ public class Lefeng implements BaseInterface {
 
 	@Resource
 	private PurchaseDao purchaseDAO;
+	
 	private static Lefeng instance = new Lefeng();  
 	private static String epEngId;
 	private static BaseP baseParams;

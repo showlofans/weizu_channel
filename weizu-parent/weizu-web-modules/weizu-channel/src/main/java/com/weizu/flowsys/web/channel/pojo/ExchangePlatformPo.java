@@ -55,6 +55,8 @@ public class ExchangePlatformPo extends Po {
     @TempField
     private String lastAccessStr;		//页面展示时间
     
+    
+    
     public Integer getEpFor() {
 		return epFor;
 	}
@@ -201,8 +203,12 @@ public class ExchangePlatformPo extends Po {
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return super.toString();
+		return "ExchangePlatformPo [epName=" + epName + ", epPurchaseIp="
+				+ epPurchaseIp + ", productListIp=" + productListIp
+				+ ", epBalanceIp=" + epBalanceIp + ", epUserName=" + epUserName
+				+ ", epUserPass=" + epUserPass + ", epApikey=" + epApikey
+				+ ", epEngId=" + epEngId + ", epOtherParams=" + epOtherParams
+				+ ", epFor=" + epFor + "]";
 	}
 
 

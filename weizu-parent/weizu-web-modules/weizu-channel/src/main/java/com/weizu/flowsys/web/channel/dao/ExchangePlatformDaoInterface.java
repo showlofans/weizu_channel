@@ -33,7 +33,7 @@ public interface ExchangePlatformDaoInterface extends Dao<ExchangePlatformPo, In
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年9月16日 下午5:08:00
 	 */
-	ExchangePlatformPo getEpByRateId(Long rateId);
+//	ExchangePlatformPo getEpByCDId(Long rateId);
 	
 	/**
 	 * @description:根据通道折扣id获得平台信息
@@ -43,6 +43,15 @@ public interface ExchangePlatformDaoInterface extends Dao<ExchangePlatformPo, In
 	 * @createTime:2017年9月18日 上午9:07:50
 	 */
 	ExchangePlatformPo getEpByCDiscountId(Long CDiscountId);
+	
+	/**
+	 * @description: 通过话费通道id获得平台信息
+	 * @param telchannelId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月11日 下午4:38:34
+	 */
+	ExchangePlatformPo getEpByTelchannelId(Long telchannelId);
 	/**
 	 * @description:获得所有平台名称
 	 * @param name

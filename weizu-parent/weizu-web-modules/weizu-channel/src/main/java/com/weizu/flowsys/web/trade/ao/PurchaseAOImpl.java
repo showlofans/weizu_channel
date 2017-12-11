@@ -357,7 +357,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				/** 更新登录用户账户信息**/
 				recordRes = chargeAccountAO.updateAccount(chargeAccountPo);
 				if(recordRes > 0){
-					Long rateDiscountId = telRatePo.getId();			//折扣id
+					Long telChannelId = telRatePo.getTelchannelId();			//折扣id
 					if(recordRes > 0){//开始把第一个消费记录，连接加上，
 						/** 向消费记录表插入登陆用户数据 */
 						chargeRecordDao.add(new ChargeRecordPo(currentTime, orderAmount,
@@ -366,7 +366,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 						/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
 						int orderPath = OrderPathEnum.WEB_PAGE.getValue();
 						Long recordId = chargeRecordDao.nextId() -1;
-						AccountPurchasePo app = new AccountPurchasePo(accountId, orderId, rateDiscountId, orderAmount, tcVO.getAccountId(), recordId, orderAmount, tcVO.getFromAgencyName(), orderPath, orderState);
+						AccountPurchasePo app = new AccountPurchasePo(accountId, orderId, telChannelId, orderAmount, tcVO.getAccountId(), recordId, orderAmount, tcVO.getFromAgencyName(), orderPath, orderState);
 						app.setOrderStateDetail(orderStateDetail);
 						app.setApDiscount(telRatePo.getActiveDiscount());
 						int aapAddRes = accountPurchaseDao.add(app);
@@ -419,7 +419,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 								agencyBeforeBalance, agencyAfterBalance, 
 								AccountTypeEnum.DECREASE.getValue(), apAccountId, tcVO.getChargeFor(), orderId));	
 						int orderPath = OrderPathEnum.CHILD_WEB_PAGE.getValue();
-						AccountPurchasePo app = new AccountPurchasePo(apAccountId, orderId, activeRatePo.getId(), minusAmount,from_accountPo.getId(), recordId, plusAmount, fromAgencyName, orderPath, orderState);
+						AccountPurchasePo app = new AccountPurchasePo(apAccountId, orderId, activeRatePo.getTelchannelId(), minusAmount,from_accountPo.getId(), recordId, plusAmount, fromAgencyName, orderPath, orderState);
 						recordId++;
 						app.setOrderStateDetail(orderStateDetail);
 						app.setApDiscount(activeRatePo.getActiveDiscount());
@@ -664,7 +664,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				/** 更新登录用户账户信息**/
 				recordRes = chargeAccountAO.updateAccount(chargeAccountPo);
 				if(recordRes > 0){
-					Long rateDiscountId = ratePo.getId();			//折扣id
+					Long channelDiscountId = ratePo.getChannelDiscountId();			//折扣id
 					if(recordRes > 0){//开始把第一个消费记录，连接加上，
 						/** 向消费记录表插入登陆用户数据 */
 						chargeRecordDao.add(new ChargeRecordPo(currentTime, orderAmount,
@@ -673,7 +673,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 						/**再向下游返回回调，并更新数据库中订单表中返回时间和返回结果*/
 						int orderPath = OrderPathEnum.WEB_PAGE.getValue();
 						Long recordId = chargeRecordDao.nextId() -1;
-						AccountPurchasePo app = new AccountPurchasePo(accountId, orderId, rateDiscountId, orderAmount, pcVO.getAccountId(), recordId, orderAmount, pcVO.getFromAgencyName(), orderPath, orderState);
+						AccountPurchasePo app = new AccountPurchasePo(accountId, orderId, channelDiscountId, orderAmount, pcVO.getAccountId(), recordId, orderAmount, pcVO.getFromAgencyName(), orderPath, orderState);
 						app.setOrderStateDetail(orderStateDetail);
 						app.setApDiscount(ratePo.getActiveDiscount());
 						int aapAddRes = accountPurchaseDao.add(app);
@@ -726,7 +726,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 								agencyBeforeBalance, agencyAfterBalance, 
 								AccountTypeEnum.DECREASE.getValue(), apAccountId, pcVO.getChargeFor(), orderId));	
 						int orderPath = OrderPathEnum.CHILD_WEB_PAGE.getValue();
-						AccountPurchasePo app = new AccountPurchasePo(apAccountId, orderId, activeRatePo.getId(), minusAmount,from_accountPo.getId(), recordId, plusAmount, fromAgencyName, orderPath, orderState);
+						AccountPurchasePo app = new AccountPurchasePo(apAccountId, orderId, activeRatePo.getChannelDiscountId(), minusAmount,from_accountPo.getId(), recordId, plusAmount, fromAgencyName, orderPath, orderState);
 						recordId++;
 						app.setOrderStateDetail(orderStateDetail);
 						app.setApDiscount(activeRatePo.getActiveDiscount());
@@ -867,7 +867,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 //					if(charge!= null){
 //						orderResultDetail = charge.getTipMsg();
 //					}
-						superApPo.setRateDiscountId(cd.getId());//ap中的通道折扣id只对超级管理员有用
+						superApPo.setChannelDiscountId(cd.getId());//ap中的通道折扣id只对超级管理员有用
 						superApPo.setApDiscount(cd.getChannelDiscount());
 						superApPo.setOrderState(orderResult);
 						superApPo.setOrderStateDetail(OrderStateEnum.CHARGING.getDesc());
@@ -884,7 +884,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 //			}else{
 //				
 //			}
-				apPo.setRateDiscountId(ratePo.getId());
+				apPo.setChannelDiscountId(ratePo.getChannelDiscountId());
 //			 int aapUpdRes = accountPurchaseDao.update(apPo);
 				int aapUpdRes = accountPurchaseDao.updateLocal(apPo, new WherePrams("account_id", "=", accountId).and("purchase_id", "=", orderId));
 				
@@ -1155,38 +1155,31 @@ public class PurchaseAOImpl implements PurchaseAO {
 			//遍历每一个订单，查看它的订单状态
 			for (PurchaseVO purchaseVO2 : records) {
 				/**查询订单成本*/
-//				AgencyBackwardPo agencyPo = agencyAO.getAgencyByAccountId(purchaseVO2.getAccountId()); //订单所属代理商
 				int accountId = purchaseVO2.getAccountId();
 				ChargeAccountPo accountPo = chargeAccountDao.get(accountId);
 				if(accountPo != null){
+					//重新设定成本
 					if(!accountPo.getAgencyId().equals(purchaseVO.getAgencyId())){//查一遍这个订单的成本(当前订单绑定的账户所属代理商和当前登陆代理商不是同一个)
-								//根据代理商id和订单id设置页面订单成本
-//					ChargeAccountPo accountPo = chargeAccountAO.getAccountByAgencyId(purchaseVO.getAgencyId(), BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-//					ChargeAccountPo accountPo1 = chargeAccountAO.getAccountByAgencyId(purchaseVO.getAgencyId(), BillTypeEnum.CORPORATE_BUSINESS.getValue());
-//					Double orderAmount = null;
-//					if(accountPo1!= null){//优先使用对公账户查询
 						AccountPurchasePo ap = accountPurchaseDao.getAPByAccountType(purchaseVO2.getOrderId(), accountId,AccountTypeEnum.DECREASE.getValue());//得到了成本
 						Double orderAmount = ap.getOrderAmount();
 						if(orderAmount != null){
 							purchaseVO2.setOrderAmount(orderAmount);
 						}
-//						else if(accountPo != null){
-//							orderAmount = accountPurchaseDao.getOrderAmount(purchaseVO2.getOrderId(), accountPo.getId());//得到了成本
-//							if(orderAmount != null){
-//								purchaseVO2.setOrderAmount(orderAmount);
-//							}
-//						}
-//					}
 					}
 					//通道暂停保存的单子，不在加载列表的时候更新她的订单状态
 					boolean canGetStateByAPI = purchaseVO2.getOrderResult() != null && purchaseVO2.getOrderResult().equals(OrderStateEnum.DAICHONG.getValue()) && "通道暂停等待".equals(purchaseVO2.getOrderResultDetail());
+					Boolean hasCallBack = OrderResultEnum.SUCCESS.getCode().equals(purchaseVO2.getHasCallBack());
 					/**订单列表，订单又不支持回调的时候**/
-					if(isPurchaseList && purchaseVO2.getRateDiscountId() != null && !canGetStateByAPI && purchaseVO2.getOrderResult() != null){//只能通过费率id，如果通道或者费率被删除，就得不到最新的订单状态//要求有充值回调记录
-						
-						ExchangePlatformPo purchaseEp = exchangePlatformDao.getEpByRateId(purchaseVO2.getRateDiscountId());
-						if(purchaseEp == null){
-							purchaseEp = exchangePlatformDao.getEpByCDiscountId(purchaseVO2.getRateDiscountId());
+					if(!hasCallBack && isPurchaseList && purchaseVO2.getChannelDiscountId() != null && !canGetStateByAPI && purchaseVO2.getOrderResult() != null){//只能通过费率id，如果通道或者费率被删除，就得不到最新的订单状态//要求有充值回调记录
+						ExchangePlatformPo purchaseEp = null;
+						if(PgServiceTypeEnum.PGCHARGE.getValue().equals(purchaseVO2.getPurchaseFor())){
+							purchaseEp = exchangePlatformDao.getEpByCDiscountId(purchaseVO2.getChannelDiscountId());
+						}else{
+							purchaseEp = exchangePlatformDao.getEpByTelchannelId(purchaseVO2.getChannelDiscountId());
 						}
+//						if(purchaseEp == null){
+//							purchaseEp = exchangePlatformDao.getEpByCDiscountId(purchaseVO2.getChannelDiscountId());
+//						}
 						if(purchaseEp != null){
 							boolean negCallBack = CallBackEnum.NEGATIVE.getValue().equals(purchaseEp.getEpCallBack());
 							if(negCallBack){//不支持回调就用主动查询，查询订单状态
