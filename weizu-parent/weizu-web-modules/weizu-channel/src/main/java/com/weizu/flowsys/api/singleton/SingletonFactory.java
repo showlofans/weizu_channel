@@ -21,7 +21,7 @@ public class SingletonFactory {
 			return Lljypt.getInstance(epEngId, baseParams);
 		}else if(MyConstants.LEFENG_ENG.equals(epEngId)){
 			return Lefeng.getInstance(epEngId, baseParams);
-		}else if(MyConstants.WANTULL_ENG.equals(epEngId)){
+		}else if(MyConstants.WANTULL_ENG.equals(epEngId)|| MyConstants.WANTULL_ENG_0.equals(epEngId)){
 			return Wantull.getInstance(epEngId, baseParams);
 		}
 		

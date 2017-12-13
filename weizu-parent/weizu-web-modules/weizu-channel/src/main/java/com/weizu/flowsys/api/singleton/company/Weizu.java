@@ -94,7 +94,7 @@ public class Weizu implements BaseInterface {
 		String jsonStr = HttpRequest.sendGet(baseParams.getEpo().getEpOrderStateIp(),paramsStr);
 		OrderDTO orderDTO = null;
 		try {  
-			if(StringHelper.isEmpty(jsonStr)){
+			if(StringHelper.isEmpty(jsonStr) || "exception".equals(jsonStr)){
 		 		return null;
 		 	}
             JSONObject obj = JSON.parseObject(jsonStr);
@@ -184,10 +184,13 @@ public class Weizu implements BaseInterface {
 //		ExchangePlatformPo epPo = baseParams.getEpo();
 		
 		 String jsonStr = HttpRequest.sendGet(baseParams.getEpo().getEpPurchaseIp(), toParams());
-		 
 		 ChargeDTO chargeDTO = null;
+//		 if("exception".equals(jsonStr)){
+//			 chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), "请求失败", null);
+//		 }
+		 
 		 try {  
-			 	if(StringHelper.isEmpty(jsonStr)){
+			 	if(StringHelper.isEmpty(jsonStr) || "exception".equals(jsonStr)){
 			 		return null;
 			 	}
 	            JSONObject obj = JSON.parseObject(jsonStr);

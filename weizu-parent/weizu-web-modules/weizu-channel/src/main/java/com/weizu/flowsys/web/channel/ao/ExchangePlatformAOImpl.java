@@ -50,8 +50,10 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 	@Override
 	public ExchangePlatformPo getEpByEpName(String epName) {
 		ExchangePlatformPo exchangePlatformPo = exchangePlatformDao.getEpByEpName(epName);
-		String dataUserPass = Hash.BASE_UTIL.decode(exchangePlatformPo.getEpUserPass());
-		exchangePlatformPo.setEpUserPass(dataUserPass);
+		if(exchangePlatformPo != null){
+			String dataUserPass = Hash.BASE_UTIL.decode(exchangePlatformPo.getEpUserPass());
+			exchangePlatformPo.setEpUserPass(dataUserPass);
+		}
 		return exchangePlatformPo;
 	}
 	/**
@@ -207,9 +209,11 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 		epPo.setEpEngId(StringUtil2.toUpperClass(epPo.getEpEngId()));
 		if(ClassUtil.contrastObj(ep, epPo)){
 			flag = "success";
-		}else if(!engId.equals(epPo.getEpEngId()) && checkEpName(epPo.getEpName()) ){
-			flag = "exist";
-		}else{//两个对象值不一样，并且英文标识不存在，或者和原来的不一样 就更新
+		}
+//		else if(checkEpName(epPo.getEpName()) ){//!engId.equals(epPo.getEpEngId()) && 
+//			flag = "exist";
+//		}
+		else{//两个对象值不一样，并且英文标识不存在，或者和原来的不一样 就更新
 			epPo.setLastAccess(System.currentTimeMillis());
 			if(epPo.getEpCallBack() == null){
 				epPo.setEpCallBack(0);

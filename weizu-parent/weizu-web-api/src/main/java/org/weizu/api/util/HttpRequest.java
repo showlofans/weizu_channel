@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 public class HttpRequest {
+	private final static int connection_time_out = 30000;			//30秒无响应
+	private final static int read_time_out = 50000;					//50秒无响应
+	
     /**
      * 向指定URL发送GET方法的请求
      * 
@@ -31,6 +34,8 @@ public class HttpRequest {
             // 设置通用的请求属性
             connection.setRequestProperty("accept", "*/*");
             connection.setRequestProperty("connection", "Keep-Alive");
+            connection.setConnectTimeout(connection_time_out);
+            connection.setReadTimeout(read_time_out);
 //            connection.setRequestProperty("user-agent",
 //                    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
             // 建立实际的连接
@@ -49,7 +54,8 @@ public class HttpRequest {
                 result += line;
             }
         } catch (Exception e) {
-            System.out.println("发送GET请求出现异常！" + e);
+        	result = "exception";
+            System.out.println("请求超时，或者其他问题" + e);
             e.printStackTrace();
         }
         // 使用finally块来关闭输入流
@@ -88,6 +94,8 @@ public class HttpRequest {
             httpConn.setRequestProperty("connection", "Keep-Alive");
             httpConn.setRequestMethod("POST"); 
             httpConn.setRequestProperty("Content-Type","application/json;charset=UTF-8");
+            httpConn.setConnectTimeout(connection_time_out);
+            httpConn.setReadTimeout(read_time_out);
             httpConn.setRequestProperty("user-agent",
                     "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
             // 发送POST请求必须设置如下两行
@@ -107,6 +115,7 @@ public class HttpRequest {
                 result += line;
             }
         } catch (Exception e) {
+        	result = "exception";
             System.out.println("发送 POST 请求出现异常！"+e);
             e.printStackTrace();
         }

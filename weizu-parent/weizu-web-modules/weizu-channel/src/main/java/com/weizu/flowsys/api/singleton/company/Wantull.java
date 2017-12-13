@@ -2,6 +2,7 @@ package com.weizu.flowsys.api.singleton.company;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.Date;
 
 import org.weizu.api.util.HttpRequest;
 
@@ -12,13 +13,18 @@ import com.weizu.flowsys.api.singleton.BalanceDTO;
 import com.weizu.flowsys.api.singleton.BaseInterface;
 import com.weizu.flowsys.api.singleton.BaseP;
 import com.weizu.flowsys.api.singleton.OrderDTO;
+import com.weizu.flowsys.api.singleton.OrderIn;
 import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 import com.weizu.flowsys.api.weizu.charge.ChargeOrder;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
+import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
+import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
+import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.MD5;
 import com.weizu.web.foundation.String.StringHelper;
 
@@ -41,17 +47,26 @@ public class Wantull implements BaseInterface {
 	@Override
 	public ChargeDTO charge() {
 		ExchangePlatformPo epPo = baseParams.getEpo();
-		 String jsonStr = HttpRequest.sendPost(epPo.getEpPurchaseIp(), toParams());
+		String params = toParams();
+		 String jsonStr = HttpRequest.sendGet(epPo.getEpPurchaseIp(), params);
+		 System.out.println(epPo.getEpPurchaseIp()+"?"+params);
 		 ChargeDTO chargeDTO = null;
+		 System.out.println(jsonStr);
 		 try {  
-			 	if(StringHelper.isEmpty(jsonStr)){
+			 	if(StringHelper.isEmpty(jsonStr) || "exception".equals(jsonStr)){
 			 		return null;
 			 	}
 	            JSONObject obj = JSON.parseObject(jsonStr);
 	            int tipCode = obj.getIntValue("code");
 	            String tipMsg = obj.getString("msg");
 	            String orderIdApi = obj.getString("trade_no");
-	            String orderId = obj.getString("out_trade_no");
+//	            String orderId = obj.getString("out_trade_no");
+	          //用我这边默认的对私账户充值
+	            if(tipCode == 1){
+	            	chargeDTO = new ChargeDTO(OrderResultEnum.SUCCESS.getCode(), tipMsg, new ChargeOrder(orderIdApi, null, null, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
+	            }else{
+	            	chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), tipMsg, new ChargeOrder(orderIdApi, null, null, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
+	            }
 //	            String epEngId = epPo.getEpEngId();
 //	            int billType = BillTypeEnum.CORPORATE_BUSINESS.getValue();
 //	            if("0".equals(epEngId.substring(epEngId.length()-1))){//英文标识最后一个字符是0表示对私
@@ -99,9 +114,70 @@ public class Wantull implements BaseInterface {
 
 	@Override
 	public OrderDTO getOrderState() {
-		
-		
-		return null;
+		String paramsStr =  toOrderParams();
+		String jsonStr = HttpRequest.sendGet(baseParams.getEpo().getEpOrderStateIp(),paramsStr);
+		OrderDTO orderDTO = null;
+		String statusMsg = "";
+		try {  
+			if(StringHelper.isEmpty(jsonStr) || "exception".equals(jsonStr)){
+		 		return null;
+		 	}
+            JSONObject obj = JSON.parseObject(jsonStr);
+            int rspCode = obj.getIntValue("code");
+            String rspMsg = obj.getString("msg");
+            if(rspCode != 1){//查询失败
+            	//用我这边默认的对私账户充值
+            	orderDTO = new OrderDTO(null, OrderResultEnum.ERROR.getCode(), "查询失败");
+            }else{
+            	String out_trade_no = obj.getString("out_trade_no");
+            	String trade_no = obj.getString("trade_no");
+            	int charge_status = obj.getIntValue("charge_status");
+            	String mobile = obj.getString("mobile");
+            	String packageId = obj.getString("package");
+//            	Long created_at_time = 0l;
+            	int myStatus = OrderStateEnum.UNCHARGE.getValue();
+            	switch (charge_status) {
+            	case 4://充值成功
+            		myStatus = OrderStateEnum.CHARGED.getValue();
+            		break;
+            	case 5://充值失败
+            		myStatus = OrderStateEnum.UNCHARGE.getValue();
+            		break;
+            	case 8://正在充值
+            		myStatus = OrderStateEnum.CHARGING.getValue();
+            		break;
+            	default:
+            		break;
+            	}
+//            	if(StringHelper.isEmpty(msg)){
+            		switch (charge_status) {
+                	case 4://充值成功
+                		statusMsg = OrderStateEnum.CHARGED.getDesc();
+                		break;
+                	case 5://充值失败
+                		statusMsg =  "充值失败";
+                		break;
+                	case 8://正在充值
+                		statusMsg = OrderStateEnum.CHARGING.getDesc();
+                		break;
+                	default:
+                		break;
+                	}
+//            	}
+            	OrderIn orderIn = new OrderIn(trade_no, out_trade_no, mobile, packageId, null, System.currentTimeMillis(), myStatus, statusMsg);
+//            	orderIn.setCreated_at_time(created_at_time);
+            	//用我这边默认的对私账户充值
+            	orderDTO = new OrderDTO(orderIn, rspCode, rspMsg);
+//            chargeDTO = new ChargeDTO(tipCode, tipMsg, new ChargeOrder(orderIdApi, number, pgSize, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
+            	// 最后输出到控制台  
+//            System.out.println(tipCode+"<--->"+tipMsg);  
+            	
+            }
+  
+        } catch (JSONException e) {  
+            e.printStackTrace();  
+        } 
+		return orderDTO;
 	}
 
 	@Override
@@ -117,19 +193,41 @@ public class Wantull implements BaseInterface {
 		signBuffer.append(baseParams.getChargeTel());
 		signBuffer.append("&package=");
 		signBuffer.append(baseParams.getProductCode());
+		signBuffer.append("&app_secret=");
+		signBuffer.append(platformPo.getEpApikey());
 		try {
 			sign = MD5.getMd5(signBuffer.toString(), MD5.LOWERCASE, "utf-8");
+			System.out.println("充值sign编码参数："+ signBuffer.toString());
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		signBuffer.append("&out_trade_no=");
-		signBuffer.append(baseParams.getOrderId());
+		
+		StringBuffer paramBuffer = new StringBuffer();
+		paramBuffer.append("account=");
+		paramBuffer.append(platformPo.getEpUserName());
+		paramBuffer.append("&");
+		paramBuffer.append(platformPo.getEpOtherParams());
+		paramBuffer.append("mobile=");
+		paramBuffer.append(baseParams.getChargeTel());
+		paramBuffer.append("&out_trade_no=");
+		paramBuffer.append(baseParams.getOrderId());
+		paramBuffer.append("&package=");
+		paramBuffer.append(baseParams.getProductCode());
+		paramBuffer.append("&range=");
+		paramBuffer.append(getRange());
+		
 //		signBuffer.append("&range=");
 //		signBuffer.append(getRange());
 //		signBuffer.append("&notify_url=");
 //		signBuffer.append(platformPo.getEpCallBackIp());
-		signBuffer.append("&sign=");
-		signBuffer.append(sign);
+		paramBuffer.append("&sign=");
+		paramBuffer.append(sign);
+		if(CallBackEnum.POSITIVE.getValue().equals(platformPo.getEpCallBack())){
+			paramBuffer.append("&notify_url=");
+			paramBuffer.append(platformPo.getEpCallBackIp());
+		}
+		
+		System.out.println(paramBuffer.toString());
 		
 //		baseParams.get
 //		signBuffer.append("")
@@ -143,7 +241,7 @@ public class Wantull implements BaseInterface {
 //			System.out.println(valueSample);
 //		}
 		
-		return signBuffer.toString();
+		return paramBuffer.toString();
 	}
 	
 	/**
@@ -227,8 +325,36 @@ public class Wantull implements BaseInterface {
 
 	@Override
 	public String toOrderParams() {
-		// TODO Auto-generated method stub
-		return null;
+		ExchangePlatformPo platformPo = baseParams.getEpo();
+		String account = platformPo.getEpUserName();
+		String app_secret = platformPo.getEpApikey();
+		String sign = "";
+		StringBuffer signBuffer = new StringBuffer();
+		signBuffer.append("account=");
+		signBuffer.append(account);
+		signBuffer.append("&app_secret=");
+		signBuffer.append(app_secret);
+		try {
+			sign = MD5.getMd5(signBuffer.toString(), MD5.LOWERCASE, "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		StringBuffer paramsBuffer = new StringBuffer();
+		paramsBuffer.append("account=");
+		paramsBuffer.append(account);
+		paramsBuffer.append("&");
+		paramsBuffer.append(platformPo.getEpOtherParams());//app_key
+		paramsBuffer.append("mobile=");//mobile
+		paramsBuffer.append(baseParams.getChargeTel());//mobile
+		paramsBuffer.append("&trade_no=");//trade_no
+		paramsBuffer.append(baseParams.getOrderIdApi());//trade_no
+		paramsBuffer.append("&out_trade_no=");//out_trade_no
+		paramsBuffer.append(baseParams.getOrderId());//out_trade_no
+		paramsBuffer.append("&sign=");//sign
+		paramsBuffer.append(sign);//sign
+		
+		
+		return paramsBuffer.toString();
 	}
 
 	public static String getEpEngId() {

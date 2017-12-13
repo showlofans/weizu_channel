@@ -501,7 +501,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 		PurchasePo latestPurchasePo = purchaseDAO.getLatestOneByTel(pcVO.getChargeTel(), pcVO.getChargeFor());
 		if(latestPurchasePo != null){
 			int minutes = (int) ((System.currentTimeMillis() - latestPurchasePo.getOrderArriveTime()) / (1000*60));
-			if(minutes <= 5){
+			if(minutes < 5){
 				return "出现重复订单";
 			}
 		}
@@ -1195,38 +1195,43 @@ public class PurchaseAOImpl implements PurchaseAO {
 								
 //								OrderDTO orderDTO = bi.getOrderState();
 								//是否需要更新订单状态条件
-								if(bi != null && bi.getOrderState() != null){
-									OrderDTO orderDTO = bi.getOrderState();
-									OrderIn orderIn = orderDTO.getOrderIn();
-									boolean updateCondition = orderIn!= null && !purchaseVO2.getOrderResult().equals(orderIn.getStatus());
-									if(updateCondition){
-										//更新订单状态//返回状态和原先数据库状态不相符
-//										Long ts = orderIn.getCreated_at_time();
-										Long ts = System.currentTimeMillis();
-										
-										int orderState = orderIn.getStatus();
-										String orderStateDetail = orderIn.getMsg();
-	//									if(agencyAO.getRootAgencyByAccountId(purchaseVO.getAccountId()) != null){//不是超管,重置订单状态
-	//										OrderIn cloneOrderIn = orderIn.clone();
-	//										resetPurchaseState(cloneOrderIn);
-	//										orderState = cloneOrderIn.getStatus();
-	//										orderStateDetail = cloneOrderIn.getMsg();
-	//									}
-										purchaseVO2.setOrderBackTimeStr(DateUtil.formatAll(ts));
-										purchaseVO2.setOrderState(orderState);
-										purchaseVO2.setOrderStateDetail(orderStateDetail);
-										String res = accountPurchaseAO.updatePurchaseState(new PurchasePo(purchaseVO2.getOrderId(), null, ts, orderState, null, orderStateDetail));//purchaseVO2.getOrderId(), orderState, orderStateDetail,ts
-										System.out.println("向下返回调结果："+res);
-										//把查询的结果利用接口推给下游
-//										AgencyBackwardPo agencyPo = agencyAO.getAgencyByAccountId(accountId);
-//										if(agencyPo != null && StringHelper.isNotEmpty(agencyPo.getCallBackIp())){//下游有回调地址的情况下，按照回调地址推送
-//											String callBackRes = sendCallBack.sendCallBack(new ResponseJsonDTO(purchaseVO2.getOrderId(), purchaseVO2.getOrderIdFrom(), orderState, orderStateDetail, ts), agencyPo.getCallBackIp());
-//											System.out.println(agencyPo.getUserName() + "：" +purchaseVO2.getOrderId() + "：" +  callBackRes);
-//										}
-									}else if(orderIn.getStatus() != purchaseVO2.getOrderResult() && orderIn!= null){
-//										accountPurchaseAO.updatePurchaseState(purchaseVO2.getOrderId(), orderIn.getStatus(), orderIn.getMsg(),System.currentTimeMillis());
+								if(bi != null){
+									if(bi.getOrderState() == null){
 										//更新订单表
-										purchaseDAO.updatePurchaseState(new PurchasePo(purchaseVO2.getOrderId(), null, System.currentTimeMillis(), orderIn.getStatus(), null, orderIn.getMsg()));//purchaseVO2.getOrderId(), System.currentTimeMillis(), orderIn.getStatus(), orderIn.getMsg(), null
+										purchaseDAO.updatePurchaseState(new PurchasePo(purchaseVO2.getOrderId(), null, System.currentTimeMillis(), null, null, ChargeStatusEnum.API_ERROR.getDesc()));//purchaseVO2.getOrderId(), System.currentTimeMillis(), orderIn.getStatus(), orderIn.getMsg(), null
+									}else{
+										OrderDTO orderDTO = bi.getOrderState();
+										OrderIn orderIn = orderDTO.getOrderIn();
+										boolean updateCondition = orderIn!= null && !purchaseVO2.getOrderResult().equals(orderIn.getStatus());
+										if(updateCondition){
+											//更新订单状态//返回状态和原先数据库状态不相符
+	//										Long ts = orderIn.getCreated_at_time();
+											Long ts = System.currentTimeMillis();
+											
+											int orderState = orderIn.getStatus();
+											String orderStateDetail = orderIn.getMsg();
+		//									if(agencyAO.getRootAgencyByAccountId(purchaseVO.getAccountId()) != null){//不是超管,重置订单状态
+		//										OrderIn cloneOrderIn = orderIn.clone();
+		//										resetPurchaseState(cloneOrderIn);
+		//										orderState = cloneOrderIn.getStatus();
+		//										orderStateDetail = cloneOrderIn.getMsg();
+		//									}
+											purchaseVO2.setOrderBackTimeStr(DateUtil.formatAll(ts));
+											purchaseVO2.setOrderState(orderState);
+											purchaseVO2.setOrderStateDetail(orderStateDetail);
+											String res = accountPurchaseAO.updatePurchaseState(new PurchasePo(purchaseVO2.getOrderId(), null, ts, orderState, null, orderStateDetail));//purchaseVO2.getOrderId(), orderState, orderStateDetail,ts
+											System.out.println("更新订单状态数据库结果："+res);
+											//把查询的结果利用接口推给下游
+	//										AgencyBackwardPo agencyPo = agencyAO.getAgencyByAccountId(accountId);
+	//										if(agencyPo != null && StringHelper.isNotEmpty(agencyPo.getCallBackIp())){//下游有回调地址的情况下，按照回调地址推送
+	//											String callBackRes = sendCallBack.sendCallBack(new ResponseJsonDTO(purchaseVO2.getOrderId(), purchaseVO2.getOrderIdFrom(), orderState, orderStateDetail, ts), agencyPo.getCallBackIp());
+	//											System.out.println(agencyPo.getUserName() + "：" +purchaseVO2.getOrderId() + "：" +  callBackRes);
+	//										}
+										}else if(orderIn.getStatus() != purchaseVO2.getOrderResult() && orderIn!= null){
+	//										accountPurchaseAO.updatePurchaseState(purchaseVO2.getOrderId(), orderIn.getStatus(), orderIn.getMsg(),System.currentTimeMillis());
+											//更新订单表
+											purchaseDAO.updatePurchaseState(new PurchasePo(purchaseVO2.getOrderId(), null, System.currentTimeMillis(), orderIn.getStatus(), null, orderIn.getMsg()));//purchaseVO2.getOrderId(), System.currentTimeMillis(), orderIn.getStatus(), orderIn.getMsg(), null
+										}
 									}
 								}
 							}
@@ -1242,9 +1247,6 @@ public class PurchaseAOImpl implements PurchaseAO {
 					if(purchaseVO2.getOrderArriveTime() != null){
 						purchaseVO2.setOrderArriveTimeStr(DateUtil.formatAll(purchaseVO2.getOrderArriveTime()));
 					}
-					
-				}else{
-					
 				}
 			}
 		}

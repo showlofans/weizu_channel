@@ -4,6 +4,7 @@
 //
 //import javax.annotation.Resource;
 //
+//import org.junit.Before;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
 //import org.springframework.test.context.ContextConfiguration;
@@ -12,10 +13,11 @@
 //import com.alibaba.fastjson.JSON;
 //import com.alibaba.fastjson.JSONException;
 //import com.alibaba.fastjson.JSONObject;
-//import com.weizu.flowsys.api.singleton.BalanceDTO;
 //import com.weizu.flowsys.api.singleton.BaseInterface;
 //import com.weizu.flowsys.api.singleton.BaseP;
 //import com.weizu.flowsys.api.singleton.SingletonFactory;
+//import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
+//import com.weizu.flowsys.api.weizu.charge.ChargeOrder;
 //import com.weizu.flowsys.util.StringUtil2;
 //import com.weizu.flowsys.web.channel.ao.ExchangePlatformAO;
 //import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
@@ -36,10 +38,17 @@
 //	@Resource
 //	private ExchangePlatformAO exchangePlatformAO;
 //	
-//	@Test
+//	private BaseInterface biCharge = null;
+//	@Before
+//	public void initBi(){
+//		ExchangePlatformPo epPo = exchangePlatformAO.getEpByEpName("河南趣闻分省");
+//		biCharge = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP("10",766467363703885824l,"18300309834",0,epPo));//充值api测试
+//	}
+//	
+////	@Test
 //	@Override
 //	public void testGetBalance(){
-//		ExchangePlatformPo platformPo = exchangePlatformAO.getEpByEpName("河南趣闻全国");
+//		ExchangePlatformPo platformPo = exchangePlatformAO.getEpByEpName("河南趣闻分省");
 ////		BaseInterface bi = SingletonFactory.getSingleton("Lljypt", new BaseP("pc123123",726633391352451072l,"15014369834",1,epPo));
 //		
 ////		BaseInterface bi = SingletonFactory.getSingleton("Wantull", new BaseP(null,726633391352451072l,null,1,platformPo));
@@ -93,6 +102,15 @@
 //		String resultStr = HttpRequest.sendGet(platformPo.getEpBalanceIp(), param.toString());
 //		System.out.println(resultStr);
 //		paraseBalanceJson(resultStr);
+//	}
+//	
+//	@Test
+//	public void testCharge(){
+//		ChargeDTO chargeDTO = biCharge.charge();
+//		if(chargeDTO != null && chargeDTO.getChargeOrder() != null){
+//			ChargeOrder co = chargeDTO.getChargeOrder();
+//			System.out.println(co.getOrderIdApi());
+//		}
 //	}
 //	
 //}

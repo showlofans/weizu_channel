@@ -210,6 +210,12 @@ public class ChargeImpl implements IChargeFacet {
 				if(!isChannelStateClose && canCharge){
 					BaseInterface bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(pc.getProductCode(),orderId,chargeTel,chargeParams.getScope(),epPo));
 					ChargeDTO chargeDTO = bi.charge();
+					if(chargeDTO == null){
+						orderResult = OrderStateEnum.DAICHONG.getValue();
+						orderResultDetail = ChargeStatusEnum.API_ERROR.getDesc();
+						purchasePo.setOrderResult(orderResult);
+						purchasePo.setOrderResultDetail(orderResultDetail);
+					}
 					String orderIdApi = chargeDTO.getChargeOrder().getOrderIdApi();
 					logger.config("上游返回的订单号："+ orderIdApi);//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
 					purchasePo.setOrderIdApi(orderIdApi);
@@ -342,7 +348,7 @@ public class ChargeImpl implements IChargeFacet {
 			ChargeAccountPo accountPo =  chargeAccountAO.getAccountByAgencyId(backPo.getId(), billType);
 			if(accountPo == null){
 				chargeEnum = ChargeStatusEnum.INVALID_BILL_TYPE;
-				charge = new Charge(chargeEnum.getValue(),backPo.getUserName() +":没有开通该业务", null);
+				charge = new Charge(chargeEnum.getValue(),backPo.getUserName() +":没有开通该账户", null);
 				sqlMap.put("exceptionDTO", charge);
 				return sqlMap;
 			}else{
@@ -356,17 +362,17 @@ public class ChargeImpl implements IChargeFacet {
 					sqlMap.put("exceptionDTO", charge);
 					return sqlMap;
 				}else{
-					ChannelChannelPo channelPo = channelChannelDao.get(new WherePrams("id", "=", ratePo.getChannelId()));
-					boolean isChannelUseStateStoped = channelPo.getChannelUseState() == ChannelUseStateEnum.CLOSE.getValue();//通道状态停止
-					if(isChannelUseStateStoped){//通道使用状态暂停，不能提单
-						chargeEnum = ChargeStatusEnum.CHANNEL_CLOSED;
-						charge = new Charge(chargeEnum.getValue(),chargeEnum.getDesc(), null);
-						sqlMap.put("exceptionDTO", charge);
-						return sqlMap;
-					}else{
-						sqlMap.put("ratePo", ratePo);
-						sqlMap.put("channelPo", channelPo);
-					}
+//					ChannelChannelPo channelPo = channelChannelDao.get(new WherePrams("id", "=", ratePo.getChannelId()));
+//					boolean isChannelUseStateStoped = channelPo.getChannelUseState() == ChannelUseStateEnum.CLOSE.getValue();//通道状态停止
+//					if(isChannelUseStateStoped){//通道使用状态暂停，不能提单
+//						chargeEnum = ChargeStatusEnum.CHANNEL_CLOSED;
+//						charge = new Charge(chargeEnum.getValue(),chargeEnum.getDesc(), null);
+//						sqlMap.put("exceptionDTO", charge);
+//						return sqlMap;
+//					}else{
+//						sqlMap.put("ratePo", ratePo);
+//						sqlMap.put("channelPo", channelPo);
+//					}
 				}
 			}
 		}

@@ -50,19 +50,23 @@ public class AllInteceptor implements HandlerInterceptor  {
 		if(obj != null){
 			AgencyBackwardVO agencyVO = (AgencyBackwardVO)obj;
 	    	AccountEventPo accountEventPo = accountEventAO.getLastByAgency(agencyVO.getId(), EventTypeEnum.AGENCY_LOGIN.getValue());
-	        Integer eventKey = Integer.parseInt(accountEventPo.getEventKey() == null? "0":accountEventPo.getEventKey());
-	    	if(accountEventPo!= null&& LoginStateEnum.ED.getValue().equals(eventKey)) {
+	    	if(accountEventPo != null){
+	    		Integer eventKey = Integer.parseInt(accountEventPo.getEventKey() == null? "0":accountEventPo.getEventKey());
+	    		if(accountEventPo!= null&& LoginStateEnum.ED.getValue().equals(eventKey)) {
 //	        	agencyVO.setUserPass("");
 //	        	request.getSession().setAttribute("loginContext", agencyVO);
-	        	request.getSession().removeAttribute("loginContext");
-	        	//response.getWriter().print("请先登陆");
-	        	HttpSession session = request.getSession();
-	        	session.setAttribute("errorMsg", "您已在其他地方已退出登陆");
-	        	session.setAttribute("loginIpAddress", accountEventPo.getEventLocation());
-				session.setAttribute("loginTime", accountEventPo.getEventTime()==null?System.currentTimeMillis():DateUtil.formatAll(accountEventPo.getEventTime()));
-	        	//response.sendRedirect("/WEB-INF/jsp/error");
-	  	      	return true;
-	        }
+	    			request.getSession().removeAttribute("loginContext");
+	    			//response.getWriter().print("请先登陆");
+	    			HttpSession session = request.getSession();
+	    			session.setAttribute("errorMsg", "您已在其他地方已退出登陆");
+	    			session.setAttribute("loginIpAddress", accountEventPo.getEventLocation());
+	    			session.setAttribute("loginTime", accountEventPo.getEventTime()==null?System.currentTimeMillis():DateUtil.formatAll(accountEventPo.getEventTime()));
+	    			//response.sendRedirect("/WEB-INF/jsp/error");
+	    			return true;
+	    		}
+	    	}else{
+	    		return true;
+	    	}
 	    }
 		    return true;//登陆请求
 		

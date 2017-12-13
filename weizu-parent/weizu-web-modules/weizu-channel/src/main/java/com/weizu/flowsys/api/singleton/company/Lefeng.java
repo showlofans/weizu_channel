@@ -107,7 +107,7 @@ public class Lefeng implements BaseInterface {
 		 String jsonStr = HttpRequest.sendPost(epPo.getEpPurchaseIp(), params);
 		 ChargeDTO chargeDTO = null;
 		 try {  
-			 	if(StringHelper.isEmpty(jsonStr)){
+			 	if(StringHelper.isEmpty(jsonStr) || "exception".equals(jsonStr)){
 			 		return null;
 			 	}
 	            JSONObject obj = JSON.parseObject(jsonStr);

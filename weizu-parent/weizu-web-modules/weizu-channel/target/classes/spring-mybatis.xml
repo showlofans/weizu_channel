@@ -29,7 +29,7 @@
    	
    
 	<!-- 引入配置文件 -->
-	<!-- <bean id="propertyConfigurer"
+	 <!-- <bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		
 		<property name="locations">
@@ -38,14 +38,14 @@
 				<value>classpath:redis.properties</value>
 			</array>
 		</property>
-	</bean> -->
+	</bean>  -->
 	<!-- 引入配置文件 -->
-	<bean id="propertyConfigurer"
+	 <bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="location" value="classpath:jdbc.properties" />
 	</bean>
 	<!-- redis -->
-	 <!-- <bean id="redisHttpSessionConfiguration"
+	<!-- <bean id="redisHttpSessionConfiguration"
 	   class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration">
 	  <property name="maxInactiveIntervalInSeconds" value="3600"/>
 	</bean>
@@ -63,7 +63,7 @@
 	  <property name="timeout" value="${redis_timeout}"/>
 	  <property name="usePool" value="true"/>
 	  <property name="poolConfig" ref="jedisPoolConfig"/>
-	</bean> -->
+	</bean>  -->
 
 	<!-- mysql -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"

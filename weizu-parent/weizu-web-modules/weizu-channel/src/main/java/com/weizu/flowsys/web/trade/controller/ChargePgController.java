@@ -498,6 +498,7 @@ public class ChargePgController {
 						ProductCodePo code = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, platformPo.getId(), pgId));
 						resultMap.put("productCode", code.getProductCode());
 					}
+					resultMap.put("msg", "success");
 					resultMap.put("channelId", cdPo.getChannelId());
 					resultMap.put("rateDiscount", cdPo.getChannelDiscount());	//折扣
 					return JSON.toJSONString(resultMap);

@@ -16,4 +16,4 @@ serviceType可能涉及channelTypeEnum,serviceTypeEnum，PgValidateEnum
 
 配置那里
 
-加测试款,要求通道
+加测试款,要求配置通道

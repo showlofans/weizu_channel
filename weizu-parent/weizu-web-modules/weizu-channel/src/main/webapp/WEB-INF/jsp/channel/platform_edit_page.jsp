@@ -49,13 +49,13 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>平台名称：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="${resultMap.exchangePlatformPo.epName }" placeholder="" id="epName" name="epName">
+				<input type="text" class="input-text" value="${resultMap.exchangePlatformPo.epName }"  onchange="checkEpName(this)" placeholder="" id="epName" name="epName">
 			</div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>平台英文标识：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text"  value="${resultMap.exchangePlatformPo.epEngId }" onchange="checkEpEngId(this)"  placeholder="" id="epEngId" name="epEngId">
+				<input type="text" class="input-text"  value="${resultMap.exchangePlatformPo.epEngId }"  placeholder="" id="epEngId" name="epEngId">
 			</div>
 		</div>
 		<!-- id, ep_name, ep_purchase_ip, product_list_ip, pgdata_check_ip, ep_balance_ip, 
@@ -205,19 +205,19 @@ $('.callBack').on('ifClicked', function(event){
 	 // alert(event.type + ' callback');  
 });
 
-/**判断平台标识是否存在*/
-function checkEpEngId(vart){
-	var epEngId = $(vart).val();
+/**判断平台名称是否存在*/
+function checkEpName(vart){
+	var epName = $(vart).val();
 	$.ajax({
         type:"post",
         url:"/flowsys/platform/check_ep_engId.do",
-        data: {epEngId:epEngId},//表单数据
+        data: {epName:epName},//表单数据
         async : false,
         success:function(d){
         	//layer.msg(d);
          	if(d == "exist"){
-         		$("#epEngId").focus();
-         		 layer.msg("英文标识已存在");
+         		$("#epName").focus();
+         		 layer.msg("平台名称已存在");
            }
         }
     });
