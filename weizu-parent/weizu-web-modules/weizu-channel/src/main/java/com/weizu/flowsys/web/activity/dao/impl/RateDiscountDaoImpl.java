@@ -238,6 +238,7 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 		params.put("pgId", pgId);
 		params.put("channelId", channelId);
 		params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+		params.put("bindState", BindStateEnum.BIND.getValue());
 		return sqlSessionTemplate.selectOne("getPriceByPg",params);
 		
 	}

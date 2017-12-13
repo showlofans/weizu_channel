@@ -16,6 +16,16 @@ public class MyConstants {
 	 * 青岛网信乐疯平台
 	 */
 	public final static String LEFENG_ENG = "Lefeng";
+	/**
+	 * 河南趣闻-顽兔平台
+	 */
+	public final static String WANTULL_ENG = "Wantull";
+	/**
+	 * 河南趣闻-顽兔平台对私英文标志
+	 */
+	public final static String WANTULL_ENG_0 = "Wantull0";
+	
+	
 	
 	
 }

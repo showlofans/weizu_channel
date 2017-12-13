@@ -30,7 +30,7 @@
 <title>通道列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 平台通道管理 <span class="c-gray en">&gt;</span> 流量通道列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 平台通道管理 <span class="c-gray en">&gt;</span> 流量通道列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" ><i class="Hui-iconfont">&#xe6a6;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
 	<form class="form form-horizontal" action="/flowsys/channel/channel_list.do" method="post" id="formD" name="dataListForm">
@@ -44,7 +44,7 @@
 				<select name="channelType" class="select" onchange="getChannelList()">
 				<option value="">通道类型</option>
 				<c:forEach items="${resultMap.channelTypeEnums }" var="channelTypeEnum" varStatus="vs1">
-					<option value="${channelTypeEnum.value }" <c:if test="${channelTypeEnum.value == resultMap.searchParam.channelType }"> selected</c:if>>${channelTypeEnum.desc }</option>
+					<option value="${channelTypeEnum.value }" <c:if test="${channelTypeEnum.value == resultMap.searchParam.channelType }"> class='c-blue' selected</c:if>>${channelTypeEnum.desc }</option>
 				</c:forEach>
 			</select>
 			</span>
@@ -102,7 +102,7 @@
 		</form>
 	</div>
 	<!-- <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加资讯" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加资讯</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div> -->
-	<div class="mt-20">
+	<div class="mt-20 mb-5">
 		<table class="table table-border table-bordered table-bg table-hover table-sort">
 			<thead>
 				<tr class="text-c">
@@ -365,6 +365,14 @@
 		</table>
 		<mytag:Pagination pagination="${resultMap.pagination}" queryForm="dataListForm" divId="channellistId" />  
 	</div>
+	<footer class="footer mt-20">
+		<div class="container">
+			<p><!-- 感谢jQuery、layer、laypage、Validform、UEditor、My97DatePicker、iconfont、Datatables、WebUploaded、icheck、highcharts、bootstrap-Switch<br> -->
+				Copyright &copy;2017-2018 南昌微族科技有限公司 All Rights Reserved.<br>
+				<!-- 本后台系统由<a href="http://www.h-ui.net/" target="_blank" title="H-ui前端框架">H-ui前端框架</a>提供前端技术支持 -->
+				</p>
+		</div>
+	</footer>
 </div>
 <!--_footer 作为公共模版分离出去-->
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
@@ -415,6 +423,9 @@ function editChannel(obj,url,title){
 function getChannelList(){
 	//alert($(vart).val());
 	$('form').submit();
+	/* if($(vart).val() != ''){
+		$(vart).addClass('c-blue');
+	} */
 }
 
 /*通道状态-修改*/

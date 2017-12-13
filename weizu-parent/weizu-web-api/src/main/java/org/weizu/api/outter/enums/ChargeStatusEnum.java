@@ -59,7 +59,13 @@ public enum ChargeStatusEnum {
 	/**
 	 * 出现可疑重复订单
 	 */
-	HAS_DOUBLE_PURCHAE("出现可疑重复订单",5010);
+	HAS_DOUBLE_PURCHAE("出现可疑重复订单",5010),
+	/**
+	 * 上游出现错误
+	 */
+	API_ERROR("上游出现错误",5011);
+	
+	
 	
 	private String desc;
 	private Integer value;

@@ -20,8 +20,9 @@
 			<div class="formControls col-xs-8 col-sm-9">
 				<c:forEach items="${resultMap.billTypeEnums }" var="billEnum" varStatus="vs">
 					<div class="radio-box">
-						<input name="billType" class="radioItem" type="radio" value="${billEnum.value }" <c:if test="${resultMap.telChannelParams.billType==billEnum.value }">checked</c:if>>
+						<input name="billType" onclick="conchange(${vs.index})" class="radioItem" type="radio" value="${billEnum.value }" <c:if test="${resultMap.telChannelParams.billType==billEnum.value }">checked</c:if>>
 						${billEnum.desc }
+						<input type="hidden" id="billType" value="${resultMap.telChannelParams.billType }" >
 					</div>
 				</c:forEach>
 			</div>
@@ -91,7 +92,19 @@
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 <script type="text/javascript">
+var checkIndex = -1; 
+var radios = document.getElementsByName("billType");  
 $().ready(function() {
+		//alert(radios.length);
+	//初始化选中的通道票务类型索引
+	var billType = $('#billType').val();
+    for(var i=0;i<radios.length;i++){  
+    	//alert(radios[i].value);
+        if(radios[i].value == billType){  
+       	  checkIndex = i;  
+        }  
+    }  
+    
     $("#cnelEditForm").validate({
     	submitHandler : function(form) {
     		var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
@@ -113,5 +126,24 @@ $().ready(function() {
     	}
     });
 })
+
+/**商务类型修改*/
+function conchange(n){
+	if(n != checkIndex){
+		layer.confirm("确认修改商务类型吗",{
+			btn:['确定','取消']
+		},function(index){
+			radios[n].checked = true;
+			//nowChecked();//重新设置选中的checkIndex
+			//checkIndex = $("input[name='billType']:checked").index();
+			layer.close(index);
+		},function(index){
+			radios[checkIndex].checked = true;//选中原来选中的checkIndex
+		});
+		/*  if(conValue){
+		}else{
+		} */
+	}
+}
 </script>
 </html>

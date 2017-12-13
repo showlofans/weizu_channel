@@ -37,6 +37,7 @@ public class Lefeng implements BaseInterface {
 
 	@Resource
 	private PurchaseDao purchaseDAO;
+	
 	private static Lefeng instance = new Lefeng();  
 	private static String epEngId;
 	private static BaseP baseParams;
@@ -106,7 +107,7 @@ public class Lefeng implements BaseInterface {
 		 String jsonStr = HttpRequest.sendPost(epPo.getEpPurchaseIp(), params);
 		 ChargeDTO chargeDTO = null;
 		 try {  
-			 	if(StringHelper.isEmpty(jsonStr)){
+			 	if(StringHelper.isEmpty(jsonStr) || "exception".equals(jsonStr)){
 			 		return null;
 			 	}
 	            JSONObject obj = JSON.parseObject(jsonStr);

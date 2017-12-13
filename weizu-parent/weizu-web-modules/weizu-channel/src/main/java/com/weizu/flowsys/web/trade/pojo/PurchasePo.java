@@ -25,7 +25,7 @@ public class PurchasePo extends Po {
 
     private String chargeTel;					//手机号
 
-    private Integer pgId;						//流量包id（外键）
+    private String pgId;						//流量包id（外键）
 
     private Long orderArriveTime;				//提交时间（本平台获得该数据请求的时间）
     
@@ -46,17 +46,30 @@ public class PurchasePo extends Po {
     
     private Double orderAmount;					//扣款:用与判断订单价格是否高于余额
 
-    private Double pgPrice;					//扣款:用与判断订单价格是否高于余额
+    //private Double pgPrice;					//扣款:用与判断订单价格是否高于余额
 //    @TempField
 //    private Long recordId;						//消费记录id-外键
     @TempField
     private Integer billType;					//票务类型
     
     private String agencyCallIp;				//代理商回调地址
+    
+    private Double chargeValue;					//订单原价
+    
+    private Integer purchaseFor;				//订单属性 PgServiceTypeEnum
+
+    public Double getChargeValue() {
+    	return chargeValue;
+    }
+    
+    public void setChargeValue(Double chargeValue) {
+    	this.chargeValue = chargeValue;
+    }
 	
 	public PurchasePo() {
 		super();
 	}
+	
 	
 	
 /**  根据页面订单参数初始化订单实体用
@@ -65,13 +78,20 @@ public class PurchasePo extends Po {
  * @param chargeTelDetail
  * @param orderAmount
  */
-public PurchasePo(String chargeTel, Integer pgId,
+public PurchasePo(String chargeTel, String pgId,
 			String chargeTelDetail) {
 		super();
 		this.chargeTel = chargeTel;
 		this.pgId = pgId;
 		this.chargeTelDetail = chargeTelDetail;
 	}
+public Integer getPurchaseFor() {
+	return purchaseFor;
+}
+
+public void setPurchaseFor(Integer purchaseFor) {
+	this.purchaseFor = purchaseFor;
+}
 
 public String getAgencyCallIp() {
 	return agencyCallIp;
@@ -83,14 +103,14 @@ public void setAgencyCallIp(String agencyCallIp) {
 }
 
 
-public Double getPgPrice() {
-	return pgPrice;
-}
-
-
-public void setPgPrice(Double pgPrice) {
-	this.pgPrice = pgPrice;
-}
+//public Double getPgPrice() {
+//	return pgPrice;
+//}
+//
+//
+//public void setPgPrice(Double pgPrice) {
+//	this.pgPrice = pgPrice;
+//}
 
 
 /** 接口充值构造订单
@@ -110,17 +130,18 @@ public void setPgPrice(Double pgPrice) {
  */
 public PurchasePo(Long orderId, String orderIdFrom, 
 		Integer accountId,
-		String chargeTel, Integer pgId, Long orderArriveTime,
+		String chargeTel, String pgId,Double chargeValue, Long orderArriveTime,
 		String chargeTelDetail, String chargeTelCity, Integer orderResult,
 		String channelName,
 		String orderResultDetail, Double orderAmount,
-		Integer billType) {
+		Integer billType,Integer purchaseFor) {
 	super();
 	this.orderId = orderId;
 	this.orderIdFrom = orderIdFrom;
 	this.accountId = accountId;
 	this.chargeTel = chargeTel;
 	this.pgId = pgId;
+	this.chargeValue = chargeValue;
 	this.orderArriveTime = orderArriveTime;
 	this.chargeTelDetail = chargeTelDetail;
 	this.chargeTelCity = chargeTelCity;
@@ -129,12 +150,13 @@ public PurchasePo(Long orderId, String orderIdFrom,
 	this.orderResultDetail = orderResultDetail;
 	this.orderAmount = orderAmount;
 	this.billType = billType;
+	this.purchaseFor = purchaseFor;
 }
 
 
 public PurchasePo(Long orderId, String orderIdApi, String orderIdFrom,
 		Integer accountId, 
-		String chargeTel, Integer pgId, Long orderArriveTime,
+		String chargeTel, String pgId, Long orderArriveTime,
 		Long orderBackTime, String chargeTelDetail, String chargeTelCity,
 		String channelName,
 		String orderResultDetail) {
@@ -257,11 +279,11 @@ public void setHasCallBack(Integer hasCallBack) {
         this.chargeTel = chargeTel == null ? null : chargeTel.trim();
     }
 
-    public Integer getPgId() {
+    public String getPgId() {
         return pgId;
     }
 
-    public void setPgId(Integer pgId) {
+    public void setPgId(String pgId) {
         this.pgId = pgId;
     }
 

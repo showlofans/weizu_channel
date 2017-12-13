@@ -512,11 +512,13 @@ public class RateController {
 		}else{
 			AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 			if(agencyVO != null){
-				String agencyName = request.getSession().getAttribute("childAgencyName").toString();
-				String agencyIdStr = request.getSession().getAttribute("childAgencyId").toString();
+				ChargeAccountPo childAccountPo = (ChargeAccountPo)request.getSession().getAttribute("childAccountPo");
+//				String agencyName = request.getSession().getAttribute("childAgencyName").toString();
+//				String agencyIdStr = request.getSession().getAttribute("childAgencyId").toString();
 				int bindAgencyId = agencyVO.getId();
-				ratePo.setAgencyId(Integer.parseInt(agencyIdStr));
-				resAddDis = rateDiscountAO.addRateDiscount(ratePo, agencyName, bindAgencyId);
+//				ratePo.setAgencyId();
+				ratePo.setAccountId(childAccountPo.getId());
+				resAddDis = rateDiscountAO.addRateDiscount(ratePo, childAccountPo.getAgencyName(), bindAgencyId);
 			}
 		}
 		try {

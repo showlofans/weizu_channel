@@ -1,5 +1,7 @@
 package com.weizu.flowsys.core.beans;
 
+import com.weizu.flowsys.core.annotation.po.TempField;
+
 
 
 /**
@@ -9,6 +11,7 @@ package com.weizu.flowsys.core.beans;
  * @email 719348277@qq.com
  */
 public class Po {
+//	@TempField
 	private Long lastAccess;			//最后更新时间
 
 	public Long getLastAccess() {

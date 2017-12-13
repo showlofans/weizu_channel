@@ -31,11 +31,19 @@
 <title>消费列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 代理商管理 <span class="c-gray en">&gt;</span>消费列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 代理商管理 <span class="c-gray en">&gt;</span>消费列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" ><i class="Hui-iconfont">&#xe6a6;</i></a></nav>
 <div class="page-container">
 	<form action="/flowsys/account/consume_list.do" method="post" id="formD" name="dataListForm">
 		<div class="text-c">
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
+			消费类型:
+			<span class="select-box inline">
+			<select name="chargeFor" class="select" onchange="getConsume()" >
+				<c:forEach items="${resultMap.pgServiceTypeEnums }" var="pgServiceTypeEnum" varStatus="vs1">
+					<option value="${pgServiceTypeEnum.value }" <c:if test="${resultMap.searchParams.chargeFor == pgServiceTypeEnum.value }"> selected</c:if>>${pgServiceTypeEnum.desc }</option>
+				</c:forEach>
+			</select>
+			</span>
 			提交时间：
 			<input type="text" style="width:150px" class="input-text" name="startTimeStr"  value="${resultMap.searchParams.startTimeStr }"  onfocus="var endTimeStr=$dp.$('endTimeStr');WdatePicker({onpicked:function(){endTimeStr.focus();getConsume()},autoPickDate:true,startDate:'%y-%M-%d 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss' })"/>
 	            <em class="inputto">至</em>
@@ -43,12 +51,20 @@
 			代理商名称:<input type="text" value="${resultMap.searchParams.userName }" name="userName" id="" placeholder=" 代理商名称" style="width:150px" class="input-text">
 			订单号:<input type="text" value="${resultMap.searchParams.purchaseId }" name="purchaseId" id="" placeholder=" 订单号" style="width:150px" class="input-text">
 			手机号:<input type="text" value="${resultMap.searchParams.chargeTel }" name="chargeTel" id="" placeholder=" 手机号" style="width:100px" class="input-text">
-			交易类型:
+			<!-- 交易类型: -->
 			<span class="select-box inline">
 			<select name="accountType" class="select" onchange="getConsume()" >
 				<option value="">交易类型</option>
 				<c:forEach items="${resultMap.accountTypeEnums }" var="accountTypeE" varStatus="vs1">
 					<option value="${accountTypeE.value }" <c:if test="${resultMap.searchParams.accountType == accountTypeE.value }"> selected</c:if>>${accountTypeE.desc }</option>
+				</c:forEach>
+			</select>
+			</span>
+			<span class="select-box inline">
+			<select name="billType" class="select" onchange="getConsume()" >
+				<option value="">账户类型</option>
+				<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+					<option value="${billTypeEnum.value }" <c:if test="${resultMap.searchParams.billType == billTypeEnum.value }"> selected</c:if>>${billTypeEnum.desc }</option>
 				</c:forEach>
 			</select>
 			</span>

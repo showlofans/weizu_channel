@@ -30,11 +30,12 @@
 <![endif]-->
 <title>话费通道列表</title>
 </head>
-<body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 我的通道 <span class="c-gray en">&gt;</span> 话费通道列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<body onload="ifIndex()">
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 我的通道 <span class="c-gray en">&gt;</span> 话费通道列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" ><i class="Hui-iconfont">&#xe6a6;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
-	<form class="form form-horizontal" action="/flowsys/tel_channel/telchannel_list.do" method="post" id="formD" name="dataListForm">
+	<form class="form form-horizontal" action="/flowsys/my_channel/tel_channel_list.do" method="post" id="formD" name="dataListForm">
+	<input type="hidden" id="lgId" value="${loginContext.id }">
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
 	<div class="row cl formControls">
 		<%-- <span class="select-box inline">
@@ -66,11 +67,13 @@
 			</select>
 		</span> 
 		 <!--  地区城市： -->
+		 <c:if test="${resultMap.city ==  resultMap.params.serviceType}">
 		 <span class="select-box inline">
-			<select class="select" id="city" name="cityid" onchange="initCity()">
+			<select class="select" id="city" name="cityid" onchange="submitForm()">
 				<option value="">城市</option>
 			</select>
 		</span> 
+		</c:if>
 		 
 		<input type="hidden" value="${resultMap.params.cityid }" id="cityid" >
 		&nbsp;&nbsp;
@@ -86,7 +89,7 @@
 		&nbsp;&nbsp;
 		 <!--  充值类型： -->
 		 <span class="select-box inline">
-			<select name="telchargeSpeed" class="select"  onchange="submitForm()">
+			<select name="chargeSpeed" class="select"  onchange="submitForm()">
 				<option value="">充值速度</option>
 				<c:forEach items="${resultMap.telchargeSpeedEnums }" var="telchargeSpeedEnum" varStatus="vs1">
 					<option value="${telchargeSpeedEnum.value }" <c:if test="${telchargeSpeedEnum.value == resultMap.params.chargeSpeed }"> selected</c:if>>${telchargeSpeedEnum.desc }</option>
@@ -108,7 +111,18 @@
 	</div>
 	<!-- 第二行搜索 -->
 	<div class="row cl" style="margin-top: 30dp">
-		平台名称：<input type="text" value="${resultMap.params.epName }" name="epName" id="" placeholder="平台名称" style="width:80px" class="input-text">
+		<%-- <c:if test="${loginContext.rootAgencyId == 0 }"> --%>
+		<%-- 平台名称：<input type="text" value="${resultMap.params.epName }" name="epName" id="" placeholder="平台名称" style="width:80px" class="input-text"> --%>
+		折扣类型:
+		<span class="select-box inline">
+			<select name="rateFor" id="rateFor" class="select" onchange="submitForm()">
+				<!-- <option value="">折扣类型</option> -->
+				<c:forEach items="${resultMap.telChannelTagEnums }" var="telChannelTagEnum" varStatus="vs1">
+					<option value="${telChannelTagEnum.value }" <c:if test="${telChannelTagEnum.value == resultMap.params.rateFor }"> selected</c:if>>${telChannelTagEnum.desc }</option>
+				</c:forEach>
+			</select>
+			<%-- <input type="hidden" class="input-text" name="rateFor" id="rateFor"  value="${resultMap.rateFor }" placeholder=""> --%>
+		</span>
 		&nbsp;&nbsp;
 		<%-- <span class="select-box inline">
 			<select name="telchannelState" class="select" onchange="submitForm()">
@@ -145,8 +159,8 @@
 			<thead>
 				<tr class="text-c">
 					<!-- <th width="80">流量包Id</th> -->
-					<th width="30">ID</th>
-					<th width="80">平台名称</th>
+					<!-- <th width="30">ID</th> -->
+					<!-- <th width="80">平台名称</th> -->
 					<th width="80">话费价值</th>
 					<th width="120">通道折扣</th>
 					<th width="120">折扣价格</th>
@@ -154,22 +168,23 @@
 					<th width="60">运营商名称</th>
 					<th width="100">业务类型</th>
 					<th width="120">支持省份</th>
+					<c:if test="${resultMap.city ==  resultMap.params.serviceType}">
 					<th width="120">支持城市</th>
-					
+					</c:if>
 					<th width="60">充值速度</th>
 					<th width="120">限制描述</th>
 					
 					
 					<!-- <th width="80">通道状态</th>
 					<th width="80">通道使用状态</th> -->
-					<th width="100">操作</th>
+					<!-- <th width="100">操作</th> -->
 				</tr>
 			</thead>
 			<tbody>
 				<c:forEach items="${resultMap.pagination.records }" var="telchannel" varStatus="vs">
 					<tr class="text-c">
-						<td>${telchannel.id }</td> 
-						<td>${telchannel.epName }</td>
+						<%-- <td>${telchannel.id }</td> 
+						<td>${telchannel.epName }</td> --%>
 						<td>${telchannel.chargeValue }元</td>
 					 	<td class="c-blue">${telchannel.telchannelDiscount }</td>
 						<td class="c-blue">${telchannel.telchannelPrice }</td>
@@ -213,8 +228,9 @@
 							</c:if>
 						</c:forEach> --%>
 						</td>
+						<c:if test="${resultMap.city ==  telchannel.serviceType}">
 						<td>${telchannel.city }</td> 
-						
+						</c:if>
 						<td>
 							<c:forEach items="${resultMap.telchargeSpeedEnums }" var="telchargeSpeedEnum" varStatus="vs1">
 							<c:if test="${telchannel.chargeSpeed == telchargeSpeedEnum.value }"> ${telchargeSpeedEnum.desc }</c:if>
@@ -234,7 +250,7 @@
 								<c:if test="${telchannel.telchannelUseState == cUseState.value  && telchannel.telchannelUseState==1}"> <span class="label radius">${cUseState.desc }</span></c:if>
 							</c:forEach>
 						</td> --%>
-						<td class="f-14 td-manage">
+						<!-- <td class="f-14 td-manage"> -->
 							<%-- <c:choose>
 								<c:when test="${telchannel.telchannelState == 1 }"><!-- 暂停 -->
 									<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeCState(${telchannel.id},'0','state')" href="javascript:;" title="运行">
@@ -264,7 +280,7 @@
 						<a style="text-decoration:none" data-toggle="tooltip" data-href='/flowsys/tel_channel/telchannel_edit_page.do?id=${telchannel.id}&serviceType=${telchannel.serviceType }' data-placement="top" class="ml-5" onclick="Hui_admin_tab(this)" data-title="编辑通道"><i class="Hui-iconfont">&#xe6df;</i></a>
 						<a style="text-decoration:none" data-toggle="tooltip" data-href='/flowsys/telRate/telRate_add_page_plat.do?id=${telchannel.id}&serviceType=${telchannel.serviceType }' data-placement="top" class="ml-5" onclick="Hui_admin_tab(this)" data-title="平台用户折扣"><i class="Hui-iconfont">&#xe72b;</i></a> --%>
 						<%-- editChannel(this,'/flowsys/tel_channel/telchannel_edit_page.do?channelId=${telchannel.id}&serviceType='${telchannel.serviceType }) --%>
-						</td>
+						<!-- </td> -->
 					</tr>
 				</c:forEach>
 			</tbody>

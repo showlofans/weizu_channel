@@ -7,15 +7,12 @@
 //import org.springframework.test.context.ContextConfiguration;
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
-//import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
-//import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
-//import com.weizu.flowsys.util.Pagination;
-//import com.weizu.flowsys.web.activity.pojo.TelrateBindAccountPo;
-//import com.weizu.flowsys.web.activity.pojo.TelrateBindAccountVO;
+//import com.weizu.flowsys.core.beans.WherePrams;
 //import com.weizu.flowsys.web.agency.ao.AgencyAO;
 //import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
-//import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
+//import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 //import com.weizu.flowsys.web.http.ao.ValiUser;
+//import com.weizu.web.foundation.hash.Hash;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -85,40 +82,44 @@
 //	 * @author:微族通道代码设计人 宁强
 //	 * @createTime:2017年11月23日 下午4:06:13
 //	 */
-//	@Test
-//	public void testGetUnbindTelAgency(){
-////		List<AgencyBackwardVO> list = agencyVODao.getUnbindAgency( 1);
-//		TelrateBindAccountVO telrateBindAccountVO = new TelrateBindAccountVO(); 
-////		aardto.setAgencyName("w");
-//		telrateBindAccountVO.setBindState(BindStateEnum.NO.getValue());
-//		telrateBindAccountVO.setTelRateId(3l);
-//		telrateBindAccountVO.setBillType(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-//		Pagination<AgencyBackwardVO> pagination = agencyAO.getUnbindTelAgency(1, telrateBindAccountVO, null);
-//		System.out.println(pagination.getRecords().size());
-//		System.out.println(pagination.getTotalRecord());
-//	}
+////	@Test
+////	public void testGetUnbindTelAgency(){
+//////		List<AgencyBackwardVO> list = agencyVODao.getUnbindAgency( 1);
+////		TelrateBindAccountVO telrateBindAccountVO = new TelrateBindAccountVO(); 
+//////		aardto.setAgencyName("w");
+////		telrateBindAccountVO.setBindState(BindStateEnum.NO.getValue());
+////		telrateBindAccountVO.setTelRateId(3l);
+////		telrateBindAccountVO.setBillType(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+////		Pagination<AgencyBackwardVO> pagination = agencyAO.getUnbindTelAgency(1, telrateBindAccountVO, null);
+////		System.out.println(pagination.getRecords().size());
+////		System.out.println(pagination.getTotalRecord());
+////	}
 ////	@Test
 ////	public void testBindStateEnum(){
 ////		System.out.println(BindStateEnum.toBindList().size());
 ////	}
-////	@Test
-////	public void testLogin(){
-//////		String userName = "博爱小强";// Lxq19930620
+//	@Test
+//	public void testLogin(){
+////		String userName = "博爱小强";// Lxq19930620
 ////		String userName = "流量代理";// xing081500
-////		AgencyBackwardPo agencyPo = agencyVODao.get(new WherePrams("user_name", "=", userName));
-////		//得到密码
-////		String userPass = Hash.BASE_UTIL.decode(agencyPo.getUserPass());
-//////		System.out.println("8a982a8a5f7bd4d7015f7bd4d7c90000".equals("8a982a8a5f7bd4d7015f7bd4d7c90000"));
-//////		System.out.println(userName);//15754715147
-////		System.out.println(userPass);
-//////		System.out.println(agencyPo.getCallBackIp());
-//////		System.out.println(agencyPo.getAgencyTag());
-////		System.out.println(agencyPo.getUserApiKey());
-//////		agencyPo.setUserPass(userPass);//948109abc
-//////		Map<String, Object> resultMap = agencyAO.login(agencyPo);
-//////		AgencyBackwardPo resultPo = (AgencyBackwardPo) resultMap.get("entity");// 获得返回的登陆实体
-//////		System.out.println(resultPo.getAgencyTel());
-////	}
+////		String userName = "罗大大";// 201103
+////		String userName = "18706732390";// hou77833
+////		String userName = "A661844";// 123456
+//		String userName = "xiao";// 123456
+//		AgencyBackwardPo agencyPo = agencyVODao.get(new WherePrams("user_name", "=", userName));
+//		//得到密码
+//		String userPass = Hash.BASE_UTIL.decode(agencyPo.getUserPass());
+////		System.out.println("8a982a8a5f7bd4d7015f7bd4d7c90000".equals("8a982a8a5f7bd4d7015f7bd4d7c90000"));
+////		System.out.println(userName);//15754715147
+//		System.out.println(userPass);
+////		System.out.println(agencyPo.getCallBackIp());
+////		System.out.println(agencyPo.getAgencyTag());
+//		System.out.println(agencyPo.getUserApiKey());
+////		agencyPo.setUserPass(userPass);//948109abc
+////		Map<String, Object> resultMap = agencyAO.login(agencyPo);
+////		AgencyBackwardPo resultPo = (AgencyBackwardPo) resultMap.get("entity");// 获得返回的登陆实体
+////		System.out.println(resultPo.getAgencyTel());
+//	}
 ////	@Test
 ////	public void testCheckName(){
 ////		boolean isExist = agencyAO.checkName("xiao");

@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
@@ -72,7 +73,7 @@ public class ProductCodeController {
 		if(agencyVO != null){
 			OneCodePo oneCodePo = (OneCodePo)request.getSession().getAttribute("oneCodePo");
 			if(oneCodePo != null){
-				List<ExchangePlatformPo> epList = exchangePlatformDao.list(new WherePrams("ep_name", "like", epName));
+				List<ExchangePlatformPo> epList = exchangePlatformDao.list(new WherePrams("ep_name", "like", epName).and("ep_for", "=", PgServiceTypeEnum.PGCHARGE.getValue()));
 				if( epList != null && epList.size() > 0 ){
 					oneCodePo.setEpId(epList.get(0).getId());
 					resultMap.put("epList", epList);

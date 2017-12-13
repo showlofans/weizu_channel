@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.operatorPg.enums.PgInServiceEnum;
+import com.weizu.flowsys.operatorPg.enums.TelChannelTagEnum;
+import com.weizu.flowsys.util.AddressUtils;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.dao.impl.RateBackwardDaoImpl;
 import com.weizu.flowsys.web.activity.pojo.AccountActiveRateDTO;
@@ -42,6 +45,8 @@ public class AgencyAOImpl implements AgencyAO {
 	private ChargeAccountDao chargeAccountDao;
 	@Resource
 	private ChargeAccountAo chargeAccountAO;
+//	@Resource
+//	private AddressUtils addressUtils;
 
 	/**
 	 * @description:注册平台代理商（账户）
@@ -186,27 +191,37 @@ public class AgencyAOImpl implements AgencyAO {
 	public Map<String,Object> login(AgencyBackwardPo agencyBackward) {
 		String userPass = agencyBackward.getUserPass(); 
 		Map<String,Object> resultMap = new HashMap<String, Object>();
-		AgencyBackwardPo resultAgency = agencyVODao.get(new WherePrams("user_name", "=", agencyBackward
-				.getUserName()));
-		if(resultAgency != null)
-		{
-			String dataUserPass = Hash.BASE_UTIL.decode(resultAgency.getUserPass());
+		if(StringHelper.isNotEmpty(agencyBackward.getUserName())){
+			WherePrams where = new WherePrams("user_name", "=", agencyBackward.getUserName());
+			AgencyBackwardPo resultAgency = null;
+			if(StringHelper.isNotEmpty(agencyBackward.getAgencyTel())){//注册使用电话验证
+				where = where.or("agency_tel", "=", agencyBackward.getAgencyTel());
+			}
+			resultAgency = agencyVODao.get(where);
 			
-			if(dataUserPass.equals(userPass))
+			if(resultAgency != null)
 			{
-				resultMap.put("msg", "success");
-				resultMap.put("entity", resultAgency);
-				return resultMap;
+				String dataUserPass = Hash.BASE_UTIL.decode(resultAgency.getUserPass());
+				
+				if(dataUserPass.equals(userPass))
+				{
+					resultMap.put("msg", "success");
+					resultMap.put("entity", resultAgency);
+					return resultMap;
+				}
+				else
+				{
+					resultMap.put("msg", "登录密码不正确!!");
+					return resultMap;
+				}
 			}
 			else
 			{
-				resultMap.put("msg", "登录密码不正确!!");
+				resultMap.put("msg", "该用户名不存在！");
 				return resultMap;
 			}
-		}
-		else
-		{
-			resultMap.put("msg", "该用户名不存在！");
+		}else{
+			resultMap.put("msg", "请重新登陆");
 			return resultMap;
 		}
 	}
@@ -559,9 +574,13 @@ public class AgencyAOImpl implements AgencyAO {
 		if(telrateBindAccountVO.getTelRateId() != null){
 			paramsMap.put("telRateId", telrateBindAccountVO.getTelRateId());
 		}
-//		if(telrateBindAccountVO.getAgencyTag() != null){
-			paramsMap.put("agencyTag", AgencyTagEnum.DATA_USER.getValue());
-//		}
+		if(telrateBindAccountVO.getRateFor() != null){
+			paramsMap.put("rateFor", telrateBindAccountVO.getRateFor());
+		}else{
+			paramsMap.put("rateFor", TelChannelTagEnum.DATA_USER.getValue());
+			
+		}
+		///paramsMap.put("rateFor", TelChannelTagEnum.DATA_USER.getValue());
 			
 		if(telrateBindAccountVO.getBillType() != null){
 			paramsMap.put("billType", telrateBindAccountVO.getBillType());
@@ -693,4 +712,10 @@ public class AgencyAOImpl implements AgencyAO {
 			return null;
 		}
 	}
+
+//	@Override
+//	public String getLoginIpAddress(HttpServletRequest request) {
+//		String address = addressUtils.getAddresses(request, "utf-8");
+//		return null;
+//	}
 }

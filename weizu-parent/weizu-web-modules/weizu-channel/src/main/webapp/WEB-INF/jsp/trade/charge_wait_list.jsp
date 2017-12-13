@@ -38,11 +38,19 @@
 
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 订单管理 <span class="c-gray en">&gt;</span> 订单列表-充值等待 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 订单管理 <span class="c-gray en">&gt;</span> 订单列表-充值等待 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" ><i class="Hui-iconfont">&#xe6a6;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
 		<form class="form form-horizontal" action="/flowsys/chargePg/purchase_list.do" method="post" id="formD" name="dataListForm">
 				<div class="row cl formControls">
+					<span class="select-box inline">
+						<select name="purchaseFor" class="select">
+						<!-- <option value="">充值业务</option> -->
+						<c:forEach items="${resultMap.pgServiceTypeEnums }" var="pgServicetypeEnum" varStatus="vs2">
+							<option value="${pgServicetypeEnum.value }" <c:if test="${pgServicetypeEnum.value == resultMap.searchParams.purchaseFor }"> selected</c:if>>${pgServicetypeEnum.desc }</option>
+						</c:forEach>
+					</select>
+					</span>
 					手机号:<input type="text"  value="${resultMap.searchParams.chargeTel }" name="chargeTel" id="" placeholder=" 手机号" style="width:150px" class="input-text">
 					所属代理商:<input type="text"  value="${resultMap.searchParams.agencyName }" name="agencyName" id="" placeholder=" 代理商名称" style="width:100px" class="input-text">
 					订单号:<input type="text"  value="${resultMap.searchParams.orderId }" name="orderId" id="" placeholder=" 订单号" style="width:250px" class="input-text">
@@ -87,7 +95,7 @@
 					<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<button class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 					<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
-					<input type="hidden" id="totalRecordLong" value="${resultMap.pagination.totalRecordLong }"> 
+					<%-- <input type="hidden" id="totalRecordLong" value="${resultMap.pagination.totalRecordLong }">  --%>
 					<input type="hidden" name="orderResult" value="${resultMap.searchParams.orderResult }">
 					<input type="hidden" name="orderState" value="${resultMap.searchParams.orderState }">
 				</div>
@@ -109,13 +117,17 @@
 					<th width="100">所属代理商</th>
 					<th width="150">订单号</th>
 					<th width="100">手机号</th>
-					<th width="80">流量大小</th>
+					<c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
+						<th width="80">流量大小</th>
+					</c:if>
 					<th width="80">业务类型</th>
 					<th width="70">面值</th>
 					<th width="150">提交时间</th>
 					<th width="150">充值时间</th>
 					<th width="100">号码归属</th>
-					<th width="60">城市</th>
+					<c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
+						<th width="60">城市</th>
+					</c:if>
 					<th width="60">充值方式</th>
 					<th width="80">结果</th>
 					<th width="80">结果描述</th>
@@ -144,17 +156,34 @@
 						</c:choose></td>
 						<td>${purchase.orderId }</td>
 						<td>${purchase.chargeTel }</td>
-						 <td>${purchase.pgSize }</td>
-						 <td><c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs">
-								<c:if test="${purchase.serviceType == serviceTypeEnum.value }">
-									${serviceTypeEnum.desc }
-								</c:if>
-							</c:forEach></td>
-						<td>${purchase.pgPrice }</td>
+						 <c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
+						 	<td>${purchase.pgSize }M</td>
+						 </c:if>
+						 <td>
+							<c:choose>
+						 		<c:when test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }"><!-- 流量订单 -->
+									 <c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs">
+										<c:if test="${purchase.serviceType == serviceTypeEnum.value }">
+											${serviceTypeEnum.desc }
+										</c:if>
+									</c:forEach>
+						 		</c:when>
+						 		<c:otherwise>
+									 <c:forEach items="${resultMap.huaServiceTypeEnums }" var="huaServiceTypeEnum" varStatus="vs">
+										<c:if test="${purchase.serviceType == huaServiceTypeEnum.value }">
+											${huaServiceTypeEnum.desc }
+										</c:if>
+									</c:forEach>
+						 		</c:otherwise>
+						 	</c:choose>
+						</td>
+						<td>${purchase.chargeValue }</td>
 						<td>${purchase.orderArriveTimeStr }</td>
 						 <td>${purchase.orderBackTimeStr }</td>
 						<td>${purchase.chargeTelDetail }</td>
-						<td>${purchase.chargeTelCity }</td>
+						<c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
+							 <td>${purchase.chargeTelCity }</td>
+						</c:if>
 						<!-- 充值方式 -->
 						<td>
 						<c:forEach items="${resultMap.orderPathEnums }" var="orderPathEnum" varStatus="vsp">
@@ -270,7 +299,7 @@ function batchCommit(){
 				type: 'POST',
 				url: "/flowsys/chargePg/batch_commit_order.do",
 				//dataType: 'json',
-				data: {purchaseIds:purchaseIds,accountIds:accountIds},
+				data: $('form').serialize(),
 				success: function(resp){
 					//$(obj).parents("tr").remove();
 					//alert
@@ -313,18 +342,23 @@ function batchCommit(){
     }  */
 }
 function formSub(){
+	$("input[name='pageNoLong']").val('');
 	$('form').submit();
 }
 $(document).ready(function() {
 	$('.select').change(function(){
 		//$('form').submit();
-		$("input[name='pageNoLong']").val('');
 		formSub();
-	})
+	});
+	/* $('.purchaseFor').change(function(){//特殊需求
+		$("input[name='pageNoLong']").val('');
+		$('#arriveStartTimeStr').val('');
+		$('form').submit();
+	}); */
 }); 
 /**手动提交订单*/
 function ajaxCommit(vart,orderId,chargeTelDetail,accountId,billType){
-	alert(orderId +'<br>' + chargeTelDetail + "<br>" + accountId + "<br>" + billType );
+	//alert(orderId +'<br>' + chargeTelDetail + "<br>" + accountId + "<br>" + billType );
 	
 	var msg='确认提交订单吗？';
 	var msgStr = '手动提交';

@@ -162,9 +162,12 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 								Double orderAmount = accountPurchasePo.getOrderAmount();
 								Double agencyBeforeBalance = accountPo.getAccountBalance();
 								accountPo.addBalance(orderAmount, 1);
+								//获得退费类型 
+								ChargeRecordPo recordPo = chargeRecordDao.get(accountPurchasePo.getRecordId()) ;
+								
 								recordPoList.add(new ChargeRecordPo(realBackTime, orderAmount,
 										agencyBeforeBalance, accountPo.getAccountBalance(), 
-										AccountTypeEnum.Replenishment.getValue(), accountId,  1 , orderId));
+										AccountTypeEnum.Replenishment.getValue(), accountId,  recordPo.getChargeFor() , orderId));
 								chargeAccountDao.updateLocal(accountPo, new WherePrams("id","=",accountId));
 								//更新连接表
 								ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);

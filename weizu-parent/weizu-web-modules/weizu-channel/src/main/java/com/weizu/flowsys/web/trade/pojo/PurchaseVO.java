@@ -26,13 +26,15 @@ public class PurchaseVO implements Cloneable,Serializable {
 
     private Integer pgSize;						//包体大小
     
-    private Double pgPrice;						//包体原价
+    private Double chargeValue;						//包体原价
     
     private Integer operatorType;				//运营商名称
     
+    private Integer operatorName;				//运营商
+    
     private Integer serviceType;				//业务范围
     
-    private Integer pgServiceType;				//业务类型：pgServiceTypeEnum
+    private Integer purchaseFor;				//业务类型：pgServiceTypeEnum
 
     private Long orderArriveTime;				//提交时间（本平台获得该数据请求的时间）
     
@@ -81,11 +83,15 @@ public class PurchaseVO implements Cloneable,Serializable {
     
     private Integer billType;					//账户类型（搜索和展示参数）
     
-    private Long rateDiscountId;						//费率折扣id
+    private Long channelDiscountId;						//通道折扣id
     
     private Double apDiscount;					//实际折扣
     
     private String agencyCallIp;				//代理商回调地址
+    
+    private Integer chargeSpeed;				//充值速度
+    
+    private Integer hasCallBack;				//是否已经接收到了回调(枚举：orderResultEnum)
     
     @Override
 	public PurchaseVO clone() {
@@ -98,17 +104,53 @@ public class PurchaseVO implements Cloneable,Serializable {
 		return pvo;
 	}
     
-	public Integer getPgServiceType() {
-		return pgServiceType;
+	public Integer getHasCallBack() {
+		return hasCallBack;
 	}
 
-	public void setPgServiceType(Integer pgServiceType) {
-		this.pgServiceType = pgServiceType;
+	public void setHasCallBack(Integer hasCallBack) {
+		this.hasCallBack = hasCallBack;
 	}
+
+	public Integer getOperatorName() {
+		return operatorName;
+	}
+
+	public void setOperatorName(Integer operatorName) {
+		this.operatorName = operatorName;
+	}
+
+
+
+	public Integer getChargeSpeed() {
+		return chargeSpeed;
+	}
+
+	public void setChargeSpeed(Integer chargeSpeed) {
+		this.chargeSpeed = chargeSpeed;
+	}
+	
+//	public Integer getPgServiceType() {
+//		return pgServiceType;
+//	}
+//
+//	public void setPgServiceType(Integer pgServiceType) {
+//		this.pgServiceType = pgServiceType;
+//	}
 
 	public String getAgencyCallIp() {
 		return agencyCallIp;
 	}
+
+	public Integer getPurchaseFor() {
+		return purchaseFor;
+	}
+
+
+	public void setPurchaseFor(Integer purchaseFor) {
+		this.purchaseFor = purchaseFor;
+	}
+
 
 	public void setAgencyCallIp(String agencyCallIp) {
 		this.agencyCallIp = agencyCallIp;
@@ -138,12 +180,12 @@ public class PurchaseVO implements Cloneable,Serializable {
 		this.agencyId = agencyId;
 	}
 
-	public Long getRateDiscountId() {
-		return rateDiscountId;
+	public Long getChannelDiscountId() {
+		return channelDiscountId;
 	}
 
-	public void setRateDiscountId(Long rateDiscountId) {
-		this.rateDiscountId = rateDiscountId;
+	public void setChannelDiscountId(Long channelDiscountId) {
+		this.channelDiscountId = channelDiscountId;
 	}
 
 	public Integer getAccountId() {
@@ -175,10 +217,6 @@ public class PurchaseVO implements Cloneable,Serializable {
 
 	public void setOrderStateDetail(String orderStateDetail) {
 		this.orderStateDetail = orderStateDetail;
-	}
-
-	public void setPgPrice(Double pgPrice) {
-		this.pgPrice = pgPrice;
 	}
 
 	public String getBackEndTimeStr() {
@@ -245,12 +283,12 @@ public class PurchaseVO implements Cloneable,Serializable {
 		this.pgSize = pgSize;
 	}
 
-	public Double getPgPrice() {
-		return pgPrice;
+	public Double getChargeValue() {
+		return chargeValue;
 	}
 
-	public void setPgPrice(double pgPrice) {
-		this.pgPrice = pgPrice;
+	public void setChargeValue(Double chargeValue) {
+		this.chargeValue = chargeValue;
 	}
 
 	public String getAgencyName() {

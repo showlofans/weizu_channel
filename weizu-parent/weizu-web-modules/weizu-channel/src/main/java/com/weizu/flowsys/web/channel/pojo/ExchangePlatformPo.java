@@ -50,10 +50,22 @@ public class ExchangePlatformPo extends Po {
     
     private String epOtherParams;		//平台其他参数
     
+    private Integer epFor;				//PgServiceTypeEnum 平台类型
+    
     @TempField
     private String lastAccessStr;		//页面展示时间
     
-    public Integer getEpCallBack() {
+    
+    
+    public Integer getEpFor() {
+		return epFor;
+	}
+
+	public void setEpFor(Integer epFor) {
+		this.epFor = epFor;
+	}
+
+	public Integer getEpCallBack() {
 		return epCallBack;
 	}
 
@@ -191,8 +203,12 @@ public class ExchangePlatformPo extends Po {
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return super.toString();
+		return "ExchangePlatformPo [epName=" + epName + ", epPurchaseIp="
+				+ epPurchaseIp + ", productListIp=" + productListIp
+				+ ", epBalanceIp=" + epBalanceIp + ", epUserName=" + epUserName
+				+ ", epUserPass=" + epUserPass + ", epApikey=" + epApikey
+				+ ", epEngId=" + epEngId + ", epOtherParams=" + epOtherParams
+				+ ", epFor=" + epFor + "]";
 	}
 
 

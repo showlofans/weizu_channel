@@ -31,7 +31,7 @@
 <title>批量绑定代理商</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 通道列表 <span class="c-gray en">&gt;</span> 费率列表 <span class="c-gray en">&gt;</span>绑定代理商 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> </nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页  <div class="titleMore"><span class="c-gray en">&gt;</span> 平台通道管理</div> <span class="c-gray en">&gt;</span> 流量通道 <span class="c-gray en">&gt;</span> 配置列表 <div class="titleMore"><span class="c-gray en">&gt;</span>绑定代理商</div> <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:closeContextFrame();" title="关闭" >绑定页面<i class="Hui-iconfont">&#xe6a6;</i></a> </nav>
 <div class="page-container">
 	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
 	<div class="text-c">
@@ -154,6 +154,14 @@
 		</table>
 		<mytag:Pagination pagination="${resultMap.pagination}" queryForm="dataListForm" divId="agencyId" />  
 	</div>
+	<footer class="footer mt-20">
+		<div class="container">
+			<p><!-- 感谢jQuery、layer、laypage、Validform、UEditor、My97DatePicker、iconfont、Datatables、WebUploaded、icheck、highcharts、bootstrap-Switch<br> -->
+				Copyright &copy;2017-2018 南昌微族科技有限公司 All Rights Reserved.<br>
+				<!-- 本后台系统由<a href="http://www.h-ui.net/" target="_blank" title="H-ui前端框架">H-ui前端框架</a>提供前端技术支持 -->
+				</p>
+		</div>
+	</footer>
 </div>
 <!--_footer 作为公共模版分离出去-->
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
@@ -176,6 +184,11 @@
 function onSub(){
 	$('form').submit();
 }
+//关闭当前弹出层
+function closeContextFrame(){
+	 var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+	parent.layer.close(index); // 执行关闭
+}
 /**绑定全部代理商**/
 function changeBAllState(url,bindState, updateBindState){
 	var rateDiscountId = $('#rateDiscountId').val();
@@ -184,24 +197,27 @@ function changeBAllState(url,bindState, updateBindState){
 	//var bindState = $('#bindState').val();
 	var agencyName = $('#agencyName').val();
 	var agencyMark = $('#agencyMark').val();
-	$.ajax({
-		type: 'POST',
-		url: url,
-		//dataType: 'json',
-		data: {updateBindState:updateBindState,rateDiscountId:rateDiscountId,billType:billType,agencyTag:agencyTag,agencyName: agencyName,agencyMark: agencyMark,bindState: bindState},
-		success: function(resp){
-			//$(obj).parents("tr").remove();
-			//alert
-			if(resp=="success"){
-				//layer.msg('更新绑定成功',{icon:1,time:1000});
-				location.reload();
-           	 }else{
-				layer.msg('更新绑定失败',{icon:1,time:1000});
-           	 }
-		},
-		error:function(resp) {
-			console.log(resp.msg);
-		}
+	var msg = "确认要全量绑定所有查询得到的代理商？";
+	layer.confirm(msg,function(index){
+		$.ajax({
+			type: 'POST',
+			url: url,
+			//dataType: 'json',
+			data: {updateBindState:updateBindState,rateDiscountId:rateDiscountId,billType:billType,agencyTag:agencyTag,agencyName: agencyName,agencyMark: agencyMark,bindState: bindState},
+			success: function(resp){
+				//$(obj).parents("tr").remove();
+				//alert
+				if(resp=="success"){
+					//layer.msg('更新绑定成功',{icon:1,time:1000});
+					location.reload();
+	           	 }else{
+					layer.msg('更新绑定失败',{icon:1,time:1000});
+	           	 }
+			},
+			error:function(resp) {
+				console.log(resp.msg);
+			}
+		});
 	});
 }
 

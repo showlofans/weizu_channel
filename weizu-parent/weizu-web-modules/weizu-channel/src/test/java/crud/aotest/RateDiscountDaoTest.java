@@ -1,6 +1,8 @@
 //package crud.aotest;
 //
+//import java.util.HashMap;
 //import java.util.List;
+//import java.util.Map;
 //
 //import javax.annotation.Resource;
 //
@@ -10,12 +12,14 @@
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
 //import com.alibaba.fastjson.JSON;
+//import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 //import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 //import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 //import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 //import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 //import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 //import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
+//import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 //import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 //import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 //
@@ -112,12 +116,18 @@
 ////			System.out.println("chanelId:"+channelId);
 ////		}
 ////	}
-//	@Test
-//	public void getPgListForPurchase(){
-//		List<PgDataPo> pgList = rateDiscountAO.getPgListForPurchase(new ChargeChannelParamsPo("陕西移动", ServiceTypeEnum.PROVINCE.getValue(), PgTypeEnum.PGDATA.getValue(), PgValidityEnum.MONTH_DAY_DATA.getValue(), ChannelTypeEnum.ORDINARY.getValue()), 101, true);
-//		String listJsonStr = JSON.toJSONString(pgList);
-//		System.out.println(listJsonStr);
-//	}
+////	@Test
+////	public void getPgListForPurchase(){
+////		List<PgDataPo> pgList = rateDiscountAO.getPgListForPurchase(new ChargeChannelParamsPo("陕西移动", ServiceTypeEnum.PROVINCE.getValue(), PgTypeEnum.PGDATA.getValue(), PgValidityEnum.MONTH_DAY_DATA.getValue(), ChannelTypeEnum.ORDINARY.getValue()), 101, true);
+////		String listJsonStr = JSON.toJSONString(pgList);
+////		System.out.println(listJsonStr);
+////	}
+////	
+////	@Test
+////	public void getPriceByPg(){
+////	   RateDiscountPo ratePo = rateDiscountDao.getPriceByPg(2, 41, 49l);
+////	   System.out.println(ratePo.getActiveDiscount());
+////	}
 ////	@Test
 ////	public void testAddMyRate(){
 ////		RateDiscountPo ratePo = new RateDiscountPo();
@@ -179,4 +189,15 @@
 ////			System.out.println("error");
 ////		}
 ////	}
+//	@Test
+//	public void testGetMyChildRate(){
+//		Map<String,Object> pMap = new HashMap<String, Object>();
+////		pMap.put("bindState", BindStateEnum.BIND.getValue());
+////		pMap.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+//		pMap.put("activeId", 74);
+//		pMap.put("accountId", 64);
+//		pMap.put("bindState", BindStateEnum.BIND.getValue());
+//		RateDiscountPo childRatePo = rateDiscountDao.getMyChildRate(pMap);
+//		System.out.println(childRatePo == null?"null":childRatePo.getActiveDiscount());
+//	}
 //}

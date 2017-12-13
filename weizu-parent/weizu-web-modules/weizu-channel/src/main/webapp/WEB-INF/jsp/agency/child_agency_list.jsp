@@ -31,12 +31,22 @@
 <title>资讯列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 代理商管理 <span class="c-gray en">&gt;</span> 代理商列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 代理商管理 <span class="c-gray en">&gt;</span> 
+<c:choose>
+	<c:when test="${resultMap.params.agencyTag == 1 }">
+		认证代理商列表
+	</c:when>
+	<c:otherwise>
+		代理商列表
+	</c:otherwise>
+</c:choose>
+ <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" ><i class="Hui-iconfont">&#xe6a6;</i></a></nav>
 <div class="page-container">
 	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
 	<div class="text-c">
 		<form action="/flowsys/agency/child_agency_list.do" method="post" id="formD" name="dataListForm">
 				<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
+				<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 				代理商名称:<input type="text"  value="${resultMap.params.userName }" name="userName" id="" placeholder=" 代理商名称" style="width:150px" class="input-text">
 				备注信息:<input type="text"  value="${resultMap.params.agencyMark }" name="agencyMark"" placeholder=" 备注信息" style="width:150px" class="input-text">
 				<!-- <input type="text" style="width:150px" class="input-text" name="start_datetime"  value="2017-05-26 00:00:00"  onClick="WdatePicker({startDate:'%y-%M-%d 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
@@ -53,9 +63,11 @@
 						</span>
 				</c:if>
 				<button name="" id="" class="btn btn-success"  type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜代理</button>
-				<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button> 
 				<c:if test="${loginContext.rootAgencyId == 0 }">
 					<a class="c-red" style="text-decoration:none" data-href="/flowsys/account/confirm_company_account_page.do" data-title="认证审核" title="认证审核" onclick="Hui_admin_tab(this)">认证审核</a>
+				</c:if>
+				<c:if test="${empty resultMap.pagination.records }">
+					<a  style="text-decoration:none" data-toggle="tooltip" data-href='/view/mine/html/agency_help.html' data-placement="top" class="ml-5 c-red" onclick="Hui_admin_tab(this)" data-title="代理商指南">代理商指南</a>
 				</c:if>
 				<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 				<input type="hidden" name="agencyTag" value="${resultMap.params.agencyTag }"> 
@@ -87,6 +99,8 @@
 				</tr>
 			</thead>
 			<tbody>
+				<!-- <tr class="text-c">
+				</tr> -->
 				<c:forEach items="${resultMap.pagination.records }" var="agency" varStatus="vs">
 					<tr class="text-c">
 						<%-- <td style="display:none">${agency.id }</td> --%>
@@ -139,8 +153,9 @@
 						<c:if test="${agency.billType == billTypeEnum.value }"> ${billTypeEnum.desc }</c:if>
 						</c:forEach></td>
 						<td class="td-manage">
-							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="editAgency(${agency.id })" href="javascript:;" title="查看APIKey"><i class="Hui-iconfont">&#xe60c;</i></a>
-							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="resetPass('${agency.id}')" href="javascript:;" title="重置密码"><i class="Hui-iconfont">&#xe63f;</i></a>
+							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="editAgency(${agency.id })" href="javascript:;" title="查看信息"><i class="Hui-iconfont">&#xe60c;</i></a>
+							<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="resetPass('/flowsys/agency/reset_pass_page.do?tag=0&agencyId=${agency.id}')" href="javascript:;" title="重置密码"><i class="Hui-iconfont">&#xe63f;</i></a> --%>
+							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none"  data-href="/flowsys/agency/reset_pass_page.do" data-title="重置密码" onclick="Hui_admin_tab(this)" title="重置密码"><i class="Hui-iconfont">&#xe63f;</i></a>
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" onClick="account_charge('账户充值',${agency.accountId })" href="javascript:;" title="账户充值"><i class="Hui-iconfont">&#xe726;</i></a> 
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" data-title="设置充值卡" data-href="/flowsys/bankAccount/attach_bank_page.do?accountId=${agency.accountId }" onClick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe725;</i></a> 
 							<%-- <a title="/flowsys/rate/rate_add_page.do?rateId=${agency.rateId }&agencyId=${agency.id}" data-href="/flowsys/rate/rate_add_page.do?rateId=${agency.rateId }&agencyId=${agency.id}" data-title="费率添加" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe6df;</i></a> --%>
@@ -161,6 +176,14 @@
 		</table>
 		<mytag:Pagination pagination="${resultMap.pagination}" queryForm="dataListForm" divId="agencyId" />  
 	</div>
+	<footer class="footer mt-20">
+		<div class="container">
+			<p><!-- 感谢jQuery、layer、laypage、Validform、UEditor、My97DatePicker、iconfont、Datatables、WebUploaded、icheck、highcharts、bootstrap-Switch<br> -->
+				Copyright &copy;2017-2018 南昌微族科技有限公司 All Rights Reserved.<br>
+				<!-- 本后台系统由<a href="http://www.h-ui.net/" target="_blank" title="H-ui前端框架">H-ui前端框架</a>提供前端技术支持 -->
+				</p>
+		</div>
+	</footer>
 </div>
 <!--_footer 作为公共模版分离出去-->
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
@@ -201,7 +224,7 @@ function formSub(){
 	$('form').submit();
 }
 /**重置密码*/
-function resetPass(agencyId){
+/* function resetPass(agencyId){
 	layer.open({
         type: 2,
         title: "重置密码",
@@ -213,7 +236,7 @@ function resetPass(agencyId){
             location.reload();
         }
     });
-}
+} */
 
 /**账户-充值 */
 function account_charge(title,accountId){

@@ -36,6 +36,7 @@
 	<span class="c-gray en">&gt;</span>
 	账户信息
 	<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a>
+	<a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" ><i class="Hui-iconfont">&#xe6a6;</i></a>
 	<!-- <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=1575326411&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:1727661035:52" alt="点击这里给我发消息" title="点击这里给我发消息"/></a> -->
 	<%-- <c:if test="${fn:indexOf(qq, '&') > 0 }">
 		<c:out value="11111"></c:out>

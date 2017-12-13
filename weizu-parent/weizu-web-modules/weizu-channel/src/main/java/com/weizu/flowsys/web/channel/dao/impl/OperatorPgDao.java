@@ -202,6 +202,11 @@ public class OperatorPgDao extends DaoImpl<PgDataPo, Integer> implements Operato
 		return sqlSessionTemplateASS.selectList("getProductPgList", map);
 	}
 
+	@Override
+	public PgDataPo getPgByOrderId(Long purchaseId) {
+		return sqlSessionTemplateASS.selectOne("getPgByOrderId", purchaseId);
+	}
+
 	
 
 }

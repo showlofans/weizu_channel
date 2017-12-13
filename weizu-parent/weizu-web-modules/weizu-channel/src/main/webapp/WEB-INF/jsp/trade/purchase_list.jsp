@@ -28,31 +28,66 @@
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
+
+<style type="text/css">
+    /* .breadcrumb{ position:fixed; z-index:998} */
+</style>
 <title>充值列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 订单管理 <span class="c-gray en">&gt;</span> 订单列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 订单管理 <span class="c-gray en">&gt;</span> 订单列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" ><i class="Hui-iconfont">&#xe6a6;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
 		<form class="form form-horizontal" action="/flowsys/chargePg/purchase_list.do" method="post" id="formD" name="dataListForm">
 				<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
 				<div class="row cl formControls">
+					<!-- 运营商类型： -->
+					<span class="select-box inline">
+						<select name="purchaseFor" class="select">
+						<!-- <option value="">充值业务</option> -->
+						<c:forEach items="${resultMap.pgServiceTypeEnums }" var="pgServicetypeEnum" varStatus="vs2">
+							<option value="${pgServicetypeEnum.value }" <c:if test="${pgServicetypeEnum.value == resultMap.searchParams.purchaseFor }"> selected</c:if>>${pgServicetypeEnum.desc }</option>
+						</c:forEach>
+					</select>
+					</span> 
 					手机号:<input type="text"  value="${resultMap.searchParams.chargeTel }" name="chargeTel" id="" placeholder=" 手机号" style="width:150px" class="input-text">
+					归属地:<input type="text"  value="${resultMap.searchParams.chargeTelDetail }" name="chargeTelDetail" id="" placeholder=" 归属地" style="width:80px" class="input-text">
 					所属代理商:<input type="text"  value="${resultMap.searchParams.agencyName }" name="agencyName" id="" placeholder=" 代理商名称" style="width:100px" class="input-text">
 					订单号:<input type="text"  value="${resultMap.searchParams.orderId }" name="orderId" id="" placeholder=" 订单号" style="width:250px" class="input-text">
-					归属地:<input type="text"  value="${resultMap.searchParams.chargeTelDetail }" name="chargeTelDetail" id="" placeholder=" 归属地" style="width:80px" class="input-text">
 				</div>
 				
 				<div class="row cl" style="margin-top: 30dp">
 					<!-- 运营商类型： -->
-					<span class="select-box inline">
-						<select name="operatorType" class="select">
-						<option value="">运营商类型</option>
-						<c:forEach items="${resultMap.operatorTypeEnums }" var="otypeEnum" varStatus="vs2">
-							<option value="${otypeEnum.value }" <c:if test="${otypeEnum.value == resultMap.searchParams.operatorType }"> selected</c:if>>${otypeEnum.desc }</option>
-						</c:forEach>
-					</select>
-					</span> 
+					<c:choose>
+						<c:when test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }"><!-- 流量充值 -->
+							<span class="select-box inline">
+								<select name="operatorType" class="select">
+								<option value="">运营商类型</option>
+								<c:forEach items="${resultMap.operatorTypeEnums }" var="otypeEnum" varStatus="vs2">
+									<option value="${otypeEnum.value }" <c:if test="${otypeEnum.value == resultMap.searchParams.operatorType }"> selected</c:if>>${otypeEnum.desc }</option>
+								</c:forEach>
+							</select>
+							</span> 
+						</c:when>
+						<c:otherwise>
+							<span class="select-box inline">
+								<select name="operatorName" class="select">
+								<option value="">运营商名称</option>
+								<c:forEach items="${resultMap.operatorNameEnums }" var="operatorNameEnum" varStatus="vs2">
+									<option value="${operatorNameEnum.value }" <c:if test="${operatorNameEnum.value == resultMap.searchParams.operatorName }"> selected</c:if>>${operatorNameEnum.desc }</option>
+								</c:forEach>
+							</select>
+							</span> 
+							<span class="select-box inline">
+								<select name="chargeSpeed" class="select">
+								<option value="">充值速度</option>
+								<c:forEach items="${resultMap.telChargeSpeedEnums }" var="chargeSpeedEnum" varStatus="vs2">
+									<option value="${chargeSpeedEnum.value }" <c:if test="${chargeSpeedEnum.value == resultMap.searchParams.chargeSpeed }"> selected</c:if>>${chargeSpeedEnum.desc }</option>
+								</c:forEach>
+							</select>
+							</span> 
+						</c:otherwise>
+					</c:choose>
 					&nbsp;&nbsp;
 						<!-- 扣款类型： -->
 					<%-- <c:choose>
@@ -96,13 +131,17 @@
 					<th width="100">所属代理商</th>
 					<th width="150">订单号</th>
 					<th width="120">手机号</th>
-					<th width="80">流量大小</th>
+					<c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
+						<th width="80">流量大小</th>
+					</c:if>
 					<th width="80">业务类型</th>
 					<th width="70">面值</th>
 					<th width="150">提交时间</th>
 					<!-- <th width="150">充值时间</th> -->
 					<th width="100">号码归属</th>
-					<th width="60">城市</th>
+					<c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
+						<th width="60">城市</th>
+					</c:if>
 					<th width="80">结果</th>
 					<th width="80">结果描述</th>
 					<th width="60">金额</th><!-- 返款 -->
@@ -149,13 +188,28 @@
 							</c:choose> --%>
 						</td>
 						<td>${purchase.chargeTel }</td>
-						 <td>${purchase.pgSize }M</td>
-						 <td><c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs">
-								<c:if test="${purchase.serviceType == serviceTypeEnum.value }">
-									${serviceTypeEnum.desc }
-								</c:if>
-							</c:forEach></td><!-- serviceTypeEnums -->
-						<td>${purchase.pgPrice }</td>
+						 <c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
+						 	<td>${purchase.pgSize }M</td>
+						 </c:if>
+						 <td>
+						 	<c:choose>
+						 		<c:when test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }"><!-- 流量订单 -->
+									 <c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs">
+										<c:if test="${purchase.serviceType == serviceTypeEnum.value }">
+											${serviceTypeEnum.desc }
+										</c:if>
+									</c:forEach>
+						 		</c:when>
+						 		<c:otherwise>
+									 <c:forEach items="${resultMap.huaServiceTypeEnums }" var="huaServiceTypeEnum" varStatus="vs">
+										<c:if test="${purchase.serviceType == huaServiceTypeEnum.value }">
+											${huaServiceTypeEnum.desc }
+										</c:if>
+									</c:forEach>
+						 		</c:otherwise>
+						 	</c:choose>
+							</td><!-- serviceTypeEnums -->
+						<td>${purchase.chargeValue }</td>
 						<td>
 								${purchase.orderArriveTimeStr }
 							<!-- <span class="label label-defaunt">
@@ -163,7 +217,10 @@
 						</td>
 						 <%-- <td>${purchase.orderBackTimeStr }</td> --%>
 						<td>${purchase.chargeTelDetail }</td>
-						<td>${purchase.chargeTelCity }</td>
+						<c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
+							 <td>${purchase.chargeTelCity }</td>
+						</c:if>
+						
 						<!-- 结果 -->
 						<td>
 							<c:forEach items="${resultMap.orderStateEnums }" var="orderStateEnum" varStatus="vs">
@@ -265,6 +322,11 @@ $(document).ready(function() {
 		//$('form').submit();
 		formSub();
 	})
+	/* $('.purchaseFor').change(function(){//特殊需求
+		$("input[name='pageNoLong']").val('');
+		$('#arriveStartTimeStr').val(null);
+		$('form').submit();
+	}) */
 }); 
 </script> 
 </body>

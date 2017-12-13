@@ -90,5 +90,14 @@ public interface PurchaseDao extends Dao<PurchasePo, Long> {
 	 */
 	TotalResult getTotalResultFromSuccess(Map<String,Object> map);
 	
+	/**
+	 * @description: 获得该号码最新的订单
+	 * @param chargeTel
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月7日 下午1:41:48
+	 */
+	PurchasePo getLatestOneByTel(String chargeTel,Integer purchaseFor);
+	
 
 }

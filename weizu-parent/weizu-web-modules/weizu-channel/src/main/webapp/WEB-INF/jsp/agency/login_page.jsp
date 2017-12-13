@@ -15,7 +15,9 @@
 <script type="text/javascript" src="lib/html5shiv.js"></script>
 <script type="text/javascript" src="lib/respond.min.js"></script>
 <![endif]-->
-<link href="/view/static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="/view/lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="/view/static/h-ui/css/H-ui.min.css" />
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/H-ui.admin.css" />
 <!-- <link href="/view/static/h-ui.admin/css/H-ui.login.css" rel="stylesheet" type="text/css" />  -->
 <link href="/view/static/h-ui.admin/css/login.css" rel="stylesheet" type="text/css" />
@@ -44,10 +46,20 @@ line-height:220px;
 <meta name="keywords" content="">
 <meta name="description" content="">
 </head>
-<body style="overflow:hidden;">
+<body onload="ifIndex()" style="overflow:hidden;">
 	<div class="loginWraper">
   <div id="loginform" class="loginBox">
-  <h3 class="title">欢迎登陆</h3> 
+  <%-- <c:if test="${not empty loginContext }">
+  </c:if> --%>
+  	<input type="hidden" id="id" value="${loginContext.id }">
+  <c:choose>
+  	<c:when test="${empty loginMap.msg }">
+	  <h3 class="title">欢迎登陆</h3> 
+  	</c:when>
+  	<c:otherwise>
+  		<h3 class="title c-red">${loginMap.msg }</h3> 
+  	</c:otherwise>
+  </c:choose>
     <form class="form form-horizontal" id="lgForm" action="/flowsys/agency/login" method="post">
       <div class="row cl">
         <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
@@ -185,6 +197,14 @@ function telLogin(){
 		         } 
 	    });*/
 	});})
+//
+function ifIndex(){
+	var $id = $('#id').val();
+	//alert($id);
+	if($id != ''){
+		window.location.href='/home';
+	}
+}
 </script>
 </body>
 </html>

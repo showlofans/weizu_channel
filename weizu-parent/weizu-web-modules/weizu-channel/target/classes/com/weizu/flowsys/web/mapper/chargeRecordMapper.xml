@@ -189,6 +189,10 @@
 			AND crt.account_id=#{accountId}
 			<!--  and ap.account_id=#{accountId} -->
 		</if>
+		<if test="chargeFor != null">
+			AND crt.charge_for = #{chargeFor}
+			<!--  and ap.account_id=#{accountId} -->
+		</if>
 		<!-- <if test="agencyId == null &amp; contextAgencyId != null">
 			AND (agb.id = #{contextAgencyId} OR agb.root_agency_id = #{contextAgencyId})
 		</if> -->
@@ -203,6 +207,10 @@
 		<if test="userName != null">
 			AND ap.from_agency_name LIKE CONCAT('%', TRIM(#{userName}), '%')
 		</if>
+		<if test="billType != null">
+			AND act.bill_type = #{billType}
+		</if>
+		
 		<if test="purchaseId != null">
 			AND pc.order_id = #{purchaseId}
 		</if>

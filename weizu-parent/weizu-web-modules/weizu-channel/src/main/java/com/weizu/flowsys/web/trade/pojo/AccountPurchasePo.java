@@ -20,7 +20,9 @@ public class AccountPurchasePo extends Po implements Cloneable{
 
     private Long purchaseId;
 
-    private Long rateDiscountId;
+//    private Long rateDiscountId;
+    
+    private Long channelDiscountId;
 
     private Double orderAmount;
 
@@ -50,7 +52,8 @@ public class AccountPurchasePo extends Po implements Cloneable{
 	public AccountPurchasePo(
 			Integer accountId, 
 			Long purchaseId,
-			Long rateDiscountId, Double orderAmount, 
+			Long channelDiscountId, 
+			Double orderAmount, 
 //			Integer billType,
 			Integer fromAccountId, 
 			Long recordId,
@@ -58,7 +61,7 @@ public class AccountPurchasePo extends Po implements Cloneable{
 		super();
 		this.accountId = accountId;
 		this.purchaseId = purchaseId;
-		this.rateDiscountId = rateDiscountId;
+		this.channelDiscountId = channelDiscountId;
 		this.orderAmount = orderAmount;
 		this.fromAccountId = fromAccountId;
 		this.recordId = recordId;
@@ -200,15 +203,15 @@ public class AccountPurchasePo extends Po implements Cloneable{
         this.purchaseId = purchaseId;
     }
 
-    public Long getRateDiscountId() {
-        return rateDiscountId;
-    }
+    public Long getChannelDiscountId() {
+		return channelDiscountId;
+	}
 
-    public void setRateDiscountId(Long rateDiscountId) {
-        this.rateDiscountId = rateDiscountId;
-    }
+	public void setChannelDiscountId(Long channelDiscountId) {
+		this.channelDiscountId = channelDiscountId;
+	}
 
-    public Double getOrderAmount() {
+	public Double getOrderAmount() {
         return orderAmount;
     }
 

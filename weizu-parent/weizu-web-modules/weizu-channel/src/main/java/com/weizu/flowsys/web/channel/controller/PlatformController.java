@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
+import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.channel.ao.ExchangePlatformAO;
@@ -72,13 +73,12 @@ public class PlatformController {
 	 * @createTime:2017年7月26日 上午10:38:37
 	 */
 	@RequestMapping(value=PlatformURL.PLATFORM_EDIT_PAGE)
-	public ModelAndView editPlatformPage(String epId,HttpServletResponse resonse,HttpServletRequest request){
-		if(StringHelper.isNotEmpty(epId)){
-			int id = Integer.parseInt(epId);
-			ExchangePlatformPo epPo = exchangePlatformAO.getEpById(id);
-			return new ModelAndView("/channel/platform_edit_page","exchangePlatformPo",epPo);
-		}
-		return new ModelAndView("/channel/platform_edit_page");
+	public ModelAndView editPlatformPage(Integer epId,HttpServletResponse resonse,HttpServletRequest request){
+		ExchangePlatformPo epPo = exchangePlatformAO.getEpById(epId);
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());
+		resultMap.put("exchangePlatformPo", epPo);
+		return new ModelAndView("/channel/platform_edit_page","resultMap",resultMap);
 	}
 	
 	/**
@@ -135,6 +135,7 @@ public class PlatformController {
 //			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 			resultMap.put("searchParam", exchangePlatformPo);
 			resultMap.put("callBackEnums", CallBackEnum.toList());
+			resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());
 			resultMap.put("pagination", pagination);
 			return new ModelAndView("/channel/platform_list", "resultMap", resultMap);
 //		}else{
@@ -148,17 +149,17 @@ public class PlatformController {
 	 * @createTime:2017年6月8日 下午3:52:42
 	 */
 	@RequestMapping(value = PlatformURL.PLATFORM_ADD_PAGE)
-	public ModelAndView addPlatformPage(@RequestParam(value = "pageTitle", required = false)String pageTitle)
+	public ModelAndView addPlatformPage()//@RequestParam(value = "pageTitle", required = false)String pageTitle
 	{
 //		try {
-//		Map<String,Object> resultMap = new HashMap<String, Object>();
-//		resultMap.put("", CallBackEnum.toList().)
-		if(StringHelper.isNotEmpty(pageTitle)){
-//				pageTitle = new String(pageTitle.getBytes("iso-8859-1"), "utf-8");
-				return new ModelAndView("/channel/platform_add_page","pageTitle",pageTitle);
-			}else{
-				return new ModelAndView("/channel/platform_add_page");
-			}
+		Map<String,Object> resultMap = new HashMap<String, Object>();
+//		if(StringHelper.isNotEmpty(pageTitle)){
+////				pageTitle = new String(pageTitle.getBytes("iso-8859-1"), "utf-8");
+//				return new ModelAndView("/channel/platform_add_page","pageTitle",pageTitle);
+//			}else{
+				resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());
+				return new ModelAndView("/channel/platform_add_page","resultMap", resultMap);
+//			}
 //		} catch (UnsupportedEncodingException e) {
 //			e.printStackTrace();
 //		}

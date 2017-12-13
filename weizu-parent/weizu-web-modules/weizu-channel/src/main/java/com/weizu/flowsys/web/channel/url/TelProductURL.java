@@ -18,16 +18,21 @@ public class TelProductURL extends BaseURL {
 	public static final String MODOE_NAME = "/flowsys/tel_product";
 	
 	/**
-	 * 话费通道添加页面
+	 * 话费通道编码添加页面
 	 * <br> /flowsys/tel_product/telproduct_add_page.do
 	 */
 	public static final String TELPRODUCT_ADD_PAGE = "/telproduct_add_page" + DYNAMIC_WEB_SUFFIX;
 	
 	/**
-	 * 话费通道添加
+	 * 话费通道编码添加
 	 * <br> /flowsys/tel_product/telproduct_add.do
 	 */
 	public static final String TELPRODUCT_ADD = "/telproduct_add" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 删除话费通道编码
+	 * <br> /flowsys/tel_product/telproduct_del.do
+	 */
+	public static final String TELPRODUCT_DEL = "/telproduct_del" + DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 验证该编码是否存在
 	 * <br>/flowsys/tel_product/telproduct_exist.do

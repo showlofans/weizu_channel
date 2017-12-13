@@ -116,7 +116,7 @@
 <meta name="description" content="">
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 平台通道管理 <span class="c-gray en">&gt;</span> 话费通道添加</nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 平台通道管理 <span class="c-gray en">&gt;</span> 话费通道添加<a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" ><i class="Hui-iconfont">&#xe6a6;</i></a></nav>
 <article class="page-container">
 	<form action="" method="" class="form form-horizontal" id="form-channel-add">
 		<div class="row cl">
@@ -127,6 +127,7 @@
 		</div>
 		<!-- 平台ID -->
 		<input type="hidden" class="input-text" value="" placeholder="" id="epId" name="epId">
+		<input type="hidden" class="input-text" value="${resultMap.epFor }" id="epFor">
 		<!-- <input type="hidden" class="input-text" value="" placeholder="" id="ep_id"> -->
 		<!-- 批量添加的折扣 -->
 		<div id="channel_discount_list" style="display:none">
@@ -224,7 +225,7 @@
 			<label class="form-label col-xs-4 col-sm-3">商务类型：</label>
 			<!-- billTypes -->
 			<div class="formControls col-xs-8 col-sm-9">
-				<c:forEach items="${resultMap.billTypes }" var="billEnum" varStatus="vs">
+				<c:forEach items="${resultMap.billTypeEnums }" var="billEnum" varStatus="vs">
 					<c:choose>
 						<c:when test="${vs.index == 0 }">
 							<div class="radio-box">
@@ -255,8 +256,9 @@
 			</div>
 		</div>
 		 <div class="row cl">
-			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
-				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3 mb-30">
+				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">&nbsp;&nbsp;
+				<button class="btn btn-primary radius" onClick="removeIframe()">取消</button>
 			</div>
 		</div>
 	</form>
@@ -450,7 +452,7 @@ $(document).ready(function(){
  	                       removeIframe();
  	                   }
  	                   if(d=="error"){
- 	                       layer.msg('保存异常!');
+ 	                       layer.msg('保存异常!查看是否已添加过该类型在使用状态的通道');
  	                   }
  	               },
     			 "error":function(msg){
@@ -516,16 +518,19 @@ function ajaxGetEp(evt) {
 	        "url": "/flowsys/channel/search_platform.do?epName="+epName,     
 	        "dataType": "json",    
 	        "success": function(resp) {  
-	        	if(resp == null){
+	        	if(resp == null ){
 	        		$("#ep_info").hide();
+	        	}else if($('#epFor').val() != resp.epFor){
+	        		layer.msg('该平台不包含话费业务!')
+	        	}else{
+		        	$("#ep_info").show();
+		        	$("#ep_name").val(resp.epUserName);
+		        	$("#ep_pass").val(resp.epUserPass);
+		        	$("#epApikey").val(resp.epApikey);
+		        	$("#epPurchaseIp").val(resp.epPurchaseIp);
+		        	$("#epName").val(resp.epName);
+		        	$("#epId").val(resp.id);
 	        	}
-	        	$("#ep_info").show();
-	        	$("#ep_name").val(resp.epUserName);
-	        	$("#ep_pass").val(resp.epUserPass);
-	        	$("#epApikey").val(resp.epApikey);
-	        	$("#epPurchaseIp").val(resp.epPurchaseIp);
-	        	$("#epName").val(resp.epName);
-	        	$("#epId").val(resp.id);
 	        	//alert(resp.id);
 	        },
 	        "error":function(msg){

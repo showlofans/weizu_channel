@@ -28,7 +28,6 @@ public class TelChannelURL extends BaseURL {
 	 * <br>/flowsys/tel_channel/telchannel_add.do
 	 */
 	public static final String TELCHANNEL_ADD = "/telchannel_add" + DYNAMIC_WEB_SUFFIX;
-	
 	/**
 	 * 话费充值页面：异步加载话费其他业务类型
 	 * <br>/flowsys/tel_channel/ajax_get_params.do

@@ -86,7 +86,7 @@ public interface ExchangePlatformAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年6月8日 下午6:20:40
 	 */
-	String addEp(ExchangePlatformPo exchangePlatformPo,int agencyId,String agencyName);
+//	String addEp(ExchangePlatformPo exchangePlatformPo,int agencyId,String agencyName);
 	
 	/**
 	 * @description: 平台添加

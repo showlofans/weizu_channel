@@ -22,6 +22,7 @@ import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ConfirmStateEnum;
+import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
@@ -169,10 +170,15 @@ public class AccountController {
 		if(agencyVo != null){
 			Integer contextId = agencyVo.getId();
 //			consumeRecordPo.setAgencyId(contextId);
+			if(consumeRecordPo.getChargeFor() == null){
+				consumeRecordPo.setChargeFor(PgServiceTypeEnum.PGCHARGE.getValue());
+			}
+			
 			Pagination<ConsumeRecordPo> pagination =  chargeRecordAO.listConsumeRecord(resultMap,contextId,consumeRecordPo, pageParam);
 			resultMap.put("pagination", pagination);
 			resultMap.put("billTypeEnums", BillTypeEnum.toList());
 			resultMap.put("accountTypeEnums", AccountTypeEnum.toConsumeList());
+			resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());	//充值业务类型
 			//点击金额进入连接，自动填充代理商名称
 			if(consumeRecordPo.getUserName() == null && consumeRecordPo.getAccountId() != null){
 				AgencyBackwardPo agencyPO = agencyAO.getAgencyByAccountId(consumeRecordPo.getAccountId());

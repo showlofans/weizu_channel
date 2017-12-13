@@ -8,6 +8,9 @@ import com.weizu.flowsys.core.sql.where.C;
 
 public class WherePrams {
 
+	public static final String DESC = "DESC";
+	public static final String AESC = "AESC";
+	
 	private String pram;
 	
 	private String limit;
@@ -73,6 +76,10 @@ public class WherePrams {
 		return this;
 	}*/
 	
+	public WherePrams() {
+		super();
+	}
+
 	/**
 	 * and条件
 	 * @param file
@@ -141,7 +148,7 @@ public class WherePrams {
 		
 		if (null == value) {
 			if (where.equals("=")) {
-				where = " is";
+				where = " is ";
 			} else {
 				where = " not ";
 			}
@@ -180,6 +187,14 @@ public class WherePrams {
 //		limitParms.add(length);
 		return this;
 	}
+	public WherePrams limit(int startNum) {
+		// TODO Auto-generated constructor stub
+//		this.limit = " limit ? , ? ";
+		this.limit = " limit " + startNum + " ";
+//		limitParms.add(startNum);
+//		limitParms.add(length);
+		return this;
+	}
 	
 	public WherePrams limit(long startNumLong, int length) {
 		// TODO Auto-generated constructor stub
@@ -195,6 +210,16 @@ public class WherePrams {
 			this.orderBy += "," + order;
 		}else{
 			this.orderBy = order;
+		}
+		return this;
+	}
+	public WherePrams orderBy(String order, String type){
+		if(this.orderBy != null){
+			this.orderBy += "," + order;
+			this.orderBy += " " + type;
+		}else{
+			this.orderBy = order;
+			this.orderBy += " " + type;
 		}
 		return this;
 	}

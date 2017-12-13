@@ -130,6 +130,7 @@
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
 				<input class="btn btn-primary radius" onclick="save()" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+				<button class="btn btn-primary radius" onClick="closeContextFrame();">取消</button>
 			</div>
 		</div>
 	</form>
@@ -147,6 +148,11 @@
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/validate-methods.js"></script> 
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script> 
 <script type="text/javascript">
+//关闭当前弹出层
+function closeContextFrame(){
+	 var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+	parent.layer.close(index); // 执行关闭
+}
 $().ready(function() {
 	$("#charge-form").validate({
 		submitHandler : function(form) {

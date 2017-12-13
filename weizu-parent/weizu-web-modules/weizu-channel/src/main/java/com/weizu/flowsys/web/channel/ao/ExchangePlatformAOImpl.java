@@ -21,6 +21,7 @@ import com.weizu.flowsys.web.channel.pojo.AgencyEpPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
+import com.weizu.web.foundation.hash.Hash;
 
 /**
  * @description:上级对接平台管理业务层
@@ -48,8 +49,12 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 	 */
 	@Override
 	public ExchangePlatformPo getEpByEpName(String epName) {
-		
-		return exchangePlatformDao.getEpByEpName(epName);
+		ExchangePlatformPo exchangePlatformPo = exchangePlatformDao.getEpByEpName(epName);
+		if(exchangePlatformPo != null){
+			String dataUserPass = Hash.BASE_UTIL.decode(exchangePlatformPo.getEpUserPass());
+			exchangePlatformPo.setEpUserPass(dataUserPass);
+		}
+		return exchangePlatformPo;
 	}
 	/**
 	 * @description:获得所有平台名称
@@ -81,6 +86,8 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 		if(exchangePlatformPo.getEpCallBack() == null){
 			exchangePlatformPo.setEpCallBack(CallBackEnum.NEGATIVE.getValue());
 		}
+		String epUserPass = Hash.BASE_UTIL.encode(exchangePlatformPo.getEpUserPass());
+		exchangePlatformPo.setEpUserPass(epUserPass);
 		int res = exchangePlatformDao.add(exchangePlatformPo);
 		if(res > 0){
 			return "success";
@@ -88,33 +95,33 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 			return "error";
 		}
 	}
-	@Override
-	public String addEp(ExchangePlatformPo exchangePlatformPo, int agencyId,String agencyName) {
-//		exchangePlatformPo.setId(epId);
-		//查看看系统是否已经对接过该平台，如果对接过就不用添加该平台
-		ExchangePlatformPo epPo = exchangePlatformDao.get(new WherePrams("ep_name", "=", exchangePlatformPo.getEpName()));
-		int res2 = 0;
-		int epId = 0;
-		if(epPo == null)
-		{//有该平台名称的平台，但同时要保证用户名和密码apikey不一样
-			epId = new Long(exchangePlatformDao.nextId()).intValue();
-			
-			res2 = exchangePlatformDao.add(exchangePlatformPo);
-		}else{
-			epId = epPo.getId();
-			AgencyEpPo agencyEp = agencyEpDAO.get(new WherePrams("agency_id", "=", agencyId).and("ep_id", "=", epId));
-			if(agencyEp != null)
-			{
-				return "errorEp";
-			}
-		}
-		int res1 = agencyEpDAO.add(new AgencyEpPo(agencyId, agencyName, epId, exchangePlatformPo.getEpName()));
-		if((res1 + res2) >= 1){
-			return "success";
-		}else{
-			return "error";
-		}
-	}
+//	@Override
+//	public String addEp(ExchangePlatformPo exchangePlatformPo, int agencyId,String agencyName) {
+////		exchangePlatformPo.setId(epId);
+//		//查看看系统是否已经对接过该平台，如果对接过就不用添加该平台
+//		ExchangePlatformPo epPo = exchangePlatformDao.get(new WherePrams("ep_name", "=", exchangePlatformPo.getEpName()));
+//		int res2 = 0;
+//		int epId = 0;
+//		if(epPo == null)
+//		{//有该平台名称的平台，但同时要保证用户名和密码apikey不一样
+//			epId = new Long(exchangePlatformDao.nextId()).intValue();
+//			
+//			res2 = exchangePlatformDao.add(exchangePlatformPo);
+//		}else{
+//			epId = epPo.getId();
+//			AgencyEpPo agencyEp = agencyEpDAO.get(new WherePrams("agency_id", "=", agencyId).and("ep_id", "=", epId));
+//			if(agencyEp != null)
+//			{
+//				return "errorEp";
+//			}
+//		}
+//		int res1 = agencyEpDAO.add(new AgencyEpPo(agencyId, agencyName, epId, exchangePlatformPo.getEpName()));
+//		if((res1 + res2) >= 1){
+//			return "success";
+//		}else{
+//			return "error";
+//		}
+//	}
 	/**
 	 * @description:获得所有平台列表
 	 * @param agencyId
@@ -154,6 +161,7 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 //		Map<String, Object> paramsMap = getMapByEntity(channelForwardPo);
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("epName", ep.getEpName());
+		paramsMap.put("epFor", ep.getEpFor());
 		int toatalRecord = exchangePlatformDao.countEp(paramsMap);
 		int pageSize = 10;
 		int pageNo = 1;
@@ -168,6 +176,8 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 //			exchangePlatformPo.setEpBalance(epBalance);
 			String lastAccessStr = DateUtil.formatPramm(exchangePlatformPo.getLastAccess(),"yyyy-MM-dd");
 			exchangePlatformPo.setLastAccessStr(lastAccessStr);
+//			String dataUserPass = Hash.BASE_UTIL.decode(exchangePlatformPo.getEpUserPass());
+//			exchangePlatformPo.setEpUserPass(dataUserPass);
 		}
 		return new Pagination<ExchangePlatformPo>(records, toatalRecord, pageNo, pageSize);
 	}
@@ -180,7 +190,8 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 	 */
 	@Override
 	public ExchangePlatformPo getEpById(Integer id) {
-		return exchangePlatformDao.get(id);
+		ExchangePlatformPo exchangePlatformPo = exchangePlatformDao.get(id);
+		return exchangePlatformPo;
 	}
 	/**
 	 * @description: 更新平台信息
@@ -198,13 +209,17 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 		epPo.setEpEngId(StringUtil2.toUpperClass(epPo.getEpEngId()));
 		if(ClassUtil.contrastObj(ep, epPo)){
 			flag = "success";
-		}else if(!engId.equals(epPo.getEpEngId()) && checkEpName(epPo.getEpName()) ){
-			flag = "exist";
-		}else{//两个对象值不一样，并且英文标识不存在，或者和原来的不一样 就更新
+		}
+//		else if(checkEpName(epPo.getEpName()) ){//!engId.equals(epPo.getEpEngId()) && 
+//			flag = "exist";
+//		}
+		else{//两个对象值不一样，并且英文标识不存在，或者和原来的不一样 就更新
 			epPo.setLastAccess(System.currentTimeMillis());
 			if(epPo.getEpCallBack() == null){
 				epPo.setEpCallBack(0);
 			}
+			String epUserPass = Hash.BASE_UTIL.encode(epPo.getEpUserPass());
+			epPo.setEpUserPass(epUserPass);
 			int upRes = exchangePlatformDao.updateLocal(epPo,new WherePrams("id", "=", epPo.getId()));
 			if(upRes > 0){
 				flag = "success";

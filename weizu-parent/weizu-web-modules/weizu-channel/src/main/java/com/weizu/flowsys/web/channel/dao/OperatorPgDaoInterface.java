@@ -123,5 +123,7 @@ public interface OperatorPgDaoInterface extends Dao<PgDataPo, Integer> {
 	 */
 	List<PgProductPo> getProductPgList(Map<String,Object> map);
 	
+	PgDataPo getPgByOrderId(Long purchaseId);
+	
 //	Pagination<OperatorPgDataPo> list();
 }

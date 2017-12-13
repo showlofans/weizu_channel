@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,10 +21,12 @@ import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.TelchannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.TelchargeSpeedEnum;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.channel.ao.TelChannelAO;
 import com.weizu.flowsys.web.channel.ao.TelProductAO;
 import com.weizu.flowsys.web.channel.dao.IProcincesDAO;
@@ -58,6 +61,7 @@ public class TelChannelController {
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());					//商务类型
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
 		resultMap.put("serviceTypeEnums", HuaServiceTypeEnum.toList());
+		resultMap.put("epFor", PgServiceTypeEnum.TELCHARGE.getValue());
 		
 		List<Provinces> provinces = procincesDAO.getProvinces();
 		resultMap.put("provinces", provinces);
@@ -72,6 +76,21 @@ public class TelChannelController {
 		String res = telChannelAO.addTelChannel(telChannelPo);
 		return res;
 	}
+	/**
+	 * @description: 删除话费通道
+	 * @param id
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月5日 下午3:39:35
+	 */
+	@RequestMapping(value=TelChannelURL.TELCHANNEL_DEL)
+	@ResponseBody
+	public String delTelChannel(Long id){
+		String res = telChannelAO.delTelChannelById(id);
+		return res;
+	}
+	
+	
 	
 	/**
 	 * @description: 获得话费通道分页列表
@@ -82,9 +101,12 @@ public class TelChannelController {
 	 * @createTime:2017年11月14日 下午5:43:04
 	 */
 	@RequestMapping(value=TelChannelURL.TELCHANNEL_LIST)
-	public ModelAndView getTelChannel(TelChannelParams telParams,@RequestParam(value = "pageNoLong", required = false)Long pageNoLong){
+	public ModelAndView getTelChannel(HttpServletRequest request,TelChannelParams telParams,@RequestParam(value = "pageNoLong", required = false)Long pageNoLong){
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO) request.getSession().getAttribute("loginContext");
+		if(agencyVO == null){
+			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+		}
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		resultMap.put("channelStateEnums", ChannelStateEnum.toList());
 		resultMap.put("channelUseStateEnums", ChannelUseStateEnum.toList());
@@ -98,12 +120,16 @@ public class TelChannelController {
 		}else{
 			pageParam = new PageParam(1l, 10);
 		}
-		if(telParams.getServiceType() == null){//默认加载市内的
-			telParams.setServiceType(HuaServiceTypeEnum.CITY.getValue());
-		}
+//		if(telParams.getServiceType() == null){//默认加载市内的
+//			telParams.setServiceType(HuaServiceTypeEnum.CITY.getValue());
+//		}
+//		if(telParams.getRateFor() == null){
+//			telParams.setRateFor(agencyVO.getAgencyTag());
+//		}
 		Pagination<TelChannelParams> pagination = telChannelAO.getTelChannel(telParams, pageParam);
 		resultMap.put("pagination", pagination);
 		
+		resultMap.put("city", HuaServiceTypeEnum.CITY.getValue());
 		List<Provinces> provinces = procincesDAO.getProvinces();
 		resultMap.put("provinces", provinces);
 		resultMap.put("params", telParams);
@@ -119,7 +145,11 @@ public class TelChannelController {
 	 * @createTime:2017年11月18日 下午5:01:05
 	 */
 	@RequestMapping(value=TelChannelURL.TELCHANNEL_EDIT_PAGE)
-	public ModelAndView editTelchannelPage(Long id, Integer serviceType){
+	public ModelAndView editTelchannelPage(HttpServletRequest request,Long id, Integer serviceType){
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO) request.getSession().getAttribute("loginContext");
+		if(agencyVO == null){
+			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+		}
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		TelChannelParams telChannelParams = telChannelAO.selectByIdType(id, serviceType);
 		resultMap.put("telChannelParams", telChannelParams);					//通道信息
@@ -156,8 +186,11 @@ public class TelChannelController {
 	 */
 	@ResponseBody
 	@RequestMapping(value=TelChannelURL.UPDATE_TELCHANNEL_STATE)
-	public String udpateState(TelChannelPo telChannelPo, String tag){
-		
+	public String udpateState(HttpServletRequest request,TelChannelPo telChannelPo, String tag){
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO) request.getSession().getAttribute("loginContext");
+		if(agencyVO == null){
+			return "error";
+		}
 		if("state".equals(tag)){
 			telChannelPo.setTelchannelUseState(null);
 		}else if("useState".equals(tag)){

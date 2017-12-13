@@ -31,7 +31,7 @@
 <title>费率列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 代理商管理 <span class="c-gray en">&gt;</span> 折扣信息 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <div class="titleMore"> <span class="c-gray en">&gt;</span> 平台通道管理 </div><span class="c-gray en">&gt;</span> 流量通道 <span class="c-gray en">&gt;</span> 配置列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" ><i class="Hui-iconfont">&#xe6a6;</i></a></nav>
 <div class="page-container">
 	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
 	<div class="text-c">
@@ -156,7 +156,7 @@
 		</form> -->
 	</div> 
 		<div class="mt-20">
-			 <a style="text-decoration:none" class="btn btn-success" onClick="batch_bind('绑定代理商',' /flowsys/rate/batch_bind_agency_page.do','10001')" href="javascript:;" title="绑定代理商"><i class="Hui-iconfont">&#xe6df;</i>绑定代理商</a>
+			 <a style="text-decoration:none" class="btn btn-success" onClick="batch_bind('/flowsys/rate/batch_bind_agency_page.do','10001')" href="javascript:;" title="绑定代理商"><i class="Hui-iconfont">&#xe6df;</i>绑定代理商</a>
 		<table class="table table-border table-bordered table-bg table-hover table-sort">
 			<thead>
 				<tr class="text-c">
@@ -270,7 +270,7 @@ function delRateDiscount(){
 }
 
 /*批量绑定代理商页面 */
-function batch_bind(title,url,id,w,h){
+function batch_bind(url,id,w,h){
 	var rateDiscountId = $("#rateDiscountId").val();
 	var activeDiscount = $("#rateDiscountId option:selected").text();
 	var scopeCityCode = $('#scopeCityCode').val();
@@ -285,7 +285,7 @@ function batch_bind(title,url,id,w,h){
 		url = url + '?scopeCityCode='+scopeCityCode+'&serviceType='+serviceType+'&specialTag='+specialTag+'&operatorType='+operatorType+'&billType='+billType + '&rateDiscountId=' + rateDiscountId + '&activeDiscount=' + activeDiscount; 
 		var index = layer.open({
 			type: 2,
-			title: title,
+			title: false,
 			content: url,
 			 end: function () {
 	            location.reload();

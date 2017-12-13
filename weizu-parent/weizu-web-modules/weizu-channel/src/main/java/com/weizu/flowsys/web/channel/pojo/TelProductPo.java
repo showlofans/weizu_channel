@@ -41,8 +41,6 @@ public class TelProductPo extends Po {
 	
 	private Integer chargeLimitHigh;	//最高限额
 	
-	
-	
 	@TempField
 	private String city;				//城市名称：页面参数
 	@TempField

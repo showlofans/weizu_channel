@@ -1,10 +1,10 @@
 package com.weizu.flowsys.web.activity.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.activity.pojo.TelrateBindAccountPo;
-import com.weizu.flowsys.web.activity.pojo.TelrateBindAccountVO;
 
 /**
  * @description: 话费折扣和账户绑定Dao
@@ -46,6 +46,15 @@ public interface ITelrateBindAccountDao extends Dao<TelrateBindAccountPo, Long> 
 	 * @createTime:2017年11月24日 上午10:49:40
 	 */
 	int batchUpdateBindTelState(long telRateId, int bindState);
+	
+	/**
+	 * @description: 根据条件更新绑定状态
+	 * @param params
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月8日 下午2:59:19
+	 */
+	int updateBindState(Map<String,Object> params);
 	
 	
 	

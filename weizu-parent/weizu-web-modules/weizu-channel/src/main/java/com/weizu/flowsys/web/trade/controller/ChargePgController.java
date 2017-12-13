@@ -34,6 +34,8 @@ import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
@@ -42,6 +44,7 @@ import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.TelchargeSpeedEnum;
 import com.weizu.flowsys.util.ClassUtil;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
@@ -183,9 +186,11 @@ public class ChargePgController {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月26日 下午4:58:40
 	 */
-	@RequestMapping(value = ChargePgURL.PG_CHARGE)
-	public ModelAndView pgCharge(HttpServletRequest request,PgChargeVO pcVO){
+	@ResponseBody
+	@RequestMapping(value = ChargePgURL.PG_CHARGE,produces = "text/text;charset=UTF-8")
+	public String pgCharge(HttpServletRequest request,PgChargeVO pcVO){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		String res = "error";
 		if(agencyVO != null){
 //			String scopeCityCode = ScopeCityEnum.QG.getValue();
 //			if(!pcVO.getServiceType().equals(ServiceTypeEnum.NATION_WIDE.getValue())){
@@ -209,7 +214,8 @@ public class ChargePgController {
 			}
 			boolean isAccess = agencyAO.checkIdByPass(agencyVO.getId(), agencyVO.getUserPass());
 			if(!isAccess || !agencyVO.getId().equals(accountPo.getAgencyId())){
-				return new ModelAndView("error", "errorMsg", "当前登陆用户不合法");
+				res = "当前登陆用户不合法";
+//				return new ModelAndView("error", "errorMsg", "当前登陆用户不合法");
 			}
 			pcVO.setAccountId(accountPo.getId());
 			pcVO.setFromAgencyName(agencyVO.getUserName());
@@ -222,20 +228,21 @@ public class ChargePgController {
 //			{
 //				accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
 //			}
-			Map<String, Object> resultMap = new HashMap<String, Object>();
-			String pageMsg = "";
-			String referURL = "";
+//			Map<String, Object> resultMap = new HashMap<String, Object>();
+//			String pageMsg = "";
+//			String referURL = "";
 			pcVO.setChannelId(channelId);
 			
 			//充值
 			pcVO.setChargeFor(PgServiceTypeEnum.PGCHARGE.getValue());
-			pageMsg = purchaseAO.purchase(pcVO, accountPo);
-			referURL = "/flowsys/chargePg/purchase_list.do?orderResult=2";
-			resultMap.put("referURL", referURL);
-			resultMap.put("pageMsg", pageMsg);
-			return new ModelAndView("/trade/charge_result_page", "resultMap", resultMap);
+			res = purchaseAO.purchase(pcVO, accountPo);
+//			referURL = "/flowsys/chargePg/purchase_list.do?orderResult=2";
+//			resultMap.put("referURL", referURL);
+//			resultMap.put("pageMsg", pageMsg);
+//			return new ModelAndView("/trade/charge_result_page", "resultMap", resultMap);
 		}
-		return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+		return res;
+//		return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 	}
 	
 	/**
@@ -470,14 +477,14 @@ public class ChargePgController {
 	 */
 	@ResponseBody
 	@RequestMapping(value= ChargePgURL.AJAX_PURCHASE_PRICE)
-	public String ajaxPurchassPrice(HttpServletRequest request, Double pgPrice,Integer serviceType,String carrier,Long channelId, Integer pgId, HttpServletResponse response){
+	public String ajaxPurchassPrice(HttpServletRequest request, Double chargeValue,Integer serviceType,String carrier,Long channelId, Integer pgId, HttpServletResponse response){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO != null){
 			if(agencyVO.getRootAgencyId() == 0){
 				ChannelDiscountPo cdPo = channelDiscountDao.get(new WherePrams("channel_id", "=", channelId));
 				if(cdPo != null){
-					Double purchasePrice = NumberTool.mul(pgPrice, cdPo.getChannelDiscount());//利率后的价格
+					Double purchasePrice = NumberTool.mul(chargeValue, cdPo.getChannelDiscount());//利率后的价格
 					resultMap.put("price", purchasePrice);
 					resultMap.put("cdId", cdPo.getId());			//	折扣id
 					resultMap.put("billType", cdPo.getBillType());
@@ -491,6 +498,7 @@ public class ChargePgController {
 						ProductCodePo code = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, platformPo.getId(), pgId));
 						resultMap.put("productCode", code.getProductCode());
 					}
+					resultMap.put("msg", "success");
 					resultMap.put("channelId", cdPo.getChannelId());
 					resultMap.put("rateDiscount", cdPo.getChannelDiscount());	//折扣
 					return JSON.toJSONString(resultMap);
@@ -501,27 +509,34 @@ public class ChargePgController {
 				if(ratePo != null){
 					ChargeAccountPo accountPo = chargeAccountAO.getAccountByAgencyId( agencyVO.getId(), ratePo.getBillType());
 					if(accountPo != null){
-						Double purchasePrice = NumberTool.mul(pgPrice, ratePo.getActiveDiscount());//利率后的价格
+						Double purchasePrice = NumberTool.mul(chargeValue, ratePo.getActiveDiscount());//利率后的价格
 						if(accountPo.getAccountBalance() >= purchasePrice){//可以扣款，提单，充值
 							resultMap.put("price", purchasePrice);
 							resultMap.put("rateDiscountId", ratePo.getId());			//	折扣id
 							resultMap.put("billType", ratePo.getBillType());
 							
-							ExchangePlatformPo platformPo = exchangePlatformDao.getEpByRateId(ratePo.getId());
+							ExchangePlatformPo platformPo = exchangePlatformDao.getEpByCDiscountId(ratePo.getChannelDiscountId());
 							if(platformPo != null){
 								String scopeCityCode = ScopeCityEnum.QG.getValue();
 								if(serviceType != ServiceTypeEnum.NATION_WIDE.getValue()){
 									scopeCityCode = ScopeCityEnum.getValueByCarrier(carrier);
 								}
 								ProductCodePo code = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, platformPo.getId(), pgId));
-								resultMap.put("productCode", code.getProductCode());
+								if(code != null){
+									resultMap.put("productCode", code.getProductCode());
+									resultMap.put("channelId", ratePo.getChannelId());
+									resultMap.put("rateDiscount", ratePo.getActiveDiscount());	//折扣
+									resultMap.put("msg", "success");	
+									
+								}else{
+									resultMap.put("price", chargeValue);
+									resultMap.put("msg", "未配置产品编码");//
+								}
 							}
 						}else{
-							resultMap.put("price", pgPrice);
+							resultMap.put("price", chargeValue);
 							resultMap.put("msg", ChargeStatusEnum.LACK_OF_BALANCE.getValue());//欠费等待
 						}
-						resultMap.put("channelId", ratePo.getChannelId());
-						resultMap.put("rateDiscount", ratePo.getActiveDiscount());	//折扣
 						return JSON.toJSONString(resultMap);
 					}
 				}
@@ -560,8 +575,8 @@ public class ChargePgController {
 //			Map<String, Object> resultMap = new HashMap<String, Object>();
 //			if(accountPo != null){
 //				RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(ccpp, accountPo.getId(), false);//获得对私的充值费率
-//				if(pgPrice != null && ratePo != null){//判断余额
-//					Double purchasePrice = NumberTool.mul(pgPrice, ratePo.getActiveDiscount());//利率后的价格
+//				if(chargeValue != null && ratePo != null){//判断余额
+//					Double purchasePrice = NumberTool.mul(chargeValue, ratePo.getActiveDiscount());//利率后的价格
 //					ChargeAccountPo account1 = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
 //					if(account1.getAccountBalance() >= purchasePrice){//可以扣款，提单，充值
 //						resultMap.put("price", purchasePrice);
@@ -571,7 +586,7 @@ public class ChargePgController {
 ////						resultMap.put("billType", bestChannel.getBillType());
 ////						response.getWriter().print(JSON.toJSONString(resultMap));
 //					}else{
-//						resultMap.put("price", pgPrice);
+//						resultMap.put("price", chargeValue);
 //						resultMap.put("msg", ChargeStatusEnum.LACK_OF_BALANCE.getValue());//欠费等待
 //					}
 //					resultMap.put("channelId", ratePo.getChannelId());
@@ -652,14 +667,26 @@ public class ChargePgController {
 			
 			pageParam = new PageParam(1l, 10);
 		}
+		if(purchaseVO.getPurchaseFor() == null){
+			purchaseVO.setPurchaseFor(PgServiceTypeEnum.PGCHARGE.getValue());
+		}
+		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		pagination = purchaseAO.getPurchase(resultMap,purchaseVO, pageParam);//
 		resultMap.put("pagination", pagination);
 		resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
+		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
+		resultMap.put("telChargeSpeedEnums",  TelchargeSpeedEnum.toList());
+		
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		resultMap.put("orderPathEnums", OrderPathEnum.toList());
 		resultMap.put("orderStateEnums", OrderStateEnum.toList());
 		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
+		resultMap.put("huaServiceTypeEnums", HuaServiceTypeEnum.toList());  //话费业务类型
+		resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());	//充值业务类型
+		resultMap.put("pgcharge", PgServiceTypeEnum.PGCHARGE.getValue());	//充值业务类型
+		
+		
 		ModelAndView model = new ModelAndView("/trade/purchase_list", "resultMap", resultMap);
 		
 		Boolean isSuper = agencyVO.getRootAgencyId() == 0;

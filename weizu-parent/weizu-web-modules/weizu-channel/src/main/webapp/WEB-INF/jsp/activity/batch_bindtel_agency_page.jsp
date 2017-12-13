@@ -31,10 +31,13 @@
 <title>话费折扣批量绑定代理商</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 通道列表 <span class="c-gray en">&gt;</span> 话费折扣列表 <span class="c-gray en">&gt;</span>绑定代理商 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> </nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 话费通道 <span class="c-gray en">&gt;</span> 配置列表<div class="titleMore"> <span class="c-gray en">&gt;</span>绑定代理商</div><a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:closeContextFrame();" title="关闭" >绑定页面<i class="Hui-iconfont">&#xe6a6;</i></a></nav>
 <div class="page-container">
 	<!-- <a href="getRegisterPage.do">生成代理商注册页面</a> -->
 	<div class="text-c">
+		<span class="c-success">
+			<strong>${telChannelParams.chargeValue }元话费</strong>
+		</span>
 		${telChannelParams.province } &nbsp;${telChannelParams.city }
 		<c:forEach items="${resultMap.stypeEnums }" var="stype" varStatus="vs1">
 			<c:if test="${ stype.value == telChannelParams.serviceType }">
@@ -66,14 +69,14 @@
 				<input type="hidden" id="operatorType" value="${resultMap.ratePo.operatorType }" > --%>
 				<input type="hidden" id="billType" name="billType" value="${resultMap.telrateBindAccountVO.billType }" >
 				<%-- <input type="hidden" id="activeDiscount" value="${resultMap.ratePo.activeDiscount }" > --%>
-				<%-- 代理类型：<span class="select-box inline">
-						<select name="agencyTag" id="agencyTag" class="select" onchange="onSub()">
+				 代理类型：<span class="select-box inline">
+						<select name="rateFor" id="rateFor" class="select" onchange="onSub()">
 						<!-- <option value="">请选择</option> -->
 						<c:forEach items="${resultMap.agencyTagEnums }" var="agencyTagEnum" varStatus="vst">
-							<option value="${agencyTagEnum.value }" <c:if test="${agencyTagEnum.value == resultMap.telrateBindAccountVO.agencyTag }"> selected</c:if>>${agencyTagEnum.desc }</option>
+							<option value="${agencyTagEnum.value }" <c:if test="${agencyTagEnum.value == resultMap.telrateBindAccountVO.rateFor }"> selected</c:if>>${agencyTagEnum.desc }</option>
 						</c:forEach>
 					</select>
-				</span> --%>
+				</span>
 				绑定状态：<span class="select-box inline">
 						<select name="bindState" id="bindState" class="select" onchange="onSub()">
 						<!-- <option value="">请选择</option> -->
@@ -89,12 +92,23 @@
 				<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 				<c:choose>
 					<c:when test="${resultMap.telrateBindAccountVO.bindState==1 }"><!-- 已解绑：批量绑定 -->
-						<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBState('/flowsys/telRate/batch_update_bindtel_state.do',0)" href="javascript:;" title="批量绑定"><i class="Hui-iconfont">&#xe60e;</i>批量绑定</a>
-						<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBAllState('/flowsys/telRate/batch_bind_allagency.do',1,0)" href="javascript:;" title="全量绑定"><i class="Hui-iconfont">&#xe60e;</i>全量绑定</a>
+						<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBState('/flowsys/telRate/batch_update_bindtel_state.do',0)" href="javascript:;" title="批量绑定"><i class="Hui-iconfont">&#xe60e;</i>绑定</a>
+						<c:if test="${resultMap.platformUser != resultMap.telrateBindAccountVO.rateFor }">
+							<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBAllState('/flowsys/telRate/batch_bind_allagency.do',1,0)" href="javascript:;" title="全量绑定"><i class="Hui-iconfont">&#xe60e;</i>全量绑定</a>
+						</c:if>
+						<%-- <c:choose>
+							<c:when test="${resultMap.platformUser == resultMap.telrateBindAccountVO.rateFor }">
+								<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBAllState('/flowsys/telRate/batch_bind_allagency.do',1,0)" href="javascript:;" title="全量绑定"><i class="Hui-iconfont">&#xe60e;</i>全量绑定</a>
+							</c:when>
+							<c:otherwise>
+							</c:otherwise>
+						</c:choose> --%>
 					</c:when>
 					<c:otherwise><!-- 未绑定 -->
-						<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBAllState('/flowsys/telRate/batch_bind_allagency.do',2,0)" href="javascript:;" title="全量增加"><i class="Hui-iconfont">&#xe60e;</i>全量增加</a>
-						<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="changeBState('/flowsys/telRate/batch_bind_agency.do',0)" href="javascript:;" > 批量增加</a>
+						<c:if test="${resultMap.platformUser != resultMap.telrateBindAccountVO.rateFor }">
+							<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBAllState('/flowsys/telRate/batch_bind_allagency.do',2,0)" href="javascript:;" title="全量增加"><i class="Hui-iconfont">&#xe60e;</i>全量增加</a>
+						</c:if>
+						<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="changeBState('/flowsys/telRate/batch_bind_agency.do',0)" href="javascript:;" > 增加</a>
 					</c:otherwise>
 				</c:choose>
 				<%-- <c:forEach items="${resultMap.bindStateEnums }" var="bState" varStatus="vst">
@@ -152,6 +166,14 @@
 		</table>
 		<mytag:Pagination pagination="${resultMap.pagination}" queryForm="dataListForm" divId="agencyId" />  
 	</div>
+	<footer class="footer mt-20">
+		<div class="container">
+			<p><!-- 感谢jQuery、layer、laypage、Validform、UEditor、My97DatePicker、iconfont、Datatables、WebUploaded、icheck、highcharts、bootstrap-Switch<br> -->
+				Copyright &copy;2017-2018 南昌微族科技有限公司 All Rights Reserved.<br>
+				<!-- 本后台系统由<a href="http://www.h-ui.net/" target="_blank" title="H-ui前端框架">H-ui前端框架</a>提供前端技术支持 -->
+				</p>
+		</div>
+	</footer>
 </div>
 <!--_footer 作为公共模版分离出去-->
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
@@ -173,6 +195,11 @@
 <script type="text/javascript">
 function onSub(){
 	$('form').submit();
+}
+//关闭当前弹出层
+function closeContextFrame(){
+	 var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+	parent.layer.close(index); // 执行关闭
 }
 /**绑定全部代理商**/
 function changeBAllState(url,bindState, updateBindState){

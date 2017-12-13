@@ -22,6 +22,7 @@
 	 <c:choose>
        	<c:when test="${not empty errorMsg }">
        		<p class="error-description">${errorMsg }</p>
+       		${loginIpAddress} 
        	</c:when>
        	<c:otherwise>
        		<p class="error-description">系统维护之后，用户未登陆！！</p>

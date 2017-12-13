@@ -6,6 +6,8 @@
   <sql id="t_cnel">channel_channel</sql>
   <sql id="t_cdiscount">channel_discount</sql>
   <!-- <sql id="t_agencyEp">agency_ep</sql> -->
+  <sql id="t_telchannel">telchannel</sql>
+  <sql id="t_tel_product">tel_product</sql>
   
   
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo">
@@ -26,14 +28,16 @@
     <result column="ep_other_params" jdbcType="VARCHAR" property="epOtherParams" />
     <result column="ep_call_back" jdbcType="INTEGER" property="epCallBack" />
     <result column="last_access" jdbcType="BIGINT" property="lastAccess" />
+    <result column="ep_for" jdbcType="INTEGER" property="epFor" />
+    
   </resultMap>
   <sql id="Base_Column_List">
     id, ep_name, ep_purchase_ip, product_list_ip, ep_order_state_ip,ep_call_back_ip, ep_balance_ip, <!-- ep_order_state_ip, -->
-    ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip, ep_eng_id,ep_other_params, ep_call_back, last_access
+    ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip, ep_eng_id,ep_other_params, ep_call_back, last_access, ep_for
   </sql>
   <sql id="EpByRteId_Column_List">
-    ep.id, ep_name, ep_purchase_ip, product_list_ip, ep_order_state_ip,ep_call_back_ip, ep_balance_ip, <!-- ep_order_state_ip, -->
-    ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip, ep_eng_id,ep_other_params, ep_call_back, ep.last_access
+    ep.id, ep.ep_name, ep_purchase_ip, product_list_ip, ep_order_state_ip,ep_call_back_ip, ep_balance_ip, <!-- ep_order_state_ip, -->
+    ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip, ep_eng_id,ep_other_params, ep_call_back, ep.last_access, ep.ep_for
   </sql>
   <!-- <sql id="Other_Column_List">
     ep.id, ep.ep_name, ep_purchase_ip, product_list_ip, pgdata_check_ip, ep_balance_ip, 
@@ -43,7 +47,7 @@
     id, ep_name
   </sql>
   <!-- 根据费率id得到平台信息 -->
-  <select id="getEpByRateId" parameterType="long" resultMap="BaseResultMap">
+  <!-- <select id="getEpByCDId" parameterType="long" resultMap="BaseResultMap">
   	select <include refid="EpByRteId_Column_List"></include>
   	from <include refid="t_ep"></include> ep
   	inner join <include refid="t_cnel"></include> cnel
@@ -53,8 +57,8 @@
   	<where>
   		rate.id=#{_parameter}
   	</where>
-  </select>
-  <!-- 通过通道id获得平台信息 -->
+  </select> -->
+  <!-- 通过通道折扣id获得平台信息 -->
   <select id="getEpByCDiscountId" parameterType="long" resultMap="BaseResultMap">
   	select <include refid="EpByRteId_Column_List"></include>
   	from <include refid="t_ep"></include> ep
@@ -64,6 +68,18 @@
   	on cnel.id = cd.channel_id
   	<where>
   		cd.id=#{_parameter}
+  	</where>
+  </select>
+  <!-- 通过话费通道id获得平台信息 -->
+  <select id="getEpByTelchannelId" parameterType="long" resultMap="BaseResultMap">
+  	select <include refid="EpByRteId_Column_List"></include>
+  	from <include refid="t_telchannel"></include> t_cnel
+	INNER JOIN <include refid="t_tel_product"></include> tp
+	on t_cnel.tel_product_id=tp.id
+	inner join  <include refid="t_ep"></include> ep
+  	on tp.ep_id = ep.id
+  	<where>
+  		t_cnel.id=#{_parameter}
   	</where>
   </select>
   <!-- 获得所有平台名称(减少数据库负担) -->
@@ -142,6 +158,9 @@
    		</if>
    		<if test="epEngId != null">
    			AND ep_eng_id = #{epEngId}
+   		</if>
+   		<if test="epFor != null">
+   			AND  ep_for = #{epFor}
    		</if>
    		<!-- <if test="agencyId != null">
    			AND aep.agency_id = #{agencyId}

@@ -242,6 +242,7 @@ function getHTMLDate(obj) {
 };
 
 $(function(){
+	/*$('nav.breadcrumb').append("<a class='btn btn-danger radius' style='line-height:1.6em;margin-top:3px' href='javascript:removeIframe();' title='关闭' ><i class='Hui-iconfont'>&#xe6a6;</i></a>");*/
 	getHTMLDate($("#top_time"));
 	getskincookie();
 	//layer.config({extend: 'extend/layer.ext.js'});

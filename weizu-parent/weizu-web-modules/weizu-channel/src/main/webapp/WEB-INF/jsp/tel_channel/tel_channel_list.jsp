@@ -30,10 +30,11 @@
 <![endif]-->
 <title>话费通道列表</title>
 </head>
-<body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 平台通道管理 <span class="c-gray en">&gt;</span> 话费通道列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<body onload="ifIndex()">
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 平台通道管理 <span class="c-gray en">&gt;</span> 话费通道列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" ><i class="Hui-iconfont">&#xe6a6;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
+	<input type="hidden" id="lgId" value="${loginContext.id }">
 	<form class="form form-horizontal" action="/flowsys/tel_channel/telchannel_list.do" method="post" id="formD" name="dataListForm">
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
 	<div class="row cl formControls">
@@ -66,11 +67,13 @@
 			</select>
 		</span> 
 		 <!--  地区城市： -->
-		 <span class="select-box inline">
-			<select class="select" id="city" name="cityid" onchange="initCity()">
-				<option value="">城市</option>
-			</select>
-		</span> 
+		 <c:if test="${resultMap.city ==  resultMap.params.serviceType}">
+			 <span class="select-box inline">
+				<select class="select" id="city" name="cityid" onchange="initCity()">
+					<option value="">城市</option>
+				</select>
+			</span> 
+		</c:if>
 		 
 		<input type="hidden" value="${resultMap.params.cityid }" id="cityid" >
 		&nbsp;&nbsp;
@@ -86,7 +89,7 @@
 		&nbsp;&nbsp;
 		 <!--  充值类型： -->
 		 <span class="select-box inline">
-			<select name="telchargeSpeed" class="select"  onchange="submitForm()">
+			<select name="chargeSpeed" class="select"  onchange="submitForm()">
 				<option value="">充值速度</option>
 				<c:forEach items="${resultMap.telchargeSpeedEnums }" var="telchargeSpeedEnum" varStatus="vs1">
 					<option value="${telchargeSpeedEnum.value }" <c:if test="${telchargeSpeedEnum.value == resultMap.params.chargeSpeed }"> selected</c:if>>${telchargeSpeedEnum.desc }</option>
@@ -138,7 +141,7 @@
 	</div>
 </form>
 </div>
-	</div>
+
 	<!-- <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加资讯" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加资讯</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div> -->
 	<div class="mt-20">
 		<table class="table table-border table-bordered table-bg table-hover table-sort">
@@ -153,8 +156,9 @@
 					<th width="60">运营商名称</th>
 					<th width="100">业务类型</th>
 					<th width="120">支持省份</th>
+					<c:if test="${resultMap.city ==  resultMap.params.serviceType}">
 					<th width="120">支持城市</th>
-					
+					</c:if>
 					<th width="60">充值速度</th>
 					<th width="120">限制描述</th>
 					
@@ -211,7 +215,9 @@
 							</c:if>
 						</c:forEach> --%>
 						</td>
+						<c:if test="${resultMap.city ==  telchannel.serviceType}">
 						<td>${telchannel.city }</td> 
+						</c:if>
 						
 						<td>
 							<c:forEach items="${resultMap.telchargeSpeedEnums }" var="telchargeSpeedEnum" varStatus="vs1">
@@ -257,7 +263,7 @@
 								</a> 
 							</c:when>
 							</c:choose>
-						<a style="text-decoration:none" class="ml-5" onClick="produce_del('/flowsys/telchannelCode/telchannelcode_delete.do',${telchannel.id })" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+						<a style="text-decoration:none" class="ml-5" onClick="produce_del('/flowsys/tel_channel/telchannel_del.do',${telchannel.id })" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
 						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="javascript:;" onClick="getTelrateList(this,'/flowsys/telRate/bind_telRate_list.do',${telchannel.id },${telchannel.serviceType })" data-title="折扣信息"><i class="Hui-iconfont">&#xe725;</i></a>
 						<a style="text-decoration:none" data-toggle="tooltip" data-href='/flowsys/tel_channel/telchannel_edit_page.do?id=${telchannel.id}&serviceType=${telchannel.serviceType }' data-placement="top" class="ml-5" onclick="Hui_admin_tab(this)" data-title="编辑通道"><i class="Hui-iconfont">&#xe6df;</i></a>
 						<a style="text-decoration:none" data-toggle="tooltip" data-href='/flowsys/telRate/telRate_add_page_plat.do?id=${telchannel.id}&serviceType=${telchannel.serviceType }' data-placement="top" class="ml-5" onclick="Hui_admin_tab(this)" data-title="平台用户折扣"><i class="Hui-iconfont">&#xe72b;</i></a>
@@ -269,6 +275,14 @@
 		</table>
 		<mytag:Pagination pagination="${resultMap.pagination}" queryForm="dataListForm" divId="pagaId" />  
 	</div>
+	<footer class="footer mt-20">
+		<div class="container">
+			<p><!-- 感谢jQuery、layer、laypage、Validform、UEditor、My97DatePicker、iconfont、Datatables、WebUploaded、icheck、highcharts、bootstrap-Switch<br> -->
+				Copyright &copy;2017-2018 南昌微族科技有限公司 All Rights Reserved.<br>
+				<!-- 本后台系统由<a href="http://www.h-ui.net/" target="_blank" title="H-ui前端框架">H-ui前端框架</a>提供前端技术支持 -->
+				</p>
+		</div>
+	</footer>
 </div>
 <!--_footer 作为公共模版分离出去-->
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
@@ -418,29 +432,27 @@ function initCity(){
 function submitForm(){
 	$('form').submit();
 }
-/*话费编码-删除*/
-function pg_del(obj,id){
-	layer.confirm("确认要删除该包体吗？",function(index){
-		//alert(index);
-		var tag = "";
-		/* $.ajax({
-			type: "post",
-			url: "/flowsys/operatorPg/pg_delete.do?pgId="+ id,
-			dataType: "json",
-			async: false,
-			success: function(data){	
-				tag = data;
+/*话费通道-删除*/
+function produce_del(url,chnelId){
+	layer.confirm('确认要删除该通道吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			url: url,
+			data: {id:chnelId},
+			//dataType: 'json',
+			success: function(data){
+				if(data=="success")
+				{
+					layer.msg('删除通道成功!',{icon:1,time:1000});
+					location.reload();
+				}else{
+					layer.msg('删除通道失败!',{icon:1,time:1000});
+				}
 			},
 			error:function(data) {
-				tag = data;
 				console.log(data.msg);
-			},
-		});	 */
-		if(tag == "success"){
-			layer.msg('删除成功', {icon:5,time:1000});
-		}
-		layer.close(index);
-		location.reload();
+			}
+		});		
 	});
 }
 </script> 

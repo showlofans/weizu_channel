@@ -31,7 +31,7 @@
 <title>话费编码列表</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 平台通道管理 <span class="c-gray en">&gt;</span> 话费编码管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 平台通道管理 <span class="c-gray en">&gt;</span> 话费编码管理 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" ><i class="Hui-iconfont">&#xe6a6;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
 	<form class="form form-horizontal" action="/flowsys/tel_product/telproduct_list.do" method="post" id="formD" name="dataListForm">
@@ -69,11 +69,13 @@
 			</select>
 		</span> 
 		 <!--  地区城市： -->
+		 <c:if test="${resultMap.params.serviceType == resultMap.city }">
 		 <span class="select-box inline">
 			<select class="select" id="city" name="cityid" onchange="initCity()">
 				<option value="">城市</option>
 			</select>
 		</span> 
+		</c:if>
 		 
 		<input type="hidden" value="${resultMap.params.cityid }" id="cityid" >
 		&nbsp;&nbsp;
@@ -122,7 +124,6 @@
 	</div>
 </form>
 </div>
-	</div>
 	<!-- <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加资讯" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加资讯</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div> -->
 	<div class="mt-20">
 		<table class="table table-border table-bordered table-bg table-hover table-sort">
@@ -134,16 +135,17 @@
 					<th width="80">产品编码</th>
 					<th width="80">话费价值</th>
 					<!-- <th width="120">支持城市</th> -->
-					<th width="100">业务类型</th>
-					<th width="120">支持省份</th>
-					<th width="120">支持城市</th>
-					
+					<th width="80">业务类型</th>
+					<th width="80">支持省份</th>
+					<c:if test="${resultMap.params.serviceType == resultMap.city }">
+					<th width="80">支持城市</th>
+					</c:if>
 					<th width="60">充值速度</th>
-					<th width="120">限制描述</th>
+					<th width="80">限制描述</th>
 					
 					<th width="60">运营商类型</th>
 					
-					<th width="30">操作</th>
+					<th width="60">操作</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -167,7 +169,9 @@
 							</c:if>
 						</c:forEach> --%>
 						</td>
+						<c:if test="${resultMap.params.serviceType == resultMap.city }">
 						<td>${product.city }</td> 
+						</c:if>
 						<td>
 							<c:forEach items="${resultMap.telchargeSpeedEnums }" var="telchargeSpeedEnum" varStatus="vs1">
 							<c:if test="${product.chargeSpeed == telchargeSpeedEnum.value }"> ${telchargeSpeedEnum.desc }</c:if>
@@ -181,7 +185,7 @@
 						</td>
 						 
 						<td class="f-14 td-manage">
-						<a style="text-decoration:none" class="ml-5" onClick="produce_del('/flowsys/productCode/productcode_delete.do',${product.id })" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+						<a style="text-decoration:none" class="ml-5" onClick="produce_del('/flowsys/tel_product/telproduct_del.do',${product.id })" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
 						</td>
 					</tr>
 				</c:forEach>
@@ -189,6 +193,14 @@
 		</table>
 		<mytag:Pagination pagination="${resultMap.pagination}" queryForm="dataListForm" divId="pagaId" />  
 	</div>
+	<footer class="footer mt-20">
+		<div class="container">
+			<p><!-- 感谢jQuery、layer、laypage、Validform、UEditor、My97DatePicker、iconfont、Datatables、WebUploaded、icheck、highcharts、bootstrap-Switch<br> -->
+				Copyright &copy;2017-2018 南昌微族科技有限公司 All Rights Reserved.<br>
+				<!-- 本后台系统由<a href="http://www.h-ui.net/" target="_blank" title="H-ui前端框架">H-ui前端框架</a>提供前端技术支持 -->
+				</p>
+		</div>
+	</footer>
 </div>
 <!--_footer 作为公共模版分离出去-->
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
@@ -278,29 +290,27 @@ function telPc_add(title,url){
         }
     });
 }
-/*包体-删除*/
-function pg_del(obj,id){
-	layer.confirm("确认要删除该包体吗？",function(index){
-		//alert(index);
-		var tag = "";
-		/* $.ajax({
-			type: "post",
-			url: "/flowsys/operatorPg/pg_delete.do?pgId="+ id,
-			dataType: "json",
-			async: false,
-			success: function(data){	
-				tag = data;
+/*话费编码-删除*/
+function produce_del(url,id){
+	layer.confirm('确认要删除吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			url: url,
+			data: {id:id},
+			//dataType: 'json',
+			success: function(data){
+				if(data=="success")
+				{
+					layer.msg('删除编码成功!',{icon:1,time:1000});
+					location.reload();
+				}else{
+					layer.msg('删除编码失败!',{icon:1,time:1000});
+				}
 			},
 			error:function(data) {
-				tag = data;
 				console.log(data.msg);
-			},
-		});	 */
-		if(tag == "success"){
-			layer.msg('删除成功', {icon:5,time:1000});
-		}
-		layer.close(index);
-		location.reload();
+			}
+		});		
 	});
 }
 </script> 

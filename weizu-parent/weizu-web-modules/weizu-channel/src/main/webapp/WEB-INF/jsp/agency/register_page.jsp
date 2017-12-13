@@ -29,16 +29,23 @@
 <body style="overflow:hidden;">
 <div class="loginWraper">
   <div id="loginform" class="loginBox">
-  <h3 class="title">欢迎注册</h3> 
+  <c:choose>
+  	<c:when test="${not empty resultMap.msg}">
+	  <h3 class="title c-red">${resultMap.msg }</h3> 
+  	</c:when>
+  	<c:otherwise>
+  		<h3 class="title">欢迎注册</h3> 
+  	</c:otherwise>
+  </c:choose>
     <form class="form form-horizontal" id="regForm" action="/flowsys/agency/register.do" method="post">
       <div class="row cl">
         <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe6cb;</i></label>
         <div class="formControls col-xs-8">
              <input id="verifyCode" name="verifyCode" value="${resultMap.reg.verifyCode }" required  autocomplete="off" type="text" placeholder="注册邀请码(最少四位)" class="input-text size-L">
              <!-- <input id="verifyCode" name="verifyCode" value="" type="hidden"> --><!--  onblur="testHas()" -->
-             <c:if test="${not empty resultMap.msg}">
+             <%-- <c:if test="${not empty resultMap.msg}">
     	  	  		<span id="errorMsg" style="color:red;" >${resultMap.msg}</span>
-    	  	  	</c:if>
+    	  	  	</c:if> --%>
         </div>
       </div>
       <div class="row cl" >

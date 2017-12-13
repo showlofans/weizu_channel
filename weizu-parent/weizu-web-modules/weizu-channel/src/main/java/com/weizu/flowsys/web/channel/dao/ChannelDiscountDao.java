@@ -46,12 +46,14 @@ public interface ChannelDiscountDao extends Dao<ChannelDiscountPo, Long> {
 	
 	/**
 	 * @description: 通过代理商和订单号得到走的通道折扣实体 
+	 * @deprecated 可能会出现当时的折扣过时的情况
 	 * @param purchaseId
 	 * @param agencyId
 	 * @return
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年9月4日 下午3:17:33
 	 */
+	@Deprecated
 	ChannelDiscountPo getCDbyAP(Long purchaseId, Integer accountId);
 	
 }

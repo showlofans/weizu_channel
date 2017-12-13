@@ -59,7 +59,7 @@
 					<li class="dropDown dropDown_hover">
 						<a href="javascript:;" onClick="myselfinfo()" class="dropDown_A">${loginContext.userName} <i class="Hui-iconfont">&#xe6d5;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
-							<li><a href="javascript:;" onClick="myselfinfo()">个人信息</a>
+							<li><a title="" data-href="/flowsys/agency/agency_info.do" data-title="个人信息" onclick="Hui_admin_tab(this)">个人信息 </a>
 							</li>
 							<li><a href="/flowsys/agency/logout.do">切换账户</a></li>
 							 <li><a data-href="/flowsys/bankAccount/my_bank_list.do" data-title="申请加款" href="javascript:void(0)" onclick="Hui_admin_tab(this)">申请加款</a></li>
@@ -176,7 +176,7 @@
 		<dd>
 			<ul>
 				<li><a data-href="/flowsys/chargePg/pg_charge_page.do" title="/flowsys/chargePg/pg_charge_page.do" data-title="流量充值" href="javascript:;"><i class="Hui-iconfont">&#xe675;</i>  流量充值</a></li>
-				<!-- <li><a data-href="/flowsys/chargePg/pg_charge_page.do" title="/flowsys/chargePg/pg_charge_page.do" data-title="话费充值" href="javascript:;"><i class="Hui-iconfont">&#xe6c7;</i> 话费充值</a></li> -->
+				<li><a data-href="/flowsys/chargeTel/tel_charge_page.do"  data-title="话费充值" href="javascript:;"><i class="Hui-iconfont">&#xe6c7;</i> 话费充值</a></li> 
 				<!-- <li><a data-href="/flowsys/chargePg/pg_batch_charge_page.do" title="批量充值" data-title="批量充值" href="javascript:;">批量充值</a></li> -->
 				
 			</ul>
@@ -222,7 +222,7 @@
  		 </dt> 
 	 	<dd>
  			<ul>
- 				<li><a href="javascript:;" onClick="myselfinfo()"><!-- <a title="" data-href="/flowsys/agency/agency_info.do" data-title="个人信息" onclick="Hui_admin_tab(this)"> --><%-- ${loginContext.userName} --%>个人信息 </a></li>
+ 				<li><a title="" data-href="/flowsys/agency/agency_info.do" data-title="个人信息" onclick="Hui_admin_tab(this)">个人信息 </a></li>
 				<li><a title="" data-href="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-title="充值记录" onclick="Hui_admin_tab(this)">余额：<c:if test="${empty chargeAccount.accountBalance && empty chargeAccount1.accountBalance }">0.00</c:if> ${chargeAccount.accountBalance + chargeAccount1.accountBalance}</a></li>
 				<li><a href="/flowsys/agency/logout.do">切换账户</a></li>
 				 <li><a data-href="/flowsys/bankAccount/my_bank_list.do" data-title="申请加款" href="javascript:void(0)" onclick="Hui_admin_tab(this)">申请加款</a></li>
@@ -283,7 +283,7 @@
 			<dd><a href="javascript:;" data-val="yellow" title="黄色">黄色</a></dd>
 			<dd><a href="javascript:;" data-val="orange" title="橙色">橙色</a></dd>
 		</dl>
-
+ --%>
 	<!-- http://htmlify.wps.cn/doc/index.html?ksyun=UD4oMeA6/word.html&theme=clear -->
 	<dl id="menu-member">
 		<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe633;</i> 平台相关<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
@@ -291,11 +291,11 @@
 			<ul>
 			<c:if test="${loginContext.agencyTag == 1 }">
 			</c:if>
-				<li><a href="/view/mine/jk-doc/jk-doc.html" title="南昌微族接口文档" target="_blank">南昌微族接口文档</a></li>
+				<li><a href="/view/mine/jk-doc/jk-doc.html" title="南昌微族流量接口文档" target="_blank">流量接口文档</a></li>
 				<li><a data-href="http://htmlify.wps.cn/doc/index.html?ksyun=hPT1Afio/word.html&theme=clear" data-title="平台操作指南" href="javascript:void(0)">平台操作指南</a></li>
 			</ul>
 		</dd>
-	</dl> --%>
+	</dl>
 	<%-- <ul>
 		<c:if test="${loginContext.agencyTag == 1 }">
 			<!-- <li><a data-href="/view/mine/jk-doc/jk-doc.html" data-title="南昌微族接口文档" href="javascript:void(0)">南昌微族接口文档</a></li> -->
@@ -425,7 +425,7 @@ $(function(){
 	});
 });
 /**个人信息*/
-function myselfinfo(){
+/* function myselfinfo(){
 	layer.open({
         type: 2,
         title: "个人信息",
@@ -437,9 +437,9 @@ function myselfinfo(){
             //location.reload();
         }
     });
-}
+} */
 /**修改密码*/
-function resetPass(){
+ function resetPass(){
 	layer.open({
         type: 2,
         title: "重置密码",
@@ -451,7 +451,7 @@ function resetPass(){
            // location.reload();
         }
     });
-}
+} 
 
 </script> 
 </body>

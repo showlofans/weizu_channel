@@ -32,19 +32,30 @@
 </head>
 <body>
 <article class="page-container">
-	<h3>${pageTitle }</h3>
+	<%-- <h3>${pageTitle }</h3> --%>
 	<form action="" method=""  class="form form-horizontal" id="platfrom">
-		<input type="hidden" value="${exchangePlatformPo.id }" name="id">
+		<input type="hidden" value="${resultMap.exchangePlatformPo.id }" name="id">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">平台类型：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<c:forEach items="${resultMap.pgServiceTypeEnums }" var="pgServiceTypeEnum" varStatus="vs">
+					<div class="radio-box">
+						<input name="epFor" class="radioItem" readonly="readonly" type="radio" id="epFor-${vs.index }" value="${pgServiceTypeEnum.value }" <c:if test="${pgServiceTypeEnum.value==resultMap.exchangePlatformPo.epFor }">checked</c:if>>
+						<label for="epFor-${vs.index }">${pgServiceTypeEnum.desc }</label>
+					</div>
+				</c:forEach>
+			</div>
+		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>平台名称：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="${exchangePlatformPo.epName }" placeholder="" id="epName" name="epName">
+				<input type="text" class="input-text" value="${resultMap.exchangePlatformPo.epName }"  onchange="checkEpName(this)" placeholder="" id="epName" name="epName">
 			</div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>平台英文标识：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text"  value="${exchangePlatformPo.epEngId }" onchange="checkEpEngId(this)"  placeholder="" id="epEngId" name="epEngId">
+				<input type="text" class="input-text"  value="${resultMap.exchangePlatformPo.epEngId }"  placeholder="" id="epEngId" name="epEngId">
 			</div>
 		</div>
 		<!-- id, ep_name, ep_purchase_ip, product_list_ip, pgdata_check_ip, ep_balance_ip, 
@@ -52,7 +63,7 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">流量订购地址：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" required  value="${exchangePlatformPo.epPurchaseIp }" placeholder="" id="epPurchaseIp" name="epPurchaseIp">
+				<input type="text" class="input-text" required  value="${resultMap.exchangePlatformPo.epPurchaseIp }" placeholder="" id="epPurchaseIp" name="epPurchaseIp">
 			</div>
 		</div>
 		<div class="row cl">
@@ -60,12 +71,12 @@
 			<div class="formControls col-xs-7 col-sm-9 skin-minimal">
 				<div class="check-box">
 					<c:choose>
-						<c:when test="${exchangePlatformPo.epCallBack == 1 }">
-							<input name="epCallBack" checked="checked" type="checkbox" value="1" id="checkbox-1">
-							<%-- <input type="text" class='input-text' required  value='${exchangePlatformPo.epCallBackIp }' placeholder='' id='epCallBackIp' name='epCallBackIp'> --%>
+						<c:when test="${resultMap.exchangePlatformPo.epCallBack == 1 }">
+							<input name="epCallBack" class="callBack" checked="checked" type="checkbox" value="1" id="checkbox-1">
+							<%-- <input type="text" class='input-text' required  value='${resultMap.exchangePlatformPo.epCallBackIp }' placeholder='' id='epCallBackIp' name='epCallBackIp'> --%>
 						</c:when>
 						<c:otherwise>
-							<input name="epCallBack"  type="checkbox" value="1" id="checkbox-1">
+							<input name="epCallBack" class="callBack"  type="checkbox" value="1" id="checkbox-1">
 						</c:otherwise>
 					</c:choose>
 					<label for="checkbox-1">&nbsp;</label>
@@ -74,10 +85,10 @@
 		</div>
 		<%-- <c:choose>
 			<c:when test="${epCallBack == 1 }"> --%>
-			<div class="row cl callBackIp" <c:if test="${exchangePlatformPo.epCallBack != 1 }"> style="display:none;"</c:if>>
+			<div class="row cl callBackIp" <c:if test="${resultMap.exchangePlatformPo.epCallBack != 1 }"> style="display:none;"</c:if>>
 				<label class="form-label col-xs-4 col-sm-2">平台回调地址：</label>
 				<div class="formControls col-xs-8 col-sm-9">
-					<input type="text" class="input-text" required  value="${exchangePlatformPo.epCallBackIp }" placeholder="输入自己的回调地址" id="epCallBackIp" name="epCallBackIp">
+					<input type="text" class="input-text" required  value="${resultMap.exchangePlatformPo.epCallBackIp }" placeholder="输入自己的回调地址" id="epCallBackIp" name="epCallBackIp">
 				</div>
 			</div>
 			<%-- </c:when>
@@ -85,61 +96,61 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">产品列表地址：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" required value="${exchangePlatformPo.productListIp }" placeholder="" id="productListIp" name="productListIp">
+				<input type="text" class="input-text" required value="${resultMap.exchangePlatformPo.productListIp }" placeholder="" id="productListIp" name="productListIp">
 			</div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">订单状态查询地址：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text required" required  value="${exchangePlatformPo.epOrderStateIp }" placeholder="" id="epOrderStateIp" name="epOrderStateIp">
+				<input type="text" class="input-text required" required  value="${resultMap.exchangePlatformPo.epOrderStateIp }" placeholder="" id="epOrderStateIp" name="epOrderStateIp">
 			</div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">余额查询地址：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" required  value="${exchangePlatformPo.epBalanceIp }" placeholder="" id="epBalanceIp" name="epBalanceIp">
+				<input type="text" class="input-text" required  value="${resultMap.exchangePlatformPo.epBalanceIp }" placeholder="" id="epBalanceIp" name="epBalanceIp">
 			</div>
 		</div>
 		<%-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">订单状态地址：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" required  value="${exchangePlatformPo.epOrderStateIp }" placeholder="" id="epOrderStateIp" name="epOrderStateIp">
+				<input type="text" class="input-text" required  value="${resultMap.exchangePlatformPo.epOrderStateIp }" placeholder="" id="epOrderStateIp" name="epOrderStateIp">
 			</div>
 		</div> --%>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">账号：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text"  value="${exchangePlatformPo.epUserName }" required placeholder="${exchangePlatformPo.epUserName }" id="epUserName" name="epUserName">
+				<input type="text" class="input-text"  value="${resultMap.exchangePlatformPo.epUserName }" required placeholder="${resultMap.exchangePlatformPo.epUserName }" id="epUserName" name="epUserName">
 			</div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">密码：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text"  value="${exchangePlatformPo.epUserPass }" required placeholder="${exchangePlatformPo.epUserPass }" id="epUserPass" name="epUserPass">
+				<input type="text" class="input-text"  value="${resultMap.exchangePlatformPo.epUserPass }" required placeholder="${resultMap.exchangePlatformPo.epUserPass }" id="epUserPass" name="epUserPass">
 			</div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">平台余额：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" readonly="readonly"  value="${exchangePlatformPo.epBalance }" placeholder="" id="epBalance" name="epBalance">
+				<input type="text" class="input-text" readonly="readonly"  value="${resultMap.exchangePlatformPo.epBalance }" placeholder="" id="epBalance" name="epBalance">
 			</div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">apikey：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text"  value="${exchangePlatformPo.epApikey }" placeholder="" id="epApikey" name="epApikey">
+				<input type="text" class="input-text"  value="${resultMap.exchangePlatformPo.epApikey }" placeholder="" id="epApikey" name="epApikey">
 			</div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">主页地址：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" required  value="${exchangePlatformPo.epIp }" placeholder="" id="epIp" name="epIp">
+				<input type="text" class="input-text" required  value="${resultMap.exchangePlatformPo.epIp }" placeholder="" id="epIp" name="epIp">
 			</div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">其他参数：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="${exchangePlatformPo.epOtherParams }" placeholder="" id="epOtherParams" name="epOtherParams">
+				<input type="text" class="input-text" value="${resultMap.exchangePlatformPo.epOtherParams }" placeholder="" id="epOtherParams" name="epOtherParams">
 			</div>
 		</div>
 		
@@ -181,7 +192,7 @@ $('.skin-minimal input').iCheck({
 	radioClass: 'iradio-blue',
 	increaseArea: '20%'
 });
-$('input').on('ifClicked', function(event){  
+$('.callBack').on('ifClicked', function(event){  
 		if(!$(this).is(':checked')){
 			//alert(1);
 			$('.callBackIp').show();
@@ -194,19 +205,19 @@ $('input').on('ifClicked', function(event){
 	 // alert(event.type + ' callback');  
 });
 
-/**判断平台标识是否存在*/
-function checkEpEngId(vart){
-	var epEngId = $(vart).val();
+/**判断平台名称是否存在*/
+function checkEpName(vart){
+	var epName = $(vart).val();
 	$.ajax({
         type:"post",
         url:"/flowsys/platform/check_ep_engId.do",
-        data: {epEngId:epEngId},//表单数据
+        data: {epName:epName},//表单数据
         async : false,
         success:function(d){
         	//layer.msg(d);
          	if(d == "exist"){
-         		$("#epEngId").focus();
-         		 layer.msg("英文标识已存在");
+         		$("#epName").focus();
+         		 layer.msg("平台名称已存在");
            }
         }
     });

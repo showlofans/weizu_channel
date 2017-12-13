@@ -25,6 +25,7 @@ import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.TelChannelTagEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.activity.ao.TelrateBindAccountAO;
 import com.weizu.flowsys.web.activity.dao.ITelRateDao;
@@ -115,7 +116,7 @@ public class TelRateController {
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
 		resultMap.put("huaServiceTypeEnums", HuaServiceTypeEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
-		resultMap.put("agencyTagEnums", AgencyTagEnum.toList());
+		resultMap.put("telChannelTagEnums", TelChannelTagEnum.toList());
 		
 //		resultMap.put("fromTag", fromTag);//
 		return new ModelAndView("/activity/telRate_add_page","resultMap",resultMap);
@@ -145,7 +146,7 @@ public class TelRateController {
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
 		resultMap.put("huaServiceTypeEnums", HuaServiceTypeEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
-		resultMap.put("agencyTagEnums", AgencyTagEnum.toList());
+		resultMap.put("telChannelTagEnums", TelChannelTagEnum.toList());
 		
 //		resultMap.put("fromTag", fromTag);//
 		return new ModelAndView("/activity/telRate_add_page","resultMap",resultMap);
@@ -178,7 +179,7 @@ public class TelRateController {
 	 */
 	@ResponseBody
 	@RequestMapping(value=TelRateURL.TELRATE_ADD)
-	public String telRateAdd(TelRatePo telRatePo){
+	public String addTelRate(TelRatePo telRatePo){
 		String resStr = "error";
 		int res = 0;
 		if(telRatePo.getId() != null){//编辑话费折扣
@@ -203,7 +204,7 @@ public class TelRateController {
 	 */
 	@ResponseBody
 	@RequestMapping(value=TelRateURL.DEL_TELRATE)
-	public String telRateDel(Long id){
+	public String delTelRate(Long id){
 		int res = telRateDao.del(id);
 		String resStr = "error";
 		if(res > 0){
@@ -243,6 +244,9 @@ public class TelRateController {
 		if(telrateBindAccountVO.getBindState() == null){
 			telrateBindAccountVO.setBindState(BindStateEnum.NO.getValue());
 		}
+//		if(telrateBindAccountVO.getRateFor() == null){
+//			telrateBindAccountVO.setRateFor(AgencyTagEnum.DATA_USER.getValue());
+//		}
 		//初始化代理商类型
 //		if(aardto.getAgencyTag() == null){
 //			aardto.setAgencyTag(AgencyTagEnum.PLATFORM_USER.getValue());
@@ -256,7 +260,8 @@ public class TelRateController {
 		resultMap.put("telrateBindAccountVO", telrateBindAccountVO);
 		resultMap.put("pagination", pagination);
 		resultMap.put("bindStateEnums", BindStateEnum.toBindList());
-//		resultMap.put("agencyTagEnums", AgencyTagEnum.toList());
+		resultMap.put("agencyTagEnums", AgencyTagEnum.toList());
+		resultMap.put("platformUser", AgencyTagEnum.PLATFORM_USER.getValue());
 		resultMap.put("onameEnums", OperatorNameEnum.toList());
 		resultMap.put("stypeEnums", ServiceTypeEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());

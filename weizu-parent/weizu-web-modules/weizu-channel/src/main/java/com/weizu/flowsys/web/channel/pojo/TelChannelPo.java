@@ -40,6 +40,8 @@ public class TelChannelPo extends Po {
     private String ids;							//页面实体：话费编码id列表
     @TempField
     private String discounts;					//页面实体：通道折扣列表
+    
+    //private 
 //    private List<Long> ids;						//页面实体：话费编码id列表
 
 //	public List<Long> getIds() {
@@ -70,11 +72,25 @@ public class TelChannelPo extends Po {
 	this.billType = billType;
 	this.lastAccess = lastAccess;
 	this.telchannelUseState = telchannelUseState;
+	this.telchannelTotalUse = 0;
+	this.telchannelTotalProfit = 0.0d;
+	this.telchannelTotalAmount = 0.0d;
 }
 	public TelChannelPo() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	/**
+	 * @description: 创建通道初始化统计参数
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月30日 下午3:19:39
+	 */
+//	public void initTotalParams(){
+//		this.telchannelTotalUse = 0;
+//		this.telchannelTotalProfit = 0.0d;
+//		this.telchannelTotalAmount = 0.0d;
+//	}
 
 
 	public void setId(Long id) {

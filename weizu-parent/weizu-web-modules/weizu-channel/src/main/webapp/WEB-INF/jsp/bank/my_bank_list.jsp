@@ -29,7 +29,7 @@
 <meta name="description" content="">
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页  <span class="c-gray en">&gt;</span> 账户管理 <span class="c-gray en">&gt;</span> 申请加款 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页  <span class="c-gray en">&gt;</span> 账户管理 <span class="c-gray en">&gt;</span> 申请加款 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" ><i class="Hui-iconfont">&#xe6a6;</i></a></nav>
 <div class="page-container">
 	<!-- <p class="f-20 text-success">欢迎使用微族通道系统 <span class="f-14">Beta</span>版本</p> -->
 	<!-- <p>登录次数：18 </p>
@@ -41,7 +41,8 @@
 				<th colspan="5" scope="col"><span class="c-danger">对公账户余额：${chargeAccount1.accountBalance }</span>
 					<c:if test="${not empty resultMap.bankList}">
 					<span class="text-r">
-						<a style="text-decoration:none" class="btn radio btn-primary" onClick="bank_add('充值卡添加','/flowsys/bankAccount/add_bank_page.do',1)" href="javascript:;" title="添加充值卡"><i class="Hui-iconfont">&#xe600;</i>添加充值卡</a>
+						<!-- <a style="text-decoration:none" class="btn radio btn-primary" onClick="bank_add('充值卡添加','/flowsys/bankAccount/add_bank_page.do',1)" href="javascript:;" title="添加充值卡"><i class="Hui-iconfont">&#xe600;</i>添加充值卡</a> -->
+						<a data-toggle="tooltip" class="btn radio btn-primary" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/add_bank_page.do?billType=1" data-title="添加充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">添加充值卡</a>
 					</span>
 					</c:if>
 				</th>
@@ -70,8 +71,8 @@
 							</td>
 							<!-- <td>已绑定</td> -->
 							<td class="td-manage">
-								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/plus_bank_list.do?id=${bank.id }&accountId=${chargeAccount1.id}" data-title="在线充值" href="javascript:void(0)" onclick="Hui_admin_tab(this)">在线充值</a>
-								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="bank_edit('编辑充值卡','/flowsys/bankAccount/edit_bank_page.do', ${bank.id })" href="javascript:;" title="编辑充值卡"><i class="Hui-iconfont">&#xe6df;</i></a>
+								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/plus_bank_list.do?id=${bank.id }&accountId=${chargeAccount1.id}" data-title="请求充值" href="javascript:void(0)" onclick="Hui_admin_tab(this)">请求充值</a>
+								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/edit_bank_page.do?id=${bank.id }" data-title="编辑充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe6df;</i></a>
 								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="bank_del('/flowsys/bankAccount/del_bank.do',${bank.id }, '${bank.remittanceWay }')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>
 								<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="transfer('${agency.id}')" href="javascript:;" title="卡充值"><i class="Hui-iconfont">&#xe604;</i></a> --%>
 								<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="bindAgency('${agency.id}')" href="javascript:;" title="绑定代理商"><i class="Hui-iconfont">&#xe725;</i></a> --%>
@@ -96,7 +97,8 @@
 				<c:otherwise>
 				<tr class="text-c">
 					<td colspan="5">
-						<a style="text-decoration:none" class="btn radio btn-primary" onClick="bank_add('充值卡添加','/flowsys/bankAccount/add_bank_page.do',1)" href="javascript:;" title="添加充值卡"><i class="Hui-iconfont">&#xe600;</i>添加充值卡</a>
+						<!-- <a style="text-decoration:none" class="btn radio btn-primary" onClick="bank_add('充值卡添加','/flowsys/bankAccount/add_bank_page.do',1)" href="javascript:;" title="添加充值卡"><i class="Hui-iconfont">&#xe600;</i>添加充值卡</a> -->
+						<a data-toggle="tooltip" class="btn radio btn-primary" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/add_bank_page.do?billType=1" data-title="添加充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">添加充值卡</a>
 					</td>
 				</tr>
 				</c:otherwise>
@@ -112,7 +114,8 @@
 				<th colspan="7" scope="col"><span class="c-danger">对私账户余额：${chargeAccount.accountBalance }</span>
 					<c:if test="${not empty resultMap.bankList0}">
 					<span class="text-r">
-						<a style="text-decoration:none" class="btn radio btn-primary" onClick="bank_add('充值卡添加','/flowsys/bankAccount/add_bank_page.do',0)" href="javascript:;" title="添加充值卡"><i class="Hui-iconfont">&#xe600;</i>添加充值卡</a>
+						<!-- <a style="text-decoration:none" class="btn radio btn-primary" onClick="bank_add('充值卡添加','/flowsys/bankAccount/add_bank_page.do',0)" href="javascript:;" title="添加充值卡"><i class="Hui-iconfont">&#xe600;</i>添加充值卡</a> -->
+						<a data-toggle="tooltip" class="btn radio btn-primary" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/add_bank_page.do?billType=0" data-title="添加充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">添加充值卡</a>
 					</span>
 					</c:if>
 				</th>
@@ -140,8 +143,9 @@
 							</td>
 							<!-- <td>已绑定</td> -->
 							<td class="td-manage">
-								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/plus_bank_list.do?id=${bank.id }&accountId=${chargeAccount.id}" data-title="在线充值" href="javascript:void(0)" onclick="Hui_admin_tab(this)">在线充值</a>
-								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="bank_edit('编辑充值卡','/flowsys/bankAccount/edit_bank_page.do', ${bank.id })" href="javascript:;" title="编辑充值卡"><i class="Hui-iconfont">&#xe6df;</i></a>
+								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/plus_bank_list.do?id=${bank.id }&accountId=${chargeAccount.id}" data-title="请求充值" href="javascript:void(0)" onclick="Hui_admin_tab(this)">请求充值</a>
+								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/edit_bank_page.do?id=${bank.id }" data-title="编辑充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe6df;</i></a>
+								<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="bank_edit('编辑充值卡','/flowsys/bankAccount/edit_bank_page.do', ${bank.id })" href="javascript:;" title="编辑充值卡"><i class="Hui-iconfont">&#xe6df;</i></a> --%>
 								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="bank_del('/flowsys/bankAccount/del_bank.do',${bank.id }, '${bank.remittanceWay }')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>
 								<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="transfer('${agency.id}')" href="javascript:;" title="卡充值"><i class="Hui-iconfont">&#xe604;</i></a> --%>
 								<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="bindAgency('${agency.id}')" href="javascript:;" title="绑定代理商"><i class="Hui-iconfont">&#xe725;</i></a> --%>
@@ -153,7 +157,8 @@
 				<c:otherwise>
 				<tr class="text-c">
 					<td colspan="5">
-						<a style="text-decoration:none" class="btn radio btn-primary" onClick="bank_add('充值卡添加','/flowsys/bankAccount/add_bank_page.do',0)" href="javascript:;" title="添加充值卡"><i class="Hui-iconfont">&#xe600;</i>添加充值卡</a>
+						<a data-toggle="tooltip" class="btn radio btn-primary" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/add_bank_page.do?billType=0" data-title="添加充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">添加充值卡</a>
+						<!-- <a style="text-decoration:none" class="btn radio btn-primary" onClick="bank_add('充值卡添加','/flowsys/bankAccount/add_bank_page.do',0)" href="javascript:;" title="添加充值卡"><i class="Hui-iconfont">&#xe600;</i>添加充值卡</a> -->
 					</td>
 				</tr>
 				</c:otherwise>
@@ -198,7 +203,7 @@ function bank_del(url,id,bankName){
 	});
 }
 /*充值卡-编辑*/
-function bank_edit(title,url,id,w,h){
+/* function bank_edit(title,url,id,w,h){
 	var index = layer.open({
 		type: 2,
 		title: title,
@@ -209,9 +214,9 @@ function bank_edit(title,url,id,w,h){
 		}
 	});
 	//layer.full(index);
-}
+} */
 /*充值卡-添加*/
-function bank_add(title,url,billType){
+/* function bank_add(title,url,billType){
 	//alert("sd");
 	var index = layer.open({
         type: 2,
@@ -225,7 +230,7 @@ function bank_add(title,url,billType){
         }
     });
 	layer.full(index);
-}
+} */
 
 </script>
 </body>

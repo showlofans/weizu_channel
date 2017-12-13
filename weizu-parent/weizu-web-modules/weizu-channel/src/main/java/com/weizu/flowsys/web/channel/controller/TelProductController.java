@@ -24,6 +24,7 @@ import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.TelchannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.TelchargeSpeedEnum;
@@ -88,21 +89,29 @@ public class TelProductController {
 		resultMap.put("operatoerNameEnums", OperatorNameEnum.toList());
 		resultMap.put("serviceTypeEnums", HuaServiceTypeEnum.toList());
 		resultMap.put("telchargeSpeedEnums", TelchargeSpeedEnum.toList());
-		WherePrams whereEp = null;
+		WherePrams whereEp = new WherePrams("ep_for", "=", PgServiceTypeEnum.TELCHARGE.getValue());
 		if(StringHelper.isNotEmpty(telProductPo.getEpName())){
-			whereEp = new WherePrams("ep_name", "like", telProductPo.getEpName());
+			whereEp.and("ep_name", "like", telProductPo.getEpName());
 		}
 		List<ExchangePlatformPo> epList = exchangePlatformDao.list(whereEp);
 		if(epList != null && epList.size() > 0 ){
 			resultMap.put("epList", epList);
 			resultMap.put("epId", epList.get(0).getId());
+			List<Provinces> provinces = procincesDAO.getProvinces();
+			resultMap.put("telProductPo", telProductPo);
+			resultMap.put("provinces", provinces);
+//		resultMap.put("provincesJson", JSON.toJSONString(provinces));
+			return new ModelAndView("/tel_channel/telproduct_add_page", "resultMap", resultMap);
+		}else{
+			resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());
+			resultMap.put("referURL", "/channel/platform_add_page");
+			
+			resultMap.put("pageMsg", "没有相关平台");
+			resultMap.put("moduleName", "去添加相关平台");
+			
+			return new ModelAndView("/trade/charge_result_page", "resultMap", resultMap);
 		}
 		
-		List<Provinces> provinces = procincesDAO.getProvinces();
-		resultMap.put("telProductPo", telProductPo);
-		resultMap.put("provinces", provinces);
-//		resultMap.put("provincesJson", JSON.toJSONString(provinces));
-		return new ModelAndView("/tel_channel/telproduct_add_page", "resultMap", resultMap);
 	}
 	/**
 	 * @description:话费编码列表
@@ -111,7 +120,7 @@ public class TelProductController {
 	 * @createTime:2017年11月11日 下午3:59:09
 	 */
 	@RequestMapping(value=TelProductURL.TELPRODUCT_LIST)
-	public ModelAndView telProductList(TelProductPo telProductPo,@RequestParam(value = "pageNoLong", required = false)Long pageNoLong){
+	public ModelAndView getTelProductList(TelProductPo telProductPo,@RequestParam(value = "pageNoLong", required = false)Long pageNoLong){
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
@@ -124,10 +133,11 @@ public class TelProductController {
 		}else{
 			pageParam = new PageParam(1l, 10);
 		}
-		if(telProductPo.getServiceType() == null){//默认加载市内的
-			telProductPo.setServiceType(HuaServiceTypeEnum.CITY.getValue());
-		}
+//		if(telProductPo.getServiceType() == null){//默认加载市内的
+//			telProductPo.setServiceType(HuaServiceTypeEnum.CITY.getValue());
+//		}
 		
+		resultMap.put("city", HuaServiceTypeEnum.CITY.getValue());
 		Pagination<TelProductPo> pagination = telProductAO.listTelProduct(telProductPo, pageParam);
 		resultMap.put("pagination", pagination);
 		
@@ -157,6 +167,27 @@ public class TelProductController {
 	}
 	
 	/**
+	 * @description: 删除话费编码
+	 * @param telProductPo
+	 * @param response
+	 * @param request
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月5日 上午10:58:54
+	 */
+	@RequestMapping(value = TelProductURL.TELPRODUCT_DEL)
+	public void delTelProduct(Long id,HttpServletResponse response,HttpServletRequest request){
+		int res = telProductDao.del(id);
+		String result = "error";
+		if(res > 0){
+			result = "success";
+		}
+		try {
+			response.getWriter().print(result);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	/**
 	 * @description: 异步获得编码有编码的话费列表 
 	 * @param telProductPo
 	 * @return
@@ -171,6 +202,8 @@ public class TelProductController {
 		
 		return jsonStr;
 	}
+	
+	
 	
 //	@RequestMapping(value = TelProductURL.TELPRODUCT_EXIST)
 //	public void ajaxPcExist(TelProductPo telProductPo, HttpServletResponse response){

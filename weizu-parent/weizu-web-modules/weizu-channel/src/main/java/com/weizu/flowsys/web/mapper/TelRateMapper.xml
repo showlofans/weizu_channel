@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.weizu.flowsys.web.activity.dao.ITelRateDao" >
-  <!-- <sql id="t_telchannel">telchannel</sql>
+  <sql id="t_telchannel">telchannel</sql>
   <sql id="t_telrate">tel_rate</sql>
   <sql id="t_tel_product">tel_product</sql>
-  <sql id="t_cities">cities</sql>
-  <sql id="t_provinces">provinces</sql> -->
+  
+  <sql id="t_tba">telrate_bind_account</sql>
+  <sql id="t_cat">charge_account</sql>
   
   <resultMap type="com.weizu.flowsys.web.activity.pojo.TelRatePo" id="BaseResultMap">
   	<id column="id" property="id" jdbcType="BIGINT" />
@@ -16,6 +17,163 @@
     <result column="rate_for" property="rateFor" jdbcType="INTEGER" />
     <result column="rate_type" property="rateType" jdbcType="INTEGER" />
   </resultMap>
+  <!-- 异步获得的话费价格折扣信息 -->
+  <resultMap type="com.weizu.flowsys.web.trade.pojo.GetTelRatePo" id="CTRResultMap">
+  	<id column="id" property="id" jdbcType="BIGINT" />
+  	<result column="telchannel_id" property="telchannelId" jdbcType="BIGINT" />
+  	<result column="tel_product_id" property="telProductId" jdbcType="BIGINT" />
+    <result column="active_discount" property="activeDiscount" jdbcType="DOUBLE" />
+    <result column="bill_type" property="billType" jdbcType="INTEGER" />
+    <result column="charge_value" property="chargeValue" jdbcType="INTEGER" />
+    <result column="tel_code" property="telCode" jdbcType="VARCHAR" />
+  </resultMap>
+   <sql id="Charge_Column_List">	
+   	tt.id,tt.active_discount,tt.bill_type,tp.charge_value,tp.tel_code,tt.telchannel_id,tp.id tel_product_id
+   </sql>
+   <sql id="Base_Column_List">	
+   	tt1.id,tt1.active_discount,tt1.bill_type,tt1.telchannel_id,tt1.rate_for,tt1.rate_type
+   </sql>
+   
+   
+   <!-- 通过接口费率折扣得到，相应话费通道的平台折扣 -->
+   <select id="getPlatTelRateById" parameterType="map" resultMap="BaseResultMap">
+	   SELECT <include refid="Base_Column_List"></include>
+	    FROM <include refid="t_telrate"></include> tt1
+		INNER JOIN <include refid="t_telrate"></include> tt2
+		on tt1.telchannel_id=tt2.telchannel_id
+		<where>
+			<if test="telRateId != null">
+				AND tt2.id=#{telRateId}
+			</if>
+			<if test="platformUser != null">
+				AND tt1.rate_for=#{platformUser}
+			</if>
+		</where>
+			<!-- WHERE tt2.id=7 and tt1.rate_for=0; -->
+   </select>
+   
+   <!-- 获得话费充值折扣 -->
+   <select id="getTelRateForCharge" parameterType="map" resultMap="CTRResultMap">
+   		select <include refid="Charge_Column_List"></include>
+   		from <include refid="t_telrate"></include> tt
+   		INNER JOIN <include refid="t_telchannel"></include> tc
+		on tt.telchannel_id=tc.id
+		INNER JOIN <include refid="t_tel_product"></include> tp
+		on tc.tel_product_id=tp.id
+		<where>
+			<if test="platformUser != null">
+				 AND tt.rate_for = #{platformUser}
+				AND tt.id NOT IN(
+					SELECT tt2.id from <include refid="t_telrate"></include> tt2
+					INNER JOIN <include refid="t_tba"></include> tba
+					on tt2.id = tba.tel_rate_id
+					INNER JOIN <include refid="t_cat"></include> cat
+					on cat.id=tba.account_id
+					<where>
+						<if test="agencyId != null">
+							AND cat.agency_id = #{agencyId}
+						</if>
+						<if test="bind != null">
+							AND tba.bind_state = #{bind}
+						</if>
+						<if test="negative != null">
+							AND tba.bind_side = #{negative}
+						</if>
+			<!-- 		AND tba.bind_state=1 and tba.bind_side = 0 -->
+				</where>)
+			</if>
+			<!-- <if test="platformUser != null">
+				 AND tt.rate_for = #{platformUser}
+			</if> -->
+			<if test="provinceid != null">
+				AND tp.provinceid = #{provinceid}
+			</if>
+			<if test="cityid != null">
+				AND tp.cityid = #{cityid}
+			</if>
+			<if test="useOpen != null">
+				AND tc.telchannel_use_state = #{useOpen}
+			</if>
+<!-- 			AND tt.id NOT IN(
+				SELECT tt2.id from <include refid="t_telrate"></include> tt2
+				INNER JOIN <include refid="t_tba"></include> tba
+				on tt2.id = tba.tel_rate_id
+				INNER JOIN <include refid="t_cat"></include> cat
+				on cat.id=tba.account_id
+				<where>
+					<if test="agencyId != null">
+						AND cat.agency_id = #{agencyId}
+					</if>
+					<if test="bind != null">
+						AND tba.bind_state = #{bind}
+					</if>
+					<if test="negative != null">
+						AND tba.bind_side = #{negative}
+					</if>
+		AND tba.bind_state=1 and tba.bind_side = 0
+				</where>) -->			
+			<if test="chargeSpeed != null">
+		  		AND tp.charge_speed = #{chargeSpeed}
+		  	</if>
+		  	<if test="serviceType != null">
+		  		AND tp.service_type = #{serviceType}
+		  	</if>
+		  	<if test="operatorName != null">
+		  		AND tp.operator_name = #{operatorName}
+		  	</if>
+		  	<if test="dataUser != null">
+			  	AND tt.id in(
+			  		SELECT tt3.id from <include refid="t_telrate"></include> tt3
+			  		INNER JOIN <include refid="t_telchannel"></include> tc2
+					on tt3.telchannel_id=tc2.id
+					INNER JOIN <include refid="t_tba"></include> tba2
+					on tt3.id = tba2.tel_rate_id
+					INNER JOIN <include refid="t_cat"></include> cat
+					on cat.id=tba2.account_id
+					<where>
+						AND tt3.rate_for = #{dataUser} 
+						<if test="agencyId != null">
+							AND cat.agency_id = #{agencyId}
+						</if>
+						<if test="bind != null">
+							AND tba2.bind_state = #{bind}
+						</if>
+						<if test="positive != null">
+							AND tba2.bind_side = #{positive}
+						</if>
+						<if test="useOpen != null">
+							AND tc2.telchannel_use_state = #{useOpen}
+						</if>
+					</where>)
+			</if>
+		  <!-- 	or tt.id in(
+		  		SELECT tt3.id from <include refid="t_telrate"></include> tt3
+		  		INNER JOIN <include refid="t_telchannel"></include> tc2
+				on tt3.telchannel_id=tc2.id
+				INNER JOIN <include refid="t_tba"></include> tba2
+				on tt3.id = tba2.tel_rate_id
+				INNER JOIN <include refid="t_cat"></include> cat
+				on cat.id=tba2.account_id
+				<where>
+					<if test="agencyId != null">
+						AND cat.agency_id = #{agencyId}
+					</if>
+					<if test="bind != null">
+						AND tba2.bind_state = #{bind}
+					</if>
+					<if test="positive != null">
+						AND tba2.bind_side = #{positive}
+					</if>
+					<if test="dataUser != null">
+						AND tt3.rate_for = #{dataUser} 
+					</if>
+					<if test="useOpen != null">
+						AND tc2.telchannel_use_state = #{useOpen}
+					</if>
+				</where>) -->
+		</where>
+   </select>
+  
   <!-- <sql id="Base_Column_List">
   	tp.*
 	<if test="serviceType == 1 ">,pc.province</if> 省内和市内
