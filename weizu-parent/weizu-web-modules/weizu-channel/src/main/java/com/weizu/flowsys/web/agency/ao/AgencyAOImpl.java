@@ -20,6 +20,7 @@ import com.weizu.flowsys.operatorPg.enums.PgInServiceEnum;
 import com.weizu.flowsys.operatorPg.enums.TelChannelTagEnum;
 import com.weizu.flowsys.util.AddressUtils;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.web.activity.dao.impl.RateBackwardDaoImpl;
 import com.weizu.flowsys.web.activity.pojo.AccountActiveRateDTO;
 import com.weizu.flowsys.web.activity.pojo.TelrateBindAccountVO;
@@ -191,8 +192,10 @@ public class AgencyAOImpl implements AgencyAO {
 	public Map<String,Object> login(AgencyBackwardPo agencyBackward) {
 		String userPass = agencyBackward.getUserPass(); 
 		Map<String,Object> resultMap = new HashMap<String, Object>();
-		if(StringHelper.isNotEmpty(agencyBackward.getUserName())){
-			WherePrams where = new WherePrams("user_name", "=", agencyBackward.getUserName());
+		String userName = StringUtil2.filterString(agencyBackward.getUserName());
+		//防sql注入
+		if(StringHelper.isNotEmpty(userName)){
+			WherePrams where = new WherePrams("user_name", "=", userName);
 			AgencyBackwardPo resultAgency = null;
 			if(StringHelper.isNotEmpty(agencyBackward.getAgencyTel())){//注册使用电话验证
 				where = where.or("agency_tel", "=", agencyBackward.getAgencyTel());
@@ -453,6 +456,7 @@ public class AgencyAOImpl implements AgencyAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月11日 上午10:11:02
 	 */
+	@Transactional
 	@Override
 	public int updatePass(int agencyId, String enterPass) {
 //		AgencyBackwardPo agencyPo = new AgencyBackwardPo();

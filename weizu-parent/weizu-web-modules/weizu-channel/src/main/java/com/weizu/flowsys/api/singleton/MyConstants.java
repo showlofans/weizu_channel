@@ -24,6 +24,12 @@ public class MyConstants {
 	 * 河南趣闻-顽兔平台对私英文标志
 	 */
 	public final static String WANTULL_ENG_0 = "Wantull0";
+	/**
+	 * 仁智-迈远平台对私英文标志
+	 */
+	public final static String MAIYUAN_ENG = "Maiyuan";
+	
+	
 	
 	
 	

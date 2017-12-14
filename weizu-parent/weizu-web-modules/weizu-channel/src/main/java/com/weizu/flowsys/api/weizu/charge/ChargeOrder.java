@@ -41,6 +41,11 @@ public class ChargeOrder {
 		this.billType = billType;
 	}
 	
+	@Override
+	public String toString() {
+		return "ChargeOrder [orderIdApi=" + orderIdApi + ", number=" + number
+				+ ", pgSize=" + pgSize + ", billType=" + billType + "]";
+	}
 	public ChargeOrder() {
 		super();
 	}

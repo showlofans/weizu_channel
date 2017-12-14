@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import com.weizu.flowsys.api.singleton.ProductDTO;
+import com.weizu.flowsys.api.singleton.ProductIn;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
@@ -168,7 +171,8 @@ public class CallBackController {
 	public String WeizuCallBack(Integer errcode, String transaction_id,String user_order_id, String number,Integer status){
 //			@RequestParam(value = "flowsize", required = false)String flowsize,@RequestParam(value = "charge_fee", required = false)String charge_fee,
 //			@RequestParam(value = "realcash", required = false)String realcash,@RequestParam(value = "msg", required = false)String msg
-		String res = "ok";
+		String successTag = "ok";
+		String res = "";
 		if(errcode.equals(0)){
 			Long orderId = Long.parseLong(user_order_id);				//用户订单号
 			PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
@@ -185,19 +189,19 @@ public class CallBackController {
 				default:
 					break;
 				}
+				if(!"success".equals(res)){//success返ok
+					System.out.println("状态回调失败");
+					System.out.println(errcode+":" +transaction_id+":"  +user_order_id+":"  +number+":"  + status);
+					successTag = "状态回调失败";
+				}
 			}else{
-				res = "已经有过回调";
+				System.out.println("已经有过回调");
 			}
-			if(!"success".equals(res)){
-            	System.out.println("状态回调失败");
-    			System.out.println(errcode+":" +transaction_id+":"  +user_order_id+":"  +number+":"  + status);
-    			res = "状态回调失败";
-    		}
 		}else{
 			System.out.println("errCode:" +errcode);
 		}
-		System.out.println("successTag:"+res);
-		return res;
+		System.out.println("successTag:"+successTag);
+		return successTag;
 	}
 	/**
 	 * @description: 乐疯回调接口
@@ -386,6 +390,124 @@ public class CallBackController {
 				}else{
 					successTag = "errorCode："+code;
 				}
+			}
+			//根据订单号去更新数据库，并返回回调结果
+			
+		} catch (JSONException e) {  
+			e.printStackTrace();  
+		}  
+		System.out.println("successTag:"+successTag);
+		return successTag;
+	}
+	/**
+	 * @description: 迈远系统GET回调
+	 * @param request
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月14日 下午4:06:23
+	 */
+	@ResponseBody
+	@RequestMapping(value=CallBackURL.Maiyuan,method=RequestMethod.GET)
+	public String MaiyuanCallBack(String TaskId, String mobile, Integer Status, String ReportTIme,
+			String ReportCode, String OutTradeNo,String sign){
+		String successTag = "ok";
+		String statusDetail = "";
+		int myStatus = -1;
+		try {  
+				System.out.println("其他参数：sign="+sign + " ReportCode=" + ReportCode+ "mobile="+mobile + " ReportTIme=" + ReportTIme );
+				//初始化参数
+				long orderId = Long.parseLong(OutTradeNo.trim());
+				PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
+				Boolean hasCall = OrderResultEnum.SUCCESS.getCode().equals(purchasePo.getHasCallBack());
+				String res = "";
+				if(!hasCall){//上一次没有回调成功
+					//Long orderBackTime = DateUtil.strToDate(report_time, null).getTime();
+					switch (Status) {
+					case 4:
+						myStatus = OrderStateEnum.CHARGED.getValue();
+						statusDetail = OrderStateEnum.CHARGED.getDesc();
+						break;
+					case 5:
+						myStatus = OrderStateEnum.UNCHARGE.getValue();
+						statusDetail = OrderStateEnum.UNCHARGE.getDesc();
+						break;
+						
+					default:
+						break;
+					}
+					res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, TaskId, System.currentTimeMillis(), myStatus,null , statusDetail));
+					if(!"success".equals(res)){
+						successTag = res;
+					}
+				}
+			//根据订单号去更新数据库，并返回回调结果
+			
+		} catch (JSONException e) {  
+			e.printStackTrace();  
+		}  
+		System.out.println("successTag:"+successTag);
+		return successTag;
+	}
+	/**
+	 * @description: 迈远系统Post回调
+	 * @param jsonStr
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月14日 下午4:38:13
+	 */
+	@ResponseBody
+	@RequestMapping(value=CallBackURL.Maiyuan,method=RequestMethod.POST)
+	public String MaiyuanCallBack(@RequestBody String jsonStr){
+		String successTag = "ok";
+		String statusDetail = "";
+		int myStatus = -1;
+		try {  
+			JSONArray jsonArr = JSON.parseArray(jsonStr);
+			boolean isError = false;
+			if(jsonArr != null && jsonArr.size() > 0){
+				for (Object object : jsonArr) {
+	        		JSONObject jsonObj = (JSONObject)object;
+	        		int Status = jsonObj.getIntValue("Status");
+	        		String taskId = jsonObj.getString("TaskID");
+	        		String mobile = jsonObj.getString("Mobile");
+	        		String ReportTIme = jsonObj.getString("ReportTIme");
+	        		String OutTradeNo = jsonObj.getString("OutTradeNo");
+	        		String ReportCode = jsonObj.getString("ReportCode");
+	        		String sign = jsonObj.getString("sign");
+//	        	System.out.println("type=" + name);
+	        		System.out.println("其他参数：sign="+sign + " ReportCode=" + ReportCode+ "mobile="+mobile + " ReportTIme=" + ReportTIme );
+	        		//初始化参数
+	        		long orderId = Long.parseLong(OutTradeNo.trim());
+	        		PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
+	        		Boolean hasCall = OrderResultEnum.SUCCESS.getCode().equals(purchasePo.getHasCallBack());
+	        		String res = "";
+	        		if(!hasCall){//上一次没有回调成功
+	        			//Long orderBackTime = DateUtil.strToDate(report_time, null).getTime();
+	        			switch (Status) {
+	        			case 4:
+	        				myStatus = OrderStateEnum.CHARGED.getValue();
+	        				statusDetail = OrderStateEnum.CHARGED.getDesc();
+	        				break;
+	        			case 5:
+	        				myStatus = OrderStateEnum.UNCHARGE.getValue();
+	        				statusDetail = OrderStateEnum.UNCHARGE.getDesc();
+	        				break;
+	        				
+	        			default:
+	        				break;
+	        			}
+	        			res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, taskId, System.currentTimeMillis(), myStatus,null , statusDetail));
+	        			if(!"success".equals(res)){
+	        				isError = true;
+//	        				successTag = res;
+	        			}
+	        		}
+	        	}
+	        }else{
+	        	successTag = "没有返回数据";
+	        }
+			if(isError){
+				successTag = "更新数据库失败";
 			}
 			//根据订单号去更新数据库，并返回回调结果
 			

@@ -44,6 +44,17 @@ public class OrderIn implements Cloneable {
 		this.msg = msg;
 	}
 	
+	@Override
+	public String toString() {
+		return "OrderIn [transaction_id=" + transaction_id + ", user_order_id="
+				+ user_order_id + ", number=" + number + ", flowsize="
+				+ flowsize + ", charge_fee=" + charge_fee + ", created_at="
+				+ created_at + ", created_at_time=" + created_at_time
+				+ ", status=" + status + ", msg=" + msg + "]";
+	}
+
+
+
 	public OrderIn(String transaction_id, String user_order_id, String number,
 			String flowsize, String charge_fee, String created_at, int status,
 			String msg) {

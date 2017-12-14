@@ -142,6 +142,10 @@ line-height:220px;
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 <script type="text/javascript">
+/* function strExclude(){
+	var pattern = new RegExp("[~'!@#$%^&*()-+_=:]");
+	pattern.test($("#name").val()
+} */
 function startRegister(){
 	var userName = $('#userName').val();
 	var userPass = $('#userPass').val();

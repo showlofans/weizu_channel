@@ -1,0 +1,12 @@
+调整硕郎回调相应，向下回调判断（减少打印）
+
+接下来工作：自动绑定银行卡。数据库备份。
+
+产品编码设计。日志设计。重复订单检查
+
+要根据产品编码，获得产品的具体参数，来确定需要传什么参数给上游
+
+account=ncwzwp&v=1.1&action=getPackage&range=0&type=0&sign=c47fae77bd6143c2eb150ead3b73a20b
+
+{"Code":"0","Message":"OK","Packages":[{"Type":"1","Package":"10","Name":"10M","Price":"3.0000"},{"Type":"1","Package":"30","Name":"30M","Price":"5.0000"},{"Type":"1","Package":"70","Name":"70M","Price":"10.0000"},{"Type":"1","Package":"100","Name":"100M","Price":"10.0000"},{"Type":"1","Package":"150","Name":"150M","Price":"20.0000"},{"Type":"1","Package":"200","Name":"200M","Price":"20.0000"},{"Type":"1","Package":"300","Name":"300M","Price":"20.0000"},{"Type":"1","Package":"500","Name":"500M","Price":"30.0000"},{"Type":"1","Package":"1000","Name":"1G","Price":"50.0000"},{"Type":"1","Package":"2000","Name":"2G","Price":"70.0000"},{"Type":"1","Package":"3000","Name":"3G","Price":"100.0000"},{"Type":"1","Package":"4000","Name":"4G","Price":"130.0000"},{"Type":"1","Package":"6000","Name":"6G","Price":"180.0000"},{"Type":"1","Package":"11000","Name":"11G","Price":"280.0000"}]}
+
