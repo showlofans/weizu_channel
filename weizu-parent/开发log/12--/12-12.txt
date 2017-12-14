@@ -1,0 +1,10 @@
+http://120.55.162.224/flowsys/callBack/weizu.do
+
+平台设置了主动回调地址，就不会调用主动查询了
+
+多出了一单，什么时候会多生成订单，自己数据库没有，直接生成给了上游
+循环多出了9单，
+上游问题，导致我们自己的问题
+
+加入签名：account=weizuwp&app_key=Z0TQ2pM6H0&mobile=18300309834&package=10
+account=weizuwp&app_key=Z0TQ2pM6H0&mobile=18300309834&package=10&app_secret=c77eb7708e03ef1c9cb13e30faf0bc29

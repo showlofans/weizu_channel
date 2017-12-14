@@ -61,13 +61,13 @@ public class SendCallBackUtil {
 			int i = 0;
 //			do{
 //				try {
-					i++;
+//					i++;
 					String backJson = JSONObject.toJSONString(rjdto);
 					System.out.println("推送的json:"+ backJson);
 					resMsg = HttpRequest.sendPost(reportUrl, backJson);
-					if(i== CALL_BACK_TIME){
-						return "error";
-					}
+//					if(i== CALL_BACK_TIME){
+//						return "error";
+//					}
 //					if( i < 4 && !"ok".equals(resMsg) ){
 //						Thread.sleep(30 * 1000 * i);//30 60 90
 //					}else{
@@ -118,7 +118,7 @@ public class SendCallBackUtil {
  				String callBack = accountPurchaseAO.updatePurchaseState(params);//orderId, backTime, myStatus, statusDetail, reqNo
  				if("success".equals(callBack)){//没有回调，本次回调成功
  					AgencyBackwardPo agencyPo = agencyAO.getAgencyByAccountId(purchasePo.getAccountId());
- 					if(StringHelper.isNotEmpty(orderIdFrom) && agencyPo != null){
+ 					if(StringHelper.isNotEmpty(orderIdFrom) && agencyPo != null && StringHelper.isNotEmpty(agencyPo.getCallBackIp())){
  						//把rjdto按照代理商返回
  						if(!"success".equals(sendCallBack(rjdto, agencyPo.getCallBackIp()))){//回调成功，更新数据库回调状态
  							//					logger.config("向下返回调失败");

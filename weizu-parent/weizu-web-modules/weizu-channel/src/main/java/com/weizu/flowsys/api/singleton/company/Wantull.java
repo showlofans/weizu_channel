@@ -48,8 +48,8 @@ public class Wantull implements BaseInterface {
 	public ChargeDTO charge() {
 		ExchangePlatformPo epPo = baseParams.getEpo();
 		String params = toParams();
+		System.out.println(epPo.getEpPurchaseIp()+"?"+params);
 		 String jsonStr = HttpRequest.sendGet(epPo.getEpPurchaseIp(), params);
-		 System.out.println(epPo.getEpPurchaseIp()+"?"+params);
 		 ChargeDTO chargeDTO = null;
 		 System.out.println(jsonStr);
 		 try {  

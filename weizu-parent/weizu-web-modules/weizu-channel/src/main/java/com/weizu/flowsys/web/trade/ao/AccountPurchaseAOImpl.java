@@ -28,6 +28,7 @@ import com.weizu.flowsys.web.trade.pojo.AccountPurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseStateParams;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
+import com.weizu.web.foundation.String.StringHelper;
 
 @Service(value="accountPurchaseAO")
 public class AccountPurchaseAOImpl implements AccountPurchaseAO {
@@ -121,7 +122,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 		}
 		if(purchasePo != null){
 			AgencyBackwardPo agencyPo = agencyVODao.getAgencyByAccountId(purchasePo.getAccountId());
-			if(agencyPo != null && !orderResult.equals(OrderStateEnum.CHARGING.getValue())){//不是充值进行，才返回调
+			if(agencyPo != null && StringHelper.isNotEmpty(agencyPo.getCallBackIp()) && !orderResult.equals(OrderStateEnum.CHARGING.getValue())){//不是充值进行，才返回调
 				sendCallBack.sendCallBack(new ResponseJsonDTO(orderId, purchasePo.getOrderIdFrom(), orderResult, "（批量推送）"+orderResultDetail, System.currentTimeMillis(),purchasePo.getChargeTel()), agencyPo.getCallBackIp());
 			}
 		}
@@ -199,7 +200,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 		}
 		if(purchasePo != null){
 			AgencyBackwardPo agencyPo = agencyVODao.getAgencyByAccountId(purchasePo.getAccountId());
-			if(agencyPo != null){
+			if(agencyPo != null && StringHelper.isNotEmpty(agencyPo.getCallBackIp())){
 				sendCallBack.sendCallBack(new ResponseJsonDTO(orderId, purchasePo.getOrderIdFrom(), orderResult, "（推送）"+orderResultDetail, System.currentTimeMillis(),purchasePo.getChargeTel()), agencyPo.getCallBackIp());
 			}
 		}

@@ -336,7 +336,18 @@ public class ChargeImpl implements IChargeFacet {
 				sqlMap.put("exceptionDTO", charge);
 				return sqlMap;
 			}
-			PurchasePo purPo = purchaseDAO.hasDoublePurchase(null, chargeParams.getOrderIdFrom());
+//			String doubleMsg = ""; 
+			
+			PurchasePo purPo = purchaseDAO.hasDoublePurchase(null, chargeParams.getOrderIdFrom());//下游传重复订单号过来
+//			PurchasePo latestPurchasePo = purchaseDAO.getLatestOneByTel(chargeParams.getNumber(), PgServiceTypeEnum.PGCHARGE.getValue());
+//			if(latestPurchasePo != null){
+//				int minutes = (int) ((System.currentTimeMillis() - latestPurchasePo.getOrderArriveTime()) / (1000*60));
+//				if(minutes <= 1){
+//					doubleMsg = "一分钟内出现两次相同号码";
+//				}
+//			}
+			
+			
 			boolean hasD = purPo != null;
 			if(hasD && purPo.getChargeTel().equals(chargeParams.getNumber())){
 				chargeEnum = ChargeStatusEnum.HAS_DOUBLE_PURCHAE;
@@ -344,6 +355,7 @@ public class ChargeImpl implements IChargeFacet {
 				sqlMap.put("exceptionDTO", charge);
 				return sqlMap;
 			}
+			
 			sqlMap.put("backPo", backPo);
 			ChargeAccountPo accountPo =  chargeAccountAO.getAccountByAgencyId(backPo.getId(), billType);
 			if(accountPo == null){

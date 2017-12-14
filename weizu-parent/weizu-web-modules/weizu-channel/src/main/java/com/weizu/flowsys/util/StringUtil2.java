@@ -1,12 +1,8 @@
 package com.weizu.flowsys.util;
 
-import java.security.MessageDigest;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
-
-import org.apache.ibatis.ognl.Token;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import com.weizu.flowsys.web.base.ATT;
 import com.weizu.web.foundation.StringUtil;
@@ -42,6 +38,16 @@ public class StringUtil2 {
 		}
 		return text;
 	}
+	
+	public   static   String filterString(String   str)   throws   PatternSyntaxException   {      
+        // 只允许字母和数字        
+        // String   regEx  =  "[^a-zA-Z0-9]";                      
+           // 清除掉所有特殊字符   
+		  String regEx="[`~!@#$%^&*()+=|{}':;',//[//].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";   
+		  Pattern   p   =   Pattern.compile(regEx);      
+		  Matcher   m   =   p.matcher(str);      
+		  return   m.replaceAll("").trim();      
+	  }      
 
 	/**
 	 * @description:根据前台传的字符串转成相应的折扣

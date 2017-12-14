@@ -41,6 +41,13 @@ public class CallBackURL extends BaseURL{
 	 * 真实地址：http://120.55.162.224/flowsys/callBack/Wantull.do<br>
 	 */
 	public static final String Wantull = "/Wantull"+ DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 仁智-迈远系统回调接口<br>
+	 * 真实地址：http://120.55.162.224/flowsys/callBack/Maiyuan.do<br>
+	 */
+	public static final String Maiyuan = "/Maiyuan"+ DYNAMIC_WEB_SUFFIX;
+	
+	
 	
 	
 }
