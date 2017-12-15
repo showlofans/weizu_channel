@@ -86,5 +86,9 @@ public class ProductCodeDAOImpl extends DaoImpl<ProductCodePo, Long> implements
 	public ProductCodePo getOneProductCode(Map<String, Object> map) {
 		return sqlSessionTemplate.selectOne("getOneProductCode", map);
 	}
+	@Override
+	public ProductCodePo selectByPrimaryKey(Long id) {
+		return sqlSessionTemplate.selectOne("selectByPrimaryKey", id);
+	}
 
 }

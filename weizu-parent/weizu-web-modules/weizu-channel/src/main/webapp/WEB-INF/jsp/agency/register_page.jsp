@@ -51,25 +51,25 @@
       <div class="row cl" >
         <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
         <div class="formControls col-xs-8">
-        	<input id="userName" value="${loginMap.userName }" required name="userName"  autocomplete="off" type="text" placeholder="账户" class="input-text size-L">
+        	<input id="userName" value="${loginMap.userName }" required name="userName"   autocomplete="off" type="text" placeholder="账户" class="input-text size-L isContainsSpecialChar">
         </div>
       </div>
       <div class="row cl">
         <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60e;</i></label>
         <div class="formControls col-xs-8">
-        	<input id="userPass" name="userPass"  value="${resultMap.reg.userPass }" type="text" required class="input-text size-L" placeholder="密码" >
+        	<input id="userPass" name="userPass"  value="${resultMap.reg.userPass }" type="text"  required class="input-text size-L isContainsSpecialChar" placeholder="密码" >
         </div>
       </div>
       <div class="row cl">
         <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe602;</i></label>
         <div class="formControls col-xs-8">
-        	<input id="userRealName" value="${resultMap.reg.userRealName }" name="userRealName" required  autocomplete="off" type="text" placeholder="真实姓名" class="input-text size-L">
+        	<input id="userRealName" value="${resultMap.reg.userRealName }" name="userRealName"  required  autocomplete="off" type="text" placeholder="真实姓名" class="input-text size-L isContainsSpecialChar">
         </div>
       </div>
       <div class="row cl">
         <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe6c7;</i></label>
         <div class="formControls col-xs-8">
-               <input id="agencyTel" name="agencyTel" value="${resultMap.reg.agencyTel }" required  autocomplete="off" type="text" placeholder="联系电话" class="input-text size-L">
+               <input id="agencyTel" name="agencyTel" value="${resultMap.reg.agencyTel }" required  autocomplete="off" type="text" placeholder="联系电话" class="input-text size-L isContainsSpecialChar">
         </div>
       </div>
       <%-- <div class="row cl">
@@ -152,6 +152,7 @@
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
 <script type="text/javascript" src="/view/static/h-ui/js/H-ui.min.js"></script>
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/validate-methods.js"></script>
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 <script type="text/javascript">
 /**跳转登陆页面*/
@@ -175,11 +176,8 @@ function testHas(){
 		//$('#verifyCode').focus();
 	    $("#regForm").validate({
 	    	rules:{
-	    		verifyCode : {
-	    			required:true
-	    		},
 	    		userName : {
-		    			remote:{//验证用户名是否存在
+	    			remote:{//验证用户名是否存在
 		    				  type:"get",
 		    	               url:"/flowsys/agency/register_check_name.do",             //servlet
 		    	               data:{
@@ -187,7 +185,19 @@ function testHas(){
 		    			}
 	    			}
 	    		},
+	    		/* userRealName : {
+	    			isContainsSpecialChar:true
+	    		}, */
+	    		agencyTel : {
+	    			isPhone:true,	
+	    		},
+	    		userPass : {
+	    			minlength:5,	
+	    		},
 	    		verifyCode : {
+	    			isContainsSpecialChar:true,
+	    			required:true,
+	    			
 	    			remote:{//验证用户名是否存在
 	    				  type:"get",
 	    	               url:"/flowsys/agency/register_check_code.do",             //servlet

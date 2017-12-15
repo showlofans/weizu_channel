@@ -105,8 +105,9 @@
 ////		String userName = "罗大大";// 201103
 ////		String userName = "18706732390";// hou77833
 ////		String userName = "A661844";// 123456
-////		String userName = "xiao";// 123456
-//		String userName = "123";// 123456
+////		String userName = "xiao";// MzMzMjIxLi4u 密码编译
+//		String userName = "q284408088";// MzMzMjIxLi4u 密码编译
+////		String userName = "123";// 123456
 //		AgencyBackwardPo agencyPo = agencyVODao.get(new WherePrams("user_name", "=", userName));
 //		//得到密码
 //		String userPass = Hash.BASE_UTIL.decode(agencyPo.getUserPass());

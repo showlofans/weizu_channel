@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.annotation.Resource;
+
 import org.weizu.api.forward.weizu.OrderState;
 import org.weizu.api.util.HttpRequest;
 
@@ -22,7 +24,9 @@ import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
+import com.weizu.flowsys.web.channel.dao.IProductCodeDAO;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
+import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.MD5;
 import com.weizu.web.foundation.String.StringHelper;
@@ -41,6 +45,8 @@ public class Weizu implements BaseInterface {
 	private static String epEngId;
 	private static BaseP baseParams;
 	private static String sign;
+//	@Resource
+//	private IProductCodeDAO productCodeDAO;
 	
 	
     private Weizu (){}  
@@ -230,12 +236,12 @@ public class Weizu implements BaseInterface {
 	public String toParams() {
 		ExchangePlatformPo epPo = baseParams.getEpo();
 		 StringBuffer sbParams = new StringBuffer();
-		 
+		 ProductCodePo pc = baseParams.getProductCodePo();
 		sbParams.append("username=").append(epPo.getEpUserName());
 		sbParams.append("&number=").append(baseParams.getChargeTel());
-		sbParams.append("&flowsize=").append(baseParams.getProductCode());
+		sbParams.append("&flowsize=").append(pc.getProductCode());
 		sbParams.append("&user_order_id=").append(baseParams.getOrderId());
-		sbParams.append("&scope=").append(getScope(baseParams.getServiceType()));
+		sbParams.append("&scope=").append(getScope(pc.getServiceType()));
 		
 		if(CallBackEnum.POSITIVE.getValue().equals(epPo.getEpCallBack()) && StringHelper.isNotEmpty(epPo.getEpCallBackIp())){
 			sbParams.append("&reporturl=").append(epPo.getEpCallBackIp());
@@ -255,8 +261,10 @@ public class Weizu implements BaseInterface {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年9月19日 上午9:44:04
 	 */
-	private int getScope(int serviceType){
+	private int getScope(Integer serviceType){
+//		ProductCodePo productPo = productCodeDAO.selectByPrimaryKey(baseParams.getProductCodeId());
 		int scope = 0;	//默认全国漫游
+//		int serviceType = productPo.getServiceType();
 		switch (serviceType) {
 		case 1://非全国漫游
 			scope = 1;

@@ -208,7 +208,7 @@ public class ChargeImpl implements IChargeFacet {
 				}
 				
 				if(!isChannelStateClose && canCharge){
-					BaseInterface bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(pc.getProductCode(),orderId,chargeTel,chargeParams.getScope(),epPo));
+					BaseInterface bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(pc,orderId,chargeTel,epPo));
 					ChargeDTO chargeDTO = bi.charge();
 					if(chargeDTO == null){
 						orderResult = OrderStateEnum.DAICHONG.getValue();
@@ -374,7 +374,7 @@ public class ChargeImpl implements IChargeFacet {
 					sqlMap.put("exceptionDTO", charge);
 					return sqlMap;
 				}else{
-//					ChannelChannelPo channelPo = channelChannelDao.get(new WherePrams("id", "=", ratePo.getChannelId()));
+					ChannelChannelPo channelPo = channelChannelDao.get(new WherePrams("id", "=", ratePo.getChannelId()));
 //					boolean isChannelUseStateStoped = channelPo.getChannelUseState() == ChannelUseStateEnum.CLOSE.getValue();//通道状态停止
 //					if(isChannelUseStateStoped){//通道使用状态暂停，不能提单
 //						chargeEnum = ChargeStatusEnum.CHANNEL_CLOSED;
@@ -383,7 +383,7 @@ public class ChargeImpl implements IChargeFacet {
 //						return sqlMap;
 //					}else{
 //						sqlMap.put("ratePo", ratePo);
-//						sqlMap.put("channelPo", channelPo);
+						sqlMap.put("channelPo", channelPo);
 //					}
 				}
 			}

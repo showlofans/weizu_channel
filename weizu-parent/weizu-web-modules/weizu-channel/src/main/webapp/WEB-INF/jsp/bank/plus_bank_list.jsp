@@ -88,7 +88,7 @@
 						<td width="150">
 							<%-- <input type="hidden" value="${bank.id }"><!--  id="toBankId" -->
 							<input type="hidden"  value="${bank.agencyId }"><!-- id="toAgencyId" --> --%>
-							<input type="text" value="" class="input-text commitAmount"  placeholder=" 转账金额" style="" width="120"></td>
+							<input type="text" value="" class="input-text commitAmount"  placeholder=" 转账金额" maxlength="6" style="" width="120"></td>
 						<td width="200">
 							<input style="width:180" type="text" class="input-text Wdate realTime" value=""  onfocus="WdatePicker({isShowClear:false,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
 						</td>

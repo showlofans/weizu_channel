@@ -192,7 +192,8 @@ public class AgencyAOImpl implements AgencyAO {
 	public Map<String,Object> login(AgencyBackwardPo agencyBackward) {
 		String userPass = agencyBackward.getUserPass(); 
 		Map<String,Object> resultMap = new HashMap<String, Object>();
-		String userName = StringUtil2.filterString(agencyBackward.getUserName());
+//		String userName = StringUtil2.filterString(agencyBackward.getUserName());
+		String userName = agencyBackward.getUserName();
 		//防sql注入
 		if(StringHelper.isNotEmpty(userName)){
 			WherePrams where = new WherePrams("user_name", "=", userName);

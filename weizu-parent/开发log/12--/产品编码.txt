@@ -1,0 +1,13 @@
+编码对照表
+
+id
+产品编码   product_tag
+编码id      product_id
+编码类型  product_type
+供货商名称（平台）product_from_name
+供货商id（外键） product_from_id
+*产品原价  product_level
+
+产品编码的组成
+P+产品大小（话费用价值）+平台标志+添加时间
+

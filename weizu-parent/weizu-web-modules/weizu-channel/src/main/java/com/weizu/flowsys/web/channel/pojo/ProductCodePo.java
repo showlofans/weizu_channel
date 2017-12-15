@@ -43,7 +43,7 @@ public class ProductCodePo extends Po{
     @TempField
     private String pgValidity;			//流量有效期(PgValidityEnum)
     @TempField
-    private Integer circulateWay;				//流通方式（1-普通通道包，2-红包通道，3-转移包，4-共享包）
+    private Integer circulateWay;				//流通方式（1-普通通道包，2-红包通道，3-转移包，4-共享包）ChannelTypeEnum
     @TempField
     private String epName;			//平台名称
 

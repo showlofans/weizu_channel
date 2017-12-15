@@ -78,6 +78,9 @@ public class ProductCodeAOImpl implements ProductCodeAO {
 			if(productCodePo.getOperatorType() != null){
 				paramsMap.put("operatorType", productCodePo.getOperatorType());
 			}
+			if(productCodePo.getServiceType() != null){
+				paramsMap.put("serviceType", productCodePo.getServiceType());
+			}
 			if(productCodePo.getPgSize() != null){
 				paramsMap.put("pgSize", productCodePo.getPgSize());
 			}

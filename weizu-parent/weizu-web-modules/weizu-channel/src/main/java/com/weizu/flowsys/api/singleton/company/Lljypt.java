@@ -54,7 +54,7 @@ public class Lljypt implements BaseInterface {
 	            	billType = BillTypeEnum.BUSINESS_INDIVIDUAL.getValue();
 	            }
 	            //用我这边默认的对私账户充值
-	            chargeDTO = new ChargeDTO(tipCode, tipMsg, new ChargeOrder(orderIdApi, baseParams.getChargeTel(), baseParams.getProductCode(), billType));
+	            chargeDTO = new ChargeDTO(tipCode, tipMsg, new ChargeOrder(orderIdApi, baseParams.getChargeTel(), baseParams.getProductCodePo().getProductCode(), billType));
 			    // 最后输出到控制台  
 	            System.out.println(tipCode+"<--->"+tipMsg);  
 	  
@@ -148,7 +148,7 @@ public class Lljypt implements BaseInterface {
 				param.put(key, value);
 			}
 			param.put("accountVal", baseParams.getChargeTel());
-			param.put("product", baseParams.getProductCode());
+			param.put("product", baseParams.getProductCodePo().getProductCode());
 			param.put("outTradeNo", baseParams.getOrderId());
 			param.put("ts", timeStamp);
 			param.put("sign", sign);
@@ -196,7 +196,7 @@ public class Lljypt implements BaseInterface {
 				}else if("accountVal".equals(key)){
 					sbKeyValue.append(key).append(baseParams.getChargeTel());
 				}else if("product".equals(key)){
-					sbKeyValue.append(key).append(baseParams.getProductCode());
+					sbKeyValue.append(key).append(baseParams.getProductCodePo().getProductCode());
 				}else if("outTradeNo".equals(key)){
 					sbKeyValue.append(key).append(baseParams.getOrderId());
 				}

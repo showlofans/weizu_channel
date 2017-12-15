@@ -219,11 +219,13 @@ public class AgencyVODao extends DaoImpl<AgencyBackwardPo, Integer> implements A
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("id", agencyId);
 		params.put("userPass", userPass);
+		params.put("lastAccess", System.currentTimeMillis());
 		return sqlSessionTemplateASS.update("updatePass", params);
 	}
 
 	@Override
 	public int updateAgencyTag(Integer agencyId,Map<String,Object> params ) {
+		params.put("lastAccess", System.currentTimeMillis());
 		return sqlSessionTemplateASS.update("updateAgencyTag", params);
 	}
 

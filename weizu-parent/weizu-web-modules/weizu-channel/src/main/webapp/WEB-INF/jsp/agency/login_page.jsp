@@ -64,13 +64,13 @@ line-height:220px;
       <div class="row cl">
         <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
         <div class="formControls col-xs-8">
-        	<input id="userName" value="${loginMap.userName }" required name="userName"   autocomplete="off" type="text" placeholder="账户" class="input-text size-L">
+        	<input id="userName" value="${loginMap.userName }" required name="userName"   autocomplete="off" type="text" placeholder="账户" class="input-text size-L isContainsSpecialChar">
         </div>
       </div>
       <div class="row cl">
         <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60e;</i></label>
         <div class="formControls col-xs-8">
-          <input id="userPass" value="${loginMap.userPass }" required name="userPass"    autocomplete="off" type="password" placeholder="密码" class="input-text size-L">
+          <input id="userPass" value="${loginMap.userPass }" required name="userPass"    autocomplete="off" type="password" placeholder="密码" class="input-text size-L isContainsSpecialChar">
         </div>
       </div>
       <div class="row cl">
@@ -140,6 +140,7 @@ line-height:220px;
 <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
 <script type="text/javascript" src="/view/static/h-ui/js/H-ui.min.js"></script>
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/validate-methods.js"></script>
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 <script type="text/javascript">
 /* function strExclude(){
@@ -149,7 +150,7 @@ line-height:220px;
 function startRegister(){
 	var userName = $('#userName').val();
 	var userPass = $('#userPass').val();
-	window.location.href = "/flowsys/agency/register_page.do?userName="+userName+"&userPass="+userPass;
+	window.location.href = "/flowsys/agency/register_page.do";
 }
 
 function telLogin(){

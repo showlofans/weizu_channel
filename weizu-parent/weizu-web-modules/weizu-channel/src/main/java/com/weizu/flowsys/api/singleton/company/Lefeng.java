@@ -24,7 +24,9 @@ import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.StringUtil2;
+import com.weizu.flowsys.web.channel.dao.IProductCodeDAO;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
+import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.web.foundation.DateUtil;
@@ -37,6 +39,8 @@ public class Lefeng implements BaseInterface {
 
 	@Resource
 	private PurchaseDao purchaseDAO;
+//	@Resource
+//	private IProductCodeDAO productCodeDAO;
 	
 	private static Lefeng instance = new Lefeng();  
 	private static String epEngId;
@@ -59,19 +63,21 @@ public class Lefeng implements BaseInterface {
 	
 	private int getScope(Integer serviceType) {
 		int scope = 0;	//全国
-		switch (serviceType) {
-		case 0:		//全国
-			scope = 0;
-			break;
-		case 1:		//省内
-			scope = 1;
-			break;
-		case 2:		//省漫游 
-			scope = 2;
-			break;
-
-		default:
-			break;
+		if(serviceType != null){
+			switch (serviceType) {
+			case 0:		//全国
+				scope = 0;
+				break;
+			case 1:		//省内
+				scope = 1;
+				break;
+			case 2:		//省漫游 
+				scope = 2;
+				break;
+				
+			default:
+				break;
+			}
 		}
 		return scope;
 	}
@@ -81,7 +87,8 @@ public class Lefeng implements BaseInterface {
 		StringBuffer sbStr = new StringBuffer();
 		sbStr.append("userName").append(epPo.getEpUserName());
 		sbStr.append("mobile").append(baseParams.getChargeTel());
-		sbStr.append("orderMeal").append(baseParams.getProductCode());
+		ProductCodePo pc = baseParams.getProductCodePo();
+		sbStr.append("orderMeal").append(pc.getProductCode());
 		sbStr.append("timeStamp").append(currentTime);
 		sbStr.append("key").append(epPo.getEpApikey());
 		String sign = SHA1.getSha1(sbStr.toString(), MD5.LOWERCASE);
@@ -122,13 +129,14 @@ public class Lefeng implements BaseInterface {
 	            	billType = BillTypeEnum.BUSINESS_INDIVIDUAL.getValue();
 	            }
 	            int rspCode = 0;
+	            ProductCodePo pc = baseParams.getProductCodePo();
 	            if("0000".equals(tipCode)){
 	            	rspCode = OrderResultEnum.SUCCESS.getCode();
 	            	//用我这边默认的对私账户充值
-	            	chargeDTO = new ChargeDTO(rspCode, tipMsg, new ChargeOrder(null, baseParams.getChargeTel(), baseParams.getProductCode(), billType));
+	            	chargeDTO = new ChargeDTO(rspCode, tipMsg, new ChargeOrder(null, baseParams.getChargeTel(), pc.getProductCode(), billType));
 	            }else{
 	            	rspCode = OrderResultEnum.ERROR.getCode();
-	            	chargeDTO = new ChargeDTO(rspCode, tipMsg, new ChargeOrder(null, baseParams.getChargeTel(), baseParams.getProductCode(), billType));
+	            	chargeDTO = new ChargeDTO(rspCode, tipMsg, new ChargeOrder(null, baseParams.getChargeTel(), pc.getProductCode(), billType));
 	            	// 最后输出到控制台  
 	            	System.out.println(tipCode+"<--->"+tipMsg);  
 	            }
@@ -199,16 +207,18 @@ public class Lefeng implements BaseInterface {
 	@Override
 	public String toParams() {
 		ExchangePlatformPo epPo = baseParams.getEpo();
+		
 		JSONObject param = new JSONObject();
 		Long timeStamp = System.currentTimeMillis()/1000;		//对外统一的时间戳
 //		Long.toString(i)
-		
+		ProductCodePo pc = baseParams.getProductCodePo();
 		param.put("userName", epPo.getEpUserName());
 		param.put("mobile", baseParams.getChargeTel());
-		param.put("orderMeal", baseParams.getProductCode());	//订购产品id
+		param.put("orderMeal", pc.getProductCode());	//订购产品id
 		param.put("orderTime", "1");						//固定值1
 		param.put("msgId", Long.toString(baseParams.getOrderId()));	//我的订单号
-		param.put("range", Integer.toString(getScope(baseParams.getServiceType())) );
+		
+		param.put("range", Integer.toString(getScope(pc.getServiceType())) );
 		param.put("sign", getSign(epPo, timeStamp));
 		param.put("timeStamp",Long.toString(timeStamp) );
 //		boolean callB = epPo.getEpCallBack().equals(CallBackEnum.POSITIVE.getValue()) && StringHelper.isNotEmpty(epPo.getEpCallBackIp());

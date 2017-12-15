@@ -4,6 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Date;
 
+import javax.annotation.Resource;
+
+import org.springframework.data.geo.Circle;
 import org.weizu.api.util.HttpRequest;
 
 import com.alibaba.fastjson.JSON;
@@ -18,12 +21,16 @@ import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 import com.weizu.flowsys.api.weizu.charge.ChargeOrder;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
+import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
+import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.StringUtil2;
+import com.weizu.flowsys.web.channel.dao.IProductCodeDAO;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
+import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.MD5;
 import com.weizu.web.foundation.String.StringHelper;
@@ -33,6 +40,9 @@ public class Wantull implements BaseInterface {
 	private static Wantull instance = new Wantull();  
 	private static String epEngId;
 	private static BaseP baseParams;
+//	@Resource
+//	private IProductCodeDAO productCodeDAO;
+	
 //	private static String [] specialKeys = new String[]{"clientId","merchant","version"};
 	private Wantull() {
 	}
@@ -184,6 +194,7 @@ public class Wantull implements BaseInterface {
 	public String toParams() {
 		ExchangePlatformPo platformPo = baseParams.getEpo();
 		String sign = "";
+		ProductCodePo pc = baseParams.getProductCodePo();
 		StringBuffer signBuffer = new StringBuffer();
 		signBuffer.append("account=");
 		signBuffer.append(platformPo.getEpUserName());
@@ -192,7 +203,7 @@ public class Wantull implements BaseInterface {
 		signBuffer.append("mobile=");
 		signBuffer.append(baseParams.getChargeTel());
 		signBuffer.append("&package=");
-		signBuffer.append(baseParams.getProductCode());
+		signBuffer.append(pc.getProductCode());
 		signBuffer.append("&app_secret=");
 		signBuffer.append(platformPo.getEpApikey());
 		try {
@@ -212,9 +223,9 @@ public class Wantull implements BaseInterface {
 		paramBuffer.append("&out_trade_no=");
 		paramBuffer.append(baseParams.getOrderId());
 		paramBuffer.append("&package=");
-		paramBuffer.append(baseParams.getProductCode());
+		paramBuffer.append(pc.getProductCode());
 		paramBuffer.append("&range=");
-		paramBuffer.append(getRange());
+		paramBuffer.append(getRange(pc));
 		
 //		signBuffer.append("&range=");
 //		signBuffer.append(getRange());
@@ -252,28 +263,62 @@ public class Wantull implements BaseInterface {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年12月11日 下午2:26:24
 	 */
-//	private int getRange(int serviceType,String pgValidate){
-	private int getRange(){
-//		//漫游
-//		boolean roaming = ServiceTypeEnum.PROVINCE_ROAMING.getValue() == serviceType;
-//		//省内
-//		boolean province = ServiceTypeEnum.PROVINCE.getValue() == serviceType;
-//		//月包漫游
-//		boolean monthRoaming = roaming && PgValidityEnum.MONTH_DAY_DATA.getValue().equals(pgValidate);
-//		//月包省内
-//		boolean monthProvince = province && PgValidityEnum.MONTH_DAY_DATA.getValue().equals(pgValidate);
-//		//月包漫游
-//		boolean monthRoaming = roaming && PgValidityEnum.MONTH_DAY_DATA.getValue().equals(pgValidate);
-//		//月包漫游
-//		boolean monthRoaming = roaming && PgValidityEnum.MONTH_DAY_DATA.getValue().equals(pgValidate);
-//		//月包漫游
-//		boolean monthRoaming = roaming && PgValidityEnum.MONTH_DAY_DATA.getValue().equals(pgValidate);
-//		//月包漫游
-//		boolean monthRoaming = roaming && PgValidityEnum.MONTH_DAY_DATA.getValue().equals(pgValidate);
-//		//月包漫游
-//		boolean monthRoaming = roaming && PgValidityEnum.MONTH_DAY_DATA.getValue().equals(pgValidate);
-//		
-		return 0;
+	private int getRange(ProductCodePo pc){
+		int range = 0;
+		int serviceType = pc.getServiceType();
+		String pgValidity = pc.getPgValidity();
+		int cirulateWay = pc.getCirculateWay();
+		//漫游
+		Boolean isRoaming = ServiceTypeEnum.NATION_WIDE.getValue()==serviceType || ServiceTypeEnum.PROVINCE_ROAMING.getValue() == serviceType;
+		//省内
+		boolean isProvince = ServiceTypeEnum.PROVINCE.getValue()==serviceType;
+		if(isProvince){//省内
+			if(PgValidityEnum.MONTH_DAY_DATA.getValue().equals(pgValidity)){
+				range = 0;
+			}
+			else if(ChannelTypeEnum.RED_PACKET.getValue().equals(cirulateWay)){
+				range = 2;
+			}
+			else if(PgValidityEnum.ONE_DAY_DATA.getValue().equals(pgValidity)){
+				range = 6;
+			}
+			else if(PgValidityEnum.THREE_DAY_DATA.getValue().equals(pgValidity)){
+				range = 8;
+			}
+			else if(PgValidityEnum.SEVEN_DAY_DATA.getValue().equals(pgValidity)){
+				range = 10;
+			}else{
+				range = 99;
+			}
+		}else if(isRoaming){//漫游包
+			if(ChannelTypeEnum.MOBILE.getValue().equals(cirulateWay)){
+				range = 3;
+			}
+			else if(PgValidityEnum.TWO_MONTH_DATA.getValue().equals(pgValidity)){
+				range = 4;
+			}
+			else if(PgValidityEnum.ONE_DAY_DATA.getValue().equals(pgValidity)){
+				range = 5;
+			}
+			else if(PgValidityEnum.THREE_DAY_DATA.getValue().equals(pgValidity)){
+				range = 7;
+			}
+			else if(PgValidityEnum.SEVEN_DAY_DATA.getValue().equals(pgValidity)){
+				range = 9;
+			}
+			else if(PgValidityEnum.ONE_SEASON_DATA.getValue().equals(pgValidity)){
+				range = 11;
+			}
+			else if(PgValidityEnum.HALF_YEAR_DATA.getValue().equals(pgValidity)){
+				range = 12;
+			}
+			else if(PgValidityEnum.ONE_YEAR_DATA.getValue().equals(pgValidity)){
+				range = 13;
+			}else{
+				range = 99;
+			}
+		}
+		return range;
 	}
 	
 //	private String getChargeSign(String epOtherParams){
