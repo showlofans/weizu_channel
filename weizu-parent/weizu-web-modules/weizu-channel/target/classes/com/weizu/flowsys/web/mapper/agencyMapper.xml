@@ -413,6 +413,9 @@ WHERE a2.root_agency_id=4 and active1.rate_discount_id=22 and active1.bind_state
   		<if test="userPass != null">
   			user_pass = #{userPass}
   		</if>
+  		<if test="lastAccess != null">
+  			,last_access = #{lastAccess}
+  		</if>
   	</set>
   	<where>
   		id = #{id}
@@ -426,6 +429,9 @@ WHERE a2.root_agency_id=4 and active1.rate_discount_id=22 and active1.bind_state
   		</if>
   		<if test="userApiKey != null">
   			,user_api_key = #{userApiKey}
+  		</if>
+  		<if test="lastAccess != null">
+  			,last_access = #{lastAccess}
   		</if>
   	</set>
   	<where>

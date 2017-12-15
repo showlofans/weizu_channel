@@ -24,14 +24,14 @@
 			<div class="row cl">
 				<label class="form-label col-xs-4 col-sm-3">原密码：</label>
 				<div class="formControls col-xs-8 col-sm-9">
-					<input type="password" class="input-text" style="width:350px;" required value="" placeholder="" id="lastPass" name="lastPass">
+					<input type="password" class="input-text isContainsSpecialChar" style="width:350px;" required value="" placeholder="" id="lastPass" name="lastPass">
 				</div>
 			</div>
 		</c:if>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">新密码：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text"  style="width:350px;" required value="" placeholder="输入新密码" id="enterPass" name="enterPass">
+				<input type="text" class="input-text isContainsSpecialChar"  style="width:350px;" required value="" placeholder="输入新密码" id="enterPass" name="enterPass">
 			</div>
 		</div>
 		<div class="row cl">
@@ -47,6 +47,7 @@
 <script type="text/javascript" src="/view/static/h-ui.admin/js/H-ui.admin.js"></script>
 <script type="text/javascript" src="/view/lib/layer/2.4/layer.js"></script>  
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/validate-methods.js"></script>
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 <script type="text/javascript">
 /* function cancelEdit(){

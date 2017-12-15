@@ -47,6 +47,10 @@ public enum PgValidityEnum {
 	/**
 	 * 季度包
 	 */
+	TWO_MONTH_DATA("双月包", "60"),
+	/**
+	 * 季度包
+	 */
 	ONE_SEASON_DATA("季度包", "90"),
 	/**
 	 * 半年包

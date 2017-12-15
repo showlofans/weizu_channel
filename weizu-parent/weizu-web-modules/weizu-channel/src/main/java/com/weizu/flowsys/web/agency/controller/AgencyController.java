@@ -457,7 +457,7 @@ public class AgencyController {
 			if(!"该用户名不存在！".equals(msg)){
 				Map<String, Object> resultMap = new HashMap<String, Object>();
 				resultMap.put("reg", agencyBackward);
-				resultMap.put("msg","用户名"+agencyBackward.getUserName()+"已注册，不需要重复注册" + msg);
+				resultMap.put("msg","用户名"+agencyBackward.getUserName()+"或者手机号已注册，不需要重复注册" + msg);
 				return new ModelAndView("/agency/register_page","resultMap",resultMap);
 			}
 			//注册用户

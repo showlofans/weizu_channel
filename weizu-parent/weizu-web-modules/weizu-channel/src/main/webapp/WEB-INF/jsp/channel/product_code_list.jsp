@@ -198,7 +198,6 @@
 
 <!--请在下方写此页面业务相关的脚本-->
 <!-- jQuery -->
-<script type="text/javascript" charset="utf8" src="/view/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="/view/lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript">
 /*编码-删除*/

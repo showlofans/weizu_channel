@@ -271,23 +271,23 @@ public class PurchaseAOImpl implements PurchaseAO {
 			orderResult = OrderStateEnum.DAICHONG.getValue();
 			orderResultDetail = "通道暂停等待";
 		}else{//通道没有暂停
-			chargeDTO = chargeByBI(epPo, orderId, tcVO.getChargeTel(),tcVO.getServiceType(), dataPo.getTelCode());
-			if(chargeDTO != null){
-				if(chargeDTO.getTipCode().equals(OrderResultEnum.SUCCESS.getCode()) ){
-					orderResult = OrderStateEnum.CHARGING.getValue();
-					orderResultDetail = OrderStateEnum.CHARGING.getDesc();
-					ChargeOrder co = chargeDTO.getChargeOrder();
-					if(co != null){
-						purchasePo.setOrderIdApi(co.getOrderIdApi());
-					}
-				}else{
-					orderResult = OrderStateEnum.DAICHONG.getValue();
-					orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+chargeDTO.getTipMsg();
-				}
-			}else{
-				orderResult = OrderStateEnum.DAICHONG.getValue();
-				orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+"平台直接返失败";
-			}
+//			chargeDTO = chargeByBI(epPo, orderId, tcVO.getChargeTel(),dataPo.getId(), dataPo.getTelCode());
+//			if(chargeDTO != null){
+//				if(chargeDTO.getTipCode().equals(OrderResultEnum.SUCCESS.getCode()) ){
+//					orderResult = OrderStateEnum.CHARGING.getValue();
+//					orderResultDetail = OrderStateEnum.CHARGING.getDesc();
+//					ChargeOrder co = chargeDTO.getChargeOrder();
+//					if(co != null){
+//						purchasePo.setOrderIdApi(co.getOrderIdApi());
+//					}
+//				}else{
+//					orderResult = OrderStateEnum.DAICHONG.getValue();
+//					orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+chargeDTO.getTipMsg();
+//				}
+//			}else{
+//				orderResult = OrderStateEnum.DAICHONG.getValue();
+//				orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+"平台直接返失败";
+//			}
 		}
 		purchasePo.setOrderResult(orderResult);
 		purchasePo.setOrderResultDetail(orderResultDetail);
@@ -582,7 +582,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 			orderResult = OrderStateEnum.DAICHONG.getValue();
 			orderResultDetail = "通道暂停等待";
 		}else{//通道没有暂停
-			chargeDTO = chargeByBI(epPo, orderId, pcVO.getChargeTel(),pcVO.getServiceType(), dataPo.getProductCode());
+			chargeDTO = chargeByBI(epPo, orderId, pcVO.getChargeTel(),dataPo);
 			if(chargeDTO != null){
 				if(chargeDTO.getTipCode().equals(OrderResultEnum.SUCCESS.getCode()) ){
 					orderResult = OrderStateEnum.CHARGING.getValue();
@@ -892,7 +892,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				String scopeCityCode = StringHelper.isNotEmpty(chargeTelDetail)?PurchaseUtil.getScopeCityByCarrier(chargeTelDetail).get("scopeCityCode").toString():null;
 				ProductCodePo pc = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, epPo.getId(), Integer.parseInt(purchasePo.getPgId())));
 //			if(!channelPo.getChannelState() == ChannelStateEnum.CLOSE.getValue()){
-				ChargeDTO chargeDTO= chargeByBI(epPo, orderId, purchasePo.getChargeTel(),cd.getServiceType(), pc.getProductCode());
+				ChargeDTO chargeDTO= chargeByBI(epPo, orderId, purchasePo.getChargeTel(),pc);
 				String orderResultDetail = null;
 				if(chargeDTO != null){
 					if(chargeDTO.getTipCode().equals(OrderResultEnum.SUCCESS.getCode()) ){
@@ -967,7 +967,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年8月17日 下午5:36:19
 	 */
-	public ChargeDTO chargeByBI(ExchangePlatformPo epPo,Long orderId,String chargeTel,Integer serviceType,String productCode) {
+	public ChargeDTO chargeByBI(ExchangePlatformPo epPo,Long orderId,String chargeTel,ProductCodePo pc) {
 		BaseInterface bi = null;
 		Integer epFor = epPo.getEpFor();
 		String epEngId = epPo.getEpEngId();
@@ -976,9 +976,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 		epPo.setEpUserPass(dataUserPass);
 		
 		if(PgServiceTypeEnum.PGCHARGE.getValue().equals(epFor)){//调用流量接口仓库
-			bi = SingletonFactory.getSingleton(epEngId, new BaseP(productCode,orderId,chargeTel,serviceType,epPo));
+			bi = SingletonFactory.getSingleton(epEngId, new BaseP(pc,orderId,chargeTel,epPo));
 		}else if(PgServiceTypeEnum.TELCHARGE.getValue().equals(epFor)){
-			bi = HSingletonFactory.getSingleton(epEngId, new BaseP(productCode,orderId,chargeTel,serviceType,epPo));
+			bi = HSingletonFactory.getSingleton(epEngId, new BaseP(pc,orderId,chargeTel,epPo));
 		}
 		ChargeDTO chargeDTO = null;
 		if(bi != null){
@@ -1188,9 +1188,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 								Integer epFor = purchaseEp.getEpFor();
 								String epEngId = purchaseEp.getEpEngId();
 								if(PgServiceTypeEnum.PGCHARGE.getValue().equals(epFor)){//调用流量接口仓库
-									bi = SingletonFactory.getSingleton(epEngId, new BaseP(null,purchaseVO2.getOrderIdApi(),purchaseVO2.getChargeTel(),null,purchaseEp));
+									bi = SingletonFactory.getSingleton(epEngId, new BaseP(null,purchaseVO2.getOrderIdApi(),purchaseVO2.getChargeTel(),purchaseEp));
 								}else if(PgServiceTypeEnum.TELCHARGE.getValue().equals(epFor)){
-									bi = HSingletonFactory.getSingleton(epEngId, new BaseP(null,purchaseVO2.getOrderIdApi(),purchaseVO2.getChargeTel(),null,purchaseEp));
+									bi = HSingletonFactory.getSingleton(epEngId, new BaseP(null,purchaseVO2.getOrderIdApi(),purchaseVO2.getChargeTel(),purchaseEp));
 								}
 								
 //								OrderDTO orderDTO = bi.getOrderState();

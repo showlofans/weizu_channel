@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.weizu.flowsys.web.channel.dao.IProductCodeDAO" >
+<mapper namespace="com.weizu.flowsys.web.channel.dao.impl.ProductCodeDAOImpl" >
   <sql id="t_pcode">product_code</sql>
   <sql id="t_opd">operator_pg_data</sql>
   <sql id="t_ep">exchange_platform</sql>
@@ -48,7 +48,7 @@
     on opd.id = pc.pg_id 
     inner join <include refid="t_ep"></include> ep
     on pc.ep_id = ep.id
-    where id = #{id,jdbcType=BIGINT}
+    where pc.id = #{_parameter,jdbcType=BIGINT}
   </select>
   <!-- 查询编码列表 -->
   <select id="getProductCode" resultMap="BaseResultMap" parameterType="map" >
@@ -88,7 +88,7 @@
   </select>
   <!-- 根据参数查询产品编码 -->
   <select id="getOneProductCode" parameterType="map" resultMap="SimpleResultMap">
-  	select <include refid="Simple_Column_List"></include> 
+  	select <include refid="Base_Column_List"></include> 
   	from <include refid="t_pcode"></include> pc
     inner join <include refid="t_opd"></include> opd
     on opd.id = pc.pg_id 
@@ -193,6 +193,9 @@
   	</if>
   	<if test="operatorType != null">
   		AND opd.operator_type = #{operatorType}
+  	</if>
+  	<if test="serviceType != null">
+  		AND opd.service_type = #{serviceType}
   	</if>
   	<if test="productName != null">
   		AND product_name like concat("%",trim(#{productName}),"%")

@@ -52,4 +52,15 @@ public interface IProductCodeDAO extends Dao<ProductCodePo, Long> {
 	 * @createTime:2017年6月10日 下午6:00:51
 	 */
 	ProductCodePo getOneProductCode(Map<String,Object> map);
+	
+	/**
+	 * @description: 通过编码id获得流量产品详细信息
+	 * @param id
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月15日 上午11:53:36
+	 */
+	ProductCodePo selectByPrimaryKey(Long id);
+	
+	
 }

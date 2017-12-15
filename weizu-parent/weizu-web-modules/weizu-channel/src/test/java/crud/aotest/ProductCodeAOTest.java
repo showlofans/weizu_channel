@@ -10,7 +10,9 @@
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
 //import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
+//import com.weizu.flowsys.web.channel.dao.IProductCodeDAO;
 //import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
+//import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -18,6 +20,8 @@
 //	
 //	@Resource
 //	private ProductCodeAO productCodeAO;
+//	@Resource
+//	private IProductCodeDAO productCodeDAO;
 //	
 ////	@Test
 ////	public void testGetproductCode(){
@@ -32,11 +36,21 @@
 ////			System.out.println(po.getProductCode());
 ////		}
 ////	}
+////	@Deprecated
+////	@Test
+////	public void testinitPgList(){
+////		List<OperatorPgDataPo> pgList = productCodeAO.initPgList(13, 0, 0);
+////		if (pgList != null) {
+////			System.out.println(pgList.size());
+////		}
+////	}
 //	@Test
-//	public void testinitPgList(){
-//		List<OperatorPgDataPo> pgList = productCodeAO.initPgList(13, 0, 0);
-//		if (pgList != null) {
-//			System.out.println(pgList.size());
+//	public void testselectByPrimaryKey(){
+//		ProductCodePo productPo = productCodeDAO.selectByPrimaryKey(349l);
+//		if(productPo != null){
+//			System.out.println(productPo.getPgValidity() + "\tserviceType=" + productPo.getServiceType()+ "\tcode=" + productPo.getScopeCityCode());
+//		}else{
+//			System.out.println("1");
 //		}
 //	}
 //}

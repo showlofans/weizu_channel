@@ -1,10 +1,10 @@
 package com.weizu.flowsys.api.singleton.company;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.annotation.Resource;
 
 import org.weizu.api.util.HttpRequest;
 
@@ -22,14 +22,15 @@ import com.weizu.flowsys.api.singleton.ProductIn;
 import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 import com.weizu.flowsys.api.weizu.charge.ChargeOrder;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
-import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
+import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
-import com.weizu.flowsys.util.StringUtil2;
+import com.weizu.flowsys.web.channel.dao.IProductCodeDAO;
+import com.weizu.flowsys.web.channel.dao.impl.ProductCodeDAOImpl;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
-import com.weizu.web.foundation.DateUtil;
+import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.web.foundation.MD5;
 import com.weizu.web.foundation.String.StringHelper;
 
@@ -38,6 +39,8 @@ public class Maiyuan implements BaseInterface {
 	private static Maiyuan instance = new Maiyuan();  
 	private static String epEngId;
 	private static BaseP baseParams;
+//	@Resource
+//	private IProductCodeDAO productCodeDAO;
 //	private static String [] specialKeys = new String[]{"clientId","merchant","version"};
 	private Maiyuan() {
 	}
@@ -68,7 +71,7 @@ public class Maiyuan implements BaseInterface {
 //	            String orderId = obj.getString("out_trade_no");
 	          //用我这边默认的对私账户充值
 	            if(!taskId.equals(0) && code.equals(0)){
-	            	chargeDTO = new ChargeDTO(OrderResultEnum.SUCCESS.getCode(), message, new ChargeOrder(taskId, baseParams.getChargeTel(), baseParams.getProductCode(), 0));
+	            	chargeDTO = new ChargeDTO(OrderResultEnum.SUCCESS.getCode(), message, new ChargeOrder(taskId, baseParams.getChargeTel(), baseParams.getProductCodePo().getProductCode(), 0));
 	            }else{
 	            	chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), message, null);
 	            }
@@ -128,6 +131,8 @@ public class Maiyuan implements BaseInterface {
 					System.out.println(productIn.toString());
 				}
 	        }
+		}else{
+			System.out.println("没有该类型产品");
 		}
 		return balanceDTO;
 	}
@@ -210,18 +215,19 @@ public class Maiyuan implements BaseInterface {
         } 
 		return orderDTO;
 	}
-
 	@Override
 	public String toParams() {
+		
 		ExchangePlatformPo platformPo = baseParams.getEpo();
+		ProductCodePo pc = baseParams.getProductCodePo();
 		String sign = "";
 		StringBuffer signBuffer = new StringBuffer();
-		signBuffer.append("Account=");
+		signBuffer.append("account=");
 		signBuffer.append(platformPo.getEpUserName());
-		signBuffer.append("&Mobile=");
+		signBuffer.append("&mobile=");
 		signBuffer.append(baseParams.getChargeTel());
-		signBuffer.append("&Package=");
-		signBuffer.append(baseParams.getProductCode());
+		signBuffer.append("&package=");
+		signBuffer.append(pc.getProductCode());
 		signBuffer.append("&key=");
 		signBuffer.append(platformPo.getEpApikey());
 		try {
@@ -230,7 +236,6 @@ public class Maiyuan implements BaseInterface {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		
 		StringBuffer paramBuffer = new StringBuffer();
 		paramBuffer.append(platformPo.getEpOtherParams());
 		paramBuffer.append("mobile=");
@@ -243,11 +248,13 @@ public class Maiyuan implements BaseInterface {
 		paramBuffer.append("&out_trade_no=");
 		paramBuffer.append(baseParams.getOrderId());
 		paramBuffer.append("&package=");
-		paramBuffer.append(baseParams.getProductCode());
+		paramBuffer.append(pc.getProductCode());
+//		Long productId = pc.getId();
+//		ProductCodePo productPo = productCodeDAO.selectByPrimaryKey(pc.getId());
 		paramBuffer.append("&range=");
-		paramBuffer.append(getRange());
+		paramBuffer.append(getRange(pc.getServiceType()));
 		paramBuffer.append("&packageType=");
-		paramBuffer.append(getPackageType());
+		paramBuffer.append(getPackageType(pc));
 		paramBuffer.append("&sign=");
 		paramBuffer.append(sign);
 		
@@ -255,9 +262,58 @@ public class Maiyuan implements BaseInterface {
 		return paramBuffer.toString();
 	}
 	
-	private int getPackageType(){
-		
-		return 1;//月包
+	private int getPackageType(ProductCodePo productPo){
+		int packageType = 1;
+		Integer circulateWay = productPo.getCirculateWay();
+		String pgValidity = productPo.getPgValidity();
+		if(ChannelTypeEnum.RED_PACKET.getValue().equals(circulateWay)){
+			packageType = 2;
+		}
+		else if(ChannelTypeEnum.MOBILE.getValue().equals(circulateWay)){
+			packageType = 3;
+		}
+		else if(PgValidityEnum.ONE_DAY_DATA.getValue().equals(pgValidity)){
+			packageType = 5;
+		}
+		else if(PgValidityEnum.THREE_DAY_DATA.getValue().equals(pgValidity)){
+			packageType = 6;
+		}
+		else if(PgValidityEnum.SEVEN_DAY_DATA.getValue().equals(pgValidity)){
+			packageType = 7;
+		}
+		else if(PgValidityEnum.ONE_SEASON_DATA.getValue().equals(pgValidity)){
+			packageType = 8;
+		}
+		else if(PgValidityEnum.HALF_YEAR_DATA.getValue().equals(pgValidity)){
+			packageType = 9;
+		}
+		else if(PgValidityEnum.ONE_YEAR_DATA.getValue().equals(pgValidity)){
+			packageType = 10;
+		}
+		return packageType;//月包
+	}
+	
+	/**
+	 * @description: 获得流量范围
+	 * @param serviceType
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月15日 下午3:10:36
+	 */
+	private int getRange(Integer serviceType){
+		int range = 0;
+		if(ServiceTypeEnum.NATION_WIDE.getValue() == serviceType){
+			range = 0;
+		}
+		else if(ServiceTypeEnum.PROVINCE_ROAMING.getValue() == serviceType){
+			range = 2;
+		}
+		else if(ServiceTypeEnum.PROVINCE.getValue() == serviceType){
+			range = 3;
+		}else{
+			range = 1;		//全国非漫游
+		}
+		return range;
 	}
 	
 	public String toProductParams(){
@@ -283,7 +339,7 @@ public class Maiyuan implements BaseInterface {
 		paramBuffer.append(platformPo.getEpOtherParams());//v=1.1
 		paramBuffer.append("action=getPackage");
 		paramBuffer.append("&range=");
-		paramBuffer.append(getRange());//全国漫游
+		paramBuffer.append(getRange(ServiceTypeEnum.NATION_WIDE.getValue()));//省漫游
 		paramBuffer.append("&type=");
 		paramBuffer.append(0);//不指定运营
 		paramBuffer.append("&sign=");
@@ -302,6 +358,7 @@ public class Maiyuan implements BaseInterface {
 			if(StringHelper.isEmpty(jsonStr) || "exception".equals(jsonStr)){
 		 		return null;
 		 	}
+			System.out.println(jsonStr);
             JSONObject obj = JSON.parseObject(jsonStr);
            
             int rspCode = obj.getIntValue("Code");
@@ -327,39 +384,6 @@ public class Maiyuan implements BaseInterface {
         } 
 		return productDTO;
 	}
-	
-	/**
-	 * @description: 获得流量类型
-	 * @param serviceType
-	 * @param pgValidate
-	 * @return
-	 * @author:微族通道代码设计人 宁强
-	 * @createTime:2017年12月11日 下午2:26:24
-	 */
-//	private int getRange(int serviceType,String pgValidate){
-	private int getRange(){
-//		//漫游
-//		boolean roaming = ServiceTypeEnum.PROVINCE_ROAMING.getValue() == serviceType;
-//		//省内
-//		boolean province = ServiceTypeEnum.PROVINCE.getValue() == serviceType;
-//		//月包漫游
-//		boolean monthRoaming = roaming && PgValidityEnum.MONTH_DAY_DATA.getValue().equals(pgValidate);
-//		//月包省内
-//		boolean monthProvince = province && PgValidityEnum.MONTH_DAY_DATA.getValue().equals(pgValidate);
-//		//月包漫游
-//		boolean monthRoaming = roaming && PgValidityEnum.MONTH_DAY_DATA.getValue().equals(pgValidate);
-//		//月包漫游
-//		boolean monthRoaming = roaming && PgValidityEnum.MONTH_DAY_DATA.getValue().equals(pgValidate);
-//		//月包漫游
-//		boolean monthRoaming = roaming && PgValidityEnum.MONTH_DAY_DATA.getValue().equals(pgValidate);
-//		//月包漫游
-//		boolean monthRoaming = roaming && PgValidityEnum.MONTH_DAY_DATA.getValue().equals(pgValidate);
-//		//月包漫游
-//		boolean monthRoaming = roaming && PgValidityEnum.MONTH_DAY_DATA.getValue().equals(pgValidate);
-//		
-		return 0;
-	}
-	
 //	private String getChargeSign(String epOtherParams){
 //		ExchangePlatformPo platformPo = baseParams.getEpo();
 //		String account = platformPo.getEpUserName();

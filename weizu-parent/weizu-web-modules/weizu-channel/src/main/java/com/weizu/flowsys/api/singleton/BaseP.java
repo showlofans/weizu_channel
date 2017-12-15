@@ -1,6 +1,7 @@
 package com.weizu.flowsys.api.singleton;
 
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
+import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 
 /**
  * @description: 对接上游自己系统能够提供的参数
@@ -11,33 +12,36 @@ import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
  * @version 1.0
  */
 public class BaseP {
-	private String productCode;		//产品编码
+//	private String productCode;		//产品编码
 	private  Long orderId;			//订单号
 	private String orderIdApi;		//订单查询订单好
 	private  String chargeTel;		//手机号
-	private  Integer serviceType;		//业务类型
+//	private  Long productCodeId;		//产品编码id(业务类型)
 	private ExchangePlatformPo epo;		//平台信息
+	private ProductCodePo productCodePo;	//产品编码信息
 	
 	public BaseP() {
 		super();
 	}
 	
-	public BaseP(String productCode, String orderIdApi, String chargeTel,
-			Integer serviceType, ExchangePlatformPo epo) {
+	public BaseP(ProductCodePo productCodePo, String orderIdApi, String chargeTel,
+			 ExchangePlatformPo epo) {
 		super();
-		this.productCode = productCode;
+//		this.productCode = productCode;
 		this.orderIdApi = orderIdApi;
 		this.chargeTel = chargeTel;
-		this.serviceType = serviceType;
+		this.productCodePo = productCodePo;
+//		this.productCodeId = productCodeId;
 		this.epo = epo;
 	}
-	public BaseP(String productCode,Long orderId,String chargeTel,Integer serviceType,ExchangePlatformPo epo) {
+	public BaseP(ProductCodePo productCodePo,Long orderId,String chargeTel,ExchangePlatformPo epo) {
 //		this.epDTO = epDTO;
 		this.epo = epo;
-		this.productCode = productCode;
+//		this.productCode = productCode;
 		this.orderId = orderId;
+		this.productCodePo = productCodePo;
 		this.chargeTel = chargeTel;
-		this.serviceType = serviceType;
+//		this.productCodeId = productCodeId;
 	}
 	public String getOrderIdApi() {
 		return orderIdApi;
@@ -48,19 +52,25 @@ public class BaseP {
 //	public void setAddParams(String addParams) {
 //		this.addParams = addParams;
 //	}
-	public  String getProductCode() {
-		return productCode;
-	}
+//	public  String getProductCode() {
+//		return productCode;
+//	}
 	public  Long getOrderId() {
 		return orderId;
 	}
 	public  String getChargeTel() {
 		return chargeTel;
 	}
-	public  Integer getServiceType() {
-		return serviceType;
-	}
+	
+//	public Long getProductCodeId() {
+//		return productCodeId;
+//	}
+
 	public  ExchangePlatformPo getEpo() {
 		return epo;
+	}
+
+	public ProductCodePo getProductCodePo() {
+		return productCodePo;
 	}
 }	
