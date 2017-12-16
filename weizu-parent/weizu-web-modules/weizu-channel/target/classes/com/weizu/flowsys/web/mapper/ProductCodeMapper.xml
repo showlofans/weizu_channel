@@ -87,7 +87,7 @@
     </where>
   </select>
   <!-- 根据参数查询产品编码 -->
-  <select id="getOneProductCode" parameterType="map" resultMap="SimpleResultMap">
+  <select id="getOneProductCode" parameterType="map" resultMap="BaseResultMap">
   	select <include refid="Base_Column_List"></include> 
   	from <include refid="t_pcode"></include> pc
     inner join <include refid="t_opd"></include> opd

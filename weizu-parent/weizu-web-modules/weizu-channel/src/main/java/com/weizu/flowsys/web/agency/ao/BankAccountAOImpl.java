@@ -42,7 +42,7 @@ public class BankAccountAOImpl implements BankAccountAO {
 	public void getMyBankList(Integer contextId,  Map<String,Object> resultMap) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("agencyId", contextId);
-		map.put("polarity", CallBackEnum.POSITIVE.getValue());
+		//map.put("polarity", CallBackEnum.POSITIVE.getValue());
 		List<BankAccountPo> dataList = bankAccountDao.getMyBankList(map);
 		//将列表分开展示
 		List<BankAccountPo> bankList0 = new LinkedList<BankAccountPo>();
@@ -68,12 +68,26 @@ public class BankAccountAOImpl implements BankAccountAO {
 	@Transactional
 	@Override
 	public String addBank(BankAccountPo bankPo) {
-		bankPo.setPolarity(CallBackEnum.POSITIVE.getValue());//设为加款卡
 		//母卡是否存在
 		BankAccountPo rootBankPo = bankAccountDao.getMyOneBankAccount(bankPo.getAgencyId(), bankPo.getRemittanceBankAccount(), CallBackEnum.POSITIVE.getValue());
 		if(rootBankPo != null){
 			return "exist";
 		}
+		//是否设置polarity为negative
+		Map<String,Object> params = new HashMap<String, Object>();
+		params.put("agencyId", bankPo.getAgencyId());
+		params.put("billType", bankPo.getBillType());
+		params.put("inUseState", CallBackEnum.POSITIVE.getValue());
+		params.put("originalPolarity", CallBackEnum.NEGATIVE.getValue());
+		List<BankAccountPo> dataList = bankAccountDao.getOriginalBankA(params);
+		if(bankPo.getPolarity() == null){
+			if(!(dataList != null && dataList.size() > 0)){//有默认绑定的银行卡，就不设置为默认
+				bankPo.setPolarity(CallBackEnum.NEGATIVE.getValue());//默认卡
+			}else{
+				bankPo.setPolarity(CallBackEnum.POSITIVE.getValue());//设为普通卡
+			}
+		}
+		
 		int res = bankAccountDao.add(bankPo);
 		if(res > 0){
 			return "success";
@@ -92,6 +106,16 @@ public class BankAccountAOImpl implements BankAccountAO {
 			map.put("polarity", CallBackEnum.POSITIVE.getValue());
 			map.put("useState", CallBackEnum.POSITIVE.getValue());
 			List<BankAccountPo> dataList = bankAccountDao.getAttachBankList(map);
+			if(!(dataList != null && dataList.size() > 0)){//没有手动绑定的银行卡，就用默认的银行卡
+				Map<String,Object> params = new HashMap<String, Object>();
+				params.put("agencyId", rootAgencyId);
+				params.put("billType", accountPo.getBillType());
+				params.put("inUseState", CallBackEnum.POSITIVE.getValue());
+				params.put("originalPolarity", CallBackEnum.NEGATIVE.getValue());
+				dataList = bankAccountDao.getOriginalBankA(params);
+			}
+			
+			
 			resultMap.put("plusBankList", dataList);
 		}
 	}
@@ -117,11 +141,12 @@ public class BankAccountAOImpl implements BankAccountAO {
 		ChargeAccountPo accountPo = chargeAccountDao.get(accountId);
 		if(accountPo != null){
 			resultMap.put("agencyName", accountPo.getAgencyName());
-			resultMap.put("billType", accountPo.getBillType());
+			int billType = accountPo.getBillType();
+			resultMap.put("billType", billType);
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("agencyId", agencyId);
 			map.put("inUseState", CallBackEnum.POSITIVE.getValue());
-			map.put("billType", accountPo.getBillType());
+			map.put("billType", billType);
 			//父级代理商所有银行卡
 			List<BankAccountPo> parentAccountList = bankAccountDao.getMyBankList(map);	//获得没有绑定的银行卡
 			
@@ -130,15 +155,47 @@ public class BankAccountAOImpl implements BankAccountAO {
 			map.put("polarity", CallBackEnum.POSITIVE.getValue());
 			map.put("useState", CallBackEnum.POSITIVE.getValue());
 			List<BankAccountPo> dataList = bankAccountDao.getAttachBankList(map);		//获得绑定的银行卡
+			if(!(dataList != null && dataList.size() > 0)){//没有绑定的就加载默认的银行卡
+				Map<String,Object> params = new HashMap<String, Object>();
+				params.put("agencyId", agencyId);
+				params.put("billType", billType);
+				params.put("inUseState", CallBackEnum.POSITIVE.getValue());
+				params.put("originalPolarity", CallBackEnum.NEGATIVE.getValue());
+				dataList = bankAccountDao.getOriginalBankA(params);
+//				dataList.addAll(dataList2);
+			}
+//			else{
+//				boolean hasDefaultBank = false;
+//				for (BankAccountPo bankAccountPo : dataList) {
+//					if(CallBackEnum.NEGATIVE.getValue().equals(bankAccountPo.getPolarity())){
+//						hasDefaultBank = true;
+//						break;
+//					}
+//				}
+//				if(hasDefaultBank){//有默认绑定的，
+//					Map<String,Object> params = new HashMap<String, Object>();
+//					params.put("agencyId", agencyId);
+//					params.put("billType", billType);
+//					params.put("inUseState", CallBackEnum.POSITIVE.getValue());
+//					params.put("originalPolarity", CallBackEnum.NEGATIVE.getValue());
+//					List<BankAccountPo> dataList2 = bankAccountDao.getOriginalBankA(params);
+//					dataList.addAll(dataList2);
+//				}
+//			}
 			
 			List<BankAccountPo> sameAttachList = new LinkedList<BankAccountPo>();
 			
 			for (BankAccountPo parentAccount : parentAccountList) {
+//				boolean hasDefaultBank = false;
 				for (BankAccountPo dataBank : dataList) {
 					Boolean isRepeat = dataBank.getRemittanceBankAccount().equals(parentAccount.getRemittanceBankAccount());
 					if(isRepeat){
 						sameAttachList.add(parentAccount);
 					}
+//					if(CallBackEnum.NEGATIVE.getValue().equals(dataBank.getPolarity()) ){
+//						sameAttachList.add(dataBank);
+////						hasDefaultBank = true;
+//					}
 				}
 			}
 			parentAccountList.removeAll(sameAttachList);
@@ -192,6 +249,23 @@ public class BankAccountAOImpl implements BankAccountAO {
 			return "success";
 		}
 		return "error";
+	}
+
+	@Override
+	public String changeBankPolarity(Long id, Integer polarity) {
+		String result = "error";
+//		BankAccountPo bankPo = bankAccountDao.get(id);
+		Map<String,Object> params = new HashMap<String, Object>();
+//		params.put("agencyId", bankPo.getAgencyId());
+//		params.put("remmitanceBankAccount", bankPo.getRemittanceBankAccount());
+		params.put("originalPolarity", polarity);
+		params.put("bankId", id);
+		
+		int res = bankAccountDao.changePolarity(params);
+		if(res > 0){
+			result = "success";
+		}
+		return result;
 	}
 
 //	@Override

@@ -210,7 +210,7 @@ function changePg(){
 	//alert(et);
 	//alert($("#pgId :hidden").html());
 	var pgSize = $(et).next().html();//:eq("+ et +")
-	alert(pgSize);
+	//alert(pgSize);
 	$('#pgSize').val(pgSize);
 	//alert(pgPrice);
 	

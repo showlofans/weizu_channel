@@ -19,30 +19,42 @@ public class BaseP {
 //	private  Long productCodeId;		//产品编码id(业务类型)
 	private ExchangePlatformPo epo;		//平台信息
 	private ProductCodePo productCodePo;	//产品编码信息
+	private String otherParams;			//其他参数
 	
 	public BaseP() {
 		super();
 	}
 	
 	public BaseP(ProductCodePo productCodePo, String orderIdApi, String chargeTel,
-			 ExchangePlatformPo epo) {
+			 ExchangePlatformPo epo,String otherParams) {
 		super();
 //		this.productCode = productCode;
 		this.orderIdApi = orderIdApi;
 		this.chargeTel = chargeTel;
 		this.productCodePo = productCodePo;
 //		this.productCodeId = productCodeId;
+		this.otherParams = otherParams;
 		this.epo = epo;
 	}
-	public BaseP(ProductCodePo productCodePo,Long orderId,String chargeTel,ExchangePlatformPo epo) {
+	public BaseP(ProductCodePo productCodePo,Long orderId,String chargeTel,ExchangePlatformPo epo,String otherParams) {
 //		this.epDTO = epDTO;
 		this.epo = epo;
 //		this.productCode = productCode;
 		this.orderId = orderId;
 		this.productCodePo = productCodePo;
 		this.chargeTel = chargeTel;
+		this.otherParams = otherParams;
 //		this.productCodeId = productCodeId;
 	}
+	
+	public String getOtherParams() {
+		return otherParams;
+	}
+
+	public void setOtherParams(String otherParams) {
+		this.otherParams = otherParams;
+	}
+
 	public String getOrderIdApi() {
 		return orderIdApi;
 	}
@@ -65,6 +77,10 @@ public class BaseP {
 //	public Long getProductCodeId() {
 //		return productCodeId;
 //	}
+
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
+	}
 
 	public  ExchangePlatformPo getEpo() {
 		return epo;

@@ -456,14 +456,16 @@ public class Maiyuan implements BaseInterface {
 		paramsBuffer.append("&");
 		paramsBuffer.append(platformPo.getEpOtherParams());//app_key
 		paramsBuffer.append("Action=queryReport");//mobile
-		paramsBuffer.append("&TaskId=");//trade_no
-		paramsBuffer.append(baseParams.getOrderIdApi());//trade_no
+		if(StringHelper.isNotEmpty(baseParams.getOrderIdApi())){
+			paramsBuffer.append("&TaskId=");//trade_no
+			paramsBuffer.append(baseParams.getOrderIdApi());//trade_no
+		}
 		if(baseParams.getOrderId() != null){
 			paramsBuffer.append("&OutTradeNo=");//out_trade_no
 			paramsBuffer.append(baseParams.getOrderId());//out_trade_no
 		}
 		paramsBuffer.append("&SendTime=");//SendTime
-		paramsBuffer.append("2017-12-10");//SendTime
+		paramsBuffer.append(baseParams.getOtherParams());//SendTime
 		paramsBuffer.append("&Sign=");//sign
 		paramsBuffer.append(sign);//sign
 		

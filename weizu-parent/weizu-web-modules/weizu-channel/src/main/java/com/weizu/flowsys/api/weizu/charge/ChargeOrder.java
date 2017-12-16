@@ -13,6 +13,7 @@ public class ChargeOrder {
 	private String number;			//充值手机号
 	private String pgSize;			//流量大小
 	private Integer billType;		//是否带票 0-不带，1-带票
+	private String otherParams;		//充值返回的其他参数
 	
 	/**
 	 * @param orderIdApi String类型
@@ -41,10 +42,17 @@ public class ChargeOrder {
 		this.billType = billType;
 	}
 	
+	public String getOtherParams() {
+		return otherParams;
+	}
+	public void setOtherParams(String otherParams) {
+		this.otherParams = otherParams;
+	}
 	@Override
 	public String toString() {
 		return "ChargeOrder [orderIdApi=" + orderIdApi + ", number=" + number
-				+ ", pgSize=" + pgSize + ", billType=" + billType + "]";
+				+ ", pgSize=" + pgSize + ", billType=" + billType
+				+ ", otherParams=" + otherParams + "]";
 	}
 	public ChargeOrder() {
 		super();

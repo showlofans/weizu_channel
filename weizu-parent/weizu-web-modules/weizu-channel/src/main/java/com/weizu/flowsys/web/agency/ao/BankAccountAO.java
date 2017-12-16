@@ -63,6 +63,16 @@ public interface BankAccountAO {
 	String attachBank(BankAccountPo bankPo);
 	
 	/**
+	 * @description: 修改子母银行卡默认状态
+	 * @param id
+	 * @param polarity
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月16日 上午11:13:17
+	 */
+	String changeBankPolarity(Long id, Integer polarity);
+	
+	/**
 	 * @description: 初始化绑定银行卡页面
 	 * @param accountId
 	 * @param agencyId

@@ -582,7 +582,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 			orderResult = OrderStateEnum.DAICHONG.getValue();
 			orderResultDetail = "通道暂停等待";
 		}else{//通道没有暂停
-			chargeDTO = chargeByBI(epPo, orderId, pcVO.getChargeTel(),dataPo);
+			chargeDTO = chargeByBI(epPo, purchasePo,dataPo);
 			if(chargeDTO != null){
 				if(chargeDTO.getTipCode().equals(OrderResultEnum.SUCCESS.getCode()) ){
 					orderResult = OrderStateEnum.CHARGING.getValue();
@@ -892,7 +892,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				String scopeCityCode = StringHelper.isNotEmpty(chargeTelDetail)?PurchaseUtil.getScopeCityByCarrier(chargeTelDetail).get("scopeCityCode").toString():null;
 				ProductCodePo pc = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, epPo.getId(), Integer.parseInt(purchasePo.getPgId())));
 //			if(!channelPo.getChannelState() == ChannelStateEnum.CLOSE.getValue()){
-				ChargeDTO chargeDTO= chargeByBI(epPo, orderId, purchasePo.getChargeTel(),pc);
+				ChargeDTO chargeDTO= chargeByBI(epPo, purchasePo,pc);
 				String orderResultDetail = null;
 				if(chargeDTO != null){
 					if(chargeDTO.getTipCode().equals(OrderResultEnum.SUCCESS.getCode()) ){
@@ -967,7 +967,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年8月17日 下午5:36:19
 	 */
-	public ChargeDTO chargeByBI(ExchangePlatformPo epPo,Long orderId,String chargeTel,ProductCodePo pc) {
+	public ChargeDTO chargeByBI(ExchangePlatformPo epPo,PurchasePo purchasePo,ProductCodePo pc) {
 		BaseInterface bi = null;
 		Integer epFor = epPo.getEpFor();
 		String epEngId = epPo.getEpEngId();
@@ -976,14 +976,18 @@ public class PurchaseAOImpl implements PurchaseAO {
 		epPo.setEpUserPass(dataUserPass);
 		
 		if(PgServiceTypeEnum.PGCHARGE.getValue().equals(epFor)){//调用流量接口仓库
-			bi = SingletonFactory.getSingleton(epEngId, new BaseP(pc,orderId,chargeTel,epPo));
+			bi = SingletonFactory.getSingleton(epEngId, new BaseP(pc,purchasePo.getOrderId(),purchasePo.getChargeTel(),epPo,DateUtil.formatPramm(purchasePo.getOrderArriveTime(), "yyyy-MM-dd")));
 		}else if(PgServiceTypeEnum.TELCHARGE.getValue().equals(epFor)){
-			bi = HSingletonFactory.getSingleton(epEngId, new BaseP(pc,orderId,chargeTel,epPo));
+			bi = HSingletonFactory.getSingleton(epEngId, new BaseP(pc,purchasePo.getOrderId(),purchasePo.getChargeTel(),epPo,DateUtil.formatPramm(purchasePo.getOrderArriveTime(), "yyyy-MM-dd")));
 		}
 		ChargeDTO chargeDTO = null;
 		if(bi != null){
 			chargeDTO = bi.charge();
-			if(chargeDTO != null){
+			if(chargeDTO != null && chargeDTO.getChargeOrder() != null){//更新返回的订单id，方便主动查询
+				PurchasePo purPo = new PurchasePo();
+				purPo.setOrderId(purchasePo.getOrderId());
+				purPo.setOrderIdApi(chargeDTO.getChargeOrder().getOrderIdApi());
+				purchaseDAO.updatePurchaseState(purPo);
 				System.out.println(chargeDTO.getChargeOrder().getOrderIdApi());//测试打印出对应平台的提单地址
 				logger.config("上游返回的订单号："+ chargeDTO.getChargeOrder().getOrderIdApi());//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
 			}
@@ -1187,10 +1191,17 @@ public class PurchaseAOImpl implements PurchaseAO {
 								BaseInterface bi = null;
 								Integer epFor = purchaseEp.getEpFor();
 								String epEngId = purchaseEp.getEpEngId();
+								Long orderId = purchaseVO2.getOrderId();
 								if(PgServiceTypeEnum.PGCHARGE.getValue().equals(epFor)){//调用流量接口仓库
-									bi = SingletonFactory.getSingleton(epEngId, new BaseP(null,purchaseVO2.getOrderIdApi(),purchaseVO2.getChargeTel(),purchaseEp));
+//									PurchasePo purPo = new PurchasePo();
+//									purPo.setOrderId(purchaseVO2.getOrderId());
+//									purPo.setOrderIdApi(purchaseVO2.getOrderIdApi());
+//									purPo.setChargeTel(purchaseVO2);
+									BaseP baseP = new BaseP(null,purchaseVO2.getOrderIdApi(),purchaseVO2.getChargeTel(),purchaseEp,DateUtil.formatPramm(purchaseVO2.getOrderArriveTime(), "yyyy-MM-dd"));
+									baseP.setOrderId(orderId);
+									bi = SingletonFactory.getSingleton(epEngId, baseP);
 								}else if(PgServiceTypeEnum.TELCHARGE.getValue().equals(epFor)){
-									bi = HSingletonFactory.getSingleton(epEngId, new BaseP(null,purchaseVO2.getOrderIdApi(),purchaseVO2.getChargeTel(),purchaseEp));
+									bi = HSingletonFactory.getSingleton(epEngId, new BaseP(null,purchaseVO2.getOrderIdApi(),purchaseVO2.getChargeTel(),purchaseEp,DateUtil.formatPramm(purchaseVO2.getOrderArriveTime(), "yyyy-MM-dd")));
 								}
 								
 //								OrderDTO orderDTO = bi.getOrderState();
@@ -1227,11 +1238,11 @@ public class PurchaseAOImpl implements PurchaseAO {
 	//											String callBackRes = sendCallBack.sendCallBack(new ResponseJsonDTO(purchaseVO2.getOrderId(), purchaseVO2.getOrderIdFrom(), orderState, orderStateDetail, ts), agencyPo.getCallBackIp());
 	//											System.out.println(agencyPo.getUserName() + "：" +purchaseVO2.getOrderId() + "：" +  callBackRes);
 	//										}
-										}else if(orderIn.getStatus() != purchaseVO2.getOrderResult() && orderIn!= null){
-	//										accountPurchaseAO.updatePurchaseState(purchaseVO2.getOrderId(), orderIn.getStatus(), orderIn.getMsg(),System.currentTimeMillis());
 											//更新订单表
 											purchaseDAO.updatePurchaseState(new PurchasePo(purchaseVO2.getOrderId(), null, System.currentTimeMillis(), orderIn.getStatus(), OrderResultEnum.SUCCESS.getCode(), orderIn.getMsg()));//purchaseVO2.getOrderId(), System.currentTimeMillis(), orderIn.getStatus(), orderIn.getMsg(), null
 										}
+	//										accountPurchaseAO.updatePurchaseState(purchaseVO2.getOrderId(), orderIn.getStatus(), orderIn.getMsg(),System.currentTimeMillis());
+										
 									}
 								}
 							}

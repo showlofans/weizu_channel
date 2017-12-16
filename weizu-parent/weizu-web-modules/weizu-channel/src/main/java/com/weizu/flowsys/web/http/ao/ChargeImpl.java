@@ -54,6 +54,7 @@ import com.weizu.flowsys.web.trade.dao.AccountPurchaseDao;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.AccountPurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
+import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
 
 /**
@@ -208,7 +209,7 @@ public class ChargeImpl implements IChargeFacet {
 				}
 				
 				if(!isChannelStateClose && canCharge){
-					BaseInterface bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(pc,orderId,chargeTel,epPo));
+					BaseInterface bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(pc,orderId,chargeTel,epPo,DateUtil.formatPramm(purchasePo.getOrderArriveTime(), "yyyy-MM-dd")));
 					ChargeDTO chargeDTO = bi.charge();
 					if(chargeDTO == null){
 						orderResult = OrderStateEnum.DAICHONG.getValue();
