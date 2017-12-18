@@ -63,6 +63,16 @@ public interface ProductCodeAO {
 	ProductCodePo getOneProductCode(OneCodePo productCodeParams);
 	
 	/**
+	 * @description: 获得无编码的编码实体
+	 * @param pgId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月18日 上午11:45:52
+	 */
+	ProductCodePo getOneProductCodeByPg(Integer pgId);
+	
+	
+	/**
 	 * @description: 删除产品编码
 	 * @param codeId
 	 * @return

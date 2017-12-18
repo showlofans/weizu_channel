@@ -58,6 +58,7 @@
 					<th width="80">平台名称</th>
 					<th width="80">平台英文标识</th>
 					<th width="80">平台类型</th>
+					<th width="80">编码类型</th>
 					<!-- <th width="80">产品列表地址</th>
 					<th width="120">支持城市</th>
 					<th width="60">订单状态地址</th>
@@ -83,6 +84,13 @@
 							<c:forEach items="${resultMap.pgServiceTypeEnums }" var="pgServiceTypeEnum" varStatus="vs1">
 								<c:if test="${pgServiceTypeEnum.value == platform.epFor }">
 									${pgServiceTypeEnum.desc }
+								</c:if>
+							</c:forEach>
+						</td>
+						<td class="f-14">
+							<c:forEach items="${resultMap.epEncodeTypeEnums }" var="epEncodeTypeEnum" varStatus="vs1">
+								<c:if test="${epEncodeTypeEnum.value == platform.epEncodeType }">
+									${epEncodeTypeEnum.desc }
 								</c:if>
 							</c:forEach>
 						</td>

@@ -42,6 +42,7 @@ import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
+import com.weizu.flowsys.operatorPg.enums.EpEncodeTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
@@ -540,7 +541,13 @@ public class PurchaseAOImpl implements PurchaseAO {
 					Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(purchasePo.getChargeTelDetail());
 					scopeCityCode = scopeMap.get("scopeCityCode").toString();
 				}
-				dataPo = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode,channel.getEpId(), Integer.parseInt(purchasePo.getPgId())));
+				if(EpEncodeTypeEnum.WITH_CODE.equals(epPo.getEpEncodeType())){
+//					String scopeCityCode = StringHelper.isNotEmpty(chargeTelDetail)?PurchaseUtil.getScopeCityByCarrier(chargeTelDetail).get("scopeCityCode").toString():null;
+					dataPo = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, epPo.getId(), Integer.parseInt(purchasePo.getPgId())));
+				}else{
+					dataPo = productCodeAO.getOneProductCodeByPg(Integer.parseInt(purchasePo.getPgId()));
+				}
+//				dataPo = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode,channel.getEpId(), Integer.parseInt(purchasePo.getPgId())));
 				if(dataPo == null){
 					logger.config("编码未配置");
 					System.out.println("编码未配置");
@@ -889,8 +896,14 @@ public class PurchaseAOImpl implements PurchaseAO {
 				int aapUpdRes = accountPurchaseDao.updateLocal(apPo, new WherePrams("account_id", "=", accountId).and("purchase_id", "=", orderId));
 				
 				ExchangePlatformPo epPo = channelChannelDao.getEpByChannelId(ratePo.getChannelId());
-				String scopeCityCode = StringHelper.isNotEmpty(chargeTelDetail)?PurchaseUtil.getScopeCityByCarrier(chargeTelDetail).get("scopeCityCode").toString():null;
-				ProductCodePo pc = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, epPo.getId(), Integer.parseInt(purchasePo.getPgId())));
+				ProductCodePo pc = null;
+				if(EpEncodeTypeEnum.WITH_CODE.equals(epPo.getEpEncodeType())){
+					String scopeCityCode = StringHelper.isNotEmpty(chargeTelDetail)?PurchaseUtil.getScopeCityByCarrier(chargeTelDetail).get("scopeCityCode").toString():null;
+					pc = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, epPo.getId(), Integer.parseInt(purchasePo.getPgId())));
+				}else{
+					pc = productCodeAO.getOneProductCodeByPg(Integer.parseInt(purchasePo.getPgId()));
+				}
+				
 //			if(!channelPo.getChannelState() == ChannelStateEnum.CLOSE.getValue()){
 				ChargeDTO chargeDTO= chargeByBI(epPo, purchasePo,pc);
 				String orderResultDetail = null;
@@ -984,10 +997,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 		if(bi != null){
 			chargeDTO = bi.charge();
 			if(chargeDTO != null && chargeDTO.getChargeOrder() != null){//更新返回的订单id，方便主动查询
-				PurchasePo purPo = new PurchasePo();
-				purPo.setOrderId(purchasePo.getOrderId());
-				purPo.setOrderIdApi(chargeDTO.getChargeOrder().getOrderIdApi());
-				purchaseDAO.updatePurchaseState(purPo);
+//				PurchasePo purPo = new PurchasePo();
+//				purPo.setOrderId(purchasePo.getOrderId());
+//				purPo.setOrderIdApi(chargeDTO.getChargeOrder().getOrderIdApi());
+//				purchaseDAO.updatePurchaseState(purPo);
 				System.out.println(chargeDTO.getChargeOrder().getOrderIdApi());//测试打印出对应平台的提单地址
 				logger.config("上游返回的订单号："+ chargeDTO.getChargeOrder().getOrderIdApi());//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
 			}
@@ -1209,7 +1222,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 								if(bi != null){
 									if(bi.getOrderState() == null){
 										//更新订单表
-										purchaseDAO.updatePurchaseState(new PurchasePo(purchaseVO2.getOrderId(), null, System.currentTimeMillis(), null, null, ChargeStatusEnum.API_ERROR.getDesc()));//purchaseVO2.getOrderId(), System.currentTimeMillis(), orderIn.getStatus(), orderIn.getMsg(), null
+										purchaseDAO.updatePurchaseState(new PurchasePo(purchaseVO2.getOrderId(), null, System.currentTimeMillis(), null, null, ChargeStatusEnum.API_ERROR.getDesc()+"查询状态"));//purchaseVO2.getOrderId(), System.currentTimeMillis(), orderIn.getStatus(), orderIn.getMsg(), null
 									}else{
 										OrderDTO orderDTO = bi.getOrderState();
 										OrderIn orderIn = orderDTO.getOrderIn();

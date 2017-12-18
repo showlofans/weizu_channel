@@ -38,7 +38,7 @@
 			  <input value="" class="input-text upload-url" style="width:300px" type="text" readonly >
 			  <input type="file" multiple name="uploadFile" class="input-file">
 			</span>
-			<button type="button" id="saveButton" class="btn btn-primary radius" onclick="saveTelList()"><i class="fa "></i> 导入文件</button>
+			<button type="button" id="saveButton" class="btn btn-primary radius" onclick="saveTelList()"><i class="fa "></i> 导入号码</button>
 			<!-- <span class="error"></span> -->
 		</div>
 		<!-- <button type="button" onclick="history.go(-1);" class="btn"><i class="fa fa-undo"></i> 取消返回</button> -->

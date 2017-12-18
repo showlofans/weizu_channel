@@ -44,11 +44,21 @@
 ////			System.out.println(pgList.size());
 ////		}
 ////	}
+////	@Test
+////	public void testselectByPrimaryKey(){
+////		ProductCodePo productPo = productCodeDAO.selectByPrimaryKey(349l);
+////		if(productPo != null){
+////			System.out.println(productPo.getPgValidity() + "\tserviceType=" + productPo.getServiceType()+ "\tcode=" + productPo.getScopeCityCode());
+////		}else{
+////			System.out.println("1");
+////		}
+////	}
 //	@Test
-//	public void testselectByPrimaryKey(){
-//		ProductCodePo productPo = productCodeDAO.selectByPrimaryKey(349l);
+//	public void testGetOneByPg(){
+//		ProductCodePo productPo = productCodeAO.getOneProductCodeByPg(50);
 //		if(productPo != null){
-//			System.out.println(productPo.getPgValidity() + "\tserviceType=" + productPo.getServiceType()+ "\tcode=" + productPo.getScopeCityCode());
+//			System.out.print(productPo.getPgValidity() + "\tserviceType=" + productPo.getServiceType());
+//			System.out.println(productPo.getProductCode() + "\t id=" + productPo.getId());
 //		}else{
 //			System.out.println("1");
 //		}

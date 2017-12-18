@@ -47,6 +47,17 @@
 			</div>
 		</div>
 		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">平台编码：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<c:forEach items="${resultMap.epEncodeTypeEnums }" var="epEncodeTypeEnum" varStatus="vs">
+					<div class="radio-box">
+						<input name="epEncodeType" class="radioItem" type="radio" id="epEncodeType-${vs.index }" value="${epEncodeTypeEnum.value }" <c:if test="${epEncodeTypeEnum.value==resultMap.exchangePlatformPo.epEncodeType }">checked</c:if>>
+						<label for="epEncodeType-${vs.index }">${epEncodeTypeEnum.desc }</label>
+					</div>
+				</c:forEach>
+			</div>
+		</div>
+		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>平台名称：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" class="input-text" value="${resultMap.exchangePlatformPo.epName }"  onchange="checkEpName(this)" placeholder="" id="epName" name="epName">

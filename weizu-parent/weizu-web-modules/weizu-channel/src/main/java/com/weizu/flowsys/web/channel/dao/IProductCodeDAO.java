@@ -54,6 +54,15 @@ public interface IProductCodeDAO extends Dao<ProductCodePo, Long> {
 	ProductCodePo getOneProductCode(Map<String,Object> map);
 	
 	/**
+	 * @description: 通过包体id获得产品编码 :id和编码需要重新处理
+	 * @param pgId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月18日 上午11:56:13
+	 */
+	ProductCodePo getOneProductCodeByPg(Integer pgId);
+	
+	/**
 	 * @description: 通过编码id获得流量产品详细信息
 	 * @param id
 	 * @return

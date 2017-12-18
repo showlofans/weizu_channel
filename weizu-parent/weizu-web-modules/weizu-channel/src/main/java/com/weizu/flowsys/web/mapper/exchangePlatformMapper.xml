@@ -27,17 +27,18 @@
     <result column="ep_eng_id" jdbcType="VARCHAR" property="epEngId" />
     <result column="ep_other_params" jdbcType="VARCHAR" property="epOtherParams" />
     <result column="ep_call_back" jdbcType="INTEGER" property="epCallBack" />
+    <result column="ep_encode_type" jdbcType="INTEGER" property="epEncodeType" />
     <result column="last_access" jdbcType="BIGINT" property="lastAccess" />
     <result column="ep_for" jdbcType="INTEGER" property="epFor" />
     
   </resultMap>
   <sql id="Base_Column_List">
     id, ep_name, ep_purchase_ip, product_list_ip, ep_order_state_ip,ep_call_back_ip, ep_balance_ip, <!-- ep_order_state_ip, -->
-    ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip, ep_eng_id,ep_other_params, ep_call_back, last_access, ep_for
+    ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip, ep_eng_id,ep_other_params, ep_call_back, last_access, ep_for,ep_encode_type
   </sql>
   <sql id="EpByRteId_Column_List">
     ep.id, ep.ep_name, ep_purchase_ip, product_list_ip, ep_order_state_ip,ep_call_back_ip, ep_balance_ip, <!-- ep_order_state_ip, -->
-    ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip, ep_eng_id,ep_other_params, ep_call_back, ep.last_access, ep.ep_for
+    ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip, ep_eng_id,ep_other_params, ep_call_back, ep.last_access, ep.ep_for,ep.ep_encode_type
   </sql>
   <!-- <sql id="Other_Column_List">
     ep.id, ep.ep_name, ep_purchase_ip, product_list_ip, pgdata_check_ip, ep_balance_ip, 

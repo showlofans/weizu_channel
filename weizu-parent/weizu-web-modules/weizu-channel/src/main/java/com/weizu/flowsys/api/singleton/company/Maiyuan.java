@@ -59,19 +59,21 @@ public class Maiyuan implements BaseInterface {
 		System.out.println(epPo.getEpPurchaseIp()+"?"+params);
 		 String jsonStr = HttpRequest.sendGet(epPo.getEpPurchaseIp(), params);
 		 ChargeDTO chargeDTO = null;
-		 System.out.println(jsonStr);
 		 try {  
 			 	if(StringHelper.isEmpty(jsonStr) || "exception".equals(jsonStr)){
 			 		return null;
 			 	}
+			 	System.out.println(jsonStr);
 	            JSONObject obj = JSON.parseObject(jsonStr);
-	            String taskId = obj.getString("TaskID");
+	            Long taskId = obj.getLongValue("TaskID");
 	            String code = obj.getString("Code");
 	            String message = obj.getString("Message");
+	            boolean isTaskId = !taskId.equals(0);
+	            boolean isCode = code.equals("0");
 //	            String orderId = obj.getString("out_trade_no");
 	          //用我这边默认的对私账户充值
-	            if(!taskId.equals(0) && code.equals(0)){
-	            	chargeDTO = new ChargeDTO(OrderResultEnum.SUCCESS.getCode(), message, new ChargeOrder(taskId, baseParams.getChargeTel(), baseParams.getProductCodePo().getProductCode(), 0));
+	            if(isTaskId && isCode){
+	            	chargeDTO = new ChargeDTO(OrderResultEnum.SUCCESS.getCode(), message, new ChargeOrder(taskId.toString(), baseParams.getChargeTel(), baseParams.getProductCodePo().getProductCode(), 0));
 	            }else{
 	            	chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), message, null);
 	            }
@@ -141,6 +143,7 @@ public class Maiyuan implements BaseInterface {
 	public OrderDTO getOrderState() {
 		String paramsStr =  toOrderParams();
 		String jsonStr = HttpRequest.sendGet(baseParams.getEpo().getEpOrderStateIp(),paramsStr);
+		System.out.println(baseParams.getEpo().getEpOrderStateIp() +'?' + paramsStr);
 		OrderDTO orderDTO = null;
 		String statusMsg = "";
 		try {  
@@ -245,7 +248,7 @@ public class Maiyuan implements BaseInterface {
 		paramBuffer.append("&account=");
 		paramBuffer.append(platformPo.getEpUserName());
 		paramBuffer.append("&");
-		paramBuffer.append("&out_trade_no=");
+		paramBuffer.append("&outTradeNo=");
 		paramBuffer.append(baseParams.getOrderId());
 		paramBuffer.append("&package=");
 		paramBuffer.append(pc.getProductCode());
@@ -436,6 +439,7 @@ public class Maiyuan implements BaseInterface {
 
 	@Override
 	public String toOrderParams() {
+		/**获得订单的订单状态*/
 		ExchangePlatformPo platformPo = baseParams.getEpo();
 		String account = platformPo.getEpUserName();
 		String key = platformPo.getEpApikey();
@@ -443,6 +447,8 @@ public class Maiyuan implements BaseInterface {
 		StringBuffer signBuffer = new StringBuffer();
 		signBuffer.append("account=");
 		signBuffer.append(account);
+		signBuffer.append("&count=");
+		signBuffer.append(1);
 		signBuffer.append("&key=");
 		signBuffer.append(key);
 		try {
@@ -451,21 +457,24 @@ public class Maiyuan implements BaseInterface {
 			e.printStackTrace();
 		}
 		StringBuffer paramsBuffer = new StringBuffer();
-		paramsBuffer.append("Account=");
+		paramsBuffer.append("account=");
 		paramsBuffer.append(account);
 		paramsBuffer.append("&");
 		paramsBuffer.append(platformPo.getEpOtherParams());//app_key
-		paramsBuffer.append("Action=queryReport");//mobile
-		if(StringHelper.isNotEmpty(baseParams.getOrderIdApi())){
-			paramsBuffer.append("&TaskId=");//trade_no
-			paramsBuffer.append(baseParams.getOrderIdApi());//trade_no
-		}
-		if(baseParams.getOrderId() != null){
-			paramsBuffer.append("&OutTradeNo=");//out_trade_no
-			paramsBuffer.append(baseParams.getOrderId());//out_trade_no
-		}
-		paramsBuffer.append("&SendTime=");//SendTime
-		paramsBuffer.append(baseParams.getOtherParams());//SendTime
+		paramsBuffer.append("action=getReports");//mobile
+//		paramsBuffer.append("Action=queryReport");//mobile
+//		if(StringHelper.isNotEmpty(baseParams.getOrderIdApi())){
+//			paramsBuffer.append("&TaskId=");//trade_no
+//			paramsBuffer.append(baseParams.getOrderIdApi());//trade_no
+//		}
+//		if(baseParams.getOrderId() != null){
+//			paramsBuffer.append("&outTradeNo=");//out_trade_no
+//			paramsBuffer.append(baseParams.getOrderId());//out_trade_no
+//		}
+//		paramsBuffer.append("&SendTime=");//SendTime
+//		paramsBuffer.append(baseParams.getOtherParams());//SendTime
+		paramsBuffer.append("&count=");//trade_no
+		paramsBuffer.append(1);//trade_no
 		paramsBuffer.append("&Sign=");//sign
 		paramsBuffer.append(sign);//sign
 		

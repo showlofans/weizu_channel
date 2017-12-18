@@ -400,7 +400,7 @@ public class CallBackController {
 		return successTag;
 	}
 	/**
-	 * @description: 迈远系统GET回调
+	 * @description: 迈远系统GET回调（未使用）
 	 * @param request
 	 * @return
 	 * @author:微族通道代码设计人 宁强
@@ -414,7 +414,7 @@ public class CallBackController {
 		String statusDetail = "";
 		int myStatus = -1;
 		try {  
-				System.out.println("其他参数：sign="+sign + " ReportCode=" + ReportCode+ "mobile="+mobile + " ReportTIme=" + ReportTIme );
+				System.out.println("其他参数：sign="+sign + " ReportCode=" + ReportCode + " OutTradeNo=" + OutTradeNo+ "mobile="+mobile + " ReportTIme=" + ReportTIme );
 				//初始化参数
 				long orderId = Long.parseLong(OutTradeNo.trim());
 				PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
@@ -449,7 +449,7 @@ public class CallBackController {
 		return successTag;
 	}
 	/**
-	 * @description: 迈远系统Post回调
+	 * @description: 迈远系统Post回调(使用)
 	 * @param jsonStr
 	 * @return
 	 * @author:微族通道代码设计人 宁强
@@ -475,31 +475,36 @@ public class CallBackController {
 	        		String ReportCode = jsonObj.getString("ReportCode");
 	        		String sign = jsonObj.getString("sign");
 //	        	System.out.println("type=" + name);
-	        		System.out.println("其他参数：sign="+sign + " ReportCode=" + ReportCode+ "mobile="+mobile + " ReportTIme=" + ReportTIme );
-	        		//初始化参数
-	        		long orderId = Long.parseLong(OutTradeNo.trim());
-	        		PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
-	        		Boolean hasCall = OrderResultEnum.SUCCESS.getCode().equals(purchasePo.getHasCallBack());
-	        		String res = "";
-	        		if(!hasCall){//上一次没有回调成功
-	        			//Long orderBackTime = DateUtil.strToDate(report_time, null).getTime();
-	        			switch (Status) {
-	        			case 4:
-	        				myStatus = OrderStateEnum.CHARGED.getValue();
-	        				statusDetail = OrderStateEnum.CHARGED.getDesc();
-	        				break;
-	        			case 5:
-	        				myStatus = OrderStateEnum.UNCHARGE.getValue();
-	        				statusDetail = OrderStateEnum.UNCHARGE.getDesc();
-	        				break;
-	        				
-	        			default:
-	        				break;
-	        			}
-	        			res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, taskId, System.currentTimeMillis(), myStatus,null , statusDetail));
-	        			if(!"success".equals(res)){
-	        				isError = true;
+	        		System.out.println("其他参数：sign="+sign + " ReportCode=" + ReportCode+ "mobile="+mobile + " ReportTIme=" + ReportTIme + " OutTradeNo=" + OutTradeNo );
+	        		if(StringHelper.isEmpty(OutTradeNo)){
+	        			successTag = "没有返回用户订单号";
+	        			break;
+	        		}else{
+	        			//初始化参数
+	        			long orderId = Long.parseLong(OutTradeNo.trim());
+	        			PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
+	        			Boolean hasCall = OrderResultEnum.SUCCESS.getCode().equals(purchasePo.getHasCallBack());
+	        			String res = "";
+	        			if(!hasCall){//上一次没有回调成功
+	        				//Long orderBackTime = DateUtil.strToDate(report_time, null).getTime();
+	        				switch (Status) {
+	        				case 4:
+	        					myStatus = OrderStateEnum.CHARGED.getValue();
+	        					statusDetail = OrderStateEnum.CHARGED.getDesc();
+	        					break;
+	        				case 5:
+	        					myStatus = OrderStateEnum.UNCHARGE.getValue();
+	        					statusDetail = OrderStateEnum.UNCHARGE.getDesc();
+	        					break;
+	        					
+	        				default:
+	        					break;
+	        				}
+	        				res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, taskId, System.currentTimeMillis(), myStatus,null , statusDetail));
+	        				if(!"success".equals(res)){
+	        					isError = true;
 //	        				successTag = res;
+	        				}
 	        			}
 	        		}
 	        	}
