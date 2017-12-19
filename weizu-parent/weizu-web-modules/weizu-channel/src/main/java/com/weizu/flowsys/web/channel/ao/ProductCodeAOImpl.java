@@ -244,4 +244,12 @@ public class ProductCodeAOImpl implements ProductCodeAO {
 		return productCodeDAO.del(id);
 	}
 
+	@Override
+	public ProductCodePo getOneProductCodeByPg(Integer pgId) {
+		ProductCodePo pcPo =  productCodeDAO.getOneProductCodeByPg(pgId);
+//		pcPo.setId(pcPo.getPgId().longValue());					//设置包体id为编码id
+		pcPo.setProductCode(pcPo.getPgSize().toString());		//设置包体大小为编码
+		return pcPo;
+	}
+
 }

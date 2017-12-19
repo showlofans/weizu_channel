@@ -164,12 +164,12 @@
 						<th width="80">有效期</th>
 						<th width="80">流通方式</th>
 						<!-- <th width="80">流量类型</th> -->
-						<th width="80">流量大小</th>
+						<th width="80">流量大小（M）</th>
 					<%-- </c:if> --%>
 					<th width="80">运营商类型</th>
 					<!-- <th width="80">运营商名称</th> -->
 					<!-- <th width="120">支持城市</th> -->
-					<th width="75">原价</th>
+					<th width="75">原价（元）</th>
 					<!-- <th width="60">使用状态</th> -->
 					 <th width="120">操作</th>
 				</tr>
@@ -220,7 +220,7 @@
 								<c:forEach items="${resultMap.pgTypeEnums }" var="pgTypeEnum" varStatus="vs1">
 									<c:if test="${pgTypeEnum.value == pg.pgType }"> 
 										<span data-toggle="tooltip" data-placement="bottom" title="${pgTypeEnum.desc }">
-											${pg.pgSize }M
+											${pg.pgSize }
 										</span>
 									</c:if>
 								</c:forEach>

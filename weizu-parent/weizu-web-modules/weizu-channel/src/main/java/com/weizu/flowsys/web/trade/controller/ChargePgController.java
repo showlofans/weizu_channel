@@ -34,6 +34,7 @@ import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.EpEncodeTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
@@ -495,7 +496,13 @@ public class ChargePgController {
 						if(serviceType != ServiceTypeEnum.NATION_WIDE.getValue()){
 							scopeCityCode = ScopeCityEnum.getValueByCarrier(carrier);
 						}
-						ProductCodePo code = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, platformPo.getId(), pgId));
+//						ProductCodePo code = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, platformPo.getId(), pgId));
+						ProductCodePo code = null;
+						if(EpEncodeTypeEnum.WITH_CODE.equals(platformPo.getEpEncodeType())){
+							code = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, platformPo.getId(), pgId));
+						}else{
+							code = productCodeAO.getOneProductCodeByPg(pgId);
+						}
 						resultMap.put("productCode", code.getProductCode());
 					}
 					resultMap.put("msg", "success");
@@ -521,7 +528,13 @@ public class ChargePgController {
 								if(serviceType != ServiceTypeEnum.NATION_WIDE.getValue()){
 									scopeCityCode = ScopeCityEnum.getValueByCarrier(carrier);
 								}
-								ProductCodePo code = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, platformPo.getId(), pgId));
+//								ProductCodePo code = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, platformPo.getId(), pgId));
+								ProductCodePo code = null;
+								if(EpEncodeTypeEnum.WITH_CODE.equals(platformPo.getEpEncodeType())){
+									code = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, platformPo.getId(), pgId));
+								}else{
+									code = productCodeAO.getOneProductCodeByPg(pgId);
+								}
 								if(code != null){
 									resultMap.put("productCode", code.getProductCode());
 									resultMap.put("channelId", ratePo.getChannelId());

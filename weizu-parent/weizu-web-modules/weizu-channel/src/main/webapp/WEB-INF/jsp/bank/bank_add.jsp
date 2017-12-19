@@ -43,6 +43,26 @@
 			</div>
 		</div>
 		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">是否默认：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<div class="radio-box">
+					 	<input name="polarity" class="radioItem" type="radio" id="pgType-1" value="1" checked>
+						<label for="pgType-1">不默认</label>
+				</div>
+				<div class="radio-box">
+					 	<input name="polarity" class="radioItem" type="radio" id="pgType-0" value="0">
+						<label for="pgType-0">默认</label>
+				</div>
+				<%-- <c:forEach items="${resultMap.callBackEnums }" var="polarity" varStatus="vs">
+					<div class="radio-box">
+					 	<input name="polarity" class="radioItem" type="radio" id="pgType-${vs.index }" value="${pgType.value }" <c:if test="${vs.index==0 }">checked</c:if>>
+						<label for="pgType-${vs.index }">${pgType.desc }</label>
+						<label for="operatorType-${vs.index }"></label>
+					</div>
+				</c:forEach> --%>
+			</div>
+		</div>
+		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
 				<button class="btn btn-primary radius" type="submit" onclick="addBank()"><i class="Hui-iconfont">&#xe632;</i> 添加</button>
 				<button class="btn btn-primary radius" onClick="removeIframe()">取消</button>
@@ -77,8 +97,9 @@ function addBank(){
         success:function(d){
             if(d=="success"){
                 layer.msg('添加成功！');//保存成功提示
-				var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
-	            parent.layer.close(index); //执行关闭
+				//var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+	            //parent.layer.close(index); //执行关闭
+	            removeIframe();
             }else if(d=="error"){
                 layer.msg('添加异常!');
             }else if(d=="exist"){

@@ -41,12 +41,11 @@ public class BankAccountPo extends Po implements Cloneable{
 	@TempField
 	private Double accountBalance;		//页面参数：绑定账户余额带票类型
 
-	public BankAccountPo(Long id, Integer accountId, String remittanceWay,
+	public BankAccountPo(Integer accountId, String remittanceWay,
 			String remittanceBankAccount, String accountName,
 			Double referenceBalance, Integer agencyId, Integer polarity,
 			Integer useState) {
 		super();
-		this.id = id;
 		this.accountId = accountId;
 		this.remittanceWay = remittanceWay;
 		this.remittanceBankAccount = remittanceBankAccount;

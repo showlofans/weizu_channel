@@ -46,8 +46,25 @@ public class ProductCodePo extends Po{
     private Integer circulateWay;				//流通方式（1-普通通道包，2-红包通道，3-转移包，4-共享包）ChannelTypeEnum
     @TempField
     private String epName;			//平台名称
+    
+    /** 一般产品编码构造函数
+     * @param id
+     * @param epId
+     * @param productCode
+     */
+    public ProductCodePo(Long id, Integer epId, String productCode) {
+		super();
+		this.id = id;
+		this.epId = epId;
+		this.productCode = productCode;
+	}
 
-    public Integer getCirculateWay() {
+	public ProductCodePo() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Integer getCirculateWay() {
 		return circulateWay;
 	}
 

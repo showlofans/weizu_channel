@@ -29,12 +29,13 @@
     <result column="reference_balance" property="referenceBalance" jdbcType="DOUBLE" />
     <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
     <result column="use_state" property="useState" jdbcType="INTEGER" />
+    <result column="polarity" property="polarity" jdbcType="INTEGER" />
 	<!-- 账户信息 -->
     <result column="bill_type" property="billType" jdbcType="INTEGER" /> 
     <result column="account_balance" property="accountBalance" jdbcType="DOUBLE" /> 
   </resultMap>
   <sql id="Other_Column_List" >
-    bct.id, bct.account_id, bct.remittance_way, bct.remittance_bank_account, bct.account_name,reference_balance,bct.agency_id,bct.use_state,act.bill_type,act.account_balance 
+    bct.id, bct.account_id, bct.remittance_way,bct.polarity, bct.remittance_bank_account, bct.account_name,reference_balance,bct.agency_id,bct.use_state,act.bill_type,act.account_balance 
   </sql>
   
   <resultMap id="SimpleResultMap" type="com.weizu.flowsys.web.agency.pojo.BankAccountPo" >
@@ -92,6 +93,55 @@
   		</if>
   	</where>
   </select>
+  
+  <!-- 把原来自己银行卡默认的极性换成非默认的极性 -->
+  <update id="changeToNew" parameterType="map">
+  	update <include refid="t_bct"></include> bct
+  	 inner join <include refid="t_account"></include> act
+  	 on bct.account_id=act.id
+  	 <set>
+  	 	<if test="newPolarity != null">
+  	 		bct.polarity = #{newPolarity}
+  	 	</if>
+  	 </set>
+  	 <where>
+  	 	<if test="agencyId != null">
+  			AND bct.agency_id = #{agencyId}
+  			AND act.agency_id = #{agencyId}
+  		</if>
+  		<if test="billType != null">
+  			AND act.bill_type = #{billType}
+  		</if>
+  		<if test="inUseState != null">
+  			AND (bct.use_state != #{inUseState} or bct.use_state is null )
+  		</if>
+  		<if test="originalPolarity != null">
+  			AND bct.polarity = #{originalPolarity}
+  		</if>
+  	 </where>
+  </update>
+  <!-- 把子母银行卡设置为默认的极性 -->
+  <update id="changeToOrinianl" parameterType="map">
+  	update <include refid="t_bct"></include>
+  	 <set>
+  	 	<if test="originalPolarity != null">
+  	 		polarity = #{originalPolarity}
+  	 	</if>
+  	 </set>
+  	 <where>
+  	 	<!-- <if test="remmitanceBankAccount != null">
+  	 		remittance_bank_account = #{remmitanceBankAccount}
+  	 	</if>
+  	 	<if test="agencyId != null">
+  			AND agency_id = #{agencyId}
+  		</if> -->
+  	 	<if test="bankId != null">
+  	 		id = #{bankId}
+  	 	</if> 
+  	 	
+  	 </where>
+  </update>
+  
   <!-- 获得绑定的父级代理商银行卡列表 -->
   <select id="getAttachBankList" parameterType="map" resultMap="OtherResultMap">
   	select <include refid="Other_Column_List"></include>
@@ -128,14 +178,40 @@
 			AND act.agency_id = #{agencyId}
 			and bct.agency_id = #{agencyId}
 		</if>
-		<if test="inUseState != null">
+		<if test="inUseState != null"><!-- 自己的银行卡 -->
 			 and (use_state != #{inUseState} or use_state IS null)
 		</if>
+		<!-- <if test="remmitanceBankAccount != null">
+			and bct.remittance_bank_account = #{remmitanceBankAccount}
+		</if> -->
 		<if test="remmitanceBankAccount != null">
 			and bct.remittance_bank_account = #{remmitanceBankAccount}
 		</if>
 	</where>
   </select>
+  <!-- 获得父级代理商默认极性的相应卡 -->
+  <select id="getOriginalBankA" parameterType="map" resultMap="OtherResultMap">
+	  SELECT <include refid="Other_Column_List"></include> 
+	  FROM <include refid="t_bct"></include> bct
+	  INNER JOIN <include refid="t_account"></include> act
+	  on act.id = bct.account_id
+	<where>
+		<if test="agencyId != null">
+  			AND bct.agency_id = #{agencyId}
+  			AND act.agency_id = #{agencyId}
+  		</if>
+  		<if test="billType != null">
+  			AND act.bill_type = #{billType}
+  		</if>
+  		<if test="inUseState != null">
+  			AND (bct.use_state != #{inUseState} or bct.use_state is null )
+  		</if>
+  		<if test="originalPolarity != null">
+  			AND bct.polarity = #{originalPolarity}
+  		</if>
+	</where>
+  </select>
+  
   
   <!-- 批量添加 -->
    <!-- <insert id="ap_addList" useGeneratedKeys="true" parameterType="java.util.List">

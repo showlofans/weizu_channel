@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
+import com.weizu.flowsys.operatorPg.enums.EpEncodeTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
@@ -77,6 +78,7 @@ public class PlatformController {
 		ExchangePlatformPo epPo = exchangePlatformAO.getEpById(epId);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());
+		resultMap.put("epEncodeTypeEnums", EpEncodeTypeEnum.toList());
 		resultMap.put("exchangePlatformPo", epPo);
 		return new ModelAndView("/channel/platform_edit_page","resultMap",resultMap);
 	}
@@ -136,6 +138,7 @@ public class PlatformController {
 			resultMap.put("searchParam", exchangePlatformPo);
 			resultMap.put("callBackEnums", CallBackEnum.toList());
 			resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());
+			resultMap.put("epEncodeTypeEnums", EpEncodeTypeEnum.toList());
 			resultMap.put("pagination", pagination);
 			return new ModelAndView("/channel/platform_list", "resultMap", resultMap);
 //		}else{
@@ -158,6 +161,7 @@ public class PlatformController {
 //				return new ModelAndView("/channel/platform_add_page","pageTitle",pageTitle);
 //			}else{
 				resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());
+				resultMap.put("epEncodeTypeEnums", EpEncodeTypeEnum.toList());
 				return new ModelAndView("/channel/platform_add_page","resultMap", resultMap);
 //			}
 //		} catch (UnsupportedEncodingException e) {

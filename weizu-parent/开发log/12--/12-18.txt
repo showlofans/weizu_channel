@@ -1,0 +1,26 @@
+注意：对接平台的时候，确认是否需要添加编码
+常用：无编码形式，默认无地区差别
+有编码形式，需要手动添加编码
+
+平台设置是否使用无编码形式
+
+所有的无编码编码在标准包里添加，在包体上设置编码,其实就是包体大小
+找到标准包的包体大小，就是编码
+
+加载需要编码的平台列表
+
+根据平台的有无编码字段，来确定获取唯一编码的方法
+
+平台接口，根据平台类型，确定获取类型的方式
+
+http://120.25.93.242:8080/api.aspx?Account=ncwzwp&v=1.1&Action=getReports&count=1&Sign=f473a5128177891b0d95d911d46a2e6d
+
+account=ncwzwp&v=1.1&action=getReports&count=1&Sign=f473a5128177891b0d95d911d46a2e6d
+
+无编码
+
+pg 41，channel 49 2
+{channelId=49, channelUseState=0, pgId=41, bindState=0, agencyId=2}
+
+
+

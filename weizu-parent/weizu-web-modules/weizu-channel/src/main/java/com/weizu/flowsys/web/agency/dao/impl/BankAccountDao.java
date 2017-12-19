@@ -48,6 +48,29 @@ public class BankAccountDao extends DaoImpl<BankAccountPo, Long> implements
 		return sqlSessionTemplateASS.selectList("getTransferMsg", params);
 	}
 
+	@Override
+	public int changePolarity(Integer agencyId,Integer billType, Integer originalPolarity,
+			Integer newPolarity, Integer inUseState) {
+		Map<String,Object> params = new HashMap<String, Object>();
+		params.put("agencyId", agencyId);
+		params.put("billType", billType);
+		params.put("inUseState", inUseState);
+		params.put("originalPolarity", originalPolarity);
+		params.put("newPolarity", newPolarity);
+		return sqlSessionTemplateASS.update("changeToNew", params);
+	}
+
+	@Override
+	public int changePolarity(Map<String,Object> params) {
+		return sqlSessionTemplateASS.update("changeToOrinianl", params);
+	}
+
+	@Override
+	public List<BankAccountPo> getOriginalBankA(Map<String, Object> paramsMap) {
+		return sqlSessionTemplateASS.selectList("getOriginalBankA", paramsMap);
+	}
+	
+
 //	@Override
 //	public int delBank(String remmitanceBankAccount, Integer agencyId) {
 //		// TODO Auto-generated method stub

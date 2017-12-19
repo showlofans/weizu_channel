@@ -52,6 +52,7 @@
 				<th>银行卡名称</th>
 				<th>银行卡账号</th>
 				<th>账户真实姓名</th>
+				<th>属性</th>
 				<!-- <th>绑定状态</th> -->
 				<th>操作</th>
 			</tr>
@@ -62,8 +63,20 @@
 					<td>${bank.remittanceWay }</td>
 					<td>${bank.remittanceBankAccount }</td>
 					<td>${bank.accountName }</td>
+					<td>
+						<c:choose>
+							<c:when test="${bank.polarity == 0 }"><!-- 默认 -->
+								默认
+							</c:when>
+							<c:otherwise>
+								非默认
+							</c:otherwise>
+						</c:choose>
+					</td>
 					<td class="td-manage">
-						<a style="text-decoration:none" class="ml-5" onClick="bank_del('/flowsys/bankAccount/del_bank.do',this,${bank.id})" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6e2;</i></a>
+						<c:if test="${bank.polarity != 0 }">
+							<a style="text-decoration:none" class="ml-5" onClick="bank_del('/flowsys/bankAccount/del_bank_bind.do',this,${bank.id})" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6e2;</i></a>
+						</c:if>
 					</td>
 				</tr>
 			</c:forEach>
@@ -96,6 +109,8 @@
 							<!-- <td>已绑定</td> -->
 							<td class="td-manage">
 								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="add_bank('/flowsys/bankAccount/attach_bank.do',${bank.id})" href="javascript:;" title="添加银行卡"><i class="Hui-iconfont">&#xe725;</i></a>
+								<%-- <c:if test="${bank.polarity != 0 }">
+								</c:if> --%>
 							</td>
 						</tr>
 					</c:forEach>

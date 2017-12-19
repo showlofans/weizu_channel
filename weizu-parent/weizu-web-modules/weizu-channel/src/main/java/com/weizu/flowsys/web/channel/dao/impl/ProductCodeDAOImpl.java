@@ -90,5 +90,9 @@ public class ProductCodeDAOImpl extends DaoImpl<ProductCodePo, Long> implements
 	public ProductCodePo selectByPrimaryKey(Long id) {
 		return sqlSessionTemplate.selectOne("selectByPrimaryKey", id);
 	}
+	@Override
+	public ProductCodePo getOneProductCodeByPg(Integer pgId) {
+		return sqlSessionTemplate.selectOne("getOneProductCodeByPg", pgId);
+	}
 
 }

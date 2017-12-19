@@ -22,6 +22,7 @@
     <result column="pg_encode_price" property="pgEncodePrice" jdbcType="DOUBLE" />
     <result column="ep_id" property="epId" jdbcType="INTEGER" />
     <result column="product_code" property="productCode" jdbcType="VARCHAR" />
+    <result column="ep_name" property="epName" jdbcType="VARCHAR" />
     
     <result column="pg_size" property="pgSize" jdbcType="INTEGER" />
     <result column="pg_price" property="pgPrice" jdbcType="DOUBLE" />
@@ -31,12 +32,16 @@
     <result column="pg_type" jdbcType="INTEGER" property="pgType" />
     <result column="circulate_way" jdbcType="INTEGER" property="circulateWay" />
     <result column="pg_validity" jdbcType="VARCHAR" property="pgValidity" />
-    <result column="ep_name" property="epName" jdbcType="VARCHAR" />
   </resultMap>
   
   <sql id="Base_Column_List" >
     pc.*,opd.pg_size,opd.pg_price,opd.pg_name,opd.operator_type,opd.service_type,opd.pg_type,opd.pg_validity,opd.circulate_way,ep.ep_name
   </sql>
+  <!-- 无编码编码列表 -->
+  <sql id="pg_code_list">
+  	id pg_id,pg_size, pg_price,operator_type,pg_price,service_type,pg_type,circulate_way,pg_validity
+  </sql>
+  
   <sql id="Simple_Column_List" >
     pc.*
   </sql>
@@ -87,7 +92,7 @@
     </where>
   </select>
   <!-- 根据参数查询产品编码 -->
-  <select id="getOneProductCode" parameterType="map" resultMap="SimpleResultMap">
+  <select id="getOneProductCode" parameterType="map" resultMap="BaseResultMap">
   	select <include refid="Base_Column_List"></include> 
   	from <include refid="t_pcode"></include> pc
     inner join <include refid="t_opd"></include> opd
@@ -98,6 +103,17 @@
     	<include refid="getOneProduct_sql"></include>
     </where>
   </select>
+  <!-- 通过包体id获得产品编码 :id和编码需要重新处理-->
+  <select id="getOneProductCodeByPg" parameterType="int" resultMap="BaseResultMap">
+  	select <include refid="pg_code_list"></include> 
+  	from <include refid="t_opd"></include>
+  	<where>
+  		<if test="_parameter != null">
+  			id = #{_parameter}
+  		</if>
+  	</where>
+  </select>
+  
   <!-- 通过参数查询一个产品编码 -->
   <sql id="getOneProduct_sql">
   <!-- WHERE pc.scope_city_code = 14 and opd.pg_size=6144 and opd.operator_type = 0 and opd.service_type = 0; -->

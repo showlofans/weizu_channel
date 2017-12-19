@@ -44,6 +44,11 @@ public class BankAccountURL extends BaseURL {
 	 */
 	public static final String DEL_BANK = "/del_bank" + DYNAMIC_WEB_SUFFIX;
 	/**
+	 * 银行卡绑定删除
+	 * <br> /flowsys/bankAccount/del_bank_bind.do
+	 */
+	public static final String DEL_BANK_BIND = "/del_bank_bind" + DYNAMIC_WEB_SUFFIX;
+	/**
 	 * 银行卡绑定
 	 * <br> /flowsys/bankAccount/attach_bank_page.do
 	 */
@@ -54,7 +59,12 @@ public class BankAccountURL extends BaseURL {
 	 */
 	public static final String ATTACH_BANK = "/attach_bank" + DYNAMIC_WEB_SUFFIX;
 	/**
-	 * 银行卡绑定
+	 * 修改银行卡默认状态
+	 * <br> /flowsys/bankAccount/change_bank_polarity.do
+	 */
+	public static final String CHANGE_BANK_POLARITY = "/change_bank_polarity" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 银行卡解绑
 	 * <br> /flowsys/bankAccount/unattach_bank.do
 	 */
 	public static final String UNATTACH_BANK = "/unattach_bank" + DYNAMIC_WEB_SUFFIX;
@@ -78,5 +88,7 @@ public class BankAccountURL extends BaseURL {
 	 * <br> /flowsys/bankAccount/transfer_confirm.do
 	 */
 	public static final String TRANSFER_CONFIRM = "/transfer_confirm" + DYNAMIC_WEB_SUFFIX;
+	
+	
 	
 }

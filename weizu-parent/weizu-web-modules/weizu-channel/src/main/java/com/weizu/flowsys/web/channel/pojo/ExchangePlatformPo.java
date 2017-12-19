@@ -52,12 +52,20 @@ public class ExchangePlatformPo extends Po {
     
     private Integer epFor;				//PgServiceTypeEnum 平台类型
     
+    private Integer epEncodeType;			//EpCodeTypeEnum 平台编码类型
+    
     @TempField
     private String lastAccessStr;		//页面展示时间
     
-    
-    
-    public Integer getEpFor() {
+	public Integer getEpEncodeType() {
+		return epEncodeType;
+	}
+
+	public void setEpEncodeType(Integer epEncodeType) {
+		this.epEncodeType = epEncodeType;
+	}
+
+	public Integer getEpFor() {
 		return epFor;
 	}
 

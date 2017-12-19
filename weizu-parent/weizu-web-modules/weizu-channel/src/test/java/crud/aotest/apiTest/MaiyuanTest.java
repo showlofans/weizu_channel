@@ -25,6 +25,7 @@
 //import com.weizu.flowsys.web.channel.dao.IProductCodeDAO;
 //import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 //import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
+//import com.weizu.web.foundation.DateUtil;
 //import com.weizu.web.foundation.MD5;
 //import com.weizu.web.foundation.http.HttpRequest;
 //
@@ -51,12 +52,12 @@
 ////		biCharge = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP("10",766467363703885824l,"18300309834",0,epPo));//充值api测试
 ////	}
 //	
-////	@Test
+//	@Test
 //	@Override
 //	public void testGetBalance(){
 //		ExchangePlatformPo platformPo = exchangePlatformAO.getEpByEpName("仁智迈远");
 //		ProductCodePo pc = productDAO.selectByPrimaryKey(278l);
-//		BaseInterface bi = SingletonFactory.getSingleton(platformPo.getEpEngId(), new BaseP(pc,726633391352451072l,null,platformPo));
+//		BaseInterface bi = SingletonFactory.getSingleton(platformPo.getEpEngId(), new BaseP(pc,726633391352451072l,null,platformPo,DateUtil.formatPramm(System.currentTimeMillis(), "yyyy-MM-dd")));
 //		BalanceDTO balanceDTO = bi.getBalance();
 //		System.out.println(balanceDTO == null ? "": balanceDTO.getAccountBalance());
 ////		String [] tipSign = new String[]{"app_key"};
@@ -67,12 +68,12 @@
 ////		}
 //	}
 //	
-//	@Test
+////	@Test
 //	public void testGetOrderState(){
 //		ExchangePlatformPo platformPo = exchangePlatformAO.getEpByEpName("仁智迈远");
 //		ProductCodePo pc = productDAO.selectByPrimaryKey(278l);
 //		
-//		BaseInterface bi = SingletonFactory.getSingleton(platformPo.getEpEngId(), new BaseP(pc,"18561135",null,platformPo));
+//		BaseInterface bi = SingletonFactory.getSingleton(platformPo.getEpEngId(), new BaseP(pc,"18561135",null,platformPo,DateUtil.formatPramm(System.currentTimeMillis(), "yyyy-MM-dd")));
 //		OrderDTO orderDTO = bi.getOrderState();
 //		if(orderDTO != null){
 //			System.out.println(orderDTO.getRspCode() + "<------>" + orderDTO.getRspMsg());	
@@ -84,7 +85,7 @@
 //		ExchangePlatformPo platformPo = exchangePlatformAO.getEpByEpName("仁智迈远");
 //		ProductCodePo pc = productDAO.selectByPrimaryKey(278l);
 //		//全国移动 10M编码
-//		BaseInterface bi = SingletonFactory.getSingleton(platformPo.getEpEngId(), new BaseP(pc,766467363703885824l,"15754710513",platformPo));
+//		BaseInterface bi = SingletonFactory.getSingleton(platformPo.getEpEngId(), new BaseP(pc,766467363703885824l,"15754710513",platformPo,DateUtil.formatPramm(System.currentTimeMillis(), "yyyy-MM-dd")));
 //		ChargeDTO chargeDTO = bi.charge();
 //		System.out.println(chargeDTO.getTipMsg() + "<------>" + chargeDTO.getTipCode());
 //		if(chargeDTO.getChargeOrder() != null){
@@ -101,7 +102,7 @@
 //	public void testGetProduct(){
 //		ExchangePlatformPo platformPo = exchangePlatformAO.getEpByEpName("仁智迈远");
 //		ProductCodePo pc = productDAO.selectByPrimaryKey(278l);
-//		BaseInterface bi = SingletonFactory.getSingleton(platformPo.getEpEngId(), new BaseP(pc,766467363703885824l,"15754710513",platformPo));
+//		BaseInterface bi = SingletonFactory.getSingleton(platformPo.getEpEngId(), new BaseP(pc,766467363703885824l,"15754710513",platformPo,DateUtil.formatPramm(System.currentTimeMillis(), "yyyy-MM-dd")));
 //		BalanceDTO balanceDTO = bi.getBalance();
 //		System.out.println(balanceDTO == null ? "": balanceDTO.getAccountBalance());
 ////		String [] tipSign = new String[]{"app_key"};

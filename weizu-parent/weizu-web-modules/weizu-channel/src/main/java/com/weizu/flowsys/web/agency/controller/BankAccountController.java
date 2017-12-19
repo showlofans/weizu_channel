@@ -92,7 +92,7 @@ public class BankAccountController {
 			Integer chileAccountId = childAccountIdOjb == null ? null : Integer.parseInt(childAccountIdOjb.toString());
 			BankAccountPo originalBankPo = bankAccountDao.get(id);
 			if(originalBankPo != null){
-				BankAccountPo bankPo = new BankAccountPo(id, chileAccountId, originalBankPo.getRemittanceWay(), originalBankPo.getRemittanceBankAccount(), originalBankPo.getAccountName(), null, agencyVo.getId(), CallBackEnum.POSITIVE.getValue(), CallBackEnum.POSITIVE.getValue());
+				BankAccountPo bankPo = new BankAccountPo(chileAccountId, originalBankPo.getRemittanceWay(), originalBankPo.getRemittanceBankAccount(), originalBankPo.getAccountName(), null, agencyVo.getId(), CallBackEnum.POSITIVE.getValue(), CallBackEnum.POSITIVE.getValue());
 				return bankAccountAO.attachBank(bankPo);
 			}
 		}
@@ -174,6 +174,7 @@ public class BankAccountController {
 	public ModelAndView addBankAccountPage(HttpServletRequest request,Integer billType){
 		Map<String,Object> resultMap = new HashMap<String,Object>();
 		resultMap.put("billType", billType);
+//		resultMap.put("callBackEnums", CallBackEnum.toList());
 		return new ModelAndView("/bank/bank_add", "resultMap", resultMap);
 	}
 	/**
@@ -187,6 +188,9 @@ public class BankAccountController {
 	@RequestMapping(value=BankAccountURL.ADD_BANK)
 	@ResponseBody
 	public String addBankAccount(HttpServletRequest request,BankAccountPo bankPo){
+		
+//		bankAccountDao.getOriginalBankA(paramsMap)
+		
 		if(BillTypeEnum.CORPORATE_BUSINESS.getValue().equals(bankPo.getBillType())){
 			ChargeAccountPo accountPo1 = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
 			if(accountPo1 != null){
@@ -203,7 +207,20 @@ public class BankAccountController {
 			}
 		}
 		return "error";
-		
+	}
+	/**
+	 * @description: 异步修改银行卡默认状态 my_bank_list
+	 * @param id
+	 * @param polarity
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月16日 上午11:13:33
+	 */
+	@RequestMapping(value=BankAccountURL.CHANGE_BANK_POLARITY)
+	@ResponseBody
+	public String changeBankPolarity(Long id, Integer polarity){
+		String res = bankAccountAO.changeBankPolarity(id, polarity);
+		return res;
 	}
 	
 	/**
@@ -240,7 +257,7 @@ public class BankAccountController {
 		}
 	}
 	/**
-	 * @description: 删除银行卡
+	 * @description: 自己删除银行卡
 	 * @param request
 	 * @param id
 	 * @return
@@ -254,6 +271,26 @@ public class BankAccountController {
 		BankAccountPo bankPo = bankAccountDao.get(id);
 		//删除子母银行卡
 		int res = bankAccountDao.del(new WherePrams("agency_id", "=", bankPo.getAgencyId()).and("remittance_bank_account", "=", bankPo.getRemittanceBankAccount()));
+		if(res > 0){
+			return "success";
+		}else{
+			return "error";
+		}
+	}
+	/**
+	 * @description: 删除绑定银行卡
+	 * @param request
+	 * @param id
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年10月9日 下午4:42:31
+	 */
+	@RequestMapping(value=BankAccountURL.DEL_BANK_BIND)
+	@ResponseBody
+	@Transactional
+	public String delBankBindAccount(Long id){
+		//删除当前绑定类型银行卡
+		int res = bankAccountDao.del(id);
 		if(res > 0){
 			return "success";
 		}else{
