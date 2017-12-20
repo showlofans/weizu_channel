@@ -45,4 +45,22 @@ public interface ITelRateDao extends Dao<TelRatePo, Long> {
 	 */
 	TelRatePo getPlatTelRateById(Long telRateId);
 	
+	/**
+	 * @description: 通过参数得到唯一的话费折扣
+	 * @param map
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月20日 下午3:56:09
+	 */
+	TelRatePo getTelRateByParams(Map<String,Object> map);
+	
+	/**
+	 * @description: 递归删除所有子折扣
+	 * @param telRateId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月20日 上午10:52:18
+	 */
+	long delByIteratorFun(Long telRateId);
+	
 }

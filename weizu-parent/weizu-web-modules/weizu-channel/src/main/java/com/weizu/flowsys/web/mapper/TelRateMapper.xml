@@ -16,6 +16,8 @@
     <result column="telchannel_id" property="telchannelId" jdbcType="BIGINT" />
     <result column="rate_for" property="rateFor" jdbcType="INTEGER" />
     <result column="rate_type" property="rateType" jdbcType="INTEGER" />
+    <result column="rate_for_platform" property="rateForPlatform" jdbcType="INTEGER" />
+    <result column="create_agency" property="createAgency" jdbcType="INTEGER" />
   </resultMap>
   <!-- 异步获得的话费价格折扣信息 -->
   <resultMap type="com.weizu.flowsys.web.trade.pojo.GetTelRatePo" id="CTRResultMap">
@@ -32,6 +34,9 @@
    </sql>
    <sql id="Base_Column_List">	
    	tt1.id,tt1.active_discount,tt1.bill_type,tt1.telchannel_id,tt1.rate_for,tt1.rate_type
+   </sql>
+   <sql id="First_Column_List">	
+   	id,active_discount,bill_type,telchannel_id,rate_for,rate_type,rate_for_platform,create_agency
    </sql>
    
    
@@ -50,6 +55,41 @@
 			</if>
 		</where>
 			<!-- WHERE tt2.id=7 and tt1.rate_for=0; -->
+   </select>
+   <!-- 递归删除所有子折扣 -->
+   <delete id="delByIteratorFun" parameterType="long">
+   		DELETE FROM <include refid="t_telrate"></include> where FIND_IN_SET(id,queryChildrenRateInfo(#{_parameter}));
+   </delete>
+   <!-- 通过参数得到唯一的话费折扣 -->
+   <select id="getTelRateByParams" parameterType="map" resultMap="BaseResultMap">
+   		SELECT <include refid="First_Column_List"></include>
+   		from <include refid="t_telrate"></include>
+   		<where>
+   			<if test="telchannelId != null">
+   				AND telchannel_id = #{telchannelId}
+   			</if>
+   			<if test="rateFor != null">
+   				AND rate_for = #{rateFor}
+   			</if>
+   			<if test="rateForPlatform != null">
+   				AND rate_for_platform = #{rateForPlatform}
+   			</if>
+   			<if test="createAgency != null">
+   				AND create_agency = #{createAgency}
+   			</if>
+   			<if test="billType != null">
+   				AND bill_type = #{billType}
+   			</if>
+   			<if test="noParent != null">
+   				AND active_id is null
+   			</if>
+   			<if test="activeId != null">
+   				AND active_id = #{activeId}
+   			</if>
+   			<if test="id != null">
+   				AND id = #{id}
+   			</if>
+   		</where>
    </select>
    
    <!-- 获得话费充值折扣 -->

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
+import com.weizu.flowsys.web.activity.pojo.TelRatePo;
 
 /**
  * @description: 话费通道查询(页面)参数
@@ -59,12 +60,32 @@ public class TelChannelParams extends Po implements Serializable {
 	
 	private Integer rateFor;					//折扣类型 AgencyTagEnum //我的话费
 	
+	private Integer rateForPlatform;			//CallBackEnum 是否配置了平台折扣标志
+	
+	private TelRatePo telRatePo;			//子代理商话费折扣
+	
 //	private Integer agencyId;					//
 	
 	//private Long lastAccess;					//更新时间
 	
 	public String getProvinceid() {
 		return provinceid;
+	}
+
+	public Integer getRateForPlatform() {
+		return rateForPlatform;
+	}
+
+	public void setRateForPlatform(Integer rateForPlatform) {
+		this.rateForPlatform = rateForPlatform;
+	}
+
+	public TelRatePo getTelRatePo() {
+		return telRatePo;
+	}
+
+	public void setTelRatePo(TelRatePo telRatePo) {
+		this.telRatePo = telRatePo;
 	}
 
 	public Integer getRateFor() {

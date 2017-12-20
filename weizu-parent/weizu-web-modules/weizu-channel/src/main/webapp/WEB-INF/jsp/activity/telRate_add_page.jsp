@@ -56,8 +56,10 @@
 			<label class="form-label col-xs-4 col-sm-3">设置折扣：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" style="width:200px" required class="input-text"  value="${resultMap.telRatePo.activeDiscount}" placeholder='按照上面格式填写' id="activeDiscount" name="activeDiscount">
+				<input type="hidden" id="activeDiscountTag" value="${resultMap.telRatePo.activeDiscount}">
+				<input type="hidden" name="operationTag" id="operationTag">
 				<span class="select-box inline">
-					<select name="rateFor" disabled="disabled" id="rateFor" rate class="select">
+					<select name="rateFor" disabled="disabled" id="rateFor" class="select">
 							<c:forEach items="${resultMap.telChannelTagEnums }" var="telChannelTagEnum" varStatus="vs1">
 								<option value="${telChannelTagEnum.value }" <c:if test="${telChannelTagEnum.value == resultMap.rateFor }"> selected</c:if>>${telChannelTagEnum.desc }</option>
 							</c:forEach>
@@ -80,8 +82,9 @@
 				</c:forEach>
 			</div>
 		</div>
-		<input type="hidden" id="telchannelId" name="telchannelId" value="${resultMap.telChannelParams.id }">
+		<input type="hidden" id="telchannelId" name="telchannelId" value="${resultMap.telchannelId }">
 		<input type="hidden" name="id" id="id" value="${resultMap.telRatePo.id }">
+		<input type="hidden" name="activeId" id="activeId" value="${resultMap.activeId }">
 		
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
@@ -106,11 +109,19 @@
 function getTelRate(vart){
 	var rateFor = $('#rateFor').val();
 	if(rateFor == 0){
-		var telchannelId = $("#telchannelId").val();
 		var billType = $(vart).val();
+		var url = "/flowsys/telRate/ajax_telrate_plat.do?billType=" + billType;
+		var telchannelId = $("#telchannelId").val();
+		var activeId = $("#activeId").val();
+		if(activeId != ''){
+			url += '&activeId=' + activeId;
+		}else if(telchannelId != ''){
+			url += '&telchannelId=' + telchannelId;
+		}
+		
 		$.ajax({
-		    type: "post",
-		    url: '/flowsys/telRate/ajax_telrate_plat.do?telChannelId='+ telchannelId + '&billType=' + billType,
+		    type: "get",
+		    url: url,
 		    dataType: "json",
 		    async: false,
 		    contentType: "application/x-www-form-urlencoded; charset=utf-8", 
@@ -120,9 +131,11 @@ function getTelRate(vart){
 		  	  if(data == null){
 		  		$('#id').val("");
 			  	  $('#activeDiscount').val("");
+			  	  $('#activeDiscountTag').val("");
 		  	  }else{
 			  	  var dataRole1 = eval(data);
 			  	  $('#id').val(dataRole1.id);
+			  	  $('#activeDiscountTag').val(dataRole1.activeDiscount);
 			  	  $('#activeDiscount').val(dataRole1.activeDiscount);
 		  	  }
 		    }
@@ -142,24 +155,38 @@ $().ready(function() {
     			url = "/flowsys/channel/edit_channel_discount.do"
     		} */
     		//var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
-    		var url = "/flowsys/telRate/telRate_add.do";
-    		$.ajax({
-    	        type: "post",
-    	        data: $('form').serialize(),//表单数据
-    	        url:url,
-    	        async : false,
-    	        success:function(d){
-    	        	//alert(d);
-    	            if(d == 'success'){
-    	                layer.msg('保存成功！');//保存成功提示
-    	                removeIframe();
-    	            }else if(d == "exist"){
-    	            	 layer.msg('该折扣已存在！');
-    	            }else{
-    	                layer.msg('保存异常!');
-    	            }
-    	        }
-    	    });
+    		var activeDiscount = $('#activeDiscount').val();
+    		if(activeDiscount != ''){
+	    		var operationTag = $('#operationTag').val();
+	    		var activeDiscountTag = $('#activeDiscountTag').val();
+	    		if(activeDiscountTag != ''){
+	    			$('#operationTag').val('edit');
+	    		}else{
+	    			$('#operationTag').val('add');
+	    		}
+	    		
+	    		var url = "/flowsys/telRate/telRate_add.do";
+	    		$.ajax({
+	    	        type: "post",
+	    	        data: $('form').serialize(),//表单数据
+	    	        url:url,
+	    	        async : false,
+	    	        success:function(d){
+	    	        	//alert(d);
+	    	            if(d == 'success'){
+	    	                layer.msg('保存成功！');//保存成功提示
+	    	                removeIframe();
+	    	            }else if(d == "exist"){
+	    	            	 layer.msg('该折扣已存在！');
+	    	            }else{
+	    	                layer.msg('保存异常!');
+	    	            }
+	    	        }
+	    	    });
+    		}else{
+    			layer.msg('折扣不能为空');
+    			$('#activeDiscount').focus();
+    		}
     	}
     });
 })

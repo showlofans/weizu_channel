@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.activity.pojo;
 
 import com.weizu.flowsys.core.annotation.po.TableName;
+import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
 
 /**
@@ -24,9 +25,15 @@ public class TelRatePo extends Po {
     
     private Long telchannelId;					//话费通道id
     
-    private Integer rateFor;				//平台用户0，接口用户1 AgencyTagEnum
+    private Integer rateFor;				//平台用户0，接口用户1 TelChannelTagEnum
     
     private Integer rateType;				//费率属性：PgServiceTypeEnum
+    
+    private Integer rateForPlatform;			//CallBackEnum 是否配置了平台折扣标志
+    
+    private Integer createAgency;			//折扣创建者
+//    @TempField
+//    private TelRatePo childTelRatePo;		//子代理商折扣实体
     
 	/** 话费折扣列表查询参数
 	 * @param billType
@@ -39,11 +46,39 @@ public class TelRatePo extends Po {
 		this.telchannelId = telchannelId;
 		this.rateFor = rateFor;
 	}
+	
+	public Integer getRateForPlatform() {
+		return rateForPlatform;
+	}
+
+	public void setRateForPlatform(Integer rateForPlatform) {
+		this.rateForPlatform = rateForPlatform;
+	}
+
+	public Integer getCreateAgency() {
+		return createAgency;
+	}
+
+
+
+	public void setCreateAgency(Integer createAgency) {
+		this.createAgency = createAgency;
+	}
+
+
 
 	public TelRatePo() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+//	public TelRatePo getChildTelRatePo() {
+//		return childTelRatePo;
+//	}
+//
+//	public void setChildTelRatePo(TelRatePo childTelRatePo) {
+//		this.childTelRatePo = childTelRatePo;
+//	}
 
 	public Integer getRateType() {
 		return rateType;

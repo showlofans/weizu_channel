@@ -120,7 +120,6 @@
 							<li><a data-href="/flowsys/tel_product/telproduct_list.do" data-title="话费编码列表" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费编码</a></li>
 							<li><a data-href="/flowsys/tel_channel/telchannel_add_page.do" data-title="话费通道添加" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费添加</a></li>
 							<li><a data-href="/flowsys/tel_channel/telchannel_list.do" data-title="话费通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费通道</a></li>
-							<!-- <li><a data-href="/flowsys/rate/bind_channel_list.do?bindTag=bAgency" data-title="活动通道" href="javascript:void(0)">活动通道</a></li> -->
 						</ul>
 					</dd>
 			</c:when>
@@ -129,7 +128,7 @@
 				<dd>
 					<ul>
 						<!-- <li><a data-href="/flowsys/channel/channel_list.do" data-title="流量通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量通道</a></li> -->
-						<li><a data-href="/flowsys/my_channel/tel_channel_list.do" data-title="话费通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费通道</a></li>
+						<li><a data-href="/flowsys/telRate/agency_telchannel_list.do" data-title="话费通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费通道</a></li>
 					</ul>
 				</dd> 
 			</c:otherwise>

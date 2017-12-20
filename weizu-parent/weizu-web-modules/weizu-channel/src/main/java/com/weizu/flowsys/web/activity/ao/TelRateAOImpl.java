@@ -7,14 +7,19 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
+import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
-import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.TelChannelTagEnum;
 import com.weizu.flowsys.web.activity.dao.ITelRateDao;
+import com.weizu.flowsys.web.activity.pojo.TelRatePo;
+import com.weizu.flowsys.web.channel.ao.TelChannelAO;
 import com.weizu.flowsys.web.channel.dao.ITelChannelDao;
 import com.weizu.flowsys.web.channel.pojo.TelChannelParams;
-import com.weizu.flowsys.web.channel.pojo.TelProductPo;
+import com.weizu.flowsys.web.channel.pojo.TelChannelPo;
 import com.weizu.flowsys.web.trade.pojo.GetTelRatePo;
 import com.weizu.web.foundation.String.StringHelper;
 
@@ -31,9 +36,10 @@ public class TelRateAOImpl implements TelRateAO {
 
 	@Resource
 	private ITelRateDao telRateDao;
-	
 	@Resource
 	private ITelChannelDao telChannelDao;
+	@Resource
+	private TelChannelAO telChannelAO;
 	@Override
 	public void getRateForCharge(Map<String,Object> resultMap, TelChannelParams telChannelParams, Integer agencyId) {
 		Map<String,Object> params = getParamsByTelChannel(telChannelParams);
@@ -142,6 +148,66 @@ public class TelRateAOImpl implements TelRateAO {
 //			params.put("chargeValue", telParams.getChargeValue());
 //		}
 		return params;
+	}
+	@Transactional
+	@Override
+	public String delTelRateById(Long telRateId, Boolean isSupperAgency, Integer agencyId) {
+		String resStr = "error";
+		TelRatePo telRatePo = telRateDao.get(telRateId);
+		if(telRatePo == null || telRateId == null){
+			return resStr;
+		}
+		
+		//判断是否需要编辑通道的状态
+		TelRatePo telRatePoTag = null;
+		Map<String,Object> paramsMap = new HashMap<String, Object>();
+		Integer billTypeTag = null;
+		paramsMap.put("createAgency", agencyId);
+		paramsMap.put("rateFor", AgencyTagEnum.PLATFORM_USER.getValue());
+		if(isSupperAgency){
+			TelChannelPo telChannelPo = telChannelDao.get(telRatePo.getTelchannelId());
+			billTypeTag =  telChannelPo.getBillType();
+			//超管：一条通道只能配置一个平台折扣
+			paramsMap.put("noParent", "noParent");
+			paramsMap.put("telchannelId", telRatePo.getTelchannelId());
+		}else{
+			paramsMap.put("activeId", telRatePo.getActiveId());
+		}
+		if(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue().equals(billTypeTag)){
+			paramsMap.put("billType", BillTypeEnum.CORPORATE_BUSINESS.getValue());
+		}else{
+			paramsMap.put("billType", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+		}
+		telRatePoTag = telRateDao.getTelRateByParams(paramsMap);
+		int rateFor = telRatePo.getRateFor();
+		
+		//如果删除的折扣是平台级折扣，修改话费通道为未配置平台折扣
+		if(TelChannelTagEnum.PLATFORM_USER.getValue().equals(rateFor) && telRatePoTag == null){
+			if(isSupperAgency){
+				String result = telChannelAO.editTelChannel(new TelChannelPo(telRatePo.getTelchannelId(), CallBackEnum.NEGATIVE.getValue()), 0);
+				if(!"success".equals(result)){
+					return resStr;
+				}
+			}else{
+				//添加平台级折扣要更新上一级折扣的平台标识
+				TelRatePo activeRatePo = telRateDao.get(telRatePo.getActiveId());
+				activeRatePo.setRateForPlatform(CallBackEnum.POSITIVE.getValue());
+				telRateDao.updateLocal(activeRatePo);
+			}
+		}
+		
+//		if(TelChannelTagEnum.PLATFORM_USER.getValue().equals(rateFor)){//平台级折扣，直接按照通道来删除
+//			telRateDao.del(new WherePrams("telchannel_id", "=", telRatePo.getTelchannelId()).and("rate_for", "=", rateFor));//删除所有通道绑定的折扣
+//		}else{//数据级折扣，则级联删除
+//		}
+		//统一用级联删除
+		long res = telRateDao.delByIteratorFun(telRateId);
+//		int res = telRateDao.del(telRateId);
+			
+		if(res > 0){
+			resStr = "success";
+		}
+		return resStr;
 	}
 
 	

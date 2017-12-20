@@ -1,7 +1,5 @@
 package com.weizu.flowsys.web.channel.pojo;
 
-import java.util.List;
-
 import com.weizu.flowsys.core.annotation.po.TableName;
 import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
@@ -36,6 +34,9 @@ public class TelChannelPo extends Po {
     private Integer telchannelState;				//通道状态
 
     private Integer telchannelUseState;			//通道使用状态
+    
+    private Integer rateForPlatform;			//CallBackEnum 是否配置了平台折扣标志
+    
     @TempField
     private String ids;							//页面实体：话费编码id列表
     @TempField
@@ -51,11 +52,25 @@ public class TelChannelPo extends Po {
 //	public void setIds(List<Long> ids) {
 //		this.ids = ids;
 //	}
-
     
     
 	public Long getId() {
 		return id;
+	}
+	/** 更新话费通道标志
+	 * @param id
+	 * @param rateForPlatform
+	 */
+	public TelChannelPo(Long id, Integer rateForPlatform) {
+		super();
+		this.id = id;
+		this.rateForPlatform = rateForPlatform;
+	}
+	public Integer getRateForPlatform() {
+		return rateForPlatform;
+	}
+	public void setRateForPlatform(Integer rateForPlatform) {
+		this.rateForPlatform = rateForPlatform;
 	}
 	/** 批量添加构造函数
 	 * @param telchannelDiscount

@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
@@ -113,6 +114,8 @@ public class TelChannelController {
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
 		resultMap.put("serviceTypeEnums", HuaServiceTypeEnum.toList());
 		resultMap.put("telchargeSpeedEnums", TelchargeSpeedEnum.toList());
+		resultMap.put("callBackEnums", CallBackEnum.toList());
+		
 //		resultMap.put("chargeTelEnums", TelchannelTypeEnum.toList());			//话费基本类型枚举
 		PageParam pageParam = null;
 		if(pageNoLong != null){

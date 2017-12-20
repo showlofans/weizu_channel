@@ -66,5 +66,15 @@ public class TelRateDaoImpl extends DaoImpl<TelRatePo, Long> implements ITelRate
 		return sqlSessionTemplate.selectOne("getPlatTelRateById", map);
 	}
 
+	@Override
+	public long delByIteratorFun(Long telRateId) {
+		return sqlSessionTemplate.delete("delByIteratorFun", telRateId);
+	}
+
+	@Override
+	public TelRatePo getTelRateByParams(Map<String, Object> map) {
+		return sqlSessionTemplate.selectOne("getTelRateByParams", map);
+	}
+
 
 }

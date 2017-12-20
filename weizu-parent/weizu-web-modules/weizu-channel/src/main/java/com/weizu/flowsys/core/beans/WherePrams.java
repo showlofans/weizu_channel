@@ -89,6 +89,9 @@ public class WherePrams {
 	 */
 	public WherePrams and(String file, String where, Serializable value){
 		if (null == value) {
+//			if("is".equals(where)){
+				this.pram = " and " + file + where + " null";
+//			}
 			/*if (where.equals("=")) {
 				where = " is";
 			} else {
