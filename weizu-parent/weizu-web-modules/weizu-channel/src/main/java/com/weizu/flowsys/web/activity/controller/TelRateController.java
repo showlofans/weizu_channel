@@ -245,6 +245,8 @@ public class TelRateController {
 				TelRatePo activeRatePo = telRateDao.get(activeId);
 				resultMap.put("activeId", activeId);//父级折扣id
 				telChannelParams = telChannelAO.selectByIdType(activeRatePo.getTelchannelId(), serviceType);
+				telChannelParams.setBillType(activeRatePo.getBillType());
+				telChannelParams.setTelchannelDiscount(activeRatePo.getActiveDiscount());
 				billTypeTag = activeRatePo.getBillType();
 				paramsMap.put("activeId", activeId);
 				paramsMap.put("billType",  billTypeTag);//默认使用父级折扣的票务进行查询

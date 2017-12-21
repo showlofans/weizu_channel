@@ -18,47 +18,6 @@
 <body>
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页   <span class="c-gray en">&gt;</span> 账户管理 <span class="c-gray en">&gt;</span> 申请加款 <div class="titleMore"><span class="c-gray en">&gt;</span> 请求充值</div> <!-- <span class="c-gray en">&gt;</span> 银行卡<span class="c-gray en">&gt;</span> 卡充值  --><a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" >请求充值<i class="Hui-iconfont">&#xe6a6;</i></a></nav>
 	<div class="page-container">
-	<table class="table c"><!-- table-border table-bordered table-bg -->
-		<thead >
-			<tr  >
-				<th class="text-r myBankInfo" scope="col" width="300px">
-					系统账户信息：
-				</th>
-				<td class="c-danger"><c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
-						<c:if test="${billTypeEnum.value == resultMap.myBank.billType }">
-							${billTypeEnum.desc } : ${resultMap.myBank.accountBalance }
-						</c:if>
-					</c:forEach></td>
-			</tr>
-		</thead>
-		<tbody>
-			<%-- <tr>
-				<th class="text-r" width="80">系统账户信息：</th>
-				<td>${resultMap.myBank.remittanceWay }</td>
-			</tr> --%>
-			<tr>
-				<th class="text-r myBankInfo">银行卡类型：</th>
-				<td>${resultMap.myBank.remittanceWay }</td>
-			</tr>
-			<tr>
-				<th class="text-r myBankInfo">汇款账号：</th>
-				<td>${resultMap.myBank.remittanceBankAccount }</td>
-			</tr>
-			<tr>
-				<th class="text-r myBankInfo">账户真实姓名：</th>
-				<td>${resultMap.myBank.accountName }</td>
-			</tr>
-			<tr>
-				<th class="text-r myBankInfo">对账余额：</th>
-				<td>${resultMap.myBank.referenceBalance }
-					<input type="hidden" id="referenceBalance" value="${resultMap.myBank.referenceBalance }">
-					<input type="hidden" id="fromBankId" value="${resultMap.myBank.id }">
-				</td>
-				
-			</tr>
-		</tbody>
-	</table>
-	
 	<table class="table table-border table-bordered table-bg">
 		<thead>
 			<tr >
@@ -128,7 +87,46 @@
 			
 		</tbody>
 		</table>
-		
+		<table class="table c"><!-- table-border table-bordered table-bg -->
+		<thead >
+			<tr  >
+				<th class="text-r myBankInfo" scope="col" width="300px">
+					系统账户信息：
+				</th>
+				<td class="c-danger"><c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+						<c:if test="${billTypeEnum.value == resultMap.myBank.billType }">
+							${billTypeEnum.desc } : ${resultMap.myBank.accountBalance }
+						</c:if>
+					</c:forEach></td>
+			</tr>
+		</thead>
+		<tbody>
+			<%-- <tr>
+				<th class="text-r" width="80">系统账户信息：</th>
+				<td>${resultMap.myBank.remittanceWay }</td>
+			</tr> --%>
+			<tr>
+				<th class="text-r myBankInfo">银行卡类型：</th>
+				<td>${resultMap.myBank.remittanceWay }</td>
+			</tr>
+			<tr>
+				<th class="text-r myBankInfo">汇款账号：</th>
+				<td>${resultMap.myBank.remittanceBankAccount }</td>
+			</tr>
+			<tr>
+				<th class="text-r myBankInfo">账户真实姓名：</th>
+				<td>${resultMap.myBank.accountName }</td>
+			</tr>
+			<tr>
+				<th class="text-r myBankInfo">对账余额：</th>
+				<td>${resultMap.myBank.referenceBalance }
+					<input type="hidden" id="referenceBalance" value="${resultMap.myBank.referenceBalance }">
+					<input type="hidden" id="fromBankId" value="${resultMap.myBank.id }">
+				</td>
+				
+			</tr>
+		</tbody>
+	</table>
 </div>
 	<%-- <form action="" method="" class="form form-horizontal" id="form-article-add">
 		<input type="hidden" value="${resultMap.myBank.id}" name="id">

@@ -983,6 +983,7 @@ public class ChargePgController {
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO != null){
 			purchaseVO.setAgencyId(agencyVO.getId());//设置为当前登陆用户的订单
+//			purchaseVO.setChargeFor(PgServiceTypeEnum.PGCHARGE.getValue());
 			HSSFWorkbook hbook = purchaseAO.exportChargedList(purchaseVO, agencyVO.getAgencyTag()); 
 			if (hbook != null)
 			{
