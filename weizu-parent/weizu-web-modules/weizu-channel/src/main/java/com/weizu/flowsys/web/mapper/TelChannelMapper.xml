@@ -90,7 +90,7 @@
     <result column="province" property="province" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="MyVO_Column_List">
-  	tt.id,tt.bill_type,tt.active_discount,tt.rate_for,tt.rate_for_platform,
+  	tt.id,tt.bill_type,tt.active_discount,tt.rate_for,
 	tp.charge_speed,tp.charge_value,tp.ep_name,tp.free_charge,tp.limit_description,tp.service_type,tp.operator_name
 	<if test="serviceType == 1 ">,pc.province</if> <!-- 省内和市内 -->
   	<if test="serviceType == 2">,pc.province,ct.city</if><!-- 市内 -->
@@ -195,6 +195,12 @@
   	<if test="billType != null">
   		AND tt.bill_type = #{billType}
   	</if>
+  	<if test="rateForPlatform != null">
+  		AND tt.rate_for_platform = #{rateForPlatform}
+  	</if>
+  	<if test="agencyId != null">
+		AND tt.create_agency = #{agencyId}
+	</if>
   	
   	<!-- <if test="epId != null">
   		AND tp.ep_id = #{epId}

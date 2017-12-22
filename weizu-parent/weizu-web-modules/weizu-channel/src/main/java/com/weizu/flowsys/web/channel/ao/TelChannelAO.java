@@ -35,7 +35,7 @@ public interface TelChannelAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年11月24日 下午2:31:53
 	 */
-	public Pagination<TelChannelParams> getAgencyTelChannel(PageParam pageParams, TelChannelParams telChannelParams, Integer agencyId);
+	public Pagination<TelChannelParams> getAgencyTelChannel(PageParam pageParams, TelChannelParams telChannelParams, Integer rootAgencyId, Integer contextAgencyId);
 	
 
 	/**

@@ -85,6 +85,7 @@
 		<input type="hidden" id="telchannelId" name="telchannelId" value="${resultMap.telchannelId }">
 		<input type="hidden" name="id" id="id" value="${resultMap.telRatePo.id }">
 		<input type="hidden" name="activeId" id="activeId" value="${resultMap.activeId }">
+		<input type="hidden" name="rateForPlatform" id="rateForPlatform" value="${resultMap.rateForPlatform }">
 		
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">

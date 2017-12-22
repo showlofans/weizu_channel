@@ -18,6 +18,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.weizu.flowsys.api.weizu.charge.PgProductParams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
+import com.weizu.flowsys.operatorPg.enums.EpEncodeTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgInServiceEnum;
@@ -27,8 +28,10 @@ import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
+import com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface;
 import com.weizu.flowsys.web.channel.dao.impl.OperatorPgDao;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
+import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
@@ -44,6 +47,8 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 	private OperatorPgDao operatorPgDao;
 	@Resource
 	private ChannelDiscountDao channelDiscountDao;
+	@Resource
+	private ExchangePlatformDaoInterface exchangePlatformDao;
 
 	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
@@ -313,13 +318,13 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 		{
 			params.put("pgType", operatorPgDataPo.getPgType());
 		}
-		if(operatorPgDataPo.getPgServiceType() != null)
-		{
-			params.put("pgServiceType", operatorPgDataPo.getPgServiceType());
-		}else{//默认
-			params.put("pgServiceType", PgServiceTypeEnum.PGCHARGE.getValue());
-			
-		}
+//		if(operatorPgDataPo.getPgServiceType() != null)
+//		{
+//			params.put("pgServiceType", operatorPgDataPo.getPgServiceType());
+//		}else{//默认
+//			params.put("pgServiceType", PgServiceTypeEnum.PGCHARGE.getValue());
+//			
+//		}
 		if(StringHelper.isNotEmpty(operatorPgDataPo.getPgValidity()))
 		{
 			params.put("pgValidity", operatorPgDataPo.getPgValidity());
@@ -522,17 +527,43 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 	 */
 	@Override
 	public String pgSizeStr(OneCodePo oneCodePo){
-		List<Integer> pgSizes = operatorPgDao.getPgInCode(oneCodePo);
 		StringBuffer pgBuffer = new StringBuffer();
 		String pgSizeStr = "";
-		if(pgSizes != null && pgSizes.size() > 0){
-			for (int i = 0; i < pgSizes.size(); i++) {
-				pgBuffer.append(pgSizes.get(i));
-				if(i != (pgSizes.size()-1)){
-					pgBuffer.append("& ");
-				}
+		Integer epId = oneCodePo.getEpId();
+		if(epId != null){
+			Map<String,Object> params = new HashMap<String, Object>();
+			ExchangePlatformPo platformPo = exchangePlatformDao.get(epId);
+			if(oneCodePo.getOperatorType() != null){
+				params.put("operatorType", oneCodePo.getOperatorType());
 			}
-			pgSizeStr = pgBuffer.toString();
+			if(oneCodePo.getServiceType() != null){
+				params.put("serviceType", oneCodePo.getServiceType());
+			}
+			if(oneCodePo.getPgType() != null){
+				params.put("pgType", oneCodePo.getPgType());
+			}
+			if(StringHelper.isNotEmpty(oneCodePo.getPgValidity())){
+				params.put("pgValidity", oneCodePo.getPgValidity());
+			}
+			List<Integer> pgSizes = null;
+			if(EpEncodeTypeEnum.WITHOUT_CODE.getValue().equals(platformPo.getEpEncodeType())){//无编码
+				pgSizes = operatorPgDao.listPgIds(params);
+			}else{
+				if(StringHelper.isNotEmpty(oneCodePo.getScopeCityCode())){
+					params.put("scopeCityCode", oneCodePo.getScopeCityCode());
+				}
+				params.put("epId", epId);
+				pgSizes = operatorPgDao.getPgInCode(params);
+			}
+			if(pgSizes != null && pgSizes.size() > 0){
+				for (int i = 0; i < pgSizes.size(); i++) {
+					pgBuffer.append(pgSizes.get(i));
+					if(i != (pgSizes.size()-1)){
+						pgBuffer.append("& ");
+					}
+				}
+				pgSizeStr = pgBuffer.toString();
+			}
 		}
 		return pgSizeStr;
 	}

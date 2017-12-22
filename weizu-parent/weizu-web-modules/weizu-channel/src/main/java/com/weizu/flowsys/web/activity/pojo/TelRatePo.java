@@ -29,7 +29,7 @@ public class TelRatePo extends Po {
     
     private Integer rateType;				//费率属性：PgServiceTypeEnum
     
-    private Integer rateForPlatform;			//CallBackEnum 是否配置了平台折扣标志
+    private Integer rateForPlatform;			//CallBackEnum 是否配置了平台折扣标志 1-平台级折扣
     
     private Integer createAgency;			//折扣创建者
 //    @TempField

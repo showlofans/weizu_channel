@@ -81,7 +81,16 @@ public interface OperatorPgDaoInterface extends Dao<PgDataPo, Integer> {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年10月25日 下午5:46:18
 	 */
-	List getPgInCode(OneCodePo oneCodePo);
+	List getPgInCode(Map<String, Object> paramsMap);
+	
+	/**
+	 * @description: 通道添加：异步加载包体列表
+	 * @param paramsMap
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月22日 下午3:20:20
+	 */
+	List listPgIds(Map<String,Object> paramsMap);
 	
 	/**
 	 * @description: 查询某个平台没有设置产品编码的包体

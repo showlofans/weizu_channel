@@ -140,7 +140,7 @@ public class TelRateController {
 		if(telParams.getRateFor() == null){
 			telParams.setRateFor(agencyVO.getAgencyTag());
 		}
-		Pagination<TelChannelParams> pagination = telChannelAO.getAgencyTelChannel(pageParam, telParams, agencyVO.getId());
+		Pagination<TelChannelParams> pagination = telChannelAO.getAgencyTelChannel(pageParam, telParams, agencyVO.getRootAgencyId(),agencyVO.getId());
 		resultMap.put("pagination", pagination);
 		
 		resultMap.put("city", HuaServiceTypeEnum.CITY.getValue());
@@ -245,6 +245,7 @@ public class TelRateController {
 				TelRatePo activeRatePo = telRateDao.get(activeId);
 				resultMap.put("activeId", activeId);//父级折扣id
 				telChannelParams = telChannelAO.selectByIdType(activeRatePo.getTelchannelId(), serviceType);
+				//初始化折扣通道信息
 				telChannelParams.setBillType(activeRatePo.getBillType());
 				telChannelParams.setTelchannelDiscount(activeRatePo.getActiveDiscount());
 				billTypeTag = activeRatePo.getBillType();
@@ -265,6 +266,7 @@ public class TelRateController {
 		
 		resultMap.put("telRatePo", telRatePo);//费率折扣信息
 		resultMap.put("rateFor", AgencyTagEnum.PLATFORM_USER.getValue());//费率折扣信息
+		resultMap.put("rateForPlatform", CallBackEnum.POSITIVE.getValue());//平台折扣添加默认用支持的去找
 		
 		resultMap.put("telChannelParams", telChannelParams);//通道信息展示参数
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());

@@ -15,6 +15,7 @@ import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
+import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
@@ -168,15 +169,16 @@ public class TelChannelAOImpl implements TelChannelAO {
 
 	@Override
 	public Pagination<TelChannelParams> getAgencyTelChannel(
-			PageParam pageParams, TelChannelParams telChannelParams, Integer agencyId) {
+			PageParam pageParams, TelChannelParams telChannelParams, Integer rootAgencyId, Integer contextAgencyId) {
 		Map<String,Object> params = getParamsByTelPara(telChannelParams);
 		if(AgencyTagEnum.PLATFORM_USER.getValue().equals(telChannelParams.getRateFor())){
 			params.put("platformUser", AgencyTagEnum.PLATFORM_USER.getValue());
 		}else if(AgencyTagEnum.DATA_USER.getValue().equals(telChannelParams.getRateFor())){
 			params.put("dataUser", AgencyTagEnum.DATA_USER.getValue());//添加接口绑定的时候设置
 		}
+		params.put("rateForPlatform", CallBackEnum.POSITIVE.getValue());
 //		params.put("rateFor", AgencyTagEnum.PLATFORM_USER.getValue());
-		params.put("agencyId", agencyId);
+		params.put("agencyId", rootAgencyId);
 		long totalRecord = 0;
 		Integer serviceType = telChannelParams.getServiceType();
 		int rateFor = telChannelParams.getRateFor();
@@ -199,7 +201,7 @@ public class TelChannelAOImpl implements TelChannelAO {
 					}
 					
 					totalRecord = telChannelDao.countMyTelChannel(params);
-					if(totalRecord != 0){
+					if(totalRecord != 0 || agencyEs.length-1 == totalRecord){
 						telChannelParams.setRateFor(rateFor);
 						break;
 					}else{
@@ -235,6 +237,14 @@ public class TelChannelAOImpl implements TelChannelAO {
 		}
 		List<TelChannelParams> records = telChannelDao.getMyTelChannel(params);
 		for (TelChannelParams telChannelParams2 : records) {
+			//设置当前代理商是否配置了自己给下游配置的的平台折扣
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("activeId", telChannelParams2.getId());
+			map.put("createAgency", contextAgencyId);
+			TelRatePo childTelRatePo = telRateDao.getTelRateByParams(map);
+			if(childTelRatePo != null){
+				telChannelParams2.setRateForPlatform(childTelRatePo.getRateForPlatform());
+			}
 			telChannelParams2.setTelchannelPrice(NumberTool.mul(telChannelParams2.getTelchannelDiscount(), telChannelParams2.getChargeValue()));
 		}
 		
@@ -277,6 +287,9 @@ public class TelChannelAOImpl implements TelChannelAO {
 		if(StringHelper.isNotEmpty(telParams.getLimitDescription())){
 			params.put("limitDescription", telParams.getLimitDescription());
 		}
+//		if(telParams.getRateForPlatform() != null){
+//			params.put("rateForPlatform", telParams.getRateForPlatform());
+//		}
 //		if(telParams.getRateFor() != null){
 //		}else{
 //			

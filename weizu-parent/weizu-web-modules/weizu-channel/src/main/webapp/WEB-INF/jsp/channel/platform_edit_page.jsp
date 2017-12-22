@@ -249,8 +249,9 @@ $().ready(function() {
 	                	//alert(d);
 	                    if(d=="success"){
 	                        layer.msg('保存成功！');//保存成功提示
-	                        var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
-	                        parent.layer.close(index);
+	                       /*  var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+	                        parent.layer.close(index); */
+	                        removeIframe();
 	                       /*  if($("h3").html().trim() != ""){//列表打开
 	                    		parent.layer.close(index); // 执行关闭
 	                        }else{

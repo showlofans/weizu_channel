@@ -47,7 +47,7 @@
 		</span>
 		&nbsp;&nbsp; --%>
 		 
-		 <c:if test="${resultMap.params.pgServiceType ==1 }"><!-- 流量还是话费 -->
+		 <%-- <c:if test="${resultMap.params.pgServiceType ==1 }"> --%><!-- 流量还是话费 -->
 			 <!--  包体有效期： -->
 			 <span class="select-box inline">
 				<select name="pgValidity" class="select"  onchange="submitForm()">
@@ -68,7 +68,7 @@
 				</select>
 			</span> 
 			&nbsp;&nbsp;
-		</c:if>
+		<%-- </c:if> --%>
 		
 		 <!--  运营商类型： -->
 		 <span class="select-box inline">

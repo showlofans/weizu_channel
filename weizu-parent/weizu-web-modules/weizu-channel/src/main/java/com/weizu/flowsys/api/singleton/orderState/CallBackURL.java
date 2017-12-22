@@ -35,17 +35,22 @@ public class CallBackURL extends BaseURL{
 	 * 青岛网信乐疯回调接口<br>
 	 * 真实地址：http://120.55.162.224:8082/flowsys/callBack/Lefeng.do<br>
 	 */
-	public static final String Lefeng = "/Lefeng"+ DYNAMIC_WEB_SUFFIX;
+	public static final String LEFENG = "/Lefeng"+ DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 河南趣闻-顽兔系统回调接口<br>
 	 * 真实地址：http://120.55.162.224/flowsys/callBack/Wantull.do<br>
 	 */
-	public static final String Wantull = "/Wantull"+ DYNAMIC_WEB_SUFFIX;
+	public static final String WANTULL = "/Wantull"+ DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 仁智-迈远系统回调接口<br>
 	 * 真实地址：http://120.55.162.224/flowsys/callBack/Maiyuan.do<br>
 	 */
-	public static final String Maiyuan = "/Maiyuan"+ DYNAMIC_WEB_SUFFIX;
+	public static final String MAIYUAN = "/Maiyuan"+ DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 智信话充系统回调接口<br>
+	 * 真实地址：http://120.55.162.224/flowsys/callBack/Zxpay.do<br>
+	 */
+	public static final String ZXPAY = "/Zxpay"+ DYNAMIC_WEB_SUFFIX;
 	
 	
 	
