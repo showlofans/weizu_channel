@@ -198,8 +198,8 @@
   	<if test="rateForPlatform != null">
   		AND tt.rate_for_platform = #{rateForPlatform}
   	</if>
-  	<if test="agencyId != null">
-		AND tt.create_agency = #{agencyId}
+  	<if test="rootAgencyId != null">
+		AND tt.create_agency = #{rootAgencyId}
 	</if>
   	
   	<!-- <if test="epId != null">

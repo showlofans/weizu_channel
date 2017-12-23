@@ -250,6 +250,7 @@ public class TelRateController {
 				telChannelParams.setTelchannelDiscount(activeRatePo.getActiveDiscount());
 				billTypeTag = activeRatePo.getBillType();
 				paramsMap.put("activeId", activeId);
+				resultMap.put("telchannelId", activeRatePo.getTelchannelId());//父级折扣id
 				paramsMap.put("billType",  billTypeTag);//默认使用父级折扣的票务进行查询
 				telRatePo = telRateDao.getTelRateByParams(paramsMap);
 //				telRatePo = telRateDao.get(new WherePrams("active_id", "=", activeId).and("rate_for", "=", AgencyTagEnum.PLATFORM_USER.getValue()).and("bill_type", "=", BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()).and("create_agency", "=", agencyVO.getId()));

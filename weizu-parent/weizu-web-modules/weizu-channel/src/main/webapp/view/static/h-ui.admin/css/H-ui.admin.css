@@ -87,7 +87,7 @@ h4{line-height:30px}
 .titleMore{display:inline;}
 @media (max-width: 767px) {
 	.breadcrumb{ padding:0 15px;position:fixed; z-index:998;width:100%;float:none;  height:auto; margin-top:0;padding-top:0;bottom:0}
-	.myBankInfo{width:20%;}		
+	.myBankInfo{width:30%;}		
 	.titleMore{display:none;}	/* //title多出来的部分 */
 	.show_iframe{-webkit-overflow-scrolling: touch;overflow-y: scroll;}
 }

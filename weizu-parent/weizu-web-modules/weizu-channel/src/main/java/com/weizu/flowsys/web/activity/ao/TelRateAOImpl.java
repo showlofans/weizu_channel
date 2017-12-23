@@ -41,7 +41,7 @@ public class TelRateAOImpl implements TelRateAO {
 	@Resource
 	private TelChannelAO telChannelAO;
 	@Override
-	public void getRateForCharge(Map<String,Object> resultMap, TelChannelParams telChannelParams, Integer agencyId) {
+	public void getRateForCharge(Map<String,Object> resultMap, TelChannelParams telChannelParams, Integer agencyId, Integer rootAgencyId) {
 		Map<String,Object> params = getParamsByTelChannel(telChannelParams);
 		int rateFor = telChannelParams.getRateFor();
 //		if(AgencyTagEnum.PLATFORM_USER.getValue().equals(telChannelParams.getRateFor())){
@@ -57,6 +57,12 @@ public class TelRateAOImpl implements TelRateAO {
 		
 		long totalRecord = 0;
 		boolean ifData = false;
+		params.put("agencyId", agencyId);
+		params.put("rootAgencyId", rootAgencyId);
+//		if(rootAgencyId != null && rootAgencyId != 0){//不是超管
+//			params.put("rateForPlatform", CallBackEnum.POSITIVE.getValue());
+//		}
+		
 		for (int i = 0; i < agencyEs.length; i++) {
 			if(isPlatUser){
 				rateFor = AgencyTagEnum.PLATFORM_USER.getValue();
@@ -87,7 +93,6 @@ public class TelRateAOImpl implements TelRateAO {
 			}
 		}
 		if(totalRecord > 0){
-			params.put("agencyId", agencyId);
 			List<GetTelRatePo> telRateList = telRateDao.getTelRateForCharge(params);
 			resultMap.put("getRateList", telRateList);
 			if(ifData){

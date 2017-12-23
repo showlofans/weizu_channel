@@ -3,3 +3,7 @@
 13699562589
 
 {rateForPlatform=1, dataUser=null, platformUser=0, negative=0, positive=1, serviceType=2, bind=0, agencyId=2, useOpen=0}
+
+{rateForPlatform=1, start=0, platformUser=0, negative=0, positive=1, serviceType=1, bind=0, agencyId=2, end=10, useOpen=0}
+
+456£º{rateForPlatform=1, start=0, dataUser=1, rootAgencyId=2, platformUser=null, negative=0, positive=1, serviceType=0, bind=0, agencyId=3, end=10, useOpen=0}

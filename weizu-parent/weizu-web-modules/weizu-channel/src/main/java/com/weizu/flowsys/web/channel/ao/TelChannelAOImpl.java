@@ -176,9 +176,10 @@ public class TelChannelAOImpl implements TelChannelAO {
 		}else if(AgencyTagEnum.DATA_USER.getValue().equals(telChannelParams.getRateFor())){
 			params.put("dataUser", AgencyTagEnum.DATA_USER.getValue());//添加接口绑定的时候设置
 		}
-		params.put("rateForPlatform", CallBackEnum.POSITIVE.getValue());
+//		params.put("rateForPlatform", CallBackEnum.POSITIVE.getValue());
 //		params.put("rateFor", AgencyTagEnum.PLATFORM_USER.getValue());
-		params.put("agencyId", rootAgencyId);
+		params.put("agencyId", contextAgencyId);
+		params.put("rootAgencyId", rootAgencyId);
 		long totalRecord = 0;
 		Integer serviceType = telChannelParams.getServiceType();
 		int rateFor = telChannelParams.getRateFor();

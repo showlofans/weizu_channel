@@ -60,7 +60,7 @@
 //		TelChannelParams telParams = new TelChannelParams();
 ////		telParams.setEpName("123");
 //		telParams.setServiceType(HuaServiceTypeEnum.PROVINCE.getValue());
-//		telParams.setRateFor(AgencyTagEnum.DATA_USER.getValue());
+//		telParams.setRateFor(AgencyTagEnum.PLATFORM_USER.getValue());
 ////		telParams.set
 //		Pagination<TelChannelParams> pagination = telChannelAO.getAgencyTelChannel(new PageParam(1l,10), telParams, 2,3);
 //		List<TelChannelParams> telProductList =  pagination.getRecords();

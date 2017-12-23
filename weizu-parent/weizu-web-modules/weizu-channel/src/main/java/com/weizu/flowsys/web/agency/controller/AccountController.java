@@ -429,12 +429,12 @@ public class AccountController {
 		}
 		ChargeAccountPo chargeAccount = chargeAccountAO.getAccountByAgencyId(agencyVo.getId(), BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 		ChargeAccountPo chargeAccount1 = chargeAccountAO.getAccountByAgencyId(agencyVo.getId(), BillTypeEnum.CORPORATE_BUSINESS.getValue());
-		AgencyBackwardPo rootAgency = agencyAO.getAgencyById(agencyVo.getRootAgencyId());
-		if(rootAgency != null){
-			String qq = rootAgency.getOtherContact();//富代理商的qq
-			request.getSession().setAttribute("qq",qq);
-		}
-		
+//		AgencyBackwardPo rootAgency = agencyAO.getAgencyById(agencyVo.getRootAgencyId());
+//		if(rootAgency != null){
+//			String qq = rootAgency.getOtherContact();//富代理商的qq
+//			request.getSession().setAttribute("qq",qq);
+//		}
+//		
 		boolean secondAgency = agencyAO.checkSecondAgency(agencyVo.getId());
 		request.getSession().setAttribute("secondAgency",secondAgency);
 		request.getSession().setAttribute("chargeAccount",chargeAccount);
