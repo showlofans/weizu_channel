@@ -1374,9 +1374,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 					dateUtilStartTime = Long.parseLong(paramsMap.get("startTimeBack").toString());
 					purchaseVO.setBackStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
 				}else if("".equals(purchaseVO.getBackStartTimeStr().trim())){
-					paramsMap.put("startTimeBack", dateUtilStartTime);
-					dateUtilStartTime = DateUtil.getStartTime().getTime();
-					purchaseVO.setBackStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+//					paramsMap.put("startTimeBack", dateUtilStartTime);
+//					dateUtilStartTime = DateUtil.getStartTime().getTime();
+//					purchaseVO.setBackStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+					paramsMap.put("startTimeBack",null);
 				}
 				//purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
 //				if(purchaseVO.getBackStartTimeStr() == null){
@@ -1400,9 +1401,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 					dateUtilStartTime = Long.parseLong(paramsMap.get("startTime").toString());
 					purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
 				}else if("".equals(purchaseVO.getArriveStartTimeStr().trim())){
-					dateUtilStartTime = DateUtil.getStartTime().getTime();
-					paramsMap.put("startTime", dateUtilStartTime);
-					purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+//					dateUtilStartTime = DateUtil.getStartTime().getTime();
+//					paramsMap.put("startTime", dateUtilStartTime);
+//					purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+					paramsMap.put("startTime",null);
 				}
 //				else{
 					//为空或者值重新设置:什么都不需要做，因为已经有记录，并且在第一次搜索的时候，就已经重置了搜索条件
@@ -1416,6 +1418,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 					purchaseVO.setArriveEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
 				}
 			}
+			totalRecord = purchaseDAO.countPurchase(paramsMap);
 		}
 		return totalRecord;
 	}

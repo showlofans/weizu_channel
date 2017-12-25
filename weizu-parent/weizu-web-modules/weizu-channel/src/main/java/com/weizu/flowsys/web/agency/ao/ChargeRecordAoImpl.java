@@ -224,25 +224,33 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		int totalRecords = chargeRecordDao.countConsume(params);
 		
 		if(totalRecords == 0){
-			if(StringHelper.isEmpty(consumeRecordPo.getStartTimeStr())){
-				params.put("startTime",null);//解除开始时间限制
-			}
+			params.put("startTime",null);
+			consumeRecordPo.setStartTimeStr("");
 			if(StringHelper.isEmpty(consumeRecordPo.getEndTimeStr())){
 				params.put("endTime", System.currentTimeMillis());
 				consumeRecordPo.setEndTimeStr(DateUtil.formatAll(System.currentTimeMillis()));
 			}
 			totalRecords = chargeRecordDao.countConsume(params);
 		}else{
-			if(StringHelper.isEmpty(consumeRecordPo.getStartTimeStr())){
-				Long dateUtilStartTime = Long.parseLong(params.get("startTime").toString());
+			Long dateUtilStartTime = null;
+			if(consumeRecordPo.getStartTimeStr() == null){
+				dateUtilStartTime = Long.parseLong(params.get("startTime").toString());
 				consumeRecordPo.setStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
 //				purchaseVO.setBackStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+			}else if("".equals(consumeRecordPo.getStartTimeStr().trim())){
+//				dateUtilStartTime = DateUtil.getStartTime().getTime();
+//				params.put("startTime", dateUtilStartTime);
+				params.put("startTime",null);
+//				consumeRecordPo.setStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+//				totalRecords = chargeRecordDao.countConsume(params);
 			}
+			
 			if(StringHelper.isEmpty(consumeRecordPo.getEndTimeStr())){
 				Long dateUtilEndTime = Long.parseLong(params.get("endTime").toString());
 				consumeRecordPo.setEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
 //				purchaseVO.setBackEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
 			}
+			totalRecords = chargeRecordDao.countConsume(params);
 		}
 		
 		int pageSize = pageParam.getPageSize();
