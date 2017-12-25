@@ -127,7 +127,7 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 			specialTagSb.append("_").append(pgValidityS);
 		}
 		channelPo.setSpecialTag(specialTagSb.toString());
-		
+		channelPo.setLastAccess(System.currentTimeMillis());
 		int cnelAddRes = channelChannelDao.channel_addList(channelPo);
 		String pgSizeStr = channelPo.getPgSize();
 		String [] pgSize = pgSizeStr.split("&");

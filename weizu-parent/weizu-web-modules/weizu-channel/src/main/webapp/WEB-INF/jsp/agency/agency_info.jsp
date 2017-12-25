@@ -173,7 +173,7 @@ function getVerifyCode(tagVer){
 
 ///更新信息
 function save(){
-	var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+	//var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
 	//alert(index);
 	
 	$.ajax({
@@ -188,7 +188,8 @@ function save(){
             }else{
                 layer.msg('保存异常!');
             }
-            parent.layer.close(index); ////执行关闭
+           // parent.layer.close(index); ////执行关闭
+           removeIframe();
         }
     });
 }

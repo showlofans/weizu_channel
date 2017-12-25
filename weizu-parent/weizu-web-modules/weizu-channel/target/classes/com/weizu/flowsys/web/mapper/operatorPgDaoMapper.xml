@@ -135,6 +135,15 @@
    		 	limit 0,10
    		 </if> 
 	</select>
+	<!-- 查询包体Id -->
+	<select id="listPgIds" parameterType="map" resultType="java.lang.Integer">
+		 select pg_size
+   		 from <include refid="t_pg"></include> pg
+   		 <where>
+   		 	<include refid="condition_sql"></include>
+   		 </where>
+   		 order by id desc
+	</select>
 	<!-- 通过订单号获得包体信息 -->
 	<select id="getPgByOrderId" parameterType="Long" resultMap="BaseResultMap">
 		select <include refid="Base_Column_List"></include>

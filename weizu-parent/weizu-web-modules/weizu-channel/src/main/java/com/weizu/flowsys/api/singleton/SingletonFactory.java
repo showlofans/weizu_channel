@@ -5,6 +5,7 @@ import com.weizu.flowsys.api.singleton.company.Lljypt;
 import com.weizu.flowsys.api.singleton.company.Maiyuan;
 import com.weizu.flowsys.api.singleton.company.Wantull;
 import com.weizu.flowsys.api.singleton.company.Weizu;
+import com.weizu.flowsys.api.singleton.company.Zxpay;
 
 public class SingletonFactory {
 	/**
@@ -15,19 +16,23 @@ public class SingletonFactory {
 	 * @createTime:2017年8月26日 上午9:43:04
 	 */
 	public static BaseInterface getSingleton(String epEngId,BaseP baseParams){
+		
+		BaseInterface bi = null;
 		if(MyConstants.WEIZU_ENG.equals(epEngId))
 		{
-			return Weizu.getInstance(epEngId, baseParams);
+			bi = Weizu.getInstance(epEngId, baseParams);
 		}else if(MyConstants.LLJYPT_ENG.equals(epEngId) || MyConstants.LLJYPT_ENG_0.equals(epEngId)){
-			return Lljypt.getInstance(epEngId, baseParams);
+			bi = Lljypt.getInstance(epEngId, baseParams);
 		}else if(MyConstants.LEFENG_ENG.equals(epEngId)){
-			return Lefeng.getInstance(epEngId, baseParams);
+			bi = Lefeng.getInstance(epEngId, baseParams);
 		}else if(MyConstants.WANTULL_ENG.equals(epEngId)|| MyConstants.WANTULL_ENG_0.equals(epEngId)){
-			return Wantull.getInstance(epEngId, baseParams);
+			bi = Wantull.getInstance(epEngId, baseParams);
 		}else if(MyConstants.MAIYUAN_ENG.equals(epEngId)){//|| MyConstants.WANTULL_ENG_0.equals(epEngId)
-			return Maiyuan.getInstance(epEngId, baseParams);
+			bi = Maiyuan.getInstance(epEngId, baseParams);
+		}else if(MyConstants.ZXPAY_ENG.equals(epEngId)){
+			bi = Zxpay.getInstance(epEngId, baseParams);
 		}
 		
-		return null;
+		return bi;
 	}
 }

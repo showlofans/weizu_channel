@@ -1,5 +1,8 @@
 package com.weizu.flowsys.util;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -185,6 +188,63 @@ public class StringUtil2 {
 			return referStr;
 		}
 	}
+	/**
+	 * @description: 根据get形式字符串获得参数数组
+	 * @param referStr
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月21日 下午3:26:02
+	 */
+	public static String[] getArrayByCharSeq(String referStr) {
+		String [] firstArray = referStr.split("&");//mrch_no=10084
+		String [] secondArray = new String[firstArray.length];
+		for (int i = 0; i < firstArray.length; i++) {
+			String firstStr = firstArray[i];
+			secondArray[i] = firstStr.substring(0, firstStr.indexOf("="));
+		}
+		return secondArray;
+	}
+	
+	/**
+	 * @description: 根据get形参数获得键值对形式参数-HashMap
+	 * @param referStr
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月21日 下午3:55:36
+	 */
+	public static Map<String,Object> getHashMapByStr(String referStr) {
+		String [] firstArray = referStr.split("&");//mrch_no=10084
+		Map<String,Object> map = new HashMap<String, Object>();
+		for (int i = 0; i < firstArray.length; i++) {
+			String firstStr = firstArray[i];
+			String key = firstStr.substring(0, firstStr.indexOf("="));
+			String value = firstStr.substring(firstStr.indexOf("=")+1, firstStr.length());
+			map.put(key, value);
+		}
+		return map;
+	}
+	/**
+	 * @description: 根据get形参数获得键值对形式参数-TreeMap
+	 * @param referStr
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月21日 下午3:55:36
+	 */
+	public static Map<String,Object> getTreeMapByStr(String referStr) {
+		String [] firstArray = referStr.split("&");//mrch_no=10084
+		Map<String,Object> map = new TreeMap<String, Object>();
+		for (int i = 0; i < firstArray.length; i++) {
+			String firstStr = firstArray[i];
+			String key = firstStr.substring(0, firstStr.indexOf("="));
+			String value = firstStr.substring(firstStr.indexOf("=")+1, firstStr.length());
+			map.put(key, value);
+		}
+		return map;
+	}
+	
+	
+	
+	
 
 //	public boolean validateSign(Map<String, Object> map, String sign)
 //			throws Exception {

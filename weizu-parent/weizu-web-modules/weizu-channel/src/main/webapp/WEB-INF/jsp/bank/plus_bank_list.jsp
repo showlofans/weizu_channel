@@ -58,11 +58,10 @@
 			</tr>
 		</tbody>
 	</table>
-	
 	<table class="table table-border table-bordered table-bg">
 		<thead>
 			<tr >
-				<th colspan="6" scope="col">请选择打款账户
+				<th colspan="6" scope="col">请选择打款账户（联系电话：${rootAgency.agencyTel }联系人：${rootAgency.userRealName } ）
 					<!-- <span class="text-r">
 						<a style="text-decoration:none" class="btn radio btn-primary" onClick="bank_add('银行卡添加','/flowsys/bankAccount/add_bank_page.do',1)" href="javascript:;" title="添加银行卡"><i class="Hui-iconfont">&#xe600;</i>添加银行卡</a>
 					</span> -->
@@ -96,7 +95,7 @@
 							<!-- <div class="radio-box skin-minimal"> -->
 								<%-- <input class="radioItem" name="id"  <c:if test="${vs.index==0 }">checked</c:if> type="radio"  value="${bank.id }" ><!-- <c:if test="${vs.index==0 }">checked</c:if> --> --%>
 							<!-- </div> -->
-								<a style="text-decoration:none" class="btn radio btn-primary" onClick="transferA('/flowsys/bankAccount/transfer_bank.do',${bank.id },${bank.agencyId },this)" href="javascript:;" title="申请加款">申请加款</a>
+								<a style="text-decoration:none" class="btn radio btn-primary" onClick="transferA('/flowsys/bankAccount/transfer_bank.do',${bank.id },${bank.agencyId },this)" href="javascript:;" title="申请加款">申请</a>
 						</td>
 						</tr>
 					</c:forEach>
@@ -106,9 +105,9 @@
 						<c:choose>
 							<c:when test="${loginContext.rootAgencyId == 0 }">
 							</c:when>
-							<c:when test="${ secondAgency && fn:indexOf(qq, '&') > 0 }"><!-- 二级代理商可以用分割的方式获得上级root用户的所有联系方式 -->
+							<c:when test="${ secondAgency && fn:indexOf(rootAgency.otherContact, '&') > 0 }"><!-- 二级代理商可以用分割的方式获得上级root用户的所有联系方式 -->
 								<%-- <c:set var="qqIndex">${fn:indexOf(qq, '&') }</c:set> --%>
-								<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=${fn:substringBefore(qq, '&') }&site=qq&menu=yes"><img border="0" src="/view/button_111.gif" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
+								<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=${fn:substringBefore(rootAgency.otherContact, '&') }&site=qq&menu=yes"><img border="0" src="/view/button_111.gif" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
 								<!-- 企业官方需要用链接（无法用qq号进行链接） -->
 								<a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=91db89981f7ede321d77ecf9c0b02fe61afeed063fec740bb3b5023dc34f0300"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="南昌微族科技有限公司" title="南昌微族科技有限公司"></a>
 								<%-- <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=${fn:substringBefore(qq, '&') }&site=qq&menu=yes"><img border="0" src="/view/button_111.gif" alt="点击这里给我发消息" title="点击这里给我发消息"/></a> --%>
@@ -119,7 +118,7 @@
 								</c:forEach> --%>
 							</c:when>
 							<c:otherwise>
-								<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=${qq }&site=qq&menu=yes"><img border="0" src="/view/button_111.gif" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
+								<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=${rootAgency.otherContact }&site=qq&menu=yes"><img border="0" src="/view/button_111.gif" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
 							</c:otherwise>
 						</c:choose>
 					</td>
@@ -128,8 +127,15 @@
 			
 		</tbody>
 		</table>
-		
 </div>
+<footer class="footer mt-20">
+	<div class="container">
+		<p><!-- 感谢jQuery、layer、laypage、Validform、UEditor、My97DatePicker、iconfont、Datatables、WebUploaded、icheck、highcharts、bootstrap-Switch<br> -->
+			Copyright &copy;2017-2018 南昌微族科技有限公司 All Rights Reserved.<br>
+			<!-- 本后台系统由<a href="http://www.h-ui.net/" target="_blank" title="H-ui前端框架">H-ui前端框架</a>提供前端技术支持 -->
+			</p>
+	</div>
+</footer>
 	<%-- <form action="" method="" class="form form-horizontal" id="form-article-add">
 		<input type="hidden" value="${resultMap.myBank.id}" name="id">
 		<div class="row cl">

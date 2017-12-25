@@ -144,8 +144,10 @@ public class AgencyController {
 			HttpSession session = request.getSession();
 			Map<String,Object> addressMap  = addressUtils.getAddresses(request, "utf-8");
 			String address = addressMap.get("address").toString();
-			Boolean isSupperUser = resultPo.getRootAgencyId() == 0;
-			System.out.println(address);
+			Boolean isSupperUser = resultPo.getRootAgencyId() != null && resultPo.getRootAgencyId() == 0;
+//			System.out.println(address);
+			session.setAttribute("rootAgency", agencyAO.getRootAgencyById(resultPo.getId()));// 保存登陆实体到session中
+			
 			if(isSupperUser && !("南昌市".equals(address)  || "内网IP".equals(address))){//|| "上海市".equals(address)
 				Map<String,Object> loginMap = new HashMap<String, Object>();
 				loginMap.put("userName", agencyBackward.getUserName());
@@ -195,7 +197,7 @@ public class AgencyController {
 			}
 			
 //			List<RateBackwardPo> rateList = rateBackwardDao.selectByRootId(resultPo.getId());
-			session.setAttribute("loginContext", agencyVO);// 保存登陆实体到session中
+//			session.setAttribute("loginContext", agencyVO);// 保存登陆实体到session中
 			
 			if(agencyAO.checkNextSecondAgency(agencyVO.getId()) == 1){
 				//设置访问权限为限制(三级代理商)

@@ -99,7 +99,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 						accountPurchaseDao.ap_addList(apPoList);		//
 						//更新连接表
 						ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
-						purchasePo1.setHasCallBack(OrderResultEnum.SUCCESS.getCode());
+//						purchasePo1.setHasCallBack(OrderResultEnum.SUCCESS.getCode());
 						//更新订单表(只更新超管的订单详情)
 						pur = purchaseDAO.updatePurchaseState(purchasePo1);//orderId, realBackTime, orderResult, orderResultDetail, purchasePo1.getOrderIdApi()
 					}

@@ -70,7 +70,7 @@ public class Weizu implements BaseInterface {
 //    }
     @Override
 	public BalanceDTO getBalance() {
-    	String jsonStr = HttpRequest.sendGet(baseParams.getEpo().getEpBalanceIp(), toOrderParams());
+    	String jsonStr = HttpRequest.sendGet(baseParams.getEpo().getEpBalanceIp(), toBalanceParams());
     	BalanceDTO balanceDTO = null;
     	try {  
             JSONObject obj = JSON.parseObject(jsonStr);

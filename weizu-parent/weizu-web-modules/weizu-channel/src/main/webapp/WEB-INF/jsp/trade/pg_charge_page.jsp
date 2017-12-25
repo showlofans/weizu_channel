@@ -162,7 +162,7 @@
 		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>充值提示：</label>
 		<div class="formControls col-xs-8 col-sm-9">
 		<!--  onfocus="ajaxPg()" -->
-			<textarea readonly="readonly" style="height:350px;  " name="" cols="30" rows="" class="textarea"  placeholder="介绍属性介绍，
+			<textarea readonly="readonly" style="height:350px;  " name="" cols="30" rows="" class="textarea"  placeholder="属性介绍，
 省内流量  （使用范围-本省——只限本省号码充值）
 省漫游流量（使用范围-全国——只限本省号码充值）
 全国流量  （使用范围-全国——全国号码均可充值）

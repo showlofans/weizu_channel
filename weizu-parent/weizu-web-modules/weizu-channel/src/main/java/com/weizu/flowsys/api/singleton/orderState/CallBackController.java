@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.weizu.flowsys.api.singleton.ProductDTO;
 import com.weizu.flowsys.api.singleton.ProductIn;
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
@@ -135,7 +137,7 @@ public class CallBackController {
 					rjdto.setStatus(myStatus);
 					rjdto.setStatusDetail(statusDetail);
 				}
-				String res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, null, ts, myStatus, null, statusDetail));//purchasePo.getOrderId(), myStatus, statusDetail, ts
+				String res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, null, ts, myStatus, OrderResultEnum.SUCCESS.getCode(), statusDetail));//purchasePo.getOrderId(), myStatus, statusDetail, ts
 				System.out.println("向下返回调结果："+res);
 //				AgencyBackwardPo agencyPo = agencyAO.getAgencyByAccountId(purchasePo.getAccountId());
 				//把rjdto按照代理商返回
@@ -181,10 +183,10 @@ public class CallBackController {
 				String orderIdApi = transaction_id;
 				switch (status) {
 				case 4://成功:设置orderResult和orderState为成功
-					res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, orderIdApi, System.currentTimeMillis(), OrderStateEnum.CHARGED.getValue(), null, OrderStateEnum.CHARGED.getDesc()));
+					res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, orderIdApi, System.currentTimeMillis(), OrderStateEnum.CHARGED.getValue(), OrderResultEnum.SUCCESS.getCode(), OrderStateEnum.CHARGED.getDesc()));
 					break;
 				case 8://失败:设置orderResult为充值等待(设置回调缓冲时间限制)
-					res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, orderIdApi, System.currentTimeMillis(), OrderStateEnum.DAICHONG.getValue(), null, OrderStateEnum.DAICHONG.getDesc()));
+					res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, orderIdApi, System.currentTimeMillis(), OrderStateEnum.UNCHARGE.getValue(), OrderResultEnum.SUCCESS.getCode(), OrderStateEnum.UNCHARGE.getDesc()));
 					break;
 				default:
 					break;
@@ -215,7 +217,7 @@ public class CallBackController {
 	 * @createTime:2017年10月20日 下午4:58:27
 	 */
 	@ResponseBody
-	@RequestMapping(value=CallBackURL.Lefeng)
+	@RequestMapping(value=CallBackURL.LEFENG)
 	public String LefengCallBack(@RequestBody String key){
 		System.out.println(key);
 //		String res = null;
@@ -254,7 +256,7 @@ public class CallBackController {
 					statusDetail = fail_describe;
 					break;
 				}
-	            res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, reqNo, System.currentTimeMillis(), myStatus,null , statusDetail));
+	            res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, reqNo, System.currentTimeMillis(), myStatus,OrderResultEnum.SUCCESS.getCode() , statusDetail));
 	            if(!"success".equals(res)){
 	            	successTag = res;
 	            }
@@ -337,7 +339,7 @@ public class CallBackController {
 	 * @createTime:2017年12月12日 下午2:29:47
 	 */
 	@ResponseBody
-	@RequestMapping(value=CallBackURL.Wantull)
+	@RequestMapping(value=CallBackURL.WANTULL)
 	public String WantullCallBack(HttpServletRequest request){
 		
 		String successTag = "ok";
@@ -382,7 +384,7 @@ public class CallBackController {
 						default:
 							break;
 						}
-						res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, orderIdApi, System.currentTimeMillis(), myStatus,null , statusDetail));
+						res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, orderIdApi, System.currentTimeMillis(), myStatus,OrderResultEnum.SUCCESS.getCode() , statusDetail));
 						if(!"success".equals(res)){
 							successTag = res;
 						}
@@ -407,7 +409,7 @@ public class CallBackController {
 	 * @createTime:2017年12月14日 下午4:06:23
 	 */
 	@ResponseBody
-	@RequestMapping(value=CallBackURL.Maiyuan,method=RequestMethod.GET)
+	@RequestMapping(value=CallBackURL.MAIYUAN,method=RequestMethod.GET)
 	public String MaiyuanCallBack(String TaskId, String mobile, Integer Status, String ReportTIme,
 			String ReportCode, String OutTradeNo,String sign){
 		String successTag = "ok";
@@ -435,7 +437,7 @@ public class CallBackController {
 					default:
 						break;
 					}
-					res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, TaskId, System.currentTimeMillis(), myStatus,null , statusDetail));
+					res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, TaskId, System.currentTimeMillis(), myStatus,OrderResultEnum.SUCCESS.getCode() , statusDetail));
 					if(!"success".equals(res)){
 						successTag = res;
 					}
@@ -456,7 +458,7 @@ public class CallBackController {
 	 * @createTime:2017年12月14日 下午4:38:13
 	 */
 	@ResponseBody
-	@RequestMapping(value=CallBackURL.Maiyuan,method=RequestMethod.POST)
+	@RequestMapping(value=CallBackURL.MAIYUAN,method=RequestMethod.POST)
 	public String MaiyuanCallBack(@RequestBody String jsonStr){
 		String successTag = "ok";
 		String statusDetail = "";
@@ -500,7 +502,7 @@ public class CallBackController {
 	        				default:
 	        					break;
 	        				}
-	        				res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, taskId, System.currentTimeMillis(), myStatus,null , statusDetail));
+	        				res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, taskId, System.currentTimeMillis(), myStatus,OrderResultEnum.SUCCESS.getCode() , statusDetail));
 	        				if(!"success".equals(res)){
 	        					isError = true;
 //	        				successTag = res;
@@ -522,6 +524,143 @@ public class CallBackController {
 		System.out.println("successTag:"+successTag);
 		return successTag;
 	}
+	/**
+	 * @description: 智信系统回调
+	 * @param jsonStr
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月22日 上午10:44:54
+	 */
+//	@Deprecated
+//	@ResponseBody
+//	@RequestMapping(value=CallBackURL.ZXPAY,method=RequestMethod.GET)
+//	public String ZxpayCallBack(@RequestBody String jsonStr){
+//		String successTag = "SUCCESS";
+//		String statusDetail = "";
+//		int myStatus = -1;
+//		try {  
+//			System.out.println("回调返回json串:"+jsonStr);
+//			JSONObject obj = JSON.parseObject(jsonStr);
+//			String orderIdApi = obj.getString("up_order_no");
+//        	String user_order_id = obj.getString("client_order_no");
+//        	
+////        	String number = obj.getString("phone_no");
+//        	int status = obj.getIntValue("recharge_status");
+//        	String elecardID = obj.getString("elecardID");//运营商流水号
+//        	String charge_fee = obj.getString("deduction_amount");
+//        	
+//        	String product_type = obj.getString("product_type");//产品类型
+//        	String sign = obj.getString("sign");//签名
+//        	String msg = obj.getString("desc");
+//        	System.out.println("其他结果参数：desc="+msg+"product_type="+product_type+"运营商流水号："+elecardID);
+//        	System.out.println("其他结果参数：sign："+sign+"抵扣金额（分）："+charge_fee);
+//        	if(StringHelper.isEmpty(user_order_id)){
+//				successTag = "没有返回用户订单号";
+//			}else{
+//				//初始化参数
+//				long orderId = Long.parseLong(user_order_id.trim());
+//				PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
+//				Boolean hasCall = OrderResultEnum.SUCCESS.getCode().equals(purchasePo.getHasCallBack());
+//				String res = "";
+//				if(!hasCall){//上一次没有回调成功
+//					//Long orderBackTime = DateUtil.strToDate(report_time, null).getTime();
+//					switch (status) {
+//					case 1://充值中
+//	            		myStatus = OrderStateEnum.CHARGING.getValue();
+//	            		statusDetail = OrderStateEnum.CHARGING.getDesc();
+//	            		break;
+//	            	case 2://充值成功
+//	            		myStatus = OrderStateEnum.CHARGED.getValue();
+//	            		statusDetail = OrderStateEnum.CHARGED.getDesc();
+//	            		break;
+//	            	case 6://充值失败
+//	            		myStatus = OrderStateEnum.UNCHARGE.getValue();
+//	            		statusDetail = OrderStateEnum.UNCHARGE.getDesc();
+//	            		break;
+//					default:
+//						break;
+//					}
+//					res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, orderIdApi, System.currentTimeMillis(), myStatus,OrderResultEnum.SUCCESS.getCode() , statusDetail));
+//					if(!"success".equals(res)){
+//						successTag = res;
+//					}
+//				}
+//			}
+//			//根据订单号去更新数据库，并返回回调结果
+//			
+//		} catch (JSONException e) {  
+//			successTag = "json结果解析异常";
+//			e.printStackTrace();  
+//		}  
+//		System.out.println("successTag:"+successTag);
+//		return successTag;
+//	}
+	/**
+	 * @description: 智信get回调
+	 * @param jsonStr
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月25日 上午9:21:30
+	 */
+	@ResponseBody
+	@RequestMapping(value=CallBackURL.ZXPAY,method=RequestMethod.GET)
+	public String ZxpayCallBack(String client_order_no,String up_order_no,String product_type,
+			String phone_no,String deduction_amount,String recharge_status,String elecardID,
+			@RequestParam(value="desc",required=false)String desc, String sign){
+		String successTag = "SUCCESS";
+		String statusDetail = "";
+		int myStatus = -1;
+		try {  
+			Double charge_fee = Double.parseDouble(deduction_amount);
+			charge_fee = NumberTool.div(charge_fee, 100);
+			
+			System.out.println("其他结果参数：desc="+desc+"product_type="+product_type+"运营商流水号："+elecardID);
+			System.out.println("其他结果参数：sign："+sign+"抵扣金额（元）："+charge_fee);
+			
+			if(StringHelper.isEmpty(client_order_no)){
+				successTag = "没有返回用户订单号";
+			}else{
+				Integer status = Integer.parseInt(recharge_status);
+				//初始化参数
+				long orderId = Long.parseLong(client_order_no.trim());
+				PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
+				Boolean hasCall = OrderResultEnum.SUCCESS.getCode().equals(purchasePo.getHasCallBack());
+				String res = "";
+				if(!hasCall){//上一次没有回调成功
+					//Long orderBackTime = DateUtil.strToDate(report_time, null).getTime();
+					switch (status) {
+					case 1://充值中
+						myStatus = OrderStateEnum.CHARGING.getValue();
+						statusDetail = OrderStateEnum.CHARGING.getDesc();
+						break;
+					case 2://充值成功
+						myStatus = OrderStateEnum.CHARGED.getValue();
+						statusDetail = OrderStateEnum.CHARGED.getDesc();
+						break;
+					case 6://充值失败
+						myStatus = OrderStateEnum.UNCHARGE.getValue();
+						statusDetail = OrderStateEnum.UNCHARGE.getDesc();
+						break;
+					default:
+						break;
+					}
+					res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, up_order_no, System.currentTimeMillis(), myStatus,OrderResultEnum.SUCCESS.getCode() , statusDetail));
+					if(!"success".equals(res)){
+						successTag = res;
+					}
+				}
+			}
+			//根据订单号去更新数据库，并返回回调结果
+			
+		} catch (JSONException e) {  
+			successTag = "json结果解析异常";
+			e.printStackTrace();  
+		}  
+		System.out.println("successTag:"+successTag);
+		return successTag;
+	}
+	
+	
 	
 	
 }

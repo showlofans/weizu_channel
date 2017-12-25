@@ -19,7 +19,7 @@ public class BaseP {
 //	private  Long productCodeId;		//产品编码id(业务类型)
 	private ExchangePlatformPo epo;		//平台信息
 	private ProductCodePo productCodePo;	//产品编码信息
-	private String otherParams;			//其他参数
+	private String otherParams;			//其他参数:如订单提交时间
 	
 	public BaseP() {
 		super();

@@ -17,6 +17,15 @@ public interface TelRateAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年12月1日 下午5:47:01
 	 */
-	void getRateForCharge(Map<String,Object> params,TelChannelParams telChannelParams, Integer agencyId);
+	void getRateForCharge(Map<String,Object> params,TelChannelParams telChannelParams, Integer agencyId, Integer rootAgencyId);
+	
+	/**
+	 * @description: 删除话费折扣
+	 * @param telRateId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月20日 上午9:54:01
+	 */
+	String delTelRateById(Long telRateId, Boolean isSupperAgency, Integer agencyId);
 	
 }

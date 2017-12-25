@@ -74,28 +74,12 @@ public class OperatorPgDao extends DaoImpl<PgDataPo, Integer> implements Operato
 	 * @createTime:2017年5月16日 上午11:59:23
 	 */
 	@Override
-	public List getPgInCode(OneCodePo oneCodePo) {
-		
-		Map<String,Object> params = new HashMap<String, Object>();
-		if(oneCodePo.getOperatorType() != null){
-			params.put("operatorType", oneCodePo.getOperatorType());
-		}
-		if(oneCodePo.getServiceType() != null){
-			params.put("serviceType", oneCodePo.getServiceType());
-		}
-		if(oneCodePo.getEpId() != null){
-			params.put("epId", oneCodePo.getEpId());
-		}
-		if(StringHelper.isNotEmpty(oneCodePo.getScopeCityCode())){
-			params.put("scopeCityCode", oneCodePo.getScopeCityCode());
-		}
-		if(oneCodePo.getPgType() != null){
-			params.put("pgType", oneCodePo.getPgType());
-		}
-		if(StringHelper.isNotEmpty(oneCodePo.getPgValidity())){
-			params.put("pgValidity", oneCodePo.getPgValidity());
-		}
-		return sqlSessionTemplateASS.selectList("getPgInCode", params);
+	public List getPgInCode(Map<String, Object> paramsMap) {
+		return sqlSessionTemplateASS.selectList("getPgInCode", paramsMap);
+	}
+	@Override
+	public List listPgIds(Map<String, Object> paramsMap) {
+		return sqlSessionTemplateASS.selectList("listPgIds", paramsMap);
 	}
 
 	/**
@@ -206,7 +190,5 @@ public class OperatorPgDao extends DaoImpl<PgDataPo, Integer> implements Operato
 	public PgDataPo getPgByOrderId(Long purchaseId) {
 		return sqlSessionTemplateASS.selectOne("getPgByOrderId", purchaseId);
 	}
-
-	
 
 }

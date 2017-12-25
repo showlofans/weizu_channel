@@ -32,9 +32,10 @@
 //	@Test
 //	public void getTelRateForCharge(){
 //		Map<String,Object> map = new HashMap<String, Object>();
-//		map.put("agencyId", 2);
+//		map.put("agencyId", 3);
 //		map.put("provinceid", 440000);
 //		map.put("cityid", 440100);
+//		map.put("rootAgencyId", 2);
 //		List<GetTelRatePo> getTelRateList = telRateDao.getTelRateForCharge(map);
 //		System.out.println("id\tactive_discount\tbill_type\tcharge_value\ttel_code");
 //		for (GetTelRatePo getTelRatePo : getTelRateList) {

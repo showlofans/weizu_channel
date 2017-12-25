@@ -28,6 +28,12 @@ public class MyConstants {
 	 * 仁智-迈远平台对私英文标志
 	 */
 	public final static String MAIYUAN_ENG = "Maiyuan";
+	/**
+	 * 智信话充平台英文标志
+	 */
+	public final static String ZXPAY_ENG = "Zxpay";
+	
+	
 	
 	
 	

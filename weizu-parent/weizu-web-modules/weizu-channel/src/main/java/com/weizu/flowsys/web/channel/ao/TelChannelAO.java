@@ -1,5 +1,7 @@
 package com.weizu.flowsys.web.channel.ao;
 
+import java.util.Map;
+
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.pojo.TelChannelParams;
@@ -33,7 +35,19 @@ public interface TelChannelAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年11月24日 下午2:31:53
 	 */
-	public Pagination<TelChannelParams> getAgencyTelChannel(PageParam pageParams, TelChannelParams telChannelParams, Integer agencyId);
+	public Pagination<TelChannelParams> getAgencyTelChannel(PageParam pageParams, TelChannelParams telChannelParams, Integer rootAgencyId, Integer contextAgencyId);
+	
+
+	/**
+	 * @description: 获得子代理商的话费折扣配置列表
+	 * @param pageParams
+	 * @param telChannelParams
+	 * @param agencyId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月19日 下午4:19:43
+	 */
+	public void getChildAgencyTelChannel(PageParam pageParams, TelChannelParams telChannelParams, Integer agencyId, Integer childAccountId, Map<String,Object> resultMap);
 	
 //	public Pagination<TelChannelParams> getTelChannel(TelChannelParams telParams, PageParam pageParams);
 	
@@ -65,4 +79,15 @@ public interface TelChannelAO {
 	 * @createTime:2017年12月5日 下午3:36:47
 	 */
 	public String delTelChannelById(Long telChannelId);
+	
+	/**
+	 * @description: 获得我的话费折扣配置列表
+	 * @param pageParams
+	 * @param childAccountId
+	 * @param contextAgencyId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月19日 下午4:08:52
+	 */
+//	public Pagination<TelRatePo> getMyTelRateList(PageParam pageParams, Integer childAccountId, Integer contextAgencyId);
 }

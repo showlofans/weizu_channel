@@ -90,6 +90,7 @@
 											&channelName=${resultMap.searchParams.channelName }
 											&backStartTimeStr=${resultMap.searchParams.backStartTimeStr }
 											&backEndTimeStr=${resultMap.searchParams.backEndTimeStr }
+											&purchaseFor=${resultMap.searchParams.purchaseFor }
 											&orderResult=${resultMap.searchParams.orderResult }">【导出列表】
 							</a>
 							<button name="" id="" class="btn btn-primary radius" onclick="batchPush()" type="button"><i class="Hui-iconfont">&#xe665;</i> 批量推送</button>
@@ -102,6 +103,7 @@
 											&channelName=${resultMap.searchParams.channelName }
 											&backStartTimeStr=${resultMap.searchParams.backStartTimeStr }
 											&backEndTimeStr=${resultMap.searchParams.backEndTimeStr }
+											&purchaseFor=${resultMap.searchParams.purchaseFor }
 											&orderState=${resultMap.searchParams.orderState }">【导出列表】
 							</a>
 							<input type="hidden" name="orderState" value="${resultMap.searchParams.orderState }">

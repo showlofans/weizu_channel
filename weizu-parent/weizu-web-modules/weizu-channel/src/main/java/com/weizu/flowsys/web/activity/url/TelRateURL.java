@@ -148,6 +148,7 @@ public class TelRateURL extends BaseURL {
 	
 	/**
 	 * 费率配置列表
+	 * <br>/flowsys/telRate/my_telRate_list.do
 	 */
 	public static final String MY_TELRATE_LIST = "/my_telRate_list" + DYNAMIC_WEB_SUFFIX;
 	
@@ -166,6 +167,13 @@ public class TelRateURL extends BaseURL {
 	 * <br> /flowsys/telRate/del_telRate.do
 	 */
 	public static final String DEL_TELRATE = "/del_telRate" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 我的话费通道列表
+	 * <br> /flowsys/telRate/agency_telchannel_list.do
+	 */
+	public static final String AGENCY_TELCHANNEL_LIST = "/agency_telchannel_list" + DYNAMIC_WEB_SUFFIX;
+	
+	
 	
 	
 }
