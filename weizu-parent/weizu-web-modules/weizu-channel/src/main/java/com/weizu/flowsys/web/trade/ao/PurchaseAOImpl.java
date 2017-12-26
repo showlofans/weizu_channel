@@ -1702,7 +1702,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 			}
 		}
 		StringBuffer sb = new StringBuffer();
-		sb.append("批量成功了 ");
+		sb.append("批量推送成功了 ");
 		sb.append(successTag);
 		sb.append("单,失败了 ");
 		sb.append(errorTag);

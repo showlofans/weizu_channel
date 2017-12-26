@@ -1,6 +1,9 @@
 package com.weizu.flowsys.web.http.controller;
 
+import java.util.Map;
+
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +26,7 @@ import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
+import com.weizu.flowsys.util.AddressUtils;
 import com.weizu.flowsys.web.http.entity.Charge;
 import com.weizu.flowsys.web.http.entity.Order;
 import com.weizu.flowsys.web.http.entity.PgProduct;
@@ -130,6 +134,8 @@ public class OuterAPIController {
 //		System.out.println(jsonResult);
 		return jsonResult;
 	}
+	@Resource
+	private AddressUtils addressUtils;
 	
 	/**
 	 * @description: 查询订单详情接口
@@ -143,8 +149,11 @@ public class OuterAPIController {
 	@ResponseBody
 	@RequestMapping(value=OuterApiURL.MY_ORDER_STATE,produces = "text/json;charset=UTF-8")
 	public String myOrderState(String userName, String sign, Long orderId, 
-			@RequestParam(value="number", required=false)String number){
-		
+			@RequestParam(value="number", required=false)String number,HttpServletRequest request){
+		System.out.println("访问ip"+request.getRequestURL());
+//		Map<String,Object> addressMap  = addressUtils.getAddresses(request, "utf-8");
+//		String address = addressMap.get("address").toString();
+//		String eventIp = addressMap.get("ip").toString();
 		QueryOrderParams orderParams = null;
 		if(StringHelper.isNotEmpty(number))
 		{
@@ -154,7 +163,7 @@ public class OuterAPIController {
 		}
 		Order order = orderFacade.getOrder(orderParams);
 		String jsonResult = JSON.toJSON(order).toString();
-		System.out.println(jsonResult);
+//		System.out.println(jsonResult);
 		return jsonResult;
 	}
 	

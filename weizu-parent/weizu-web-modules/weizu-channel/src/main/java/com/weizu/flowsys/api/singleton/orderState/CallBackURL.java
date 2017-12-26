@@ -51,6 +51,11 @@ public class CallBackURL extends BaseURL{
 	 * 真实地址：http://120.55.162.224/flowsys/callBack/Zxpay.do<br>
 	 */
 	public static final String ZXPAY = "/Zxpay"+ DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 智信话充系统回调接口<br>
+	 * 真实地址：http://120.55.162.224/flowsys/callBack/Hongjia.do<br>
+	 */
+	public static final String HONGJIA = "/Hongjia"+ DYNAMIC_WEB_SUFFIX;
 	
 	
 	

@@ -1,5 +1,6 @@
 package com.weizu.flowsys.api.singleton;
 
+import com.weizu.flowsys.api.singleton.company.Hongjia;
 import com.weizu.flowsys.api.singleton.company.Lefeng;
 import com.weizu.flowsys.api.singleton.company.Lljypt;
 import com.weizu.flowsys.api.singleton.company.Maiyuan;
@@ -18,19 +19,34 @@ public class SingletonFactory {
 	public static BaseInterface getSingleton(String epEngId,BaseP baseParams){
 		
 		BaseInterface bi = null;
+		//微族公司英文标识
 		if(MyConstants.WEIZU_ENG.equals(epEngId))
 		{
 			bi = Weizu.getInstance(epEngId, baseParams);
-		}else if(MyConstants.LLJYPT_ENG.equals(epEngId) || MyConstants.LLJYPT_ENG_0.equals(epEngId)){
+		}
+		//行云流水对公
+		else if(MyConstants.LLJYPT_ENG.equals(epEngId) || MyConstants.LLJYPT_ENG_0.equals(epEngId)){
 			bi = Lljypt.getInstance(epEngId, baseParams);
-		}else if(MyConstants.LEFENG_ENG.equals(epEngId)){
+		}
+		//青岛网信乐疯平台
+		else if(MyConstants.LEFENG_ENG.equals(epEngId)){
 			bi = Lefeng.getInstance(epEngId, baseParams);
-		}else if(MyConstants.WANTULL_ENG.equals(epEngId)|| MyConstants.WANTULL_ENG_0.equals(epEngId)){
+		}
+		//河南趣闻-顽兔平台
+		else if(MyConstants.WANTULL_ENG.equals(epEngId)|| MyConstants.WANTULL_ENG_0.equals(epEngId)){
 			bi = Wantull.getInstance(epEngId, baseParams);
-		}else if(MyConstants.MAIYUAN_ENG.equals(epEngId)){//|| MyConstants.WANTULL_ENG_0.equals(epEngId)
+		}
+		//仁智-迈远平台对私英文标志
+		else if(MyConstants.MAIYUAN_ENG.equals(epEngId)){//|| MyConstants.WANTULL_ENG_0.equals(epEngId)
 			bi = Maiyuan.getInstance(epEngId, baseParams);
-		}else if(MyConstants.ZXPAY_ENG.equals(epEngId)){
+		}
+		//智信话充平台英文标志
+		else if(MyConstants.ZXPAY_ENG.equals(epEngId)){
 			bi = Zxpay.getInstance(epEngId, baseParams);
+		}
+		//红茄科技平台英文标志
+		else if(MyConstants.HONGJIA_ENG.equals(epEngId)){
+			bi = Hongjia.getInstance(epEngId, baseParams);
 		}
 		
 		return bi;

@@ -4,7 +4,9 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.weizu.api.util.HttpRequest;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
@@ -16,7 +18,6 @@ import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
-import com.weizu.web.foundation.http.HttpRequest;
 
 /**
  * @description: 推送订单结果工具类
@@ -62,7 +63,8 @@ public class SendCallBackUtil {
 //			do{
 //				try {
 //					i++;
-					String backJson = JSONObject.toJSONString(rjdto);
+//					String backJson = JSONObject.toJSONString(rjdto);
+					String backJson = JSON.toJSON(rjdto).toString();
 					System.out.println("推送的json:"+ backJson);
 					resMsg = HttpRequest.sendPost(reportUrl, backJson);
 //					if(i== CALL_BACK_TIME){
