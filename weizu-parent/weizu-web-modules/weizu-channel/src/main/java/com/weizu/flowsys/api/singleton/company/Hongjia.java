@@ -97,8 +97,8 @@ public class Hongjia implements BaseInterface {
     @Override
 	public BalanceDTO getBalance() {
     	String params = toBalanceParams();
-    	System.out.println("参数:"+params);
     	String jsonStr = HttpRequest.sendGet(baseParams.getEpo().getEpBalanceIp(), params);
+    	System.out.println("完整访问地址："+baseParams.getEpo().getEpBalanceIp() +"?"+ params);
     	System.out.println(jsonStr);
     	BalanceDTO balanceDTO = null;
     	try {  
@@ -141,9 +141,11 @@ public class Hongjia implements BaseInterface {
 
 	@Override
 	public OrderDTO getOrderState() {
-		String paramsStr =  toOrderParams();
-		//System.out.println("查询参数："+paramsStr);
-		String jsonStr = HttpRequest.sendPost(baseParams.getEpo().getEpOrderStateIp(),paramsStr);
+		String[] paramsArr =  toOrderParamsArr();
+		String requestIp = baseParams.getEpo().getEpOrderStateIp()+"?"+paramsArr[0];
+		System.out.println("访问地址：" + requestIp);
+		System.out.println("参数：" + paramsArr[1]);
+		String jsonStr = HttpRequest.sendPost(requestIp,paramsArr[1]);
 		OrderDTO orderDTO = null;
 		try {  
 			if(StringHelper.isEmpty(jsonStr) || "exception".equals(jsonStr)){
@@ -151,77 +153,52 @@ public class Hongjia implements BaseInterface {
 		 	}
 			System.out.println("返回值:"+jsonStr);
             JSONObject obj = JSON.parseObject(jsonStr);
-            int rspCode = obj.getIntValue("code");
+            int rspCode = obj.getIntValue("status");
             String rspMsg = obj.getString("message");
 //            System.out.println(rspCode);
             int myStatus = OrderStateEnum.CHARGING.getValue();
-            if(rspCode == 626){//未查询到订单状态
-            	String order_time = baseParams.getOtherParams();
-            	String msg = "正在充值";
-            	if(StringHelper.isEmpty(order_time)){//传值不正确
-            		msg = "提交参数有误，或者正在充值";
-            	}else{//传值正确
-            		Long orderTime = DateUtil.strToDate(order_time, "yyyyMMddHHmmss").getTime();
-            		int minutes = (int) ((System.currentTimeMillis() - orderTime) / (1000*60));
-            		if(minutes > 10){//
-            			myStatus = OrderStateEnum.UNCHARGE.getValue();
-            			msg = rspMsg;
-            		}else{
-            			msg = "提交参数有误，或者正在充值（充值未超时）";
-//            			System.out.println("提交参数有误，或者正在充值（充值未超时）");
-            		}
-            	}
-            	System.out.println("626未查到结果："+msg);
-            	OrderIn orderId = new OrderIn(baseParams.getOrderIdApi(), baseParams.getOrderId().toString(), null, null, null, System.currentTimeMillis(), myStatus, msg);
-            	//用我这边默认的对私账户充值
-            	orderDTO = new OrderDTO(orderId, rspCode, rspMsg);
-            }else if(rspCode == 2){
+            
+            if(rspCode == 1){//查询到订单状态
             	JSONObject orderObj = obj.getJSONObject("data");
-            	String orderIdApi = orderObj.getString("up_order_no");
-            	String user_order_id = orderObj.getString("client_order_no");
-            	
-            	String number = orderObj.getString("phone_no");
-            	String charge_fee = orderObj.getString("deduction_amount");//以分为单位
-            	double chargeValue = NumberTool.div(Double.parseDouble(charge_fee), 100); //扣款金额以元为单位 
-            	int status = orderObj.getIntValue("recharge_status");
-            	String elecardID = orderObj.getString("elecardID");//运营商流水号
-            	
-            	String product_type = orderObj.getString("product_type");//产品类型
-            	String msg = orderObj.getString("desc");
-            	System.out.println("其他结果参数：desc="+msg+",product_type="+product_type+"扣款金额（元）："+chargeValue+"运营商流水号："+elecardID);
-            	switch (status) {
-            	case 1://充值中
-            		myStatus = OrderStateEnum.CHARGING.getValue();
-            		break;
-            	case 2://充值成功
-            		myStatus = OrderStateEnum.CHARGED.getValue();
-            		break;
-            	case 6://充值失败
-            		myStatus = OrderStateEnum.UNCHARGE.getValue();
-            		break;
-            	default:
-            		break;
-            	}
-            	if(StringHelper.isEmpty(msg)){
+            	if(orderObj != null){
+            		String orderIdApi = orderObj.getString("orderid");
+            		String user_order_id = orderObj.getString("transno");
+            		
+            		String number = orderObj.getString("phone");
+            		String message = orderObj.getString("message");//订单描述
+            		int status = orderObj.getIntValue("status");
+            		
+            		System.out.println("其他结果参数：message="+message+",number="+number);
             		switch (status) {
-                	case 1://正在充值
-                		msg = OrderStateEnum.CHARGING.getDesc();
-                		break;
-                	case 2://充值成功
-                		msg = OrderStateEnum.CHARGED.getDesc();
-                		break;
-                	case 6://充值失败
-                		msg = OrderStateEnum.UNCHARGE.getDesc();
-                		break;
-                	default:
-                		break;
-                	}
-            	}
-            	OrderIn orderId = new OrderIn(orderIdApi, user_order_id, number, null, charge_fee, System.currentTimeMillis(), myStatus, msg);
+            		case 2://充值中
+            			myStatus = OrderStateEnum.CHARGING.getValue();
+            			break;
+            		case 1://充值成功
+            			myStatus = OrderStateEnum.CHARGED.getValue();
+            			break;
+            		default://充值失败
+            			myStatus = OrderStateEnum.UNCHARGE.getValue();
+            			break;
+            		}
+            		if(StringHelper.isEmpty(message)){
+            			switch (status) {
+            			case 2://正在充值
+            				message = OrderStateEnum.CHARGING.getDesc();
+            				break;
+            			case 1://充值成功
+            				message = OrderStateEnum.CHARGED.getDesc();
+            				break;
+            			default:
+            				message = OrderStateEnum.UNCHARGE.getDesc();
+            				break;
+            			}
+            		}
+            		OrderIn orderId = new OrderIn(orderIdApi, user_order_id, number, null, null, System.currentTimeMillis(), myStatus, message);
 //            	orderId.setCreated_at_time(created_at_time);
-            	//用我这边默认的对私账户充值
-            	orderDTO = new OrderDTO(orderId, rspCode, rspMsg);
-            }else{//不做失败处理：不做处理
+            		//用我这边默认的对私账户充值
+            		orderDTO = new OrderDTO(orderId, rspCode, rspMsg);
+            	}
+            }else{//查询失败
             	System.out.print("查询参数有误：");
             	System.out.println(rspCode+"<--->"+rspMsg);
 //            	String errorMsg = "";
@@ -250,9 +227,11 @@ public class Hongjia implements BaseInterface {
 	}
 	@Override
 	public ChargeDTO charge() {
-		String params = toParams();
-		System.out.println("参数：" + params);
-		 String jsonStr = HttpRequest.sendPost(baseParams.getEpo().getEpPurchaseIp(), params);
+		String[] paramsArr = toParamsArr();
+		String requestIp = baseParams.getEpo().getEpPurchaseIp()+"?"+paramsArr[0];
+		System.out.println("访问地址：" + requestIp);
+		System.out.println("参数：" + paramsArr[1]);
+		 String jsonStr = HttpRequest.sendPost(requestIp, paramsArr[1]);
 		 ChargeDTO chargeDTO = null;
 		 try {  
 			 	if(StringHelper.isEmpty(jsonStr) || "exception".equals(jsonStr)){
@@ -262,30 +241,29 @@ public class Hongjia implements BaseInterface {
 	            JSONObject obj = JSON.parseObject(jsonStr);
 	            int tipCode = obj.getIntValue("status");
 	            String tipMsg = obj.getString("message");
-	            
+	            System.out.println("message=" + tipMsg);
 	            if(tipCode == 2 || tipCode == 1){//充值中(tipCode == 1){//充值成功（秒）
-	            	JSONArray array = obj.getJSONArray("data");
-	    	        if(array != null && array.size() > 0){
-	    	        	for (Object object : array) {
-	    	        		if(object != null){
-	    	        			JSONObject jsonObj = (JSONObject)object;
-	    	        			String orderIdApi = jsonObj.getString("orderid");//红茄订单号
-	    	        			String orderId = jsonObj.getString("transno");//自己传过去的订单好
-	    	        			System.out.println("自己的订单好："+orderId);
-	    	        			chargeDTO = new ChargeDTO(OrderResultEnum.SUCCESS.getCode(), tipMsg, new ChargeOrder(orderIdApi, baseParams.getChargeTel(), baseParams.getProductCodePo().getPgSize().toString(), BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
-	    	        		}
-	    	        	}
-	    	        }
-	            	
-//	            	JSONObject orderObj = obj.getJSONObject("data");
-//	            	if(orderObj != null){
-//	            		String orderIdApi = orderObj.getString("orderid");
-//	            		String orderId = orderObj.getString("transno");
-//	            		System.out.println("自己的订单好："+orderId.toString());
-//	            		chargeDTO = new ChargeDTO(OrderResultEnum.SUCCESS.getCode(), tipMsg, new ChargeOrder(orderIdApi, baseParams.getChargeTel(), baseParams.getProductCodePo().getPgSize().toString(), BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
-//	            	}else{
-//	            		System.out.println("返回为空");
-//	            	}
+//	            	JSONArray array = obj.getJSONArray("data");
+//	    	        if(array != null && array.size() > 0){
+//	    	        	for (Object object : array) {
+//	    	        		if(object != null){
+//	    	        			JSONObject jsonObj = (JSONObject)object;
+//	    	        			String orderIdApi = jsonObj.getString("orderid");//红茄订单号
+//	    	        			String orderId = jsonObj.getString("transno");//自己传过去的订单好
+//	    	        			System.out.println("自己的订单好："+orderId);
+//	    	        			chargeDTO = new ChargeDTO(OrderResultEnum.SUCCESS.getCode(), tipMsg, new ChargeOrder(orderIdApi, baseParams.getChargeTel(), baseParams.getProductCodePo().getPgSize().toString(), BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
+//	    	        		}
+//	    	        	}
+//	    	        }
+	            	JSONObject orderObj = obj.getJSONObject("data");
+	            	if(orderObj != null){
+	            		String orderIdApi = orderObj.getString("orderid");
+	            		String orderId = orderObj.getString("transno");
+	            		System.out.println("自己的订单好："+orderId.toString());
+	            		chargeDTO = new ChargeDTO(OrderResultEnum.SUCCESS.getCode(), tipMsg, new ChargeOrder(orderIdApi, baseParams.getChargeTel(), baseParams.getProductCodePo().getPgSize().toString(), BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
+	            	}else{
+	            		System.out.println("返回为空");
+	            	}
 	            }
 	            else{//返回失败,考虑退款
 	            	// 最后输出到控制台  
@@ -339,13 +317,14 @@ public class Hongjia implements BaseInterface {
 		return chargeDTO;
 	}
 	
+	
 	/**
-	 * @description: 封装充值参数方法
+	 * @description: 充值参数 【0】urlAddParams【1】json参数列表
 	 * @return
 	 * @author:微族通道代码设计人 宁强
-	 * @createTime:2017年8月28日 上午11:39:28
+	 * @createTime:2017年12月27日 上午11:34:19
 	 */
-	public String toParams() {
+	private String[] toParamsArr() {
 		 ProductCodePo pc = baseParams.getProductCodePo();
 		
 		ExchangePlatformPo epPo = baseParams.getEpo();
@@ -356,7 +335,7 @@ public class Hongjia implements BaseInterface {
 		String sign = "";
 		int seconds = (int) (System.currentTimeMillis()/1000);//时间戳：秒
 		StringBuffer signBuffer = new StringBuffer();
-//		signBuffer.append(apiKey);
+		signBuffer.append(apiKey);
 		String method = "rw.open.dataflow.order";
 		signBuffer.append("method" + method);
 		signBuffer.append("timestamp"+seconds);
@@ -383,17 +362,24 @@ public class Hongjia implements BaseInterface {
 			e.printStackTrace();
 		}
 		StringBuffer paramsBuffer = new StringBuffer();
-		paramsBuffer.append("method=");
-		paramsBuffer.append(method);
-		paramsBuffer.append("&userid=");
+		paramsBuffer.append("userid=");
 		paramsBuffer.append(account);
+		paramsBuffer.append("&method=");
+		paramsBuffer.append(method);
 		paramsBuffer.append("&timestamp=");
 		paramsBuffer.append(seconds);
 		paramsBuffer.append("&sign=");
 		paramsBuffer.append(sign);
 		System.out.println("sign签名"+sign);
-		return paramsBuffer.toString();
+		String [] arr = new String []{paramsBuffer.toString(),jsonStr};
+		return arr;
 	}
+	
+	public String toParams(){
+		return null;
+	}
+	
+	
 	/**
 	 * @description:设置业务范围
 	 * @param serviceType
@@ -475,19 +461,89 @@ public class Hongjia implements BaseInterface {
 	}
 	@Override
 	public String toOrderParams() {
+//		ExchangePlatformPo epPo = baseParams.getEpo();
+////ProductCodePo pc = baseParams.getProductCodePo();
+////		Map<String,Object> map = new HashMap<String, Object>();
+//		String account = epPo.getEpUserName();
+//		String apiKey = epPo.getEpApikey();
+//		String sign = "";
+//		int seconds = (int) (System.currentTimeMillis()/1000);//时间戳：秒
+//		StringBuffer signBuffer = new StringBuffer();
+//		signBuffer.append(apiKey);
+//		String method = "rw.open.dataflow.orderquery";
+//		signBuffer.append("method" + method);
+//		signBuffer.append("timestamp"+seconds);
+//		signBuffer.append("userid"+account);
+//		
+//		Map<String,Object> signMap = new HashMap<String, Object>();
+//		signMap.put("orderid", baseParams.getOrderIdApi());
+//		signMap.put("transno", baseParams.getOrderId().toString());
+//		String jsonStr = JSON.toJSONString(signMap);
+//		
+//		signBuffer.append(jsonStr);
+//		signBuffer.append(apiKey);
+//		System.out.println("参与签名参数："+signBuffer.toString());
+//		try {
+//			sign = MD5.getMd5(signBuffer.toString(), MD5.LOWERCASE, "utf-8");
+//		} catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//		}
+//		StringBuffer paramsBuffer = new StringBuffer();
+//		paramsBuffer.append("userid=");
+//		paramsBuffer.append(account);
+//		paramsBuffer.append("&method=");
+//		paramsBuffer.append(method);
+//		paramsBuffer.append("&timestamp=");
+//		paramsBuffer.append(seconds);
+//		paramsBuffer.append("&sign=");
+//		paramsBuffer.append(sign);
+//		System.out.println("sign签名"+sign);
+//		
+//		return JSON.toJSONString(map);
+		return null;
+	}
+	public String[] toOrderParamsArr() {
 		ExchangePlatformPo epPo = baseParams.getEpo();
+//ProductCodePo pc = baseParams.getProductCodePo();
+//		Map<String,Object> map = new HashMap<String, Object>();
+		String account = epPo.getEpUserName();
+		String apiKey = epPo.getEpApikey();
+		String sign = "";
+		int seconds = (int) (System.currentTimeMillis()/1000);//时间戳：秒
+		StringBuffer signBuffer = new StringBuffer();
+		signBuffer.append(apiKey);
+		String method = "rw.open.dataflow.orderquery";
+		signBuffer.append("method" + method);
+		signBuffer.append("timestamp"+seconds);
+		signBuffer.append("userid"+account);
 		
+		Map<String,Object> signMap = new HashMap<String, Object>();
+		signMap.put("orderid", baseParams.getOrderIdApi());
+		signMap.put("transno", baseParams.getOrderId().toString());
+		String jsonStr = JSON.toJSONString(signMap);
 		
+		signBuffer.append(jsonStr);
+		signBuffer.append(apiKey);
+		System.out.println("参与签名参数："+signBuffer.toString());
+		try {
+			sign = MD5.getMd5(signBuffer.toString(), MD5.LOWERCASE, "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		StringBuffer paramsBuffer = new StringBuffer();
+		paramsBuffer.append("userid=");
+		paramsBuffer.append(account);
+		paramsBuffer.append("&method=");
+		paramsBuffer.append(method);
+		paramsBuffer.append("&timestamp=");
+		paramsBuffer.append(seconds);
+		paramsBuffer.append("&sign=");
+		paramsBuffer.append(sign);
+		System.out.println("sign签名"+sign);
 		
-		Map<String,Object> map = StringUtil2.getTreeMapByStr(epPo.getEpOtherParams());
-		map.put("request_time", DateUtil.formatPramm(System.currentTimeMillis(), "yyyyMMddHHmmss"));//查询时间
-		map.put("client_order_no", baseParams.getOrderId().toString());
-		//订单生成时间
-		//按照传过来的订单提交时间格式，去解析真正的时间
-		Long time = DateUtil.strToDate(baseParams.getOtherParams(), "yyyy-MM-dd").getTime();
-		map.put("order_time", DateUtil.formatPramm(time, "yyyyMMddHHmmss"));
-		initSign(map, epPo.getEpApikey());
-		return JSON.toJSONString(map);
+//		return JSON.toJSONString(map);
+		String [] arr = new String []{paramsBuffer.toString(),jsonStr};
+		return arr;
 	}
 	
 	private void initSign(Map<String,Object> map,String secret_key) {

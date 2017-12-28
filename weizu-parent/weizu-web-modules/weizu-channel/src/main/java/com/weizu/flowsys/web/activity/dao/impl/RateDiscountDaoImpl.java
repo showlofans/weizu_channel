@@ -243,4 +243,9 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 		
 	}
 
+	@Override
+	public long delRateByIteratorFun(Long rateId) {
+		return sqlSessionTemplate.delete("delRateByIteratorFun", rateId);
+	}
+
 }

@@ -68,14 +68,12 @@
 				</select>
 				</span> </div>
 		</div>
-		<c:if test="${resultMap.pgServiceType ==1 }">
 			<div class="row cl">
 				<label class="form-label col-xs-4 col-sm-2">流量大小：</label>
 				<div class="formControls col-xs-8 col-sm-9">
 					<input type="text" class="input-text" required="required" maxlength="6" onkeyup='this.value=this.value.replace(/\D/gi,"")' style="width:100px" value="" placeholder="" id="pgSize" name="pgSize">M
 				</div>
 			</div>
-		</c:if>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2">原价：</label>
 			<div class="formControls col-xs-8 col-sm-9">
@@ -92,21 +90,8 @@
 						<option value="1">开通</option>
 				</select>
 				</span> 
-				<%-- &nbsp;&nbsp;&nbsp;&nbsp;
-				<span class="c-red">*</span>属性：&nbsp;&nbsp;
-				 <span class="select-box inline">
-				<select  name="pgServiceType" class="select">
-					<c:forEach items="${resultMap.pgServiceTypeEnums }" var="pgServiceTypeEnum" varStatus="vs1">
-						 <c:if test="${pgServiceTypeEnum.value == resultMap.pgServiceType }">
-							<option value="${pgServiceTypeEnum.value }">${pgServiceTypeEnum.desc }</option>
-						 </c:if>
-					</c:forEach>
-						<!-- <option value="1">开通</option> -->
-				</select>
-				</span> --%>
 				</div>
 		</div>
-		<%-- <c:if test="${resultMap.pgServiceType ==1 }"> --%>
 			<div class="row cl">
 				<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>流量包有效期：</label>
 				<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
@@ -140,7 +125,6 @@
 					</select>
 					</span> </div>
 			</div>
-		<%-- </c:if> --%>
 		
 		<div id="province"></div>
 		

@@ -23,6 +23,7 @@ import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.DiscountPo;
 import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
@@ -52,6 +53,9 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 	private ValiUser valiUser;
 	@Resource
 	private OperatorPgDaoInterface operatorPgDao;
+//	@Resource
+//	private RateDiscountDao rateDiscountDao;
+	
 	
 	@Override
 	public ExchangePlatformPo getEpByChannelId(Long channelId) {
@@ -94,6 +98,7 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 	@Override
 	public int deleteChannel(String channelId) {
 		Long id = Long.parseLong(channelId);
+//		rateDiscountDao.del(new WherePrams("channel_id", "=", channelId));
 		return channelChannelDao.del(id);
 	}
 

@@ -159,7 +159,7 @@ public class AgencyController {
 			}else{
 				String eventIp = addressMap.get("ip").toString();
 				//得到上一次的登陆日志
-				System.out.println("访问ip"+request.getRequestURL());
+				System.out.println("访问remoteAddr:"+request.getRemoteAddr()+"\t" + request.getRemoteUser());
 				WherePrams where = new WherePrams("agency_id", "=", resultPo.getId()).and("event_state", "=", LoginStateEnum.ING.getValue());
 				where.orderBy("event_time",WherePrams.DESC);
 				where.limit(0, 1);

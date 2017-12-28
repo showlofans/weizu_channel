@@ -176,4 +176,6 @@ public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	 */
 	RateDiscountPo getPriceByPg(Integer agencyId, Integer pgId, Long channelId);
 	
+	long delRateByIteratorFun(Long rateId);
+	
 }

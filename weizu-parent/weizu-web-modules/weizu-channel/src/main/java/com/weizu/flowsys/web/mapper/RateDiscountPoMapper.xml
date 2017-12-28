@@ -83,6 +83,10 @@
 		)  -->
 	</where>
   </select>
+  <!-- 递归删除所有子折扣 -->
+  <delete id="delRateByIteratorFun" parameterType="long">
+  	DELETE FROM <include refid="t_rateD"></include> where FIND_IN_SET(id,rateQueryChildrenInfo(#{_parameter}));
+  </delete>
   
   <!-- 根据通道折扣差额修改费率折扣 -->
   <update id="updateRateDiscountByCDId" parameterType="map">

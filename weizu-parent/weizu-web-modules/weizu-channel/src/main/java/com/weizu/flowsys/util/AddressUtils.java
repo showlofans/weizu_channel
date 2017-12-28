@@ -51,7 +51,7 @@ public class AddressUtils {
 		String returnStr = this.getResult(urlStr, content, encodingString);
 		if (returnStr != null) {
 			// 处理返回的省市区信息
-			System.out.println(returnStr);
+//			System.out.println(returnStr);
 			String[] temp = returnStr.split(",");
 			if (temp.length < 3) {
 				return "0";// 无效IP，局域网测试
