@@ -916,18 +916,6 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		if(judgeChannelState){//需要判断通道状态:比如再次提交获得的费率，比如测试通道的时候
 			params.put("channelState", ChannelStateEnum.OPEN.getValue());
 		}
-//		if(ccpp.getChannelType() == null || ccpp.getPgType() == null || StringHelper.isEmpty(ccpp.getPgValidity())){
-//			//有任何一个为空，就需要获取费率列表
-//			List<RateDiscountPo> dataList = rateDiscountDao.getRateListForCharge(params);
-//			for (RateDiscountPo rateDiscountPo : dataList) {
-//				
-//			}
-//			//获得枚举列表
-//			
-//			return rateDiscountDao.getRateForCharge(params);
-//		}else{
-//			return rateDiscountDao.getRateForCharge(params);
-//		}
 		if (ccpp.getChannelType() == null) {
 			params.put("channelType", ChannelTypeEnum.ORDINARY.getValue());
 		} else {

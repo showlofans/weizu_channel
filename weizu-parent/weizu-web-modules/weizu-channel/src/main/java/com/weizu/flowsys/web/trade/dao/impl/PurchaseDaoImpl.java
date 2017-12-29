@@ -132,4 +132,14 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePo, Long> implements Purcha
 		return sqlSessionTemplate.selectOne("getLatestOneByTel", map);
 	}
 
+	@Override
+	public PurchasePo getLatestOneByTel(String chargeTel, Integer purchaseFor,
+			Long highTime) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("chargeTel", chargeTel);
+		map.put("purchaseFor", purchaseFor);
+		map.put("highTime", highTime);
+		return sqlSessionTemplate.selectOne("getLatestOneByTel", map);
+	}
+
 }

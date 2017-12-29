@@ -51,6 +51,8 @@ public class PurchaseVO implements Cloneable,Serializable {
     
     private Integer accountId;				//当前登陆id（外键）：数据库返回参数
     
+    private Integer fromAccountId;				//来源账户id
+    
     private Integer agencyId;					//登陆代理商id（数据库查询参数）
 
     private Long orderBackTime;					//充值时间（本平台获得返回结果，或者返回给下游平台结果的时间戳）
@@ -104,6 +106,14 @@ public class PurchaseVO implements Cloneable,Serializable {
 		return pvo;
 	}
     
+	public Integer getFromAccountId() {
+		return fromAccountId;
+	}
+
+	public void setFromAccountId(Integer fromAccountId) {
+		this.fromAccountId = fromAccountId;
+	}
+
 	public Integer getHasCallBack() {
 		return hasCallBack;
 	}

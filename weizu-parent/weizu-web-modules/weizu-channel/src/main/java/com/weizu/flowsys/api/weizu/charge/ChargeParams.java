@@ -40,6 +40,15 @@ public class ChargeParams {
 		this.flowsize = flowsize;
 		this.billType = billType;
 	}
+	@Override
+	public String toString() {
+		return "ChargeParams [userName=" + userName + ", number=" + number
+				+ ", flowsize=" + flowsize + ", scope=" + scope + ", sign="
+				+ sign + ", billType=" + billType + ", orderIdFrom="
+				+ orderIdFrom + ", pgType=" + pgType + ", channelType="
+				+ channelType + ", pgValidity=" + pgValidity + ", reportUrl="
+				+ reportUrl + "]";
+	}
 
 	public String getReportUrl() {
 		return reportUrl;

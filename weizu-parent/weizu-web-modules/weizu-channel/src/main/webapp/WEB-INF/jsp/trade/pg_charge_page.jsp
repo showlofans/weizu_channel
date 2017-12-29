@@ -33,7 +33,7 @@
  	<form class="form form-horizontal" action="" method=""  id="form-charge">
  	<input type="hidden" name="channelId" id="channelId">
  	<input type="hidden" name="billType" id="billType">
- 	<input type="hidden" name="pgId" id="pgId">
+ 	<!-- <input type="hidden" name="pgId" id="pgId"> -->
  	<input type="hidden" name="productCode" id="productCode">
  	<input style="display: none;" type="text" value="${resultMap.pageMsg }" id="pageMsg">
 	
@@ -423,10 +423,10 @@
 	   } */
 	   //$('#rateDiscount').html(rateDis);
 	   //alert(channelId);
-	   var pgId = $(vart).prev().val();
+	   var pgId = $(vart).val();
 	   var pprice = $(vart).parent().next().val();
 	   var serviceType = $("#select-servce-type").val();
-       $("#pgId").val(pgId);//包体id
+       //$("#pgId").val(pgId);//包体id
        var carrier = $('#chargeTelDetail').val();
        
        $.ajax({
@@ -524,8 +524,8 @@
 		var cdis = $('#rateDiscount').html();
 		//var orderAmount = numMulti(chargeValue,cdis);
 		//alert(orderAmount);
-		var pgId =  $(vart).prev().val();
-		$("#pgId").val(pgId);
+		var pgId =  $(vart).val();
+		//$("#pgId").val(pgId);
 		$("#productCode").val(productCode);
 		$("#orderAmount").val(orderAmount);
 		$("#chargeValue").val(chargeValue);
@@ -570,11 +570,11 @@
                  	   //var cdis = dataRole1[i].cdis;
                  	  // var cdisId = dataRole1[i].cdisId;
                  	   //var pgDiscountPrice = dataRole1[i].pgDiscountPrice;
-       					appendData1 += "<div class='radio-box pgNameType'><input type='hidden' value='";
-       					appendData1 += dataRole1[i].id;
-       					appendData1 += "'></input><input class='pgNameRadio' type='radio' id='pgName-";
+       					appendData1 += "<div class='radio-box pgNameType'><input class='pgNameRadio' name='pgId' type='radio' id='pgName-";
        					appendData1 += (i+1);
-       					appendData1 += "' onclick='changeRadio(this,"+ cnelId +")'><label for='pgName-";
+       					appendData1 += "' onclick='changeRadio(this,"+ cnelId +")'> value='"
+       					appendData1 += dataRole1[i].id;
+       					appendData1 += "' <label for='pgName-";
        					appendData1 += (i+1);
        					appendData1 += "'>";
        					appendData1 += name;
@@ -771,7 +771,7 @@
 		        	           				$("#pgSize").val(data[0].pgSize);
 		        	           				$("#pgId").val(data[0].id);
 		                   				}else{ */
-		                   					appendData += "<div class='radio-box pgNameType'><input type='hidden' value='"+dataRole[i].id+"'></input><input class='pgNameRadio' type='radio' id='pgName-"+(i+1)+"' onclick='changeRadio(this,"+channelId+")'><label for='pgName-"+(i+1)+"'>"+name+"</label></div><input type='hidden' class='price' value='"+price+"'></input>"
+		                   					appendData += "<div class='radio-box pgNameType'><input class='pgNameRadio' type='radio' name='pgId' value='"+dataRole[i].id+"' id='pgName-"+(i+1)+"' onclick='changeRadio(this,"+channelId+")'><label for='pgName-"+(i+1)+"'>"+name+"</label></div><input type='hidden' class='price' value='"+price+"'></input>"
 		                   					+"<input type='hidden' value='"+pgSize+"'></input><input type='hidden' value='"+channelId+"'></input>"
 		                   					/* <input type='hidden' value='"+productCode+"'></input><input type='hidden'  value='"+pgDiscountPrice +"'></input></input><input type='hidden' value='"+rteDis 
 		                   					+"'></input><input type='hidden' value='"+channelId +"'></input><input type='hidden' value='"+rteId +"'></input><br>";; */

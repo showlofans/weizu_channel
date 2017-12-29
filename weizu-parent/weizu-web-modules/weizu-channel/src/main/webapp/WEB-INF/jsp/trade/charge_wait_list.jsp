@@ -123,7 +123,7 @@
 					<th width="80">业务类型</th>
 					<th width="70">面值</th>
 					<th width="150">提交时间</th>
-					<th width="150">充值时间</th>
+					<!-- <th width="150">充值时间</th> -->
 					<th width="100">号码归属</th>
 					<c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
 						<th width="60">城市</th>
@@ -179,7 +179,7 @@
 						</td>
 						<td>${purchase.chargeValue }</td>
 						<td>${purchase.orderArriveTimeStr }</td>
-						 <td>${purchase.orderBackTimeStr }</td>
+						 <%-- <td>${purchase.orderBackTimeStr }</td> --%>
 						<td>${purchase.chargeTelDetail }</td>
 						<c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
 							 <td>${purchase.chargeTelCity }</td>
@@ -212,7 +212,7 @@
 								<input type="hidden" value="${purchase.orderId }" >
 								<i class="Hui-iconfont">&#xe6e5;</i>
 							</a> 
-							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="ajaxCommit(this,'${purchase.orderId }','${purchase.chargeTelDetail }','${purchase.accountId }')" href="javascript:;" title="提交">
+							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="ajaxCommit(this,'${purchase.orderId }','${purchase.chargeTelDetail }','${purchase.fromAccountId }')" href="javascript:;" title="提交">
 								<input type="hidden" value="${purchase.orderId }" >
 								<i class="Hui-iconfont">&#xe6dc;</i>
 							</a> 

@@ -100,23 +100,21 @@ public class OuterAPIController {
 		if(scope == null){//默认省漫游类型
 			scope = ServiceTypeEnum.PROVINCE_ROAMING.getValue();
 		}
+		ChargeParams chargeParams = new ChargeParams(userName, number, pgSize, scope, sign, billType);
 		if(pgType == null)
 		{
 			pgType = PgTypeEnum.PGDATA.getValue();
+			chargeParams.setPgType(pgType);
 		}
 		if(StringHelper.isEmpty(pgValidity ))
 		{
 			pgValidity = PgValidityEnum.MONTH_DAY_DATA.getValue();
+			chargeParams.setPgValidity(pgValidity);
 		}
 		if(channelType == null){
 			channelType = ChannelTypeEnum.ORDINARY.getValue();
+			chargeParams.setChannelType(channelType);
 		}
-		
-		
-		ChargeParams chargeParams = new ChargeParams(userName, number, pgSize, scope, sign, billType);
-		chargeParams.setPgType(pgType);
-		chargeParams.setPgValidity(pgValidity);
-		chargeParams.setChannelType(channelType);
 		if(StringHelper.isNotEmpty(userOrderId)){
 			chargeParams.setOrderIdFrom(userOrderId);
 		}
@@ -125,6 +123,7 @@ public class OuterAPIController {
 		}
 		Charge charge = null;
 		try {
+			System.out.println("传单参数：" + chargeParams.toString());
 			charge = chargeImpl.charge(chargeParams);
 		} catch (Exception e) {
 			charge = new Charge(ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc(), null);

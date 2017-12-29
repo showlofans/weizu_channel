@@ -863,7 +863,7 @@ public class ChargePgController {
 				 StringBuffer sb = new StringBuffer();
 		        while ((line=br.readLine())!=null) {
 		        	sb.append(line);
-		        	sb.append(" ");
+		        	sb.append(",");
 //			            arrs=line.split(",");
 //			            arrs=line;
 //			            System.out.println(arrs[0] + " : " + arrs[1] + " : " + arrs[2]);

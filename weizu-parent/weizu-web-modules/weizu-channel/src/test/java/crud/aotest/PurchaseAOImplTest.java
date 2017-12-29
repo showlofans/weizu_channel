@@ -55,12 +55,12 @@
 ////		
 ////		System.out.println(pagination.getTotalRecordLong());		
 ////	}
-//	@Test
-//	public void testDate(){
-//		PurchasePo purPo = purchaseDAO.getLatestOneByTel("15024732435", PgServiceTypeEnum.PGCHARGE.getValue());
-//		int minutes = (int) ((System.currentTimeMillis() - purPo.getOrderArriveTime()) / (1000*60));//h
-//		System.out.println(minutes);
-//	}
+////	@Test
+////	public void testDate(){
+////		PurchasePo purPo = purchaseDAO.getLatestOneByTel("15024732435", PgServiceTypeEnum.PGCHARGE.getValue());
+////		int minutes = (int) ((System.currentTimeMillis() - purPo.getOrderArriveTime()) / (1000*60));//h
+////		System.out.println(minutes);
+////	}
 //	/**
 //	 * @description:测试通过产品编码向原系统下单
 //	 * @author:POP产品研发部 宁强
@@ -242,4 +242,12 @@
 ////			System.out.println(purPo.getChargeTel());
 ////		}
 ////	}
+//	@Test
+//	public void testGetLatestPur(){
+//		Long highTime = System.currentTimeMillis() - 1000*60;//一分钟之前的时间
+//		PurchasePo purchasePo =  purchaseDAO.getLatestOneByTel("13902009999", PgServiceTypeEnum.PGCHARGE.getValue(), highTime);
+//		if(purchasePo != null){
+//			System.out.println("一分钟以内有过该号码");
+//		}
+//	}
 //}

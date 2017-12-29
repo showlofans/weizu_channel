@@ -346,25 +346,24 @@ public class ChargeImpl implements IChargeFacet {
 				return sqlMap;
 			}
 //			String doubleMsg = ""; 
-			
-			PurchasePo purPo = purchaseDAO.hasDoublePurchase(null, chargeParams.getOrderIdFrom());//下游传重复订单号过来
-//			PurchasePo latestPurchasePo = purchaseDAO.getLatestOneByTel(chargeParams.getNumber(), PgServiceTypeEnum.PGCHARGE.getValue());
-//			if(latestPurchasePo != null){
-//				int minutes = (int) ((System.currentTimeMillis() - latestPurchasePo.getOrderArriveTime()) / (1000*60));
-//				if(minutes <= 1){
-//					doubleMsg = "一分钟内出现两次相同号码";
-//				}
-//			}
-			
-			
-			boolean hasD = purPo != null;
-			if(hasD && purPo.getChargeTel().equals(chargeParams.getNumber())){
+			if(chargeParams.getOrderIdFrom() != null){
+				PurchasePo purPo = purchaseDAO.hasDoublePurchase(null, chargeParams.getOrderIdFrom());//下游传重复订单号过来
+				boolean hasD = purPo != null;
+				if(hasD && purPo.getChargeTel().equals(chargeParams.getNumber())){
+					chargeEnum = ChargeStatusEnum.HAS_DOUBLE_PURCHAE;
+					charge = new Charge(chargeEnum.getValue(),chargeEnum.getDesc(), null);
+					sqlMap.put("exceptionDTO", charge);
+					return sqlMap;
+				}
+			}
+			Long highTime = System.currentTimeMillis() - 1000*60;//一分钟之前的时间
+			PurchasePo latestPurchasePo = purchaseDAO.getLatestOneByTel(chargeParams.getNumber(), PgServiceTypeEnum.PGCHARGE.getValue(), highTime);
+			if(latestPurchasePo != null){
 				chargeEnum = ChargeStatusEnum.HAS_DOUBLE_PURCHAE;
 				charge = new Charge(chargeEnum.getValue(),chargeEnum.getDesc(), null);
 				sqlMap.put("exceptionDTO", charge);
 				return sqlMap;
 			}
-			
 			sqlMap.put("backPo", backPo);
 			ChargeAccountPo accountPo =  chargeAccountAO.getAccountByAgencyId(backPo.getId(), billType);
 			if(accountPo == null){

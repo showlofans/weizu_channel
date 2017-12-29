@@ -53,6 +53,7 @@ public class ValiUser {
 		
 //		AgencyBackwardPo backPo1 = agencyBackwardDao.get(new WherePrams("user_name","=",userName));
 		AgencyBackwardPo backPo = agencyVODao.getSecondAgency(userName);
+//		AgencyBackwardPo backPo = agencyVODao.
 		if(backPo == null){
 			return null;
 		}

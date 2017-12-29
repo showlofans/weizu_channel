@@ -876,23 +876,15 @@ public class PurchaseAOImpl implements PurchaseAO {
 //					}
 						superApPo.setChannelDiscountId(cd.getId());//ap中的通道折扣id只对超级管理员有用
 						superApPo.setApDiscount(cd.getChannelDiscount());
-						superApPo.setOrderState(orderResult);
+						superApPo.setOrderState(OrderStateEnum.CHARGING.getValue());
 						superApPo.setOrderStateDetail(OrderStateEnum.CHARGING.getDesc());
 						accountPurchaseDao.update(superApPo);
 						logger.config("通道暂停后，再次提交");
 					}
 				}
-//			AgencyPurchasePo apPo = accountPurchaseDao.get(new WherePrams("agency_id", "=", agencyId).and("purchase_id", "=", orderId));
 				//重新设置某笔订单某个代理商相关的通道信息，以便通过正确的费率通道去查询最新的结果
 				AccountPurchasePo apPo = new AccountPurchasePo();
-//			RateDiscountPo nowRatePo = rateDiscountAO.getRateByAcountIdAndCDId(cd.getId(), accountId);
-//			if(nowRatePo != null){
-//				
-//			}else{
-//				
-//			}
 				apPo.setChannelDiscountId(ratePo.getChannelDiscountId());
-//			 int aapUpdRes = accountPurchaseDao.update(apPo);
 				int aapUpdRes = accountPurchaseDao.updateLocal(apPo, new WherePrams("account_id", "=", accountId).and("purchase_id", "=", orderId));
 				
 				ExchangePlatformPo epPo = channelChannelDao.getEpByChannelId(ratePo.getChannelId());
@@ -1659,7 +1651,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 		int errorTag = 0;
 		
 		for (PurchaseVO purchaseVO2 : records) {
-			String res = ajaxCommitOrder(purchaseVO2.getOrderId(), purchaseVO2.getAccountId(), purchaseVO2.getChargeTelDetail());
+			String res = ajaxCommitOrder(purchaseVO2.getOrderId(), purchaseVO2.getFromAccountId(), purchaseVO2.getChargeTelDetail());
 			if("success".equals(res)){
 				successTag++;
 			}else{
@@ -1667,7 +1659,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 			}
 		}
 		StringBuffer sb = new StringBuffer();
-		sb.append("批量成功了 ");
+		sb.append("批量提交了 ");
 		sb.append(successTag);
 		sb.append("单,失败了 ");
 		sb.append(errorTag);
@@ -1691,7 +1683,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 			String res = "error";
 			if(StringHelper.isNotEmpty(purchaseVO2.getAgencyCallIp())){
 				//推送订单结果
-				res = sendCallBack.sendCallBack(new ResponseJsonDTO(purchaseVO2.getOrderId(), purchaseVO2.getOrderIdFrom(), purchaseVO.getOrderResult(), "（推送）"+purchaseVO2.getOrderResultDetail(), System.currentTimeMillis(),purchaseVO2.getChargeTel()), purchaseVO2.getAgencyCallIp());
+				res = sendCallBack.sendCallBack(new ResponseJsonDTO(purchaseVO2.getOrderId(), purchaseVO2.getOrderIdFrom(), purchaseVO.getOrderResult(), "（批量推送）"+purchaseVO2.getOrderResultDetail(), System.currentTimeMillis(),purchaseVO2.getChargeTel()), purchaseVO2.getAgencyCallIp());
 			}else{
 				successTag++;//没有回调ip，设置为回调成功
 			}
