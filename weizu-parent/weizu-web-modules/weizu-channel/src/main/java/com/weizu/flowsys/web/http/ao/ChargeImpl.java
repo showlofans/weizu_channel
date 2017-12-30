@@ -109,7 +109,6 @@ public class ChargeImpl implements IChargeFacet {
 		Map<String, Object> resMap = PurchaseUtil.getOperatorsByTel(chargeTel);//调用接口得到电话的归属地
 		Map<String, Object> sqlMap = getParamsExceptioin(chargeParams,resMap);
 		if(sqlMap.get("exceptionDTO") == null){//说明sqlMap中的其他参数都不为空
-			
 			AgencyBackwardPo backPo = (AgencyBackwardPo)sqlMap.get("backPo");
 			ChargeAccountPo accountPo = (ChargeAccountPo)sqlMap.get("accountPo");
 			PgDataPo pgData = (PgDataPo)sqlMap.get("pgData");
@@ -144,7 +143,6 @@ public class ChargeImpl implements IChargeFacet {
 			Double superAgencyBeforeBalance = null;
 			/**超管充值额（）*/
 			Double superOrderAmount = null;
-//			if(!isChannelStateClose){
 				/**更新超管的账户信息*/
 				cdPo = channelDiscountDao.get(ratePo.getChannelDiscountId());
 				AgencyBackwardPo superAgencyPo = agencyAO.getRootAgencyById(backPo.getId());
@@ -156,8 +154,6 @@ public class ChargeImpl implements IChargeFacet {
 					/**超管充值额（）*/
 					superOrderAmount = NumberTool.mul(cdPo.getChannelDiscount(), pgData.getPgPrice());
 				}
-//			}
-//			Double superAgencyAfterBalance = NumberTool.sub(superAgencyBeforeBalance, superOrderAmount); //简单的结果运算
 			Long orderId = null;
 			PurchasePo purchasePo = null;
 			String chargeTelDetail = resMap.get("chargeTelDetail").toString();
@@ -224,12 +220,13 @@ public class ChargeImpl implements IChargeFacet {
 						orderResultDetail = ChargeStatusEnum.API_ERROR.getDesc();
 						purchasePo.setOrderResult(orderResult);
 						purchasePo.setOrderResultDetail(orderResultDetail);
+					}else{
+						String orderIdApi = chargeDTO.getChargeOrder().getOrderIdApi();
+						logger.config("上游返回的订单号："+ orderIdApi);//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
+						purchasePo.setOrderIdApi(orderIdApi);
+						charge = getChargeByDTO(chargeDTO,chargeParams,purchasePo);
+						orderResultDetail = charge.getTipMsg();
 					}
-					String orderIdApi = chargeDTO.getChargeOrder().getOrderIdApi();
-					logger.config("上游返回的订单号："+ orderIdApi);//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
-					purchasePo.setOrderIdApi(orderIdApi);
-					charge = getChargeByDTO(chargeDTO,chargeParams,purchasePo);
-					orderResultDetail = charge.getTipMsg();
 				}else if(!canCharge){
 //					orderResult = OrderStateEnum.DAICHONG.getValue();
 //					orderResultDetail = ChargeStatusEnum.LACK_OF_BALANCE.getDesc();
@@ -249,12 +246,12 @@ public class ChargeImpl implements IChargeFacet {
 			}else{
 				logger.config(orderStateDetail + ":没有通过接口充值，不产生接口订单号");
 			}
-			if(charge == null && !isChannelStateClose){
-				throw new Exception("发送接口请求异常，接口调用失败");
-			}
+//			if(charge == null && !isChannelStateClose){
+//				throw new Exception("发送接口请求异常，接口调用失败");
+//			}
 			purResult = purchaseDAO.addPurchase(purchasePo);
 			if(recordId != 0){
-				AccountPurchasePo app = new AccountPurchasePo(accountId, orderId,ratePo.getChannelDiscountId(), orderAmount,accountPo.getId(),recordId, orderAmount, backPo.getUserName(), orderPath, orderState);
+				AccountPurchasePo app = new AccountPurchasePo(accountId, orderId,ratePo.getChannelDiscountId(), orderAmount,accountId,recordId, orderAmount, backPo.getUserName(), orderPath, orderState);
 				app.setOrderStateDetail(orderStateDetail);
 				accountPurchaseDao.add(app);
 			}

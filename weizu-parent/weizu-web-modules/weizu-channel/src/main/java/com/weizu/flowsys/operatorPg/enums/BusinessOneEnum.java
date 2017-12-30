@@ -21,11 +21,11 @@ import com.weizu.flowsys.web.channel.pojo.SpecialOpdType;
 public enum BusinessOneEnum {
 	
 	/**
-	 * 月包
+	 * 小陶-tao
 	 */
 	xiao_tao("小陶", "tao"),
 	/**
-	 * 月包
+	 * 小兵-bing
 	 */
 	xiao_bing("小兵", "bing"),
 //	/**
@@ -34,7 +34,7 @@ public enum BusinessOneEnum {
 //	MONTH_DAY_DATA("月包", "30"),
 	
 	/**
-	 * 年包
+	 * 小占-zhan
 	 */
 	xiao_zhan("小占", "zhan");
 	

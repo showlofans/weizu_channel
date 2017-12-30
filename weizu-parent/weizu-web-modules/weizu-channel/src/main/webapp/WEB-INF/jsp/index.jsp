@@ -187,6 +187,7 @@
 			<dd>
 				<ul>
 					<li><a data-href="/flowsys/operatorPg/operatorPg_list.do" data-title="标准价管理" href="javascript:void(0)">标准价管理</a></li>
+					<li><a data-href="/flowsys/showRate/showRate_list.do?showModel=1" data-title="通道展示列表" href="javascript:void(0)">通道展示</a></li>
 				</ul>
 		</dd>
 	</dl>

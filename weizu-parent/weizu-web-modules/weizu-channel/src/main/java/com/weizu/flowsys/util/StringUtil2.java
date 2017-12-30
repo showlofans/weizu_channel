@@ -116,7 +116,7 @@ public class StringUtil2 {
 		String channelDiscount = discountD + "";
 		int bit = channelDiscount.trim().length()
 				- channelDiscount.indexOf(".") - 1;// 位数
-		double discount = 1.00d;
+		Double discount = 1.00d;
 		if (channelDiscount != null) {
 			if (bit == 1) {// 只有位小数字
 				discount = StringUtil.getDouble(channelDiscount)
@@ -129,7 +129,7 @@ public class StringUtil2 {
 						* ATT.TRIPLE_NUMBER_DIVIDE;
 			}
 		}
-		return discount + "";
+		return discount.toString();
 	}
 
 	/**

@@ -11,8 +11,10 @@
 //
 //
 //
+//
 //import com.alibaba.fastjson.JSONObject;
 //import com.weizu.flowsys.core.util.NumberTool;
+//import com.weizu.flowsys.util.StringUtil2;
 //import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 ////import com.weizu.flowsys.util.ClassUtil;
 ////import com.weizu.flowsys.util.StringUtil2;
@@ -151,15 +153,17 @@
 ////		long res = ll / page;
 ////		System.out.println(res);
 ////		System.out.println(String.valueOf(742810868827295744l).length());
-//		String md6Str = "";
-//		try {
-//			md6Str = MD5.getMd5("123", MD5.LOWERCASE, "utf-8");
-//		} catch (UnsupportedEncodingException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		System.out.println(md6Str);
-//		System.out.println(md6Str.length());
+////		String md6Str = "";
+////		try {
+////			md6Str = MD5.getMd5("123", MD5.LOWERCASE, "utf-8");
+////		} catch (UnsupportedEncodingException e) {
+////			// TODO Auto-generated catch block
+////			e.printStackTrace();
+////		}
+////		System.out.println(md6Str);
+////		System.out.println(md6Str.length());
+//		Double discount = 526.0d;
+//		System.out.println(StringUtil2.getDiscountVO(discount)); 
 //		
 ////		UUIDGenerator generator = new UUIDGenerator();
 ////		String userApiKey = generator.generate().toString();

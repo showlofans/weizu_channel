@@ -16,20 +16,37 @@ import java.util.Map;
 public enum BusinessOperatorEnum {
 	
 	/**
-	 * 扣款
+	 * tao-移动
 	 */
-	XIAO_TAO(1, "扣款"),
+	XIAO_TAO(0, "tao"),
 	/**
-	 * 扣款
+	 *  bing-移动
 	 */
-	XIAO_BING(1, "扣款"),
+	XIAO_BING(0, "bing"),
 	/**
-	 * 扣款
+	 * zhan-联通
 	 */
-	XIAO_ZHAN(1, "扣款");
+	XIAO_ZHAN(1, "zhan");
 	
 	private Integer value;
 	private String desc;
+	
+	/**
+	 * @description: 通过值，获得键
+	 * @param desc
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月30日 下午3:36:28
+	 */
+	public static Integer getValueByDesc(String desc){
+		BusinessOperatorEnum[] enumAry = BusinessOperatorEnum.values();
+		for (BusinessOperatorEnum businessOperatorEnum : enumAry) {
+			if(businessOperatorEnum.desc.contains(desc) ){
+				return businessOperatorEnum.value;
+			}
+		}
+		return null;
+	}
 	
 	/**
 	 * @description:通过枚举值获取枚举

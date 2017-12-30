@@ -245,11 +245,11 @@ public class ProductCodeController {
 			Pagination<ProductCodePo> pagination = productCodeAO.getProductCode(productCodePo, pageParam);
 			resultMap.put("pagination", pagination);
 			//List<ExchangePlatformPo> epList = 
-			resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
-			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 			resultMap.put("pgTypeEnums", PgTypeEnum.toList());
 			resultMap.put("pgValidityEnums", PgValidityEnum.toList());
 			resultMap.put("channelTypeEnums", ChannelTypeEnum.toList());
+			resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
+			resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 			resultMap.put("searchParam", productCodePo);
 			resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 			return new ModelAndView("/channel/product_code_list", "resultMap", resultMap);
