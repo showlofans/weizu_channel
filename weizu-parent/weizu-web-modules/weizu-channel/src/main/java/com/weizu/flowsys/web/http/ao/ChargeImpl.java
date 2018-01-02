@@ -24,6 +24,7 @@ import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.EpEncodeTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
+import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.util.OrderUril;
@@ -50,9 +51,11 @@ import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.http.entity.Charge;
 import com.weizu.flowsys.web.http.entity.ChargePo;
+import com.weizu.flowsys.web.http.entity.PurchaseLog;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.dao.AccountPurchaseDao;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
+import com.weizu.flowsys.web.trade.dao.PurchaseLogDao;
 import com.weizu.flowsys.web.trade.pojo.AccountPurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.web.foundation.DateUtil;
@@ -98,6 +101,8 @@ public class ChargeImpl implements IChargeFacet {
 	private AccountPurchaseDao accountPurchaseDao;
 	@Resource
 	private ChannelDiscountDao channelDiscountDao;
+	@Resource
+	private PurchaseLogDao purchaseLogDao;
 	
 	
 	private Logger logger = Logger.getLogger("ChargeImpl");
@@ -187,6 +192,9 @@ public class ChargeImpl implements IChargeFacet {
 			
 			long recordId = 0l;
 			long supperRecordId = 0l;
+			Integer supperRecAddTag = OrderResultEnum.ERROR.getCode();
+			Integer recAddTag = OrderResultEnum.ERROR.getCode();
+			
 			if(pc != null){//可以通过接口充值
 				/** 更新登录用户账户信息**/
 				accountPo.addBalance(orderAmount,-1);
@@ -207,6 +215,9 @@ public class ChargeImpl implements IChargeFacet {
 							superAgencyBeforeBalance, superAccountPo.getAccountBalance(), 
 							AccountTypeEnum.DECREASE.getValue(), superAccountPo.getId(), 1 , orderId));
 					supperRecordId = chargeRecordDao.nextId() -1 ;
+					if(supperRecordId != 0){
+						supperRecAddTag = OrderResultEnum.SUCCESS.getCode();
+					}
 //					AccountPurchasePo app = new AccountPurchasePo(accountId, orderId,pcVO.getCdisId(), orderAmount,pcVO.getAccountId(), recordId, orderAmount, fromAgencyName, orderPath, orderResult);
 //					app.setOrderStateDetail(OrderStateEnum.CHARGING.getDesc());
 //					int aarAdd = accountPurchaseDao.add(app);
@@ -254,14 +265,21 @@ public class ChargeImpl implements IChargeFacet {
 				AccountPurchasePo app = new AccountPurchasePo(accountId, orderId,ratePo.getChannelDiscountId(), orderAmount,accountId,recordId, orderAmount, backPo.getUserName(), orderPath, orderState);
 				app.setOrderStateDetail(orderStateDetail);
 				accountPurchaseDao.add(app);
+				supperRecAddTag = OrderResultEnum.SUCCESS.getCode();
 			}
 			if(supperRecordId != 0){
 	//			if(!isChannelStateClose){
 					AccountPurchasePo superApp = new AccountPurchasePo(superAccountPo.getId(), orderId,cdPo.getId(), superOrderAmount, accountPo.getId(),supperRecordId, orderAmount, backPo.getUserName(), orderPath, orderResult);
 					superApp.setOrderStateDetail(orderResultDetail);
 					accountPurchaseDao.add(superApp);
+					recAddTag = OrderResultEnum.SUCCESS.getCode();
 	//			}
 			}
+			PurchaseLog purchaseLog = new PurchaseLog(accountId, pgData.getId(), chargeParams.getNumber(), chargeParams.getSign(), chargeParams.getOrderIdFrom(), chargeParams.getReportUrl(), chargeParams.getOrderArriveTime(), orderId, charge.getTipCode() , charge.getTipMsg());
+			purchaseLog.setRecAddTagDesc("超管账户更新："+ OrderResultEnum.getEnum(supperRecAddTag).getMsg() + ",传单账户更新："+ OrderResultEnum.getEnum(recAddTag).getMsg());
+			purchaseLog.setRecAddTag(recAddTag);
+			purchaseLog.setSupperRecAddTag(supperRecAddTag);
+			purchaseLogDao.add(purchaseLog);
 			return charge;
 		}else{
 			return (Charge) sqlMap.get("exceptionDTO");

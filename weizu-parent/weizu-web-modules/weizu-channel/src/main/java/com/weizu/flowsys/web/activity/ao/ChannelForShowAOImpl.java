@@ -41,7 +41,13 @@ public class ChannelForShowAOImpl implements ChannelForShowAO {
 			where.and("scope_city_code", "=", channelForShowPo.getScopeCityCode());
 		}
 		if(StringHelper.isNotEmpty(channelForShowPo.getChannelCompany())){
-			where.and("channel_company", "=", channelForShowPo.getChannelCompany());
+			where.and("channel_company", "like", channelForShowPo.getChannelCompany());
+		}
+		if(StringHelper.isNotEmpty(channelForShowPo.getBussinessMan())){
+			where.and("bussiness_man", "=", channelForShowPo.getBussinessMan());
+		}
+		if(channelForShowPo.getChannelBill() != null){
+			where.and("channel_bill", "=", channelForShowPo.getChannelBill());
 		}
 		if(channelForShowPo.getOperatorType() != null){
 			where.and("operator_type", "=", channelForShowPo.getOperatorType());
@@ -53,6 +59,7 @@ public class ChannelForShowAOImpl implements ChannelForShowAO {
 			where.and("limit_price", "=", channelForShowPo.getLimitPrice());
 		}
 		where.orderBy("operator_type");
+		where.orderBy("last_access desc");
 		return where;
 	}
 

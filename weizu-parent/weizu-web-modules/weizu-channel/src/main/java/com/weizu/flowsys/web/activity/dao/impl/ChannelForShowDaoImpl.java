@@ -21,7 +21,7 @@ import com.weizu.flowsys.web.activity.pojo.ChannelForShowPo;
  * @version 1.0
  */
 @Repository(value="channelForShowDao")
-public class ChannelForShowDaoImpl extends DaoImpl<ChannelForShowPo, Integer> implements
+public class ChannelForShowDaoImpl extends DaoImpl<ChannelForShowPo, Long> implements
 		IChannelForShowDao {
 
 	

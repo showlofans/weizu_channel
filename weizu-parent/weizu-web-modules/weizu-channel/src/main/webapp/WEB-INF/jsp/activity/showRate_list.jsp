@@ -61,22 +61,67 @@
 		&nbsp;&nbsp;
 		<span class="select-box inline">
 			<select name="serviceType" onchange="submitForm()" class="select">
-			<option value="">业务类型</option>
-			<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceType" varStatus="vs1">
-				<option value="${serviceType.value }" <c:if test="${serviceType.value == resultMap.searchParam.serviceType }"> selected</c:if>>${serviceType.desc }</option>
-			</c:forEach>
-		</select>
+				<option value="">业务类型</option>
+				<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceType" varStatus="vs1">
+					<option value="${serviceType.value }" <c:if test="${serviceType.value == resultMap.searchParam.serviceType }"> selected</c:if>>${serviceType.desc }</option>
+				</c:forEach>
+			</select>
 		</span> 
-			<button type="button" class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
-			<c:if test="${loginContext.rootAgencyId == 0  && resultMap.showModel == 1}">
+		
+		<c:choose>
+				<c:when test="${loginContext.rootAgencyId == 0  && resultMap.showModel == 1}">
+					<input type="hidden" id="showModel" name="showModel" value="${resultMap.showModel }">
 				<a style="text-decoration:none" class="btn btn-success" data-title='展示通道添加' onClick="showRate_add(this,'展示通道添加','/flowsys/showRate/showRate_add_page.do',0)" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i>添加</a>
-			</c:if>
+				</c:when>
+				<c:otherwise>
+					<button type="button" class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
+				</c:otherwise>
+			</c:choose>
 			<input value="查询" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
 		</div>
+		<c:if test="${loginContext.rootAgencyId == 0  && resultMap.showModel == 1}">
+			<div class="row cl" style="margin-top: 30dp;">
+			&nbsp;&nbsp;
+			<span class="select-box inline">
+				<select name="bussinessMan" onchange="submitForm()" class="select">
+					<option value="">商务</option>
+					<c:forEach items="${resultMap.businessOneEnums }" var="businessOneEnum">
+						<option value="${businessOneEnum.value }" <c:if test="${businessOneEnum.value == resultMap.searchParam.bussinessMan }"> selected</c:if>>${businessOneEnum.desc }</option>
+					</c:forEach>
+				</select>
+			</span> 
+			&nbsp;&nbsp;
+			<span class="select-box inline">
+				<select name="channelBill" onchange="submitForm()" class="select">
+					<option value="">拿货票务</option>
+					<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum">
+						<option value="${billTypeEnum.value }" <c:if test="${billTypeEnum.value == resultMap.searchParam.channelBill }"> selected</c:if>>${billTypeEnum.desc }</option>
+					</c:forEach>
+				</select>
+			</span> 
+			渠道备注:<input type="text"  value="${resultMap.searchParam.channelCompany }" name="channelCompany" id="channelCompany" placeholder=" 渠道备注" style="width:250px" class="input-text">
+			<!-- 公司商务 -->
+			</div>
+		</c:if>
+		<!-- <div class="row cl" style="margin-top: 30dp"> -->
+			<!-- <button type="button" class="btn btn-success" onclick="resetNow()" value="重置">重置</button> -->
 			<%-- <input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }">  --%>
 		</form>
 	</div>
 	<div class="mt-20">
+		<%-- <div class="codeView">
+			<ul di>
+				 <c:forEach items="${resultMap.showRateList }" var="showRate" varStatus="vs">
+				<li> 
+					<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum">
+						<c:if test="${scopeCityEnum.value== showRate.scopeCityCode}">
+							<span class="label label-primary radius mark" data-tra="hui-fadein">${scopeCityEnum.desc } </span>
+						</c:if>
+					</c:forEach>
+				</li>
+				</c:forEach>
+			</ul>
+		</div> --%>
 		<table class="table table-border table-bordered table-bg table-hover table-sort">
 			<thead>
 				<tr class="text-c">
@@ -88,19 +133,20 @@
 					<th width="180">不带/带价格</th>
 					<th width="80">是否限价</th>
 					<th width="120">更新时间</th>
+					<th width="40">状态</th>
 					<c:if test="${loginContext.rootAgencyId == 0  && resultMap.showModel == 1 }">
-						<th width="200">商务备注</th>
+						<th width="350">商务备注</th>
 						<th width="80">操作</th>
 					</c:if>
 				</tr>
 			</thead>
 			<tbody>
 				<c:forEach items="${resultMap.showRateList }" var="showRate" varStatus="vs">
-					<tr class="text-c">
+					<tr class="text-c"><!--  <c:if test='${showRate.showRateState == 1 }'> c-red</c:if> -->
 						<td>
 						<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum">
 							<c:if test="${scopeCityEnum.value== showRate.scopeCityCode}">
-								<span data-toggle="tooltip" data-placement="right" title="${showRate.scopeCityCode }">${scopeCityEnum.desc }</span>
+								<span >${scopeCityEnum.desc }</span><!-- data-toggle="tooltip" data-placement="right" title="${showRate.scopeCityCode }" -->
 							</c:if>
 						</c:forEach>
 						</td>
@@ -140,7 +186,7 @@
 									&nbsp;带票 &nbsp;
 									${showRate.billRate }
 								</c:otherwise>
-							</c:choose>--%>
+							</c:choose> --%>
 						</td>
 						<td>
 							<c:forEach items="${resultMap.limitPriceEnums }" var="limitPriceEnum">
@@ -150,6 +196,16 @@
 							</c:forEach>
 						</td>
 						<td>${showRate.lastAccessStr }</td>
+						<td><c:choose>
+								<c:when test="${showRate.showRateState == 0 }">
+									正常
+								</c:when>
+								<c:otherwise>
+									<span class="c-red">维护</span>  
+								</c:otherwise>
+							</c:choose>
+						</td>
+						
 						<c:if test="${loginContext.rootAgencyId == 0  && resultMap.showModel == 1}">
 							<td>
 								<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum">
@@ -166,18 +222,24 @@
 										<%-- <span data-toggle="tooltip" data-placement="right" title="${businessOneEnum.desc }">${businessOneEnum.desc }</span> --%>
 									</c:if>
 								</c:forEach>
-								<%-- ${showRate.bussinessMan } --%> 
+								<%-- ${showRate.bussinessMan }  --%>
 							</td> 
-							
-							<%-- 
-							<td>
-								<c:forEach items="${resultMap.productStateEnums }" var="cState" varStatus="vs1">
-								<c:if test="${product.productState == cState.value }"> ${cState.desc }</c:if>
-								</c:forEach>
-							</td> --%>
 							<td class="f-14 td-manage">
 							<a style="text-decoration:none" class="ml-5" onClick="produce_del('/flowsys/showRate/del_showRate.do',${showRate.id })" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
 							<a style="text-decoration:none" class="ml-5" data-title='展示通道编辑' onClick="showRate_add(this,'展示通道编辑','/flowsys/showRate/showRate_edit_page.do',${showRate.id })" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a>
+							<!-- 编辑展示通道维护状态 -->
+							<c:choose>
+								<c:when test="${showRate.showRateState == 0 }">
+									<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeUseState('/flowsys/showRate/update_showRate_state.do','1',${showRate.id})" href="javascript:;" title="维护">
+										<i class="Hui-iconfont">&#xe631;</i>
+									</a>
+								</c:when>
+								<c:otherwise>
+									<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeUseState('/flowsys/showRate/update_showRate_state.do','0',${showRate.id})" href="javascript:;" title="恢复">
+										<i class="Hui-iconfont">&#xe615;</i>
+									</a> 
+								</c:otherwise>
+							</c:choose>
 							</td>
 						</c:if>
 					</tr>
@@ -200,67 +262,9 @@
 <script type="text/javascript" src="/view/lib/layer/2.4/layer.js"></script>
 <script type="text/javascript" src="/view/static/h-ui/js/H-ui.min.js"></script> 
 <script type="text/javascript" src="/view/static/h-ui.admin/js/H-ui.admin.js"></script>
-<!--/_footer 作为公共模版分离出去-->
-
-<!--请在下方写此页面业务相关的脚本-->
-<!-- jQuery -->
 <script type="text/javascript" src="/view/lib/laypage/1.2/laypage.js"></script>
-<script type="text/javascript">
-/*编码-删除*/
-function produce_del(url,id){
-	layer.confirm('确认要删除吗？',function(index){
-		$.ajax({
-			type: 'POST',
-			url: url,
-			data: {id:id},
-			//dataType: 'json',
-			success: function(data){
-				if(data=="success")
-				{
-					layer.msg('删除折扣成功!',{icon:1,time:1000});
-					location.reload();
-				}else{
-					layer.msg('删除折扣失败!',{icon:1,time:1000});
-				}
-			},
-			error:function(data) {
-				console.log(data.msg);
-			}
-		});		
-	});
-}
-
-/*提交表单**/
-function submitForm(){
-	$("input[name='pageNo']").val('');
-	$('form').submit();
-}
-
-/*展示通道添加-添加*/
-function showRate_add(obj,title,url,id){
-	//alert(id);
-	if(id != '0'){//编辑展示通道
-		url = url + '?id=' + id; 
-	}
-	$(obj).attr('data-href',url);
-	Hui_admin_tab(obj);
-	//alert("sd");
-	//var epId = $('#epId').val();//选中的平台
-	
-	/* var epName = $('#epName').val();//选中的平台
-	//alert(epId);
-	layer.open({
-        type: 2,
-        title: false,
-       //area: ['500px', '600px'],
-        maxmin: false,
-        closeBtn: 1,
-        content: url+'?pageTitle=' + title + '&epName='+ epName,
-         end: function () {
-            location.reload();
-        }
-    }); */
-}
+<script type="text/javascript" src="/view/mine/showRate.js"></script>
+<script type="text/javascript" >
 </script> 
 </body>
 </html>

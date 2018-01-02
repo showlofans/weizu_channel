@@ -39,6 +39,8 @@ public class ChannelForShowPo extends Po {
     
     private String channelCompany;		//拿货公司（渠道）
     
+    private Integer showRateState;		//是否维护
+    
     @TempField
     private String lastAccessStr;		//最后更新时间
     
@@ -60,7 +62,31 @@ public class ChannelForShowPo extends Po {
 		super();
 	}
     
-    public String getChannelPriceStr() {
+    
+    /** 更新通道状态构造函数
+     * @param id
+     * @param showRateState
+     */
+    public ChannelForShowPo(Long id, Integer showRateState, Long lastAccess) {
+    	super();
+    	this.id = id;
+    	this.showRateState = showRateState;
+    	this.lastAccess = lastAccess;
+    }
+   
+
+
+	public Integer getShowRateState() {
+		return showRateState;
+	}
+
+
+
+	public void setShowRateState(Integer showRateState) {
+		this.showRateState = showRateState;
+	}
+
+	public String getChannelPriceStr() {
 		return channelPriceStr;
 	}
 

@@ -48,5 +48,10 @@ public class ShowRateURL extends BaseURL {
 	 * <br> /flowsys/showRate/del_showRate.do
 	 */
 	public static final String DEL_SHOWRATE = "/del_showRate" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 变更展示通道状态
+	 * <br> /flowsys/showRate/update_showRate_state.do
+	 */
+	public static final String UPDATE_SHOWRATE_STATE = "/update_showRate_state" + DYNAMIC_WEB_SUFFIX;
 	
 }

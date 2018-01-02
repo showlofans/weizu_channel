@@ -30,6 +30,7 @@ import com.weizu.flowsys.util.AddressUtils;
 import com.weizu.flowsys.web.http.entity.Charge;
 import com.weizu.flowsys.web.http.entity.Order;
 import com.weizu.flowsys.web.http.entity.PgProduct;
+import com.weizu.flowsys.web.http.entity.PurchaseLog;
 import com.weizu.web.foundation.String.StringHelper;
 
 /**
@@ -100,7 +101,8 @@ public class OuterAPIController {
 		if(scope == null){//默认省漫游类型
 			scope = ServiceTypeEnum.PROVINCE_ROAMING.getValue();
 		}
-		ChargeParams chargeParams = new ChargeParams(userName, number, pgSize, scope, sign, billType);
+		Long currentTime = System.currentTimeMillis();
+		ChargeParams chargeParams = new ChargeParams(userName, number, pgSize, scope, sign, billType,currentTime);
 		if(pgType == null)
 		{
 			pgType = PgTypeEnum.PGDATA.getValue();
@@ -129,6 +131,12 @@ public class OuterAPIController {
 			charge = new Charge(ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc(), null);
 			e.printStackTrace();
 		}
+		
+		
+//		Purchase
+		//根据charge获得返回的订单号，结果，结果描述，
+		//根据穿入的参数，设定其他参数的传单日志（根据日志，能判定订单情况，从而手动生成订单和扣款记录）
+		
 		String jsonResult = JSON.toJSON(charge).toString();
 //		System.out.println(jsonResult);
 		return jsonResult;

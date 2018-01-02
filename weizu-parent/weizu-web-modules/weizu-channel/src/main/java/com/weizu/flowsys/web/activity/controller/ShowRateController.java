@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BusinessOneEnum;
 import com.weizu.flowsys.operatorPg.enums.BusinessOperatorEnum;
+import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.LimitPriceEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
@@ -88,7 +89,7 @@ public class ShowRateController {
 		if(StringHelper.isNotEmpty(channelForShowPo.getBillRateStr())){
 			channelForShowPo.setBillRate(StringUtil2.getDiscount(channelForShowPo.getBillRateStr()));
 		}
-		
+		channelForShowPo.setShowRateState(ChannelUseStateEnum.OPEN.getValue());
 		int res = channelForShowDao.add(channelForShowPo);
 		String result = "error";
 		if(res > 0){
@@ -104,7 +105,7 @@ public class ShowRateController {
 	 * @createTime:2017年12月30日 上午10:18:30
 	 */
 	@RequestMapping(value=ShowRateURL.SHOWRATE_EDIT_PAGE)
-	public ModelAndView showRateEditPage(HttpServletRequest request,Integer id){
+	public ModelAndView showRateEditPage(HttpServletRequest request,Long id){
 		Map<String,Object> resultMap = new HashMap<String,Object>();
 		ChannelForShowPo channelForShowPo = channelForShowDao.get(id);
 		
@@ -178,8 +179,28 @@ public class ShowRateController {
 	 */
 	@ResponseBody
 	@RequestMapping(value=ShowRateURL.DEL_SHOWRATE)
-	public String delShowRate(HttpServletRequest request,Integer id){
+	public String delShowRate(HttpServletRequest request,Long id){
 		int res = channelForShowDao.del(id);
+		String result = "error";
+		if(res > 0){
+			result = "success";
+		}
+		return result;
+	}
+	/**
+	 * @description: 更新展示通道维护状态
+	 * @param request
+	 * @param id
+	 * @param showRateState
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月2日 下午4:46:38
+	 */
+	@Transactional
+	@ResponseBody
+	@RequestMapping(value=ShowRateURL.UPDATE_SHOWRATE_STATE)
+	public String updateShowRate(HttpServletRequest request,Long id, Integer showRateState){
+		int res = channelForShowDao.updateLocal(new ChannelForShowPo(id, showRateState,System.currentTimeMillis()));
 		String result = "error";
 		if(res > 0){
 			result = "success";
@@ -206,9 +227,9 @@ public class ShowRateController {
 		resultMap.put("limitPriceEnums", LimitPriceEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		resultMap.put("businessOneEnums", BusinessOneEnum.toList());
+		resultMap.put("channelUseStateEnums", ChannelUseStateEnum.toList());
+		
 		resultMap.put("showModel", showModel);
-		
-		
 		return new ModelAndView("/activity/showRate_list", "resultMap", resultMap);
 	}
 }
