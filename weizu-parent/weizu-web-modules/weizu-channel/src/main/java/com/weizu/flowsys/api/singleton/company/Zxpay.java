@@ -380,7 +380,6 @@ public class Zxpay implements BaseInterface {
 		Map<String,Object> map = StringUtil2.getTreeMapByStr(epPo.getEpOtherParams());
 		map.put("request_time", DateUtil.formatPramm(System.currentTimeMillis(), "yyyyMMddHHmmss"));
 		initSign(map, epPo.getEpApikey());
-		
 		return JSON.toJSONString(map);
 	}
 	@Override

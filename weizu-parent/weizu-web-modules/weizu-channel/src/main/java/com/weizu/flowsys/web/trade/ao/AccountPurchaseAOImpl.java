@@ -121,9 +121,13 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 			pur = purchaseDAO.updatePurchaseState(purchasePo1);
 		}
 		if(purchasePo != null){
-			AgencyBackwardPo agencyPo = agencyVODao.getAgencyByAccountId(purchasePo.getAccountId());
-			if(agencyPo != null && StringHelper.isNotEmpty(agencyPo.getCallBackIp()) && !orderResult.equals(OrderStateEnum.CHARGING.getValue())){//不是充值进行，才返回调
-				sendCallBack.sendCallBack(new ResponseJsonDTO(orderId, purchasePo.getOrderIdFrom(), orderResult, "（批量推送）"+orderResultDetail, System.currentTimeMillis(),purchasePo.getChargeTel()), agencyPo.getCallBackIp());
+			if(StringHelper.isNotEmpty(purchasePo.getAgencyCallIp())){
+				sendCallBack.sendCallBack(new ResponseJsonDTO(orderId, purchasePo.getOrderIdFrom(), orderResult, "系统推送"+orderResultDetail, System.currentTimeMillis(),purchasePo.getChargeTel()), purchasePo.getAgencyCallIp());
+			}else{
+				AgencyBackwardPo agencyPo = agencyVODao.getAgencyByAccountId(purchasePo.getAccountId());
+				if(agencyPo != null && StringHelper.isNotEmpty(agencyPo.getCallBackIp()) && !orderResult.equals(OrderStateEnum.CHARGING.getValue())){//不是充值进行，才返回调
+					sendCallBack.sendCallBack(new ResponseJsonDTO(orderId, purchasePo.getOrderIdFrom(), orderResult, "系统推送"+orderResultDetail, System.currentTimeMillis(),purchasePo.getChargeTel()), agencyPo.getCallBackIp());
+				}
 			}
 		}
 		
@@ -199,9 +203,13 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 			pur = purchaseDAO.updatePurchaseState(new PurchasePo(orderId, null, realBackTime, orderResult, null, orderResultDetail));
 		}
 		if(purchasePo != null){
-			AgencyBackwardPo agencyPo = agencyVODao.getAgencyByAccountId(purchasePo.getAccountId());
-			if(agencyPo != null && StringHelper.isNotEmpty(agencyPo.getCallBackIp())){
-				sendCallBack.sendCallBack(new ResponseJsonDTO(orderId, purchasePo.getOrderIdFrom(), orderResult, "（推送）"+orderResultDetail, System.currentTimeMillis(),purchasePo.getChargeTel()), agencyPo.getCallBackIp());
+			if(StringHelper.isNotEmpty(purchasePo.getAgencyCallIp())){
+				sendCallBack.sendCallBack(new ResponseJsonDTO(orderId, purchasePo.getOrderIdFrom(), orderResult, "（手动推送）"+orderResultDetail, System.currentTimeMillis(),purchasePo.getChargeTel()), purchasePo.getAgencyCallIp());
+			}else{
+				AgencyBackwardPo agencyPo = agencyVODao.getAgencyByAccountId(purchasePo.getAccountId());
+				if(agencyPo != null && StringHelper.isNotEmpty(agencyPo.getCallBackIp()) && !orderResult.equals(OrderStateEnum.CHARGING.getValue())){//不是充值进行，才返回调
+					sendCallBack.sendCallBack(new ResponseJsonDTO(orderId, purchasePo.getOrderIdFrom(), orderResult, "（手动推送）"+orderResultDetail, System.currentTimeMillis(),purchasePo.getChargeTel()), agencyPo.getCallBackIp());
+				}
 			}
 		}
 		if(pur + ap > 1){

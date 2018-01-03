@@ -17,6 +17,7 @@ public class ChargeParams {
 	private String sign;				//密钥
 	private Integer billType;			//是否带票0-不带票，1-带票*******
 	private String orderIdFrom;			//用户传过来的订单号***********
+	private Long orderArriveTime;		//传单时间
 	
 	private Integer pgType;				//流量类型（1-流量包，2-流量池）*****
 	private Integer channelType;		//通道类型（1-普通通道包，2-红包通道，3-转移包，4-共享包）********
@@ -24,7 +25,7 @@ public class ChargeParams {
     private String reportUrl;			//回调地址
 	
 	public ChargeParams(String userName, String number, Integer flowsize,
-			Integer scope, String sign, Integer billType) {
+			Integer scope, String sign, Integer billType, Long orderArriveTime) {
 		super();
 		this.userName = userName;
 		this.number = number;
@@ -32,6 +33,7 @@ public class ChargeParams {
 		this.scope = scope;
 		this.sign = sign;
 		this.billType = billType;
+		this.orderArriveTime = orderArriveTime;
 	}
 	
 	public ChargeParams(String number, Integer flowsize, Integer billType) {
@@ -39,6 +41,23 @@ public class ChargeParams {
 		this.number = number;
 		this.flowsize = flowsize;
 		this.billType = billType;
+	}
+	@Override
+	public String toString() {
+		return "ChargeParams [userName=" + userName + ", number=" + number
+				+ ", flowsize=" + flowsize + ", scope=" + scope + ", sign="
+				+ sign + ", billType=" + billType + ", orderIdFrom="
+				+ orderIdFrom + ", pgType=" + pgType + ", channelType="
+				+ channelType + ", pgValidity=" + pgValidity + ", reportUrl="
+				+ reportUrl + "]";
+	}
+	
+	public Long getOrderArriveTime() {
+		return orderArriveTime;
+	}
+
+	public void setOrderArriveTime(Long orderArriveTime) {
+		this.orderArriveTime = orderArriveTime;
 	}
 
 	public String getReportUrl() {

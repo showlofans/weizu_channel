@@ -78,7 +78,7 @@ public class TelRateAOImpl implements TelRateAO {
 				if(AgencyTagEnum.DATA_USER.getValue().equals(rateFor)){
 					ifData = true;
 				}
-				if(isPlatUser){
+				if(ifData){
 					Map<String,Object> cloneMap = getParamsByTelChannel(telChannelParams);
 					cloneMap.put("dataUser", AgencyTagEnum.DATA_USER.getValue());
 					cloneMap.put("platformUser", null);

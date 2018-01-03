@@ -99,5 +99,16 @@ public interface PurchaseDao extends Dao<PurchasePo, Long> {
 	 */
 	PurchasePo getLatestOneByTel(String chargeTel,Integer purchaseFor);
 	
+	/**
+	 * @description:获得该号码是否在改时间之后有订单
+	 * @param chargeTel
+	 * @param purchaseFor
+	 * @param highTime
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月29日 上午10:38:36
+	 */
+	PurchasePo getLatestOneByTel(String chargeTel,Integer purchaseFor, Long highTime);
+	
 
 }

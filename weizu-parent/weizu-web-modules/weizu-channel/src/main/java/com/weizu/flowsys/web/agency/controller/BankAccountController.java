@@ -335,7 +335,7 @@ public class BankAccountController {
 	 */
 	@RequestMapping(value=BankAccountURL.TRANSFER_RECORD)
 	public ModelAndView getTransferRecord(Long bankId,@RequestParam(value="direction",required=false)Integer direction,
-			@RequestParam(value="pageNo",required=false)Long pageNoLong,
+			@RequestParam(value="pageNoLong",required=false)Long pageNoLong,
 			@RequestParam(value="confirmState",required=false)Integer confirmState,
 			HttpServletRequest request){
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");

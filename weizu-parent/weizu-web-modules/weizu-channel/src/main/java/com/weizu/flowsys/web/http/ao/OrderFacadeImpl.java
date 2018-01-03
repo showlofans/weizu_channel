@@ -56,7 +56,6 @@ public class OrderFacadeImpl implements IOrderFacet {
 	 */
 	@Override
 	public Order getOrder(QueryOrderParams orderParams) {
-		AgencyBackwardPo agencyPo = valiUser.findAgency(orderParams.getUserName(), orderParams.getSign());
 		Order order = null;
 		PurchasePo purchasePo = null;
 		OrderStateCheckEnum oscEnum = null;
@@ -65,17 +64,17 @@ public class OrderFacadeImpl implements IOrderFacet {
 //			oscEnum = OrderStateCheckEnum.ORDERID_ISNULL;
 //			return new OrderDTO(null, oscEnum.getValue(), oscEnum.getDesc());
 //		}
-		
+		if(orderParams.getOrderId() == null)
+		{
+			oscEnum = OrderStateCheckEnum.ORDERID_ISNULL;
+			return new Order(null, oscEnum.getValue(), oscEnum.getDesc());
+		}
+		AgencyBackwardPo agencyPo = valiUser.findAgency(orderParams.getUserName(), orderParams.getSign());
 		if(agencyPo == null)
 		{
 			oscEnum = OrderStateCheckEnum.AUTHENTICATION_FAILURE;
 			order = new Order(null,oscEnum.getValue(), oscEnum.getDesc());
 		}else{
-			if(orderParams.getOrderId() == null)
-			{
-				oscEnum = OrderStateCheckEnum.ORDERID_ISNULL;
-				return new Order(null, oscEnum.getValue(), oscEnum.getDesc());
-			}
 			purchasePo = purchaseDAO.getMyPurchase(agencyPo.getId(), orderParams.getOrderId());
 			if(purchasePo == null)
 			{

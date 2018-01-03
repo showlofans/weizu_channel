@@ -1000,8 +1000,7 @@ public class RateController {
 	@ResponseBody
 	@RequestMapping(value=RateURL.DEL_RATE)
 	public String delRateDiscount(Long rateDiscountId){
-		int res = rateDiscountDao.del(rateDiscountId);
-//		purchaseDAO.del(new WherePrams("", where, value))
+		long res = rateDiscountDao.delRateByIteratorFun(rateDiscountId);
 		if(res > 0){
 			return "success";
 		}

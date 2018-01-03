@@ -177,27 +177,26 @@
 ////		}
 ////		
 ////	}
-////	@Test
-////	public void testGetRateForCharge(){
-////		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(1, "广东移动", 4, 0, true);
-////		//{operatorType=0, channelState=0, billTypeRate=0, channelUseState=0, bindState=0, scopeCityCode=19, serviceType=1, agencyId=4}
-////		if(ratePo != null){
-////			
-////			System.out.println("success");
-////		}else{
-////			
-////			System.out.println("error");
-////		}
-////	}
 //	@Test
-//	public void testGetMyChildRate(){
-//		Map<String,Object> pMap = new HashMap<String, Object>();
-////		pMap.put("bindState", BindStateEnum.BIND.getValue());
-////		pMap.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
-//		pMap.put("activeId", 74);
-//		pMap.put("accountId", 64);
-//		pMap.put("bindState", BindStateEnum.BIND.getValue());
-//		RateDiscountPo childRatePo = rateDiscountDao.getMyChildRate(pMap);
-//		System.out.println(childRatePo == null?"null":childRatePo.getActiveDiscount());
+//	public void testGetRateForCharge(){
+//		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo("陕西移动", 1, null, null, null), 2, true);
+//		//{operatorType=0, channelState=0, billTypeRate=0, channelUseState=0, bindState=0, scopeCityCode=19, serviceType=1, agencyId=4}
+//		if(ratePo != null){
+//			System.out.println("success");
+//		}else{
+//			
+//			System.out.println("error");
+//		}
 //	}
+////	@Test
+////	public void testGetMyChildRate(){
+////		Map<String,Object> pMap = new HashMap<String, Object>();
+//////		pMap.put("bindState", BindStateEnum.BIND.getValue());
+//////		pMap.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+////		pMap.put("activeId", 74);
+////		pMap.put("accountId", 64);
+////		pMap.put("bindState", BindStateEnum.BIND.getValue());
+////		RateDiscountPo childRatePo = rateDiscountDao.getMyChildRate(pMap);
+////		System.out.println(childRatePo == null?"null":childRatePo.getActiveDiscount());
+////	}
 //}

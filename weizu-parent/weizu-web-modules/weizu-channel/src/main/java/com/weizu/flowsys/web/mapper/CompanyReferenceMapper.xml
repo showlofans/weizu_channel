@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weizu.flowsys.web.agency.dao.CompanyReferenceDao" >
+  <sql id="t_crm">company_reference</sql>
+  
+  <resultMap type="com.weizu.flowsys.web.agency.pojo.CompanyReferencePo" id="BaseResultMap">
+  	<id column="id" property="id" jdbcType="INTEGER" />
+    <result column="crm_name" property="crmName" jdbcType="VARCHAR" />
+    <result column="crm_forward_desc" property="crmForwardDesc" jdbcType="CLOB" />
+    <result column="crm_backward_desc" property="crmBackwardDesc" jdbcType="CLOB" />
+    <result column="crm_group_mark" property="crmGroupMark" jdbcType="VARCHAR" />
+    <result column="crm_platform_tag" property="crmPlatformTag" jdbcType="INTEGER" />
+    <result column="last_access" property="lastAccess" jdbcType="BIGINT" />
+    <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
+    <result column="ep_id" property="epId" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+  	id,crm_name, crm_forward_desc, crm_backward_desc, crm_group_mark, crm_platform_tag, last_access,agency_id,ep_id
+  </sql>
+  
+  <select id="listCRM" parameterType="map" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"></include>
+  	from <include refid="t_crm"></include>
+  	<where>
+  		<include refid="condition_sql"></include>
+  	</where>
+  	order by id desc
+    <if test="start != null">
+	 	limit #{start}
+	 </if>
+	<if test="end != null">
+	 	, #{end}
+	 </if>
+  </select>
+  <select id="countCRM" parameterType="map" resultType="int">
+  	select count(id)
+  	from <include refid="t_crm"></include>
+  	<where>
+  		<include refid="condition_sql"></include>
+  	</where>
+  </select>
+  
+  <sql id="condition_sql">
+  	<if test="crmName != null">
+  		AND crm_name like concat('%',#{crmName},'%') 
+  	</if>
+  	<if test="crmGroupMark != null">
+  		AND crm_group_mark = #{crmGroupMark}
+  	</if>
+  	<if test="crmPlatformTag != null">
+  		AND crm_platform_tag = #{crmPlatformTag}
+  	</if>
+  </sql>
+  <!-- 更新绑定状态 -->
+  <!-- <update id="updateByParmas" parameterType="map">
+  	update <include refid="t_tba"></include>
+  	<set>
+  		<if test="bindState != null">
+  			bind_state = #{bindState},
+  		</if>
+  		<if test="activeTime != null">
+  			active_time = #{activeTime}
+  		</if>
+  	</set>
+  	<where>
+  		<if test="id != null">
+  			AND id = #{id}
+  		</if>
+  		<if test="telRateId != null">
+  			AND tel_rate_id = #{telRateId}
+  		</if>
+  		<if test="accountIds != null">
+  			AND account_id in <foreach item="accountId" index="index" collection="accountIds" open="(" separator="," close=")">#{accountId}</foreach>
+  		</if>
+  		<if test="accountId != null">
+  			AND account_id = #{accountId}
+  		</if>
+  	</where>
+  </update> -->
+</mapper>

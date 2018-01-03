@@ -1,6 +1,9 @@
 package com.weizu.flowsys.web.http.controller;
 
+import java.util.Map;
+
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,9 +26,11 @@ import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
+import com.weizu.flowsys.util.AddressUtils;
 import com.weizu.flowsys.web.http.entity.Charge;
 import com.weizu.flowsys.web.http.entity.Order;
 import com.weizu.flowsys.web.http.entity.PgProduct;
+import com.weizu.flowsys.web.http.entity.PurchaseLog;
 import com.weizu.web.foundation.String.StringHelper;
 
 /**
@@ -96,23 +101,22 @@ public class OuterAPIController {
 		if(scope == null){//默认省漫游类型
 			scope = ServiceTypeEnum.PROVINCE_ROAMING.getValue();
 		}
+		Long currentTime = System.currentTimeMillis();
+		ChargeParams chargeParams = new ChargeParams(userName, number, pgSize, scope, sign, billType,currentTime);
 		if(pgType == null)
 		{
 			pgType = PgTypeEnum.PGDATA.getValue();
+			chargeParams.setPgType(pgType);
 		}
 		if(StringHelper.isEmpty(pgValidity ))
 		{
 			pgValidity = PgValidityEnum.MONTH_DAY_DATA.getValue();
+			chargeParams.setPgValidity(pgValidity);
 		}
 		if(channelType == null){
 			channelType = ChannelTypeEnum.ORDINARY.getValue();
+			chargeParams.setChannelType(channelType);
 		}
-		
-		
-		ChargeParams chargeParams = new ChargeParams(userName, number, pgSize, scope, sign, billType);
-		chargeParams.setPgType(pgType);
-		chargeParams.setPgValidity(pgValidity);
-		chargeParams.setChannelType(channelType);
 		if(StringHelper.isNotEmpty(userOrderId)){
 			chargeParams.setOrderIdFrom(userOrderId);
 		}
@@ -121,15 +125,24 @@ public class OuterAPIController {
 		}
 		Charge charge = null;
 		try {
+			System.out.println("传单参数：" + chargeParams.toString());
 			charge = chargeImpl.charge(chargeParams);
 		} catch (Exception e) {
 			charge = new Charge(ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc(), null);
 			e.printStackTrace();
 		}
+		
+		
+//		Purchase
+		//根据charge获得返回的订单号，结果，结果描述，
+		//根据穿入的参数，设定其他参数的传单日志（根据日志，能判定订单情况，从而手动生成订单和扣款记录）
+		
 		String jsonResult = JSON.toJSON(charge).toString();
 //		System.out.println(jsonResult);
 		return jsonResult;
 	}
+	@Resource
+	private AddressUtils addressUtils;
 	
 	/**
 	 * @description: 查询订单详情接口
@@ -143,8 +156,11 @@ public class OuterAPIController {
 	@ResponseBody
 	@RequestMapping(value=OuterApiURL.MY_ORDER_STATE,produces = "text/json;charset=UTF-8")
 	public String myOrderState(String userName, String sign, Long orderId, 
-			@RequestParam(value="number", required=false)String number){
-		
+			@RequestParam(value="number", required=false)String number,HttpServletRequest request){
+		System.out.println("访问ip"+request.getRequestURL());
+//		Map<String,Object> addressMap  = addressUtils.getAddresses(request, "utf-8");
+//		String address = addressMap.get("address").toString();
+//		String eventIp = addressMap.get("ip").toString();
 		QueryOrderParams orderParams = null;
 		if(StringHelper.isNotEmpty(number))
 		{
@@ -154,7 +170,7 @@ public class OuterAPIController {
 		}
 		Order order = orderFacade.getOrder(orderParams);
 		String jsonResult = JSON.toJSON(order).toString();
-		System.out.println(jsonResult);
+//		System.out.println(jsonResult);
 		return jsonResult;
 	}
 	

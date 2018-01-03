@@ -1,0 +1,11 @@
+在当前时间的前一分钟之前 
+之后 提交的有号码为该号码的订单，说明重复订单
+
+到达时间有大于一分钟之前，说明不能提交
+
+陕西移动本地
+{operatorType=0, channelType=1, accountId=2, channelState=0, channelUseState=0, pgType=1, bindState=0, scopeCityCode=26, serviceType=1, pgValidity=30}
+
+遗留：话费的异步提交问题
+
+解决异步提交和批量提交问题

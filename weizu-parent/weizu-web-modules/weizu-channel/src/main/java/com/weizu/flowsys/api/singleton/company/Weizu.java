@@ -208,14 +208,18 @@ public class Weizu implements BaseInterface {
 	            String orderIdApi = orderObj.getString("transaction_id");
 	            String number = orderObj.getString("number");
 	            String pgSize = orderObj.getString("flowsize");
-	            //用我这边默认的对私账户充值
-	            if(tipCode == 0){
-	            	chargeDTO = new ChargeDTO(OrderResultEnum.SUCCESS.getCode(), tipMsg, new ChargeOrder(orderIdApi, number, pgSize, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
-	            }else if(tipCode == 50000 || tipCode == 50005 || tipCode == 50006 || tipCode == 50008 || tipCode == 50012 || tipCode == 50004 || tipCode == 55006){
-	            	chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), tipMsg, new ChargeOrder(orderIdApi, number, pgSize, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
-	            }else{//返回失败,考虑退款
-	            	// 最后输出到控制台  
-	            	System.out.println(tipCode+"<--->"+tipMsg);  
+	            if(StringHelper.isNotEmpty(orderIdApi)){
+	            	//用我这边默认的对私账户充值
+	            	if(tipCode == 0){
+	            		chargeDTO = new ChargeDTO(OrderResultEnum.SUCCESS.getCode(), tipMsg, new ChargeOrder(orderIdApi, number, pgSize, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
+	            	}else if(tipCode == 50000 || tipCode == 50005 || tipCode == 50006 || tipCode == 50008 || tipCode == 50012 || tipCode == 50004 || tipCode == 55006){
+	            		chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), tipMsg, new ChargeOrder(orderIdApi, number, pgSize, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
+	            	}else{//返回失败,考虑退款
+	            		// 最后输出到控制台  
+	            		System.out.println(tipCode+"<--->"+tipMsg);  
+	            	}
+	            }else{
+	            	System.out.println(tipCode+"<--->"+tipMsg); 
 	            }
 	  
 	        } catch (JSONException e) {  

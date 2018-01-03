@@ -144,6 +144,9 @@
 					<li><a data-href="/flowsys/agency/child_agency_list.do?agencyTag=1" data-title="认证用户" href="javascript:void(0)">认证用户</a></li>
 					</c:if>
 					<li><a data-href="/flowsys/agency/child_agency_list.do?agencyTag=0" data-title="代理商" href="javascript:void(0)">代理商</a></li>
+					<c:if test="${loginContext.rootAgencyId == 0 }">
+						<li><a data-href="/flowsys/crm/crm_list.do" data-title="客户信息" href="javascript:void(0)">客户信息</a></li>
+					</c:if>
 					<!-- <li><a data-href="/flowsys/agency/get_tel_location.do" data-title="号码归属地查询" href="javascript:void(0)">号码归属地查询</a></li> -->
 				</ul>
 			</dd>
@@ -187,6 +190,7 @@
 			<dd>
 				<ul>
 					<li><a data-href="/flowsys/operatorPg/operatorPg_list.do" data-title="标准价管理" href="javascript:void(0)">标准价管理</a></li>
+					<li><a data-href="/flowsys/showRate/showRate_list.do?showModel=1" data-title="通道展示列表" href="javascript:void(0)">通道展示</a></li>
 				</ul>
 		</dd>
 	</dl>

@@ -26,6 +26,7 @@
     <result column="order_result" property="orderResult" jdbcType="INTEGER" />
     <result column="order_result_detail" property="orderResultDetail" jdbcType="VARCHAR" />
     <result column="has_call_back" property="hasCallBack" jdbcType="INTEGER" />
+    <result column="agency_call_ip" property="agencyCallIp" jdbcType="VARCHAR" />
     <result column="channel_name" property="channelName" jdbcType="BIGINT" />
     <result column="order_amount" property="orderAmount" jdbcType="DOUBLE" />
     <result column="bill_type" property="billType" jdbcType="INTEGER" />
@@ -38,6 +39,7 @@
   <resultMap id="VOResultMap" type="com.weizu.flowsys.web.trade.pojo.PurchaseVO" >
     <id column="order_id" property="orderId" jdbcType="BIGINT" />
     <result column="account_id" property="accountId" jdbcType="INTEGER" />
+    <result column="from_account_id" property="fromAccountId" jdbcType="INTEGER" />
     <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
     <result column="order_id_api" property="orderIdApi" jdbcType="VARCHAR" />
     <result column="order_id_from" property="orderIdFrom" jdbcType="VARCHAR" />
@@ -191,6 +193,10 @@
 		<if test="purchaseFor != null">
 			AND purchase_for = #{purchaseFor}
 		</if>
+		<if test="highTime != null">
+			AND order_arrive_time &gt; #{highTime}
+		</if>
+		
   	</where>
   	ORDER BY order_arrive_time DESC 
   	LIMIT 1

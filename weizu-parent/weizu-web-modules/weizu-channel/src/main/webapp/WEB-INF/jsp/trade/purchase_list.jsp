@@ -223,13 +223,26 @@
 						
 						<!-- 结果 -->
 						<td>
-							<c:forEach items="${resultMap.orderStateEnums }" var="orderStateEnum" varStatus="vs">
-								<c:if test="${purchase.orderResult == orderStateEnum.value }">
-									<span class="label label-primary radius mark">
-										${orderStateEnum.desc }
-									</span>
-								</c:if>
-							</c:forEach>
+							<c:choose>
+								<c:when test="${loginContext.rootAgencyId == 0 }">
+									<c:forEach items="${resultMap.orderStateEnums }" var="orderStateEnum" varStatus="vs">
+										<c:if test="${purchase.orderResult == orderStateEnum.value }">
+											<span class="label label-primary radius mark">
+												${orderStateEnum.desc }
+											</span>
+										</c:if>
+									</c:forEach>
+								</c:when>
+								<c:otherwise>
+									<c:forEach items="${resultMap.orderStateEnums }" var="orderStateEnum" varStatus="vs">
+										<c:if test="${purchase.orderState == orderStateEnum.value }">
+											<span class="label label-primary radius mark">
+												${orderStateEnum.desc }
+											</span>
+										</c:if>
+									</c:forEach>
+								</c:otherwise>
+							</c:choose>
 						</td>
 						
 						<td>

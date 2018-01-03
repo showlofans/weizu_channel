@@ -169,7 +169,7 @@
 						</c:forEach>
 						</td>
 						<c:if test="${loginContext.rootAgencyId == 0 }">
-						<td class="f-14 td-manage">
+						<td class="f-14 td-manage success">
 							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeState(this,1)" href="javascript:;" title="成功">
 								<input type="hidden" value="${purchase.orderId }" >
 								<i class="Hui-iconfont">&#xe6e6;</i>

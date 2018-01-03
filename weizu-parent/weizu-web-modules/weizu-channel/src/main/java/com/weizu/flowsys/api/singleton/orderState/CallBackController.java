@@ -24,6 +24,7 @@ import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
+import com.weizu.flowsys.util.JsonKeyEncodeUtil;
 import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.dao.impl.AgencyBackwardDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
@@ -658,6 +659,83 @@ public class CallBackController {
 		}  
 		System.out.println("successTag:"+successTag);
 		return successTag;
+	}
+	
+	/**
+	 * @description: 红茄php后台推送
+	 * @param key
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年12月27日 下午4:15:48
+	 */
+	@ResponseBody
+	@RequestMapping(value=CallBackURL.HONGJIA,method=RequestMethod.POST,produces="application/json;charset=UTF-8")//charset=UTF-8
+	public String HongjiaCallBack(@RequestBody String key){
+		JSONObject resObj = new JSONObject();
+		String messageTag = "回调成功";
+		int statusTag = 1; 
+		
+		String statusDetail = "";
+		int myStatus = -1;
+		try {  
+//        	String message = obj.getString("message");
+//        	String phone = obj.getString("phone");//产品类型
+//        	String method = obj.getString("method");//时间戳
+//        	System.out.println("其他结果参数：desc="+message+"\tphone="+phone+"\t回调方法："+method);
+//			System.out.println("回调返回json串:"+key);
+			key = JsonKeyEncodeUtil.getRealJsonStr(key);
+			key = key.substring(0, key.length()-1);
+//			System.out.println("编码之后:"+key);
+			JSONObject obj = JSON.parseObject(key);
+			String orderIdApi = obj.getString("orderid");
+        	String user_order_id = obj.getString("transno");
+        	
+        	int status = obj.getIntValue("status");
+        	Long timestamp = obj.getLong("timestamp");//时间戳s
+        	timestamp *= 1000;
+        	if(StringHelper.isEmpty(user_order_id)){
+        		statusTag = 0;
+        		messageTag = "没有返回用户订单号";
+			}else{
+				//初始化参数
+				long orderId = Long.parseLong(user_order_id.trim());
+				PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
+				Boolean hasCall = OrderResultEnum.SUCCESS.getCode().equals(purchasePo.getHasCallBack());
+				String res = "";
+				if(!hasCall){//上一次没有回调成功
+					switch (status) {
+					case 2://充值中
+	            		myStatus = OrderStateEnum.CHARGING.getValue();
+	            		statusDetail = OrderStateEnum.CHARGING.getDesc();
+	            		break;
+	            	case 1://充值成功
+	            		myStatus = OrderStateEnum.CHARGED.getValue();
+	            		statusDetail = OrderStateEnum.CHARGED.getDesc();
+	            		break;
+					default://充值失败
+						myStatus = OrderStateEnum.UNCHARGE.getValue();
+	            		statusDetail = OrderStateEnum.UNCHARGE.getDesc();
+						break;
+					}
+					res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, orderIdApi, timestamp, myStatus,OrderResultEnum.SUCCESS.getCode() , statusDetail));
+					if(!"success".equals(res)){
+						statusTag = 0;
+		        		messageTag = res;
+					}
+				}
+			}
+			//根据订单号去更新数据库，并返回回调结果
+			
+		} catch (JSONException e) {  
+			statusTag = 0;
+    		messageTag = "json结果解析异常";
+			e.printStackTrace();  
+		}  
+		resObj.put("status", statusTag);
+		resObj.put("message", messageTag);
+		String resJsonStr = resObj.toJSONString();
+		System.out.println("resJsonStr:"+resJsonStr);
+		return resJsonStr;
 	}
 	
 	

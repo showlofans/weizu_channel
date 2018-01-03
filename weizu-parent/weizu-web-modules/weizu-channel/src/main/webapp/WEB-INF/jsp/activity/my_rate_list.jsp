@@ -230,14 +230,17 @@ function addUp(vart){//vart是提交按钮
 	var activeDiscount = $ad.val().trim();
 	var agencyName = $('#agencyName').val();
 	
+	var activeDiscountNum = parseFloat(activeDiscount);
+	//alert(activeDiscountNum);
+	
 	/* alert(activeId);
 	alert(id); */
 	//alert(activeDiscount);
-	if(activeDiscount != "" && activeDiscount != null){
+	var myDiscount = $(vart).parents('tr').children('.myDiscount').html().trim();
+	if(activeDiscount != "" && activeDiscount != null && activeDiscountNum > 0 && activeDiscountNum < 1){
 		//alert(optionIn);
 		//alert(optionIn.indexOf('-'));
-		var myDiscount = $(vart).parents('tr').children('.myDiscount').html().trim();
-		if(parseFloat(myDiscount) > parseFloat(activeDiscount)){
+		if(parseFloat(myDiscount) > activeDiscountNum){
 			layer.confirm('设置的折扣不能小于自己的折扣!<br>', {
 				  btn: ['确定'] //按钮
 				}, function(){
@@ -250,7 +253,6 @@ function addUp(vart){//vart是提交按钮
 				  }); */
 				});
 		}else{
-//if(optionIn.indexOf('-') == -1){//没有自己的折扣
 			if(optionIn == ''){//没有自己的折扣
 				billType = $(vart).parents('tr').children('.billType').html();
 				layer.confirm('确认给'+agencyName+'增加费率吗？',function(index){
@@ -278,7 +280,7 @@ function addUp(vart){//vart是提交按钮
 				var origninal = $(vart).parents('td').prev().children('.billType').val().trim(); //子代理商原来的折扣
 				
 				//var nowActiveDis = arr[2];
-				if(parseFloat(origninal)!= parseFloat(activeDiscount) ){//发送ajax请求
+				if(parseFloat(origninal)!= activeDiscountNum ){//发送ajax请求
 					layer.confirm('确认给'+agencyName+'修改费率吗？',function(index){
 						$.ajax({
 							type: 'POST',
@@ -304,19 +306,18 @@ function addUp(vart){//vart是提交按钮
 					    ,closeBtn: 0
 					    ,anim: 4 //动画类型
 				    });
-					//alert('已经设置了该折扣');
-					//alert(1);
-					//$(vart).attr("disabled",'disabled');
 				}
 			}
 		} 
 			
 	}else{
-		layer.alert('折扣不能为空', {
+		layer.alert('折扣设置参数不对', {
 		    skin: 'layui-layer-lan'
 		    ,closeBtn: 0
 		    ,anim: 4 //动画类型
 	    });
+		$ad.val(myDiscount);
+		$ad.focus();
 		//alert('折扣不能为空');
 	} 
 	

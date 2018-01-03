@@ -152,7 +152,7 @@
 		on pur.pg_id = pg.id
 		<where>
 			<if test="_parameter != null">
-				AND pur.id = #{_parameter}
+				AND pur.order_id = #{_parameter}
 			</if>
 		</where>
 	</select>
