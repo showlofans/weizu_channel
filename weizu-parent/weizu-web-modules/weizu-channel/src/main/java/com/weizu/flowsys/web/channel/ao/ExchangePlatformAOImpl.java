@@ -216,11 +216,11 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 		else{//两个对象值不一样，并且英文标识不存在，或者和原来的不一样 就更新
 			epPo.setLastAccess(System.currentTimeMillis());
 			if(epPo.getEpCallBack() == null){
-				epPo.setEpCallBack(0);
+				epPo.setEpCallBack(CallBackEnum.NEGATIVE.getValue());
 			}
 			String epUserPass = Hash.BASE_UTIL.encode(epPo.getEpUserPass());
 			epPo.setEpUserPass(epUserPass);
-			int upRes = exchangePlatformDao.updateLocal(epPo,new WherePrams("id", "=", epPo.getId()));
+			int upRes = exchangePlatformDao.updateLocal(epPo);
 			if(upRes > 0){
 				flag = "success";
 			}else{

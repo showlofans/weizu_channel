@@ -1,7 +1,7 @@
 /**更新展示通道维护状态*/
 function changeUseState(url, showRateState, id){
 	var msg = "确认要维护该通道吗?";
-	if(status == '0'){
+	if(showRateState == '0'){
 		msg = '确认要恢复该通道吗?';
 	}
 	

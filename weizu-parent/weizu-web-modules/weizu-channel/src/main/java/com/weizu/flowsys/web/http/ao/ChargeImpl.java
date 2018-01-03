@@ -14,6 +14,7 @@ import com.weizu.flowsys.api.singleton.BaseInterface;
 import com.weizu.flowsys.api.singleton.BaseP;
 import com.weizu.flowsys.api.singleton.SingletonFactory;
 import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
+import com.weizu.flowsys.api.weizu.charge.ChargeOrder;
 import com.weizu.flowsys.api.weizu.charge.ChargeParams;
 import com.weizu.flowsys.api.weizu.facet.IChargeFacet;
 import com.weizu.flowsys.core.beans.WherePrams;
@@ -232,11 +233,18 @@ public class ChargeImpl implements IChargeFacet {
 						purchasePo.setOrderResult(orderResult);
 						purchasePo.setOrderResultDetail(orderResultDetail);
 					}else{
-						String orderIdApi = chargeDTO.getChargeOrder().getOrderIdApi();
-						logger.config("上游返回的订单号："+ orderIdApi);//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
-						purchasePo.setOrderIdApi(orderIdApi);
-						charge = getChargeByDTO(chargeDTO,chargeParams,purchasePo);
-						orderResultDetail = charge.getTipMsg();
+						//上有接口充值返回异常
+//						if(OrderResultEnum.ERROR.equals(chargeDTO.getTipCode())){//充值失败+返款
+//							charge = new Charge(ChargeStatusEnum.CHARGE_SUCCESS.getValue(), ChargeStatusEnum.CHARGE_SUCCESS.getDesc(), new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
+//						}
+//						else{
+							ChargeOrder co = chargeDTO.getChargeOrder();
+							String orderIdApi = co.getOrderIdApi();
+							logger.config("上游返回的订单号："+ orderIdApi);//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
+							purchasePo.setOrderIdApi(orderIdApi);
+							charge = getChargeByDTO(chargeDTO,chargeParams,purchasePo);
+							orderResultDetail = charge.getTipMsg();
+//						}
 					}
 				}else if(!canCharge){
 //					orderResult = OrderStateEnum.DAICHONG.getValue();

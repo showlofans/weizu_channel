@@ -40,12 +40,18 @@
 ////			System.out.println("username:"+agencyBackwardVO.getUserName());
 ////		}
 ////	 }
-////	@Test
-////	public void testGetEpByEpName(){
-////		String name = "迈远";
-////		ExchangePlatformPo epPo = exchangePlatformAO.getEpByEpName(name);
-////		System.out.println(epPo.getEpApikey());
-////	}
+//	@Test
+//	public void testGetEpByEpName(){
+//		String name = "河南趣闻分省";
+//		ExchangePlatformPo epPo = exchangePlatformAO.getEpByEpName(name);
+//		if(epPo != null){
+////			String userPass2 = Hash.BASE_UTIL.decode(epPo.getEpUserPass());
+////			System.out.println("userName="+ epPo.getEpUserName()+" ,userPass="+ userPass2);
+//			System.out.println("userName="+ epPo.getEpUserName()+" ,userPass="+ epPo.getEpUserPass());
+//		}else{
+//			System.out.println("没有该平台信息");
+//		}
+//	}
 ////	@Test
 ////	public void testGetEp(){
 //////		Pagination<ExchangePlatformPo>  pagination = exchangePlatformAO.getEp(4, null, null);
@@ -80,17 +86,25 @@
 ////	}
 ////	@Test
 ////	public void updateEpUserPass(){
-////		List<ExchangePlatformPo> list = exchangePlatformDao.list(new WherePrams("1", "=", "1"));
+//////		List<ExchangePlatformPo> list = exchangePlatformDao.list(new WherePrams("1", "=", "1"));
 ////		int upd = 0;
-////		for (ExchangePlatformPo exchangePlatformPo : list) {
-////			String epUserPass = exchangePlatformPo.getEpUserPass();
-//////			epUserPass = Hash.BASE_UTIL.decode(epUserPass);
-////			epUserPass = Hash.BASE_UTIL.encode(epUserPass);
-////			exchangePlatformPo.setEpUserPass(epUserPass);
-////			exchangePlatformPo.setEpFor(PgServiceTypeEnum.TELCHARGE.getValue());
-////			upd += exchangePlatformDao.updateLocal(exchangePlatformPo);
-//////			System.out.println(epUserPass);
-////		}
+//////		for (ExchangePlatformPo exchangePlatformPo : list) {
+//////			String epUserPass = exchangePlatformPo.getEpUserPass();
+////////			epUserPass = Hash.BASE_UTIL.decode(epUserPass);
+//////			epUserPass = Hash.BASE_UTIL.encode(epUserPass);
+//////			exchangePlatformPo.setEpUserPass(epUserPass);
+//////			exchangePlatformPo.setEpFor(PgServiceTypeEnum.TELCHARGE.getValue());
+//////			upd += exchangePlatformDao.updateLocal(exchangePlatformPo);
+////////			System.out.println(epUserPass);
+//////		}
+////		ExchangePlatformPo exchangePlatformPo = exchangePlatformAO.getEpByEpName("河南趣闻分省");
+//////		String epUserPass = exchangePlatformPo.getEpUserPass();
+////		String epUserPass = "123456";
+//////		epUserPass = Hash.BASE_UTIL.decode(epUserPass);
+////		epUserPass = Hash.BASE_UTIL.encode(epUserPass);
+////		exchangePlatformPo.setEpUserPass(epUserPass);
+////		exchangePlatformPo.setEpFor(PgServiceTypeEnum.PGCHARGE.getValue());
+////		upd += exchangePlatformDao.updateLocal(exchangePlatformPo);
 ////		System.out.println(upd);
 ////	}
 //	
