@@ -15,6 +15,7 @@ import com.weizu.flowsys.api.singleton.OrderDTO;
 import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 import com.weizu.flowsys.api.weizu.charge.ChargeOrder;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.web.foundation.MD5;
@@ -74,17 +75,22 @@ public class Lljypt implements BaseInterface {
             String rspMsg = obj.getString("rspMsg");
             String balanceStr = obj.getString("balance");
             double balance = 0.00d;
-            if(StringHelper.isNotEmpty(balanceStr)){
-            	balance = Double.parseDouble(balanceStr);
-            }
 //            System.out.println(obj);
-            String epEngId = baseParams.getEpo().getEpEngId();
-            String epEngIdTag = epEngId.substring(epEngId.length()-1);
-            if("0".equals(epEngIdTag)){
-            	balanceDTO = new BalanceDTO(balance, rspCode, rspMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
+            if(rspCode == 0){
+            	if(StringHelper.isNotEmpty(balanceStr)){
+            		balance = Double.parseDouble(balanceStr);
+            	}
+            	balanceDTO = new BalanceDTO(balance, OrderResultEnum.SUCCESS.getCode(), rspMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
             }else{
-            	balanceDTO = new BalanceDTO(balance, rspCode, rspMsg,BillTypeEnum.CORPORATE_BUSINESS.getValue()); 
+            	balanceDTO = new BalanceDTO(balance, OrderResultEnum.ERROR.getCode(), rspMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
             }
+//            String epEngId = baseParams.getEpo().getEpEngId();
+//            String epEngIdTag = epEngId.substring(epEngId.length()-1);
+//            if("0".equals(epEngIdTag)){
+//            	balanceDTO = new BalanceDTO(balance, rspCode, rspMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
+//            }else{
+//            	balanceDTO = new BalanceDTO(balance, rspCode, rspMsg,BillTypeEnum.CORPORATE_BUSINESS.getValue()); 
+//            }
 		    // 最后输出到控制台  
             System.out.println(rspCode+"<--->"+rspMsg);  
   

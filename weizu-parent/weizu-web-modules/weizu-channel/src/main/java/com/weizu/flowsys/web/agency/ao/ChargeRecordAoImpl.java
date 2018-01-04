@@ -14,9 +14,11 @@ import com.aiyi.base.pojo.PageParam;
 import com.aiyi.base.pojo.PurchasePo;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.AgencyLevelEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeRecordDao;
+import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
@@ -160,6 +162,11 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 	@Override
 	public Map<String, Object> getMapByConsume(ConsumeRecordPo consumeRecordPo,Integer contextAgencyId) {
 		Map<String, Object> params = new HashMap<String, Object>();
+		if(AgencyLevelEnum.SUPPER_USER.getValue() == consumeRecordPo.getShowModel()){
+			params.put("supperAgencyId", contextAgencyId);
+		}else{
+			params.put("agencyId", contextAgencyId);
+		}
 		if(StringHelper.isNotEmpty(consumeRecordPo.getUserName())){
 			params.put("userName", consumeRecordPo.getUserName());
 		}
@@ -186,9 +193,6 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 			params.put("chargeTel", consumeRecordPo.getChargeTel());
 		}
 		
-		if(contextAgencyId != null){
-			params.put("agencyId", contextAgencyId);
-		}
 		if(consumeRecordPo.getAccountId() != null){
 			params.put("accountId", consumeRecordPo.getAccountId());
 		}
@@ -219,6 +223,8 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 	 */
 	@Override
 	public Pagination<ConsumeRecordPo> listConsumeRecord(Map<String, Object> resultMap, Integer contextAgencyId,ConsumeRecordPo consumeRecordPo, PageParam pageParam) {
+		
+//		String contextAgencyName = contextAgency.getUserName();
 		Map<String, Object> params = getMapByConsume(consumeRecordPo,contextAgencyId);
 		
 		int totalRecords = chargeRecordDao.countConsume(params);

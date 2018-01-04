@@ -36,6 +36,16 @@
 	<form action="/flowsys/account/consume_list.do" method="post" id="formD" name="dataListForm">
 		<div class="text-c">
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
+			显示模式:
+			<span class="select-box inline">
+			<select name="showModel" class="select" onchange="getConsume()" >
+				<c:forEach items="${resultMap.agencyLevelEnums }" var="agencyLevelEnum" varStatus="vs1">
+					<option value="${agencyLevelEnum.value }" <c:if test="${resultMap.searchParams.showModel == agencyLevelEnum.value }"> selected</c:if>>${agencyLevelEnum.desc }</option>
+				</c:forEach>
+			</select>
+			</span>
+			<%-- <c:if test="${loginContext.rootAgencyId == 0 }">
+			</c:if> --%>
 			消费类型:
 			<span class="select-box inline">
 			<select name="chargeFor" class="select" onchange="getConsume()" >

@@ -80,7 +80,7 @@
     <result column="charge_tel" property="chargeTel" />
   </resultMap>
   <sql id="Consume_Column_List">
-    crt.*,pc.charge_tel,act.bill_type,ap.from_agency_name
+    crt.*,pc.charge_tel,act.bill_type
   </sql>
   
   <!-- 查询充值列表 -->
@@ -157,6 +157,14 @@
   </select>
   <select id="getConsume" parameterType="map" resultMap="ConsumeRecordMap">	
   	select <include refid="Consume_Column_List"></include>
+  	<choose>
+  		<when test="supperAgencyId != null">
+		  	,act.agency_name from_agency_name
+  		</when>
+  		<otherwise>
+		  	,ap.from_agency_name
+  		</otherwise>
+  	</choose>
   	from <include refid="t_record"></include> crt
 	INNER JOIN <include refid="t_ap"></include> ap
 	on ap.record_id=crt.id
@@ -185,6 +193,9 @@
 		<if test="agencyId != null">
 			act.agency_id=#{agencyId}
 		</if>
+		<if test="supperAgencyId != null">
+			act.supper_agency_id=#{supperAgencyId}
+		</if>
 		<if test="accountId != null">
 			AND crt.account_id=#{accountId}
 			<!--  and ap.account_id=#{accountId} -->
@@ -204,7 +215,7 @@
 			</when>
 		</choose> -->
 		
-		<if test="userName != null">
+		<if test="userName != null"><!-- 超管模式，获得子代理商的账户消费信息 -->
 			AND ap.from_agency_name LIKE CONCAT('%', TRIM(#{userName}), '%')
 		</if>
 		<if test="billType != null">

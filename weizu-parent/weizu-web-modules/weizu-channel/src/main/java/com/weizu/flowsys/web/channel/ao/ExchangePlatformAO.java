@@ -124,4 +124,12 @@ public interface ExchangePlatformAO {
 	 */
 	boolean checkEpName(String epName);
 	
+	/**
+	 * @description: 更新平台余额
+	 * @return 
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月4日 上午10:11:14
+	 */
+	String updateEpBalance();
+	
 }

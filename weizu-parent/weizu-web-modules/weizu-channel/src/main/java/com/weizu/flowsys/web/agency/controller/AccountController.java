@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.AgencyLevelEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ConfirmStateEnum;
 import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
@@ -169,9 +170,17 @@ public class AccountController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		if(agencyVo != null){
 			Integer contextId = agencyVo.getId();
+//			String contextAgencyName = agencyVo.getUserName();
 //			consumeRecordPo.setAgencyId(contextId);
 			if(consumeRecordPo.getChargeFor() == null){
 				consumeRecordPo.setChargeFor(PgServiceTypeEnum.PGCHARGE.getValue());
+			}
+			if(consumeRecordPo.getShowModel() == null){
+				if(agencyVo.getRootAgencyId() == 0){
+					consumeRecordPo.setShowModel(AgencyLevelEnum.SUPPER_USER.getValue());
+				}else{
+					consumeRecordPo.setShowModel(AgencyLevelEnum.PLAT_USER.getValue());
+				}
 			}
 			
 			Pagination<ConsumeRecordPo> pagination =  chargeRecordAO.listConsumeRecord(resultMap,contextId,consumeRecordPo, pageParam);
@@ -179,6 +188,7 @@ public class AccountController {
 			resultMap.put("billTypeEnums", BillTypeEnum.toList());
 			resultMap.put("accountTypeEnums", AccountTypeEnum.toConsumeList());
 			resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());	//充值业务类型
+			resultMap.put("agencyLevelEnums", AgencyLevelEnum.toList());	//充值业务类型
 			//点击金额进入连接，自动填充代理商名称
 			if(consumeRecordPo.getUserName() == null && consumeRecordPo.getAccountId() != null){
 				AgencyBackwardPo agencyPO = agencyAO.getAgencyByAccountId(consumeRecordPo.getAccountId());
@@ -186,6 +196,7 @@ public class AccountController {
 					consumeRecordPo.setUserName(agencyPO.getUserName());
 				}
 			}
+			resultMap.put("searchParams", consumeRecordPo);	//充值业务类型
 			return new ModelAndView("/account/consume_list", "resultMap", resultMap);
 		}else{
 			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");

@@ -17,11 +17,12 @@
 	    <result column="remittance_bank_account" jdbcType="VARCHAR" property="remittanceBankAccount" />
 	    <result column="account_credit" jdbcType="DOUBLE" property="accountCredit" />
 	    <result column="agency_id" jdbcType="INTEGER" property="agencyId" />
+	    <result column="supper_agency_id" jdbcType="INTEGER" property="supperAgencyId" />
 	    <result column="agency_name" jdbcType="VARCHAR" property="agencyName" />
 	    <result column="bill_type" jdbcType="INTEGER" property="billType" />
 	 </resultMap>
 	 <sql id="Base_Column_List">
-    	act.id, act.bill_type, act.account_balance, act.remittance_way, act.remittance_bank_account, act.account_credit, act.agency_id, act.create_time
+    	act.id, act.bill_type, act.account_balance, act.remittance_way, act.remittance_bank_account, act.account_credit, act.agency_id, act.create_time,act.supper_agency_id
  	 </sql>
 	 
 	 <!-- 只把账户余额和信用值查出来 -->

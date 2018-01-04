@@ -10,8 +10,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.api.hsingleton.HSingletonFactory;
+import com.weizu.flowsys.api.singleton.BalanceDTO;
+import com.weizu.flowsys.api.singleton.BaseInterface;
+import com.weizu.flowsys.api.singleton.BaseP;
+import com.weizu.flowsys.api.singleton.SingletonFactory;
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
+import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
+import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.util.ClassUtil;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.util.StringUtil2;
@@ -260,5 +268,45 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 //	public ExchangePlatformPo getEpByRateId(Long rateId) {
 //		return exchangePlatformDao.getEpByRateId(rateId);
 //	}
+	@Override
+	public String updateEpBalance() {
+		String resMsg = "";
+		int successNum = 0;
+		int errorNum = 0;
+		List<ExchangePlatformPo> platformList = exchangePlatformDao.list(new WherePrams("1", "=", 1));
+		for (ExchangePlatformPo epPo : platformList) {
+			Integer epFor = epPo.getEpFor();
+			String epEngId = epPo.getEpEngId();
+			BaseP baseP = new BaseP();
+			baseP.setEpo(epPo);
+			BaseInterface bi = null;
+			if(PgServiceTypeEnum.PGCHARGE.getValue().equals(epFor)){//调用流量接口仓库
+				bi = SingletonFactory.getSingleton(epEngId, baseP);
+			}else if(PgServiceTypeEnum.TELCHARGE.getValue().equals(epFor)){
+				bi = HSingletonFactory.getSingleton(epEngId, baseP);
+			}
+			String msg = epPo.getEpName() + ":余额更新失败";
+			boolean successTag = false;  
+			if(bi != null && bi.getBalance() != null){
+				BalanceDTO balanceDTO = bi.getBalance();
+				if(balanceDTO != null && OrderResultEnum.SUCCESS.getCode().equals(balanceDTO.getTipCode())){
+					epPo.setEpBalance(balanceDTO.getAccountBalance());
+					//更新平台余额
+					int res = exchangePlatformDao.updateLocal(epPo);
+					if(res > 0){
+						msg = epPo.getEpName() + ":余额更新成功";
+						successTag = true;
+						successNum++;
+					}
+				}
+			}
+			if(!successTag){
+				errorNum++;
+			}
+			System.out.println(msg);
+		}
+		resMsg = "更新成功"+successNum+"条，更新失败"+errorNum +"条";
+		return resMsg;
+	}
 
 }

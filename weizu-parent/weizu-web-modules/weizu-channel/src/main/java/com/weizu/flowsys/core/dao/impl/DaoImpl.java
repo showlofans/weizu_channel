@@ -466,7 +466,7 @@ public class DaoImpl<T extends Po, PK extends Serializable> implements Dao<T, PK
 //			sql = sql.substring(0,sql.lastIndexOf(","));
 //		} 
 		sql += " where id=" + id +";";
-		System.out.println("updateLocal_sql:"+sql);
+		//System.out.println("updateLocal_sql:"+sql);
 		
 		return sqlSessionTemplateASS.update("updateLocal", sql);
 	}
@@ -547,7 +547,7 @@ public class DaoImpl<T extends Po, PK extends Serializable> implements Dao<T, PK
 			sql = sql.substring(0,sql.lastIndexOf(","));
 		} 
 		sql += where.getWherePrams() +";";
-		System.out.println("updateLocal_sql:"+sql);
+		//System.out.println("updateLocal_sql:"+sql);
 		return sqlSessionTemplateASS.update("updateLocalByPram", sql);
 		
 	}

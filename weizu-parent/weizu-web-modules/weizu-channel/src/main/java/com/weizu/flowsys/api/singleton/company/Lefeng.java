@@ -34,6 +34,14 @@ import com.weizu.web.foundation.MD5;
 import com.weizu.web.foundation.SHA1;
 import com.weizu.web.foundation.String.StringHelper;
 
+/**
+ * @description: 青岛网信乐疯-过时
+ * @projectName:weizu-channel
+ * @className:Lefeng.java
+ * @author:微族通道代码设计人 宁强
+ * @createTime:2018年1月4日 上午11:57:39
+ * @version 1.0
+ */
 @Service
 public class Lefeng implements BaseInterface {
 

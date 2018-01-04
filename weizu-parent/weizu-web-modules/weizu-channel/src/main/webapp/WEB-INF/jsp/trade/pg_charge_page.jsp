@@ -572,9 +572,9 @@
                  	   //var pgDiscountPrice = dataRole1[i].pgDiscountPrice;
        					appendData1 += "<div class='radio-box pgNameType'><input class='pgNameRadio' name='pgId' type='radio' id='pgName-";
        					appendData1 += (i+1);
-       					appendData1 += "' onclick='changeRadio(this,"+ cnelId +")'> value='"
+       					appendData1 += "' onclick='changeRadio(this,"+ cnelId +")' value='"
        					appendData1 += dataRole1[i].id;
-       					appendData1 += "' <label for='pgName-";
+       					appendData1 += "'><label for='pgName-";
        					appendData1 += (i+1);
        					appendData1 += "'>";
        					appendData1 += name;

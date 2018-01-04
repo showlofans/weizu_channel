@@ -87,7 +87,7 @@ public class AgencyAOImpl implements AgencyAO {
 				agencyBackward.setId(agencyId);
 				AgencyBackwardVO agencyVO = getVOByPo(agencyBackward);
 				httpSession.setAttribute("loginContext", agencyVO);
-				ChargeAccountPo chargePo = new ChargeAccountPo(agencyId, 0.00d, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue(), agencyBackward.getCreateTime(), agencyBackward.getUserName());
+				ChargeAccountPo chargePo = new ChargeAccountPo(agencyId,agencyVO.getRootAgencyId(), 0.00d, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue(), agencyBackward.getCreateTime(), agencyBackward.getUserName());
 				int addCharge = chargeAccountDao.add(chargePo);
 				if(addCharge > 0){
 					int accountId = (int) (chargeAccountDao.nextId()-1);

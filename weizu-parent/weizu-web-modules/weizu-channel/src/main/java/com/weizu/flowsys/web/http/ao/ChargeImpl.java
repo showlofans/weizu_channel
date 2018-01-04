@@ -234,17 +234,19 @@ public class ChargeImpl implements IChargeFacet {
 						purchasePo.setOrderResultDetail(orderResultDetail);
 					}else{
 						//上有接口充值返回异常
-//						if(OrderResultEnum.ERROR.equals(chargeDTO.getTipCode())){//充值失败+返款
+						if(OrderResultEnum.ERROR.equals(chargeDTO.getTipCode())){//充值失败+返款
 //							charge = new Charge(ChargeStatusEnum.CHARGE_SUCCESS.getValue(), ChargeStatusEnum.CHARGE_SUCCESS.getDesc(), new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
-//						}
-//						else{
+							orderResult = OrderStateEnum.DAICHONG.getValue();
+							orderResultDetail = chargeDTO.getTipMsg();
+						}
+						else{
 							ChargeOrder co = chargeDTO.getChargeOrder();
 							String orderIdApi = co.getOrderIdApi();
 							logger.config("上游返回的订单号："+ orderIdApi);//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
 							purchasePo.setOrderIdApi(orderIdApi);
 							charge = getChargeByDTO(chargeDTO,chargeParams,purchasePo);
-							orderResultDetail = charge.getTipMsg();
-//						}
+							orderResultDetail = chargeDTO.getTipMsg();
+						}
 					}
 				}else if(!canCharge){
 //					orderResult = OrderStateEnum.DAICHONG.getValue();

@@ -47,6 +47,7 @@
 		<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 		<a style="text-decoration:none" class="btn btn-success" onClick="platform_add('平台信息添加','/flowsys/platform/platform_add_page.do')" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i> 添加</a>
 		<input value="搜平台" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
+		<span><a href="javascript:;" onclick="updateBalance()" class="btn btn-primary radius">刷新余额</a></span>
 		<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 		</form>
 	</div>
@@ -78,7 +79,10 @@
 			<tbody>
 				<c:forEach items="${resultMap.pagination.records }" var="platform" varStatus="vs">
 					<tr class="text-c">
-						<td class="f-14 td-manage">${platform.epName }</td>
+						<td class="f-14 td-manage <c:if test='${platform.epBalance <=0 }'>c-red</c:if>">
+							<span data-toggle="tooltip" data-placement="top" style="text-decoration: none;" title="${platform.epBalance }">${platform.epName }
+							</span>
+						</td>
 						<td class="f-14 td-manage">${platform.epEngId }</td>
 						<td class="f-14">
 							<c:forEach items="${resultMap.pgServiceTypeEnums }" var="pgServiceTypeEnum" varStatus="vs1">
@@ -207,6 +211,24 @@ function platform_del(url,epId,epName){
 			}
 		});		
 	});
+}
+/**刷新平台余额*/
+function updateBalance(){
+	$.ajax({
+		type: 'POST',
+		url: "/flowsys/platform/platform_balance.do",
+		//data: {epId:epId},
+		success: function(data){
+			layer.alert(data, {
+			    skin: 'layui-layer-lan'
+			    ,closeBtn: 0
+			    ,anim: 4 //动画类型
+		    });
+		},
+		error:function(data) {
+			console.log(data.msg);
+		}
+	});	
 }
 </script> 
 </body>

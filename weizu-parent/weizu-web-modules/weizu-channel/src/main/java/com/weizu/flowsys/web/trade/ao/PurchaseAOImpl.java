@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
@@ -986,15 +987,26 @@ public class PurchaseAOImpl implements PurchaseAO {
 			bi = HSingletonFactory.getSingleton(epEngId, new BaseP(pc,purchasePo.getOrderId(),purchasePo.getChargeTel(),epPo,DateUtil.formatPramm(purchasePo.getOrderArriveTime(), "yyyy-MM-dd")));
 		}
 		ChargeDTO chargeDTO = null;
+		
+		
 		if(bi != null){
+//		long hourTimes = 60*60*1000;//小时/毫秒
+//		long eighteenth = DateUtil.getEndTime().getTime() - hourTimes * 6 ;//当天18:00的毫秒数
+//		if(System.currentTimeMillis())
+//		System.out.println(DateUtil.formatAll(eighteenth));//当天的18:00
+			
+//			bi.getBalance()
 			chargeDTO = bi.charge();
-			if(chargeDTO != null && chargeDTO.getChargeOrder() != null){//更新返回的订单id，方便主动查询
+			if(chargeDTO != null){//更新返回的订单id，方便主动查询
 //				PurchasePo purPo = new PurchasePo();
 //				purPo.setOrderId(purchasePo.getOrderId());
 //				purPo.setOrderIdApi(chargeDTO.getChargeOrder().getOrderIdApi());
 //				purchaseDAO.updatePurchaseState(purPo);
-				System.out.println(chargeDTO.getChargeOrder().getOrderIdApi());//测试打印出对应平台的提单地址
-				logger.config("上游返回的订单号："+ chargeDTO.getChargeOrder().getOrderIdApi());//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
+				
+				if(chargeDTO.getChargeOrder() != null){
+					System.out.println(chargeDTO.getChargeOrder().getOrderIdApi());//测试打印出对应平台的提单地址
+					logger.config("上游返回的订单号："+ chargeDTO.getChargeOrder().getOrderIdApi());//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
+				}
 			}
 		}
 //		ChargeDTO chargeDTO = bi.charge();

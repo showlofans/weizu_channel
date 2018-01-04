@@ -179,7 +179,7 @@ public class AgencyController {
 			}
 			
 			if(chargeAccountPo1 == null && isSupperUser){//超管登陆的时候，默认如果没有对公账户，就给他创建一个对公账户
-				chargeAccountPo1 = new ChargeAccountPo(resultPo.getId(), 0.00d, BillTypeEnum.CORPORATE_BUSINESS.getValue(), System.currentTimeMillis(), agencyBackward.getUserName());
+				chargeAccountPo1 = new ChargeAccountPo(resultPo.getId(), resultPo.getRootAgencyId(),0.00d, BillTypeEnum.CORPORATE_BUSINESS.getValue(), System.currentTimeMillis(), agencyBackward.getUserName());
 				chargeAccountAO.createAccount(chargeAccountPo1);//给超管创建一个
 			}
 			//对私账户

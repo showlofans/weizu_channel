@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.omg.PortableInterceptor.SUCCESSFUL;
 import org.springframework.util.NumberUtils;
 import org.weizu.api.util.HttpRequest;
 
@@ -98,18 +99,30 @@ public class Hongjia implements BaseInterface {
 	public BalanceDTO getBalance() {
     	String params = toBalanceParams();
     	String jsonStr = HttpRequest.sendGet(baseParams.getEpo().getEpBalanceIp(), params);
-    	System.out.println("完整访问地址："+baseParams.getEpo().getEpBalanceIp() +"?"+ params);
-    	System.out.println(jsonStr);
+//    	System.out.println("完整访问地址："+baseParams.getEpo().getEpBalanceIp() +"?"+ params);
+//    	System.out.println(jsonStr);
     	BalanceDTO balanceDTO = null;
     	try {  
             JSONObject obj = JSON.parseObject(jsonStr);
             int rspCode = obj.getIntValue("status");
             String rspMsg = obj.getString("message");
-//            System.out.println(rspCode+"<--->"+rspMsg);
-            
-            JSONObject dataObj = obj.getJSONObject("data");
-            String balance = dataObj.getString("balance").toString();
-            String credit = dataObj.getString("credit");//信用
+            System.out.println(rspCode+"<--->"+rspMsg);
+            double balance = 0d;
+            if(rspCode == 1){
+            	JSONObject dataObj = obj.getJSONObject("data");
+            	if(dataObj != null){
+            		String balanceStr = dataObj.getString("balance").toString();
+            		String credit = dataObj.getString("credit");//信用
+            		balance = Double.parseDouble(balanceStr);
+            		rspCode = OrderResultEnum.SUCCESS.getCode();
+            		rspMsg += "，信用："+credit; 
+            	}else{
+            		rspCode = OrderResultEnum.ERROR.getCode();
+            	}
+            }else{
+            	rspCode = OrderResultEnum.ERROR.getCode();
+            }
+            balanceDTO = new BalanceDTO(balance, rspCode, rspMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 //            StringBuffer sbBalanceMsg = new StringBuffer();
 //    		sbBalanceMsg.append("balance=");
 //    		sbBalanceMsg.append(balance);
@@ -129,7 +142,7 @@ public class Hongjia implements BaseInterface {
 //            String epEngId = baseParams.getEpo().getEpEngId();
 //            String epEngIdTag = epEngId.substring(epEngId.length()-1);
 //            if("0".equals(epEngIdTag)){
-            	balanceDTO = new BalanceDTO(Double.parseDouble(balance), rspCode, rspMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
+//            	balanceDTO = new BalanceDTO(Double.parseDouble(balance), rspCode, rspMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
 //            }else{
 //            	balanceDTO = new BalanceDTO(balance, rspCode, sbBalanceMsg.toString(),BillTypeEnum.CORPORATE_BUSINESS.getValue()); 
 //            }
@@ -143,8 +156,8 @@ public class Hongjia implements BaseInterface {
 	public OrderDTO getOrderState() {
 		String[] paramsArr =  toOrderParamsArr();
 		String requestIp = baseParams.getEpo().getEpOrderStateIp()+"?"+paramsArr[0];
-		System.out.println("访问地址：" + requestIp);
-		System.out.println("参数：" + paramsArr[1]);
+//		System.out.println("访问地址：" + requestIp);
+//		System.out.println("参数：" + paramsArr[1]);
 		String jsonStr = HttpRequest.sendPost(requestIp,paramsArr[1]);
 		OrderDTO orderDTO = null;
 		try {  
@@ -168,7 +181,7 @@ public class Hongjia implements BaseInterface {
             		String message = orderObj.getString("message");//订单描述
             		int status = orderObj.getIntValue("status");
             		
-            		System.out.println("其他结果参数：message="+message+",number="+number);
+            		System.out.println("查询状态其他结果参数：message="+message+",number="+number);
             		switch (status) {
             		case 2://充值中
             			myStatus = OrderStateEnum.CHARGING.getValue();
@@ -229,8 +242,8 @@ public class Hongjia implements BaseInterface {
 	public ChargeDTO charge() {
 		String[] paramsArr = toParamsArr();
 		String requestIp = baseParams.getEpo().getEpPurchaseIp()+"?"+paramsArr[0];
-		System.out.println("访问地址：" + requestIp);
-		System.out.println("参数：" + paramsArr[1]);
+//		System.out.println("访问地址：" + requestIp);
+//		System.out.println("参数：" + paramsArr[1]);
 		 String jsonStr = HttpRequest.sendPost(requestIp, paramsArr[1]);
 		 ChargeDTO chargeDTO = null;
 		 try {  
@@ -355,7 +368,7 @@ public class Hongjia implements BaseInterface {
 		
 		signBuffer.append(jsonStr);
 		signBuffer.append(apiKey);
-		System.out.println("参与签名参数："+signBuffer.toString());
+//		System.out.println("参与签名参数："+signBuffer.toString());
 		try {
 			sign = MD5.getMd5(signBuffer.toString(), MD5.LOWERCASE, "utf-8");
 		} catch (UnsupportedEncodingException e) {
@@ -370,7 +383,7 @@ public class Hongjia implements BaseInterface {
 		paramsBuffer.append(seconds);
 		paramsBuffer.append("&sign=");
 		paramsBuffer.append(sign);
-		System.out.println("sign签名"+sign);
+//		System.out.println("sign签名"+sign);
 		String [] arr = new String []{paramsBuffer.toString(),jsonStr};
 		return arr;
 	}
@@ -434,7 +447,7 @@ public class Hongjia implements BaseInterface {
 		signBuffer.append("timestamp"+seconds);
 		signBuffer.append("userid"+account);
 		signBuffer.append(apiKey);
-		System.out.println("参与签名参数："+signBuffer.toString());
+//		System.out.println("参与签名参数："+signBuffer.toString());
 		try {
 			sign = MD5.getMd5(signBuffer.toString(), MD5.LOWERCASE, "utf-8");
 		} catch (UnsupportedEncodingException e) {
@@ -449,7 +462,7 @@ public class Hongjia implements BaseInterface {
 		paramsBuffer.append(seconds);
 		paramsBuffer.append("&sign=");
 		paramsBuffer.append(sign);
-		System.out.println("sign签名"+sign);
+//		System.out.println("sign签名"+sign);
 		
 //		map.put("sign", sign);
 //		map.put("timestamp", seconds);
@@ -524,7 +537,7 @@ public class Hongjia implements BaseInterface {
 		
 		signBuffer.append(jsonStr);
 		signBuffer.append(apiKey);
-		System.out.println("参与签名参数："+signBuffer.toString());
+//		System.out.println("参与签名参数："+signBuffer.toString());
 		try {
 			sign = MD5.getMd5(signBuffer.toString(), MD5.LOWERCASE, "utf-8");
 		} catch (UnsupportedEncodingException e) {
@@ -539,7 +552,7 @@ public class Hongjia implements BaseInterface {
 		paramsBuffer.append(seconds);
 		paramsBuffer.append("&sign=");
 		paramsBuffer.append(sign);
-		System.out.println("sign签名"+sign);
+//		System.out.println("sign签名"+sign);
 		
 //		return JSON.toJSONString(map);
 		String [] arr = new String []{paramsBuffer.toString(),jsonStr};

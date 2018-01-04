@@ -112,11 +112,19 @@ public class Zxpay implements BaseInterface {
             sbBalanceMsg.append(",");
             sbBalanceMsg.append("flow_balance=");
             sbBalanceMsg.append(flow_balance);
-            
+            double flowBalance = 0.0d;
+            if(rspCode == 2){//查询成功
+            	if(StringHelper.isNotEmpty(flow_balance)){
+            		flowBalance = Double.parseDouble(flow_balance);
+            	}
+            	balanceDTO = new BalanceDTO(flowBalance, OrderResultEnum.SUCCESS.getCode(), rspMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
+            }else{
+            	balanceDTO = new BalanceDTO(flowBalance, OrderResultEnum.ERROR.getCode(), rspMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
+            }
 //            String epEngId = baseParams.getEpo().getEpEngId();
 //            String epEngIdTag = epEngId.substring(epEngId.length()-1);
 //            if("0".equals(epEngIdTag)){
-            	balanceDTO = new BalanceDTO(Double.parseDouble(flow_balance), rspCode, sbBalanceMsg.toString(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
+//            	balanceDTO = new BalanceDTO(Double.parseDouble(flow_balance), rspCode, sbBalanceMsg.toString(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
 //            }else{
 //            	balanceDTO = new BalanceDTO(balance, rspCode, sbBalanceMsg.toString(),BillTypeEnum.CORPORATE_BUSINESS.getValue()); 
 //            }
