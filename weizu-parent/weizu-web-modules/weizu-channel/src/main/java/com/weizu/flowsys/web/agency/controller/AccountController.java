@@ -1,6 +1,5 @@
 package com.weizu.flowsys.web.agency.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -30,15 +29,14 @@ import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.ao.ChargeRecordAO;
 import com.weizu.flowsys.web.agency.ao.CompanyCredentialsAO;
 import com.weizu.flowsys.web.agency.dao.CompanyCredentialsDao;
-import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.CompanyCredentialsPo;
 import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
+import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordPo;
 import com.weizu.flowsys.web.agency.url.AccountURL;
-import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
 
 /**
@@ -184,6 +182,9 @@ public class AccountController {
 			}
 			
 			Pagination<ConsumeRecordPo> pagination =  chargeRecordAO.listConsumeRecord(resultMap,contextId,consumeRecordPo, pageParam);
+
+			List<GroupAgencyRecordPo> groupAgencyList =chargeRecordAO.groupAgencyRecord(contextId, consumeRecordPo);
+			resultMap.put("groupAgencyList", groupAgencyList);
 			resultMap.put("pagination", pagination);
 			resultMap.put("billTypeEnums", BillTypeEnum.toList());
 			resultMap.put("accountTypeEnums", AccountTypeEnum.toConsumeList());

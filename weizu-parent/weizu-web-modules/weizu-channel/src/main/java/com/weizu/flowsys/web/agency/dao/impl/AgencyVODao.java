@@ -242,6 +242,16 @@ public class AgencyVODao extends DaoImpl<AgencyBackwardPo, Integer> implements A
 		return sqlSessionTemplateASS.selectOne("getAgencyByAccountId", accountId);
 	}
 
+	@Override
+	public int countSecondAgency(String userName) {
+		return sqlSessionTemplateASS.selectOne("countSecondAgency", userName);
+	}
+
+	@Override
+	public List<AgencyBackwardPo> getChildrenAgency(String userName) {
+		return sqlSessionTemplateASS.selectList("getChildrenAgency", userName);
+	}
+
 	/**
 	 * @description:  更新密码
 	 * @param paramMap

@@ -142,7 +142,7 @@
 			</thead>
 			<tbody>
 				<c:forEach items="${resultMap.showRateList }" var="showRate" varStatus="vs">
-					<tr class="text-c"><!--  <c:if test='${showRate.showRateState == 1 }'> c-red</c:if> -->
+					<tr class="text-c <c:choose> <c:when test='${showRate.showRateState == 1 }'>danger</c:when><c:otherwise>success</c:otherwise></c:choose>">
 						<td>
 						<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum">
 							<c:if test="${scopeCityEnum.value== showRate.scopeCityCode}">

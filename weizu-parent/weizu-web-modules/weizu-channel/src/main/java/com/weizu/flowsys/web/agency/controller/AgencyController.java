@@ -310,10 +310,19 @@ public class AgencyController {
 	 * @createTime:2017年7月11日 上午9:44:18
 	 */
 	@RequestMapping(value = AgencyURL.RESET_PASS_PAGE)
-	public ModelAndView resetPassPage(HttpServletRequest request, @RequestParam(value="agencyId",required = false)String agencyId, String tag){
+	public ModelAndView resetPassPage(HttpServletRequest request, @RequestParam(value="agencyId",required = false)Integer agencyId){
 		Map<String,Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("tag", tag);
+		String agencyUserName = "";
+		if(agencyId != null){//给子代理商配置
+			AgencyBackwardPo agencyPo = agencyAO.getAgencyById(agencyId);
+			agencyUserName = agencyPo.getUserName();
+		}else{
+			AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+			agencyUserName = agencyVo.getUserName();
+		}
+		resultMap.put("agencyUserName", agencyUserName);
 		resultMap.put("agencyId", agencyId);
+		
 		return new ModelAndView("/agency/reset_pass_page","resultMap",resultMap);
 	}
 	/**
@@ -324,10 +333,10 @@ public class AgencyController {
 	 * @createTime:2017年7月11日 上午10:08:24
 	 */
 	@RequestMapping(value = AgencyURL.RESET_PASS)
-	public void resetPass(HttpServletRequest request, String enterPass,String tag, @RequestParam(value="agencyId",required = false)String agencyId, HttpServletResponse response){
+	public void resetPass(HttpServletRequest request, String enterPass,@RequestParam(value="agencyId",required = false)String agencyId, HttpServletResponse response){
 		int aid = 0;
 		AgencyBackwardVO agencyVo = null;
-		if(tag != "1" && StringHelper.isNotEmpty(agencyId)){//修改下级代理商
+		if(StringHelper.isNotEmpty(agencyId)){//修改下级代理商
 			aid = Integer.parseInt(agencyId);
 		}else{//修改自己的密码
  			agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");

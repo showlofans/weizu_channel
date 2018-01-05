@@ -26,7 +26,11 @@ public enum BusinessOperatorEnum {
 	/**
 	 * zhan-联通
 	 */
-	XIAO_ZHAN(1, "zhan");
+	XIAO_ZHAN(1, "zhan"),
+	/**
+	 *  bing-移动
+	 */
+	TelCome(2, "telCome");
 	
 	private Integer value;
 	private String desc;

@@ -15,11 +15,16 @@
 <body>
 	<form action="" method="" class="form form-horizontal" id="form-article-add">
 		<!-- 不能修改要原样保留的数据 -->
-		<input type="hidden" name="tag" value="${resultMap.tag }" id="tag">
 		<input type="hidden" name="agencyId" value="${resultMap.agencyId }" id="agencyId">
 		<%-- <input type="hidden" value="${resultMap.agencyPo.rootAgencyId }" name="rootAgencyId"> --%>
 		
-		<c:if test="${resultMap.tag == '1' }"><!-- 给自己设置密码 -->
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">密码用户名：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" value="${resultMap.agencyUserName }" class="input-text isContainsSpecialChar" readonly="readonly"  style="width:350px;">
+			</div>
+		</div>
+		<c:if test="${empty resultMap.agencyId }"><!-- 给自己设置密码 -->
 			<input type="hidden" value="${loginContext.userPass }" id="userPass">
 			<div class="row cl">
 				<label class="form-label col-xs-4 col-sm-3">原密码：</label>
@@ -91,8 +96,9 @@ $().ready(function() {
 	                success:function(d){
 	                    if(d=="success"){
 	                        layer.msg('保存成功！');//保存成功提示
-	                        var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
-	                    		parent.layer.close(index); // 执行关闭
+	                       /*  var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+	                    		parent.layer.close(index); // 执行关闭 */
+	                    		removeIframe();
 	                        	//window.location.pathname = "/flowsys/agency/reset_pass_page.do";
 	                    }
 	                    if(d=="error"){

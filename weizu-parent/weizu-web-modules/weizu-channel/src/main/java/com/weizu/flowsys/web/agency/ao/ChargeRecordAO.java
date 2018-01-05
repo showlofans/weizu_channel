@@ -1,13 +1,14 @@
 package com.weizu.flowsys.web.agency.ao;
 
+import java.util.List;
 import java.util.Map;
 
 import com.aiyi.base.pojo.PageParam;
 import com.aiyi.base.pojo.PurchasePo;
 import com.weizu.flowsys.util.Pagination;
-import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
+import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordPo;
 
 public interface ChargeRecordAO {
 	/**
@@ -50,6 +51,16 @@ public interface ChargeRecordAO {
 	 * @createTime:2017年7月3日 下午5:17:57
 	 */
 	Map<String,Object> getMapByConsume(ConsumeRecordPo consumeRecordPo,Integer contextAgencyId);
+	
+	/**
+	 * @description: 代理商订单消费统计
+	 * @param contextAgencyId
+	 * @param consumeRecordPo
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月5日 下午2:24:41
+	 */
+	List<GroupAgencyRecordPo> groupAgencyRecord(Integer contextAgencyId,ConsumeRecordPo consumeRecordPo);
 	
 	/**
 	 * @description: 加载分页消费记录列表

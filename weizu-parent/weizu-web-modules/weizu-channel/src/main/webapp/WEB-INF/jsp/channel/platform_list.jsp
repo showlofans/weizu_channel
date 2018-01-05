@@ -78,8 +78,8 @@
 			</thead>
 			<tbody>
 				<c:forEach items="${resultMap.pagination.records }" var="platform" varStatus="vs">
-					<tr class="text-c">
-						<td class="f-14 td-manage <c:if test='${platform.epBalance <=0 }'>c-red</c:if>">
+					<tr class="text-c <c:if test='${platform.epBalance >0 }'>success</c:if>"><!-- danger -->
+						<td class="f-14 td-manage">
 							<span data-toggle="tooltip" data-placement="top" style="text-decoration: none;" title="${platform.epBalance }">${platform.epName }
 							</span>
 						</td>

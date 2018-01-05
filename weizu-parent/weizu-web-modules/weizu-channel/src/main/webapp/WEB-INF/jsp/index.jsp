@@ -63,7 +63,7 @@
 							</li>
 							<li><a href="/flowsys/agency/logout.do">切换账户</a></li>
 							 <li><a data-href="/flowsys/bankAccount/my_bank_list.do" data-title="申请加款" href="javascript:void(0)" onclick="Hui_admin_tab(this)">申请加款</a></li>
-							<li><a href="javascript:;" onClick="resetPass()">修改密码</a></li>
+							<li><a title="" data-href="/flowsys/agency/reset_pass_page.do" data-title="修改密码" onclick="Hui_admin_tab(this)">修改密码</a></li>
 							<li><a href="/flowsys/agency/logout.do">退出</a></li>
 						</ul>
 					</li>
@@ -229,7 +229,7 @@
 				<li><a title="" data-href="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-title="充值记录" onclick="Hui_admin_tab(this)">余额：<c:if test="${empty chargeAccount.accountBalance && empty chargeAccount1.accountBalance }">0.00</c:if> ${chargeAccount.accountBalance + chargeAccount1.accountBalance}</a></li>
 				<li><a href="/flowsys/agency/logout.do">切换账户</a></li>
 				 <li><a data-href="/flowsys/bankAccount/my_bank_list.do" data-title="申请加款" href="javascript:void(0)" onclick="Hui_admin_tab(this)">申请加款</a></li>
- 				<li><a title="" data-href="/flowsys/agency/reset_pass_page.do?tag=1" data-title="修改密码" onclick="Hui_admin_tab(this)"><%-- ${loginContext.userName} --%>修改密码 </a></li>
+ 				<li><a title="" data-href="/flowsys/agency/reset_pass_page.do" data-title="修改密码" onclick="Hui_admin_tab(this)"><%-- ${loginContext.userName} --%>修改密码 </a></li>
 				<!-- <li><a href="javascript:;" onClick="resetPass()">修改密码</a></li> -->
 				<li><a href="/flowsys/agency/logout.do">退出</a></li>
 			</ul>
@@ -442,7 +442,7 @@ $(function(){
     });
 } */
 /**修改密码*/
- function resetPass(){
+/*  function resetPass(){
 	layer.open({
         type: 2,
         title: "重置密码",
@@ -454,7 +454,7 @@ $(function(){
            // location.reload();
         }
     });
-} 
+}  */
 
 </script> 
 </body>

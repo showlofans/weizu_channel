@@ -12,6 +12,7 @@ import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.web.agency.dao.ChargeRecordDaoInterface;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
+import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordPo;
 
 @Repository("chargeRecordDao")
 public class ChargeRecordDao extends DaoImpl<ChargeRecordPo, Long> implements ChargeRecordDaoInterface {
@@ -74,6 +75,12 @@ public class ChargeRecordDao extends DaoImpl<ChargeRecordPo, Long> implements Ch
 	@Override
 	public int crt_addList(List<ChargeRecordPo> recordPoList) {
 		return sqlSessionTemplate.insert("crt_addList", recordPoList);
+	}
+
+	@Override
+	public List<GroupAgencyRecordPo> groupAgencyRecord(
+			Map<String, Object> paramsMap) {
+		return sqlSessionTemplate.selectList("groupAgencyRecord", paramsMap);
 	}
 	
 }
