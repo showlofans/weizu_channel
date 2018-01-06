@@ -139,12 +139,10 @@ public class Lefeng implements BaseInterface {
 	            int rspCode = 0;
 	            ProductCodePo pc = baseParams.getProductCodePo();
 	            if("0000".equals(tipCode)){
-	            	rspCode = OrderResultEnum.SUCCESS.getCode();
 	            	//用我这边默认的对私账户充值
-	            	chargeDTO = new ChargeDTO(rspCode, tipMsg, new ChargeOrder(null, baseParams.getChargeTel(), pc.getProductCode(), billType));
+	            	chargeDTO = new ChargeDTO(OrderResultEnum.SUCCESS.getCode(), tipMsg, new ChargeOrder(null, baseParams.getChargeTel(), pc.getProductCode(), billType));
 	            }else{
-	            	rspCode = OrderResultEnum.ERROR.getCode();
-	            	chargeDTO = new ChargeDTO(rspCode, tipMsg, new ChargeOrder(null, baseParams.getChargeTel(), pc.getProductCode(), billType));
+	            	chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), tipMsg, new ChargeOrder(null, baseParams.getChargeTel(), pc.getProductCode(), billType));
 	            	// 最后输出到控制台  
 	            	System.out.println(tipCode+"<--->"+tipMsg);  
 	            }

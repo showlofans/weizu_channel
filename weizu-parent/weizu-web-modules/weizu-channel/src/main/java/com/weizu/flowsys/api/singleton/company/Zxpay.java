@@ -265,11 +265,12 @@ public class Zxpay implements BaseInterface {
 	            	// 最后输出到控制台  
 	            	if(tipCode == 625){//充值失败,不需直接返失败
 	            		System.out.println("返回码描述信息codeMsg:重复流水号");
+	            		tipMsg = "返回码描述信息codeMsg:重复流水号";
 //	            		System.out.println("充值未直接返回失败："+ tipMsg);
 		            }else{//直接返回失败
 		            	System.out.println(tipCode+"<--->"+tipMsg);  
-		            	chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), tipMsg, new ChargeOrder(null, baseParams.getChargeTel(), baseParams.getProductCodePo().getPgSize().toString(), BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
 		            }
+	            	chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), tipMsg, new ChargeOrder(null, baseParams.getChargeTel(), baseParams.getProductCodePo().getPgSize().toString(), BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
 //	            	String codeMsg = "";
 //	            	//用我这边默认的对私账户充值
 //		            switch (tipCode) {

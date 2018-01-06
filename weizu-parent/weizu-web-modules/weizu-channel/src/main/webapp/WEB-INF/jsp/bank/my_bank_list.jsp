@@ -61,7 +61,7 @@
 				<c:when test="${not empty resultMap.bankList}">
 					<c:forEach items="${resultMap.bankList }" var="bank" varStatus="vst">
 						<tr class="text-c">
-							<td>${bank.remittanceWay }</td>
+							<td><span data-toggle="tooltip" data-placement="top" title="${bank.lastAccessStr }">${bank.remittanceWay }</span></td>
 							<td>${bank.remittanceBankAccount }</td>
 							<td>${bank.accountName }</td>
 							<td>
@@ -82,6 +82,7 @@
 										<a data-toggle="tooltip" data-placement="top" style="text-decoration:none"  title="设置默认" href="javascript:void(0)" onclick="changePolarity('/flowsys/bankAccount/change_bank_polarity.do',${bank.id },0)"><i class="Hui-iconfont">&#xe607;</i></a>
 									</c:otherwise>
 								</c:choose>
+								<a data-href="/flowsys/bankAccount/transfer_record.do?bankId=${bank.id }" style="text-decoration:none" data-title="转账记录" title="转账记录" onclick="Hui_admin_tab(this)">转账记录</a>
 								<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="transfer('${agency.id}')" href="javascript:;" title="卡充值"><i class="Hui-iconfont">&#xe604;</i></a> --%>
 								<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="bindAgency('${agency.id}')" href="javascript:;" title="绑定代理商"><i class="Hui-iconfont">&#xe725;</i></a> --%>
 								<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" onClick="account_charge('账户充值',${agency.accountId })" href="javascript:;" title="设为默认"><i class="Hui-iconfont">&#xe60e;</i></a> --%> 
@@ -141,7 +142,7 @@
 				<c:when test="${not empty resultMap.bankList0}">
 					<c:forEach items="${resultMap.bankList0 }" var="bank" varStatus="vst">
 						<tr class="text-c">
-							<td>${bank.remittanceWay }</td>
+							<td><span data-toggle="tooltip" data-placement="top" title="${bank.lastAccessStr }">${bank.remittanceWay }</span></td>
 							<td>${bank.remittanceBankAccount }</td>
 							<td>${bank.accountName }</td>
 							<td>
@@ -163,6 +164,7 @@
 										<a data-toggle="tooltip" data-placement="top" style="text-decoration:none"  title="设置默认" href="javascript:void(0)" onclick="changePolarity('/flowsys/bankAccount/change_bank_polarity.do',${bank.id },0)"><i class="Hui-iconfont">&#xe607;</i></a>
 									</c:otherwise>
 								</c:choose>
+								<a data-href="/flowsys/bankAccount/transfer_record.do?bankId=${bank.id }" style="text-decoration:none" data-title="转账记录" title="转账记录" onclick="Hui_admin_tab(this)">转账记录</a>
 								<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="transfer('${agency.id}')" href="javascript:;" title="卡充值"><i class="Hui-iconfont">&#xe604;</i></a> --%>
 								<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="bindAgency('${agency.id}')" href="javascript:;" title="绑定代理商"><i class="Hui-iconfont">&#xe725;</i></a> --%>
 								<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" onClick="account_charge('账户充值',${agency.accountId })" href="javascript:;" title="设为默认"><i class="Hui-iconfont">&#xe60e;</i></a>  --%>
@@ -181,6 +183,27 @@
 			</c:choose>
 		</tbody>
 	</table>
+	<%-- <c:if test="${empty resultMap.bankList0 && empty resultMap.bankList}"> --%>
+	<textarea readonly="readonly" style="height:350px;  " name="" cols="" rows="" class="textarea"  placeholder="温馨提示：平台支持自助加款模式，为了更好的服务，我司自助加款需先添加一个打款方式，
+
+第一步：添加银行卡/微信/支付宝/ 它有二个作用
+
+1：自己添加了打款方式，可以显示给下游，
+   这样下游就知道你的收款方式。方便给您打款
+
+2：方便上游核实在某一时间段是否收到对应的款项。以免造成损失
+
+对账余额：只是方便您自己对账，也可随意填写
+
+是否默认选项，不默认（不默认的意思是不默认这个为你的收款方式，这样下游就不能看到您的这个收款方式）
+              默认 （默认的意思就是，默认显示给所有下游，下游可以根据您添加的收款账户给您打款）
+
+
+第二步：当您添加了之后，您能在您添加的银行卡信息旁边看到一个（请求充值）点击过后您就能看到您上游的收款方式
+输入打款金额 选择打款时间， 点击（申请）上游就能收到您的加款请求，
+
+切记，如手机登入后台，请选择（手机登入）有一些功能只有（手机登入才能显示）"></textarea>
+<%-- </c:if> --%>
 </div>
 <footer class="footer mt-20">
 	<div class="container">

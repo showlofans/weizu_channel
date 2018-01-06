@@ -306,19 +306,18 @@ public class AccountController {
 			resultMap.put("unconfirmList", list);
 			resultMap.put("confirmStateEnums", ConfirmStateEnum.toList());
 			//处理消息
-			Object obj = request.getSession().getAttribute("unconfirmSize");
-			int unconfirmSize = 0;
-			if(obj != null){
-				unconfirmSize = (int) obj;
-			}
-			/*unconfirmSize -= 1;*/
-			request.getSession().setAttribute("unconfirmSize", unconfirmSize);
-			if(unconfirmSize == 0){
-				Object obj2 = request.getSession().getAttribute("msgNum");
-				if(obj2 != null){
-					int msgNum = (int)obj2;
-					//request.getSession().setAttribute("unconfirm", null);//设置消息为不显示
-					request.getSession().setAttribute("msgNum", msgNum-1);//设置总消息数
+			if(list != null){
+				int unconfirmSize = list.size();
+				if(unconfirmSize > 0){
+					//request.getSession().setAttribute("unconfirmSize", 0);
+					Object obj2 = request.getSession().getAttribute("msgNum");
+					if(obj2 != null){
+						int msgNum = (int)obj2;
+						if(msgNum > 0){
+							request.getSession().setAttribute("msgNum", msgNum-unconfirmSize);//设置总消息数
+						}
+						//request.getSession().setAttribute("unconfirm", null);//设置消息为不显示
+					}
 				}
 			}
 			return new ModelAndView("/account/unconfirm_account_list","resultMap",resultMap);

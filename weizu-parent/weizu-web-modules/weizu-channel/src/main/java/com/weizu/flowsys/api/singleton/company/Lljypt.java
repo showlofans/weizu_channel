@@ -54,8 +54,12 @@ public class Lljypt implements BaseInterface {
 	            if("0".equals(epEngId.substring(epEngId.length()-1))){//英文标识最后一个字符是0表示对私
 	            	billType = BillTypeEnum.BUSINESS_INDIVIDUAL.getValue();
 	            }
-	            //用我这边默认的对私账户充值
-	            chargeDTO = new ChargeDTO(tipCode, tipMsg, new ChargeOrder(orderIdApi, baseParams.getChargeTel(), baseParams.getProductCodePo().getProductCode(), billType));
+	            if(tipCode == 0){//提交成功
+	            	//用我这边默认的对私账户充值
+	            	chargeDTO = new ChargeDTO(OrderResultEnum.SUCCESS.getCode(), tipMsg, new ChargeOrder(orderIdApi, baseParams.getChargeTel(), baseParams.getProductCodePo().getProductCode(), billType));
+	            }else{
+	            	chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), tipMsg, new ChargeOrder(orderIdApi, baseParams.getChargeTel(), baseParams.getProductCodePo().getProductCode(), billType));
+	            }
 			    // 最后输出到控制台  
 	            System.out.println(tipCode+"<--->"+tipMsg);  
 	  

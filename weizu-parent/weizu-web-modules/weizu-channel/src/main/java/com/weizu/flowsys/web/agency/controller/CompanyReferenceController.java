@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.operatorPg.enums.AgencyForwardEnum;
 import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BusinessOneEnum;
@@ -55,7 +56,8 @@ public class CompanyReferenceController {
 	@RequestMapping(value=CRMURL.CRM_ADD_PAGE)
 	public ModelAndView crmAddPage(HttpServletRequest request){
 		Map<String,Object> resultMap = new HashMap<String,Object>();
-		resultMap.put("agencyTagEnums", AgencyTagEnum.toList());
+//		resultMap.put("agencyTagEnums", AgencyTagEnum.toList());//
+//		resultMap.put("crmPlatformTagEnums", CrmPlatformTagEnum.toList());//是否已对接
 		return new ModelAndView("/agency/crm_add_page", "resultMap", resultMap);
 	}
 	
@@ -72,6 +74,9 @@ public class CompanyReferenceController {
 	@RequestMapping(value=CRMURL.CRM_ADD)
 	public String crmAdd(HttpServletRequest request,CompanyReferencePo companyReferencePo){
 		companyReferencePo.setLastAccess(System.currentTimeMillis());
+		if(companyReferencePo.getCrmPlatformTag() == null){
+			companyReferencePo.setCrmPlatformTag(CrmPlatformTagEnum.PLATFORM_USER.getValue());
+		}
 		int res = companyReferenceDao.add(companyReferencePo);
 		String result = "error";
 		if(res > 0){
@@ -98,6 +103,25 @@ public class CompanyReferenceController {
 		resultMap.put("businessOneEnums", BusinessOneEnum.toList());
 		return new ModelAndView("/agency/crm_add_page", "resultMap", resultMap);
 	}
+	/**
+	 * @description: 客户信息编辑页面 
+	 * @param request
+	 * @param id
+	 * @param agencyForward
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月6日 下午3:38:37
+	 */
+	@RequestMapping(value=CRMURL.CRM_INFO_EDIT_PAGE)
+	public ModelAndView crmInfoEditPage(HttpServletRequest request,Integer id,Integer agencyForward){
+		Map<String,Object> resultMap = new HashMap<String,Object>();
+		CompanyReferencePo companyReferencePo = companyReferenceDao.get(id);
+		resultMap.put("companyReferencePo", companyReferencePo);//id 描述
+		
+		resultMap.put("agencyForward", agencyForward);
+//		resultMap.put("AgencyForwardEnum", AgencyForwardEnum.toList());
+		return new ModelAndView("/agency/crm_info_edit_page", "resultMap", resultMap);
+	}
 	
 	/**
 	 * @description: 客户基本信息更新
@@ -109,12 +133,12 @@ public class CompanyReferenceController {
 	 */
 	@ResponseBody
 	@RequestMapping(value=CRMURL.CRM_EDIT)
-	public String crmEdit(HttpServletRequest request,CompanyReferencePo companyReferencePo){
+	public String crmEdit(HttpServletRequest request,CompanyReferencePo companyReferencePo){//,@RequestParam(value="agencyForward",required=false)Integer agencyForward
 		companyReferencePo.setLastAccess(System.currentTimeMillis());
 		int res = companyReferenceDao.updateLocal(companyReferencePo);
 		String result = "error";
-		if(res > 0){
 			result = "success";
+			if(res > 0){
 		}
 		return result;
 	}
@@ -178,8 +202,7 @@ public class CompanyReferenceController {
 		Pagination<CompanyReferencePo> pagination = companyReferenceAO.list(companyReferencePo, pageParam);
 		resultMap.put("pagination", pagination);
 		resultMap.put("params", companyReferencePo);
-		
-		resultMap.put("crmPlatformTagEnums", CrmPlatformTagEnum.toList());
+		resultMap.put("crmPlatformTagEnums", CrmPlatformTagEnum.toList());//是否已对接
 		return new ModelAndView("/agency/crm_list", "resultMap", resultMap);
 	}
 }

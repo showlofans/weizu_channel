@@ -40,6 +40,10 @@ public class BankAccountPo extends Po implements Cloneable{
 	private Integer billType;			//页面参数：绑定账户带票类型
 	@TempField
 	private Double accountBalance;		//页面参数：绑定账户余额带票类型
+	
+	private Long lastAccess;			//最后更新时间
+	@TempField
+	private String lastAccessStr;		//页面展示时间
 
 	public BankAccountPo(Integer accountId, String remittanceWay,
 			String remittanceBankAccount, String accountName,
@@ -67,7 +71,22 @@ public class BankAccountPo extends Po implements Cloneable{
 		return pvo;
 	}
 
-	
+	public Long getLastAccess() {
+		return lastAccess;
+	}
+
+	public void setLastAccess(Long lastAccess) {
+		this.lastAccess = lastAccess;
+	}
+
+	public String getLastAccessStr() {
+		return lastAccessStr;
+	}
+
+	public void setLastAccessStr(String lastAccessStr) {
+		this.lastAccessStr = lastAccessStr;
+	}
+
 	/**
 	 * @description: 修改引用账户余额
 	 * @param minusAmount

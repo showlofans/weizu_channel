@@ -30,12 +30,13 @@
     <result column="agency_id" property="agencyId" jdbcType="INTEGER" />
     <result column="use_state" property="useState" jdbcType="INTEGER" />
     <result column="polarity" property="polarity" jdbcType="INTEGER" />
+    <result column="last_access" property="lastAccess" jdbcType="BIGINT" />
 	<!-- 账户信息 -->
     <result column="bill_type" property="billType" jdbcType="INTEGER" /> 
     <result column="account_balance" property="accountBalance" jdbcType="DOUBLE" /> 
   </resultMap>
   <sql id="Other_Column_List" >
-    bct.id, bct.account_id, bct.remittance_way,bct.polarity, bct.remittance_bank_account, bct.account_name,reference_balance,bct.agency_id,bct.use_state,act.bill_type,act.account_balance 
+    bct.id, bct.account_id, bct.remittance_way,bct.polarity, bct.remittance_bank_account, bct.account_name,reference_balance,bct.agency_id,bct.use_state,act.bill_type,act.account_balance,bct.last_access 
   </sql>
   
   <resultMap id="SimpleResultMap" type="com.weizu.flowsys.web.agency.pojo.BankAccountPo" >

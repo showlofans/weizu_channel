@@ -1,8 +1,8 @@
 package com.weizu.flowsys.web.agency.controller;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -22,6 +22,7 @@ import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.ConfirmStateTransferEnum;
 import com.weizu.flowsys.operatorPg.enums.InOrOutEnum;
+import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.ao.BankAccountAO;
 import com.weizu.flowsys.web.agency.ao.TransferRecAO;
 import com.weizu.flowsys.web.agency.dao.BankAccountDaoInterface;
@@ -30,8 +31,8 @@ import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.BankAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.TransferRecordPo;
+import com.weizu.flowsys.web.agency.pojo.TransferRecordVO;
 import com.weizu.flowsys.web.agency.url.BankAccountURL;
-import com.weizu.web.foundation.DateUtil;
 
 @Controller
 @RequestMapping(value=BankAccountURL.MODEL_NAME)
@@ -353,8 +354,27 @@ public class BankAccountController {
 		}else{
 			pageParam = new PageParam(pageNoLong, 10);
 		}
-		
 		transferRecAO.getTransferRec(bankId, direction,confirmState,pageParam, resultMap);
+		
+		//待确认转入==转账消息查看==更新消息记录数
+		if(ConfirmStateTransferEnum.ON_CONFIRM.getValue().equals(confirmState) && InOrOutEnum.IN.getValue().equals(direction)){
+			Pagination<TransferRecordVO> pagination = (Pagination<TransferRecordVO>)resultMap.get("pagination");
+			List<TransferRecordVO> records = pagination.getRecords();
+			if(records!= null){
+				int unconfirmSize = records.size();
+				if(unconfirmSize > 0){
+					//request.getSession().setAttribute("unconfirmSize", 0);
+					Object obj2 = request.getSession().getAttribute("msgNum");
+					if(obj2 != null){
+						int msgNum = (int)obj2;
+						if(msgNum > 0){
+							request.getSession().setAttribute("msgNum", msgNum-unconfirmSize);//设置总消息数
+						}
+						//request.getSession().setAttribute("unconfirm", null);//设置消息为不显示
+					}
+				}
+			}
+		}
 		
 		BankAccountPo bankPo = bankAccountDao.get(bankId);
 		resultMap.put("bankPo", bankPo);

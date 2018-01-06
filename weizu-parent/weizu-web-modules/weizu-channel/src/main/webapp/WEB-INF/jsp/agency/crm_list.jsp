@@ -83,15 +83,26 @@
 								${crm.crmName }
 							</span>
 						</td>
-						<td>${crm.crmGroupMark }</td>
-						<td>${crm.crmForwardDesc }</td>
-						<td>${crm.crmBackwardDesc }</td>
+						<td>${crm.crmGroupMark}</td>
+						<td>
+							<a style="text-decoration:none" onclick="editInfo('/flowsys/crm/crm_info_edit_page.do?id=${crm.id}&agencyForward=1','${crm.crmName }-上游信息编辑')" href="javascript:;" >
+								${fn:substring(crm.crmForwardDesc,0,100)}
+							</a> 
+						</td>
+						<td>
+							<a style="text-decoration:none"  onclick="editInfo('/flowsys/crm/crm_info_edit_page.do?id=${crm.id}&agencyForward=0','${crm.crmName }-上游信息编辑')" href="javascript:;" >
+							${fn:substring(crm.crmBackwardDesc,0,100)}
+							</a>
+							<%-- <span data-container="body" data-toggle="popover" data-placement="left" data-content="${crm.crmBackwardDesc }">
+							${fn:substring(crm.crmBackwardDesc,0,100)}
+							</span> --%>
+						</td>
 						<td class="td-status"><c:forEach items="${resultMap.crmPlatformTagEnums }" var="crmPlatformTagEnum" varStatus="vs1">
 						<c:if test="${crm.crmPlatformTag == crmPlatformTagEnum.value }"> ${crmPlatformTagEnum.desc }</c:if>
 						</c:forEach></td>
 						<td>${crm.lastAccessStr }</td>
 						<td class="td-manage">
-							<a style="text-decoration:none" class="ml-5" onClick="produce_del('/flowsys/crm/del_crm.do',${crm.id })" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+							<a style="text-decoration:none" class="ml-5" onClick="crm_del('/flowsys/crm/del_crm.do',${crm.id })" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
 							<a style="text-decoration:none" class="ml-5" data-title='客户资料编辑' onClick="crm_add(this,'客户资料编辑','/flowsys/crm/crm_edit_page.do',${crm.id })" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a>			
 						</td>
 					</tr>
@@ -127,8 +138,22 @@
 <script src="/view/lib/bootstrap-datetimepicker.min.js"></script>
 <script src="/view/lib/bootstrap-datetimepicker.zh-CN.js"></script> -->
 <script type="text/javascript">
+function editInfo(url,title){
+	layer.open({
+        type: 2,
+        title: title,
+        area: ['40%', '80%'],
+        maxmin: false,
+        closeBtn: 1,
+        content: url,
+         end: function () {
+            location.reload();
+        }
+    });
+}
+
 /*客户信息-删除*/
-function produce_del(url,id){
+function crm_del(url,id){
 	layer.confirm('确认要删除吗？',function(index){
 		$.ajax({
 			type: 'POST',
