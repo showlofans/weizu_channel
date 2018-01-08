@@ -74,6 +74,7 @@ function save(){
             if(d == 'success'){
                 layer.msg('保存成功！');//保存成功提示
 	            parent.layer.close(index); ////执行关闭
+	            //parent.location.reload();
             }else{
                 layer.msg('保存异常!');
             }

@@ -37,6 +37,7 @@ import com.weizu.flowsys.web.agency.pojo.CompanyCredentialsPo;
 import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordPo;
 import com.weizu.flowsys.web.agency.url.AccountURL;
+import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
 
 /**
@@ -324,6 +325,35 @@ public class AccountController {
 		}
 		return new ModelAndView("/account/unconfirm_account_list");
 	}
+	/**
+	 * @description: 对公账户审核信息查看页面-根据代理商
+	 * @param request
+	 * @param agencyId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月8日 下午1:50:05
+	 */
+	@RequestMapping(value=AccountURL.CONFIRM_ACCOUNT_INFO)
+	public ModelAndView confirmAccountInfo(HttpServletRequest request,Integer agencyId){
+		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		if(agencyVo != null)
+		{
+			CompanyCredentialsPo companyCredentialsPo = chargeAccountAO.getCredentialByAgency(agencyId, agencyVo.getId());
+//			CompanyCredentialsPo ccpo = companyCredentialsDao.checkCraatedByAgencyId(agencyVo.getId());
+			if(companyCredentialsPo != null){
+				companyCredentialsPo.setConfirmTimeStr(DateUtil.formatAll(companyCredentialsPo.getConfirmTime()));
+			}
+			resultMap.put("companyCredentialsPo", companyCredentialsPo);
+			ChargeAccountPo billAccountPo = chargeAccountAO.getAccountByAgencyId(agencyId, BillTypeEnum.CORPORATE_BUSINESS.getValue());//获得对公账户余额
+			resultMap.put("billAccountPo", billAccountPo);
+			resultMap.put("confirmStateEnums", ConfirmStateEnum.toList());
+			//处理消息
+			return new ModelAndView("/account/credential_show","resultMap",resultMap);
+		}
+		return new ModelAndView("/account/credential_show");
+	}
+	
 	/**
 	 * @description: 开通对公账户
 	 * @return

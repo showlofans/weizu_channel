@@ -27,7 +27,7 @@
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/style.css" />
  </head>
  <body>
-  <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 在线充值 <span class="c-gray en">&gt;</span> 批量充值<!--  <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> --></nav>
+  <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 在线充值 <span class="c-gray en">&gt;</span>流量充值 <span class="c-gray en">&gt;</span> 批量充值<!--  <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a> --></nav>
  <div class="page-container">
  <form class="form form-horizontal" name="form-import" action="?"  id="form-import" enctype="multipart/form-data">
 	<div class="row cl">
@@ -89,6 +89,19 @@
 				</div> -->
 			</div>
 		</div> --%>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>业务类型：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<span class="select-box inline">
+						<select id="select-servce-type" name="serviceType" onchange="ifAjaxPg()" style="width:150px;" class="select">
+							<option value="">请选择</option>
+							<c:forEach items="${resultMap.serviceTypeEnums }" var="typeEnum" varStatus="vs1">
+								<option value="${typeEnum.value }" >${typeEnum.desc }</option>
+							</c:forEach>
+						</select>
+					</span>
+			</div>
+		</div>
 	<div class="row cl" id="pg">
 		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流量面值：</label>
 		<div class="formControls col-xs-8 col-sm-9">

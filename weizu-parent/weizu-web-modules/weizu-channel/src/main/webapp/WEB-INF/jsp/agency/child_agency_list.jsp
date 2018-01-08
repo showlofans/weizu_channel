@@ -53,9 +53,9 @@
 	                  	<em class="inputto">至</em>
 	            <input style="width:150px" type="text" class="input-text" name="end_datetime"   value="2017-05-26 23:59:59"  onClick="WdatePicker({startDate:'%y-%M-%d 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/> -->
 				<c:if test="${resultMap.params.agencyTag == 1 }"><!-- 认证用户页面 -->
-				账户类型：<span class="select-box inline">
+				<span class="select-box inline">
 							<select name="billType"  id="billType" class="select" onchange="formSub()">
-								<option value="">请选择</option>
+								<option value="">账户类型</option>
 								<c:forEach items="${resultMap.billTypeEnums }" var="billEnum" varStatus="vs1">
 									<option value="${billEnum.value }" <c:if test="${billEnum.value == resultMap.params.billType }"> selected</c:if>>${billEnum.desc }</option>
 								</c:forEach>
@@ -107,20 +107,21 @@
 						<td>
 						<c:choose>
 							<c:when test="${agency.billType == 0 }">
-								<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
-									<c:if test="${billTypeEnum.value == 0 }">
+								<%-- <c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+									<c:if test="${billTypeEnum.value == 0 }"> --%>
 										<span class="c-red" ><!-- data-toggle="tooltip"   data-placement="right" title="${billTypeEnum.desc }" -->
 										${agency.userName }</span>
-									</c:if>
-								</c:forEach>
+									<%-- </c:if>
+								</c:forEach> --%>
 							</c:when>
 							<c:otherwise>
-								<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
-								<c:if test="${billTypeEnum.value == 1 }">
+								<%-- <c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+								<c:if test="${billTypeEnum.value == 1 }"> --%>
 									<span class="c-green"><!--  data-toggle="tooltip"  data-placement="right" title="${billTypeEnum.desc }" -->
-									${agency.userName }</span>
-								</c:if>
-								</c:forEach>
+									<a style="cursor:pointer;text-decoration:none;" class="text-primary" title="查看认证信息" data-toggle="tooltip" data-placement="top"  onclick="credential_show('${agency.userName }','/flowsys/account/confirm_account_info.do?agencyId=${agency.id }','500','600')">${agency.userName }</a>
+									</span>
+								<%-- </c:if>
+								</c:forEach> --%>
 							</c:otherwise>
 						</c:choose>
 						</td>
@@ -269,6 +270,13 @@ function editAgency(id){
             //location.reload();
         }
     });
+}
+
+/*认证信息-查看*/
+function credential_show(title,url,w,h){
+	//url += '?agencyId='+id;
+	title += '-认证信息查看';
+	layer_show(title,url,w,h);
 }
 </script> 
 </body>
