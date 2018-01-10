@@ -2,6 +2,7 @@
 //
 //import java.io.UnsupportedEncodingException;
 //import java.net.URLDecoder;
+//import java.util.Arrays;
 //import java.util.Map;
 //
 //import com.alibaba.fastjson.JSON;
@@ -28,8 +29,11 @@
 ////			e.printStackTrace();
 ////		}
 //		
-//		Long ts = 1514425785l;
-//		ts *= 1000;
-//		System.out.println(DateUtil.formatAll(ts));
+////		Long ts = 1514425785l;
+////		ts *= 1000;
+////		System.out.println(DateUtil.formatAll(ts));
+////		String[]  attr = new String []{"mch_id","phone","goods_id","out_trade_no","notify_url","mch_time"};
+//		String[]  attr = new String []{"mch_id","out_trade_no","time"};
+//		StringUtil2.printSortedArr(attr);
 //	}
 //}

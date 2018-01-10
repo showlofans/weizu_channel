@@ -1,5 +1,6 @@
 package com.weizu.flowsys.util;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -240,6 +241,24 @@ public class StringUtil2 {
 			map.put(key, value);
 		}
 		return map;
+	}
+	/**
+	 * @description: 打印升序排列的数组
+	 * @param attr
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月10日 下午4:41:24
+	 */
+	public static void printSortedArr(String[] attr) {
+		Arrays.sort(attr);
+		StringBuffer sb = new StringBuffer();
+		sb.append("{");
+		for (String string : attr) {
+			sb.append("\"");
+			sb.append(string);
+			sb.append("\",");
+		}
+		sb.append("}");
+		System.out.println(sb.toString());
 	}
 	
 	

@@ -214,7 +214,9 @@
 				</c:choose>
 				<c:if test="${chargeAccount1 == null && (companyAccount == 'yes' || power == 'no' ) }">
 					<%-- <c:choose>
-						<c:when test="${loginContext.agencyTag != 1 }"></c:when>
+						<c:when test="${loginContext.agencyTag != 1 }">
+						
+						</c:when>
 					</c:choose> --%>
 					<li><a data-href="/flowsys/account/open_company_account_page.do" data-title="开通对公账号" href="javascript:void(0)">开通对公账号</a></li>
 				</c:if>

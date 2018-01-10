@@ -36,6 +36,12 @@ public class MyConstants {
 	 * 红茄科技平台英文标志
 	 */
 	public final static String HONGJIA_ENG = "Hongjia";
+	/**
+	 * 流量汇平台英文标志
+	 */
+	public final static String LIULIANGHUI_ENG = "LiuLiangHui";
+	
+	
 	
 	
 	
