@@ -30,6 +30,7 @@ import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
+import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.web.channel.dao.IProductCodeDAO;
 import com.weizu.flowsys.web.channel.dao.impl.ProductCodeDAOImpl;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
@@ -69,15 +70,14 @@ public class LiuLiangHui implements BaseInterface {
 			 	}
 			 	System.out.println(jsonStr);
 	            JSONObject obj = JSON.parseObject(jsonStr);
-	            Long code = obj.getLongValue("code");
+	            int code = obj.getIntValue("code");
 	            String message = obj.getString("code_desc");
-	            boolean isCode = code.equals("0");
 //	            String orderId = obj.getString("out_trade_no");
 	          //用我这边默认的对私账户充值
-	            if(isCode){
+	            if(code == 0){
 	            	chargeDTO = new ChargeDTO(OrderResultEnum.SUCCESS.getCode(), message, new ChargeOrder(baseParams.getOrderId().toString(), baseParams.getChargeTel(), baseParams.getProductCodePo().getProductCode(), 0));
 	            }
-	            else if(code.equals("-1")){
+	            else if(code == -1){
 	            	System.out.println("充值余额不zu");
 	            }
 	            else{
@@ -154,7 +154,7 @@ public class LiuLiangHui implements BaseInterface {
 	@Override
 	public OrderDTO getOrderState() {
 		String paramsStr =  toOrderParams();
-		String jsonStr = HttpRequest.sendGet(baseParams.getEpo().getEpOrderStateIp(),paramsStr);
+		String jsonStr = HttpRequest.sendPost(baseParams.getEpo().getEpOrderStateIp(),paramsStr);
 		System.out.println(baseParams.getEpo().getEpOrderStateIp() +'?' + paramsStr);
 		OrderDTO orderDTO = null;
 		String statusMsg = "";
@@ -249,9 +249,11 @@ public class LiuLiangHui implements BaseInterface {
 		StringBuffer signBuffer = new StringBuffer();
 		signBuffer.append("goods_id=");
 		signBuffer.append(pc.getProductCode());
-		signBuffer.append("&mch_id=");
-		signBuffer.append(platformPo.getEpUserName());
-		signBuffer.append("&mch_time=");
+		signBuffer.append("&");
+		signBuffer.append(platformPo.getEpOtherParams());//商户号
+//		signBuffer.append("&mch_id=");
+//		signBuffer.append(platformPo.getEpUserName());
+		signBuffer.append("mch_time=");
 		String timeStr = DateUtil.formatAll(System.currentTimeMillis());
 		signBuffer.append(timeStr);
 		if(CallBackEnum.POSITIVE.getValue().equals(platformPo.getEpCallBack()) && StringHelper.isNotEmpty(platformPo.getEpCallBackIp())){
@@ -271,7 +273,8 @@ public class LiuLiangHui implements BaseInterface {
 		//{"goods_id","mch_id","mch_time","notify_url","out_trade_no","phone",}
 		Map<String,Object> signMap = new HashMap<String, Object>();
 		signMap.put("goods_id", pc.getProductCode());
-		signMap.put("mch_id", platformPo.getEpUserName());
+		String refer = StringUtil2.getParamsByCharSeq(platformPo.getEpOtherParams(), "mch_id");
+		signMap.put("mch_id", refer.substring(refer.indexOf("=")+1)); 
 		signMap.put("mch_time", timeStr);
 		if(CallBackEnum.POSITIVE.getValue().equals(platformPo.getEpCallBack()) && StringHelper.isNotEmpty(platformPo.getEpCallBackIp())){
 			signMap.put("notify_url", platformPo.getEpCallBackIp());
@@ -284,36 +287,36 @@ public class LiuLiangHui implements BaseInterface {
 		return jsonStr;
 	}
 	
-	private int getPackageType(ProductCodePo productPo){
-		int packageType = 1;
-		Integer circulateWay = productPo.getCirculateWay();
-		String pgValidity = productPo.getPgValidity();
-		if(ChannelTypeEnum.RED_PACKET.getValue().equals(circulateWay)){
-			packageType = 2;
-		}
-		else if(ChannelTypeEnum.MOBILE.getValue().equals(circulateWay)){
-			packageType = 3;
-		}
-		else if(PgValidityEnum.ONE_DAY_DATA.getValue().equals(pgValidity)){
-			packageType = 5;
-		}
-		else if(PgValidityEnum.THREE_DAY_DATA.getValue().equals(pgValidity)){
-			packageType = 6;
-		}
-		else if(PgValidityEnum.SEVEN_DAY_DATA.getValue().equals(pgValidity)){
-			packageType = 7;
-		}
-		else if(PgValidityEnum.ONE_SEASON_DATA.getValue().equals(pgValidity)){
-			packageType = 8;
-		}
-		else if(PgValidityEnum.HALF_YEAR_DATA.getValue().equals(pgValidity)){
-			packageType = 9;
-		}
-		else if(PgValidityEnum.ONE_YEAR_DATA.getValue().equals(pgValidity)){
-			packageType = 10;
-		}
-		return packageType;//月包
-	}
+//	private int getPackageType(ProductCodePo productPo){
+//		int packageType = 1;
+//		Integer circulateWay = productPo.getCirculateWay();
+//		String pgValidity = productPo.getPgValidity();
+//		if(ChannelTypeEnum.RED_PACKET.getValue().equals(circulateWay)){
+//			packageType = 2;
+//		}
+//		else if(ChannelTypeEnum.MOBILE.getValue().equals(circulateWay)){
+//			packageType = 3;
+//		}
+//		else if(PgValidityEnum.ONE_DAY_DATA.getValue().equals(pgValidity)){
+//			packageType = 5;
+//		}
+//		else if(PgValidityEnum.THREE_DAY_DATA.getValue().equals(pgValidity)){
+//			packageType = 6;
+//		}
+//		else if(PgValidityEnum.SEVEN_DAY_DATA.getValue().equals(pgValidity)){
+//			packageType = 7;
+//		}
+//		else if(PgValidityEnum.ONE_SEASON_DATA.getValue().equals(pgValidity)){
+//			packageType = 8;
+//		}
+//		else if(PgValidityEnum.HALF_YEAR_DATA.getValue().equals(pgValidity)){
+//			packageType = 9;
+//		}
+//		else if(PgValidityEnum.ONE_YEAR_DATA.getValue().equals(pgValidity)){
+//			packageType = 10;
+//		}
+//		return packageType;//月包
+//	}
 	
 	/**
 	 * @description: 获得流量范围
@@ -322,90 +325,22 @@ public class LiuLiangHui implements BaseInterface {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年12月15日 下午3:10:36
 	 */
-	private int getRange(Integer serviceType){
-		int range = 0;
-		if(ServiceTypeEnum.NATION_WIDE.getValue() == serviceType){
-			range = 0;
-		}
-		else if(ServiceTypeEnum.PROVINCE_ROAMING.getValue() == serviceType){
-			range = 2;
-		}
-		else if(ServiceTypeEnum.PROVINCE.getValue() == serviceType){
-			range = 3;
-		}else{
-			range = 1;		//全国非漫游
-		}
-		return range;
-	}
+//	private int getRange(Integer serviceType){
+//		int range = 0;
+//		if(ServiceTypeEnum.NATION_WIDE.getValue() == serviceType){
+//			range = 0;
+//		}
+//		else if(ServiceTypeEnum.PROVINCE_ROAMING.getValue() == serviceType){
+//			range = 2;
+//		}
+//		else if(ServiceTypeEnum.PROVINCE.getValue() == serviceType){
+//			range = 3;
+//		}else{
+//			range = 1;		//全国非漫游
+//		}
+//		return range;
+//	}
 	
-	public String toProductParams(){
-		ExchangePlatformPo platformPo = baseParams.getEpo();
-		String sign = "";
-		StringBuffer signBuffer = new StringBuffer();
-		signBuffer.append("account=");
-		signBuffer.append(platformPo.getEpUserName());
-		signBuffer.append("&type=");
-		signBuffer.append(0);
-		signBuffer.append("&key=");
-		signBuffer.append(platformPo.getEpApikey());
-		try {
-			sign = MD5.getMd5(signBuffer.toString(), MD5.LOWERCASE, "utf-8");
-			System.out.println("充值sign编码参数："+ signBuffer.toString());
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		StringBuffer paramBuffer = new StringBuffer();
-		paramBuffer.append("account=");
-		paramBuffer.append(platformPo.getEpUserName());
-		paramBuffer.append("&");
-		paramBuffer.append(platformPo.getEpOtherParams());//v=1.1
-		paramBuffer.append("action=getPackage");
-		paramBuffer.append("&range=");
-		paramBuffer.append(getRange(ServiceTypeEnum.NATION_WIDE.getValue()));//省漫游
-		paramBuffer.append("&type=");
-		paramBuffer.append(0);//不指定运营
-		paramBuffer.append("&sign=");
-		paramBuffer.append(sign);
-		
-		return paramBuffer.toString();
-	}
-	
-	public ProductDTO getProduct(){
-		String paramsStr =  toProductParams();
-		//产品编码地址和订购地址一样
-		String jsonStr = HttpRequest.sendGet(baseParams.getEpo().getEpPurchaseIp(),paramsStr);
-		ProductDTO productDTO = null;
-		List<ProductIn> pcList = new LinkedList<ProductIn>();
-		try {  
-			if(StringHelper.isEmpty(jsonStr) || "exception".equals(jsonStr)){
-		 		return null;
-		 	}
-			System.out.println(jsonStr);
-            JSONObject obj = JSON.parseObject(jsonStr);
-           
-            int rspCode = obj.getIntValue("Code");
-            String rspMsg = obj.getString("Message");
-	        JSONArray array = obj.getJSONArray("Packages");
-	        if(array != null && array.size() > 0){
-	        	for (Object object : array) {
-	        		JSONObject jsonObj = (JSONObject)object;
-	        		int operator = jsonObj.getIntValue("Type");
-	        		String pg = jsonObj.getString("Package");
-	        		String name = jsonObj.getString("Name");
-	        		Double price = jsonObj.getDoubleValue("Price");
-	        		pcList.add(new ProductIn(operator, pg, name, price));
-//	        	System.out.println("type=" + name);
-	        	}
-	        	productDTO = new ProductDTO(rspCode, rspMsg, pcList);
-	        }else{
-	        	productDTO = new ProductDTO(rspCode, rspMsg, null);
-	        }
-            
-		} catch (JSONException e) {  
-            e.printStackTrace();  
-        } 
-		return productDTO;
-	}
 //	private String getChargeSign(String epOtherParams){
 //		ExchangePlatformPo platformPo = baseParams.getEpo();
 //		String account = platformPo.getEpUserName();
@@ -480,7 +415,7 @@ public class LiuLiangHui implements BaseInterface {
 		Map<String,Object> signMap = new HashMap<String, Object>();
 		signMap.put("mch_id", platformPo.getEpUserName());
 		signMap.put("time", time);
-		signMap.put("out_trade_no", baseParams.getOrderId());
+		signMap.put("out_trade_no", baseParams.getOrderId().toString());
 		signMap.put("sign", sign);
 		String jsonStr = JSON.toJSONString(signMap);
 		System.out.println(jsonStr);

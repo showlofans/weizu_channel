@@ -94,7 +94,7 @@ public class OuterAPIController {
 			@RequestParam(value="pgType",required=false) Integer pgType,
 			@RequestParam(value="pgValidity",required=false) String pgValidity,
 			@RequestParam(value="reportUrl",required=false) String reportUrl,
-			@RequestParam(value="userOrderId",required=false) String userOrderId){
+			@RequestParam(value="userOrderId",required=false) String userOrderId,HttpServletRequest request){
 		if(billType == null){//默认对公
 			billType = BillTypeEnum.CORPORATE_BUSINESS.getValue();
 		}
@@ -123,9 +123,16 @@ public class OuterAPIController {
 		if(StringHelper.isNotEmpty(reportUrl)){
 			chargeParams.setReportUrl(reportUrl);
 		}
+		try {
+			 String ip = addressUtils.getIp(request);
+			chargeParams.setRequestIp(ip);
+		} catch (Exception e1) {
+			chargeParams.setRequestIp("未知ip");
+			e1.printStackTrace();
+		}
 		Charge charge = null;
 		try {
-			System.out.println("传单参数：" + chargeParams.toString());
+			//System.out.println("传单参数：" + chargeParams.toString());
 			charge = chargeImpl.charge(chargeParams);
 		} catch (Exception e) {
 			charge = new Charge(ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc(), null);

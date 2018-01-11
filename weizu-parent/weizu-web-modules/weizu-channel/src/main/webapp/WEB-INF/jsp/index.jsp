@@ -179,7 +179,7 @@
 			<ul>
 				<li><a data-href="/flowsys/chargePg/pg_charge_page.do" title="/flowsys/chargePg/pg_charge_page.do" data-title="流量充值" href="javascript:;"><i class="Hui-iconfont">&#xe675;</i>  流量充值</a></li>
 				<li><a data-href="/flowsys/chargeTel/tel_charge_page.do"  data-title="话费充值" href="javascript:;"><i class="Hui-iconfont">&#xe6c7;</i> 话费充值</a></li> 
-				<li><a data-href="/flowsys/chargePg/pg_batch_charge_page.do" title="批量充值" data-title="批量充值" href="javascript:;">批量充值</a></li>
+				<!-- <li><a data-href="/flowsys/chargePg/pg_batch_charge_page.do" title="批量充值" data-title="批量充值" href="javascript:;">批量充值</a></li> -->
 				
 			</ul>
 		</dd>

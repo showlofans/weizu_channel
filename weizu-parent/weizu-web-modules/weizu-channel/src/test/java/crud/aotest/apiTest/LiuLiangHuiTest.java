@@ -14,6 +14,7 @@
 //import com.weizu.flowsys.api.singleton.SingletonFactory;
 //import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 //import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
+//import com.weizu.flowsys.util.StringUtil2;
 //import com.weizu.flowsys.web.channel.ao.ExchangePlatformAO;
 //import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
 //import com.weizu.flowsys.web.channel.dao.IProductCodeDAO;
@@ -57,10 +58,12 @@
 //////		System.out.println(balanceDTO.getAccountBalance());
 ////	}
 ////	
-////	@Test
-////	public void testGetState(){
-////		ExchangePlatformPo platformPo = exchangePlatformAO.getEpByEpName("广州彩趣流量-测试");
-//////		ProductCodePo dataPo = productCodeAO.getOneProductCodeByPg(41);//3元10M省漫游移动  
+//	@Test
+//	public void testGetState(){
+//		ExchangePlatformPo platformPo = exchangePlatformAO.getEpByEpName("广州彩趣流量");
+//		String mchId = StringUtil2.getParamsByCharSeq(platformPo.getEpOtherParams(), "mch_id");
+//		System.out.println(mchId.substring(mchId.indexOf("=")+1));
+////		ProductCodePo dataPo = productCodeAO.getOneProductCodeByPg(41);//3元10M省漫游移动  
 ////		ProductCodePo dataPo = new ProductCodePo();
 ////		dataPo.setProductCode("2003");
 ////		BaseP baseP = new BaseP(dataPo,"123",null,platformPo,DateUtil.formatPramm(System.currentTimeMillis(), "yyyyMMddHHmmss"));
@@ -72,25 +75,25 @@
 ////			System.out.println(orderDTO.getRspCode() + "<------>" + orderDTO.getRspMsg());	
 ////			System.out.println(orderDTO.getOrderIn() == null?"":orderDTO.getOrderIn().toString());
 ////		}
-////	}
-//	@Test
-//	public void testCharge(){
-////	orderIdApi 20171222135332792463890
-////			ChargeOrder [orderIdApi=20171222135332792463890, number=13699562589, pgSize=10, billType=0, otherParams=null]
-//		ExchangePlatformPo platformPo = exchangePlatformAO.getEpByEpName("广州彩趣流量-测试");
-////		ProductCodePo dataPo = productCodeAO.getOneProductCodeByPg(66);//3元10M省内移动
-////		ProductCodePo dataPo = productCodeAO.getOneProductCodeByPg(41);//3元10M省漫游移动
-//		ProductCodePo dataPo = new ProductCodePo();
-//		dataPo.setProductCode("2003");
-//		BaseInterface bi = SingletonFactory.getSingleton(platformPo.getEpEngId(), new BaseP(dataPo,776978753887670272l,"15112799915",platformPo,DateUtil.formatPramm(System.currentTimeMillis(), "yyyyMMddHHmmss")));//其它参数用订单实际到达时间代替
-//		ChargeDTO chargeDTO = bi.charge();
-//		if(chargeDTO != null){
-//			System.out.println(OrderResultEnum.getEnum(chargeDTO.getTipCode()).getMsg() + "：" + chargeDTO.getTipMsg());
-//			if(chargeDTO.getChargeOrder() != null){
-//				System.out.println(chargeDTO.getChargeOrder().toString());
-//			}
-//		}
 //	}
+////	@Test
+////	public void testCharge(){
+//////	orderIdApi 20171222135332792463890
+//////			ChargeOrder [orderIdApi=20171222135332792463890, number=13699562589, pgSize=10, billType=0, otherParams=null]
+////		ExchangePlatformPo platformPo = exchangePlatformAO.getEpByEpName("广州彩趣流量-测试");
+//////		ProductCodePo dataPo = productCodeAO.getOneProductCodeByPg(66);//3元10M省内移动
+//////		ProductCodePo dataPo = productCodeAO.getOneProductCodeByPg(41);//3元10M省漫游移动
+////		ProductCodePo dataPo = new ProductCodePo();
+////		dataPo.setProductCode("2003");
+////		BaseInterface bi = SingletonFactory.getSingleton(platformPo.getEpEngId(), new BaseP(dataPo,776978753887670272l,"15112799915",platformPo,DateUtil.formatPramm(System.currentTimeMillis(), "yyyyMMddHHmmss")));//其它参数用订单实际到达时间代替
+////		ChargeDTO chargeDTO = bi.charge();
+////		if(chargeDTO != null){
+////			System.out.println(OrderResultEnum.getEnum(chargeDTO.getTipCode()).getMsg() + "：" + chargeDTO.getTipMsg());
+////			if(chargeDTO.getChargeOrder() != null){
+////				System.out.println(chargeDTO.getChargeOrder().toString());
+////			}
+////		}
+////	}
 //	
 //	
 //}

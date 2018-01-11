@@ -41,8 +41,26 @@ public class PgDataPo extends Po {
 	 * @param pgType
 	 * @param pgValidity
 	 */
+//	public PgDataPo(Integer operatorType, Integer pgSize, Integer serviceType,
+//			Integer pgType, String pgValidity,Integer circulateWay, Integer pgServiceType) {
+//		super();
+//		this.operatorType = operatorType;
+//		this.pgSize = pgSize;
+//		this.serviceType = serviceType;
+//		this.pgType = pgType;
+//		this.pgValidity = pgValidity;
+//		this.circulateWay = circulateWay;
+//		this.pgServiceType = pgServiceType;
+//	}
+	/** 验证包体是否存在的必须参数
+	 * @param operatorType
+	 * @param pgSize
+	 * @param serviceType
+	 * @param pgType
+	 * @param pgValidity
+	 */
 	public PgDataPo(Integer operatorType, Integer pgSize, Integer serviceType,
-			Integer pgType, String pgValidity,Integer circulateWay, Integer pgServiceType) {
+			Integer pgType, String pgValidity,Integer circulateWay) {
 		super();
 		this.operatorType = operatorType;
 		this.pgSize = pgSize;
@@ -50,7 +68,6 @@ public class PgDataPo extends Po {
 		this.pgType = pgType;
 		this.pgValidity = pgValidity;
 		this.circulateWay = circulateWay;
-		this.pgServiceType = pgServiceType;
 	}
 	
 	public String getProductCode() {

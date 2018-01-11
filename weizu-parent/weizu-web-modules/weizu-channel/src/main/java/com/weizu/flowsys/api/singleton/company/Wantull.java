@@ -7,6 +7,7 @@ import java.util.Date;
 import javax.annotation.Resource;
 
 import org.springframework.data.geo.Circle;
+import org.springframework.stereotype.Service;
 import org.weizu.api.util.HttpRequest;
 
 import com.alibaba.fastjson.JSON;
@@ -19,6 +20,7 @@ import com.weizu.flowsys.api.singleton.OrderDTO;
 import com.weizu.flowsys.api.singleton.OrderIn;
 import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 import com.weizu.flowsys.api.weizu.charge.ChargeOrder;
+import com.weizu.flowsys.operatorPg.enums.AgencyForwardEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
@@ -31,10 +33,12 @@ import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.web.channel.dao.IProductCodeDAO;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
+import com.weizu.flowsys.web.http.entity.ChargeLog;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.MD5;
 import com.weizu.web.foundation.String.StringHelper;
 
+//@Service(value="wantull")
 public class Wantull implements BaseInterface {
 
 	private static Wantull instance = new Wantull();  
@@ -56,10 +60,11 @@ public class Wantull implements BaseInterface {
 	
 	@Override
 	public ChargeDTO charge() {
-		ExchangePlatformPo epPo = baseParams.getEpo();
 		String params = toParams();
+		ExchangePlatformPo epPo = baseParams.getEpo();
 		System.out.println(epPo.getEpPurchaseIp()+"?"+params);
 		 String jsonStr = HttpRequest.sendGet(epPo.getEpPurchaseIp(), params);
+		 
 		 ChargeDTO chargeDTO = null;
 		 System.out.println(jsonStr);
 		 try {  
@@ -233,31 +238,13 @@ public class Wantull implements BaseInterface {
 		paramBuffer.append(pc.getProductCode());
 		paramBuffer.append("&range=");
 		paramBuffer.append(getRange(pc));
-		
-//		signBuffer.append("&range=");
-//		signBuffer.append(getRange());
-//		signBuffer.append("&notify_url=");
-//		signBuffer.append(platformPo.getEpCallBackIp());
 		paramBuffer.append("&sign=");
 		paramBuffer.append(sign);
 		if(CallBackEnum.POSITIVE.getValue().equals(platformPo.getEpCallBack())){
 			paramBuffer.append("&notify_url=");
 			paramBuffer.append(platformPo.getEpCallBackIp());
 		}
-		
 		System.out.println(paramBuffer.toString());
-		
-//		baseParams.get
-//		signBuffer.append("")
-		
-//		String [] tipSign = new String []{"account","app_key","mobile","package"};//参与签名的字段
-//		
-		
-//		String [] specialKeys = new String[]{"app_key"};
-//		for (String key : specialKeys) {
-//			String valueSample = StringUtil2.getParamsByCharSeq(platformPo.getEpOtherParams(), key);
-//			System.out.println(valueSample);
-//		}
 		
 		return paramBuffer.toString();
 	}

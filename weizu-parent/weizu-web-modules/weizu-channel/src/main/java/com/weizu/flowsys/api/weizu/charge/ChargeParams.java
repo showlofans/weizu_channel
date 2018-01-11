@@ -23,6 +23,8 @@ public class ChargeParams {
 	private Integer channelType;		//通道类型（1-普通通道包，2-红包通道，3-转移包，4-共享包）********
     private String pgValidity;			//流量有效期(PgValidityEnum)********
     private String reportUrl;			//回调地址
+    
+    private String requestIp;			//请求地址
 	
 	public ChargeParams(String userName, String number, Integer flowsize,
 			Integer scope, String sign, Integer billType, Long orderArriveTime) {
@@ -52,6 +54,15 @@ public class ChargeParams {
 				+ reportUrl + "]";
 	}
 	
+	
+	public String getRequestIp() {
+		return requestIp;
+	}
+
+	public void setRequestIp(String requestIp) {
+		this.requestIp = requestIp;
+	}
+
 	public Long getOrderArriveTime() {
 		return orderArriveTime;
 	}
