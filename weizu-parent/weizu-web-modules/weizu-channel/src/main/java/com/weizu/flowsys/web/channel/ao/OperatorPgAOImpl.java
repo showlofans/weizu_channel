@@ -498,6 +498,7 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 				operatorPgDataPo.setPgName(sb.toString());
 			}
 		}
+		operatorPgDataPo.setPgServiceType(PgServiceTypeEnum.PGCHARGE.getValue());
 		int resultMsg = operatorPgDao.add(operatorPgDataPo);
 		if(resultMsg > 0){
 			return "success";
@@ -544,6 +545,9 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 			}
 			if(StringHelper.isNotEmpty(oneCodePo.getPgValidity())){
 				params.put("pgValidity", oneCodePo.getPgValidity());
+			}
+			if(oneCodePo.getCirculateWay() != null){
+				params.put("circulateWay", oneCodePo.getCirculateWay());
 			}
 			List<Integer> pgSizes = null;
 			if(EpEncodeTypeEnum.WITHOUT_CODE.getValue().equals(platformPo.getEpEncodeType())){//无编码

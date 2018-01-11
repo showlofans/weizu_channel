@@ -36,7 +36,16 @@ public interface ChargeAccountAo {
 	List<CompanyCredentialsPo> getUnconfirmedAccount(int rootAgencyId);
 	
 	/**
-	 * @description: 获得所有下级没审核的账户
+	 * @description: 根据代理商id和当前登陆代理商查询子代理商审核信息
+	 * @param agencytId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月8日 下午1:52:08
+	 */
+	CompanyCredentialsPo getCredentialByAgency(int agencyId, int confirmAgencyId);
+	
+	/**
+	 * @description: 获得所有下级待审核的账户
 	 * @param rootAgencyId
 	 * @param confirmState
 	 * @return
@@ -45,6 +54,15 @@ public interface ChargeAccountAo {
 	 */
 	List<CompanyCredentialsPo> getUnconfirmedAccount(int rootAgencyId, int confirmState);
 	
+	/**
+	 * @description: 下级待审核的账户个数
+	 * @param rootAgencyId
+	 * @param confirmState
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月6日 上午11:11:32
+	 */
+	Integer countUnconfirmedAccount(int rootAgencyId, int confirmState);
 	
 	/**
 	 * @description: 创建一个对公账户

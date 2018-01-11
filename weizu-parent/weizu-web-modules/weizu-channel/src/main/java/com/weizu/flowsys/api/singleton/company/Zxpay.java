@@ -112,11 +112,19 @@ public class Zxpay implements BaseInterface {
             sbBalanceMsg.append(",");
             sbBalanceMsg.append("flow_balance=");
             sbBalanceMsg.append(flow_balance);
-            
+            double flowBalance = 0.0d;
+            if(rspCode == 2){//查询成功
+            	if(StringHelper.isNotEmpty(flow_balance)){
+            		flowBalance = Double.parseDouble(flow_balance);
+            	}
+            	balanceDTO = new BalanceDTO(flowBalance, OrderResultEnum.SUCCESS.getCode(), rspMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
+            }else{
+            	balanceDTO = new BalanceDTO(flowBalance, OrderResultEnum.ERROR.getCode(), rspMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
+            }
 //            String epEngId = baseParams.getEpo().getEpEngId();
 //            String epEngIdTag = epEngId.substring(epEngId.length()-1);
 //            if("0".equals(epEngIdTag)){
-            	balanceDTO = new BalanceDTO(Double.parseDouble(flow_balance), rspCode, sbBalanceMsg.toString(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
+//            	balanceDTO = new BalanceDTO(Double.parseDouble(flow_balance), rspCode, sbBalanceMsg.toString(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
 //            }else{
 //            	balanceDTO = new BalanceDTO(balance, rspCode, sbBalanceMsg.toString(),BillTypeEnum.CORPORATE_BUSINESS.getValue()); 
 //            }
@@ -257,11 +265,12 @@ public class Zxpay implements BaseInterface {
 	            	// 最后输出到控制台  
 	            	if(tipCode == 625){//充值失败,不需直接返失败
 	            		System.out.println("返回码描述信息codeMsg:重复流水号");
+	            		tipMsg = "返回码描述信息codeMsg:重复流水号";
 //	            		System.out.println("充值未直接返回失败："+ tipMsg);
 		            }else{//直接返回失败
 		            	System.out.println(tipCode+"<--->"+tipMsg);  
-		            	chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), tipMsg, new ChargeOrder(null, baseParams.getChargeTel(), baseParams.getProductCodePo().getPgSize().toString(), BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
 		            }
+	            	chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), tipMsg, new ChargeOrder(null, baseParams.getChargeTel(), baseParams.getProductCodePo().getPgSize().toString(), BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
 //	            	String codeMsg = "";
 //	            	//用我这边默认的对私账户充值
 //		            switch (tipCode) {

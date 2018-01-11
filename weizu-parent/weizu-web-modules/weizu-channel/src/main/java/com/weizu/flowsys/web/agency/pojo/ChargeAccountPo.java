@@ -23,6 +23,8 @@ public class ChargeAccountPo extends Po implements Cloneable,Serializable {
 
     private Integer agencyId;				//所属代理商id
     
+    private Integer supperAgencyId;			//所属父级代理商id
+    
     private String remittanceWay;			//常用汇款方式
 
     private String remittanceBankAccount;	//汇款账号(银行卡)
@@ -66,13 +68,14 @@ public class ChargeAccountPo extends Po implements Cloneable,Serializable {
 	 * @param createTime
 	 * @param agencyName
 	 */
-	public ChargeAccountPo(Integer agencyId, Double accountBalance,
+	public ChargeAccountPo(Integer agencyId,Integer supperAgencyId, Double accountBalance,
 			Integer billType, Long createTime, String agencyName) {
 		super();
 		this.agencyId = agencyId;
 		this.accountBalance = accountBalance;
 		this.billType = billType;
 		this.createTime = createTime;
+		this.supperAgencyId = supperAgencyId;
 		this.agencyName = agencyName;
 	}
 
@@ -99,7 +102,13 @@ public class ChargeAccountPo extends Po implements Cloneable,Serializable {
     	return this.accountBalance;
     }
     
-    public String getAgencyName() {
+    public Integer getSupperAgencyId() {
+		return supperAgencyId;
+	}
+	public void setSupperAgencyId(Integer supperAgencyId) {
+		this.supperAgencyId = supperAgencyId;
+	}
+	public String getAgencyName() {
 		return agencyName;
 	}
 

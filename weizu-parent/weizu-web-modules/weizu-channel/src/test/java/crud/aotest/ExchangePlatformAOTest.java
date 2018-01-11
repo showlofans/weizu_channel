@@ -40,17 +40,22 @@
 ////			System.out.println("username:"+agencyBackwardVO.getUserName());
 ////		}
 ////	 }
+////	@Test
+////	public void testGetEpByEpName(){
+////		String name = "河南趣闻分省";
+////		ExchangePlatformPo epPo = exchangePlatformAO.getEpByEpName(name);
+////		if(epPo != null){
+//////			String userPass2 = Hash.BASE_UTIL.decode(epPo.getEpUserPass());
+//////			System.out.println("userName="+ epPo.getEpUserName()+" ,userPass="+ userPass2);
+////			System.out.println("userName="+ epPo.getEpUserName()+" ,userPass="+ epPo.getEpUserPass());
+////		}else{
+////			System.out.println("没有该平台信息");
+////		}
+////	}
 //	@Test
-//	public void testGetEpByEpName(){
-//		String name = "河南趣闻分省";
-//		ExchangePlatformPo epPo = exchangePlatformAO.getEpByEpName(name);
-//		if(epPo != null){
-////			String userPass2 = Hash.BASE_UTIL.decode(epPo.getEpUserPass());
-////			System.out.println("userName="+ epPo.getEpUserName()+" ,userPass="+ userPass2);
-//			System.out.println("userName="+ epPo.getEpUserName()+" ,userPass="+ epPo.getEpUserPass());
-//		}else{
-//			System.out.println("没有该平台信息");
-//		}
+//	public void testUpdateEpBalance(){
+//		String resMsg = exchangePlatformAO.updateEpBalance();
+//		System.out.println(resMsg);
 //	}
 ////	@Test
 ////	public void testGetEp(){

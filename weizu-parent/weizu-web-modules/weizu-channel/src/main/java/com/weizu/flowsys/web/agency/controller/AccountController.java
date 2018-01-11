@@ -1,6 +1,5 @@
 package com.weizu.flowsys.web.agency.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.AgencyLevelEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ConfirmStateEnum;
 import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
@@ -29,13 +29,13 @@ import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.ao.ChargeRecordAO;
 import com.weizu.flowsys.web.agency.ao.CompanyCredentialsAO;
 import com.weizu.flowsys.web.agency.dao.CompanyCredentialsDao;
-import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.CompanyCredentialsPo;
 import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
+import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordPo;
 import com.weizu.flowsys.web.agency.url.AccountURL;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
@@ -169,16 +169,28 @@ public class AccountController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		if(agencyVo != null){
 			Integer contextId = agencyVo.getId();
+//			String contextAgencyName = agencyVo.getUserName();
 //			consumeRecordPo.setAgencyId(contextId);
 			if(consumeRecordPo.getChargeFor() == null){
 				consumeRecordPo.setChargeFor(PgServiceTypeEnum.PGCHARGE.getValue());
 			}
+			if(consumeRecordPo.getShowModel() == null){
+				if(agencyVo.getRootAgencyId() == 0){
+					consumeRecordPo.setShowModel(AgencyLevelEnum.SUPPER_USER.getValue());
+				}else{
+					consumeRecordPo.setShowModel(AgencyLevelEnum.PLAT_USER.getValue());
+				}
+			}
 			
 			Pagination<ConsumeRecordPo> pagination =  chargeRecordAO.listConsumeRecord(resultMap,contextId,consumeRecordPo, pageParam);
+
+			List<GroupAgencyRecordPo> groupAgencyList =chargeRecordAO.groupAgencyRecord(contextId, consumeRecordPo);
+			resultMap.put("groupAgencyList", groupAgencyList);
 			resultMap.put("pagination", pagination);
 			resultMap.put("billTypeEnums", BillTypeEnum.toList());
 			resultMap.put("accountTypeEnums", AccountTypeEnum.toConsumeList());
 			resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());	//充值业务类型
+			resultMap.put("agencyLevelEnums", AgencyLevelEnum.toList());	//充值业务类型
 			//点击金额进入连接，自动填充代理商名称
 			if(consumeRecordPo.getUserName() == null && consumeRecordPo.getAccountId() != null){
 				AgencyBackwardPo agencyPO = agencyAO.getAgencyByAccountId(consumeRecordPo.getAccountId());
@@ -186,6 +198,7 @@ public class AccountController {
 					consumeRecordPo.setUserName(agencyPO.getUserName());
 				}
 			}
+			resultMap.put("searchParams", consumeRecordPo);	//充值业务类型
 			return new ModelAndView("/account/consume_list", "resultMap", resultMap);
 		}else{
 			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
@@ -294,25 +307,53 @@ public class AccountController {
 			resultMap.put("unconfirmList", list);
 			resultMap.put("confirmStateEnums", ConfirmStateEnum.toList());
 			//处理消息
-			Object obj = request.getSession().getAttribute("unconfirmSize");
-			int unconfirmSize = 0;
-			if(obj != null){
-				unconfirmSize = (int) obj;
-			}
-			/*unconfirmSize -= 1;*/
-			request.getSession().setAttribute("unconfirmSize", unconfirmSize);
-			if(unconfirmSize == 0){
-				Object obj2 = request.getSession().getAttribute("msgNum");
-				if(obj2 != null){
-					int msgNum = (int)obj2;
-					//request.getSession().setAttribute("unconfirm", null);//设置消息为不显示
-					request.getSession().setAttribute("msgNum", msgNum-1);//设置总消息数
+			if(list != null){
+				int unconfirmSize = list.size();
+				if(unconfirmSize > 0){
+					//request.getSession().setAttribute("unconfirmSize", 0);
+					Object obj2 = request.getSession().getAttribute("msgNum");
+					if(obj2 != null){
+						int msgNum = (int)obj2;
+						if(msgNum > 0){
+							request.getSession().setAttribute("msgNum", msgNum-unconfirmSize);//设置总消息数
+						}
+						//request.getSession().setAttribute("unconfirm", null);//设置消息为不显示
+					}
 				}
 			}
 			return new ModelAndView("/account/unconfirm_account_list","resultMap",resultMap);
 		}
 		return new ModelAndView("/account/unconfirm_account_list");
 	}
+	/**
+	 * @description: 对公账户审核信息查看页面-根据代理商
+	 * @param request
+	 * @param agencyId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月8日 下午1:50:05
+	 */
+	@RequestMapping(value=AccountURL.CONFIRM_ACCOUNT_INFO)
+	public ModelAndView confirmAccountInfo(HttpServletRequest request,Integer agencyId){
+		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		if(agencyVo != null)
+		{
+			CompanyCredentialsPo companyCredentialsPo = chargeAccountAO.getCredentialByAgency(agencyId, agencyVo.getId());
+//			CompanyCredentialsPo ccpo = companyCredentialsDao.checkCraatedByAgencyId(agencyVo.getId());
+			if(companyCredentialsPo != null){
+				companyCredentialsPo.setConfirmTimeStr(DateUtil.formatAll(companyCredentialsPo.getConfirmTime()));
+			}
+			resultMap.put("companyCredentialsPo", companyCredentialsPo);
+			ChargeAccountPo billAccountPo = chargeAccountAO.getAccountByAgencyId(agencyId, BillTypeEnum.CORPORATE_BUSINESS.getValue());//获得对公账户余额
+			resultMap.put("billAccountPo", billAccountPo);
+			resultMap.put("confirmStateEnums", ConfirmStateEnum.toList());
+			//处理消息
+			return new ModelAndView("/account/credential_show","resultMap",resultMap);
+		}
+		return new ModelAndView("/account/credential_show");
+	}
+	
 	/**
 	 * @description: 开通对公账户
 	 * @return

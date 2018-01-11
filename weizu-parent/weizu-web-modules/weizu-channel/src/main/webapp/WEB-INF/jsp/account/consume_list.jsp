@@ -30,12 +30,22 @@
 <![endif]-->
 <title>消费列表</title>
 </head>
-<body>
+<body onl>
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 代理商管理 <span class="c-gray en">&gt;</span>消费列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" ><i class="Hui-iconfont">&#xe6a6;</i></a></nav>
 <div class="page-container">
 	<form action="/flowsys/account/consume_list.do" method="post" id="formD" name="dataListForm">
 		<div class="text-c">
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
+			显示模式:
+			<span class="select-box inline">
+			<select name="showModel" class="select" onchange="getConsume()" >
+				<c:forEach items="${resultMap.agencyLevelEnums }" var="agencyLevelEnum" varStatus="vs1">
+					<option value="${agencyLevelEnum.value }" <c:if test="${resultMap.searchParams.showModel == agencyLevelEnum.value }"> selected</c:if>>${agencyLevelEnum.desc }</option>
+				</c:forEach>
+			</select>
+			</span>
+			<%-- <c:if test="${loginContext.rootAgencyId == 0 }">
+			</c:if> --%>
 			消费类型:
 			<span class="select-box inline">
 			<select name="chargeFor" class="select" onchange="getConsume()" >
@@ -155,6 +165,67 @@
 			</tbody>
 		</table>
 		<mytag:Pagination pagination="${resultMap.pagination}" queryForm="dataListForm" divId="recordId" />
+		<c:if test="${resultMap.searchParams.showModel == 1 }">
+				<div class="pd-10 tags">
+				<ul id="Huifold1" class="Huifold">
+				  <li class="item">
+				    <h4>代理商订单消费保守统计<b>-</b></h4>
+				   	<ul id="Huifold11" class="Huifold">
+				   		<c:forEach items="${resultMap.groupAgencyList }" var="groupAgency" varStatus="vs">
+				   			 <li class="item">
+				   			<h4>
+				   			${groupAgency.agencyName }(
+				   				<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+									<c:if test="${billTypeEnum.value == groupAgency.billType }">
+										<span class="c-red" >
+										${billTypeEnum.desc }</span>
+									</c:if>
+								</c:forEach>
+				   			)
+				   			<b>+</b></h4>
+				   			<div class="info"> 
+						   		总笔数（保守统计）：${groupAgency.numb }<br>
+								交易金额 :${groupAgency.totalAmount }
+						    </div>
+						    </li>
+						 	<%-- <c:choose>
+								<c:when test="${groupAgency.billType == 0 }">
+									<span class="c-red" data-toggle="tooltip"  data-placement="top" title="${groupAgency.numb }笔,${groupAgency.totalAmount }元" ><!--  -->
+									${groupAgency.agencyName }</span>
+								</c:when>
+								<c:otherwise>
+									<span class="c-green" data-toggle="tooltip"  data-placement="top" title="${groupAgency.numb }笔${groupAgency.totalAmount }元" ><!--  data-toggle="tooltip"  data-placement="right" title="${billTypeEnum.desc }" -->
+										${groupAgency.agencyName }</span>
+								</c:otherwise>
+							</c:choose> --%>
+						 </c:forEach>
+				   	</ul>
+				    <!-- <div class="info"> 
+				   		 内容<br>很多内容 
+				    
+				    </div> -->
+				  </li>
+				</ul>
+				</div>
+				<%-- <div class="codeView">
+					<ul>
+						 <c:forEach items="${resultMap.groupAgencyList }" var="groupAgency" varStatus="vs">
+							<li> 
+								<c:choose>
+									<c:when test="${groupAgency.billType == 0 }">
+										<span class="c-red" data-toggle="tooltip"  data-placement="right" title="${groupAgency.totalAmount }元<br>${groupAgency.numb }笔" ><!--  -->
+										${groupAgency.agencyName }</span>
+									</c:when>
+									<c:otherwise>
+										<span class="c-green" data-toggle="tooltip"  data-placement="right" title="${groupAgency.totalAmount }元<br>${groupAgency.numb }笔" ><!--  data-toggle="tooltip"  data-placement="right" title="${billTypeEnum.desc }" -->
+											${groupAgency.agencyName }</span>
+									</c:otherwise>
+								</c:choose>
+							</li>
+						</c:forEach>
+					</ul>
+				</div> --%>
+			</c:if>
 		<footer class="footer mt-20">
 		<div class="container">
 			<p><!-- 感谢jQuery、layer、laypage、Validform、UEditor、My97DatePicker、iconfont、Datatables、WebUploaded、icheck、highcharts、bootstrap-Switch<br> -->
@@ -180,6 +251,10 @@
 function getConsume(){
 	$('form').submit();
 }
+$(function(){
+	$.Huifold("#Huifold1 .item h4","#Huifold1 .item info","fast",1,"click"); /*5个参数顺序不可打乱，分别是：相应区,隐藏显示的内容,速度,类型,事件click*/
+	//$.Huifold("#Huifold2 .item h4","#Huifold2 .item .info","fast",3,"mouseover"); /*5个参数顺序不可打乱，分别是：相应区,隐藏显示的内容,速度,类型,事件click*/
+});
 /*资讯-删除*/
 /* function article_del(obj,id){
 	layer.confirm('确认要删除吗？',function(index){

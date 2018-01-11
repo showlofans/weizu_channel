@@ -34,6 +34,14 @@ import com.weizu.web.foundation.MD5;
 import com.weizu.web.foundation.SHA1;
 import com.weizu.web.foundation.String.StringHelper;
 
+/**
+ * @description: 青岛网信乐疯-过时
+ * @projectName:weizu-channel
+ * @className:Lefeng.java
+ * @author:微族通道代码设计人 宁强
+ * @createTime:2018年1月4日 上午11:57:39
+ * @version 1.0
+ */
 @Service
 public class Lefeng implements BaseInterface {
 
@@ -131,12 +139,10 @@ public class Lefeng implements BaseInterface {
 	            int rspCode = 0;
 	            ProductCodePo pc = baseParams.getProductCodePo();
 	            if("0000".equals(tipCode)){
-	            	rspCode = OrderResultEnum.SUCCESS.getCode();
 	            	//用我这边默认的对私账户充值
-	            	chargeDTO = new ChargeDTO(rspCode, tipMsg, new ChargeOrder(null, baseParams.getChargeTel(), pc.getProductCode(), billType));
+	            	chargeDTO = new ChargeDTO(OrderResultEnum.SUCCESS.getCode(), tipMsg, new ChargeOrder(null, baseParams.getChargeTel(), pc.getProductCode(), billType));
 	            }else{
-	            	rspCode = OrderResultEnum.ERROR.getCode();
-	            	chargeDTO = new ChargeDTO(rspCode, tipMsg, new ChargeOrder(null, baseParams.getChargeTel(), pc.getProductCode(), billType));
+	            	chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), tipMsg, new ChargeOrder(null, baseParams.getChargeTel(), pc.getProductCode(), billType));
 	            	// 最后输出到控制台  
 	            	System.out.println(tipCode+"<--->"+tipMsg);  
 	            }

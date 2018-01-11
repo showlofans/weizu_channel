@@ -16,11 +16,11 @@ import java.util.Map;
 public enum InOrOutEnum {
 	
 	/**
-	 * 转入业务
+	 * 转入业务-0
 	 */
 	IN("转入",0),
 	/**
-	 * 转出业务
+	 * 转出业务-1
 	 */
 	OUT("转出",1);
 	

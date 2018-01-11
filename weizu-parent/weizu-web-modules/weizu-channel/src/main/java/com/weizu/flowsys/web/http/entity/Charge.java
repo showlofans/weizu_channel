@@ -22,6 +22,18 @@ public class Charge {
 		this.chargePo = chargePo;
 	}
 	
+	
+	
+	@Override
+	public String toString() {
+		if(chargePo != null){
+			return "Charge [tipCode=" + tipCode + ", tipMsg=" + tipMsg
+					+ ", chargePo=" + chargePo.toString() + "]";
+		}else{
+			return "Charge [tipCode=" + tipCode + ", tipMsg=" + tipMsg
+					+ ", chargePo=" + null + "]";
+		}
+	}
 	public int getTipCode() {
 		return tipCode;
 	}

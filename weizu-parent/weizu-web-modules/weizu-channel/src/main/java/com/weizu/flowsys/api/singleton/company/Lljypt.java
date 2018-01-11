@@ -15,6 +15,7 @@ import com.weizu.flowsys.api.singleton.OrderDTO;
 import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 import com.weizu.flowsys.api.weizu.charge.ChargeOrder;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.web.foundation.MD5;
@@ -53,8 +54,12 @@ public class Lljypt implements BaseInterface {
 	            if("0".equals(epEngId.substring(epEngId.length()-1))){//英文标识最后一个字符是0表示对私
 	            	billType = BillTypeEnum.BUSINESS_INDIVIDUAL.getValue();
 	            }
-	            //用我这边默认的对私账户充值
-	            chargeDTO = new ChargeDTO(tipCode, tipMsg, new ChargeOrder(orderIdApi, baseParams.getChargeTel(), baseParams.getProductCodePo().getProductCode(), billType));
+	            if(tipCode == 0){//提交成功
+	            	//用我这边默认的对私账户充值
+	            	chargeDTO = new ChargeDTO(OrderResultEnum.SUCCESS.getCode(), tipMsg, new ChargeOrder(orderIdApi, baseParams.getChargeTel(), baseParams.getProductCodePo().getProductCode(), billType));
+	            }else{
+	            	chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), tipMsg, new ChargeOrder(orderIdApi, baseParams.getChargeTel(), baseParams.getProductCodePo().getProductCode(), billType));
+	            }
 			    // 最后输出到控制台  
 	            System.out.println(tipCode+"<--->"+tipMsg);  
 	  
@@ -74,17 +79,22 @@ public class Lljypt implements BaseInterface {
             String rspMsg = obj.getString("rspMsg");
             String balanceStr = obj.getString("balance");
             double balance = 0.00d;
-            if(StringHelper.isNotEmpty(balanceStr)){
-            	balance = Double.parseDouble(balanceStr);
-            }
 //            System.out.println(obj);
-            String epEngId = baseParams.getEpo().getEpEngId();
-            String epEngIdTag = epEngId.substring(epEngId.length()-1);
-            if("0".equals(epEngIdTag)){
-            	balanceDTO = new BalanceDTO(balance, rspCode, rspMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
+            if(rspCode == 0){
+            	if(StringHelper.isNotEmpty(balanceStr)){
+            		balance = Double.parseDouble(balanceStr);
+            	}
+            	balanceDTO = new BalanceDTO(balance, OrderResultEnum.SUCCESS.getCode(), rspMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
             }else{
-            	balanceDTO = new BalanceDTO(balance, rspCode, rspMsg,BillTypeEnum.CORPORATE_BUSINESS.getValue()); 
+            	balanceDTO = new BalanceDTO(balance, OrderResultEnum.ERROR.getCode(), rspMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
             }
+//            String epEngId = baseParams.getEpo().getEpEngId();
+//            String epEngIdTag = epEngId.substring(epEngId.length()-1);
+//            if("0".equals(epEngIdTag)){
+//            	balanceDTO = new BalanceDTO(balance, rspCode, rspMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
+//            }else{
+//            	balanceDTO = new BalanceDTO(balance, rspCode, rspMsg,BillTypeEnum.CORPORATE_BUSINESS.getValue()); 
+//            }
 		    // 最后输出到控制台  
             System.out.println(rspCode+"<--->"+rspMsg);  
   

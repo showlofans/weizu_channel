@@ -16,6 +16,18 @@ public class ChargeDTO {
 	public ChargeDTO() {
 		super();
 	}
+	
+	@Override
+	public String toString() {
+		if(chargeOrder != null){
+			return "ChargeDTO [tipCode=" + tipCode + ", tipMsg=" + tipMsg
+					+ ", chargeOrder=" + chargeOrder.toString() + "]";
+		}else{
+			return "ChargeDTO [tipCode=" + tipCode + ", tipMsg=" + tipMsg
+					+ ", chargeOrder=" + null + "]";
+		}
+	}
+
 	public ChargeDTO(int tipCode, String tipMsg, ChargeOrder chargeOrder) {
 		super();
 		this.tipCode = tipCode;

@@ -16,6 +16,17 @@ import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
  * @version 1.0
  */
 public interface AgencyVODaoInterface extends Dao<AgencyBackwardPo, Integer> {
+	
+	/**
+	 * @description: 查看代理商有没有子代理商
+	 * @param userName
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月5日 上午10:23:11
+	 */
+	int countSecondAgency(String userName);
+	
+	List<AgencyBackwardPo> getChildrenAgency(String userName);
 	/**
 	 * @description:查询代理商列表
 	 * @param paramsMap
@@ -193,15 +204,6 @@ public interface AgencyVODaoInterface extends Dao<AgencyBackwardPo, Integer> {
 	 * @createTime:2017年8月19日 下午4:44:38
 	 */
 	AgencyBackwardPo getRootAgencyById(int agencyId);
-	
-	/**
-	 * @description:通过账户id获得代理商信息
-	 * @param accountId
-	 * @return
-	 * @author:微族通道代码设计人 宁强
-	 * @createTime:2017年9月21日 下午2:50:19
-	 */
-//	AgencyBackwardPo getAgencyByAccountId(int accountId);
 	
 	/**
 	 * @description: 更新密码

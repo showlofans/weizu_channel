@@ -14,12 +14,15 @@ import com.aiyi.base.pojo.PageParam;
 import com.aiyi.base.pojo.PurchasePo;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.AgencyLevelEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeRecordDao;
+import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
+import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordPo;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
 
@@ -160,6 +163,11 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 	@Override
 	public Map<String, Object> getMapByConsume(ConsumeRecordPo consumeRecordPo,Integer contextAgencyId) {
 		Map<String, Object> params = new HashMap<String, Object>();
+		if(AgencyLevelEnum.SUPPER_USER.getValue() == consumeRecordPo.getShowModel()){
+			params.put("supperAgencyId", contextAgencyId);
+		}else{
+			params.put("agencyId", contextAgencyId);
+		}
 		if(StringHelper.isNotEmpty(consumeRecordPo.getUserName())){
 			params.put("userName", consumeRecordPo.getUserName());
 		}
@@ -182,13 +190,10 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		if(consumeRecordPo.getAccountType() != null){
 			params.put("accountType", consumeRecordPo.getAccountType());
 		}
-		if(consumeRecordPo.getChargeTel() != null){
+		if(StringHelper.isNotEmpty(consumeRecordPo.getChargeTel())){
 			params.put("chargeTel", consumeRecordPo.getChargeTel());
 		}
 		
-		if(contextAgencyId != null){
-			params.put("agencyId", contextAgencyId);
-		}
 		if(consumeRecordPo.getAccountId() != null){
 			params.put("accountId", consumeRecordPo.getAccountId());
 		}
@@ -219,6 +224,8 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 	 */
 	@Override
 	public Pagination<ConsumeRecordPo> listConsumeRecord(Map<String, Object> resultMap, Integer contextAgencyId,ConsumeRecordPo consumeRecordPo, PageParam pageParam) {
+		
+//		String contextAgencyName = contextAgency.getUserName();
 		Map<String, Object> params = getMapByConsume(consumeRecordPo,contextAgencyId);
 		
 		int totalRecords = chargeRecordDao.countConsume(params);
@@ -267,6 +274,35 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		
 		return new Pagination<ConsumeRecordPo>(records,totalRecords,pageNo,pageSize);
 	}
+	
+	@Override
+	public List<GroupAgencyRecordPo> groupAgencyRecord(Integer contextAgencyId,
+			ConsumeRecordPo consumeRecordPo) {
+		//consumeRecordPo.setShowModel(AgencyLevelEnum.SUPPER_USER.getValue());			//超管模式开启统计
+		Map<String, Object> params = getMapByConsume(consumeRecordPo,contextAgencyId); //
+		if(consumeRecordPo.getStartTimeStr() == null){
+			Long dateUtilStartTime = null;
+			dateUtilStartTime = Long.parseLong(params.get("startTime").toString());
+			consumeRecordPo.setStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+		}else if("".equals(consumeRecordPo.getStartTimeStr().trim())){
+			params.put("startTime",null);
+		}
+		if(StringHelper.isEmpty(consumeRecordPo.getEndTimeStr())){
+			Long dateUtilEndTime = Long.parseLong(params.get("endTime").toString());
+			consumeRecordPo.setEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
+		}
+		List<GroupAgencyRecordPo> list = chargeRecordDao.groupAgencyRecord(params);
+		if(!(list.size() > 0 ) ){//今天没查到，查所有的记录
+			params.put("startTime",null);
+			consumeRecordPo.setStartTimeStr("");
+			if(StringHelper.isEmpty(consumeRecordPo.getEndTimeStr())){
+				params.put("endTime", System.currentTimeMillis());
+				consumeRecordPo.setEndTimeStr(DateUtil.formatAll(System.currentTimeMillis()));
+			}
+			list = chargeRecordDao.groupAgencyRecord(params);
+		}
+		return list;
+	}
 
 	/**
 	 * @description:通过实体封装查询参数
@@ -301,6 +337,9 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		if(chargeRecordPo.getAccountType() != null){
 			params.put("accountType", chargeRecordPo.getAccountType());
 		}
+//		if(chargeRecordPo.getChargeFor() != null){
+//			params.put("chargeFor", chargeRecordPo.getChargeFor());
+//		}
 		
 		/*if(chargeRecordPo.getAgencyId() != null){
 			params.put("agencyId", chargeRecordPo.getAgencyId());
@@ -342,4 +381,5 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		
 		return null;
 	}
+
 }

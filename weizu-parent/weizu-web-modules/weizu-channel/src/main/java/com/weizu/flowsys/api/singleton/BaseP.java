@@ -20,6 +20,7 @@ public class BaseP {
 	private ExchangePlatformPo epo;		//平台信息
 	private ProductCodePo productCodePo;	//产品编码信息
 	private String otherParams;			//其他参数:如订单提交时间
+	private Integer billType;			//扣款票务
 	
 	public BaseP() {
 		super();
@@ -47,6 +48,14 @@ public class BaseP {
 //		this.productCodeId = productCodeId;
 	}
 	
+	public Integer getBillType() {
+		return billType;
+	}
+
+	public void setBillType(Integer billType) {
+		this.billType = billType;
+	}
+
 	public String getOtherParams() {
 		return otherParams;
 	}
@@ -84,6 +93,9 @@ public class BaseP {
 
 	public  ExchangePlatformPo getEpo() {
 		return epo;
+	}
+	public void setEpo(ExchangePlatformPo epo) {
+		this.epo = epo;
 	}
 
 	public ProductCodePo getProductCodePo() {

@@ -16,15 +16,15 @@ import java.util.Map;
 public enum OperatorTypeEnum {
 	
 	/**
-	 * 移动运营
+	 * 移动运营-0
 	 */
 	MOBILE("移动",0),
 	/**
-	 * 联通运营
+	 * 联通运营-1
 	 */
 	LINK("联通",1),
 	/**
-	 * 电信运营
+	 * 电信运营-2
 	 */
 	TELECOME("电信",2);
 

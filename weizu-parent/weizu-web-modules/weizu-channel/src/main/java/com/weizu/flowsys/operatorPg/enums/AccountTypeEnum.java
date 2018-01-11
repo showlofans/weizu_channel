@@ -16,15 +16,15 @@ import java.util.Map;
 public enum AccountTypeEnum {
 	
 	/**
-	 * 扣款
+	 * 扣款-1
 	 */
 	DECREASE("扣款",1),
 	/**
-	 * 充值失败：补款
+	 * 充值失败：补款-2
 	 */
 	Replenishment("补款",2),
 	/**
-	 * 充值
+	 * 充值-0
 	 */
 	INCREASE("充值",0);
 	

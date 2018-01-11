@@ -2,6 +2,7 @@ package com.weizu.flowsys.api.singleton;
 
 import com.weizu.flowsys.api.singleton.company.Hongjia;
 import com.weizu.flowsys.api.singleton.company.Lefeng;
+import com.weizu.flowsys.api.singleton.company.LiuLiangHui;
 import com.weizu.flowsys.api.singleton.company.Lljypt;
 import com.weizu.flowsys.api.singleton.company.Maiyuan;
 import com.weizu.flowsys.api.singleton.company.Wantull;
@@ -47,6 +48,10 @@ public class SingletonFactory {
 		//红茄科技平台英文标志
 		else if(MyConstants.HONGJIA_ENG.equals(epEngId)){
 			bi = Hongjia.getInstance(epEngId, baseParams);
+		}
+		//流量汇平台英文标志
+		else if(MyConstants.LIULIANGHUI_ENG.equals(epEngId)){
+			bi = LiuLiangHui.getInstance(epEngId, baseParams);
 		}
 		
 		return bi;

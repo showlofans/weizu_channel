@@ -78,16 +78,22 @@ public class Weizu implements BaseInterface {
             String rspMsg = obj.getString("errmsg");
             double balance = 0.00d;
             String balanceStr = obj.getString("balance");
-            if(StringHelper.isNotEmpty(balanceStr)){
-            	balance = Double.parseDouble(balanceStr);
-            }
-            String epEngId = baseParams.getEpo().getEpEngId();
-            String epEngIdTag = epEngId.substring(epEngId.length()-1);
-            if("0".equals(epEngIdTag)){
-            	balanceDTO = new BalanceDTO(balance, rspCode, rspMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
+            if(rspCode == 0){
+            	if(StringHelper.isNotEmpty(balanceStr)){
+            		balance = Double.parseDouble(balanceStr);
+            	}
+            	balanceDTO = new BalanceDTO(balance, OrderResultEnum.SUCCESS.getCode(), rspMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
+//            	String epEngId = baseParams.getEpo().getEpEngId();
+//            	String epEngIdTag = epEngId.substring(epEngId.length()-1);
+//            	if("0".equals(epEngIdTag)){
+//            		balanceDTO = new BalanceDTO(balance, rspCode, rspMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
+//            	}else{
+//            		balanceDTO = new BalanceDTO(balance, rspCode, rspMsg,BillTypeEnum.CORPORATE_BUSINESS.getValue()); 
+//            	}
             }else{
-            	balanceDTO = new BalanceDTO(balance, rspCode, rspMsg,BillTypeEnum.CORPORATE_BUSINESS.getValue()); 
+            	balanceDTO = new BalanceDTO(balance, OrderResultEnum.ERROR.getCode(), rspMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
             }
+            
     	 } catch (JSONException e) {  
              e.printStackTrace();  
          } 

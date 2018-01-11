@@ -53,9 +53,9 @@
 	                  	<em class="inputto">至</em>
 	            <input style="width:150px" type="text" class="input-text" name="end_datetime"   value="2017-05-26 23:59:59"  onClick="WdatePicker({startDate:'%y-%M-%d 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/> -->
 				<c:if test="${resultMap.params.agencyTag == 1 }"><!-- 认证用户页面 -->
-				账户类型：<span class="select-box inline">
+				<span class="select-box inline">
 							<select name="billType"  id="billType" class="select" onchange="formSub()">
-								<option value="">请选择</option>
+								<option value="">账户类型</option>
 								<c:forEach items="${resultMap.billTypeEnums }" var="billEnum" varStatus="vs1">
 									<option value="${billEnum.value }" <c:if test="${billEnum.value == resultMap.params.billType }"> selected</c:if>>${billEnum.desc }</option>
 								</c:forEach>
@@ -107,20 +107,21 @@
 						<td>
 						<c:choose>
 							<c:when test="${agency.billType == 0 }">
-								<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
-									<c:if test="${billTypeEnum.value == 0 }">
+								<%-- <c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+									<c:if test="${billTypeEnum.value == 0 }"> --%>
 										<span class="c-red" ><!-- data-toggle="tooltip"   data-placement="right" title="${billTypeEnum.desc }" -->
 										${agency.userName }</span>
-									</c:if>
-								</c:forEach>
+									<%-- </c:if>
+								</c:forEach> --%>
 							</c:when>
 							<c:otherwise>
-								<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
-								<c:if test="${billTypeEnum.value == 1 }">
+								<%-- <c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+								<c:if test="${billTypeEnum.value == 1 }"> --%>
 									<span class="c-green"><!--  data-toggle="tooltip"  data-placement="right" title="${billTypeEnum.desc }" -->
-									${agency.userName }</span>
-								</c:if>
-								</c:forEach>
+									<a style="cursor:pointer;text-decoration:none;" class="text-primary" title="查看认证信息" data-toggle="tooltip" data-placement="top"  onclick="credential_show('${agency.userName }','/flowsys/account/confirm_account_info.do?agencyId=${agency.id }','500','600')">${agency.userName }</a>
+									</span>
+								<%-- </c:if>
+								</c:forEach> --%>
 							</c:otherwise>
 						</c:choose>
 						</td>
@@ -155,7 +156,7 @@
 						<td class="td-manage">
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="editAgency(${agency.id })" href="javascript:;" title="查看信息"><i class="Hui-iconfont">&#xe60c;</i></a>
 							<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="resetPass('/flowsys/agency/reset_pass_page.do?tag=0&agencyId=${agency.id}')" href="javascript:;" title="重置密码"><i class="Hui-iconfont">&#xe63f;</i></a> --%>
-							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none"  data-href="/flowsys/agency/reset_pass_page.do" data-title="重置密码" onclick="Hui_admin_tab(this)" title="重置密码"><i class="Hui-iconfont">&#xe63f;</i></a>
+							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none"  data-href="/flowsys/agency/reset_pass_page.do?agencyId=${agency.id }" data-title="重置密码" onclick="Hui_admin_tab(this)" title="重置密码"><i class="Hui-iconfont">&#xe63f;</i></a>
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" onClick="account_charge('账户充值',${agency.accountId })" href="javascript:;" title="账户充值"><i class="Hui-iconfont">&#xe726;</i></a> 
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" class="ml-5" data-title="设置充值卡" data-href="/flowsys/bankAccount/attach_bank_page.do?accountId=${agency.accountId }" onClick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe725;</i></a> 
 							<%-- <a title="/flowsys/rate/rate_add_page.do?rateId=${agency.rateId }&agencyId=${agency.id}" data-href="/flowsys/rate/rate_add_page.do?rateId=${agency.rateId }&agencyId=${agency.id}" data-title="费率添加" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe6df;</i></a> --%>
@@ -269,6 +270,13 @@ function editAgency(id){
             //location.reload();
         }
     });
+}
+
+/*认证信息-查看*/
+function credential_show(title,url,w,h){
+	//url += '?agencyId='+id;
+	title += '-认证信息查看';
+	layer_show(title,url,w,h);
 }
 </script> 
 </body>

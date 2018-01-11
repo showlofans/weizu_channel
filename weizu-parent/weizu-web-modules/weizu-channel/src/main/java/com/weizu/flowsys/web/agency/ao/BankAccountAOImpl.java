@@ -20,6 +20,7 @@ import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.BankAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
+import com.weizu.web.foundation.DateUtil;
 /**
  * @description: 银行卡管理AO
  * @projectName:weizu-channel
@@ -48,6 +49,7 @@ public class BankAccountAOImpl implements BankAccountAO {
 		List<BankAccountPo> bankList0 = new LinkedList<BankAccountPo>();
 		List<BankAccountPo> bankList = new LinkedList<BankAccountPo>();
 		for (BankAccountPo bankAccountPo : dataList) {
+			bankAccountPo.setLastAccessStr(DateUtil.formatAll(bankAccountPo.getLastAccess()));
 			if(BillTypeEnum.CORPORATE_BUSINESS.getValue().equals(bankAccountPo.getBillType())){
 				bankList.add(bankAccountPo);
 			}else if(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue().equals(bankAccountPo.getBillType())){
@@ -87,6 +89,7 @@ public class BankAccountAOImpl implements BankAccountAO {
 				bankPo.setPolarity(CallBackEnum.POSITIVE.getValue());//设为普通卡
 			}
 		}
+		bankPo.setLastAccess(System.currentTimeMillis());
 		
 		int res = bankAccountDao.add(bankPo);
 		if(res > 0){

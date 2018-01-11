@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.weizu.api.outter.enums.ChargeStatusEnum;
 
+import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.api.singleton.BaseInterface;
 import com.weizu.flowsys.api.singleton.BaseP;
 import com.weizu.flowsys.api.singleton.SingletonFactory;
@@ -20,9 +21,9 @@ import com.weizu.flowsys.api.weizu.facet.IChargeFacet;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.AgencyForwardEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
-import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.EpEncodeTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
@@ -34,7 +35,6 @@ import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
-import com.weizu.flowsys.web.agency.dao.impl.AgencyBackwardDao;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeRecordDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
@@ -51,10 +51,12 @@ import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.http.entity.Charge;
+import com.weizu.flowsys.web.http.entity.ChargeLog;
 import com.weizu.flowsys.web.http.entity.ChargePo;
 import com.weizu.flowsys.web.http.entity.PurchaseLog;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.dao.AccountPurchaseDao;
+import com.weizu.flowsys.web.trade.dao.ChargeLogDao;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.dao.PurchaseLogDao;
 import com.weizu.flowsys.web.trade.pojo.AccountPurchasePo;
@@ -104,6 +106,8 @@ public class ChargeImpl implements IChargeFacet {
 	private ChannelDiscountDao channelDiscountDao;
 	@Resource
 	private PurchaseLogDao purchaseLogDao;
+	@Resource
+	private ChargeLogDao chargeLogDao;
 	
 	
 	private Logger logger = Logger.getLogger("ChargeImpl");
@@ -234,17 +238,19 @@ public class ChargeImpl implements IChargeFacet {
 						purchasePo.setOrderResultDetail(orderResultDetail);
 					}else{
 						//上有接口充值返回异常
-//						if(OrderResultEnum.ERROR.equals(chargeDTO.getTipCode())){//充值失败+返款
+						if(OrderResultEnum.ERROR.equals(chargeDTO.getTipCode())){//充值失败+返款
 //							charge = new Charge(ChargeStatusEnum.CHARGE_SUCCESS.getValue(), ChargeStatusEnum.CHARGE_SUCCESS.getDesc(), new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
-//						}
-//						else{
+							orderResult = OrderStateEnum.DAICHONG.getValue();
+							orderResultDetail = chargeDTO.getTipMsg();
+						}
+						else{
 							ChargeOrder co = chargeDTO.getChargeOrder();
 							String orderIdApi = co.getOrderIdApi();
 							logger.config("上游返回的订单号："+ orderIdApi);//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
 							purchasePo.setOrderIdApi(orderIdApi);
 							charge = getChargeByDTO(chargeDTO,chargeParams,purchasePo);
-							orderResultDetail = charge.getTipMsg();
-//						}
+							orderResultDetail = chargeDTO.getTipMsg();
+						}
 					}
 				}else if(!canCharge){
 //					orderResult = OrderStateEnum.DAICHONG.getValue();
@@ -283,11 +289,15 @@ public class ChargeImpl implements IChargeFacet {
 					recAddTag = OrderResultEnum.SUCCESS.getCode();
 	//			}
 			}
-			PurchaseLog purchaseLog = new PurchaseLog(accountId, pgData.getId(), chargeParams.getNumber(), chargeParams.getSign(), chargeParams.getOrderIdFrom(), chargeParams.getReportUrl(), chargeParams.getOrderArriveTime(), orderId, charge.getTipCode() , charge.getTipMsg());
-			purchaseLog.setRecAddTagDesc("超管账户更新："+ OrderResultEnum.getEnum(supperRecAddTag).getMsg() + ",传单账户更新："+ OrderResultEnum.getEnum(recAddTag).getMsg());
-			purchaseLog.setRecAddTag(recAddTag);
-			purchaseLog.setSupperRecAddTag(supperRecAddTag);
-			purchaseLogDao.add(purchaseLog);
+			String accountDesc = "超管账户更新："+ OrderResultEnum.getEnum(supperRecAddTag).getMsg() + ",传单账户更新："+ OrderResultEnum.getEnum(recAddTag).getMsg();
+			ChargeLog chargeLog = new ChargeLog(chargeParams.toString(), charge.toString(), orderId, chargeParams.getNumber(), charge.getTipCode(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+":"+accountDesc);
+			chargeLogDao.add(chargeLog);
+			
+//			PurchaseLog purchaseLog = new PurchaseLog(accountId, pgData.getId(), chargeParams.getNumber(), chargeParams.getSign(), chargeParams.getOrderIdFrom(), chargeParams.getReportUrl(), chargeParams.getOrderArriveTime(), orderId, charge.getTipCode() , charge.getTipMsg());
+//			purchaseLog.setRecAddTagDesc("超管账户更新："+ OrderResultEnum.getEnum(supperRecAddTag).getMsg() + ",传单账户更新："+ OrderResultEnum.getEnum(recAddTag).getMsg());
+//			purchaseLog.setRecAddTag(recAddTag);
+//			purchaseLog.setSupperRecAddTag(supperRecAddTag);
+//			purchaseLogDao.add(purchaseLog);
 			return charge;
 		}else{
 			return (Charge) sqlMap.get("exceptionDTO");
@@ -348,7 +358,7 @@ public class ChargeImpl implements IChargeFacet {
 			return sqlMap;
 		}else{
 			otype = Integer.parseInt(resMap.get("operatorType").toString());
-			PgDataPo pgData = valiUser.findPg(new PgDataPo(otype,  chargeParams.getFlowsize(), chargeParams.getScope(), chargeParams.getPgType(), chargeParams.getPgValidity(),chargeParams.getChannelType(),PgServiceTypeEnum.PGCHARGE.getValue()));//,,
+			PgDataPo pgData = valiUser.findPg(new PgDataPo(otype,  chargeParams.getFlowsize(), chargeParams.getScope(), chargeParams.getPgType(), chargeParams.getPgValidity(),chargeParams.getChannelType()));//,,,PgServiceTypeEnum.PGCHARGE.getValue()
 			
 			if(pgData == null)
 			{

@@ -138,7 +138,6 @@
 $().ready(function() {
     $("#bindRateForm").validate({
     	submitHandler : function(form) {
-    		var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
     		var url = "/flowsys/rate/bind_rate_add.do";
     		var fromTag = $('#fromTag').val();
     		//alert($('#activeDiscount').attr("placeholder"));
@@ -148,6 +147,7 @@ $().ready(function() {
     		}else if(fromTag == "editChannel"){
     			url = "/flowsys/channel/edit_channel_discount.do"
     		}
+    		var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
     		$.ajax({
     	        type: "post",
     	        data: $('form').serialize(),//表单数据

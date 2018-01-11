@@ -155,7 +155,7 @@ public class CompanyCredentialsAOImpl implements CompanyCredentialsAO {
 		int res = companyCredentialsDao.updateLocal(ccpo, new WherePrams("id", "=", ccpo.getId()));//更新这个代理商的认证信息
 		
 		//如果确认就，给代理商增加代理商对公账户,同时把用户的等级换成认证用户
-		if(ConfirmStateEnum.CONFIRM_PASS.getValue() == ccpo.getConfirmState()){
+		if(ConfirmStateEnum.CONFIRM_PASS.getValue().equals(ccpo.getConfirmState()) ){
 			ChargeAccountPo chargePo = new ChargeAccountPo();
 			//认证通过后，设置代理商为认证用户
 			int agencyId = ccpo.getAgencyId();

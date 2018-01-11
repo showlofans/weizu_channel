@@ -12,11 +12,11 @@
 //		//
 //		long hourTimes = 60*60*1000;
 //		long times = System.currentTimeMillis() - hourTimes*2;
-//		long eighteenth = DateUtil.getEndTime().getTime() - hourTimes * 6 ;
-//		long lastEighteenth = DateUtil.getEndTime().getTime() - hourTimes * (6+24) ;
 //		System.out.println(DateUtil.formatAll(times));//前面两小时
-//		System.out.println(DateUtil.formatAll(eighteenth));//当天的18:00
+//		long lastEighteenth = DateUtil.getEndTime().getTime() - hourTimes * (6+24) ;
 //		System.out.println(DateUtil.formatAll(lastEighteenth));//昨天的18:00
+//		long eighteenth = DateUtil.getEndTime().getTime() - hourTimes * 6 ;
+//		System.out.println(DateUtil.formatAll(eighteenth));//当天的18:00
 //	}
 //	
 //	

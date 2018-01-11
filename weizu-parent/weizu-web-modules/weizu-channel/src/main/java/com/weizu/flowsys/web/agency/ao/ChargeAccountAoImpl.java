@@ -78,6 +78,11 @@ public class ChargeAccountAoImpl implements ChargeAccountAo {
 		List<CompanyCredentialsPo> list = companyCredentialsDao.list(new WherePrams("confirm_agency_id", "=", rootAgencyId).and("confirm_state", "=", confirmState));
 		return list;
 	}
+	
+	@Override
+	public Integer countUnconfirmedAccount(int rootAgencyId, int confirmState) {
+		return (int) companyCredentialsDao.count(new WherePrams("confirm_agency_id", "=", rootAgencyId).and("confirm_state", "=", confirmState));
+	}
 
 	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
@@ -199,6 +204,11 @@ public class ChargeAccountAoImpl implements ChargeAccountAo {
 	public ChargeAccountPo getAccountById(int accountId) {
 		
 		return chargeAccountDao.get(accountId);
+	}
+
+	@Override
+	public CompanyCredentialsPo getCredentialByAgency(int agencytId, int confirmAgencyId) {
+		return companyCredentialsDao.get(new WherePrams("agency_id", "=", agencytId).and("confirm_agency_id", "=", confirmAgencyId));
 	}
 
 }

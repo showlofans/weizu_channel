@@ -171,7 +171,7 @@
 			</c:otherwise>
 		</c:choose>
 	</form>
-		<%-- <form action="" method="" class="form form-horizontal">
+		<form action="" method="" class="form form-horizontal">
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">营业执照：</label>
 			<div class="formControls col-xs-7 col-sm-9">
@@ -280,7 +280,7 @@
 				</div>
 			</div>
 		</div>
-	</form> --%>
+	</form> 
 		<!-- <div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">法定人身份证(反面)：</label>
 			<div class="formControls col-xs-7 col-sm-9">
@@ -331,7 +331,7 @@
 			<div class="col-xs-7 col-sm-9 col-xs-offset-4 col-sm-offset-2">
 				<button onClick="" class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
 				<!-- <button onClick="article_save();" class="btn btn-secondary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 保存草稿</button> -->
-				<!-- <button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button> -->
+				<button onClick="removeIframe());" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
 			</div>
 		</div>
 		<input type="hidden" id="confirmState" name="confirmState" value="${resultMap.ccpo.confirmState }">

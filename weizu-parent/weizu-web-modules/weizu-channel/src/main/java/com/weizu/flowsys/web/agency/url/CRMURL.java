@@ -27,6 +27,11 @@ public class CRMURL extends BaseURL {
 	 */
 	public static final String CRM_EDIT_PAGE = "/crm_edit_page" + DYNAMIC_WEB_SUFFIX;
 	/**
+	 * 客户信息编辑页面
+	 * <br>/flowsys/crm/crm_info_edit_page.do
+	 */
+	public static final String CRM_INFO_EDIT_PAGE = "/crm_info_edit_page" + DYNAMIC_WEB_SUFFIX;
+	/**
 	 * 客户基本信息添加
 	 * <br> /flowsys/crm/crm_add.do
 	 */
@@ -42,6 +47,11 @@ public class CRMURL extends BaseURL {
 	 * /flowsys/crm/crm_edit.do
 	 */
 	public static final String CRM_EDIT = "/crm_edit" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 客户信息编辑<br>
+	 * /flowsys/crm/crm_info_edit.do
+	 */
+	public static final String CRM_INFO_EDIT = "/crm_info_edit" + DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 删除客户基本信息
 	 * <br> /flowsys/crm/del_crm.do

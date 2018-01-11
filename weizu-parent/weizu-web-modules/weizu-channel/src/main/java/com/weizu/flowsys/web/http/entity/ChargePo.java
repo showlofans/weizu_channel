@@ -31,7 +31,12 @@ public class ChargePo {
 	public ChargePo() {
 		super();
 	}
-
+	
+	@Override
+	public String toString() {
+		return "ChargePo [orderId=" + orderId + ", number=" + number
+				+ ", pgSize=" + pgSize + ", billType=" + billType + "]";
+	}
 	public Integer getBillType() {
 		return billType;
 	}

@@ -16,11 +16,11 @@ import java.util.Map;
 public enum ConfirmStateTransferEnum {
 	
 	/**
-	 * 转账未通过
+	 * 转账未通过-0
 	 */
 	FAIL_CONFIRM("转账未通过",0),
 	/**
-	 * 待确认
+	 * 待确认-2
 	 */
 	ON_CONFIRM("待确认",2),
 	/**
@@ -28,7 +28,7 @@ public enum ConfirmStateTransferEnum {
 	 */
 //	INCOMPLETE_CONFIRM("待完善",3),
 	/**
-	 * 转账成功
+	 * 转账成功-1
 	 */
 	CONFIRM_PASS("转账成功",1);
 	

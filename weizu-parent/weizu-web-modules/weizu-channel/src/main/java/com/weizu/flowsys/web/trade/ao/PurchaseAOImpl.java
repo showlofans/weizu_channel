@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
@@ -38,6 +39,7 @@ import com.weizu.flowsys.api.weizu.charge.ChargeOrder;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.AgencyForwardEnum;
 import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
@@ -87,9 +89,11 @@ import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.channel.pojo.TelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.TelProductPo;
 import com.weizu.flowsys.web.http.ParamsEntityWeiZu;
+import com.weizu.flowsys.web.http.entity.ChargeLog;
 import com.weizu.flowsys.web.http.weizu.OrderStateResult;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.dao.AccountPurchaseDao;
+import com.weizu.flowsys.web.trade.dao.ChargeLogDao;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.AccountPurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
@@ -158,6 +162,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 	private AccountPurchaseAO accountPurchaseAO;
 	@Resource
 	private SendCallBackUtil sendCallBack;
+	@Resource
+	private ChargeLogDao chargeLogDao;
 	
 	private Logger logger = Logger.getLogger("PurchaseAOImpl");
 //	@Resource
@@ -536,12 +542,12 @@ public class PurchaseAOImpl implements PurchaseAO {
 				System.out.println("通道使用状态暂停");
 				return "产品待更新，产品暂不支持购买！！";
 			}else{
-				String scopeCityCode = ScopeCityEnum.QG.getValue();
-				if(!pcVO.getServiceType().equals(ServiceTypeEnum.NATION_WIDE.getValue())){
-					Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(purchasePo.getChargeTelDetail());
-					scopeCityCode = scopeMap.get("scopeCityCode").toString();
-				}
-				if(EpEncodeTypeEnum.WITH_CODE.equals(epPo.getEpEncodeType())){
+				if(EpEncodeTypeEnum.WITH_CODE.getValue().equals(epPo.getEpEncodeType())){
+					String scopeCityCode = ScopeCityEnum.QG.getValue();
+					if(!pcVO.getServiceType().equals(ServiceTypeEnum.NATION_WIDE.getValue())){
+						Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(purchasePo.getChargeTelDetail());
+						scopeCityCode = scopeMap.get("scopeCityCode").toString();
+					}
 //					String scopeCityCode = StringHelper.isNotEmpty(chargeTelDetail)?PurchaseUtil.getScopeCityByCarrier(chargeTelDetail).get("scopeCityCode").toString():null;
 					dataPo = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, epPo.getId(), Integer.parseInt(purchasePo.getPgId())));
 				}else{
@@ -889,7 +895,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				
 				ExchangePlatformPo epPo = channelChannelDao.getEpByChannelId(ratePo.getChannelId());
 				ProductCodePo pc = null;
-				if(EpEncodeTypeEnum.WITH_CODE.equals(epPo.getEpEncodeType())){
+				if(EpEncodeTypeEnum.WITH_CODE.getValue().equals(epPo.getEpEncodeType())){
 					String scopeCityCode = StringHelper.isNotEmpty(chargeTelDetail)?PurchaseUtil.getScopeCityByCarrier(chargeTelDetail).get("scopeCityCode").toString():null;
 					pc = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, epPo.getId(), Integer.parseInt(purchasePo.getPgId())));
 				}else{
@@ -986,15 +992,28 @@ public class PurchaseAOImpl implements PurchaseAO {
 			bi = HSingletonFactory.getSingleton(epEngId, new BaseP(pc,purchasePo.getOrderId(),purchasePo.getChargeTel(),epPo,DateUtil.formatPramm(purchasePo.getOrderArriveTime(), "yyyy-MM-dd")));
 		}
 		ChargeDTO chargeDTO = null;
+		
 		if(bi != null){
+//		long hourTimes = 60*60*1000;//小时/毫秒
+//		long eighteenth = DateUtil.getEndTime().getTime() - hourTimes * 6 ;//当天18:00的毫秒数
+//		if(System.currentTimeMillis())
+//		System.out.println(DateUtil.formatAll(eighteenth));//当天的18:00
+			
+//			bi.getBalance()
 			chargeDTO = bi.charge();
-			if(chargeDTO != null && chargeDTO.getChargeOrder() != null){//更新返回的订单id，方便主动查询
+			if(chargeDTO != null){//更新返回的订单id，方便主动查询
+				String params = "编码："+pc.getProductCode()+"，平台名称:"+epPo.getEpName();
+				ChargeLog chargeLog = new ChargeLog(params, chargeDTO.toString(), purchasePo.getOrderId(), purchasePo.getChargeTel(), chargeDTO.getTipCode(), System.currentTimeMillis(), AgencyForwardEnum.FOWARD.getValue(), epPo.getEpPurchaseIp()+":tipMsg:"+chargeDTO.getTipMsg());
+				chargeLogDao.add(chargeLog);
 //				PurchasePo purPo = new PurchasePo();
 //				purPo.setOrderId(purchasePo.getOrderId());
 //				purPo.setOrderIdApi(chargeDTO.getChargeOrder().getOrderIdApi());
 //				purchaseDAO.updatePurchaseState(purPo);
-				System.out.println(chargeDTO.getChargeOrder().getOrderIdApi());//测试打印出对应平台的提单地址
-				logger.config("上游返回的订单号："+ chargeDTO.getChargeOrder().getOrderIdApi());//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
+				
+				if(chargeDTO.getChargeOrder() != null){
+					System.out.println(chargeDTO.getChargeOrder().getOrderIdApi());//测试打印出对应平台的提单地址
+					logger.config("上游返回的订单号："+ chargeDTO.getChargeOrder().getOrderIdApi());//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
+				}
 			}
 		}
 //		ChargeDTO chargeDTO = bi.charge();

@@ -208,6 +208,18 @@
 			</div>
 		</div>
 		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">通道类型：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<c:forEach items="${resultMap.channelTypeEnums }" var="channelTypeEnum" varStatus="vs">
+					<div class="radio-box">
+					 	<input name="channelType" class="radioItem" type="radio" id="channelType-${vs.index }" value="${channelTypeEnum.value }" <c:if test="${vs.index==0 }">checked</c:if>>
+						<label for="channelType-${vs.index }">${channelTypeEnum.desc }</label>
+						<%-- <label for="operatorType-${vs.index }"></label> --%>
+					</div>
+				</c:forEach>
+			</div>
+		</div>
+		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">流量有效期：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 				<c:forEach items="${resultMap.pgValidityEnums }" var="pgValidity" varStatus="vs">
@@ -252,18 +264,6 @@
 					</div> -->
 				</c:forEach>
 			</table>
-			</div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">通道类型：</label>
-			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
-				<c:forEach items="${resultMap.channelTypeEnums }" var="channelTypeEnum" varStatus="vs">
-					<div class="radio-box">
-					 	<input name="channelType" class="radioItem" type="radio" id="channelType-${vs.index }" value="${channelTypeEnum.value }" <c:if test="${vs.index==0 }">checked</c:if>>
-						<label for="channelType-${vs.index }">${channelTypeEnum.desc }</label>
-						<%-- <label for="operatorType-${vs.index }"></label> --%>
-					</div>
-				</c:forEach>
 			</div>
 		</div>
 		<div class="row cl">
@@ -448,12 +448,13 @@ function checkBoxes(vart){
 			 var epId = $('#epId').val();
 			 var pgType = $("input[name='pgType']:checked").val();
 			 var pgValidity = $("input[name='pgValidity']:checked").val();
+			 var circulateWay = $("input[name='channelType']:checked").val();
 			 
 			 //alert(operatorType);
 			 $.ajax( {    
 			        "type": "post",     
 			        "contentType": "application/x-www-form-urlencoded; charset=utf-8",    
-			        "url": "/flowsys/channel/change_channel_pgSize.do?operatorType="+ operatorType+"&serviceType=" + serviceType+"&pgType=" + pgType+"&pgValidity=" + pgValidity+"&scopeCityCode=" + scopeCityCode+"&epId=" + epId,
+			        "url": "/flowsys/channel/change_channel_pgSize.do?operatorType="+ operatorType+"&serviceType=" + serviceType+"&circulateWay=" + circulateWay+"&pgType=" + pgType+"&pgValidity=" + pgValidity+"&scopeCityCode=" + scopeCityCode+"&epId=" + epId,
 			        "success": function(d){
 			            $("#pgSize").val(d);	//写入pgSize
 			        }

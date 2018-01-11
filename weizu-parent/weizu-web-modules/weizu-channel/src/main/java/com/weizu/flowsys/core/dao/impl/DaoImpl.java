@@ -462,11 +462,11 @@ public class DaoImpl<T extends Po, PK extends Serializable> implements Dao<T, PK
 				}
 			}
 		}
-//		if(sql.lastIndexOf(",") >= 0){
-//			sql = sql.substring(0,sql.lastIndexOf(","));
-//		} 
+		if(sql.lastIndexOf(",") >= 0 && sql.lastIndexOf(",") == sql.trim().length()-1){//最后一个参数后面跟了，号
+			sql = sql.substring(0,sql.lastIndexOf(","));
+		} 
 		sql += " where id=" + id +";";
-		System.out.println("updateLocal_sql:"+sql);
+		//System.out.println("updateLocal_sql:"+sql);
 		
 		return sqlSessionTemplateASS.update("updateLocal", sql);
 	}
@@ -543,11 +543,11 @@ public class DaoImpl<T extends Po, PK extends Serializable> implements Dao<T, PK
 					j++;
 			}
 		}
-		if(sql.lastIndexOf(",") >= 0){
+		if(sql.lastIndexOf(",") >= 0 && sql.lastIndexOf(",") == sql.trim().length()-1){
 			sql = sql.substring(0,sql.lastIndexOf(","));
 		} 
 		sql += where.getWherePrams() +";";
-		System.out.println("updateLocal_sql:"+sql);
+		//System.out.println("updateLocal_sql:"+sql);
 		return sqlSessionTemplateASS.update("updateLocalByPram", sql);
 		
 	}
@@ -577,7 +577,7 @@ public class DaoImpl<T extends Po, PK extends Serializable> implements Dao<T, PK
 				}
 			}
 		}
-		if(sql.lastIndexOf(",") >= 0){
+		if(sql.lastIndexOf(",") >= 0 && sql.lastIndexOf(",") == sql.trim().length()-1){
 			sql = sql.substring(0,sql.lastIndexOf(","));
 		} 
 		sql += where.getWherePrams() + ";";

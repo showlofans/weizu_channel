@@ -63,7 +63,7 @@
 							</li>
 							<li><a href="/flowsys/agency/logout.do">切换账户</a></li>
 							 <li><a data-href="/flowsys/bankAccount/my_bank_list.do" data-title="申请加款" href="javascript:void(0)" onclick="Hui_admin_tab(this)">申请加款</a></li>
-							<li><a href="javascript:;" onClick="resetPass()">修改密码</a></li>
+							<li><a title="" data-href="/flowsys/agency/reset_pass_page.do" data-title="修改密码" onclick="Hui_admin_tab(this)">修改密码</a></li>
 							<li><a href="/flowsys/agency/logout.do">退出</a></li>
 						</ul>
 					</li>
@@ -204,9 +204,19 @@
 				<li><a data-href="/flowsys/account/charge_list.do" data-title="充值明细" href="javascript:void(0)">充值明细</a></li>
 				<li><a data-href="/flowsys/account/account_info.do" data-title="账户信息" href="javascript:void(0)">账户信息</a></li>
 				<li><a data-href="/flowsys/account/consume_list.do" data-title="订单消费" href="javascript:void(0)">订单消费</a></li>
+				<c:choose>
+					<c:when test="${empty telLogin }"><!-- 当前不是手机模式 -->
+						<li><a href="/flowsys/agency/logout.do?logOutModel=1" title="手机模式" target="_self">手机模式</a></li>
+					</c:when>
+					<c:otherwise>
+						<li><a href="/flowsys/agency/logout.do?logOutModel=2" title="一般模式" target="_self">一般模式</a></li>
+					</c:otherwise>
+				</c:choose>
 				<c:if test="${chargeAccount1 == null && (companyAccount == 'yes' || power == 'no' ) }">
 					<%-- <c:choose>
-						<c:when test="${loginContext.agencyTag != 1 }"></c:when>
+						<c:when test="${loginContext.agencyTag != 1 }">
+						
+						</c:when>
 					</c:choose> --%>
 					<li><a data-href="/flowsys/account/open_company_account_page.do" data-title="开通对公账号" href="javascript:void(0)">开通对公账号</a></li>
 				</c:if>
@@ -228,8 +238,8 @@
  				<li><a title="" data-href="/flowsys/agency/agency_info.do" data-title="个人信息" onclick="Hui_admin_tab(this)">个人信息 </a></li>
 				<li><a title="" data-href="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-title="充值记录" onclick="Hui_admin_tab(this)">余额：<c:if test="${empty chargeAccount.accountBalance && empty chargeAccount1.accountBalance }">0.00</c:if> ${chargeAccount.accountBalance + chargeAccount1.accountBalance}</a></li>
 				<li><a href="/flowsys/agency/logout.do">切换账户</a></li>
-				 <li><a data-href="/flowsys/bankAccount/my_bank_list.do" data-title="申请加款" href="javascript:void(0)" onclick="Hui_admin_tab(this)">申请加款</a></li>
- 				<li><a title="" data-href="/flowsys/agency/reset_pass_page.do?tag=1" data-title="修改密码" onclick="Hui_admin_tab(this)"><%-- ${loginContext.userName} --%>修改密码 </a></li>
+				 <!-- <li><a data-href="/flowsys/bankAccount/my_bank_list.do" data-title="申请加款" href="javascript:void(0)" onclick="Hui_admin_tab(this)">申请加款</a></li> -->
+ 				<li><a title="" data-href="/flowsys/agency/reset_pass_page.do" data-title="修改密码" onclick="Hui_admin_tab(this)"><%-- ${loginContext.userName} --%>修改密码 </a></li>
 				<!-- <li><a href="javascript:;" onClick="resetPass()">修改密码</a></li> -->
 				<li><a href="/flowsys/agency/logout.do">退出</a></li>
 			</ul>
@@ -292,7 +302,8 @@
 		<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe633;</i> 平台相关<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 		<dd>
 			<ul>
-			<c:if test="${loginContext.agencyTag == 1 }">
+			<c:if test="${loginContext.rootAgencyId == 0 }">
+				<li><a href="/view/index.html" title="平台页面模板" target="_blank">平台页面模板</a></li>
 			</c:if>
 				<li><a href="/view/mine/jk-doc/jk-doc.html" title="南昌微族流量接口文档" target="_blank">流量接口文档</a></li>
 				<li><a data-href="http://htmlify.wps.cn/doc/index.html?ksyun=hPT1Afio/word.html&theme=clear" data-title="平台操作指南" href="javascript:void(0)">平台操作指南</a></li>
@@ -442,7 +453,7 @@ $(function(){
     });
 } */
 /**修改密码*/
- function resetPass(){
+/*  function resetPass(){
 	layer.open({
         type: 2,
         title: "重置密码",
@@ -454,7 +465,7 @@ $(function(){
            // location.reload();
         }
     });
-} 
+}  */
 
 </script> 
 </body>

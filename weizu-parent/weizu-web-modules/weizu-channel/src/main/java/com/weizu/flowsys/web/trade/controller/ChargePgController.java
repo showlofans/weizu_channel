@@ -839,7 +839,9 @@ public class ChargePgController {
 	 */
 	@RequestMapping(value=ChargePgURL.PG_BATCH_CHARGE_PAGE)
 	public ModelAndView pgBatchPurchasePage(){
-		return new ModelAndView("/trade/pg_batch_charge_page");
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
+		return new ModelAndView("/trade/pg_batch_charge_page","resultMap",resultMap);
 	}
 	@RequestMapping(value = ChargePgURL.TEL_BATCH_IMPORT_TXT, method = RequestMethod.POST)
 	@ResponseBody
@@ -851,47 +853,77 @@ public class ChargePgController {
 		{
 			if (uploadFile != null && !uploadFile.isEmpty())
 			{
-				long size = uploadFile.getSize();
-				System.out.println(size);
-//				byte[] data = new byte[(int) size];
-				InputStream input = uploadFile.getInputStream();
-				
-				InputStreamReader isr = new InputStreamReader(input);
-				BufferedReader br = new BufferedReader(isr);
-				 String line="";
-//			        String[] arrs=null;
-				 StringBuffer sb = new StringBuffer();
-		        while ((line=br.readLine())!=null) {
-		        	sb.append(line);
-		        	sb.append(",");
-//			            arrs=line.split(",");
-//			            arrs=line;
-//			            System.out.println(arrs[0] + " : " + arrs[1] + " : " + arrs[2]);
-		        }
-			        br.close();
-			        isr.close();
-//			        fis.close();
-				
-//				input.read(data);
-//				File folder = new File(request.getSession().getServletContext().getRealPath("/") + "telTxt/");
-//				if (!folder.exists())
-//				{
-//					folder.mkdir();
-//				}
+				Map<String, Object> map = new HashMap<String, Object>();
+				String msg = "success";
 				String uploadFileName = uploadFile.getOriginalFilename();
-				String ExName = uploadFileName.substring(uploadFileName.lastIndexOf("."), uploadFileName.length());
-//				File outFile = new File(request.getSession().getServletContext().getRealPath("/") + "telTxt/" + context.getLoginUID() + ExName);
-//				
-//				if (!outFile.exists())
-//				{
-//					outFile.createNewFile();
-//				}
-//				FileOutputStream outStream = new FileOutputStream(outFile);
-
-//				outStream.write(data);
-//				outStream.close();
-				input.close();
-				response.getWriter().print(sb.toString());
+				String scopeCode = uploadFileName.substring(uploadFileName.indexOf("_")+1);
+				String scopeCityCode = scopeCode.substring(0,2);
+				String operator = scopeCode.substring(2,uploadFileName.lastIndexOf("."));
+				int operatorType = -1;
+				if("10000".equals(operator)){
+					operatorType = OperatorTypeEnum.TELECOME.getValue();
+				}else if("10010".equals(operator)){
+					operatorType = OperatorTypeEnum.LINK.getValue();
+				}else if("10086".equals(operator)){
+					operatorType = OperatorTypeEnum.MOBILE.getValue();
+				}
+				if(operatorType == -1){
+					msg = "名称不规范(tel_地区编码+运营商客服电话)";
+				}
+				
+				if("success".equals(msg) || ScopeCityEnum.getEnum(scopeCityCode) == null){//运营商或者地区编码不对
+					long size = uploadFile.getSize();
+					System.out.println(size);
+	//				byte[] data = new byte[(int) size];
+					InputStream input = uploadFile.getInputStream();
+					
+					InputStreamReader isr = new InputStreamReader(input);
+					BufferedReader br = new BufferedReader(isr);
+					 String line="";
+	//			        String[] arrs=null;
+					 StringBuffer sb = new StringBuffer();
+			        while ((line=br.readLine())!=null) {
+			        	sb.append(line);
+	//		        	sb.append(",");
+	//			            arrs=line.split(",");
+	//			            arrs=line;
+	//			            System.out.println(arrs[0] + " : " + arrs[1] + " : " + arrs[2]);
+			        }
+				        br.close();
+				        isr.close();
+	//			        fis.close();
+					
+	//				input.read(data);
+	//				File folder = new File(request.getSession().getServletContext().getRealPath("/") + "telTxt/");
+	//				if (!folder.exists())
+	//				{
+	//					folder.mkdir();
+	//				}
+					
+					String ExName = uploadFileName.substring(uploadFileName.lastIndexOf("."), uploadFileName.length());
+	//				File outFile = new File(request.getSession().getServletContext().getRealPath("/") + "telTxt/" + context.getLoginUID() + ExName);
+	//				
+	//				if (!outFile.exists())
+	//				{
+	//					outFile.createNewFile();
+	//				}
+	//				FileOutputStream outStream = new FileOutputStream(outFile);
+	
+	//				outStream.write(data);
+	//				outStream.close();
+					input.close();
+				
+					String scopeCity = ScopeCityEnum.getEnum(scopeCityCode).getDesc();
+					String carrier = scopeCity.substring(0, scopeCity.length()-2) + OperatorTypeEnum.getEnum(operatorType);//carrier
+					map.put("carrier", carrier);//江西移动
+					map.put("telData", sb.toString());
+//					response.getWriter().print(sb.toString());
+				}else{
+					msg = "运营商或者地区编码不对";
+				}
+				map.put("msg", msg);
+				String jsonStr = JSON.toJSONString(map);
+				response.getWriter().print(jsonStr);
 //				returnMessage = invoiceAccountAO.importPreInvoiceAccount(outFile, context.getLoginName(), context.getLoginUID());
 			}
 		}

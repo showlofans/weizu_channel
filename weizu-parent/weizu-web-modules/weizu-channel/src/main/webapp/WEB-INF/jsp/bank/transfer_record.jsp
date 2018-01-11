@@ -61,6 +61,7 @@
 			<thead>
 				<tr class="text-c">
 					<!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
+					<th width="75">汇款代理商</th>
 					<c:choose>
 						<c:when test="${resultMap.direction == 0 }"><!-- 转入显示转出银行卡信息 -->
 							<th width="80">转入银行卡</th>
@@ -77,7 +78,6 @@
 						</c:otherwise>
 					</c:choose>
 					<th width="60">汇款确认状态</th>
-					<th width="75">汇款代理商</th>
 					<th width="75">提交申请时间</th>
 					<th width="75">真实汇款时间</th>
 					<th width="75">汇款确认时间</th>
@@ -88,6 +88,7 @@
 				<c:forEach items="${resultMap.pagination.records }" var="transfer" varStatus="vs">
 					<tr class="text-c font-red">
 						<td style="display:none">${transfer.id }</td>
+						<td>${transfer.fromAgencyName }</td>
 						<c:choose>
 						<c:when test="${resultMap.direction == 0 }"><!-- 转入显示转出银行卡信息 -->
 							<th width="80">${transfer.fromRemittanceWay }</th>
@@ -145,7 +146,6 @@
 							<c:if test="${transfer.confirmState == confirmStateEnum.value }"> <span class="label label-success radius">${confirmStateEnum.desc }</span></c:if>
 							</c:forEach>
 						</td> --%>
-						<td>${transfer.fromAgencyName }</td>
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
 						<td>${transfer.commitTimeStr }</td>
 						<td>${transfer.realTimeStr }</td>

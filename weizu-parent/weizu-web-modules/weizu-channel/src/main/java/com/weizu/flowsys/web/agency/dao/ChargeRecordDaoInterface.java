@@ -6,6 +6,7 @@ import java.util.Map;
 import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
+import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordPo;
 
 public interface ChargeRecordDaoInterface extends Dao<ChargeRecordPo, Long> {
 	
@@ -53,5 +54,14 @@ public interface ChargeRecordDaoInterface extends Dao<ChargeRecordPo, Long> {
 	 * @createTime:2017年8月21日 上午9:50:23
 	 */
 	int crt_addList(List<ChargeRecordPo> recordPoList);
+	
+	/**
+	 * @description: 代理商订单消费统计
+	 * @param paramsMap
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月5日 下午2:15:49
+	 */
+	List<GroupAgencyRecordPo> groupAgencyRecord(Map<String, Object> paramsMap);
 	
 }

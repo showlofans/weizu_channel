@@ -28,10 +28,10 @@ public enum BusinessOneEnum {
 	 * 小兵-bing
 	 */
 	xiao_bing("小兵", "bing"),
-//	/**
-//	 * 月包
-//	 */
-//	MONTH_DAY_DATA("月包", "30"),
+	/**
+	 * 电信-telCome
+	 */
+	telCome("电信", "telCome"),
 	
 	/**
 	 * 小占-zhan

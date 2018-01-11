@@ -49,6 +49,8 @@ public class ConsumeRecordPo extends Po implements Cloneable{
 	
 	@TempField
 	private String endTimeStr;			// 结束时间str
+	@TempField
+	private Integer showModel;			//超管和普通用户
 	
 	@TempField
 	private Long endTime; 				// 结束时间
@@ -97,6 +99,14 @@ public class ConsumeRecordPo extends Po implements Cloneable{
 		return chargeRecordPo;
 	}
 	
+	public Integer getShowModel() {
+		return showModel;
+	}
+
+	public void setShowModel(Integer showModel) {
+		this.showModel = showModel;
+	}
+
 	public Long getPurchaseId() {
 		return purchaseId;
 	}

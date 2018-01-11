@@ -103,39 +103,45 @@ public class Maiyuan implements BaseInterface {
     	    String tipMsg = obj.getString("Message");
     	    String balanceStr = obj.getString("Balance");
             double balance = 0.00d;
-            if(StringHelper.isNotEmpty(balanceStr)){
-            	balance = Double.parseDouble(balanceStr);
-            }
-            String epEngId = baseParams.getEpo().getEpEngId();
-            String epEngIdTag = epEngId.substring(epEngId.length()-1);
-            if("0".equals(epEngIdTag)){
-            	balanceDTO = new BalanceDTO(balance, tipCode, tipMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
+            
+            if(tipCode == 0){//查询成功
+            	if(StringHelper.isNotEmpty(balanceStr)){
+            		balance = Double.parseDouble(balanceStr);
+            	}
+            	balanceDTO = new BalanceDTO(balance, OrderResultEnum.SUCCESS.getCode(), tipMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
             }else{
-            	balanceDTO = new BalanceDTO(balance, tipCode, tipMsg,BillTypeEnum.CORPORATE_BUSINESS.getValue()); 
+            	balanceDTO = new BalanceDTO(balance, OrderResultEnum.ERROR.getCode(), tipMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
             }
+//            String epEngId = baseParams.getEpo().getEpEngId();
+//            String epEngIdTag = epEngId.substring(epEngId.length()-1);
+//            if("0".equals(epEngIdTag)){
+//            	balanceDTO = new BalanceDTO(balance, tipCode, tipMsg,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()); 
+//            }else{
+//            	balanceDTO = new BalanceDTO(balance, tipCode, tipMsg,BillTypeEnum.CORPORATE_BUSINESS.getValue()); 
+//            }
 		    // 最后输出到控制台  
             System.out.println(tipMsg+"<--->"+tipMsg + ":" + balance);  
   
         } catch (JSONException e) {  
             e.printStackTrace();  
         }  
-		
-		ProductDTO productDTO = getProduct();
-		
-		if(productDTO != null){
-			  // 最后输出到控制台  
-	        System.out.println(productDTO.getRspCode()+"<--->"+productDTO.getRspMsg());
-	        
-	        List<ProductIn> getList = productDTO.getProductInList();
-	        if(getList != null){
-	        	for (ProductIn productIn : getList) {
-//	        		System.out.println(productIn.getOperator() + "\tname=" + productIn.getName() + "\tprice=" + productIn.getPrice() + "\t" + productIn.getPg());
-					System.out.println(productIn.toString());
-				}
-	        }
-		}else{
-			System.out.println("没有该类型产品");
-		}
+		//获得产品列表
+//		ProductDTO productDTO = getProduct();
+//		
+//		if(productDTO != null){
+//			  // 最后输出到控制台  
+//	        System.out.println(productDTO.getRspCode()+"<--->"+productDTO.getRspMsg());
+//	        
+//	        List<ProductIn> getList = productDTO.getProductInList();
+//	        if(getList != null){
+//	        	for (ProductIn productIn : getList) {
+////	        		System.out.println(productIn.getOperator() + "\tname=" + productIn.getName() + "\tprice=" + productIn.getPrice() + "\t" + productIn.getPg());
+//					System.out.println(productIn.toString());
+//				}
+//	        }
+//		}else{
+//			System.out.println("没有该类型产品");
+//		}
 		return balanceDTO;
 	}
 

@@ -48,7 +48,25 @@
 		 WHERE id= #{_parameter})
 	</where>
 </select>
-
+<!-- 查看代理商有没有子代理商 -->
+<select id="countSecondAgency" parameterType="string" resultType="int">
+	select count(*) 
+	FROM <include refid="agency_backward"></include>
+	<where>
+		root_agency_id = (SELECT id from <include refid="agency_backward"></include>
+		 WHERE user_name= #{_parameter})
+	</where>
+</select>
+<!-- 查询二级代理商列表 -->
+<select id="getChildrenAgency" parameterType="string" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List"></include>
+	FROM <include refid="agency_backward"></include>
+	<where>
+		root_agency_id = (SELECT id from <include refid="agency_backward"></include>
+		 WHERE user_name= #{_parameter})
+	</where>
+</select>
+<!-- 通过账户id获得代理商信息 -->
 <select id="getAgencyByAccountId" parameterType="int" resultMap="BaseResultMap">
 	select <include refid="AgencyAccount_Column_List"></include>
 	from <include refid="agency_backward"></include> agb

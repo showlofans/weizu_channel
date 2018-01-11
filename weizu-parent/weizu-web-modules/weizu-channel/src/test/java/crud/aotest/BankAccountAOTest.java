@@ -36,31 +36,41 @@
 //	@Resource
 //	private TransferRecAO transferRecAO;
 //	
-////	@Test
-////	public void getMyBankList(){
-////		Map<String,Object> resultMap = new HashMap<String,Object>();
-////		bankAccountAO.getMyBankList(1, resultMap);
-////		List<BankAccountPo> bankList = (List<BankAccountPo>) resultMap.get("bankList");
-////		System.out.println(bankList.size());
-////	}
 //	@Test
-//	public void getAttachBankList(){
-////		Map<String,Object> resultMap = new HashMap<String,Object>();
-////		bankAccountAO.getAttachBankList(61, 1, resultMap);
-////		List<BankAccountPo> unattachList = (List<BankAccountPo>) resultMap.get("unattachList");
-////		List<BankAccountPo> attachList = (List<BankAccountPo>) resultMap.get("attachList");
-////		System.out.println(unattachList.size());
-////		System.out.println(attachList.size());
-//		Map<String,Object> paramsMap = new HashMap<String,Object>();
-//		//与该账户绑定的父级代理商银行卡
-//		paramsMap.put("accountId", 2);
-////		map.put("polarity", CallBackEnum.POSITIVE.getValue());
-//		paramsMap.put("useState", CallBackEnum.POSITIVE.getValue());
-//		List<BankAccountPo> bankList = bankAccountDao.getAttachBankList(paramsMap);
+//	public void getMyBankList(){
+//		Map<String,Object> resultMap = new HashMap<String,Object>();
+//		bankAccountAO.getMyBankList(1, resultMap);
+//		List<BankAccountPo> bankList = (List<BankAccountPo>) resultMap.get("bankList");
 //		for (BankAccountPo bankAccountPo : bankList) {
-//			System.out.println(bankAccountPo.getRemittanceWay());
+//			System.out.println(bankAccountPo.getLastAccessStr());
 //		}
+////		System.out.println(bankList.size());
 //	}
+////	@Test
+////	public void updateBank(){
+////		BankAccountPo bankPo = new BankAccountPo();
+////		bankPo.setLastAccess(System.currentTimeMillis());
+////		int res = bankAccountDao.updateLocal(bankPo, new WherePrams("1", "=", 1));
+////		System.out.println(res);
+////	}
+////	@Test
+////	public void getAttachBankList(){
+//////		Map<String,Object> resultMap = new HashMap<String,Object>();
+//////		bankAccountAO.getAttachBankList(61, 1, resultMap);
+//////		List<BankAccountPo> unattachList = (List<BankAccountPo>) resultMap.get("unattachList");
+//////		List<BankAccountPo> attachList = (List<BankAccountPo>) resultMap.get("attachList");
+//////		System.out.println(unattachList.size());
+//////		System.out.println(attachList.size());
+////		Map<String,Object> paramsMap = new HashMap<String,Object>();
+////		//与该账户绑定的父级代理商银行卡
+////		paramsMap.put("accountId", 2);
+//////		map.put("polarity", CallBackEnum.POSITIVE.getValue());
+////		paramsMap.put("useState", CallBackEnum.POSITIVE.getValue());
+////		List<BankAccountPo> bankList = bankAccountDao.getAttachBankList(paramsMap);
+////		for (BankAccountPo bankAccountPo : bankList) {
+////			System.out.println(bankAccountPo.getRemittanceWay());
+////		}
+////	}
 ////	@Test
 ////	public void getPlusBankList(){
 ////		Map<String,Object> resultMap = new HashMap<String,Object>();

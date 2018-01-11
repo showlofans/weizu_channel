@@ -16,6 +16,8 @@
 //import com.aiyi.base.pojo.PageParam;
 //import com.weizu.flowsys.core.util.NumberTool;
 //import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
+//import com.weizu.flowsys.operatorPg.enums.AgencyLevelEnum;
+//import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 //import com.weizu.flowsys.util.Pagination;
 //import com.weizu.flowsys.web.agency.ao.ChargeRecordAO;
 //import com.weizu.flowsys.web.agency.dao.ChargeAccountDaoInterface;
@@ -23,6 +25,7 @@
 //import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 //import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 //import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
+//import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordPo;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -68,24 +71,24 @@
 //	 * @author:POP产品研发部 宁强
 //	 * @createTime:2017年8月4日 下午4:08:26
 //	 */
-//	@Test
-//	public void testListConsumeRecord(){
-////		ConsumeRecordPo crp = new ConsumeRecordPo();
-//////		crp.setAgencyId(4);
-//		Map<String,Object> parmasMap = new HashMap<String,Object>();
-//		parmasMap.put("agencyId", 1);
-////		Pagination<ConsumeRecordPo> pagination = chargeRecordAO.listConsumeRecord(parmasMap,4, crp, new PageParam(1, 10));
-////		List<ConsumeRecordPo> list = pagination.getRecords();	
-//////		 System.out.println(list.size());
-////		 System.out.println(list.get(0).getRemittanceTimeStr());
-////		 System.out.println(list.get(0).getRemittanceTime());
-////		 System.out.println(list.get(0).getPurchaseId());
-//		System.out.println(chargeRecordDao.countConsume(parmasMap));
-////		 for (ConsumeRecordPo po : list) {
-////			 System.out.println(po.getRemittanceTimeStr());
-//////			System.out.println("username:"+chargeRecordPo.getUserName());
-////		}
-//	}
+////	@Test
+////	public void testListConsumeRecord(){
+//////		ConsumeRecordPo crp = new ConsumeRecordPo();
+////////		crp.setAgencyId(4);
+////		Map<String,Object> parmasMap = new HashMap<String,Object>();
+////		parmasMap.put("agencyId", 1);
+//////		Pagination<ConsumeRecordPo> pagination = chargeRecordAO.listConsumeRecord(parmasMap,4, crp, new PageParam(1, 10));
+//////		List<ConsumeRecordPo> list = pagination.getRecords();	
+////////		 System.out.println(list.size());
+//////		 System.out.println(list.get(0).getRemittanceTimeStr());
+//////		 System.out.println(list.get(0).getRemittanceTime());
+//////		 System.out.println(list.get(0).getPurchaseId());
+////		System.out.println(chargeRecordDao.countConsume(parmasMap));
+//////		 for (ConsumeRecordPo po : list) {
+//////			 System.out.println(po.getRemittanceTimeStr());
+////////			System.out.println("username:"+chargeRecordPo.getUserName());
+//////		}
+////	}
 //	
 //	/**
 //	 * @description: 批量添加
@@ -110,6 +113,18 @@
 ////		System.out.println(res);
 ////	}
 //
+////	@Test
+////	public void testGroupAgencyList(){
+////		ConsumeRecordPo consumeRecordPo = new ConsumeRecordPo();
+////		consumeRecordPo.setAccountType(AccountTypeEnum.DECREASE.getValue());
+////		consumeRecordPo.setShowModel(AgencyLevelEnum.SUPPER_USER.getValue());
+////		consumeRecordPo.setChargeFor(PgServiceTypeEnum.PGCHARGE.getValue());
+////		List<GroupAgencyRecordPo> groupAgencyList =chargeRecordAO.groupAgencyRecord(1, consumeRecordPo);
+////		System.out.println(groupAgencyList.size());
+////		for (GroupAgencyRecordPo groupAgencyRecordPo : groupAgencyList) {
+////			System.out.println(groupAgencyRecordPo.getAgencyName()+":"+groupAgencyRecordPo.getNumb());
+////		}
+////	}
 //
 //
 //}

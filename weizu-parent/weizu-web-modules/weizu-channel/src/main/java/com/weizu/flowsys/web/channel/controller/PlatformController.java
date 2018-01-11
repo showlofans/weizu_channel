@@ -184,4 +184,17 @@ public class PlatformController {
 		}
 		return "not";
 	}
+	/**
+	 * @description: 更新平台余额
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月4日 上午10:09:37
+	 */
+	@RequestMapping(value = PlatformURL.PLATFORM_BALANCE,produces="text/plain;charset=UTF-8")
+	@ResponseBody
+	public String updateEpBalance(){
+		String upRes = exchangePlatformAO.updateEpBalance();
+		return upRes;
+	}
+	
 }
