@@ -1,10 +1,13 @@
 package com.weizu.flowsys.web.trade.dao.impl;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Repository;
 
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
-import com.weizu.flowsys.web.http.entity.ChargeLog;
 import com.weizu.flowsys.web.trade.dao.ChargeLogDao;
+import com.weizu.flowsys.web.trade.pojo.ChargeLog;
 
 /**
  * @description: 提单日志数据库操作
@@ -17,5 +20,17 @@ import com.weizu.flowsys.web.trade.dao.ChargeLogDao;
 @Repository(value="chargeLogDao")
 public class ChargeLogDaoImpl extends DaoImpl<ChargeLog, Long> implements
 		ChargeLogDao {
+
+	@Override
+	public Long countChargeLog(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ChargeLog> listChargeLog(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

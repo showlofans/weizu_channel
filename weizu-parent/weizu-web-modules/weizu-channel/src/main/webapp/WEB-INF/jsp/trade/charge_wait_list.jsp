@@ -303,12 +303,12 @@ function batchCommit(){
 				success: function(resp){
 					//$(obj).parents("tr").remove();
 					//alert
-					if(resp=="success"){
-						//layer.msg('更新绑定成功',{icon:1,time:1000});
 						location.reload();
+					/* if(resp=="success"){
+						//layer.msg('更新绑定成功',{icon:1,time:1000});
 	               	 }else{
 						layer.msg('更新绑定失败',{icon:1,time:1000});
-	               	 }
+	               	 } */
 				},
 				error:function(resp) {
 					console.log(resp.msg);

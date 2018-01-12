@@ -56,7 +56,7 @@ public class Maiyuan implements BaseInterface {
 	public ChargeDTO charge() {
 		ExchangePlatformPo epPo = baseParams.getEpo();
 		String params = toParams();
-		System.out.println(epPo.getEpPurchaseIp()+"?"+params);
+		//System.out.println(epPo.getEpPurchaseIp()+"?"+params);
 		 String jsonStr = HttpRequest.sendGet(epPo.getEpPurchaseIp(), params);
 		 ChargeDTO chargeDTO = null;
 		 try {  
@@ -86,7 +86,7 @@ public class Maiyuan implements BaseInterface {
 //	            chargeDTO = new ChargeDTO(tipCode, tipMsg, new ChargeOrder(orderIdApi, baseParams.getChargeTel(), baseParams.getProductCode(), billType));
 			    // 最后输出到控制台  
 	            System.out.println(code+"<--->"+message);  
-	  
+	            chargeDTO.setJsonStr(jsonStr);//设置返回的json串日志信息
 	        } catch (JSONException e) {  
 	            e.printStackTrace();  
 	        }  
@@ -241,7 +241,7 @@ public class Maiyuan implements BaseInterface {
 		signBuffer.append(platformPo.getEpApikey());
 		try {
 			sign = MD5.getMd5(signBuffer.toString(), MD5.LOWERCASE, "utf-8");
-			System.out.println("充值sign编码参数："+ signBuffer.toString());
+			//System.out.println("充值sign编码参数："+ signBuffer.toString());
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -267,7 +267,7 @@ public class Maiyuan implements BaseInterface {
 		paramBuffer.append("&sign=");
 		paramBuffer.append(sign);
 		
-		System.out.println(paramBuffer.toString());
+		//System.out.println(paramBuffer.toString());
 		return paramBuffer.toString();
 	}
 	

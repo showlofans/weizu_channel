@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
@@ -20,8 +19,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.NumberUtils;
 import org.weizu.api.outter.enums.ChargeStatusEnum;
 
 import com.aiyi.base.pojo.PageParam;
@@ -89,13 +86,13 @@ import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.channel.pojo.TelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.TelProductPo;
 import com.weizu.flowsys.web.http.ParamsEntityWeiZu;
-import com.weizu.flowsys.web.http.entity.ChargeLog;
 import com.weizu.flowsys.web.http.weizu.OrderStateResult;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.dao.AccountPurchaseDao;
 import com.weizu.flowsys.web.trade.dao.ChargeLogDao;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.AccountPurchasePo;
+import com.weizu.flowsys.web.trade.pojo.ChargeLog;
 import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
@@ -811,7 +808,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 		PgDataPo pgDataPo =  operatorPgDao.getPgByOrderId(orderId);
 		
 		/**todo*///超管的单子是不会有充值等待的；只有下级代理商的单子才有充值等待
-		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo(chargeTelDetail, pgDataPo.getServiceType(), null, null, null) , accountId,true);
+		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo(chargeTelDetail, pgDataPo.getServiceType(), pgDataPo.getPgType(), pgDataPo.getPgValidity(), pgDataPo.getCirculateWay()) , accountId,true);
 		
 		if(ratePo != null){
 			ChannelDiscountPo cd = channelDiscountDao.get(ratePo.getChannelDiscountId());
@@ -1003,7 +1000,13 @@ public class PurchaseAOImpl implements PurchaseAO {
 			chargeDTO = bi.charge();
 			if(chargeDTO != null){//更新返回的订单id，方便主动查询
 				String params = "编码："+pc.getProductCode()+"，平台名称:"+epPo.getEpName();
-				ChargeLog chargeLog = new ChargeLog(params, chargeDTO.toString(), purchasePo.getOrderId(), purchasePo.getChargeTel(), chargeDTO.getTipCode(), System.currentTimeMillis(), AgencyForwardEnum.FOWARD.getValue(), epPo.getEpPurchaseIp()+":tipMsg:"+chargeDTO.getTipMsg());
+				//返回参数
+				StringBuffer sb = new StringBuffer();
+				sb.append("tipCode:"+chargeDTO.getTipCode()+",");
+				sb.append("tipMsg:"+chargeDTO.getTipMsg()+",jsonStr:");
+				sb.append(chargeDTO.getJsonStr());
+				
+				ChargeLog chargeLog = new ChargeLog(params, sb.toString(), purchasePo.getOrderId(), purchasePo.getChargeTel(), chargeDTO.getTipCode(), System.currentTimeMillis(), AgencyForwardEnum.FOWARD.getValue(), epPo.getEpPurchaseIp()+":tipMsg:"+chargeDTO.getTipMsg());
 				chargeLogDao.add(chargeLog);
 //				PurchasePo purPo = new PurchasePo();
 //				purPo.setOrderId(purchasePo.getOrderId());
@@ -1011,7 +1014,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 //				purchaseDAO.updatePurchaseState(purPo);
 				
 				if(chargeDTO.getChargeOrder() != null){
-					System.out.println(chargeDTO.getChargeOrder().getOrderIdApi());//测试打印出对应平台的提单地址
+//					System.out.println(chargeDTO.getChargeOrder().getOrderIdApi());//测试打印出对应平台的提单地址
 					logger.config("上游返回的订单号："+ chargeDTO.getChargeOrder().getOrderIdApi());//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
 				}
 			}

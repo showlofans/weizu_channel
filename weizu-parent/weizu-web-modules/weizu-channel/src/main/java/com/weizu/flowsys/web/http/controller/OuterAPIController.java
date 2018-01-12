@@ -106,17 +106,17 @@ public class OuterAPIController {
 		if(pgType == null)
 		{
 			pgType = PgTypeEnum.PGDATA.getValue();
-			chargeParams.setPgType(pgType);
 		}
 		if(StringHelper.isEmpty(pgValidity ))
 		{
 			pgValidity = PgValidityEnum.MONTH_DAY_DATA.getValue();
-			chargeParams.setPgValidity(pgValidity);
 		}
 		if(channelType == null){
 			channelType = ChannelTypeEnum.ORDINARY.getValue();
-			chargeParams.setChannelType(channelType);
 		}
+		chargeParams.setPgType(pgType);
+		chargeParams.setPgValidity(pgValidity);
+		chargeParams.setChannelType(channelType);
 		if(StringHelper.isNotEmpty(userOrderId)){
 			chargeParams.setOrderIdFrom(userOrderId);
 		}

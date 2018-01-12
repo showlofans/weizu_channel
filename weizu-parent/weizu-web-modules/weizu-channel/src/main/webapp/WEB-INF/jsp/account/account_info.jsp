@@ -44,7 +44,7 @@
 	<c:choose>
 		 <c:when test="${loginContext.rootAgencyId == 0 }">
 		</c:when>
-		<c:when test="${ secondAgency && fn:indexOf(rootAgency.otherContact, '&') > 0 }"><!-- 二级代理商可以用分割的方式获得上级root用户的所有联系方式 -->
+		<c:when test="${ resultMap.secondAgency && fn:indexOf(rootAgency.otherContact, '&') > 0 }"><!-- 二级代理商可以用分割的方式获得上级root用户的所有联系方式 -->
 			<%-- <c:set var="qqIndex">${fn:indexOf(qq, '&') }</c:set> --%>
 			<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=${fn:substringBefore(rootAgency.otherContact, '&') }&site=qq&menu=yes"><img border="0" src="/view/button_111.gif" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
 			<!-- 企业官方需要用链接（无法用qq号进行链接） -->
@@ -65,18 +65,18 @@
 	
 		<div id="tab-system" class="HuiTab">
 			<div class="tabBar cl">
-			<c:if test="${chargeAccount1 != null }">
+			<c:if test="${resultMap.chargeAccount1 != null }">
 				<span>高配账户</span>
 			</c:if>
 				<span>一般账户</span>
 			</div>
-			<c:if test="${chargeAccount1 != null }">
+			<c:if test="${resultMap.chargeAccount1 != null }">
 			<form class="form form-horizontal" id="form-account1-edit">
 				<div class="tabCon">
 					<div class="row cl">
 						<label class="form-label col-xs-4 col-sm-2">账户余额：</label>
 						<div class="formControls col-xs-8 col-sm-9">
-							<input type="text" readonly="readonly"  class="input-text" value="${chargeAccount1.accountBalance }" id="" name="">
+							<input type="text" readonly="readonly"  class="input-text" value="${resultMap.chargeAccount1.accountBalance }" id="" name="">
 						</div>
 					</div>
 					<%-- <div class="row cl">
@@ -112,7 +112,7 @@
 							<button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
 						</div>
 					</div> -->
-					<input type="hidden" id="billType" name="billType" value="${chargeAccount1.billType }" >
+					<input type="hidden" id="billType" name="billType" value="${resultMap.chargeAccount1.billType }" >
 				</div>
 			</form>
 			</c:if>
@@ -121,7 +121,7 @@
 				<div class="row cl">
 					<label class="form-label col-xs-4 col-sm-2">账户余额：</label>
 					<div class="formControls col-xs-8 col-sm-9">
-						<input type="text" readonly="readonly"  class="input-text" value="${chargeAccount.accountBalance }" id="" name="">
+						<input type="text" readonly="readonly"  class="input-text" value="${resultMap.chargeAccount.accountBalance }" id="" name="">
 					</div>
 				</div>
 				<%-- <div class="row cl">
@@ -148,7 +148,7 @@
 						<button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
 					</div>
 				</div> -->
-				<input type="hidden" id="billType" name="billType" value="${chargeAccount.billType }" >
+				<input type="hidden" id="billType" name="billType" value="${resultMap.chargeAccount.billType }" >
 			</div>
 			</form>
 		</div>
@@ -167,7 +167,7 @@
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script> 
 <script type="text/javascript">
 $().ready(function() {
-	$("#form-account1-edit").validate({
+	/* $("#form-account1-edit").validate({
 		submitHandler : function(form) {
 			$.ajax({
 		        type:"post",
@@ -178,12 +178,12 @@ $().ready(function() {
 		            if(d=="success"){
 		            	alert("保存成功");
 		                layer.msg('保存成功！');//保存成功提示
+		                removeIframe();
 		            }
 		            if(d=="error"){
 		                layer.msg('保存异常!');
 		            }
-		            /* var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
-		            parent.layer.close(index); //执行关闭 */
+		            
 		        }
 		    }); 
 		}
@@ -198,16 +198,15 @@ $().ready(function() {
 		        success:function(d){
 		            if(d=="success"){
 		                layer.msg('保存成功！');//保存成功提示
+		                removeIframe();
 		            }
 		            if(d=="error"){
 		                layer.msg('保存异常!');
 		            }
-		           /*  var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
-		            parent.layer.close(index); //执行关闭 */
 		        }
 		    }); 
 		}
-	});
+	}); */
 	
 })
 

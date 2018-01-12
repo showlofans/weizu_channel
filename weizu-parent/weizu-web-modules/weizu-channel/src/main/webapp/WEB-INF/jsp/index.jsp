@@ -55,7 +55,7 @@
 				<ul class="cl">
 					<!-- <li>超级管理员</li> -->
 					<%-- <li>个人信用：<a href="#"><c:if test="${empty chargeAccount.accountCredit }">0.00</c:if> ${chargeAccount.accountCredit }</a></li> --%>
-					<li>余额：<a title="充值记录" data-href="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-title="充值记录" onclick="Hui_admin_tab(this)"><c:if test="${empty chargeAccount.accountBalance && empty chargeAccount1.accountBalance }">0.00</c:if> ${chargeAccount.accountBalance + chargeAccount1.accountBalance}</a></li>
+					<li>余额：<a title="充值记录" data-href="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-title="充值记录" onclick="Hui_admin_tab(this)">${totalBalance }</a></li><!-- <c:if test="${empty chargeAccount.accountBalance && empty chargeAccount1.accountBalance }">0.00</c:if> ${chargeAccount.accountBalance + chargeAccount1.accountBalance} -->
 					<li class="dropDown dropDown_hover">
 						<a href="javascript:;" onClick="myselfinfo()" class="dropDown_A">${loginContext.userName} <i class="Hui-iconfont">&#xe6d5;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
@@ -212,7 +212,7 @@
 						<li><a href="/flowsys/agency/logout.do?logOutModel=2" title="一般模式" target="_self">一般模式</a></li>
 					</c:otherwise>
 				</c:choose>
-				<c:if test="${chargeAccount1 == null && (companyAccount == 'yes' || power == 'no' ) }">
+				<c:if test="${loginContext.agencyTag != 1 && (companyAccount == 'yes' || power == 'no' ) }">
 					<%-- <c:choose>
 						<c:when test="${loginContext.agencyTag != 1 }">
 						

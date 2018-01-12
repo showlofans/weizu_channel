@@ -476,12 +476,16 @@ public class AccountController {
 //			request.getSession().setAttribute("qq",qq);
 //		}
 //		
+		Map<String,Object> resultMap = new HashMap<String, Object>();
 		boolean secondAgency = agencyAO.checkSecondAgency(agencyVo.getId());
-		request.getSession().setAttribute("secondAgency",secondAgency);
-		request.getSession().setAttribute("chargeAccount",chargeAccount);
-		request.getSession().setAttribute("chargeAccount1",chargeAccount1);
-		return new ModelAndView("/account/account_info");
-//		return new ModelAndView("/account/account_info","resultMap",resultMap);
+		resultMap.put("secondAgency",secondAgency);
+		resultMap.put("chargeAccount",chargeAccount);
+		resultMap.put("chargeAccount1",chargeAccount1);
+//		request.getSession().setAttribute("secondAgency",secondAgency);
+//		request.getSession().setAttribute("chargeAccount",chargeAccount);
+//		request.getSession().setAttribute("chargeAccount1",chargeAccount1);
+//		return new ModelAndView("/account/account_info");
+		return new ModelAndView("/account/account_info","resultMap",resultMap);
 	}
 	/**
 	 * @description: 账户信息更新
@@ -490,43 +494,43 @@ public class AccountController {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月3日 上午11:56:01
 	 */
-	@RequestMapping(value=AccountURL.ACCOUNT_INFO_EDIT)
-	@ResponseBody
-	public void editAccountInfo(HttpServletRequest request,ChargeAccountPo chargeAccount,HttpServletResponse response){
-		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-//		Map<String,Object> resultMap = new HashMap<String, Object>();
-		if(agencyVo != null){
-			chargeAccount.setAgencyId(agencyVo.getId());
-			int res = chargeAccountAO.updateAccount(chargeAccount);
-			try {
-				if(res > 0 )
-				{
-					//更新session中相关账户信息
-					if(chargeAccount.getBillType() == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())
-					{
-//					ChargeAccountPo chargeAccount0 =  (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
-//					chargeAccount0.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());
-						request.getSession().setAttribute("chargeAccount", chargeAccount);
-					}else if(chargeAccount.getBillType() == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())
-					{
-//					ChargeAccountPo chargeAccount1 =  (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
-//					chargeAccount1.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());
-						request.getSession().setAttribute("chargeAccount1", chargeAccount);
-					}
-					
-					response.getWriter().print("success");
-				}
-				else
-				{
-					response.getWriter().print("error");
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-//		return new ModelAndView("/account/account_info","resultMap",resultMap);
-	}
+//	@RequestMapping(value=AccountURL.ACCOUNT_INFO_EDIT)
+//	@ResponseBody
+//	public void editAccountInfo(HttpServletRequest request,ChargeAccountPo chargeAccount,HttpServletResponse response){
+//		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+////		Map<String,Object> resultMap = new HashMap<String, Object>();
+//		if(agencyVo != null){
+//			chargeAccount.setAgencyId(agencyVo.getId());
+//			int res = chargeAccountAO.updateAccount(chargeAccount);
+//			try {
+//				if(res > 0 )
+//				{
+//					//更新session中相关账户信息
+//					if(chargeAccount.getBillType() == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())
+//					{
+////					ChargeAccountPo chargeAccount0 =  (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
+////					chargeAccount0.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());
+//						request.getSession().setAttribute("chargeAccount", chargeAccount);
+//					}else if(chargeAccount.getBillType() == BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())
+//					{
+////					ChargeAccountPo chargeAccount1 =  (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
+////					chargeAccount1.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());
+//						request.getSession().setAttribute("chargeAccount1", chargeAccount);
+//					}
+//					
+//					response.getWriter().print("success");
+//				}
+//				else
+//				{
+//					response.getWriter().print("error");
+//				}
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		
+////		return new ModelAndView("/account/account_info","resultMap",resultMap);
+//	}
 	
 	/**
 	 * @description: 审核认证信息

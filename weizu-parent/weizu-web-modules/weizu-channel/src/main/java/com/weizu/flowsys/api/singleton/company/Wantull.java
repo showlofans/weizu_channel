@@ -1,13 +1,7 @@
 package com.weizu.flowsys.api.singleton.company;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.Date;
 
-import javax.annotation.Resource;
-
-import org.springframework.data.geo.Circle;
-import org.springframework.stereotype.Service;
 import org.weizu.api.util.HttpRequest;
 
 import com.alibaba.fastjson.JSON;
@@ -20,21 +14,15 @@ import com.weizu.flowsys.api.singleton.OrderDTO;
 import com.weizu.flowsys.api.singleton.OrderIn;
 import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 import com.weizu.flowsys.api.weizu.charge.ChargeOrder;
-import com.weizu.flowsys.operatorPg.enums.AgencyForwardEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
-import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
-import com.weizu.flowsys.util.StringUtil2;
-import com.weizu.flowsys.web.channel.dao.IProductCodeDAO;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
-import com.weizu.flowsys.web.http.entity.ChargeLog;
-import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.MD5;
 import com.weizu.web.foundation.String.StringHelper;
 
@@ -62,7 +50,7 @@ public class Wantull implements BaseInterface {
 	public ChargeDTO charge() {
 		String params = toParams();
 		ExchangePlatformPo epPo = baseParams.getEpo();
-		System.out.println(epPo.getEpPurchaseIp()+"?"+params);
+		//System.out.println(epPo.getEpPurchaseIp()+"?"+params);
 		 String jsonStr = HttpRequest.sendGet(epPo.getEpPurchaseIp(), params);
 		 
 		 ChargeDTO chargeDTO = null;
@@ -84,6 +72,7 @@ public class Wantull implements BaseInterface {
 	            }else{
 	            	chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), tipMsg, new ChargeOrder(orderIdApi, null, null, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
 	            }
+	            chargeDTO.setJsonStr(jsonStr);//设置返回的json串日志信息
 //	            String epEngId = epPo.getEpEngId();
 //	            int billType = BillTypeEnum.CORPORATE_BUSINESS.getValue();
 //	            if("0".equals(epEngId.substring(epEngId.length()-1))){//英文标识最后一个字符是0表示对私
@@ -93,7 +82,6 @@ public class Wantull implements BaseInterface {
 //	            chargeDTO = new ChargeDTO(tipCode, tipMsg, new ChargeOrder(orderIdApi, baseParams.getChargeTel(), baseParams.getProductCode(), billType));
 			    // 最后输出到控制台  
 	            System.out.println(tipCode+"<--->"+tipMsg);  
-	  
 	        } catch (JSONException e) {  
 	            e.printStackTrace();  
 	        }  

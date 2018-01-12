@@ -313,6 +313,7 @@ public class Zxpay implements BaseInterface {
 //					}
 //		            System.out.println("返回码描述信息codeMsg:"+codeMsg);
 	            }
+	            chargeDTO.setJsonStr(jsonStr);//设置返回的json串日志信息
 	        } catch (JSONException e) {  
 	            e.printStackTrace();  
 	        }  

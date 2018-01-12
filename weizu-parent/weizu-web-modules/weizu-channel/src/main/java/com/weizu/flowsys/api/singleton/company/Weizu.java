@@ -218,8 +218,10 @@ public class Weizu implements BaseInterface {
 	            	//用我这边默认的对私账户充值
 	            	if(tipCode == 0){
 	            		chargeDTO = new ChargeDTO(OrderResultEnum.SUCCESS.getCode(), tipMsg, new ChargeOrder(orderIdApi, number, pgSize, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
+	            		chargeDTO.setJsonStr(jsonStr);//设置返回的json串日志信息
 	            	}else if(tipCode == 50000 || tipCode == 50005 || tipCode == 50006 || tipCode == 50008 || tipCode == 50012 || tipCode == 50004 || tipCode == 55006){
 	            		chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), tipMsg, new ChargeOrder(orderIdApi, number, pgSize, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
+	            		chargeDTO.setJsonStr(jsonStr);//设置返回的json串日志信息
 	            	}else{//返回失败,考虑退款
 	            		// 最后输出到控制台  
 	            		System.out.println(tipCode+"<--->"+tipMsg);  
@@ -231,7 +233,6 @@ public class Weizu implements BaseInterface {
 	        } catch (JSONException e) {  
 	            e.printStackTrace();  
 	        }  
-		 
 //		System.out.println(baseParams.getOrderId());
 //		System.out.println(baseParams.getAddParams());
 		return chargeDTO;
