@@ -179,9 +179,10 @@
 ////	}
 //	@Test
 //	public void testGetRateForCharge(){
-//		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo("陕西移动", 1, null, null, null), 2, true);
+//		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo("广东移动", 1,1, "20", 2,50), 115, true);
 //		//{operatorType=0, channelState=0, billTypeRate=0, channelUseState=0, bindState=0, scopeCityCode=19, serviceType=1, agencyId=4}
 //		if(ratePo != null){
+//			System.out.println(ratePo.getActiveDiscount());
 //			System.out.println("success");
 //		}else{
 //			

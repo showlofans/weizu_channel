@@ -161,13 +161,14 @@
 									${purchase.agencyName }
 								</c:when>
 								<c:otherwise>
-									<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="editAgency(${purchase.agencyId})" href="javascript:;" title="查看代理商">
 										${purchase.agencyName }
-									</a>
+									<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="editAgency(${purchase.agencyId})" href="javascript:;" title="查看代理商">
+									</a> --%>
 								</c:otherwise>
 							</c:choose>
 						</td>
-						<td>${purchase.orderId }
+						<td>
+						<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" data-href="/flowsys/chargeLog/charge_log_list.do?orderId=${purchase.orderId }" title="查看传单日志" onclick="Hui_admin_tab(this)" data-title="接口订单日志" href="javascript:void(0)">${purchase.orderId }</a>
 							<%-- <c:choose>
 								<c:when test="${purchase.billType == 0 }">
 									<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
@@ -319,7 +320,7 @@ function editAgency(id){
 	//var $id = $agencyTr.children(0);
 	layer.open({
         type: 2,
-        title: '查看APIKey',
+        title: '查看代理商',
         area: ['800px', '500px'],
         maxmin: false,
         closeBtn: 1,

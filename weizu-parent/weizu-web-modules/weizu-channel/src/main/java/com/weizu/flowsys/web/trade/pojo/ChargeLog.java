@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.trade.pojo;
 
 import com.weizu.flowsys.core.annotation.po.TableName;
+import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
 
 /**
@@ -29,6 +30,12 @@ public class ChargeLog extends Po {
 	private String chargeDesc;				//提单结果描述
 	
 	private Long chargeTime;
+	@TempField
+	private String chargeTimeStr;			//页面参数：日志生成时间
+	@TempField
+	private String startTimeStr;			//参数:开始时间页面
+	@TempField
+	private String endTimeStr;				//参数:结束时间页面
 	
 	private Integer chargeDirection;		//提单方向 AgencyForwardEnum
 	
@@ -48,6 +55,30 @@ public class ChargeLog extends Po {
 		this.chargeTime = chargeTime;
 		this.chargeDirection = chargeDirection;
 		this.chargeDesc = chargeDesc;
+	}
+	
+	public String getChargeTimeStr() {
+		return chargeTimeStr;
+	}
+
+	public void setChargeTimeStr(String chargeTimeStr) {
+		this.chargeTimeStr = chargeTimeStr;
+	}
+
+	public String getStartTimeStr() {
+		return startTimeStr;
+	}
+
+	public void setStartTimeStr(String startTimeStr) {
+		this.startTimeStr = startTimeStr;
+	}
+
+	public String getEndTimeStr() {
+		return endTimeStr;
+	}
+
+	public void setEndTimeStr(String endTimeStr) {
+		this.endTimeStr = endTimeStr;
 	}
 
 	public String getChargeDesc() {

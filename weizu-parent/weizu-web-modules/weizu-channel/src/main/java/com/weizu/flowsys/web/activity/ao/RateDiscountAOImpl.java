@@ -931,6 +931,10 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		} else {
 			params.put("pgValidity", ccpp.getPgValidity());
 		}
+		
+		if(ccpp.getPgSize() != null){
+			params.put("pgSize", ccpp.getPgSize());
+		}
 		return rateDiscountDao.getRateForCharge(params);
 	}
 	

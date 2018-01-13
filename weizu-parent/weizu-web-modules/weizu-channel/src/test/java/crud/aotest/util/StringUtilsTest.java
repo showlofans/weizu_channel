@@ -5,6 +5,8 @@
 //import java.util.Arrays;
 //import java.util.Map;
 //
+//import org.weizu.api.outter.enums.ChargeStatusEnum;
+//
 //import com.alibaba.fastjson.JSON;
 //import com.weizu.flowsys.util.JsonKeyEncodeUtil;
 //import com.weizu.flowsys.util.StringUtil2;
@@ -33,7 +35,13 @@
 ////		ts *= 1000;
 ////		System.out.println(DateUtil.formatAll(ts));
 ////		String[]  attr = new String []{"mch_id","phone","goods_id","out_trade_no","notify_url","mch_time"};
-//		String[]  attr = new String []{"mch_id","out_trade_no","time"};
-//		StringUtil2.printSortedArr(attr);
+//		
+////		String[]  attr = new String []{"mch_id","out_trade_no","time"};
+////		StringUtil2.printSortedArr(attr);
+////		ChargeStatusEnum[] enums = ChargeStatusEnum.values();
+////		for (ChargeStatusEnum chargeStatusEnum : enums) {
+////			System.out.println(chargeStatusEnum.getValue());
+////		}
+//		System.out.println(ChargeStatusEnum.SCOPE_RATE_UNDEFINED.getValue());
 //	}
 //}

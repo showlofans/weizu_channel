@@ -162,6 +162,7 @@
 							<li><a data-href="/flowsys/chargePg/purchase_list.do?orderResult=4" data-title="充值等待" href="javascript:void(0)">充值等待</a></li>
 							<li><a data-href="/flowsys/chargePg/purchase_list.do?orderResult=1" data-title="充值成功" href="javascript:void(0)">充值成功</a></li>
 							<li><a data-href="/flowsys/chargePg/purchase_list.do?orderResult=0" data-title="充值失败" href="javascript:void(0)">充值失败</a></li>
+							<li><a data-href="/flowsys/chargeLog/charge_log_list.do" data-title="接口订单日志" href="javascript:void(0)">接口订单日志</a></li>
 						</c:when>
 						<c:otherwise>
 							<li><a data-href="/flowsys/chargePg/purchase_list.do" data-title="订单列表" href="javascript:void(0)">订单列表</a></li>

@@ -185,7 +185,7 @@ public class ChargeImpl implements IChargeFacet {
 			}
 			ExchangePlatformPo epPo = exchangePlatformDao.get(channelPo.getEpId());
 			ProductCodePo pc = null;
-			if(EpEncodeTypeEnum.WITH_CODE.equals(epPo.getEpEncodeType())){
+			if(EpEncodeTypeEnum.WITH_CODE.getValue().equals(epPo.getEpEncodeType())){
 				String scopeCityCode = StringHelper.isNotEmpty(chargeTelDetail)?PurchaseUtil.getScopeCityByCarrier(chargeTelDetail).get("scopeCityCode").toString():null;
 				pc = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, epPo.getId(), pgData.getId()));
 			}else{
@@ -228,7 +228,7 @@ public class ChargeImpl implements IChargeFacet {
 //					int aarAdd = accountPurchaseDao.add(app);
 				}
 				
-				if(!isChannelStateClose && canCharge){
+				if(!isChannelStateClose && canCharge){//canCharge：余额足够
 					BaseInterface bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(pc,orderId,chargeTel,epPo,DateUtil.formatPramm(purchasePo.getOrderArriveTime(), "yyyy-MM-dd")));
 					ChargeDTO chargeDTO = bi.charge();
 					if(chargeDTO == null){
@@ -236,6 +236,7 @@ public class ChargeImpl implements IChargeFacet {
 						orderResultDetail = ChargeStatusEnum.API_ERROR.getDesc();
 						purchasePo.setOrderResult(orderResult);
 						purchasePo.setOrderResultDetail(orderResultDetail);
+						charge = new Charge(ChargeStatusEnum.PG_NOT_FOUND.getValue(), "chargeDTO为空", new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
 					}else{
 						//上有接口充值返回异常
 						if(OrderResultEnum.SUCCESS.getCode().equals(chargeDTO.getTipCode())){
@@ -248,7 +249,9 @@ public class ChargeImpl implements IChargeFacet {
 						}else{
 							orderResult = OrderStateEnum.DAICHONG.getValue();
 							orderResultDetail = chargeDTO.getTipMsg();
-							charge = new Charge(orderResult, orderResultDetail,null);
+							purchasePo.setOrderResult(orderResult);
+							purchasePo.setOrderResultDetail(orderResultDetail);
+							charge = new Charge(OrderResultEnum.ERROR.getCode(), orderResultDetail,null);
 						}
 					}
 				}else if(!canCharge){
@@ -265,11 +268,14 @@ public class ChargeImpl implements IChargeFacet {
 					
 					charge = new Charge(ChargeStatusEnum.CHARGE_SUCCESS.getValue(), ChargeStatusEnum.CHARGE_SUCCESS.getDesc(), new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
 				}
-			}else if(pc == null){
-				logger.config("产品编码未配置,没有通过接口充值，不产生接口订单号");
 			}else{
+				charge = new Charge(ChargeStatusEnum.PG_NOT_FOUND.getValue(), "产品编码未配置,没有通过接口充值，不产生接口订单号", new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
 				logger.config(orderStateDetail + ":没有通过接口充值，不产生接口订单号");
 			}
+//			else if(pc == null){
+//				charge = new Charge(ChargeStatusEnum.PG_NOT_FOUND.getValue(), "产品编码未配置,没有通过接口充值，不产生接口订单号", new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
+//				logger.config("产品编码未配置,没有通过接口充值，不产生接口订单号");
+//			}
 //			if(charge == null && !isChannelStateClose){
 //				throw new Exception("发送接口请求异常，接口调用失败");
 //			}
@@ -419,7 +425,7 @@ public class ChargeImpl implements IChargeFacet {
 				sqlMap.put("accountPo", accountPo);
 				String chargeTelDetail = resMap.get("chargeTelDetail").toString();
 				//折扣是忽略包体大小的
-				RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo(chargeTelDetail, chargeParams.getScope(), chargeParams.getPgType(), chargeParams.getPgValidity(), chargeParams.getChannelType()), accountPo.getId(),false);
+				RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo(chargeTelDetail, chargeParams.getScope(), chargeParams.getPgType(), chargeParams.getPgValidity(), chargeParams.getChannelType(),chargeParams.getFlowsize()), accountPo.getId(),false);
 				if(ratePo == null){
 					chargeEnum = ChargeStatusEnum.SCOPE_RATE_UNDEFINED;
 					charge = new Charge(chargeEnum.getValue(),chargeEnum.getDesc(), null);

@@ -677,7 +677,6 @@ public class ChargePgController {
 		if(pageNoLong != null){
 			pageParam = new PageParam(pageNoLong, 10) ;
 		}else{//初始化开始时间和结束时间
-			
 			pageParam = new PageParam(1l, 10);
 		}
 		if(purchaseVO.getPurchaseFor() == null){

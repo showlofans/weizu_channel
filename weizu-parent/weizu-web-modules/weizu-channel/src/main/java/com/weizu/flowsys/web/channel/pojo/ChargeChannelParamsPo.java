@@ -25,6 +25,8 @@ public class ChargeChannelParamsPo {
     private Integer pgType;				//流量类型（1-流量包，2-流量池）
     private String pgValidity;			//流量有效期(PgValidityEnum)
     private Integer channelType;						//通道类型（页面参数：1-普通通道包，2-红包通道，3-转移包，4-共享包）
+    
+    private Integer pgSize;					//包体大小
 	
 	public ChargeChannelParamsPo(String carrier, String scopeCityCode,
 			String epName) {
@@ -42,13 +44,14 @@ public class ChargeChannelParamsPo {
 	 * @param channelType
 	 */
 	public ChargeChannelParamsPo(String carrier, Integer serviceType,
-			Integer pgType, String pgValidity, Integer channelType) {
+			Integer pgType, String pgValidity, Integer channelType,Integer pgSize) {
 		super();
 		this.carrier = carrier;
 		this.serviceType = serviceType;
 		this.pgType = pgType;
 		this.pgValidity = pgValidity;
 		this.channelType = channelType;
+		this.pgSize = pgSize;
 	}
 
 
@@ -76,6 +79,15 @@ public class ChargeChannelParamsPo {
 		this.pgType = pgType;
 	}
 
+
+	
+	public Integer getPgSize() {
+		return pgSize;
+	}
+
+	public void setPgSize(Integer pgSize) {
+		this.pgSize = pgSize;
+	}
 
 	public String getPgValidity() {
 		return pgValidity;

@@ -808,7 +808,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 		PgDataPo pgDataPo =  operatorPgDao.getPgByOrderId(orderId);
 		
 		/**todo*///超管的单子是不会有充值等待的；只有下级代理商的单子才有充值等待
-		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo(chargeTelDetail, pgDataPo.getServiceType(), pgDataPo.getPgType(), pgDataPo.getPgValidity(), pgDataPo.getCirculateWay()) , accountId,true);
+		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo(chargeTelDetail, pgDataPo.getServiceType(), pgDataPo.getPgType(), pgDataPo.getPgValidity(), pgDataPo.getCirculateWay(),pgDataPo.getPgSize()) , accountId,true);
 		
 		if(ratePo != null){
 			ChannelDiscountPo cd = channelDiscountDao.get(ratePo.getChannelDiscountId());

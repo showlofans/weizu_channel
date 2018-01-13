@@ -68,31 +68,7 @@
 				</select>
 				</span> </div>
 		</div>
-			<div class="row cl">
-				<label class="form-label col-xs-4 col-sm-2">流量大小：</label>
-				<div class="formControls col-xs-8 col-sm-9">
-					<input type="text" class="input-text" required="required" maxlength="6" onkeyup='this.value=this.value.replace(/\D/gi,"")' style="width:100px" value="" placeholder="" id="pgSize" name="pgSize">M
-				</div>
-			</div>
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2">原价：</label>
-			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" style="width:100px" required="required" class="input-text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")'  value="" placeholder="" id="pgPrice" name="pgPrice">元
-			</div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否启用：</label>
-			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box inline">
-				<select  name="pgInService" class="select">
-					<%-- <c:forEach items="${resultMap.pgInServiceEnums }" var="pgInService" varStatus="vs1">
-						<option value="${pgInService.value }">${pgInService.desc }</option>
-					</c:forEach> --%>
-						<option value="1">开通</option>
-				</select>
-				</span> 
-				</div>
-		</div>
-			<div class="row cl">
 				<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>流量包有效期：</label>
 				<div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
 					<select id="pgValidity" name="pgValidity" class="select">
@@ -125,7 +101,30 @@
 					</select>
 					</span> </div>
 			</div>
-		
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-2">流量大小：</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" required="required" maxlength="6" onkeyup='this.value=this.value.replace(/\D/gi,"")' style="width:100px" value="" placeholder="" id="pgSize" name="pgSize">M
+				</div>
+			</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">原价：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" style="width:100px" required="required" class="input-text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")'  value="" placeholder="" id="pgPrice" name="pgPrice">元
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否启用：</label>
+			<div class="formControls col-xs-8 col-sm-9"> <span class="select-box inline">
+				<select  name="pgInService" class="select">
+					<%-- <c:forEach items="${resultMap.pgInServiceEnums }" var="pgInService" varStatus="vs1">
+						<option value="${pgInService.value }">${pgInService.desc }</option>
+					</c:forEach> --%>
+						<option value="1">开通</option>
+				</select>
+				</span> 
+				</div>
+		</div>
 		<div id="province"></div>
 		
 		<div class="row cl va-b">

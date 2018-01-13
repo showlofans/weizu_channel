@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.weizu.flowsys.web.trade.dao.ChargeLogDao">
-	<sql id="t_cchargeLog">charge_log</sql>
+	<sql id="t_chargeLog">charge_log</sql>
 
 	<resultMap type="com.weizu.flowsys.web.trade.pojo.ChargeLog" id="BaseResultMap">
 		<id column="id" property="id" jdbcType="INTEGER" />
@@ -11,7 +11,7 @@
 	    <result column="charge_tel" property="chargeTel" jdbcType="VARCHAR" />
 	    <result column="charge_desc" property="chargeDesc" jdbcType="VARCHAR" />
 	    <result column="charge_status" property="chargeStatus" jdbcType="INTEGER" />
-	    <result column="charge_time" property="confirmTime" jdbcType="BIGINT" />
+	    <result column="charge_time" property="chargeTime" jdbcType="BIGINT" />
 	    <result column="charge_direction" property="chargeDirection" jdbcType="INTEGER" />
 	</resultMap>
 	<sql id="Base_Column_List" >
@@ -19,7 +19,7 @@
 	 </sql>
 	 <select id="listChargeLog" parameterType="map" resultMap="BaseResultMap">
   	select <include refid="Base_Column_List"></include>
-  	from <include refid="t_cchargeLog"></include>
+  	from <include refid="t_chargeLog"></include>
   	<where>
   		<include refid="condition_sql"></include>
   	</where>
@@ -31,13 +31,20 @@
 	 	, #{end}
 	 </if>
   </select>
-  <select id="countChargeLog" parameterType="map" resultType="int">
+  <select id="countChargeLog" parameterType="map" resultType="long">
   	select count(id)
-  	from <include refid="t_cchargeLog"></include>
+  	from <include refid="t_chargeLog"></include>
   	<where>
   		<include refid="condition_sql"></include>
   	</where>
   </select>
+  <!-- 根据条件删除日志 -->
+  <delete id="delChargeLog" parameterType="map">
+  	delete from <include refid="t_chargeLog"></include>
+  	<where>
+  		<include refid="condition_sql"></include>
+  	</where>
+  </delete>
   
   <sql id="condition_sql">
   	<if test="logOutContent != null">
@@ -46,9 +53,17 @@
   	<if test="logInContent != null">
   		AND log_in_content like concat('%',#{logInContent},'%') 
   	</if>
-  	<if test="orderId != null">
-  		AND order_id = #{orderId}
-  	</if>
+  	<choose>
+  		<when test="orderId == null &amp; orderIdIsNull != null"><!--  -->
+  			AND order_id is null
+  		</when>
+  		<when test="orderId == null &amp; orderIdIsNotNull != null"><!--  -->
+  			AND order_id is not null
+  		</when>
+  		<when test="orderId != null"><!--  -->
+  			AND order_id = #{orderId}
+  		</when>
+  	</choose>
   	<if test="chargeTel != null">
   		AND charge_tel = #{chargeTel}
   	</if>
@@ -59,10 +74,10 @@
   		AND charge_direction = #{chargeDirection}
   	</if>
   	<if test="startTime != null">
-		AND pur.charge_time &gt;= #{startTime}
+		AND charge_time &gt;= #{startTime}
 	</if>
 	<if test="endTime != null">
-		AND pur.charge_time &lt;= #{endTime}
+		AND charge_time &lt;= #{endTime}
 	</if>
   </sql>
 </mapper>

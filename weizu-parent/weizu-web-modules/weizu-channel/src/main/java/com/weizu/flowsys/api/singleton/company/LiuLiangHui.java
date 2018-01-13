@@ -61,7 +61,7 @@ public class LiuLiangHui implements BaseInterface {
 	public ChargeDTO charge() {
 		ExchangePlatformPo epPo = baseParams.getEpo();
 		String params = toParams();
-		//System.out.println(epPo.getEpPurchaseIp()+"?"+params);
+		System.out.println(epPo.getEpPurchaseIp()+"?"+params);
 		 String jsonStr = HttpRequest.sendPost(epPo.getEpPurchaseIp(), params);
 		 ChargeDTO chargeDTO = null;
 		 try {  
@@ -275,6 +275,7 @@ public class LiuLiangHui implements BaseInterface {
 		//{"goods_id","mch_id","mch_time","notify_url","out_trade_no","phone",}
 		Map<String,Object> signMap = new HashMap<String, Object>();
 		signMap.put("goods_id", pc.getProductCode());
+		System.out.println("产品编码编码："+pc.getProductCode());
 		String refer = StringUtil2.getParamsByCharSeq(platformPo.getEpOtherParams(), "mch_id");
 		signMap.put("mch_id", refer.substring(refer.indexOf("=")+1)); 
 		signMap.put("mch_time", timeStr);
