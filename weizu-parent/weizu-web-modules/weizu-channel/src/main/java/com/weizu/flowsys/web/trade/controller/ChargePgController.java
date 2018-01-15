@@ -482,7 +482,7 @@ public class ChargePgController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO != null){
-			if(agencyVO.getRootAgencyId() == 0){
+			if(agencyVO.getRootAgencyId() == 0){//超管利用通道提测试订单
 				ChannelDiscountPo cdPo = channelDiscountDao.get(new WherePrams("channel_id", "=", channelId));
 				if(cdPo != null){
 					Double purchasePrice = NumberTool.mul(chargeValue, cdPo.getChannelDiscount());//利率后的价格
@@ -511,7 +511,7 @@ public class ChargePgController {
 					return JSON.toJSONString(resultMap);
 				}
 				
-			}else{
+			}else{//不是超管
 				RateDiscountPo ratePo = rateDiscountAO.getPriceByPg(pgId, agencyVO.getId(),channelId);
 				if(ratePo != null){
 					ChargeAccountPo accountPo = chargeAccountAO.getAccountByAgencyId( agencyVO.getId(), ratePo.getBillType());

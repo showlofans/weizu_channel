@@ -61,6 +61,9 @@
 		<if test="channelId != null">
 			AND rate.channel_id = #{channelId}
 		</if>
+		<if test="channelUseState != null">
+			AND chnel.channel_use_state = #{channelUseState}
+		</if>
 		<if test="bindState != null">
 			AND aar.bind_state = #{bindState}
 		</if>

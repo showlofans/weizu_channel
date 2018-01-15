@@ -132,7 +132,7 @@
   	<where>
   		<include refid="condition_sql"></include>
   	</where>
-  	order by channel.id desc
+  	order by channel.lastAccess desc
   	<if test="start != null">
 	 	limit #{start}
 	 </if>

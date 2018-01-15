@@ -533,12 +533,12 @@ public class PurchaseAOImpl implements PurchaseAO {
 		ProductCodePo dataPo = null;
 		if(channel != null){
 			epPo = exchangePlatformAO.getEpById(channel.getEpId());
-			boolean isChannelUseStateStoped = channel.getChannelUseState() == ChannelUseStateEnum.CLOSE.getValue();//通道状态停止
-			if(isChannelUseStateStoped){//通道使用状态暂停，不能提单
-				logger.config("通道使用状态暂停");
-				System.out.println("通道使用状态暂停");
-				return "产品待更新，产品暂不支持购买！！";
-			}else{
+//			boolean isChannelUseStateStoped = channel.getChannelUseState() == ChannelUseStateEnum.CLOSE.getValue();//通道状态停止
+//			if(isChannelUseStateStoped){//通道使用状态暂停，不能提单
+//				logger.config("通道使用状态暂停");
+//				System.out.println("通道使用状态暂停");
+//				return "产品待更新，产品暂不支持购买！！";
+//			}else{
 				if(EpEncodeTypeEnum.WITH_CODE.getValue().equals(epPo.getEpEncodeType())){
 					String scopeCityCode = ScopeCityEnum.QG.getValue();
 					if(!pcVO.getServiceType().equals(ServiceTypeEnum.NATION_WIDE.getValue())){
@@ -556,7 +556,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 					System.out.println("编码未配置");
 					return "产品待更新，产品暂不支持购买！！";
 				}
-			}
+//			}
 		}else{
 			logger.config("通道不存在");
 			System.out.println("通道不存在");
@@ -1542,7 +1542,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 	public List<ChargeChannelPo> ajaxChargeChannel(ChargeChannelParamsPo ccpp) {
 		Map<String,Object> searchMap = getSearachMap(ccpp);
 		searchMap.put("channelState", ChannelStateEnum.OPEN.getValue());
-		searchMap.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+		//searchMap.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
 		List<ChargeChannelPo> channelList = channelChannelDao.list_charge_channel(searchMap);
 //		if(channelList != null && channelList.size()==1){//只有一条通道的时候，可以默认加载这条通道的包体
 //			Map<String, Object> objMap = new HashMap<String, Object>();

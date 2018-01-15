@@ -2,7 +2,7 @@
 //
 //import java.util.List;
 //
-//public class BaseTestUtil {
+//public  class BaseTestUtil {
 //	
 //	/**
 //	 * @description:
@@ -11,7 +11,9 @@
 //	 * @author:POP产品研发部 宁强
 //	 * @createTime:2017年7月18日 上午9:44:47
 //	 */
-//	public static int getListSize(List<Object> list){
+//	public  static int getListSize(List<Object> list){
 //		return list.size();
 //	}
+//	
+//	
 //}
