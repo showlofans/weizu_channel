@@ -95,6 +95,8 @@ public class PurchaseVO implements Cloneable,Serializable {
     
     private Integer hasCallBack;				//是否已经接收到了回调(枚举：orderResultEnum)
     
+    private Integer epId;						//订单流向平台id
+    
     @Override
 	public PurchaseVO clone() {
     	PurchaseVO pvo = null;
@@ -106,6 +108,18 @@ public class PurchaseVO implements Cloneable,Serializable {
 		return pvo;
 	}
     
+	public Integer getEpId() {
+		return epId;
+	}
+
+
+
+	public void setEpId(Integer epId) {
+		this.epId = epId;
+	}
+
+
+
 	public Integer getFromAccountId() {
 		return fromAccountId;
 	}

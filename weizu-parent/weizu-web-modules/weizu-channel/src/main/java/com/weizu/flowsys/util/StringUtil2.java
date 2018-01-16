@@ -98,9 +98,14 @@ public class StringUtil2 {
 			} else if (discountIndex.trim().length() == 2) {// 有两位数字
 				discount = StringUtil.getDouble(discountIndex)
 						/ ATT.DOUBLE_NUMBER_DIVIDE;
-			} else if (discountIndex.length() == 3) {
+			} 
+			else if (discountIndex.length() == 3) {
 				discount = StringUtil.getDouble(discountIndex)
 						/ ATT.TRIPLE_NUMBER_DIVIDE;
+			}
+			else if (discountIndex.length() == 4) {
+				discount = StringUtil.getDouble(discountIndex)
+						/ ATT.FOUR_NUMBER_DIVIDE;
 			}
 		}
 		return discount;

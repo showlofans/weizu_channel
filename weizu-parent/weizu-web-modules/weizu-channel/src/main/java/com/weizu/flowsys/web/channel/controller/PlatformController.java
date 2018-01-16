@@ -120,7 +120,8 @@ public class PlatformController {
 	 * @createTime:2017年6月8日 下午3:16:48
 	 */
 	@RequestMapping(value = PlatformURL.PLATFORM_LIST)
-	public ModelAndView PlatformSearch(@RequestParam(value = "pageNo", required = false)String pageNo,ExchangePlatformPo exchangePlatformPo,HttpServletRequest request)
+	public ModelAndView PlatformSearch(@RequestParam(value = "pageNo", required = false)String pageNo,
+			ExchangePlatformPo exchangePlatformPo,HttpServletRequest request)
 	{
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 //		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");

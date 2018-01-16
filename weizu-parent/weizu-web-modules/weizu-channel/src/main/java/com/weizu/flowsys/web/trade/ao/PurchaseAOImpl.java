@@ -982,7 +982,6 @@ public class PurchaseAOImpl implements PurchaseAO {
 		//初始化平台密码
 		String dataUserPass = Hash.BASE_UTIL.decode(epPo.getEpUserPass());
 		epPo.setEpUserPass(dataUserPass);
-		
 		if(PgServiceTypeEnum.PGCHARGE.getValue().equals(epFor)){//调用流量接口仓库
 			bi = SingletonFactory.getSingleton(epEngId, new BaseP(pc,purchasePo.getOrderId(),purchasePo.getChargeTel(),epPo,DateUtil.formatPramm(purchasePo.getOrderArriveTime(), "yyyy-MM-dd")));
 		}else if(PgServiceTypeEnum.TELCHARGE.getValue().equals(epFor)){
@@ -998,7 +997,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 			
 //			bi.getBalance()
 			chargeDTO = bi.charge();
-			if(chargeDTO != null){//更新返回的订单id，方便主动查询
+			if(chargeDTO != null){//在后面：更新返回的订单id，方便主动查询
+				purchasePo.setEpId(epPo.getId());
+				
 				String params = "编码："+pc.getProductCode()+"，平台名称:"+epPo.getEpName();
 				//返回参数
 				StringBuffer sb = new StringBuffer();

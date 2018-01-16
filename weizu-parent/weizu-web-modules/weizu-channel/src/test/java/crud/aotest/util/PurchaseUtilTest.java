@@ -3,8 +3,12 @@
 //import java.io.File;
 //import java.lang.management.ManagementFactory;
 //import java.lang.management.OperatingSystemMXBean;
+//import java.net.UnknownHostException;
+//import java.util.List;
 //import java.util.Map;
 //
+//import com.alibaba.fastjson.JSON;
+//import com.weizu.flowsys.web.base.SystemInfo;
 //import com.weizu.flowsys.web.trade.PurchaseUtil;
 //
 ///**
@@ -28,23 +32,64 @@
 ////		long dateTimes = 24*hourTimes;
 ////		PurchaseUtil.todayOnhistory(System.currentTimeMillis() - 16*dateTimes);
 ////		PurchaseUtil.todayOnhistory(System.currentTimeMillis() - 24*hourTimes);
-//		File[] roots = File.listRoots();  
-//        for (File _file : roots) {  
-//            System.out.println(_file.getPath());  
-//            //System.out.println(_file.getName());  
-//            System.out.println("Free space = " + (_file.getFreeSpace()/(1024*1024))/1024+"G");  //显示GB大小
-//            System.out.println("Usable space = " + _file.getUsableSpace());  
-//            System.out.println("Total space = " + (_file.getTotalSpace()/(1024*1024))/1024+"G");  
-//            System.out.println("used space  = " + (_file.getTotalSpace()-_file.getFreeSpace()));  
-//            System.out.println();  
-//        }  
-//        File win = new File("C:\\WINDOWS");  
-//        System.out.println(win.getPath());  
-//        System.out.println(win.getName());  
-//        System.out.println("Free space = " + win.getFreeSpace());  
-//        System.out.println("Usable space = " + win.getUsableSpace());  
-//        System.out.println("Total space = " + win.getTotalSpace());  
-//        System.out.println(); 
+////		
+////		File[] roots = File.listRoots();  
+////		for (File _file : roots) {  
+////			System.out.println(_file.getPath());  
+////			//System.out.println(_file.getName());  
+////			System.out.println("Free space = " + (_file.getFreeSpace()/(1024*1024))/1024+"G");  //显示GB大小
+////			System.out.println("Usable space = " + _file.getUsableSpace());  
+////			System.out.println("Total space = " + (double)(_file.getTotalSpace()/(1024*1024))/1024+"G");  
+////			System.out.println("used space  = " + (_file.getTotalSpace()-_file.getFreeSpace()));  
+////			System.out.println();  
+////		}  
+////		File win = new File("C:\\WINDOWS");  
+////		System.out.println(win.getPath());  
+////		System.out.println(win.getName());  
+////		System.out.println("Free space = " + win.getFreeSpace());  
+////		System.out.println("Usable space = " + win.getUsableSpace());  
+////		System.out.println("Total space = " + win.getTotalSpace());  
+////		System.out.println(); 
+//		
+//		try {
+//			System.out.println("--------------文件系统信息如下--------------------");  
+//			// 文件系统信息  
+//			 List<Map<String,Object>> mapList = SystemInfo.file();
+//			 String jsonStr = JSON.toJSONString(mapList);
+//			 System.out.println(jsonStr);
+//			
+////			System.out.println("-----------System信息，从jvm获取如下-----------------------");  
+////            // System信息，从jvm获取  
+////			SystemInfo.property();  
+////             
+////            System.out.println("------------cpu信息如下----------------------");  
+////            // cpu信息  
+////			SystemInfo.cpu();  
+////			 
+////			System.out.println("------------内存信息如下----------------------");  
+////			// 内存信息  
+////			SystemInfo.memory();  
+////			
+////			System.out.println("------------操作系统信息如下----------------------");  
+////			// 操作系统信息  
+////			SystemInfo.os();  
+////			 
+////			System.out.println("-------------用户信息如下---------------------");  
+////			// 用户信息  
+////			SystemInfo.who();  
+////			 
+////			System.out.println("-----------网络信息如下-----------------------");  
+////			// 网络信息  
+////			SystemInfo.net();  
+////			
+////			System.out.println("------------以太网信息如下----------------------");  
+////			// 以太网信息  
+////			SystemInfo.ethernet();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
 //		
 //	}
 ////	 public static void getDiskInfo()

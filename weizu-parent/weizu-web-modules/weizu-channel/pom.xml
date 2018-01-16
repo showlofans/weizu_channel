@@ -244,11 +244,19 @@
 			<artifactId>jedis</artifactId>
 			<version>2.8.1</version>
 		</dependency>
-		
+		<!-- 导入导出 -->
 		<dependency>
 		  <groupId>org.apache.poi</groupId>
 		  <artifactId>poi</artifactId>
 		  <version>3.13</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.fusesource/sigar -->
+		<!-- linux系统内存监控 -->
+		<dependency>
+		    <groupId>org.fusesource</groupId>
+		    <artifactId>sigar</artifactId>
+		    <version>1.6.4</version>
 		</dependency>
   </dependencies>
     <build>

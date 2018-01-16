@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.weizu.flowsys.core.dao.Dao;
+import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchaseStateParams;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
@@ -110,5 +111,4 @@ public interface PurchaseDao extends Dao<PurchasePo, Long> {
 	 */
 	PurchasePo getLatestOneByTel(String chargeTel,Integer purchaseFor, Long highTime);
 	
-
 }

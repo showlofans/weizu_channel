@@ -57,8 +57,18 @@ public class PurchasePo extends Po {
     private Double chargeValue;					//订单原价
     
     private Integer purchaseFor;				//订单属性 PgServiceTypeEnum
+    
+    private Integer epId;						//订单流向平台id
+    
+    public Integer getEpId() {
+		return epId;
+	}
 
-    public Double getChargeValue() {
+	public void setEpId(Integer epId) {
+		this.epId = epId;
+	}
+
+	public Double getChargeValue() {
     	return chargeValue;
     }
     

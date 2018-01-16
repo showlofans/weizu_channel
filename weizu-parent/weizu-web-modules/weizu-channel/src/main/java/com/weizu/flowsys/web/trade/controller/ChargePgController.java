@@ -651,6 +651,23 @@ public class ChargePgController {
 //		System.out.println(listJsonStr);
 		return listJsonStr;
 	}
+	/**
+	 * @description: 查询订单流向的平台
+	 * @param channelId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月16日 上午11:22:47
+	 */
+	@ResponseBody
+	@RequestMapping(value=ChargePgURL.EP_IN_PURCHASE)
+	public String ajaxEp(Long orderId){
+//		List<PgDataPo> chargeList = purchaseAO.getPgByChanel(channelId);
+//		if(StringHelper.isNotEmpty(orderId)){};
+		ExchangePlatformPo epPo = exchangePlatformDao.getEpInPurchase(orderId);
+		String epJsonStr = JSON.toJSONString(epPo);
+//		System.out.println(listJsonStr);
+		return epJsonStr;
+	}
 	
 	/**
 	 * @description: 查询订单列表

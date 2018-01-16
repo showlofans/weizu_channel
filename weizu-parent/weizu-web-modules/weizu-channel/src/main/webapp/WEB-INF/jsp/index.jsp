@@ -146,6 +146,7 @@
 					<li><a data-href="/flowsys/agency/child_agency_list.do?agencyTag=0" data-title="代理商" href="javascript:void(0)">代理商</a></li>
 					<c:if test="${loginContext.rootAgencyId == 0 }">
 						<li><a data-href="/flowsys/crm/crm_list.do" data-title="客户信息" href="javascript:void(0)">客户信息</a></li>
+						<li><a data-href="/flowsys/otherPart/server_file_log.do" data-title="其他数据" href="javascript:void(0)">其他数据</a></li>
 					</c:if>
 					<!-- <li><a data-href="/flowsys/agency/get_tel_location.do" data-title="号码归属地查询" href="javascript:void(0)">号码归属地查询</a></li> -->
 				</ul>

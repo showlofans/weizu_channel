@@ -76,5 +76,9 @@ public class ExchangePlatformDao extends DaoImpl<ExchangePlatformPo, Integer> im
 	public ExchangePlatformPo getEpByTelchannelId(Long telchannelId) {
 		return sqlSessionTemplate.selectOne("getEpByTelchannelId", telchannelId);
 	}
+	@Override
+	public ExchangePlatformPo getEpInPurchase(Long orderId) {
+		return sqlSessionTemplate.selectOne("getEpInPurchase", orderId);
+	}
 
 }

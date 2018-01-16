@@ -170,6 +170,9 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("epName", ep.getEpName());
 		paramsMap.put("epFor", ep.getEpFor());
+		if(ep.getId() != null){
+			paramsMap.put("id", ep.getId());
+		}
 		int toatalRecord = exchangePlatformDao.countEp(paramsMap);
 		int pageSize = 10;
 		int pageNo = 1;

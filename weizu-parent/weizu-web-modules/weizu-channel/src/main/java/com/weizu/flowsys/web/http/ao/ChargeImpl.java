@@ -238,6 +238,7 @@ public class ChargeImpl implements IChargeFacet {
 						purchasePo.setOrderResultDetail(orderResultDetail);
 						charge = new Charge(ChargeStatusEnum.PG_NOT_FOUND.getValue(), "chargeDTO为空", new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
 					}else{
+						purchasePo.setEpId(channelPo.getEpId());
 						//上有接口充值返回异常
 						if(OrderResultEnum.SUCCESS.getCode().equals(chargeDTO.getTipCode())){
 							ChargeOrder co = chargeDTO.getChargeOrder();
