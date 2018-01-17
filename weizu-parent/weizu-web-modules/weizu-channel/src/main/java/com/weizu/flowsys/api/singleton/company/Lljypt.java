@@ -60,6 +60,7 @@ public class Lljypt implements BaseInterface {
 	            }else{
 	            	chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), tipMsg, new ChargeOrder(orderIdApi, baseParams.getChargeTel(), baseParams.getProductCodePo().getProductCode(), billType));
 	            }
+	            chargeDTO.setJsonStr(jsonStr);//设置返回的json串日志信息
 			    // 最后输出到控制台  
 	            System.out.println(tipCode+"<--->"+tipMsg);  
 	  

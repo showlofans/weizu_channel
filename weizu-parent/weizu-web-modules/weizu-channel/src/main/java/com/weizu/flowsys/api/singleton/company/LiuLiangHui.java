@@ -68,7 +68,7 @@ public class LiuLiangHui implements BaseInterface {
 			 	if(StringHelper.isEmpty(jsonStr) || "exception".equals(jsonStr)){
 			 		return null;
 			 	}
-			 	System.out.println(jsonStr);
+			 	//System.out.println(jsonStr);
 	            JSONObject obj = JSON.parseObject(jsonStr);
 	            int code = obj.getIntValue("code");
 	            String message = obj.getString("code_desc");
@@ -78,7 +78,8 @@ public class LiuLiangHui implements BaseInterface {
 	            	chargeDTO = new ChargeDTO(OrderResultEnum.SUCCESS.getCode(), message, new ChargeOrder(baseParams.getOrderId().toString(), baseParams.getChargeTel(), baseParams.getProductCodePo().getProductCode(), 0));
 	            }
 	            else if(code == -1){
-	            	System.out.println("充值余额不zu");
+//	            	System.out.println("充值余额不zu");
+	            	chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), "充值余额不zu", null);
 	            }
 	            else{
 	            	chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), message, null);
@@ -92,6 +93,7 @@ public class LiuLiangHui implements BaseInterface {
 //	            chargeDTO = new ChargeDTO(tipCode, tipMsg, new ChargeOrder(orderIdApi, baseParams.getChargeTel(), baseParams.getProductCode(), billType));
 			    // 最后输出到控制台  
 	            System.out.println(code+"<--->"+message);  
+	            chargeDTO.setJsonStr(jsonStr);//设置返回的json串日志信息
 	  
 	        } catch (JSONException e) {  
 	            e.printStackTrace();  
@@ -266,13 +268,14 @@ public class LiuLiangHui implements BaseInterface {
 		signBuffer.append(platformPo.getEpApikey());
 		try {
 			sign = MD5.getMd5(signBuffer.toString(), MD5.LOWERCASE, "utf-8");
-			System.out.println("充值sign编码参数："+ signBuffer.toString());
+			//System.out.println("充值sign编码参数："+ signBuffer.toString());
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 		//{"goods_id","mch_id","mch_time","notify_url","out_trade_no","phone",}
 		Map<String,Object> signMap = new HashMap<String, Object>();
 		signMap.put("goods_id", pc.getProductCode());
+		System.out.println("产品编码编码："+pc.getProductCode());
 		String refer = StringUtil2.getParamsByCharSeq(platformPo.getEpOtherParams(), "mch_id");
 		signMap.put("mch_id", refer.substring(refer.indexOf("=")+1)); 
 		signMap.put("mch_time", timeStr);
@@ -283,7 +286,7 @@ public class LiuLiangHui implements BaseInterface {
 		signMap.put("phone", baseParams.getChargeTel());
 		signMap.put("sign", sign);
 		String jsonStr = JSON.toJSONString(signMap);
-		System.out.println(jsonStr);
+		//System.out.println(jsonStr);
 		return jsonStr;
 	}
 	
@@ -418,7 +421,7 @@ public class LiuLiangHui implements BaseInterface {
 		signMap.put("out_trade_no", baseParams.getOrderId().toString());
 		signMap.put("sign", sign);
 		String jsonStr = JSON.toJSONString(signMap);
-		System.out.println(jsonStr);
+		//System.out.println(jsonStr);
 		return jsonStr;
 	}
 

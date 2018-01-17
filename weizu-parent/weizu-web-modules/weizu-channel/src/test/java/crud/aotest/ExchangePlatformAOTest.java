@@ -9,6 +9,7 @@
 //import org.springframework.test.context.ContextConfiguration;
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
+//import com.alibaba.fastjson.JSON;
 //import com.weizu.flowsys.core.beans.WherePrams;
 //import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 //import com.weizu.flowsys.web.channel.ao.AgencyEpAO;
@@ -52,10 +53,16 @@
 ////			System.out.println("没有该平台信息");
 ////		}
 ////	}
+////	@Test
+////	public void testUpdateEpBalance(){
+////		String resMsg = exchangePlatformAO.updateEpBalance();
+////		System.out.println(resMsg);
+////	}
 //	@Test
-//	public void testUpdateEpBalance(){
-//		String resMsg = exchangePlatformAO.updateEpBalance();
-//		System.out.println(resMsg);
+//	public void testGetEpInPurchase(){
+//		ExchangePlatformPo epPo = exchangePlatformDao.getEpInPurchase(766087584798478336l);
+//		String epJsonStr = JSON.toJSONString(epPo);
+//		System.out.println(epJsonStr);
 //	}
 ////	@Test
 ////	public void testGetEp(){

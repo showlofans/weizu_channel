@@ -482,7 +482,7 @@ public class ChargePgController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO != null){
-			if(agencyVO.getRootAgencyId() == 0){
+			if(agencyVO.getRootAgencyId() == 0){//超管利用通道提测试订单
 				ChannelDiscountPo cdPo = channelDiscountDao.get(new WherePrams("channel_id", "=", channelId));
 				if(cdPo != null){
 					Double purchasePrice = NumberTool.mul(chargeValue, cdPo.getChannelDiscount());//利率后的价格
@@ -511,7 +511,7 @@ public class ChargePgController {
 					return JSON.toJSONString(resultMap);
 				}
 				
-			}else{
+			}else{//不是超管
 				RateDiscountPo ratePo = rateDiscountAO.getPriceByPg(pgId, agencyVO.getId(),channelId);
 				if(ratePo != null){
 					ChargeAccountPo accountPo = chargeAccountAO.getAccountByAgencyId( agencyVO.getId(), ratePo.getBillType());
@@ -651,6 +651,23 @@ public class ChargePgController {
 //		System.out.println(listJsonStr);
 		return listJsonStr;
 	}
+	/**
+	 * @description: 查询订单流向的平台
+	 * @param channelId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月16日 上午11:22:47
+	 */
+	@ResponseBody
+	@RequestMapping(value=ChargePgURL.EP_IN_PURCHASE)
+	public String ajaxEp(Long orderId){
+//		List<PgDataPo> chargeList = purchaseAO.getPgByChanel(channelId);
+//		if(StringHelper.isNotEmpty(orderId)){};
+		ExchangePlatformPo epPo = exchangePlatformDao.getEpInPurchase(orderId);
+		String epJsonStr = JSON.toJSONString(epPo);
+//		System.out.println(listJsonStr);
+		return epJsonStr;
+	}
 	
 	/**
 	 * @description: 查询订单列表
@@ -677,7 +694,6 @@ public class ChargePgController {
 		if(pageNoLong != null){
 			pageParam = new PageParam(pageNoLong, 10) ;
 		}else{//初始化开始时间和结束时间
-			
 			pageParam = new PageParam(1l, 10);
 		}
 		if(purchaseVO.getPurchaseFor() == null){

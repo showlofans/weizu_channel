@@ -61,6 +61,9 @@
 		<if test="channelId != null">
 			AND rate.channel_id = #{channelId}
 		</if>
+		<if test="channelUseState != null">
+			AND chnel.channel_use_state = #{channelUseState}
+		</if>
 		<if test="bindState != null">
 			AND aar.bind_state = #{bindState}
 		</if>
@@ -209,6 +212,10 @@
 	 	on rate.channel_discount_id=cd.id
 	  	INNER JOIN <include refid="t_cnel"></include> cnel
 	 	on cnel.id=cd.channel_id
+	 	INNER JOIN <include refid="t_cbp"></include> cbp
+		on cbp.channel_id=cnel.id
+	 	INNER JOIN <include refid="t_pg"></include> opd
+		on cbp.pg_id=opd.id
 	 	<where>
 	 		<include refid="tripple_table_sql"></include>
 	 	</where>
@@ -243,6 +250,10 @@
  	on rate.channel_discount_id=cd.id
  	INNER JOIN <include refid="t_cnel"></include> cnel
  	on cnel.id=cd.channel_id
+ 	INNER JOIN <include refid="t_cbp"></include> cbp
+	on cbp.channel_id=cnel.id
+ 	INNER JOIN <include refid="t_pg"></include> opd
+	on cbp.pg_id=opd.id
  	<where>
  		<include refid="tripple_table_sql"></include>
  	</where>
@@ -263,6 +274,9 @@
 	</where>)
   	 <if test="accountId != null">
 		AND active.account_id = #{accountId}
+	</if>
+  	 <if test="pgSize != null">
+		AND opd.pg_size = #{pgSize}
 	</if>
   	 <if test="agencyId != null">
 		AND act.agency_id = #{agencyId}

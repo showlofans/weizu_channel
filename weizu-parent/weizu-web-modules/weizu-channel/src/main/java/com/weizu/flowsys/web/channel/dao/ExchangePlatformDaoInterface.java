@@ -77,5 +77,13 @@ public interface ExchangePlatformDaoInterface extends Dao<ExchangePlatformPo, In
 	 */
 	int countEp(Map<String,Object> paramsMap);
 	
+	/**
+	 * @description: 根据订单号找到订单流向的平台信息
+	 * @param orderId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月16日 上午9:44:29
+	 */
+	ExchangePlatformPo getEpInPurchase(Long orderId);
 	
 }

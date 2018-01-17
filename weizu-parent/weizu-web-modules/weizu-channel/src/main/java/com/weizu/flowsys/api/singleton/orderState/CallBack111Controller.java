@@ -111,7 +111,8 @@ public class CallBack111Controller {
 					statusDetail = code_desc;
 					break;
 				}
-	            res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, transaction_id, System.currentTimeMillis(), myStatus,OrderResultEnum.SUCCESS.getCode() , statusDetail));
+	            Long chargeTime = DateUtil.strToDate(time, "").getTime();
+	            res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, transaction_id, chargeTime, myStatus,OrderResultEnum.SUCCESS.getCode() , statusDetail));
 	            if(!"success".equals(res)){
 	            	successTag = res;
 	            }

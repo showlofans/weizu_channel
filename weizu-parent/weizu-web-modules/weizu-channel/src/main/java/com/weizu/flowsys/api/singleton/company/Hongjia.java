@@ -250,11 +250,11 @@ public class Hongjia implements BaseInterface {
 			 	if(StringHelper.isEmpty(jsonStr) || "exception".equals(jsonStr)){
 			 		return null;
 			 	}
-			 	System.out.println("返回的json结果串："+ jsonStr);
+			 	//System.out.println("返回的json结果串："+ jsonStr);
 	            JSONObject obj = JSON.parseObject(jsonStr);
 	            int tipCode = obj.getIntValue("status");
 	            String tipMsg = obj.getString("message");
-	            System.out.println("message=" + tipMsg);
+	            //System.out.println("message=" + tipMsg);
 	            if(tipCode == 2 || tipCode == 1){//充值中(tipCode == 1){//充值成功（秒）
 //	            	JSONArray array = obj.getJSONArray("data");
 //	    	        if(array != null && array.size() > 0){
@@ -272,9 +272,10 @@ public class Hongjia implements BaseInterface {
 	            	if(orderObj != null){
 	            		String orderIdApi = orderObj.getString("orderid");
 	            		String orderId = orderObj.getString("transno");
-	            		System.out.println("自己的订单好："+orderId.toString());
+	            		//System.out.println("自己的订单好："+orderId.toString());
 	            		chargeDTO = new ChargeDTO(OrderResultEnum.SUCCESS.getCode(), tipMsg, new ChargeOrder(orderIdApi, baseParams.getChargeTel(), baseParams.getProductCodePo().getPgSize().toString(), BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
 	            	}else{
+	            		chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), "返回为空", null);
 	            		System.out.println("返回为空");
 	            	}
 	            }
@@ -283,6 +284,7 @@ public class Hongjia implements BaseInterface {
 	            	System.out.println(tipCode+"<--->"+tipMsg);  
 	            	chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), tipMsg, new ChargeOrder(null, baseParams.getChargeTel(), baseParams.getProductCodePo().getPgSize().toString(), BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
 	            }
+	            chargeDTO.setJsonStr(jsonStr);//设置返回的json串日志信息
 //	            	String codeMsg = "";
 //	            	//用我这边默认的对私账户充值
 //		            switch (tipCode) {
@@ -326,7 +328,7 @@ public class Hongjia implements BaseInterface {
 //		            System.out.println("返回码描述信息codeMsg:"+codeMsg);
 	        } catch (JSONException e) {  
 	            e.printStackTrace();  
-	        }  
+	        } 
 		return chargeDTO;
 	}
 	

@@ -8,7 +8,7 @@
   <!-- <sql id="t_agencyEp">agency_ep</sql> -->
   <sql id="t_telchannel">telchannel</sql>
   <sql id="t_tel_product">tel_product</sql>
-  
+  <sql id="t_purchase">purchase</sql>
   
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo">
     <id column="id" jdbcType="INTEGER" property="id" />
@@ -36,6 +36,10 @@
     id, ep_name, ep_purchase_ip, product_list_ip, ep_order_state_ip,ep_call_back_ip, ep_balance_ip, <!-- ep_order_state_ip, -->
     ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip, ep_eng_id,ep_other_params, ep_call_back, last_access, ep_for,ep_encode_type
   </sql>
+  <sql id="BaseOne_Column_List"><!-- 带ep前缀的基本属性 -->
+    ep.id, ep.ep_name, ep.ep_purchase_ip, ep.product_list_ip, ep.ep_order_state_ip,ep.ep_call_back_ip, ep.ep_balance_ip, <!-- ep_order_state_ip, -->
+    ep.ep_user_name, ep.ep_user_pass, ep.ep_balance, ep.ep_apikey, ep.ep_ip, ep.ep_eng_id,ep.ep_other_params, ep.ep_call_back, ep.last_access, ep.ep_for,ep.ep_encode_type
+  </sql>
   <sql id="EpByRteId_Column_List">
     ep.id, ep.ep_name, ep_purchase_ip, product_list_ip, ep_order_state_ip,ep_call_back_ip, ep_balance_ip, <!-- ep_order_state_ip, -->
     ep_user_name, ep_user_pass, ep_balance, ep_apikey, ep_ip, ep_eng_id,ep_other_params, ep_call_back, ep.last_access, ep.ep_for,ep.ep_encode_type
@@ -47,6 +51,16 @@
   <sql id="Simple_Column_List">
     id, ep_name
   </sql>
+  <!-- 根据订单号找到订单流向的平台信息 -->
+  <select id="getEpInPurchase" parameterType="long" resultMap="BaseResultMap">
+  	select <include refid="BaseOne_Column_List"></include>
+  	from <include refid="t_ep"></include> ep
+  	inner join <include refid="t_purchase"></include> pur
+  	on pur.ep_id = ep.id
+  	<where>
+  		pur.order_id = #{_parameter}
+  	</where>
+  </select>
   <!-- 根据费率id得到平台信息 -->
   <!-- <select id="getEpByCDId" parameterType="long" resultMap="BaseResultMap">
   	select <include refid="EpByRteId_Column_List"></include>
@@ -162,6 +176,9 @@
    		</if>
    		<if test="epFor != null">
    			AND  ep_for = #{epFor}
+   		</if>
+   		<if test="id != null">
+   			AND  id = #{id}
    		</if>
    		<!-- <if test="agencyId != null">
    			AND aep.agency_id = #{agencyId}

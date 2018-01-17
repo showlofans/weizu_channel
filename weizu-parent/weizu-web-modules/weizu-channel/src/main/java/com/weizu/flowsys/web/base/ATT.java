@@ -31,6 +31,10 @@ public class ATT {
 	 * 折扣有三位数字的除数
 	 */
 	public static final int TRIPLE_NUMBER_DIVIDE = 1000;			
+	/**
+	 * 折扣有四位数字的除数
+	 */
+	public static final int FOUR_NUMBER_DIVIDE = 10000;			
 	
 	
 	

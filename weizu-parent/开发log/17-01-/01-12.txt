@@ -1,0 +1,5 @@
+ChargeParams [userName=xiaoning, number=13670850603, flowsize=200, scope=1, sign=1D03E77FD343026B76BF237271AEB4A5, billType=0, orderIdFrom=20180112092031923069, pgType=null, channelType=null, pgValidity=null, reportUrl=http://139.224.70.161:32001/api/v1/ordercb/10188]
+
+我这边红包的通道还没测通，就在硕朗平台把对接我这边的通道暂停，不要再向这边提单了
+
+ChargeParams [userName=xiaoning, number=13670850603, flowsize=200, scope=1, sign=1D03E77FD343026B76BF237271AEB4A5, billType=0, orderIdFrom=20180112121259396944, pgType=1, channelType=2, pgValidity=20, reportUrl=http://139.224.70.161:32001/api/v1/ordercb/10188]

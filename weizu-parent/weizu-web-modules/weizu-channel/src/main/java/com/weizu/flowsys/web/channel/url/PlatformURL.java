@@ -49,6 +49,7 @@ public class PlatformURL extends BaseURL{
 	public static final String PLATFORM_BALANCE = "/platform_balance" + DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 平台列表
+	 * <br>/flowsys/platform/platform_list.do
 	 */
 	public static final String PLATFORM_LIST = "/platform_list" + DYNAMIC_WEB_SUFFIX;
 	

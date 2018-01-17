@@ -23,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ConfirmStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ConfirmStateTransferEnum;
@@ -182,8 +183,8 @@ public class AgencyController {
 //				int logAdd = accountEventDao.add(new AccountEventPo(resultPo.getId(), EventTypeEnum.AGENCY_LOGIN.getValue(), System.currentTimeMillis(), address, eventIp, LoginStateEnum.ING.getValue()));
 //				System.out.println("日志成功添加："+logAdd);
 			}
-			
-			if(chargeAccountPo1 == null && isSupperUser){//超管登陆的时候，默认如果没有对公账户，就给他创建一个对公账户
+			//超管登陆的时候，默认如果没有对公账户，就给他创建一个对公账户
+			if(chargeAccountPo1 == null && isSupperUser){
 				chargeAccountPo1 = new ChargeAccountPo(resultPo.getId(), resultPo.getRootAgencyId(),0.00d, BillTypeEnum.CORPORATE_BUSINESS.getValue(), System.currentTimeMillis(), agencyBackward.getUserName());
 				chargeAccountAO.createAccount(chargeAccountPo1);//给超管创建一个
 			}
@@ -192,9 +193,18 @@ public class AgencyController {
 					.getAccountByAgencyId(resultPo.getId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 			AgencyBackwardVO agencyVO = agencyAO.getVOByPo(resultPo);
 			session.setMaxInactiveInterval(24*60*60);//一天
+			
+			Double accountBalance = chargeAccountPo.getAccountBalance();
+			
+			if(chargeAccountPo1 != null){
+				accountBalance = NumberTool.add(accountBalance, chargeAccountPo1.getAccountBalance());
+			}
+//			accountBalance +=
 			//注册的时候已经保证了可以进行表连接
-			session.setAttribute("chargeAccount", chargeAccountPo);//对私
-			session.setAttribute("chargeAccount1", chargeAccountPo1);//对公
+			session.setAttribute("totalBalance", accountBalance);//对私
+//			session.setAttribute("chargeAccount1", chargeAccountPo1);//对公
+			
+			
 			
 			String agencyIp = agencyBackward.getAgencyIp();
 			if(StringHelper.isNotEmpty(agencyIp) && "telLogin".equals(agencyIp)){

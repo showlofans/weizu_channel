@@ -147,6 +147,7 @@
 					<th width="60">金额</th><!-- 返款 -->
 					<c:if test="${loginContext.rootAgencyId == 0 }">
 						<th width="120">通道名称</th>
+						<th width="80">查看目录</th>
 					</c:if>
 					<th width="60">扣款类型</th>
 					<th width="60">充值方式</th>
@@ -161,13 +162,15 @@
 									${purchase.agencyName }
 								</c:when>
 								<c:otherwise>
-									<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="editAgency(${purchase.agencyId})" href="javascript:;" title="查看代理商">
 										${purchase.agencyName }
-									</a>
+									<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="editAgency(${purchase.agencyId})" href="javascript:;" title="查看代理商">
+									</a> --%>
 								</c:otherwise>
 							</c:choose>
 						</td>
-						<td>${purchase.orderId }
+						<td>
+						<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" data-href="/flowsys/chargeLog/charge_log_list.do?orderId=${purchase.orderId }" title="查看传单日志" onclick="Hui_admin_tab(this)" data-title="接口订单日志" href="javascript:void(0)">${purchase.orderId }</a> --%>
+						${purchase.orderId }
 							<%-- <c:choose>
 								<c:when test="${purchase.billType == 0 }">
 									<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
@@ -260,7 +263,13 @@
 								${purchase.orderPrice }
 							</span>
 						</td>
-						<c:if test="${loginContext.rootAgencyId == 0 }"><td>${purchase.channelName }</td> 
+						<c:if test="${loginContext.rootAgencyId == 0 }">
+						<td>${purchase.channelName }</td> 
+						<td class="f-14 td-manage success">
+							<a  data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" data-href="/flowsys/chargeLog/charge_log_list.do?orderId=${purchase.orderId }" title="查看传单日志" onclick="Hui_admin_tab(this)" data-title="接口订单日志" href="javascript:void(0)"><i class="Hui-iconfont">&#xe623;</i></a>
+							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="editAgency(${purchase.agencyId})" href="javascript:;" title="查看代理商"><i class="Hui-iconfont">&#xe60c;</i></a>
+							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="getEp('${purchase.orderId }',this)" href="javascript:;" title="查看平台信息"><i class="Hui-iconfont">&#xe72b;</i></a>
+						</td> 
 						</c:if>
 						<td>
 							<c:forEach items="${resultMap.billTypeEnums }" var="bTypeEnum" varStatus="vs">
@@ -319,7 +328,7 @@ function editAgency(id){
 	//var $id = $agencyTr.children(0);
 	layer.open({
         type: 2,
-        title: '查看APIKey',
+        title: '查看代理商',
         area: ['800px', '500px'],
         maxmin: false,
         closeBtn: 1,
@@ -328,6 +337,33 @@ function editAgency(id){
             //location.reload();
         }
     });
+}
+/**查看平台信息*/
+function getEp(orderId,obj){
+	$.ajax({
+		type:'post',
+		async: false,
+		url:'/flowsys/chargePg/ep_in_purchase.do',
+		dataType: "json",
+		data:{orderId:orderId},
+		success: function(data){
+			if(data == null || data == 'null'){
+				layer.msg('没有找到平台信息！');
+			}else{
+				layer.msg(data.epName);
+				var nextUrl = '/flowsys/platform/platform_list.do';
+				nextUrl += '?epName='+data.epName;
+				nextUrl += '&epFor='+data.epFor;
+				nextUrl += '&id='+data.id;
+				$(obj).attr('data-href',nextUrl);
+				$(obj).attr("data-title","平台信息查看");
+				Hui_admin_tab(obj);
+			}
+		},
+		error:function(data) {
+			console.log(data.msg);
+		}
+	})
 }
 
 $(document).ready(function() {

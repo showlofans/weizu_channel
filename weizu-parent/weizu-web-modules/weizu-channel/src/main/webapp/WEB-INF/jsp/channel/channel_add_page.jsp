@@ -255,7 +255,7 @@
 								${scopeCityEnum.value }${scopeCityEnum.desc }  
 								<%-- <label for="scopeCityCode-${vs.index }"></label> --%> 
 								<!-- 输入两位折扣数字 -->
-								<input class="disscount" style="display: none; width:50px;" type="text" maxlength="3" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
+								<input class="disscount" style="display: none; width:50px;" type="text" maxlength="4" onkeyup='this.value=this.value.replace(/\D/gi,"")' placeholder="1.00">
 							</div>
 						</td>
 					<c:if test="${(vs.index+1) % 4==0 }"></tr></c:if>

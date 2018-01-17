@@ -1,0 +1,26 @@
+ChargeParams [userName=xiaoning, number=18814279220, flowsize=200, scope=1, sign=1D03E77FD343026B76BF237271AEB4A5, billType=0, orderIdFrom=20180112175421837812, pgType=1, channelType=2, pgValidity=20, reportUrl=http://139.224.70.161:32001/api/v1/ordercb/10188]
+
+ChargeParams [userName=xiaoning, number=18814279220, flowsize=200, scope=1, sign=1D03E77FD343026B76BF237271AEB4A5, billType=0, orderIdFrom=20180112175421837812, pgType=1, channelType=2, pgValidity=20, reportUrl=http://139.224.70.161:32001/api/v1/ordercb/10188]
+
+接口调用次数限制
+订单查询限制：订单号查询状态次数：根据订单号（和限制的请求地址）找到查询次数，进行判断，
+根据订单号更新查询次数
+
+一天五次
+
+时间参数：如果为空null，需要设置为今天的开始时间
+
+开始时间和结束时间都没有：今天的开始时间和结束时间：没有结果，将今天的开始时间清空进行搜索
+清空了开始时间为“”，结束时间为设定的结束时间：只有设定的结束时间：没有结果：那就是没有结果
+开始时间和结束时间都有了：选定的开始和结束时间：没有结果，将开始时间清空
+
+查询参数：下级，代理商名称在输入参数里面找
+
+{startTime=1515772800000, endTime=1515859199000, orderId=null}
+
+异常订单，没有订单号的，可以查到，
+正常订单，有订单号的，
+订单号不为空，默认查正常订单
+
+解决接口问题，包括查费率没有按照包体大小来找
+传单日志分页加载

@@ -51,7 +51,6 @@ import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.http.entity.Charge;
-import com.weizu.flowsys.web.http.entity.ChargeLog;
 import com.weizu.flowsys.web.http.entity.ChargePo;
 import com.weizu.flowsys.web.http.entity.PurchaseLog;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
@@ -60,6 +59,7 @@ import com.weizu.flowsys.web.trade.dao.ChargeLogDao;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.dao.PurchaseLogDao;
 import com.weizu.flowsys.web.trade.pojo.AccountPurchasePo;
+import com.weizu.flowsys.web.trade.pojo.ChargeLog;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
@@ -185,7 +185,7 @@ public class ChargeImpl implements IChargeFacet {
 			}
 			ExchangePlatformPo epPo = exchangePlatformDao.get(channelPo.getEpId());
 			ProductCodePo pc = null;
-			if(EpEncodeTypeEnum.WITH_CODE.equals(epPo.getEpEncodeType())){
+			if(EpEncodeTypeEnum.WITH_CODE.getValue().equals(epPo.getEpEncodeType())){
 				String scopeCityCode = StringHelper.isNotEmpty(chargeTelDetail)?PurchaseUtil.getScopeCityByCarrier(chargeTelDetail).get("scopeCityCode").toString():null;
 				pc = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, epPo.getId(), pgData.getId()));
 			}else{
@@ -228,7 +228,7 @@ public class ChargeImpl implements IChargeFacet {
 //					int aarAdd = accountPurchaseDao.add(app);
 				}
 				
-				if(!isChannelStateClose && canCharge){
+				if(!isChannelStateClose && canCharge){//canCharge：余额足够
 					BaseInterface bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(pc,orderId,chargeTel,epPo,DateUtil.formatPramm(purchasePo.getOrderArriveTime(), "yyyy-MM-dd")));
 					ChargeDTO chargeDTO = bi.charge();
 					if(chargeDTO == null){
@@ -236,20 +236,23 @@ public class ChargeImpl implements IChargeFacet {
 						orderResultDetail = ChargeStatusEnum.API_ERROR.getDesc();
 						purchasePo.setOrderResult(orderResult);
 						purchasePo.setOrderResultDetail(orderResultDetail);
+						charge = new Charge(ChargeStatusEnum.PG_NOT_FOUND.getValue(), "chargeDTO为空", new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
 					}else{
+						purchasePo.setEpId(channelPo.getEpId());
 						//上有接口充值返回异常
-						if(OrderResultEnum.ERROR.equals(chargeDTO.getTipCode())){//充值失败+返款
-//							charge = new Charge(ChargeStatusEnum.CHARGE_SUCCESS.getValue(), ChargeStatusEnum.CHARGE_SUCCESS.getDesc(), new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
-							orderResult = OrderStateEnum.DAICHONG.getValue();
-							orderResultDetail = chargeDTO.getTipMsg();
-						}
-						else{
+						if(OrderResultEnum.SUCCESS.getCode().equals(chargeDTO.getTipCode())){
 							ChargeOrder co = chargeDTO.getChargeOrder();
 							String orderIdApi = co.getOrderIdApi();
 							logger.config("上游返回的订单号："+ orderIdApi);//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
 							purchasePo.setOrderIdApi(orderIdApi);
-							charge = getChargeByDTO(chargeDTO,chargeParams,purchasePo);
 							orderResultDetail = chargeDTO.getTipMsg();
+							charge = getChargeByDTO(chargeDTO,chargeParams,purchasePo);
+						}else{
+							orderResult = OrderStateEnum.DAICHONG.getValue();
+							orderResultDetail = chargeDTO.getTipMsg();
+							purchasePo.setOrderResult(orderResult);
+							purchasePo.setOrderResultDetail(orderResultDetail);
+							charge = new Charge(OrderResultEnum.ERROR.getCode(), orderResultDetail,null);
 						}
 					}
 				}else if(!canCharge){
@@ -266,11 +269,14 @@ public class ChargeImpl implements IChargeFacet {
 					
 					charge = new Charge(ChargeStatusEnum.CHARGE_SUCCESS.getValue(), ChargeStatusEnum.CHARGE_SUCCESS.getDesc(), new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
 				}
-			}else if(pc == null){
-				logger.config("产品编码未配置,没有通过接口充值，不产生接口订单号");
 			}else{
+				charge = new Charge(ChargeStatusEnum.PG_NOT_FOUND.getValue(), "产品编码未配置,没有通过接口充值，不产生接口订单号", new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
 				logger.config(orderStateDetail + ":没有通过接口充值，不产生接口订单号");
 			}
+//			else if(pc == null){
+//				charge = new Charge(ChargeStatusEnum.PG_NOT_FOUND.getValue(), "产品编码未配置,没有通过接口充值，不产生接口订单号", new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
+//				logger.config("产品编码未配置,没有通过接口充值，不产生接口订单号");
+//			}
 //			if(charge == null && !isChannelStateClose){
 //				throw new Exception("发送接口请求异常，接口调用失败");
 //			}
@@ -349,11 +355,18 @@ public class ChargeImpl implements IChargeFacet {
 			sqlMap.put("exceptionDTO", charge);
 			return sqlMap;
 		}
+		sqlMap.put("backPo", backPo);
+		//合法用户传的错误日志，选择记录(只检查入参有没有配置)
+//		ChargeLog chargeLog = new ChargeLog(chargeParams.toString(), null, null, chargeParams.getNumber(), charge.getTipCode(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+":"+accountDesc);
+//		chargeLogDao.add(chargeLog);
+		
 		//验证包体：运营商类型，业务范围，包体大小，包体
 		int otype = -1;
 		if(resMap == null){
 			chargeEnum = ChargeStatusEnum.CITY_NOT_FOUND;
 			charge =  new Charge(chargeEnum.getValue(),chargeEnum.getDesc(), null);
+			ChargeLog chargeLog = new ChargeLog(chargeParams.toString(), charge.toString(), null, chargeParams.getNumber(), charge.getTipCode(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+":调用归属地接口异常");
+			chargeLogDao.add(chargeLog);
 			sqlMap.put("exceptionDTO", charge);
 			return sqlMap;
 		}else{
@@ -364,6 +377,8 @@ public class ChargeImpl implements IChargeFacet {
 			{
 				chargeEnum = ChargeStatusEnum.PG_NOT_FOUND;
 				charge =  new Charge(chargeEnum.getValue(),chargeEnum.getDesc(), null);
+				ChargeLog chargeLog = new ChargeLog(chargeParams.toString(), charge.toString(), null, chargeParams.getNumber(), charge.getTipCode(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+":"+chargeEnum.getDesc());
+				chargeLogDao.add(chargeLog);
 				sqlMap.put("exceptionDTO", charge);
 				return sqlMap;
 			}else{
@@ -385,6 +400,8 @@ public class ChargeImpl implements IChargeFacet {
 				if(hasD && purPo.getChargeTel().equals(chargeParams.getNumber())){
 					chargeEnum = ChargeStatusEnum.HAS_DOUBLE_PURCHAE;
 					charge = new Charge(chargeEnum.getValue(),chargeEnum.getDesc(), null);
+					ChargeLog chargeLog = new ChargeLog(chargeParams.toString(), charge.toString(), null, chargeParams.getNumber(), charge.getTipCode(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+":下游循环传一样的订单");
+					chargeLogDao.add(chargeLog);
 					sqlMap.put("exceptionDTO", charge);
 					return sqlMap;
 				}
@@ -394,10 +411,11 @@ public class ChargeImpl implements IChargeFacet {
 			if(latestPurchasePo != null){
 				chargeEnum = ChargeStatusEnum.HAS_DOUBLE_PURCHAE;
 				charge = new Charge(chargeEnum.getValue(),chargeEnum.getDesc(), null);
+				ChargeLog chargeLog = new ChargeLog(chargeParams.toString(), charge.toString(), null, chargeParams.getNumber(), charge.getTipCode(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+":一分钟内多次传的可疑订单");
+				chargeLogDao.add(chargeLog);
 				sqlMap.put("exceptionDTO", charge);
 				return sqlMap;
 			}
-			sqlMap.put("backPo", backPo);
 			ChargeAccountPo accountPo =  chargeAccountAO.getAccountByAgencyId(backPo.getId(), billType);
 			if(accountPo == null){
 				chargeEnum = ChargeStatusEnum.INVALID_BILL_TYPE;
@@ -408,10 +426,12 @@ public class ChargeImpl implements IChargeFacet {
 				sqlMap.put("accountPo", accountPo);
 				String chargeTelDetail = resMap.get("chargeTelDetail").toString();
 				//折扣是忽略包体大小的
-				RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo(chargeTelDetail, chargeParams.getScope(), null, null, null), accountPo.getId(),false);
+				RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo(chargeTelDetail, chargeParams.getScope(), chargeParams.getPgType(), chargeParams.getPgValidity(), chargeParams.getChannelType(),chargeParams.getFlowsize()), accountPo.getId(),false);
 				if(ratePo == null){
 					chargeEnum = ChargeStatusEnum.SCOPE_RATE_UNDEFINED;
 					charge = new Charge(chargeEnum.getValue(),chargeEnum.getDesc(), null);
+					ChargeLog chargeLog = new ChargeLog(chargeParams.toString(), charge.toString(), null, chargeParams.getNumber(), charge.getTipCode(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+":产品未配置");
+					chargeLogDao.add(chargeLog);
 					sqlMap.put("exceptionDTO", charge);
 					return sqlMap;
 				}else{

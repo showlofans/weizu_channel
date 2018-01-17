@@ -55,7 +55,7 @@
 				<ul class="cl">
 					<!-- <li>超级管理员</li> -->
 					<%-- <li>个人信用：<a href="#"><c:if test="${empty chargeAccount.accountCredit }">0.00</c:if> ${chargeAccount.accountCredit }</a></li> --%>
-					<li>余额：<a title="充值记录" data-href="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-title="充值记录" onclick="Hui_admin_tab(this)"><c:if test="${empty chargeAccount.accountBalance && empty chargeAccount1.accountBalance }">0.00</c:if> ${chargeAccount.accountBalance + chargeAccount1.accountBalance}</a></li>
+					<li>余额：<a title="充值记录" data-href="/flowsys/account/charge_list.do?agencyId=${loginContext.id }" data-title="充值记录" onclick="Hui_admin_tab(this)">${totalBalance }</a></li><!-- <c:if test="${empty chargeAccount.accountBalance && empty chargeAccount1.accountBalance }">0.00</c:if> ${chargeAccount.accountBalance + chargeAccount1.accountBalance} -->
 					<li class="dropDown dropDown_hover">
 						<a href="javascript:;" onClick="myselfinfo()" class="dropDown_A">${loginContext.userName} <i class="Hui-iconfont">&#xe6d5;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
@@ -146,6 +146,7 @@
 					<li><a data-href="/flowsys/agency/child_agency_list.do?agencyTag=0" data-title="代理商" href="javascript:void(0)">代理商</a></li>
 					<c:if test="${loginContext.rootAgencyId == 0 }">
 						<li><a data-href="/flowsys/crm/crm_list.do" data-title="客户信息" href="javascript:void(0)">客户信息</a></li>
+						<li><a data-href="/flowsys/otherPart/server_file_log.do" data-title="其他数据" href="javascript:void(0)">其他数据</a></li>
 					</c:if>
 					<!-- <li><a data-href="/flowsys/agency/get_tel_location.do" data-title="号码归属地查询" href="javascript:void(0)">号码归属地查询</a></li> -->
 				</ul>
@@ -162,6 +163,7 @@
 							<li><a data-href="/flowsys/chargePg/purchase_list.do?orderResult=4" data-title="充值等待" href="javascript:void(0)">充值等待</a></li>
 							<li><a data-href="/flowsys/chargePg/purchase_list.do?orderResult=1" data-title="充值成功" href="javascript:void(0)">充值成功</a></li>
 							<li><a data-href="/flowsys/chargePg/purchase_list.do?orderResult=0" data-title="充值失败" href="javascript:void(0)">充值失败</a></li>
+							<li><a data-href="/flowsys/chargeLog/charge_log_list.do" data-title="接口订单日志" href="javascript:void(0)">接口订单日志</a></li>
 						</c:when>
 						<c:otherwise>
 							<li><a data-href="/flowsys/chargePg/purchase_list.do" data-title="订单列表" href="javascript:void(0)">订单列表</a></li>
@@ -212,7 +214,7 @@
 						<li><a href="/flowsys/agency/logout.do?logOutModel=2" title="一般模式" target="_self">一般模式</a></li>
 					</c:otherwise>
 				</c:choose>
-				<c:if test="${chargeAccount1 == null && (companyAccount == 'yes' || power == 'no' ) }">
+				<c:if test="${loginContext.agencyTag != 1 && (companyAccount == 'yes' || power == 'no' ) }">
 					<%-- <c:choose>
 						<c:when test="${loginContext.agencyTag != 1 }">
 						

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weizu.flowsys.web.trade.dao.ChargeLogDao">
+	<sql id="t_chargeLog">charge_log</sql>
+
+	<resultMap type="com.weizu.flowsys.web.trade.pojo.ChargeLog" id="BaseResultMap">
+		<id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="log_out_content" property="logOutContent" jdbcType="CLOB" />
+	    <result column="log_in_content" property="logInContent" jdbcType="CLOB" />
+	    <result column="order_id" property="orderId" jdbcType="BIGINT" />
+	    <result column="charge_tel" property="chargeTel" jdbcType="VARCHAR" />
+	    <result column="charge_desc" property="chargeDesc" jdbcType="VARCHAR" />
+	    <result column="charge_status" property="chargeStatus" jdbcType="INTEGER" />
+	    <result column="charge_time" property="chargeTime" jdbcType="BIGINT" />
+	    <result column="charge_direction" property="chargeDirection" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List" >
+	    id, log_out_content,log_in_content, order_id, charge_tel, charge_desc, charge_status, charge_time, charge_direction
+	 </sql>
+	 <select id="listChargeLog" parameterType="map" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"></include>
+  	from <include refid="t_chargeLog"></include>
+  	<where>
+  		<include refid="condition_sql"></include>
+  	</where>
+  	order by id desc
+    <if test="start != null">
+	 	limit #{start}
+	 </if>
+	<if test="end != null">
+	 	, #{end}
+	 </if>
+  </select>
+  <select id="countChargeLog" parameterType="map" resultType="long">
+  	select count(id)
+  	from <include refid="t_chargeLog"></include>
+  	<where>
+  		<include refid="condition_sql"></include>
+  	</where>
+  </select>
+  <!-- 根据条件删除日志 -->
+  <delete id="delChargeLog" parameterType="map">
+  	delete from <include refid="t_chargeLog"></include>
+  	<where>
+  		<include refid="condition_sql"></include>
+  	</where>
+  </delete>
+  
+  <sql id="condition_sql">
+  	<if test="logOutContent != null">
+  		AND log_out_content like concat('%',#{logOutContent},'%') 
+  	</if>
+  	<if test="logInContent != null">
+  		AND log_in_content like concat('%',#{logInContent},'%') 
+  	</if>
+  	<choose>
+  		<when test="orderId == null &amp; orderIdIsNull != null"><!--  -->
+  			AND order_id is null
+  		</when>
+  		<when test="orderId == null &amp; orderIdIsNotNull != null"><!--  -->
+  			AND order_id is not null
+  		</when>
+  		<when test="orderId != null"><!--  -->
+  			AND order_id = #{orderId}
+  		</when>
+  	</choose>
+  	<if test="chargeTel != null">
+  		AND charge_tel = #{chargeTel}
+  	</if>
+  	<if test="chargeStatus != null">
+  		AND charge_status = #{chargeStatus}
+  	</if>
+  	<if test="chargeDirection != null">
+  		AND charge_direction = #{chargeDirection}
+  	</if>
+  	<if test="startTime != null">
+		AND charge_time &gt;= #{startTime}
+	</if>
+	<if test="endTime != null">
+		AND charge_time &lt;= #{endTime}
+	</if>
+  </sql>
+</mapper>

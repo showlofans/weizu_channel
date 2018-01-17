@@ -69,6 +69,13 @@ public class ChargePgURL extends BaseURL {
 	 */
 	public static final String PURCHASE_LIST = "/purchase_list" + DYNAMIC_WEB_SUFFIX;
 	/**
+	 * 查询订单流向的平台
+	 * <br>/flowsys/chargePg/ep_in_purchase.do
+	 */
+	public static final String EP_IN_PURCHASE = "/ep_in_purchase" + DYNAMIC_WEB_SUFFIX;
+	
+	
+	/**
 	 * 查询成功订单列表
 	 */
 	public static final String PURCHASE_SUCCESS_LIST = "/purchase_success_list" + DYNAMIC_WEB_SUFFIX;

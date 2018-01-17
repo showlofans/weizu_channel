@@ -130,7 +130,7 @@
 					<th width="60">价格(元)</th>
 					<th width="60">业务类型</th>
 					<th width="60">运营商类型</th>
-					<th width="100">包体编码名称</th>
+					<!-- <th width="100">包体编码名称</th> -->
 					
 					<th width="30">操作</th>
 				</tr>
@@ -163,7 +163,7 @@
 							<c:if test="${product.operatorType == operatorType.value }"> ${operatorType.desc }</c:if>
 							</c:forEach>
 						</td>
-						<td>${product.productName }</td>
+						<%-- <td>${product.productName }</td> --%>
 						 
 						<%-- 
 						<td>

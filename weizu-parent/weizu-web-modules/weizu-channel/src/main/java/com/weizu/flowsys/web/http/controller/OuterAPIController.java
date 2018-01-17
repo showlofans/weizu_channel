@@ -21,6 +21,7 @@ import com.weizu.flowsys.api.weizu.facet.IChargeFacet;
 import com.weizu.flowsys.api.weizu.facet.IOrderFacet;
 import com.weizu.flowsys.api.weizu.facet.IPgProductFacet;
 import com.weizu.flowsys.api.weizu.order.QueryOrderParams;
+import com.weizu.flowsys.operatorPg.enums.AgencyForwardEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
@@ -31,6 +32,8 @@ import com.weizu.flowsys.web.http.entity.Charge;
 import com.weizu.flowsys.web.http.entity.Order;
 import com.weizu.flowsys.web.http.entity.PgProduct;
 import com.weizu.flowsys.web.http.entity.PurchaseLog;
+import com.weizu.flowsys.web.trade.dao.ChargeLogDao;
+import com.weizu.flowsys.web.trade.pojo.ChargeLog;
 import com.weizu.web.foundation.String.StringHelper;
 
 /**
@@ -53,6 +56,8 @@ public class OuterAPIController {
 	private IOrderFacet orderFacade;
 	@Resource
 	private IPgProductFacet pgProductFacdeImpl;
+	@Resource
+	private ChargeLogDao chargeLogDao;
 	
 	/**
 	 * @description:
@@ -106,17 +111,17 @@ public class OuterAPIController {
 		if(pgType == null)
 		{
 			pgType = PgTypeEnum.PGDATA.getValue();
-			chargeParams.setPgType(pgType);
 		}
 		if(StringHelper.isEmpty(pgValidity ))
 		{
 			pgValidity = PgValidityEnum.MONTH_DAY_DATA.getValue();
-			chargeParams.setPgValidity(pgValidity);
 		}
 		if(channelType == null){
 			channelType = ChannelTypeEnum.ORDINARY.getValue();
-			chargeParams.setChannelType(channelType);
 		}
+		chargeParams.setPgType(pgType);
+		chargeParams.setPgValidity(pgValidity);
+		chargeParams.setChannelType(channelType);
 		if(StringHelper.isNotEmpty(userOrderId)){
 			chargeParams.setOrderIdFrom(userOrderId);
 		}
@@ -135,11 +140,11 @@ public class OuterAPIController {
 			//System.out.println("传单参数：" + chargeParams.toString());
 			charge = chargeImpl.charge(chargeParams);
 		} catch (Exception e) {
+			ChargeLog chargeLog = new ChargeLog(chargeParams.toString(), "无返回，有异常", null, chargeParams.getNumber(), charge.getTipCode(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc());
+			chargeLogDao.add(chargeLog);
 			charge = new Charge(ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc(), null);
 			e.printStackTrace();
 		}
-		
-		
 //		Purchase
 		//根据charge获得返回的订单号，结果，结果描述，
 		//根据穿入的参数，设定其他参数的传单日志（根据日志，能判定订单情况，从而手动生成订单和扣款记录）
@@ -164,7 +169,13 @@ public class OuterAPIController {
 	@RequestMapping(value=OuterApiURL.MY_ORDER_STATE,produces = "text/json;charset=UTF-8")
 	public String myOrderState(String userName, String sign, Long orderId, 
 			@RequestParam(value="number", required=false)String number,HttpServletRequest request){
-		System.out.println("访问ip"+request.getRequestURL());
+		try {
+			String remoteIp = addressUtils.getIp(request);
+			System.out.println("请求地址："+request.getRequestURL()+"访问ip:"+remoteIp);
+		} catch (Exception e) {
+			System.out.println("请求地址："+request.getRequestURL()+"访问ip:"+"未识别地址");
+			e.printStackTrace();
+		}
 //		Map<String,Object> addressMap  = addressUtils.getAddresses(request, "utf-8");
 //		String address = addressMap.get("address").toString();
 //		String eventIp = addressMap.get("ip").toString();
