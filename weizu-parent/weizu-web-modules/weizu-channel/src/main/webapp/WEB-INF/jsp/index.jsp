@@ -146,7 +146,7 @@
 					<li><a data-href="/flowsys/agency/child_agency_list.do?agencyTag=0" data-title="代理商" href="javascript:void(0)">代理商</a></li>
 					<c:if test="${loginContext.rootAgencyId == 0 }">
 						<li><a data-href="/flowsys/crm/crm_list.do" data-title="客户信息" href="javascript:void(0)">客户信息</a></li>
-						<li><a data-href="/flowsys/otherPart/server_file_log.do" data-title="其他数据" href="javascript:void(0)">其他数据</a></li>
+						<!-- <li><a data-href="/flowsys/otherPart/server_file_log.do" data-title="其他数据" href="javascript:void(0)">其他数据</a></li> -->
 					</c:if>
 					<!-- <li><a data-href="/flowsys/agency/get_tel_location.do" data-title="号码归属地查询" href="javascript:void(0)">号码归属地查询</a></li> -->
 				</ul>
@@ -181,7 +181,7 @@
 			<ul>
 				<li><a data-href="/flowsys/chargePg/pg_charge_page.do" title="/flowsys/chargePg/pg_charge_page.do" data-title="流量充值" href="javascript:;"><i class="Hui-iconfont">&#xe675;</i>  流量充值</a></li>
 				<li><a data-href="/flowsys/chargeTel/tel_charge_page.do"  data-title="话费充值" href="javascript:;"><i class="Hui-iconfont">&#xe6c7;</i> 话费充值</a></li> 
-				<!-- <li><a data-href="/flowsys/chargePg/pg_batch_charge_page.do" title="批量充值" data-title="批量充值" href="javascript:;">批量充值</a></li> -->
+				<li><a data-href="/flowsys/chargePg/pg_batch_charge_page.do" title="批量充值" data-title="批量充值" href="javascript:;">批量充值</a></li> 
 				
 			</ul>
 		</dd>

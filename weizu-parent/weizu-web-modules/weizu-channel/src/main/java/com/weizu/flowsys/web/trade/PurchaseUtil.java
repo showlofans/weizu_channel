@@ -16,6 +16,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
+import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
+import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
+import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
 
@@ -378,6 +381,73 @@ public class PurchaseUtil {
 //		}
 //	}
 	
-	
+	/**
+	 * @description: 根据名称获得号码范围
+	 * @param name
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月17日 下午4:28:48
+	 */
+	public static Map<String, Object> getServiceScopeByName(String name){
+		if(StringHelper.isNotEmpty(name)){
+			//获得运营商类型
+			OperatorTypeEnum[] enumArray = OperatorTypeEnum.values();
+			ScopeCityEnum[] enumArray2 = ScopeCityEnum.values();
+			ServiceTypeEnum[] enumArray3 = ServiceTypeEnum.values();
+			boolean tagOpeator = false;
+			boolean tagServiceType = false;
+			boolean tagScope= false;
+			boolean tagOther =name.contains("_");
+			StringBuffer carrierSb = new StringBuffer();
+			Map<String, Object> resultMap = new HashMap<String, Object>(); 
+			for (ScopeCityEnum scopeCityEnum : enumArray2) {
+				if(name.contains(scopeCityEnum.getDesc())){
+					resultMap.put("scopeCityCode", scopeCityEnum.getValue());
+					carrierSb.append(scopeCityEnum.getDesc());
+					tagScope = true;
+					break;
+				}
+			}
+			for (OperatorTypeEnum operatorTypeEnum : enumArray) {
+				if(name.contains(operatorTypeEnum.getDesc())){
+					resultMap.put("opeartorType", operatorTypeEnum.getValue());
+					carrierSb.append(operatorTypeEnum.getDesc());
+					tagOpeator = true;
+					break;
+				}
+			}
+			String serviceTypeDesc = "";
+			for (ServiceTypeEnum serviceTypeEnum : enumArray3) {
+				if(name.contains(serviceTypeEnum.getDesc())){
+					resultMap.put("serviceType", serviceTypeEnum.getValue());
+					serviceTypeDesc = serviceTypeEnum.getDesc();
+					tagServiceType = true;
+					break;
+				}
+			}
+			
+			String pgSizeStr = name.substring(name.lastIndexOf("_")+1); 
+			int pgSize = -1;
+			try {
+				pgSize = Integer.parseInt(pgSizeStr);
+				resultMap.put("pgSize", pgSize);
+			} catch (NumberFormatException e) {
+				tagOther = false;
+				e.printStackTrace();
+			}
+			
+			if(tagOpeator && tagServiceType && tagScope && tagOther){//格式正确
+				resultMap.put("carrier", carrierSb.toString());
+				resultMap.put("desc", carrierSb.toString() + serviceTypeDesc);//江西移动省漫游
+				resultMap.put("pgSize", pgSize);
+				return resultMap;
+			}
+			
+//			if(tagOpeator && tagScope){
+//				resultMap.put("carrier", carrierSb.toString());
+//			}
+		}
+		return null;
+	}
 
 }

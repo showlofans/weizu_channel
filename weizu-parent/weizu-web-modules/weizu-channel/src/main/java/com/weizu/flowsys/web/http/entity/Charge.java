@@ -28,7 +28,7 @@ public class Charge {
 	public String toString() {
 		if(chargePo != null){
 			return "Charge [tipCode=" + tipCode + ", tipMsg=" + tipMsg
-					+ ", chargePo=" + chargePo.toString() + "]";
+					+ ", " + chargePo.toString() + "]";
 		}else{
 			return "Charge [tipCode=" + tipCode + ", tipMsg=" + tipMsg
 					+ ", chargePo=" + null + "]";

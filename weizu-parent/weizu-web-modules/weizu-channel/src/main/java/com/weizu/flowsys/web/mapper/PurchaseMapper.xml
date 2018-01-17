@@ -107,7 +107,7 @@
   </sql>
   <sql id="VO2_Column_List"><!-- 话费订单页面 -->
   	ap.from_agency_name,ap.account_id, ap.from_account_id, pur.order_id, pur.order_id_api, pur.order_id_from, pur.charge_tel, 
-  	 pur.charge_value, tp.operator_name operator_type,tp.service_type, tp.charge_speed, pur.has_call_back,pur.purchase_for,,pur.ep_id,
+  	 pur.charge_value, tp.operator_name operator_type,tp.service_type, tp.charge_speed, pur.has_call_back,pur.purchase_for,pur.ep_id,
   	pur.order_arrive_time,
   	pur.order_back_time, pur.charge_tel_detail, pur.charge_tel_city,ap.order_amount ap_order_amount,ap.order_price,pur.order_result,ap.order_state,ap.order_state_Detail,ap.order_platform_path,
   	 pur.order_result_detail,pur.channel_name,act.bill_type actBill_type, act2.agency_id, ap.channel_discount_id,ap.ap_discount, pur.agency_call_ip

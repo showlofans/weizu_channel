@@ -54,6 +54,9 @@
 			<textarea id="telList" rows="5" cols="10" style="width:500px;" class="textarea" name="telList"  ></textarea>
 		</div>
 	</div>
+ 	<div class="row cl" id="pg">
+		<span id="msgDesc" style="display:none;"></span>
+	</div>
 	
 	<%-- <div class="row cl">
 		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>归属地：</label>
@@ -137,6 +140,7 @@
  </body>
   <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
   <script type="text/javascript" src="/view/static/h-ui/js/H-ui.min.js"></script> 
+  <script type="text/javascript" src="/view/lib/layer/2.4/layer.js"></script>
   <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
   <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
  <script type="text/javascript">
@@ -186,10 +190,17 @@
          data : new FormData($('#form-import')[0]),
          processData: false,
          contentType : false,
+         dataType:"json",
          success : function(data) {
         	 //alert(data);
         	//$('#telList').val(data);
-        	$('#telList').val(data);
+        	if("success" == data.msg){
+	        	$('#telList').val(data.telData);
+	        	$('#msgDesc').html(data.msgDesc);
+	        	
+        	}else{
+        		layer.msg(data.msg);
+        	}
         	// alert($('#telList').html());
         	// $('#telList').html(data);
             //alert(data);  
