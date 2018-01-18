@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
@@ -35,6 +36,7 @@ import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
+import com.weizu.flowsys.web.trade.pojo.RatePgPo;
 import com.weizu.web.foundation.String.StringHelper;
 
 @Service(value="rateDiscountAO")
@@ -895,6 +897,24 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	@Override
 	public RateDiscountPo getRateForCharge(ChargeChannelParamsPo ccpp,
 			int accountId, Boolean judgeChannelState) {
+		Map<String, Object> params = getMapByParams(ccpp, accountId, judgeChannelState);
+		return rateDiscountDao.getRateForCharge(params);
+	}
+	
+	@Override
+	public List<RatePgPo> getRatePgForCharge(ChargeChannelParamsPo ccpp,
+			int accountId, Boolean judgeChannelState) {
+		Map<String, Object> params = getMapByParams(ccpp, accountId, judgeChannelState);
+		List<RatePgPo> ratePgList = rateDiscountDao.getRatePgForCharge(params);
+		for (RatePgPo ratePgPo : ratePgList) {
+			ratePgPo.setPgDiscountPrice(NumberTool.mul(ratePgPo.getPgPrice(), ratePgPo.getActiveDiscount()));
+		}
+		
+		return ratePgList;
+	}
+	
+	private Map<String,Object> getMapByParams(ChargeChannelParamsPo ccpp,
+			int accountId, Boolean judgeChannelState){
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("accountId", accountId);
 		params.put("bindState", BindStateEnum.BIND.getValue());
@@ -935,7 +955,7 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		if(ccpp.getPgSize() != null){
 			params.put("pgSize", ccpp.getPgSize());
 		}
-		return rateDiscountDao.getRateForCharge(params);
+		return params;
 	}
 	
 	@Override
@@ -1012,5 +1032,6 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		
 		return ratePo;
 	}
+
 	
 }

@@ -382,7 +382,7 @@ public class PurchaseUtil {
 //	}
 	
 	/**
-	 * @description: 根据名称获得号码范围
+	 * @description: 根据传入的归属地相关字符串获得号码范围（导入号码）
 	 * @param name
 	 * @return
 	 * @author:微族通道代码设计人 宁强
@@ -397,55 +397,80 @@ public class PurchaseUtil {
 			boolean tagOpeator = false;
 			boolean tagServiceType = false;
 			boolean tagScope= false;
-			boolean tagOther =name.contains("_");
 			StringBuffer carrierSb = new StringBuffer();
 			Map<String, Object> resultMap = new HashMap<String, Object>(); 
 			for (ScopeCityEnum scopeCityEnum : enumArray2) {
-				if(name.contains(scopeCityEnum.getDesc())){
+				String pname = scopeCityEnum.getDesc();
+				String pNameScope = pname.substring(0,pname.length()-1);
+				if(name.contains(pNameScope)){
 					resultMap.put("scopeCityCode", scopeCityEnum.getValue());
-					carrierSb.append(scopeCityEnum.getDesc());
+					carrierSb.append(pNameScope);
 					tagScope = true;
 					break;
 				}
 			}
 			for (OperatorTypeEnum operatorTypeEnum : enumArray) {
 				if(name.contains(operatorTypeEnum.getDesc())){
-					resultMap.put("opeartorType", operatorTypeEnum.getValue());
+					resultMap.put("operatorType", operatorTypeEnum.getValue());
 					carrierSb.append(operatorTypeEnum.getDesc());
 					tagOpeator = true;
 					break;
 				}
 			}
-			String serviceTypeDesc = "";
 			for (ServiceTypeEnum serviceTypeEnum : enumArray3) {
 				if(name.contains(serviceTypeEnum.getDesc())){
 					resultMap.put("serviceType", serviceTypeEnum.getValue());
-					serviceTypeDesc = serviceTypeEnum.getDesc();
+//					String serviceTypeDesc = serviceTypeEnum.getDesc();
+					resultMap.put("serviceTypeDesc", serviceTypeEnum.getDesc());
+					
 					tagServiceType = true;
 					break;
 				}
 			}
 			
-			String pgSizeStr = name.substring(name.lastIndexOf("_")+1); 
-			int pgSize = -1;
-			try {
-				pgSize = Integer.parseInt(pgSizeStr);
-				resultMap.put("pgSize", pgSize);
-			} catch (NumberFormatException e) {
-				tagOther = false;
-				e.printStackTrace();
-			}
-			
-			if(tagOpeator && tagServiceType && tagScope && tagOther){//格式正确
-				resultMap.put("carrier", carrierSb.toString());
-				resultMap.put("desc", carrierSb.toString() + serviceTypeDesc);//江西移动省漫游
-				resultMap.put("pgSize", pgSize);
+			if(tagOpeator && tagServiceType && tagScope){//格式正确
+				resultMap.put("carrier", carrierSb.toString());//归属地
+//				resultMap.put("desc", carrierSb.toString() + serviceTypeDesc);//江西移动省漫游
+//				resultMap.put("pgSize", pgSize);
 				return resultMap;
 			}
-			
-//			if(tagOpeator && tagScope){
-//				resultMap.put("carrier", carrierSb.toString());
-//			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @description: 根据归属地获得地区编码和运营商类型
+	 * @param carrier
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月18日 下午2:42:00
+	 */
+	public static Map<String,Object> getOperatorMapByCarrier(String carrier){
+		OperatorTypeEnum[] enumArray = OperatorTypeEnum.values();
+		ScopeCityEnum[] enumArray2 = ScopeCityEnum.values();
+		boolean tagOpeator = false;
+		boolean tagScope= false;
+//		StringBuffer carrierSb = new StringBuffer();
+		Map<String, Object> resultMap = new HashMap<String, Object>(); 
+		for (ScopeCityEnum scopeCityEnum : enumArray2) {
+			if(carrier.contains(scopeCityEnum.getDesc())){
+				resultMap.put("scopeCityCode", scopeCityEnum.getValue());
+//				carrierSb.append(scopeCityEnum.getDesc());
+				tagScope = true;
+				break;
+			}
+		}
+		for (OperatorTypeEnum operatorTypeEnum : enumArray) {
+			if(carrier.contains(operatorTypeEnum.getDesc())){
+				resultMap.put("opeartorType", operatorTypeEnum.getValue());
+//				carrierSb.append(operatorTypeEnum.getDesc());
+				tagOpeator = true;
+				break;
+			}
+		}
+		if(tagOpeator && tagScope){//格式正确
+//			resultMap.put("carrier", carrierSb.toString());//归属地
+			return resultMap;
 		}
 		return null;
 	}

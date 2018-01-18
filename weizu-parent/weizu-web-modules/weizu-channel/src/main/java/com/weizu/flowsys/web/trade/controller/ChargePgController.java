@@ -75,6 +75,7 @@ import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.channel.pojo.SpecialCnelType;
 import com.weizu.flowsys.web.channel.pojo.SpecialOpdType;
 import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
+import com.weizu.flowsys.web.http.ao.ValiUser;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.ao.AccountPurchaseAO;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
@@ -127,6 +128,9 @@ public class ChargePgController {
 	private ExchangePlatformAO exchangePlatformAO;
 	@Resource
 	private ExchangePlatformDaoInterface exchangePlatformDao;
+	
+	@Resource
+	private ValiUser valiUser;
 //	@Resource
 //	private ChannelDiscountAO channelDiscountAO;
 	/**
@@ -872,55 +876,99 @@ public class ChargePgController {
 				{
 					String uploadFileName = uploadFile.getOriginalFilename();
 //				boolean isAccess = uploadFileName.contains("10000")
-					
+					uploadFileName = uploadFileName.substring(0,uploadFileName.indexOf("."));
 					Map<String, Object> map = PurchaseUtil.getServiceScopeByName(uploadFileName);
 					if(map == null){
 						map = new HashMap<String, Object>();
-						map.put("msg", "名称不规范（江西移动_省漫游_100）");
+						
+						
+//						map.put("msg", "名称不规范（江西移动_省漫游_100）");
+						map.put("msg", "没有该业务类型");
 					}else{//做其他判定,设定msg的值
+						boolean tagOther =uploadFileName.contains("_");
+						String pgSizeStr = uploadFileName.substring(uploadFileName.lastIndexOf("_")+1); 
+						int pgSize = -1;
+						try {
+							pgSize = Integer.parseInt(pgSizeStr);
+							map.put("pgSize", pgSize);
+						} catch (NumberFormatException e) {
+							tagOther = false;
+							e.printStackTrace();
+						}
+						if(!tagOther){
+							map.put("msg", "名称不规范（江西移动_省漫游_100）");
+						}
+						
+						
 						//判定号码是否与文件名一致
-						long size = uploadFile.getSize();
-						System.out.println(size);
 						InputStream input = uploadFile.getInputStream();
 						
-						InputStreamReader isr = new InputStreamReader(input);
-						BufferedReader br = new BufferedReader(isr);
-						String line="";
-						StringBuffer sb = new StringBuffer();
-						int successSize = 0;
-						int errorSize = 0;
 						String carrier = map.get("carrier").toString();
-						while ((line=br.readLine())!=null) {
-							Map<String,Object> carrierMap = PurchaseUtil.getOperatorsByTel(line.trim());
-							String chargeTelDetail = carrierMap.get("chargeTelDetail").toString();
-							System.out.println("carrier:"+carrier+",chargeTelDetail"+ chargeTelDetail);
-							if(chargeTelDetail.equals(carrier)){//手机号得到的归属地和文件名得到的归属地一致
-								sb.append(line);
-								sb.append(",");
-								successSize++;
-							}else{
-								errorSize++;
-							}
-						}
-						br.close();
-						isr.close();
-						input.close();
-						if(successSize > 0){
-							map.put("msg", "success");
-							map.put("telData", sb.toString());
-						}else{
-							map.put("msg", "导入失败");
-						}
-						map.put("msgDesc", "导入失败"+errorSize+"条,导入成功条数："+ successSize);
-						
-						int pgSize = Integer.parseInt(map.get("pgSize").toString());
 						int serviceType = Integer.parseInt(map.get("serviceType").toString());
+						
+						int operatorType = Integer.parseInt(map.get("operatorType").toString());
 						ChargeAccountPo accountPo = chargeAccountAO.getAccountByAgencyId(agencyVO.getId(), BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 						RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo(carrier, serviceType, null,null,null,pgSize) , accountPo.getId(),true);
+						
 						if(ratePo != null){//只有费率
+							InputStreamReader isr = new InputStreamReader(input);
+							BufferedReader br = new BufferedReader(isr);
+							String line="";
+							StringBuffer sb = new StringBuffer();
+							int successSize = 0;
+							int errorSize = 0;
+							long size = uploadFile.getSize();
+//							System.out.println(size);
 							map.put("ratePo", ratePo);
-							//根据折扣设置包体是否足够
+							PgDataPo pgData = valiUser.findPg(new PgDataPo(operatorType,  pgSize, serviceType, null,null,null));//,,,PgServiceTypeEnum.PGCHARGE.getValue()
+							if(pgData == null){
+								map.put("msg", "包体不存在，导入失败");
+							}else{
+								
+								map.put("pgData", pgData);
+								//根据折扣设置包体是否足够
+								Double accountBalance = accountPo.getAccountBalance();
+								double pgPrice = pgData.getPgPrice();
+								double pgDiscountPrice = NumberTool.mul(pgData.getPgPrice(), ratePo.getActiveDiscount());
+								Double telCharge = 0d;
+								Double pgTotalPrice = 0d;
+								while ((line=br.readLine())!=null) {
+									Map<String,Object> carrierMap = PurchaseUtil.getOperatorsByTel(line.trim());
+									String chargeTelDetail = carrierMap.get("chargeTelDetail").toString();
+//									System.out.println("carrier:"+carrier+",chargeTelDetail"+ chargeTelDetail);
+									telCharge = NumberTool.add(pgDiscountPrice, telCharge); 
+									pgTotalPrice = NumberTool.add(pgTotalPrice, pgPrice); 
+									if(telCharge > accountBalance){//余额不足
+										break;
+									}
+									if(chargeTelDetail.equals(carrier)){//手机号得到的归属地和文件名得到的归属地一致
+										sb.append(line);
+										sb.append(",");
+										successSize++;
+									}else{
+										errorSize++;
+									}
+								}
+								br.close();
+								isr.close();
+								input.close();
+								if(successSize > 0){
+									map.put("msg", "success");
+									map.put("telData", sb.toString());
+									map.put("pgPrice", pgTotalPrice);
+									map.put("orderAmount", telCharge);//总成本
+									map.put("msgDesc", "导入失败"+errorSize+"条,导入成功条数："+ successSize);
+								}else{
+									map.put("msg", "导入失败");
+								}
+							}
+							
+						}else{
+							map.put("msg", "未配置折扣，导入失败");
 						}
+						
+//						int pgSize = Integer.parseInt(map.get("pgSize").toString());
+						
 						
 					}
 					

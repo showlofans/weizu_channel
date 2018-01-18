@@ -1,0 +1,25 @@
+navigateTo: function () {
+    wx.navigateTo({ url: './navigator' })
+  },
+  navigateBack: function () {
+    wx.navigateBack()
+  },
+  redirectTo: function () {
+    wx.redirectTo({ url: './navigator' })
+  }
+
+
+设置标题
+wx.setNavigationBarTitle({
+      title: title
+    })
+
+表单提交
+setNaivgationBarTitle: function (e) {
+    var title = e.detail.value.title
+    console.log(title)
+    wx.setNavigationBarTitle({
+      title: title
+    })
+  }
+

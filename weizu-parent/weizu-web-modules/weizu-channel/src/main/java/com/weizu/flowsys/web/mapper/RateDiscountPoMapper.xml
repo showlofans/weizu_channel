@@ -29,6 +29,17 @@
     <result column="active_id" property="activeId" jdbcType="BIGINT" />
     <result column="channel_discount_id" property="channelDiscountId" jdbcType="BIGINT" />
   </resultMap>
+  <!-- 包体折扣信息 -->
+  <resultMap id="RatePgMap" type="com.weizu.flowsys.web.trade.pojo.RatePgPo" >
+    <result column="pg_size" property="pgSize" jdbcType="INTEGER" />
+    <result column="rate_id" property="rateId" jdbcType="BIGINT" />
+    <result column="channel_id" property="channelId" jdbcType="BIGINT" />
+    <result column="active_discount" property="activeDiscount" jdbcType="DOUBLE" />
+    <result column="pg_price" property="pgPrice" jdbcType="DOUBLE" />
+    <result column="pg_id" property="pgId" jdbcType="INTEGER" />
+  </resultMap>
+  
+  
   <sql id="Base_Column_List" >
     rate.id, cDiscount.operator_type, cDiscount.scope_city_code, active_discount,channel_discount_id,rate.bill_type,rate.channel_id
   </sql>
@@ -38,6 +49,10 @@
   </sql>
   <sql id="Get_My_Rate">
   	rate.id, rate.active_id,active.active_time, channel_discount_id,rate.active_discount,rate.bill_type,cd.operator_type,cd.service_type,cd.scope_city_code,rate.channel_id,cnel.special_tag 
+  </sql>
+  <!-- 包体折扣信息 -->
+  <sql id="ratePg_list">
+  	rate.id rate_id, rate.channel_id, rate.active_discount, opd.pg_size, opd.pg_price, opd.id pg_id
   </sql>
   <sql id="My_Rate_List">
   	rate.id, rate.active_id, active_discount,channel_discount_id,rate.bill_type 
@@ -221,6 +236,27 @@
 	 	</where>
 	 	order by active.active_time DESC) b 
 	 	<!-- GROUP BY b.scope_city_code -->
+  </select>
+  <!-- 获得费率包体列表 -->
+  <select id="getRatePgForCharge" parameterType="map" resultMap="RatePgMap">
+	  select <include refid="ratePg_list"></include>
+		  	from <include refid="t_active"></include> active
+		  	INNER join <include refid="t_account"></include> act
+			on active.account_id=act.id
+		  	inner join <include refid="t_rateD"></include> rate
+		  	ON active.rate_discount_id=rate.id
+		  	INNER JOIN <include refid="t_cDiscount"></include> cd
+		 	on rate.channel_discount_id=cd.id
+		  	INNER JOIN <include refid="t_cnel"></include> cnel
+		 	on cnel.id=cd.channel_id
+		 	INNER JOIN <include refid="t_cbp"></include> cbp
+			on cbp.channel_id=cnel.id
+		 	INNER JOIN <include refid="t_pg"></include> opd
+			on cbp.pg_id=opd.id
+		 	<where>
+		 		<include refid="tripple_table_sql"></include>
+		 	</where>
+		 	order by opd.pg_size
   </select>
   
   <!-- 通过代理商id找到它绑定的通道id -->

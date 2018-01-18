@@ -55,7 +55,7 @@
 		</div>
 	</div>
  	<div class="row cl" id="pg">
-		<span id="msgDesc" style="display:none;"></span>
+		<span id="msgDesc" style="display:none;" class="c-success"></span>
 	</div>
 	
 	<%-- <div class="row cl">
@@ -196,11 +196,19 @@
         	//$('#telList').val(data);
         	if("success" == data.msg){
 	        	$('#telList').val(data.telData);
-	        	$('#msgDesc').html(data.msgDesc);
+	        var msgDesc = data.msgDesc;
+	        msgDesc += '折扣：'+data.ratePo.activeDiscount+'<br>';
+	        msgDesc += '总成本：'+data.orderAmount+'<br>';
+	        msgDesc += '总价值：'+data.pgPrice+'<br>';
+	        msgDesc += '包体大小：'+data.pgSize+'<br>';
+	        msgDesc += '范围：'+data.carrier+data.serviceTypeDesc+'<br>';
+	        	$('#msgDesc').html(msgDesc);
 	        	
         	}else{
         		layer.msg(data.msg);
+        		$('#msgDesc').html(data.msg);
         	}
+        		$('#msgDesc').show();
         	// alert($('#telList').html());
         	// $('#telList').html(data);
             //alert(data);  
