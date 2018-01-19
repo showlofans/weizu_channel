@@ -453,7 +453,9 @@ public class PurchaseUtil {
 //		StringBuffer carrierSb = new StringBuffer();
 		Map<String, Object> resultMap = new HashMap<String, Object>(); 
 		for (ScopeCityEnum scopeCityEnum : enumArray2) {
-			if(carrier.contains(scopeCityEnum.getDesc())){
+			String pname = scopeCityEnum.getDesc();
+			String pNameScope = pname.substring(0,pname.length()-1);
+			if(carrier.contains(pNameScope)){
 				resultMap.put("scopeCityCode", scopeCityEnum.getValue());
 //				carrierSb.append(scopeCityEnum.getDesc());
 				tagScope = true;
@@ -462,7 +464,7 @@ public class PurchaseUtil {
 		}
 		for (OperatorTypeEnum operatorTypeEnum : enumArray) {
 			if(carrier.contains(operatorTypeEnum.getDesc())){
-				resultMap.put("opeartorType", operatorTypeEnum.getValue());
+				resultMap.put("operatorType", operatorTypeEnum.getValue());
 //				carrierSb.append(operatorTypeEnum.getDesc());
 				tagOpeator = true;
 				break;

@@ -206,6 +206,7 @@
 //		for (RatePgPo ratePgPo : ratePgList) {
 //			System.out.println(ratePgPo.getPgSize() + "M,折扣价："+ ratePgPo.getPgDiscountPrice());
 //		}
+//		System.out.println(JSON.toJSONString(ratePgList));
 //	}
 ////	@Test
 ////	public void testGetMyChildRate(){

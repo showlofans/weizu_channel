@@ -31,41 +31,62 @@
  <div class="page-container">
  <form class="form form-horizontal" name="form-import" action="?"  id="form-import" enctype="multipart/form-data">
 	<div class="row cl">
-		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>号码文本：</label>
+		<label class="form-label col-xs-4 col-sm-3">号码文本：</label>
 		<div class="formControls col-xs-8 col-sm-9">
 			<span class="btn-upload">
 			  <a href="javascript:void();" class="btn btn-primary radius"><i class="iconfont">&#xf0020;</i> 选择文件</a>
 			  <input value="" class="input-text upload-url" style="width:300px" type="text" readonly >
 			  <input type="file" multiple name="uploadFile" class="input-file">
 			</span>
-			<button type="button" id="saveButton" class="btn btn-primary radius" onclick="saveTelList()"><i class="fa "></i> 导入号码</button>
-			<!-- <span class="error"></span> -->
+			<button type="button" id="saveButton" class="btn btn-primary radius" onclick="saveTelList()"> 导入号码</button>
 		</div>
 		<!-- <button type="button" onclick="history.go(-1);" class="btn"><i class="fa fa-undo"></i> 取消返回</button> -->
 	</div>
 </form>
- 	<form class="form form-horizontal" name="form-charge" action="?" id="form-charge">
+ 	<form class="form form-horizontal" name="form-charge" action="?" id="form-batch-charge">
  	<input type="hidden" name="channelId" id="channelId">
  	<input type="hidden" name="billType" id="billType">
  	<input type="hidden" name="pgId" id="pgId">
+ 	<input type="hidden" id="pgSinglePrice"><!-- 包体原价单价 -->
+ 	<input type="hidden" name="totalNum" id="totalNum">
+ 	<input type="hidden" name="carrier" id="carrier">
+ 	<input type="hidden" name="serviceType" id="serviceType">
+ 	<input type="hidden" value="${loginContext.rootAgencyId }" id="rootAgencyId">
+ 	<c:choose>
+		<c:when test="${loginContext.rootAgencyId == 0 }">
+			<input id="cdisId" name="cdisId" type="hidden" value="">
+		</c:when>
+		<c:otherwise>
+			<input id="rateId" name="rateId" type="hidden" value="">
+		</c:otherwise>
+	</c:choose>
  	<div class="row cl" id="pg">
-		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机号：</label>
+		<label class="form-label col-xs-4 col-sm-3">手机号：</label>
 		<div class="formControls col-xs-8 col-sm-9">
-			<textarea id="telList" rows="5" cols="10" style="width:500px;" class="textarea" name="telList"  ></textarea>
+			<textarea id="telList" rows="5" cols="10" style="width:500px;" class="textarea" name="chargeTelArray"  ></textarea>
+			<br><span id="msgDesc" style="display:none;" class="c-success"></span>
 		</div>
 	</div>
- 	<div class="row cl" id="pg">
-		<span id="msgDesc" style="display:none;" class="c-success"></span>
+ 	<div class="row cl" id="serviceScope" style="display:none;">
+		<label class="form-label col-xs-4 col-sm-3">业务：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" id="businessType" readonly class="input-text" required style="width:400px" autocomplete="off"  placeholder="" >
+		</div>
 	</div>
+	<div id="cnelInsert" class="row cl">
+	</div>
+ 	<!-- <div class="row cl" id="pg">
+		<span id="msgDesc" style="display:none;" class="c-success"></span>
+	</div> -->
 	
 	<%-- <div class="row cl">
-		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>归属地：</label>
+		<label class="form-label col-xs-4 col-sm-3">归属地：</label>
 		<div class="formControls col-xs-8 col-sm-9">
 			<input type="text" class="input-text" required  style="width:400px" value="" placeholder="" id="chargeTelDetail" name="chargeTelDetail">
 		</div>
 	</div>
 	<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>业务类型：</label>
+			<label class="form-label col-xs-4 col-sm-3">业务类型：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 				<c:forEach items="${resultMap.serviceTypeEnum }" var="serviceType" varStatus="vs">
 					<div class="radio-box">
@@ -92,8 +113,8 @@
 				</div> -->
 			</div>
 		</div> --%>
-		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>业务类型：</label>
+		<%-- <div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">业务类型：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 				<span class="select-box inline">
 						<select id="select-servce-type" name="serviceType" onchange="ifAjaxPg()" style="width:150px;" class="select">
@@ -104,12 +125,12 @@
 						</select>
 					</span>
 			</div>
-		</div>
+		</div> --%>
 	<div class="row cl" id="pg">
-		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>流量面值：</label>
+		<label class="form-label col-xs-4 col-sm-3">流量面值：</label>
 		<div class="formControls col-xs-8 col-sm-9">
 		<!--  onfocus="ajaxPg()" -->
-			<input type="text" id="pgPrice" readonly name="pgPrice" class="input-text" required style="width:400px" autocomplete="off"  placeholder="" >
+			<input type="text" id="pgPrice" readonly name="chargeValue" class="input-text" required style="width:400px" autocomplete="off"  placeholder="" >
 			<!-- <div>
 				<span class="pgName"></span>
 				<span style="display:none;" class="pgName"></span>
@@ -123,14 +144,16 @@
 		<!-- style="display:none;"  -->
 	</div>
 	<div class="row cl">
-		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>采购金额：</label>
+		<label class="form-label col-xs-4 col-sm-3">采购金额：</label>
 		<div class="formControls col-xs-8 col-sm-9">
 			<input id="orderAmount" name="orderAmount" type="text" readonly class="input-text" required  style="width:400px" value="" placeholder="">
+			<br>折扣：<span id="rateDiscount" class="c-red">${resultMap.pageMsg }</span>
 		</div>
 	</div>
 	<div class="row cl">
 		<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
 			<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+			<input class="btn btn-primary radius" type="button" onclick="removeIframe();" value="&nbsp;&nbsp;取消&nbsp;&nbsp;">
 		</div>
 	</div>
 	</form>
@@ -141,6 +164,7 @@
   <script type="text/javascript" src="/view/lib/jquery/1.9.1/jquery.min.js"></script> 
   <script type="text/javascript" src="/view/static/h-ui/js/H-ui.min.js"></script> 
   <script type="text/javascript" src="/view/lib/layer/2.4/layer.js"></script>
+  <script type="text/javascript" src="/view/static/h-ui.admin/js/H-ui.admin.js"></script>
   <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
   <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
  <script type="text/javascript">
@@ -177,6 +201,52 @@
   });  
  
  }) */
+ $().ready(function() {
+	 $("#form-batch-charge").validate({
+		 submitHandler : function(form) {
+			 	layer.msg($.trim($('#telList').val()));
+	    		if($.trim($('#telList').val()) == ''){
+	    			 alert($('#pageMsg').val());
+	    		 }else {
+		    		$.ajax({
+				        type:"post",
+				        url:"/flowsys/chargePg/pg_batch_charge.do",
+				        data: $('form').serialize(),//表单数据
+				        async : false,
+				        success:function(d){
+				        	if(d == 'success'){
+					        	removeIframe();
+				        	}else{
+				        		alert(d + "充值失败");
+				        		//removeIframe();
+				        	}
+				           /* if(d=="success"){
+				                layer.msg('提交成功！');//保存成功提示
+				            }
+				            if(d=="error"){
+				                layer.msg('提交异常!');
+				            } */
+				        }
+				    });
+	    		 }
+			}
+	 });
+});
+ /**超管选择通道*/
+ function chooseChannel(cnelId,cdisId,cdis,vart){
+	//layer.msg(cnelId+","+cdisId+";"+cdis);
+	//var cnel = $(vart).prev().val();
+	//layer.msg(cnel);
+	$('#channelId').val(cnelId);
+	$('#rateDiscount').html(cdis);//通道折扣
+	$('#cdisId').val(cdisId); //初始化通道折扣id
+	var orderPrice = parseFloat($('#pgSinglePrice').val() * $('#totalNum').val());
+	var orderAmount = orderPrice * cdis;
+	//layer.msg(orderAmount);
+	$('#orderAmount').val(orderAmount);
+	$('#pgPrice').val(orderPrice);
+}
+ 
  function saveTelList(){
 	
 	//alert($('#telList').val());
@@ -196,24 +266,62 @@
         	//$('#telList').val(data);
         	if("success" == data.msg){
 	        	$('#telList').val(data.telData);
-	        var msgDesc = data.msgDesc;
-	        msgDesc += '折扣：'+data.ratePo.activeDiscount+'<br>';
-	        msgDesc += '总成本：'+data.orderAmount+'<br>';
-	        msgDesc += '总价值：'+data.pgPrice+'<br>';
-	        msgDesc += '包体大小：'+data.pgSize+'<br>';
-	        msgDesc += '范围：'+data.carrier+data.serviceTypeDesc+'<br>';
+		        var msgDesc = data.msgDesc;
+		        $('#businessType').val(data.carrier+data.serviceTypeDesc+data.pgSize + 'M(原价：'+data.pgData.pgPrice+'元)');
+		        $('#serviceScope').show();
+		        //msgDesc += '<br>包体大小：'+data.pgSize;
+		        //msgDesc += '<br>范围：'+data.carrier+data.serviceTypeDesc;
+		        //msgDesc += '<br>总价值：'+data.pgPrice;
+		        //msgDesc += '<br>折扣：'+data.ratePo.activeDiscount;
+		       // msgDesc += '<br>总成本（扣款）：'+data.orderAmount;
 	        	$('#msgDesc').html(msgDesc);
+	        	$('#totalNum').val(data.totalNum);
+	        	$('#pgSinglePrice').val(data.pgData.pgPrice);
+	        	$('#pgId').val(data.pgData.id);
+	        	$('#serviceType').val(data.serviceType);
+	        	$('#carrier').val(data.carrier);
+	        	var rootAgencyId = $('#rootAgencyId').val();
+	        	//layer.msg(rootAgencyId);
+	        	if(rootAgencyId == '0'){
+	               	var dataRole = eval(data.chargeList);
+	               	//alert(dataRole.length);
+	               	if(dataRole.length > 0){
+		        		var appendData = "<label class='form-label col-xs-4 col-sm-3'>通道：</label><div class='formControls col-xs-8 col-sm-9 skin-minimal'>";
+	                      for(var i=0; i < dataRole.length; i++){
+	                    	  var cnel_id = dataRole[i].id;
+	                    	  var cdisId = dataRole[i].cdId;
+	                    	  var cnel_name = dataRole[i].channelName;
+	                    	  var ep_name = dataRole[i].epName;
+	                    	  var ep_id = dataRole[i].epId;
+	                    	  var cdiscount = dataRole[i].channelDiscount;
+	                    	  appendData += "<div class='radio-box'><input type='hidden' value='"+cnel_id+"'></input><input class='cNameRadio' type='radio' name='cNameRadio' id='cname-"+(i+1)+"' onclick='chooseChannel("+cnel_id+","+cdisId+","+cdiscount+",this)'><label for='cname-"+(i+1)+"'>"
+	            					+cnel_name+"</label></div>";
+	                      }
+	                	appendData += "</div>";
+		            	$("#cnelInsert").prepend(appendData);
+		            	$("#cnelInsert").show();
+	                }
+	        	}else{
+	        		$('#rateDiscount').html(data.ratePo.activeDiscount);
+	        		$('#rateId').val(data.ratePo.id);
+		        	$('#orderAmount').val(data.orderAmount);
+		        	$('#pgPrice').val(data.pgPrice);
+	        	}
 	        	
         	}else{
+        		$('#businessType').val('');
+		        $('#serviceScope').hide();
+        		$('#orderAmount').val('');
+	        	$('#pgPrice').val('');
+	        	$('#rateDiscount').html('');
+	        	
         		layer.msg(data.msg);
         		$('#msgDesc').html(data.msg);
         	}
-        		$('#msgDesc').show();
+        	$('#msgDesc').show();
         	// alert($('#telList').html());
         	// $('#telList').html(data);
             //alert(data);  
-        	
-
          },
 
          error : function(data) {

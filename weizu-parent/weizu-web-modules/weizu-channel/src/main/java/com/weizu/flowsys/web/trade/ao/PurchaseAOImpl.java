@@ -335,7 +335,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 						app.setApDiscount(telchannel.getTelchannelDiscount());
 						int aarAdd = accountPurchaseDao.add(app);
 						if(aarAdd > 0){
-							return "订单提交成功";
+							return "success";
 						}
 					}
 				}
@@ -469,7 +469,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				int batchAddCrt = chargeRecordDao.crt_addList(recordPoList);		//批量添加扣款记录信息
 				int batchAddApp = accountPurchaseDao.ap_addList(apPoList);		//批量添加连接信息
 				if(batchAddApp + batchAddCrt > 1){
-					return "订单提交成功";
+					return "success";
 				}
 //					if(batchAddApp > 0 && batchAddCrt > 0 && !isChannelStateCanceled){//开始走接口
 //						return chargeByBI(epPo, orderId, pcVO.getChargeTel(),pcVO.getServiceType(), dataPo.getProductCode());
@@ -584,7 +584,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 		{
 			chargeTelCity = telMap.get("chargeTelCity").toString();
 		}else{
-			return "调用接口异常";
+			logger.config("调用接口异常，设置城市异常");
+			return "调用接口异常，设置城市异常";
 		}
 		purchasePo.setChargeTelCity(chargeTelCity);
 		Boolean isChannelStateCanceled = channel.getChannelState() == ChannelStateEnum.CLOSE.getValue();
@@ -650,7 +651,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 						app.setApDiscount(cdisPo.getChannelDiscount());
 						int aarAdd = accountPurchaseDao.add(app);
 						if(aarAdd > 0){
-							return "订单提交成功";
+							return "success";
 						}
 					}
 				}
@@ -782,7 +783,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				int batchAddCrt = chargeRecordDao.crt_addList(recordPoList);		//批量添加扣款记录信息
 				int batchAddApp = accountPurchaseDao.ap_addList(apPoList);		//批量添加连接信息
 				if(batchAddApp + batchAddCrt > 1){
-					return "订单提交成功";
+					return "success";
 				}
 //					if(batchAddApp > 0 && batchAddCrt > 0 && !isChannelStateCanceled){//开始走接口
 //						return chargeByBI(epPo, orderId, pcVO.getChargeTel(),pcVO.getServiceType(), dataPo.getProductCode());
@@ -1581,6 +1582,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 					searchMap.put("scopeCityCode", scopeCityCode);
 				}
 			}
+		}
+		if(ccpp.getPgSize() != null){
+			searchMap.put("pgSize", ccpp.getPgSize());
 		}
 		if(ccpp.getPgType() != null){
 			searchMap.put("pgType", ccpp.getPgType());

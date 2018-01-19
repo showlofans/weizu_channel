@@ -79,6 +79,7 @@ import com.weizu.flowsys.web.http.ao.ValiUser;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.ao.AccountPurchaseAO;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
+import com.weizu.flowsys.web.trade.pojo.PgBatchChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 import com.weizu.flowsys.web.trade.pojo.TotalResult;
@@ -249,6 +250,59 @@ public class ChargePgController {
 		}
 		return res;
 //		return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+	}
+	/**
+	 * @description: 流量包批量购买
+	 * @param request
+	 * @param pcVO
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月19日 下午2:08:12
+	 */
+	@ResponseBody
+	@RequestMapping(value = ChargePgURL.PG_BATCH_CHARGE,produces = "text/text;charset=UTF-8")
+	public String pgBatchCharge(HttpServletRequest request,PgBatchChargeVO pbcVO){
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		String res = "error";
+		if(agencyVO != null){
+			ChargeAccountPo accountPo = null;
+			Long channelId = null;
+			if(!agencyVO.getRootAgencyId().equals(0)){
+				RateDiscountPo ratePo = rateDiscountDao.get(pbcVO.getRateId());
+				if(ratePo != null){
+					accountPo = chargeAccountAO.getAccountByAgencyId(agencyVO.getId(), ratePo.getBillType());
+					channelId = ratePo.getChannelId();
+				}
+			}else{//超管测试通道，通过通道折扣提单
+				ChannelDiscountPo cdPo = channelDiscountDao.get(pbcVO.getCdisId());//new WherePrams("channel_id", "=", pcVO.getChannelId()).and("scope_city_code", "=", scopeCityCode)
+				if(cdPo!=null && cdPo.getBillType().equals(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())){
+					accountPo = chargeAccountAO.getAccountByAgencyId(agencyVO.getId(), cdPo.getBillType());
+					channelId = cdPo.getChannelId();
+				}
+			}
+			boolean isAccess = agencyAO.checkIdByPass(agencyVO.getId(), agencyVO.getUserPass());
+			if(!isAccess || !agencyVO.getId().equals(accountPo.getAgencyId())){
+				res = "当前登陆用户不合法";
+//				return new ModelAndView("error", "errorMsg", "当前登陆用户不合法");
+			}
+			Double orderAmount = NumberTool.div(pbcVO.getOrderAmount(), pbcVO.getTotalNum());
+			Double chargeValue = NumberTool.div(pbcVO.getChargeValue(), pbcVO.getTotalNum());
+			
+			String[] chargeTelArr = pbcVO.getChargeTelArray().split(",");
+//			res = "success";
+			for (String chargeTel : chargeTelArr) {
+				PgChargeVO pcVO = new PgChargeVO(channelId, chargeTel, pbcVO.getCarrier(), orderAmount, chargeValue, pbcVO.getPgId(), pbcVO.getServiceType(), pbcVO.getRateId(), pbcVO.getCdisId());
+				pcVO.setAccountId(accountPo.getId());
+				pcVO.setFromAgencyName(agencyVO.getUserName());
+				//充值
+				pcVO.setChargeFor(PgServiceTypeEnum.PGCHARGE.getValue());
+				res = purchaseAO.purchase(pcVO, accountPo);
+				if(!"success".equals(res)){//有成功的
+					break;
+				}
+			}
+		}
+		return res;
 	}
 	
 	/**
@@ -870,6 +924,7 @@ public class ChargePgController {
 	{
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO != null){
+			boolean isSupperRoot = agencyVO.getRootAgencyId() == 0;
 			try
 			{
 				if (uploadFile != null && !uploadFile.isEmpty())
@@ -877,11 +932,14 @@ public class ChargePgController {
 					String uploadFileName = uploadFile.getOriginalFilename();
 //				boolean isAccess = uploadFileName.contains("10000")
 					uploadFileName = uploadFileName.substring(0,uploadFileName.indexOf("."));
+					String epName = "";
+					if(isSupperRoot){//超管把平台部分去掉
+						epName = uploadFileName.substring(0, uploadFileName.indexOf("_")) ;//超管默认第一个为提单平台名称
+						uploadFileName = uploadFileName.substring(uploadFileName.indexOf("_")+1);
+					}
 					Map<String, Object> map = PurchaseUtil.getServiceScopeByName(uploadFileName);
 					if(map == null){
 						map = new HashMap<String, Object>();
-						
-						
 //						map.put("msg", "名称不规范（江西移动_省漫游_100）");
 						map.put("msg", "没有该业务类型");
 					}else{//做其他判定,设定msg的值
@@ -899,7 +957,6 @@ public class ChargePgController {
 							map.put("msg", "名称不规范（江西移动_省漫游_100）");
 						}
 						
-						
 						//判定号码是否与文件名一致
 						InputStream input = uploadFile.getInputStream();
 						
@@ -908,40 +965,80 @@ public class ChargePgController {
 						
 						int operatorType = Integer.parseInt(map.get("operatorType").toString());
 						ChargeAccountPo accountPo = chargeAccountAO.getAccountByAgencyId(agencyVO.getId(), BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-						RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo(carrier, serviceType, null,null,null,pgSize) , accountPo.getId(),true);
-						
-						if(ratePo != null){//只有费率
-							InputStreamReader isr = new InputStreamReader(input);
-							BufferedReader br = new BufferedReader(isr);
-							String line="";
-							StringBuffer sb = new StringBuffer();
-							int successSize = 0;
-							int errorSize = 0;
-							long size = uploadFile.getSize();
-//							System.out.println(size);
-							map.put("ratePo", ratePo);
-							PgDataPo pgData = valiUser.findPg(new PgDataPo(operatorType,  pgSize, serviceType, null,null,null));//,,,PgServiceTypeEnum.PGCHARGE.getValue()
-							if(pgData == null){
-								map.put("msg", "包体不存在，导入失败");
+						PgDataPo pgData = valiUser.findPg(new PgDataPo(operatorType,  pgSize, serviceType, null,null,null));//,,,PgServiceTypeEnum.PGCHARGE.getValue()
+						if(pgData == null){
+							map.put("msg", "包体不存在，导入失败");
+						}else{
+							map.put("pgData", pgData);
+							Double activeDiscount = null;
+							if(!isSupperRoot){
+								RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo(carrier, serviceType, null,null,null,pgSize) , accountPo.getId(),true);
+								if(ratePo != null){//只有费率
+									activeDiscount = ratePo.getActiveDiscount();
+									map.put("ratePo", ratePo);
+								}else{
+									map.put("msg", "未配置折扣，导入失败");
+								}
 							}else{
+								if(StringHelper.isNotEmpty(epName)){
+									ExchangePlatformPo platformPo = exchangePlatformAO.getEpByEpName(epName);
+									if(platformPo != null){
+										ChargeChannelParamsPo ccpp = new ChargeChannelParamsPo(carrier, serviceType, null,null,null,pgSize);
+										ccpp.setEpName(epName);
+										List<ChargeChannelPo> chargeList = purchaseAO.ajaxChargeChannel(ccpp);
+										if(chargeList != null && chargeList.size() > 0){
+											activeDiscount = 1d;//让折扣不为空,继续进行
+											map.put("chargeList", chargeList);
+										}
+									}else{
+										map.put("msg", "平台名称未找到，导入失败");
+									}
+								}else{
+									map.put("msg", "名称不规范（河南硕朗_江西移动_省漫游_100），导入失败");
+								}
+							}
+							if(activeDiscount != null){
+								InputStreamReader isr = new InputStreamReader(input);
+								BufferedReader br = new BufferedReader(isr);
+								String line="";
+								StringBuffer sb = new StringBuffer();
+								int successSize = 0;
+								int errorSize = 0;
+//								long size = uploadFile.getSize();
+//							System.out.println(size);
+								String wrongNumber = "";
+								String doubleNumber = "";
 								
-								map.put("pgData", pgData);
 								//根据折扣设置包体是否足够
 								Double accountBalance = accountPo.getAccountBalance();
 								double pgPrice = pgData.getPgPrice();
-								double pgDiscountPrice = NumberTool.mul(pgData.getPgPrice(), ratePo.getActiveDiscount());
+								double pgDiscountPrice = NumberTool.mul(pgData.getPgPrice(), activeDiscount);
 								Double telCharge = 0d;
 								Double pgTotalPrice = 0d;
+								
+								String msgDesc = "";
 								while ((line=br.readLine())!=null) {
 									Map<String,Object> carrierMap = PurchaseUtil.getOperatorsByTel(line.trim());
-									String chargeTelDetail = carrierMap.get("chargeTelDetail").toString();
-//									System.out.println("carrier:"+carrier+",chargeTelDetail"+ chargeTelDetail);
-									telCharge = NumberTool.add(pgDiscountPrice, telCharge); 
-									pgTotalPrice = NumberTool.add(pgTotalPrice, pgPrice); 
-									if(telCharge > accountBalance){//余额不足
+									if(carrierMap == null){
+										wrongNumber = line.trim();
 										break;
 									}
+									String chargeTelDetail = carrierMap.get("chargeTelDetail").toString();
+//									System.out.println("carrier:"+carrier+",chargeTelDetail"+ chargeTelDetail);
 									if(chargeTelDetail.equals(carrier)){//手机号得到的归属地和文件名得到的归属地一致
+										String tempStr = sb.toString();
+										if(tempStr.contains(line)){//前面的号码包含了新加的号码
+											doubleNumber = line;
+											break;
+										}
+										if(!isSupperRoot){//验证余额
+											telCharge = NumberTool.add(pgDiscountPrice, telCharge); 
+											pgTotalPrice = NumberTool.add(pgPrice,pgTotalPrice); 
+											if(telCharge > accountBalance){//余额不足
+												msgDesc = ",余额不足";
+												break;
+											}
+										}
 										sb.append(line);
 										sb.append(",");
 										successSize++;
@@ -952,24 +1049,26 @@ public class ChargePgController {
 								br.close();
 								isr.close();
 								input.close();
-								if(successSize > 0){
+								if(StringHelper.isNotEmpty(wrongNumber)){
+									map.put("msg", wrongNumber + ",号码文本格式不对（归属地查询失败），导入失败");
+								}
+								else if(StringHelper.isNotEmpty(doubleNumber)){
+									map.put("msg", doubleNumber + "出现多次,导入失败");
+								}
+								else if(successSize > 0){
 									map.put("msg", "success");
+									map.put("totalNum", successSize);
 									map.put("telData", sb.toString());
-									map.put("pgPrice", pgTotalPrice);
-									map.put("orderAmount", telCharge);//总成本
-									map.put("msgDesc", "导入失败"+errorSize+"条,导入成功条数："+ successSize);
+									if(!isSupperRoot){
+										map.put("pgPrice", pgTotalPrice);
+										map.put("orderAmount", telCharge);//总成本
+									}
+									map.put("msgDesc", "导入失败"+errorSize+"条,导入成功条数："+ successSize+msgDesc);
 								}else{
 									map.put("msg", "导入失败");
 								}
 							}
-							
-						}else{
-							map.put("msg", "未配置折扣，导入失败");
 						}
-						
-//						int pgSize = Integer.parseInt(map.get("pgSize").toString());
-						
-						
 					}
 					
 //				String msg = "success";

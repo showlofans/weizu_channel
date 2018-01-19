@@ -36,6 +36,26 @@ public class PgChargeVO {
 	
 	private Integer chargeFor;				//PgServiceTypeEnum：充值业务类型
 	
+	public PgChargeVO(Long channelId, String chargeTel, String chargeTelDetail,
+			Double orderAmount, Double chargeValue, Integer pgId,
+			Integer serviceType,Long rateId, Long cdisId) {
+		super();
+		this.channelId = channelId;
+		this.chargeTel = chargeTel;
+		this.chargeTelDetail = chargeTelDetail;
+		this.orderAmount = orderAmount;
+		this.chargeValue = chargeValue;
+		this.pgId = pgId;
+		this.serviceType = serviceType;
+		this.rateId = rateId;
+		this.cdisId = cdisId;
+	}
+
+	public PgChargeVO() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	public Integer getChargeFor() {
 		return chargeFor;
 	}

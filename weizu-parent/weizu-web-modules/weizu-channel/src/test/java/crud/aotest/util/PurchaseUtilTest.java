@@ -50,8 +50,10 @@
 ////		System.out.println("Usable space = " + win.getUsableSpace());  
 ////		System.out.println("Total space = " + win.getTotalSpace());  
 ////		System.out.println(); 
-//		Map<String,Object> map = PurchaseUtil.getOperatorsByTel("136995862589");
-//		System.out.println(map.get("chargeTelDetail"));
+////		Map<String,Object> map = PurchaseUtil.getOperatorsByTel("136995862589");
+////		System.out.println(map.get("chargeTelDetail"));
+//		Map<String,Object> map = PurchaseUtil.getOperatorMapByCarrier("陕西移动");
+//		System.out.println(map.get("operatorType"));
 ////		try {
 ////			System.out.println("--------------文件系统信息如下--------------------");  
 ////			// 文件系统信息  

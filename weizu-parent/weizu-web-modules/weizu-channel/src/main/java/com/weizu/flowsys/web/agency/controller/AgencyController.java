@@ -491,7 +491,7 @@ public class AgencyController {
 //					httpSession.setAttribute("power", "no");
 //				}
 //				httpSession.setAttribute("loginContext", agencyVO);
-				return new ModelAndView("index");
+				return new ModelAndView("index","telLogin","telLogin");
 			}else{
 				Map<String, Object> resultMap = new HashMap<String, Object>();
 				String regMsg = ""; 
