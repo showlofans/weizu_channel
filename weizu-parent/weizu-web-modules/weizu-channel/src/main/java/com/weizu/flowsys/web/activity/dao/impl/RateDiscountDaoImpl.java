@@ -15,6 +15,7 @@ import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
+import com.weizu.flowsys.web.trade.pojo.RatePgPo;
 
 /**
  * @description: 费率折扣Dao层实现
@@ -246,6 +247,11 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 	@Override
 	public long delRateByIteratorFun(Long rateId) {
 		return sqlSessionTemplate.delete("delRateByIteratorFun", rateId);
+	}
+
+	@Override
+	public List<RatePgPo> getRatePgForCharge(Map<String, Object> params) {
+		return sqlSessionTemplate.selectList("getRatePgForCharge", params);
 	}
 
 }

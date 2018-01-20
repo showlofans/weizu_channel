@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.weizu.api.outter.enums.ChargeStatusEnum;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.operatorPg.enums.AgencyForwardEnum;
 import com.weizu.flowsys.operatorPg.enums.IsExceptionEnum;
+import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.trade.ao.ChargeLogAO;
@@ -58,6 +60,9 @@ public class ChargeLogController {
 		resultMap.put("isExceptionEnums", IsExceptionEnum.toList());
 		resultMap.put("searchParams", chargeLog);
 		resultMap.put("isException", isException);
+		
+		resultMap.put("chargeStatusEnums", ChargeStatusEnum.toList());
+		resultMap.put("orderResultEnums", OrderResultEnum.toList());
 		return new ModelAndView("/trade/charge_log_list", "resultMap", resultMap);
 	}
 	

@@ -8,6 +8,7 @@
 //import org.weizu.api.outter.enums.ChargeStatusEnum;
 //
 //import com.alibaba.fastjson.JSON;
+//import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 //import com.weizu.flowsys.util.JsonKeyEncodeUtil;
 //import com.weizu.flowsys.util.StringUtil2;
 //import com.weizu.web.foundation.DateUtil;
@@ -42,6 +43,11 @@
 ////		for (ChargeStatusEnum chargeStatusEnum : enums) {
 ////			System.out.println(chargeStatusEnum.getValue());
 ////		}
+//		ChargeDTO chargeDTO = new ChargeDTO();
+//		System.out.println(chargeDTO.getAjaxDoublePurchase());
+//		if(chargeDTO.getAjaxDoublePurchase()){
+//		}
+//		
 //		System.out.println(ChargeStatusEnum.SCOPE_RATE_UNDEFINED.getValue());
 //	}
 //}

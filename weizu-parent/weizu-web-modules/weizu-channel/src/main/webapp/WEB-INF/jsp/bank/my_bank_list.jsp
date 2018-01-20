@@ -34,11 +34,11 @@
 	<!-- <p class="f-20 text-success">欢迎使用微族通道系统 <span class="f-14">Beta</span>版本</p> -->
 	<!-- <p>登录次数：18 </p>
 	<p>上次登录IP：222.35.131.79.1  上次登录时间：2014-6-14 11:19:55</p> -->
-	 <c:if test="${not empty chargeAccount1 }">
+	 <c:if test="${not empty resultMap.chargeAccount1 }">
 	 <table class="table table-border table-bordered table-bg">
 		<thead>
 			<tr >
-				<th colspan="5" scope="col"><span class="c-danger">对公账户余额：${chargeAccount1.accountBalance }</span>
+				<th colspan="5" scope="col"><span class="c-danger">对公账户余额：${resultMap.chargeAccount1.accountBalance }</span>
 					<c:if test="${not empty resultMap.bankList}">
 					<span class="text-r">
 						<!-- <a style="text-decoration:none" class="btn radio btn-primary" onClick="bank_add('充值卡添加','/flowsys/bankAccount/add_bank_page.do',1)" href="javascript:;" title="添加充值卡"><i class="Hui-iconfont">&#xe600;</i>添加充值卡</a> -->
@@ -71,7 +71,7 @@
 							</td>
 							<!-- <td>已绑定</td> -->
 							<td class="td-manage">
-								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/plus_bank_list.do?id=${bank.id }&accountId=${chargeAccount1.id}" data-title="请求充值" href="javascript:void(0)" onclick="Hui_admin_tab(this)">请求充值</a>
+								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/plus_bank_list.do?id=${bank.id }&accountId=${resultMap.chargeAccount1.id}" data-title="请求充值" href="javascript:void(0)" onclick="Hui_admin_tab(this)">请求充值</a>
 								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/edit_bank_page.do?id=${bank.id }" data-title="编辑充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe6df;</i></a>
 								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="bank_del('/flowsys/bankAccount/del_bank.do',${bank.id }, '${bank.remittanceWay }')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>
 								<c:choose>
@@ -120,7 +120,7 @@
 	 <table class="table table-border table-bordered table-bg">
 		<thead>
 			<tr>
-				<th colspan="7" scope="col"><span class="c-danger">对私账户余额：${chargeAccount.accountBalance }</span>
+				<th colspan="7" scope="col"><span class="c-danger">对私账户余额：${resultMap.chargeAccount.accountBalance }</span>
 					<c:if test="${not empty resultMap.bankList0}">
 					<span class="text-r">
 						<!-- <a style="text-decoration:none" class="btn radio btn-primary" onClick="bank_add('充值卡添加','/flowsys/bankAccount/add_bank_page.do',0)" href="javascript:;" title="添加充值卡"><i class="Hui-iconfont">&#xe600;</i>添加充值卡</a> -->
@@ -152,7 +152,7 @@
 							</td>
 							<!-- <td>已绑定</td> -->
 							<td class="td-manage">
-								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/plus_bank_list.do?id=${bank.id }&accountId=${chargeAccount.id}&billType=${chargeAccount.billType}" data-title="请求充值" href="javascript:void(0)" onclick="Hui_admin_tab(this)">请求充值</a>
+								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/plus_bank_list.do?id=${bank.id }&accountId=${resultMap.chargeAccount.id}&billType=0" data-title="请求充值" href="javascript:void(0)" onclick="Hui_admin_tab(this)">请求充值</a>
 								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/edit_bank_page.do?id=${bank.id }" data-title="编辑充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe6df;</i></a>
 								<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="bank_edit('编辑充值卡','/flowsys/bankAccount/edit_bank_page.do', ${bank.id })" href="javascript:;" title="编辑充值卡"><i class="Hui-iconfont">&#xe6df;</i></a> --%>
 								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="bank_del('/flowsys/bankAccount/del_bank.do',${bank.id }, '${bank.remittanceWay }')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>

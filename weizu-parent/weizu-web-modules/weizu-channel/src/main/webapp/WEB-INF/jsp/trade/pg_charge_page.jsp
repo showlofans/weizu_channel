@@ -213,7 +213,7 @@
 				        data: $('form').serialize(),//表单数据
 				        async : false,
 				        success:function(d){
-				        	if(d == '订单提交成功'){
+				        	if(d == 'success'){
 					        	removeIframe();
 				        	}else{
 				        		alert(d + "充值失败");

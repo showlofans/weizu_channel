@@ -335,7 +335,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 						app.setApDiscount(telchannel.getTelchannelDiscount());
 						int aarAdd = accountPurchaseDao.add(app);
 						if(aarAdd > 0){
-							return "订单提交成功";
+							return "success";
 						}
 					}
 				}
@@ -469,7 +469,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				int batchAddCrt = chargeRecordDao.crt_addList(recordPoList);		//批量添加扣款记录信息
 				int batchAddApp = accountPurchaseDao.ap_addList(apPoList);		//批量添加连接信息
 				if(batchAddApp + batchAddCrt > 1){
-					return "订单提交成功";
+					return "success";
 				}
 //					if(batchAddApp > 0 && batchAddCrt > 0 && !isChannelStateCanceled){//开始走接口
 //						return chargeByBI(epPo, orderId, pcVO.getChargeTel(),pcVO.getServiceType(), dataPo.getProductCode());
@@ -584,7 +584,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 		{
 			chargeTelCity = telMap.get("chargeTelCity").toString();
 		}else{
-			return "调用接口异常";
+			logger.config("调用接口异常，设置城市异常");
+			return "调用接口异常，设置城市异常";
 		}
 		purchasePo.setChargeTelCity(chargeTelCity);
 		Boolean isChannelStateCanceled = channel.getChannelState() == ChannelStateEnum.CLOSE.getValue();
@@ -650,7 +651,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 						app.setApDiscount(cdisPo.getChannelDiscount());
 						int aarAdd = accountPurchaseDao.add(app);
 						if(aarAdd > 0){
-							return "订单提交成功";
+							return "success";
 						}
 					}
 				}
@@ -782,7 +783,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				int batchAddCrt = chargeRecordDao.crt_addList(recordPoList);		//批量添加扣款记录信息
 				int batchAddApp = accountPurchaseDao.ap_addList(apPoList);		//批量添加连接信息
 				if(batchAddApp + batchAddCrt > 1){
-					return "订单提交成功";
+					return "success";
 				}
 //					if(batchAddApp > 0 && batchAddCrt > 0 && !isChannelStateCanceled){//开始走接口
 //						return chargeByBI(epPo, orderId, pcVO.getChargeTel(),pcVO.getServiceType(), dataPo.getProductCode());
@@ -900,25 +901,40 @@ public class PurchaseAOImpl implements PurchaseAO {
 				}
 				
 //			if(!channelPo.getChannelState() == ChannelStateEnum.CLOSE.getValue()){
-				ChargeDTO chargeDTO= chargeByBI(epPo, purchasePo,pc);
+				ChargeDTO chargeDTO= null;
 				String orderResultDetail = null;
-				if(chargeDTO != null){
-					if(chargeDTO.getTipCode().equals(OrderResultEnum.SUCCESS.getCode()) ){
-						orderResult = OrderStateEnum.CHARGING.getValue();
-						orderResultDetail = OrderStateEnum.CHARGING.getDesc();
-						ChargeOrder co = chargeDTO.getChargeOrder();
-						if(co != null){
-							purchasePo.setOrderIdApi(co.getOrderIdApi());
+				boolean doFlag = false;////重新生成第二个订单号,重新提交
+				do{
+					chargeDTO= chargeByBI(epPo, purchasePo,pc);
+					if(chargeDTO != null){
+						if(chargeDTO.getTipCode().equals(OrderResultEnum.SUCCESS.getCode()) ){
+							orderResult = OrderStateEnum.CHARGING.getValue();
+							orderResultDetail = OrderStateEnum.CHARGING.getDesc();
+							ChargeOrder co = chargeDTO.getChargeOrder();
+							if(co != null){
+								purchasePo.setOrderIdApi(co.getOrderIdApi());
+							}
+							res = "success";
+						}else{
+							orderResult = OrderStateEnum.DAICHONG.getValue();
+							orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+chargeDTO.getTipMsg();
+							if(chargeDTO.getAjaxDoublePurchase()){//重新生成第二个订单号,重新提交
+								try {
+									OrderUril ou1 = new OrderUril(1);
+									Long secondOrderId = ou1.nextId();
+									purchasePo.setSecondOrderId(secondOrderId);//设置订单号
+								} catch (Exception e) {
+									e.printStackTrace();
+									res = "订单号生成失败";
+								}
+								doFlag = true;
+							}
 						}
-						res = "success";
 					}else{
 						orderResult = OrderStateEnum.DAICHONG.getValue();
-						orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+chargeDTO.getTipMsg();
+						orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+"平台直接返失败";
 					}
-				}else{
-					orderResult = OrderStateEnum.DAICHONG.getValue();
-					orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+"平台直接返失败";
-				}
+				}while(doFlag);
 				purchasePo.setOrderResult(orderResult);
 				purchasePo.setOrderResultDetail(orderResultDetail);
 				purchaseDAO.updateLocal(purchasePo,new WherePrams("order_id", "=", orderId));
@@ -1581,6 +1597,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 					searchMap.put("scopeCityCode", scopeCityCode);
 				}
 			}
+		}
+		if(ccpp.getPgSize() != null){
+			searchMap.put("pgSize", ccpp.getPgSize());
 		}
 		if(ccpp.getPgType() != null){
 			searchMap.put("pgType", ccpp.getPgType());

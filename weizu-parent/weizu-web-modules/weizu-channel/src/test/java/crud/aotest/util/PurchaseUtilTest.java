@@ -50,45 +50,48 @@
 ////		System.out.println("Usable space = " + win.getUsableSpace());  
 ////		System.out.println("Total space = " + win.getTotalSpace());  
 ////		System.out.println(); 
-//		
-//		try {
-//			System.out.println("--------------文件系统信息如下--------------------");  
-//			// 文件系统信息  
-//			 List<Map<String,Object>> mapList = SystemInfo.file();
-//			 String jsonStr = JSON.toJSONString(mapList);
-//			 System.out.println(jsonStr);
-//			
-////			System.out.println("-----------System信息，从jvm获取如下-----------------------");  
-////            // System信息，从jvm获取  
-////			SystemInfo.property();  
-////             
-////            System.out.println("------------cpu信息如下----------------------");  
-////            // cpu信息  
-////			SystemInfo.cpu();  
-////			 
-////			System.out.println("------------内存信息如下----------------------");  
-////			// 内存信息  
-////			SystemInfo.memory();  
+////		Map<String,Object> map = PurchaseUtil.getOperatorsByTel("136995862589");
+////		System.out.println(map.get("chargeTelDetail"));
+//		Map<String,Object> map = PurchaseUtil.getOperatorMapByCarrier("陕西移动");
+//		System.out.println(map.get("operatorType"));
+////		try {
+////			System.out.println("--------------文件系统信息如下--------------------");  
+////			// 文件系统信息  
+////			 List<Map<String,Object>> mapList = SystemInfo.file();
+////			 String jsonStr = JSON.toJSONString(mapList);
+////			 System.out.println(jsonStr);
 ////			
-////			System.out.println("------------操作系统信息如下----------------------");  
-////			// 操作系统信息  
-////			SystemInfo.os();  
-////			 
-////			System.out.println("-------------用户信息如下---------------------");  
-////			// 用户信息  
-////			SystemInfo.who();  
-////			 
-////			System.out.println("-----------网络信息如下-----------------------");  
-////			// 网络信息  
-////			SystemInfo.net();  
-////			
-////			System.out.println("------------以太网信息如下----------------------");  
-////			// 以太网信息  
-////			SystemInfo.ethernet();
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+//////			System.out.println("-----------System信息，从jvm获取如下-----------------------");  
+//////            // System信息，从jvm获取  
+//////			SystemInfo.property();  
+//////             
+//////            System.out.println("------------cpu信息如下----------------------");  
+//////            // cpu信息  
+//////			SystemInfo.cpu();  
+//////			 
+//////			System.out.println("------------内存信息如下----------------------");  
+//////			// 内存信息  
+//////			SystemInfo.memory();  
+//////			
+//////			System.out.println("------------操作系统信息如下----------------------");  
+//////			// 操作系统信息  
+//////			SystemInfo.os();  
+//////			 
+//////			System.out.println("-------------用户信息如下---------------------");  
+//////			// 用户信息  
+//////			SystemInfo.who();  
+//////			 
+//////			System.out.println("-----------网络信息如下-----------------------");  
+//////			// 网络信息  
+//////			SystemInfo.net();  
+//////			
+//////			System.out.println("------------以太网信息如下----------------------");  
+//////			// 以太网信息  
+//////			SystemInfo.ethernet();
+////		} catch (Exception e) {
+////			// TODO Auto-generated catch block
+////			e.printStackTrace();
+////		}
 //		
 //		
 //	}

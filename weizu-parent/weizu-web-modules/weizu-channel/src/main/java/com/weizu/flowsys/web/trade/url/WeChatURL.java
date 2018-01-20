@@ -22,4 +22,11 @@ public class WeChatURL extends BaseURL {
 	 */
 	public static final String INIT_FIRST_PAGE = "/init_first_page" + DYNAMIC_WEB_SUFFIX;
 	
+	/**
+	 * 根据归属地和业务类型获得小程序可以充值的包体
+	 * <br>/flowsys/wechat/getpg_for_purchase.do
+	 */
+	public static final String GETPG_FOR_PURCHASE = "/getpg_for_purchase" + DYNAMIC_WEB_SUFFIX;
+	
+	
 }

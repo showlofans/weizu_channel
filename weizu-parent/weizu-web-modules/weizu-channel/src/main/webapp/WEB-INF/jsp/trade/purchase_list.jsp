@@ -170,7 +170,7 @@
 						</td>
 						<td>
 						<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" data-href="/flowsys/chargeLog/charge_log_list.do?orderId=${purchase.orderId }" title="查看传单日志" onclick="Hui_admin_tab(this)" data-title="接口订单日志" href="javascript:void(0)">${purchase.orderId }</a> --%>
-						${purchase.orderId }
+						<span data-container="body" data-toggle="popover" data-placement="top" data-content="${purchase.secondOrderId }">${purchase.orderId }</span>
 							<%-- <c:choose>
 								<c:when test="${purchase.billType == 0 }">
 									<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
@@ -267,7 +267,7 @@
 						<td>${purchase.channelName }</td> 
 						<td class="f-14 td-manage success">
 							<a  data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" data-href="/flowsys/chargeLog/charge_log_list.do?orderId=${purchase.orderId }" title="查看传单日志" onclick="Hui_admin_tab(this)" data-title="接口订单日志" href="javascript:void(0)"><i class="Hui-iconfont">&#xe623;</i></a>
-							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="editAgency(${purchase.agencyId})" href="javascript:;" title="查看代理商"><i class="Hui-iconfont">&#xe60c;</i></a>
+							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="editAgency(${purchase.agencyId})" href="javascript:;" title="查看代理商"><i class="Hui-iconfont">&#xe60a;</i></a>
 							<a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="getEp('${purchase.orderId }',this)" href="javascript:;" title="查看平台信息"><i class="Hui-iconfont">&#xe72b;</i></a>
 						</td> 
 						</c:if>

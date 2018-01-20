@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
+import com.weizu.flowsys.web.trade.pojo.RatePgPo;
 
 public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	
@@ -177,5 +178,14 @@ public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	RateDiscountPo getPriceByPg(Integer agencyId, Integer pgId, Long channelId);
 	
 	long delRateByIteratorFun(Long rateId);
+	
+	/**
+	 * @description: 获得费率包体列表
+	 * @param params
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月18日 下午4:00:07
+	 */
+	List<RatePgPo> getRatePgForCharge(Map<String, Object> params);
 	
 }

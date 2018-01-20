@@ -163,6 +163,9 @@
 		<if test="pgValidity != null">
 			AND opd.pg_validity=#{pgValidity}
 		</if>
+		<if test="pgSize != null">
+			AND opd.pg_size=#{pgSize}
+		</if>
 	</where>)
 	 	<if test="epName != null">
 	 		AND ep.ep_name = #{epName}

@@ -16,6 +16,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
+import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
+import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
+import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
 
@@ -378,6 +381,100 @@ public class PurchaseUtil {
 //		}
 //	}
 	
+	/**
+	 * @description: 根据传入的归属地相关字符串获得号码范围（导入号码）
+	 * @param name
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月17日 下午4:28:48
+	 */
+	public static Map<String, Object> getServiceScopeByName(String name){
+		if(StringHelper.isNotEmpty(name)){
+			//获得运营商类型
+			OperatorTypeEnum[] enumArray = OperatorTypeEnum.values();
+			ScopeCityEnum[] enumArray2 = ScopeCityEnum.values();
+			ServiceTypeEnum[] enumArray3 = ServiceTypeEnum.values();
+			boolean tagOpeator = false;
+			boolean tagServiceType = false;
+			boolean tagScope= false;
+			StringBuffer carrierSb = new StringBuffer();
+			Map<String, Object> resultMap = new HashMap<String, Object>(); 
+			for (ScopeCityEnum scopeCityEnum : enumArray2) {
+				String pname = scopeCityEnum.getDesc();
+				String pNameScope = pname.substring(0,pname.length()-1);
+				if(name.contains(pNameScope)){
+					resultMap.put("scopeCityCode", scopeCityEnum.getValue());
+					carrierSb.append(pNameScope);
+					tagScope = true;
+					break;
+				}
+			}
+			for (OperatorTypeEnum operatorTypeEnum : enumArray) {
+				if(name.contains(operatorTypeEnum.getDesc())){
+					resultMap.put("operatorType", operatorTypeEnum.getValue());
+					carrierSb.append(operatorTypeEnum.getDesc());
+					tagOpeator = true;
+					break;
+				}
+			}
+			for (ServiceTypeEnum serviceTypeEnum : enumArray3) {
+				if(name.contains(serviceTypeEnum.getDesc())){
+					resultMap.put("serviceType", serviceTypeEnum.getValue());
+//					String serviceTypeDesc = serviceTypeEnum.getDesc();
+					resultMap.put("serviceTypeDesc", serviceTypeEnum.getDesc());
+					
+					tagServiceType = true;
+					break;
+				}
+			}
+			
+			if(tagOpeator && tagServiceType && tagScope){//格式正确
+				resultMap.put("carrier", carrierSb.toString());//归属地
+//				resultMap.put("desc", carrierSb.toString() + serviceTypeDesc);//江西移动省漫游
+//				resultMap.put("pgSize", pgSize);
+				return resultMap;
+			}
+		}
+		return null;
+	}
 	
+	/**
+	 * @description: 根据归属地获得地区编码和运营商类型
+	 * @param carrier
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月18日 下午2:42:00
+	 */
+	public static Map<String,Object> getOperatorMapByCarrier(String carrier){
+		OperatorTypeEnum[] enumArray = OperatorTypeEnum.values();
+		ScopeCityEnum[] enumArray2 = ScopeCityEnum.values();
+		boolean tagOpeator = false;
+		boolean tagScope= false;
+//		StringBuffer carrierSb = new StringBuffer();
+		Map<String, Object> resultMap = new HashMap<String, Object>(); 
+		for (ScopeCityEnum scopeCityEnum : enumArray2) {
+			String pname = scopeCityEnum.getDesc();
+			String pNameScope = pname.substring(0,pname.length()-1);
+			if(carrier.contains(pNameScope)){
+				resultMap.put("scopeCityCode", scopeCityEnum.getValue());
+//				carrierSb.append(scopeCityEnum.getDesc());
+				tagScope = true;
+				break;
+			}
+		}
+		for (OperatorTypeEnum operatorTypeEnum : enumArray) {
+			if(carrier.contains(operatorTypeEnum.getDesc())){
+				resultMap.put("operatorType", operatorTypeEnum.getValue());
+//				carrierSb.append(operatorTypeEnum.getDesc());
+				tagOpeator = true;
+				break;
+			}
+		}
+		if(tagOpeator && tagScope){//格式正确
+//			resultMap.put("carrier", carrierSb.toString());//归属地
+			return resultMap;
+		}
+		return null;
+	}
 
 }

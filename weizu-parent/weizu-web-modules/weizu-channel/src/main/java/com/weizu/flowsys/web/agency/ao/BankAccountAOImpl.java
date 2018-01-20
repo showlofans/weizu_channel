@@ -36,6 +36,8 @@ public class BankAccountAOImpl implements BankAccountAO {
 	private BankAccountDaoInterface bankAccountDao;
 	@Resource
 	private ChargeAccountDao chargeAccountDao;
+	@Resource
+	private ChargeAccountAo chargeAccountAO;
 //	@Resource
 //	private AgencyAO agencyAO;
 	
@@ -63,6 +65,12 @@ public class BankAccountAOImpl implements BankAccountAO {
 //		if(bankList0.size() > 0){
 //			resultMap.put("accountBalance0", bankList0.get(0).getAccountBalance());
 //		}
+		ChargeAccountPo chargeAccount1 = chargeAccountAO
+				.getAccountByAgencyId(contextId,BillTypeEnum.CORPORATE_BUSINESS.getValue());
+		resultMap.put("chargeAccount1", chargeAccount1);
+		ChargeAccountPo chargeAccount = chargeAccountAO
+				.getAccountByAgencyId(contextId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+		resultMap.put("chargeAccount", chargeAccount);
 		resultMap.put("bankList0", bankList0);
 		resultMap.put("bankList", bankList);
 	}

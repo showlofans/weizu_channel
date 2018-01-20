@@ -131,7 +131,27 @@
 								</c:otherwise>
 							</c:choose>
 						 </td>
-						 <td>${chargeLog.chargeStatus }</td>
+						 <td>
+						 	<c:set var="condition" value="0" scope="page"></c:set><!-- 跳出循环遍历不再判断的标志 -->
+						 	<c:forEach items="${resultMap.orderResultEnums }" var="orderResultEnum" varStatus="vst">
+						 	<c:forEach items="${resultMap.chargeStatusEnums }" var="chargeStatusEnum" varStatus="vs">
+							 	<c:choose>
+							 		<c:when test="${condition != 1 && orderResultEnum.code == chargeLog.chargeStatus   }">
+							 			<span data-toggle="tooltip" data-placement="top" title="${orderResultEnum.msg }">${chargeLog.chargeStatus }</span>
+							 			<c:set var="condition" value="1"></c:set>
+							 		</c:when>
+							 		<c:when test="${condition != 1 && chargeStatusEnum.value == chargeLog.chargeStatus}">
+							 			<span data-toggle="tooltip" data-placement="top" title="${chargeStatusEnum.desc }">${chargeLog.chargeStatus }</span>
+							 			<c:set var="condition" value="1"></c:set>
+							 		</c:when>
+							 		<c:when test="${condition != 1 &&  -1 == chargeLog.chargeStatus}"><!-- 0 -->
+							 			<span data-toggle="tooltip" data-placement="top" title="其它错误">${chargeLog.chargeStatus }</span>
+							 			<c:set var="condition" value="1"></c:set>
+							 		</c:when>
+							 	</c:choose>
+						 	</c:forEach>
+						 	</c:forEach>
+						 </td>
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
 						<td>${chargeLog.chargeDesc }</td>
 						<!-- 备注 -->

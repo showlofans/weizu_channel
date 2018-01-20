@@ -48,6 +48,7 @@ import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.TelchargeSpeedEnum;
 import com.weizu.flowsys.util.ClassUtil;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
@@ -74,9 +75,11 @@ import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.channel.pojo.SpecialCnelType;
 import com.weizu.flowsys.web.channel.pojo.SpecialOpdType;
 import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
+import com.weizu.flowsys.web.http.ao.ValiUser;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.ao.AccountPurchaseAO;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
+import com.weizu.flowsys.web.trade.pojo.PgBatchChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 import com.weizu.flowsys.web.trade.pojo.TotalResult;
@@ -126,6 +129,9 @@ public class ChargePgController {
 	private ExchangePlatformAO exchangePlatformAO;
 	@Resource
 	private ExchangePlatformDaoInterface exchangePlatformDao;
+	
+	@Resource
+	private ValiUser valiUser;
 //	@Resource
 //	private ChannelDiscountAO channelDiscountAO;
 	/**
@@ -244,6 +250,59 @@ public class ChargePgController {
 		}
 		return res;
 //		return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+	}
+	/**
+	 * @description: 流量包批量购买
+	 * @param request
+	 * @param pcVO
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月19日 下午2:08:12
+	 */
+	@ResponseBody
+	@RequestMapping(value = ChargePgURL.PG_BATCH_CHARGE,produces = "text/text;charset=UTF-8")
+	public String pgBatchCharge(HttpServletRequest request,PgBatchChargeVO pbcVO){
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		String res = "error";
+		if(agencyVO != null){
+			ChargeAccountPo accountPo = null;
+			Long channelId = null;
+			if(!agencyVO.getRootAgencyId().equals(0)){
+				RateDiscountPo ratePo = rateDiscountDao.get(pbcVO.getRateId());
+				if(ratePo != null){
+					accountPo = chargeAccountAO.getAccountByAgencyId(agencyVO.getId(), ratePo.getBillType());
+					channelId = ratePo.getChannelId();
+				}
+			}else{//超管测试通道，通过通道折扣提单
+				ChannelDiscountPo cdPo = channelDiscountDao.get(pbcVO.getCdisId());//new WherePrams("channel_id", "=", pcVO.getChannelId()).and("scope_city_code", "=", scopeCityCode)
+				if(cdPo!=null && cdPo.getBillType().equals(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue())){
+					accountPo = chargeAccountAO.getAccountByAgencyId(agencyVO.getId(), cdPo.getBillType());
+					channelId = cdPo.getChannelId();
+				}
+			}
+			boolean isAccess = agencyAO.checkIdByPass(agencyVO.getId(), agencyVO.getUserPass());
+			if(!isAccess || !agencyVO.getId().equals(accountPo.getAgencyId())){
+				res = "当前登陆用户不合法";
+//				return new ModelAndView("error", "errorMsg", "当前登陆用户不合法");
+			}
+			Double orderAmount = NumberTool.div(pbcVO.getOrderAmount(), pbcVO.getTotalNum());
+			Double chargeValue = NumberTool.div(pbcVO.getChargeValue(), pbcVO.getTotalNum());
+			
+			String[] chargeTelArr = pbcVO.getChargeTelArray().split(",");
+//			res = "success";
+			for (String chargeTel : chargeTelArr) {
+				PgChargeVO pcVO = new PgChargeVO(channelId, chargeTel, pbcVO.getCarrier(), orderAmount, chargeValue, pbcVO.getPgId(), pbcVO.getServiceType(), pbcVO.getRateId(), pbcVO.getCdisId());
+				pcVO.setAccountId(accountPo.getId());
+				pcVO.setFromAgencyName(agencyVO.getUserName());
+				//充值
+				pcVO.setChargeFor(PgServiceTypeEnum.PGCHARGE.getValue());
+				res = purchaseAO.purchase(pcVO, accountPo);
+				if(!"success".equals(res)){//有成功的
+					break;
+				}
+			}
+		}
+		return res;
 	}
 	
 	/**
@@ -863,90 +922,234 @@ public class ChargePgController {
 	@ResponseBody
 	public void importTelBatch(HttpServletRequest request, MultipartFile uploadFile,HttpServletResponse response)
 	{
-//		BaseEmployeeLoginContext context = (BaseEmployeeLoginContext) request.getSession().getAttribute(BaseEmployeeLoginContext.LOGIN_CONTEXT_NAME);
-
-		try
-		{
-			if (uploadFile != null && !uploadFile.isEmpty())
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		if(agencyVO != null){
+			boolean isSupperRoot = agencyVO.getRootAgencyId() == 0;
+			try
 			{
-				Map<String, Object> map = new HashMap<String, Object>();
-				String msg = "success";
-				String uploadFileName = uploadFile.getOriginalFilename();
-				String scopeCode = uploadFileName.substring(uploadFileName.indexOf("_")+1);
-				String scopeCityCode = scopeCode.substring(0,2);
-				String operator = scopeCode.substring(2,uploadFileName.lastIndexOf("."));
-				int operatorType = -1;
-				if("10000".equals(operator)){
-					operatorType = OperatorTypeEnum.TELECOME.getValue();
-				}else if("10010".equals(operator)){
-					operatorType = OperatorTypeEnum.LINK.getValue();
-				}else if("10086".equals(operator)){
-					operatorType = OperatorTypeEnum.MOBILE.getValue();
-				}
-				if(operatorType == -1){
-					msg = "名称不规范(tel_地区编码+运营商客服电话)";
-				}
-				
-				if("success".equals(msg) || ScopeCityEnum.getEnum(scopeCityCode) == null){//运营商或者地区编码不对
-					long size = uploadFile.getSize();
-					System.out.println(size);
-	//				byte[] data = new byte[(int) size];
-					InputStream input = uploadFile.getInputStream();
+				if (uploadFile != null && !uploadFile.isEmpty())
+				{
+					String uploadFileName = uploadFile.getOriginalFilename();
+//				boolean isAccess = uploadFileName.contains("10000")
+					uploadFileName = uploadFileName.substring(0,uploadFileName.indexOf("."));
+					String epName = "";
+					if(isSupperRoot){//超管把平台部分去掉
+						epName = uploadFileName.substring(0, uploadFileName.indexOf("_")) ;//超管默认第一个为提单平台名称
+						uploadFileName = uploadFileName.substring(uploadFileName.indexOf("_")+1);
+					}
+					Map<String, Object> map = PurchaseUtil.getServiceScopeByName(uploadFileName);
+					if(map == null){
+						map = new HashMap<String, Object>();
+//						map.put("msg", "名称不规范（江西移动_省漫游_100）");
+						map.put("msg", "没有该业务类型");
+					}else{//做其他判定,设定msg的值
+						boolean tagOther =uploadFileName.contains("_");
+						String pgSizeStr = uploadFileName.substring(uploadFileName.lastIndexOf("_")+1); 
+						int pgSize = -1;
+						try {
+							pgSize = Integer.parseInt(pgSizeStr);
+							map.put("pgSize", pgSize);
+						} catch (NumberFormatException e) {
+							tagOther = false;
+							e.printStackTrace();
+						}
+						if(!tagOther){
+							map.put("msg", "名称不规范（江西移动_省漫游_100）");
+						}
+						
+						//判定号码是否与文件名一致
+						InputStream input = uploadFile.getInputStream();
+						
+						String carrier = map.get("carrier").toString();
+						int serviceType = Integer.parseInt(map.get("serviceType").toString());
+						
+						int operatorType = Integer.parseInt(map.get("operatorType").toString());
+						ChargeAccountPo accountPo = chargeAccountAO.getAccountByAgencyId(agencyVO.getId(), BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+						PgDataPo pgData = valiUser.findPg(new PgDataPo(operatorType,  pgSize, serviceType, null,null,null));//,,,PgServiceTypeEnum.PGCHARGE.getValue()
+						if(pgData == null){
+							map.put("msg", "包体不存在，导入失败");
+						}else{
+							map.put("pgData", pgData);
+							Double activeDiscount = null;
+							if(!isSupperRoot){
+								RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo(carrier, serviceType, null,null,null,pgSize) , accountPo.getId(),true);
+								if(ratePo != null){//只有费率
+									activeDiscount = ratePo.getActiveDiscount();
+									map.put("ratePo", ratePo);
+								}else{
+									map.put("msg", "未配置折扣，导入失败");
+								}
+							}else{
+								if(StringHelper.isNotEmpty(epName)){
+									ExchangePlatformPo platformPo = exchangePlatformAO.getEpByEpName(epName);
+									if(platformPo != null){
+										ChargeChannelParamsPo ccpp = new ChargeChannelParamsPo(carrier, serviceType, null,null,null,pgSize);
+										ccpp.setEpName(epName);
+										List<ChargeChannelPo> chargeList = purchaseAO.ajaxChargeChannel(ccpp);
+										if(chargeList != null && chargeList.size() > 0){
+											activeDiscount = 1d;//让折扣不为空,继续进行
+											map.put("chargeList", chargeList);
+										}
+									}else{
+										map.put("msg", "平台名称未找到，导入失败");
+									}
+								}else{
+									map.put("msg", "名称不规范（河南硕朗_江西移动_省漫游_100），导入失败");
+								}
+							}
+							if(activeDiscount != null){
+								InputStreamReader isr = new InputStreamReader(input);
+								BufferedReader br = new BufferedReader(isr);
+								String line="";
+								StringBuffer sb = new StringBuffer();
+								int successSize = 0;
+								int errorSize = 0;
+//								long size = uploadFile.getSize();
+//							System.out.println(size);
+								String wrongNumber = "";
+								String doubleNumber = "";
+								
+								//根据折扣设置包体是否足够
+								Double accountBalance = accountPo.getAccountBalance();
+								double pgPrice = pgData.getPgPrice();
+								double pgDiscountPrice = NumberTool.mul(pgData.getPgPrice(), activeDiscount);
+								Double telCharge = 0d;
+								Double pgTotalPrice = 0d;
+								
+								String msgDesc = "";
+								while ((line=br.readLine())!=null) {
+									Map<String,Object> carrierMap = PurchaseUtil.getOperatorsByTel(line.trim());
+									if(carrierMap == null){
+										wrongNumber = line.trim();
+										break;
+									}
+									String chargeTelDetail = carrierMap.get("chargeTelDetail").toString();
+//									System.out.println("carrier:"+carrier+",chargeTelDetail"+ chargeTelDetail);
+									if(chargeTelDetail.equals(carrier)){//手机号得到的归属地和文件名得到的归属地一致
+										String tempStr = sb.toString();
+										if(tempStr.contains(line)){//前面的号码包含了新加的号码
+											doubleNumber = line;
+											break;
+										}
+										if(!isSupperRoot){//验证余额
+											telCharge = NumberTool.add(pgDiscountPrice, telCharge); 
+											pgTotalPrice = NumberTool.add(pgPrice,pgTotalPrice); 
+											if(telCharge > accountBalance){//余额不足
+												msgDesc = ",余额不足";
+												break;
+											}
+										}
+										sb.append(line);
+										sb.append(",");
+										successSize++;
+									}else{
+										errorSize++;
+									}
+								}
+								br.close();
+								isr.close();
+								input.close();
+								if(StringHelper.isNotEmpty(wrongNumber)){
+									map.put("msg", wrongNumber + ",号码文本格式不对（归属地查询失败），导入失败");
+								}
+								else if(StringHelper.isNotEmpty(doubleNumber)){
+									map.put("msg", doubleNumber + "出现多次,导入失败");
+								}
+								else if(successSize > 0){
+									map.put("msg", "success");
+									map.put("totalNum", successSize);
+									map.put("telData", sb.toString());
+									if(!isSupperRoot){
+										map.put("pgPrice", pgTotalPrice);
+										map.put("orderAmount", telCharge);//总成本
+									}
+									map.put("msgDesc", "导入失败"+errorSize+"条,导入成功条数："+ successSize+msgDesc);
+								}else{
+									map.put("msg", "导入失败");
+								}
+							}
+						}
+					}
 					
-					InputStreamReader isr = new InputStreamReader(input);
-					BufferedReader br = new BufferedReader(isr);
-					 String line="";
-	//			        String[] arrs=null;
-					 StringBuffer sb = new StringBuffer();
-			        while ((line=br.readLine())!=null) {
-			        	sb.append(line);
-	//		        	sb.append(",");
-	//			            arrs=line.split(",");
-	//			            arrs=line;
-	//			            System.out.println(arrs[0] + " : " + arrs[1] + " : " + arrs[2]);
-			        }
-				        br.close();
-				        isr.close();
-	//			        fis.close();
-					
-	//				input.read(data);
-	//				File folder = new File(request.getSession().getServletContext().getRealPath("/") + "telTxt/");
-	//				if (!folder.exists())
-	//				{
-	//					folder.mkdir();
-	//				}
-					
-					String ExName = uploadFileName.substring(uploadFileName.lastIndexOf("."), uploadFileName.length());
-	//				File outFile = new File(request.getSession().getServletContext().getRealPath("/") + "telTxt/" + context.getLoginUID() + ExName);
-	//				
-	//				if (!outFile.exists())
-	//				{
-	//					outFile.createNewFile();
-	//				}
-	//				FileOutputStream outStream = new FileOutputStream(outFile);
-	
-	//				outStream.write(data);
-	//				outStream.close();
-					input.close();
-				
-					String scopeCity = ScopeCityEnum.getEnum(scopeCityCode).getDesc();
-					String carrier = scopeCity.substring(0, scopeCity.length()-2) + OperatorTypeEnum.getEnum(operatorType);//carrier
-					map.put("carrier", carrier);//江西移动
-					map.put("telData", sb.toString());
-//					response.getWriter().print(sb.toString());
-				}else{
-					msg = "运营商或者地区编码不对";
-				}
-				map.put("msg", msg);
-				String jsonStr = JSON.toJSONString(map);
-				response.getWriter().print(jsonStr);
+//				String msg = "success";
+//				String scopeCode = uploadFileName.substring(uploadFileName.indexOf("_")+1);
+//				String scopeCityCode = scopeCode.substring(0,2);
+//				String operator = scopeCode.substring(2,uploadFileName.lastIndexOf("."));
+//				int operatorType = -1;
+//				if(uploadFileName.contains("10000")){
+//					operatorType = OperatorTypeEnum.TELECOME.getValue();
+//				}else if(uploadFileName.contains("10010")){
+//					operatorType = OperatorTypeEnum.LINK.getValue();
+//				}else if(uploadFileName.contains("10086")){
+//					operatorType = OperatorTypeEnum.MOBILE.getValue();
+//				}
+//				if(operatorType == -1){
+//					msg = "名称不规范(tel_地区编码+运营商客服电话)";
+//				}
+//				
+//				if("success".equals(msg) || ScopeCityEnum.getEnum(scopeCityCode) == null){//运营商或者地区编码不对
+//					long size = uploadFile.getSize();
+//					System.out.println(size);
+//	//				byte[] data = new byte[(int) size];
+//					InputStream input = uploadFile.getInputStream();
+//					
+//					InputStreamReader isr = new InputStreamReader(input);
+//					BufferedReader br = new BufferedReader(isr);
+//					 String line="";
+//	//			        String[] arrs=null;
+//					 StringBuffer sb = new StringBuffer();
+//			        while ((line=br.readLine())!=null) {
+//			        	sb.append(line);
+//	//		        	sb.append(",");
+//	//			            arrs=line.split(",");
+//	//			            arrs=line;
+//	//			            System.out.println(arrs[0] + " : " + arrs[1] + " : " + arrs[2]);
+//			        }
+//				        br.close();
+//				        isr.close();
+//				        input.close();
+//	//			        fis.close();
+//					
+//	//				input.read(data);
+//	//				File folder = new File(request.getSession().getServletContext().getRealPath("/") + "telTxt/");
+//	//				if (!folder.exists())
+//	//				{
+//	//					folder.mkdir();
+//	//				}
+//					
+//					String ExName = uploadFileName.substring(uploadFileName.lastIndexOf("."), uploadFileName.length());
+//	//				File outFile = new File(request.getSession().getServletContext().getRealPath("/") + "telTxt/" + context.getLoginUID() + ExName);
+//	//				
+//	//				if (!outFile.exists())
+//	//				{
+//	//					outFile.createNewFile();
+//	//				}
+//	//				FileOutputStream outStream = new FileOutputStream(outFile);
+//	
+//	//				outStream.write(data);
+//	//				outStream.close();
+//				
+//					String scopeCity = ScopeCityEnum.getEnum(scopeCityCode).getDesc();
+//					String carrier = scopeCity.substring(0, scopeCity.length()-2) + OperatorTypeEnum.getEnum(operatorType);//carrier
+//					map.put("carrier", carrier);//江西移动
+//					map.put("telData", sb.toString());
+////					response.getWriter().print(sb.toString());
+//				}else{
+//					msg = "运营商或者地区编码不对";
+//				}
+//				map.put("msg", msg);
+					String jsonStr = JSON.toJSONString(map);
+					response.setCharacterEncoding("utf-8");
+					response.getWriter().print(jsonStr);
 //				returnMessage = invoiceAccountAO.importPreInvoiceAccount(outFile, context.getLoginName(), context.getLoginUID());
+				}
 			}
-		}
-		catch (IOException e)
-		{
+			catch (IOException e)
+			{
 //			returnMessage = MgtConstants.MSG_PROGRAM_EXCEPTION_IMPORT_ERROR;
-			e.printStackTrace();
+				e.printStackTrace();
+			}
+			
 		}
 //		Map<String, Object> returnMap = new HashMap<String, Object>(2);
 //		returnMap.put("message", returnMessage);

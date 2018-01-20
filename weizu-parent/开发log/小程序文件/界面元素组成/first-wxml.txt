@@ -1,0 +1,18 @@
+<view class="flex-wrp" style="height: 300px;flex-direction:column;">
+        <view class="flex-item bc_green">1</view>
+        <view class="flex-item bc_red">2</view>
+        <view class="flex-item bc_blue">3</view>
+      </view>
+
+表单提交
+<form bindsubmit="setNaivgationBarTitle">
+        <view class="page-body-form">
+          <view class="page-body-form-item" style="border-bottom: none;">
+            <text class="page-body-form-key">页面标题</text>
+            <input class="page-body-form-value" type="text" placeholder="请输入页面标题并点击设置即可" name="title"></input>
+          </view>
+        </view>
+        <view class="page-body-buttons">
+          <button class="page-body-button" type="primary" formType="submit">设置</button>
+        </view>
+      </form>
