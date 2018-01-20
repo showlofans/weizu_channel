@@ -901,25 +901,40 @@ public class PurchaseAOImpl implements PurchaseAO {
 				}
 				
 //			if(!channelPo.getChannelState() == ChannelStateEnum.CLOSE.getValue()){
-				ChargeDTO chargeDTO= chargeByBI(epPo, purchasePo,pc);
+				ChargeDTO chargeDTO= null;
 				String orderResultDetail = null;
-				if(chargeDTO != null){
-					if(chargeDTO.getTipCode().equals(OrderResultEnum.SUCCESS.getCode()) ){
-						orderResult = OrderStateEnum.CHARGING.getValue();
-						orderResultDetail = OrderStateEnum.CHARGING.getDesc();
-						ChargeOrder co = chargeDTO.getChargeOrder();
-						if(co != null){
-							purchasePo.setOrderIdApi(co.getOrderIdApi());
+				boolean doFlag = false;////重新生成第二个订单号,重新提交
+				do{
+					chargeDTO= chargeByBI(epPo, purchasePo,pc);
+					if(chargeDTO != null){
+						if(chargeDTO.getTipCode().equals(OrderResultEnum.SUCCESS.getCode()) ){
+							orderResult = OrderStateEnum.CHARGING.getValue();
+							orderResultDetail = OrderStateEnum.CHARGING.getDesc();
+							ChargeOrder co = chargeDTO.getChargeOrder();
+							if(co != null){
+								purchasePo.setOrderIdApi(co.getOrderIdApi());
+							}
+							res = "success";
+						}else{
+							orderResult = OrderStateEnum.DAICHONG.getValue();
+							orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+chargeDTO.getTipMsg();
+							if(chargeDTO.getAjaxDoublePurchase()){//重新生成第二个订单号,重新提交
+								try {
+									OrderUril ou1 = new OrderUril(1);
+									Long secondOrderId = ou1.nextId();
+									purchasePo.setSecondOrderId(secondOrderId);//设置订单号
+								} catch (Exception e) {
+									e.printStackTrace();
+									res = "订单号生成失败";
+								}
+								doFlag = true;
+							}
 						}
-						res = "success";
 					}else{
 						orderResult = OrderStateEnum.DAICHONG.getValue();
-						orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+chargeDTO.getTipMsg();
+						orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+"平台直接返失败";
 					}
-				}else{
-					orderResult = OrderStateEnum.DAICHONG.getValue();
-					orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+"平台直接返失败";
-				}
+				}while(doFlag);
 				purchasePo.setOrderResult(orderResult);
 				purchasePo.setOrderResultDetail(orderResultDetail);
 				purchaseDAO.updateLocal(purchasePo,new WherePrams("order_id", "=", orderId));

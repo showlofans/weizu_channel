@@ -170,7 +170,7 @@
 						</td>
 						<td>
 						<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" data-href="/flowsys/chargeLog/charge_log_list.do?orderId=${purchase.orderId }" title="查看传单日志" onclick="Hui_admin_tab(this)" data-title="接口订单日志" href="javascript:void(0)">${purchase.orderId }</a> --%>
-						${purchase.orderId }
+						<span data-container="body" data-toggle="popover" data-placement="top" data-content="${purchase.secondOrderId }">${purchase.orderId }</span>
 							<%-- <c:choose>
 								<c:when test="${purchase.billType == 0 }">
 									<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">

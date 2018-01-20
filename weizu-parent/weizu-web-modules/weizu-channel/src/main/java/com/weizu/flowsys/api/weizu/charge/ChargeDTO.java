@@ -12,7 +12,10 @@ public class ChargeDTO {
 	
 	private Integer tipCode;				//提示信息编码:正常提单0-，提单失败1-
 	private String tipMsg;				//提示信息
+	
 	private String jsonStr;				//上游返回的json串
+	private boolean ajaxDoublePurchase;	//异步提交出现重复订单，需要生成新的订单号标记
+	
 	private ChargeOrder chargeOrder;	//充值形成的订单对象
 	public ChargeDTO() {
 		super();
@@ -36,6 +39,14 @@ public class ChargeDTO {
 		this.chargeOrder = chargeOrder;
 	}
 	
+	public boolean getAjaxDoublePurchase() {
+		return ajaxDoublePurchase;
+	}
+
+	public void setAjaxDoublePurchase(boolean ajaxDoublePurchase) {
+		this.ajaxDoublePurchase = ajaxDoublePurchase;
+	}
+
 	public String getJsonStr() {
 		return jsonStr;
 	}

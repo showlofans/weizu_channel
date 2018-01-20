@@ -80,6 +80,9 @@ public class LiuLiangHui implements BaseInterface {
 	            else if(code == -1){
 //	            	System.out.println("充值余额不zu");
 	            	chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), "充值余额不zu", null);
+	            }else if(code == 666){
+	            	chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), message, null);
+	            	chargeDTO.setAjaxDoublePurchase(true);
 	            }
 	            else{
 	            	chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), message, null);

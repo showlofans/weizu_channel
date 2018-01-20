@@ -57,13 +57,16 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 			purchasePo1.setOrderBackTime(System.currentTimeMillis());
 		}
 		Integer orderResult = purchasePo1.getOrderResult();
-		Long orderId = purchasePo1.getOrderId();
+		Long orderId = purchasePo1.getOrderId();//参数订单号id
+		PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
+		orderId = purchasePo.getOrderId();
+		purchasePo1.setOrderId(purchasePo.getOrderId()); //得到真正从下级代理商传过来的orderId
 		String orderResultDetail = purchasePo1.getOrderResultDetail();
+		
 		//失败直接返款判定
 		boolean unchargeNotSave = orderResult == OrderStateEnum.UNCHARGE.getValue();
 		String res = "error";
 		
-		PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
 		if(unchargeNotSave){//手动失败，要返款
 			if(purchasePo != null && purchasePo.getOrderResult() != null && orderResult !=  purchasePo.getOrderResult()){//清除已经返款的记录
 				List<AccountPurchasePo> list = accountPurchaseDao.list(new WherePrams("purchase_id", "=", orderId));

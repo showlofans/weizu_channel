@@ -150,10 +150,24 @@
 			<br>折扣：<span id="rateDiscount" class="c-red">${resultMap.pageMsg }</span>
 		</div>
 	</div>
+	
 	<div class="row cl">
 		<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
 			<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
 			<input class="btn btn-primary radius" type="button" onclick="removeIframe();" value="&nbsp;&nbsp;取消&nbsp;&nbsp;">
+		</div>
+	</div>
+	
+	<div class="row cl" id="pg">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>充值提示：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+		<!--  onfocus="ajaxPg()" -->
+			<textarea readonly="readonly" style="height:250px;  " name="" cols="30" rows="" class="textarea"  placeholder="导入介绍，
+批量条件：同一个地区，同一个业务类型，同样的包体大小;
+文本命名方式：归属地_业务类型_包体大小（江西移动_省漫游_10）
+文件格式：.txt文本。
+文本内容：每个号码一行（每行号码都会单独检测号码的合法性，所以必须这样）
+冲单方式一样是一条一条的添加订单；可以在订单列表中找到所有导入成功的充值号码"></textarea>
 		</div>
 	</div>
 	</form>

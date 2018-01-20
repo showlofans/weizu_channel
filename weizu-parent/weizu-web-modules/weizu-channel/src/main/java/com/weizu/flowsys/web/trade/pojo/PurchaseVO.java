@@ -97,6 +97,8 @@ public class PurchaseVO implements Cloneable,Serializable {
     
     private Integer epId;						//订单流向平台id
     
+    private Long secondOrderId;					//第二次订单号
+    
     @Override
 	public PurchaseVO clone() {
     	PurchaseVO pvo = null;
@@ -111,14 +113,19 @@ public class PurchaseVO implements Cloneable,Serializable {
 	public Integer getEpId() {
 		return epId;
 	}
-
-
-
+	
 	public void setEpId(Integer epId) {
 		this.epId = epId;
 	}
+	
 
+	public Long getSecondOrderId() {
+		return secondOrderId;
+	}
 
+	public void setSecondOrderId(Long secondOrderId) {
+		this.secondOrderId = secondOrderId;
+	}
 
 	public Integer getFromAccountId() {
 		return fromAccountId;
