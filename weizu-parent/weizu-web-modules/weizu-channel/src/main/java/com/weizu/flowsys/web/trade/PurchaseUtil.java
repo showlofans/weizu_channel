@@ -399,31 +399,40 @@ public class PurchaseUtil {
 			boolean tagScope= false;
 			StringBuffer carrierSb = new StringBuffer();
 			Map<String, Object> resultMap = new HashMap<String, Object>(); 
-			for (ScopeCityEnum scopeCityEnum : enumArray2) {
-				String pname = scopeCityEnum.getDesc();
-				String pNameScope = pname.substring(0,pname.length()-1);
-				if(name.contains(pNameScope)){
-					resultMap.put("scopeCityCode", scopeCityEnum.getValue());
-					carrierSb.append(pNameScope);
-					tagScope = true;
+			int serviceType = -1;
+			for (ServiceTypeEnum serviceTypeEnum : enumArray3) {
+				if(name.contains(serviceTypeEnum.getDesc())){
+					resultMap.put("serviceType", serviceTypeEnum.getValue());
+					serviceType = serviceTypeEnum.getValue();
+//					String serviceTypeDesc = serviceTypeEnum.getDesc();
+					resultMap.put("serviceTypeDesc", serviceTypeEnum.getDesc());
+					tagServiceType = true;
 					break;
 				}
 			}
+			if(serviceType != -1 && tagServiceType){
+				if(ServiceTypeEnum.NATION_WIDE.getValue() != serviceType){
+					for (ScopeCityEnum scopeCityEnum : enumArray2) {
+						String pname = scopeCityEnum.getDesc();
+						String pNameScope = pname.substring(0,pname.length()-1);
+						if(name.contains(pNameScope)){
+							resultMap.put("scopeCityCode", scopeCityEnum.getValue());
+							carrierSb.append(pNameScope);
+							tagScope = true;
+							break;
+						}
+					}
+				}else{
+					resultMap.put("scopeCityCode", ScopeCityEnum.QG.getValue());
+					tagScope = true;
+				}
+			}
+			
 			for (OperatorTypeEnum operatorTypeEnum : enumArray) {
 				if(name.contains(operatorTypeEnum.getDesc())){
 					resultMap.put("operatorType", operatorTypeEnum.getValue());
 					carrierSb.append(operatorTypeEnum.getDesc());
 					tagOpeator = true;
-					break;
-				}
-			}
-			for (ServiceTypeEnum serviceTypeEnum : enumArray3) {
-				if(name.contains(serviceTypeEnum.getDesc())){
-					resultMap.put("serviceType", serviceTypeEnum.getValue());
-//					String serviceTypeDesc = serviceTypeEnum.getDesc();
-					resultMap.put("serviceTypeDesc", serviceTypeEnum.getDesc());
-					
-					tagServiceType = true;
 					break;
 				}
 			}
