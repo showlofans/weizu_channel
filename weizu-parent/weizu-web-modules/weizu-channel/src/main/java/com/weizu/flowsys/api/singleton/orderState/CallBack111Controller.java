@@ -96,6 +96,13 @@ public class CallBack111Controller {
             long orderId = Long.parseLong(out_trade_no.trim());
             
             PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
+            if(purchasePo == null){
+				purchasePo = purchaseDAO.getOnePurchase(transaction_id);
+			}
+			if(purchasePo == null){
+				successTag = "未找到该订单";
+				return successTag;
+			}
 			Boolean hasCall = OrderResultEnum.SUCCESS.getCode().equals(purchasePo.getHasCallBack());
 			String res = "";
 			if(!hasCall){//上一次没有回调成功

@@ -171,6 +171,12 @@
 	</choose> -->
   	where order_id = #{_parameter} or second_order_id =  #{_parameter}
   </select>
+  <!-- 通过用户订单号查询订单 -->
+  <select id="getOnePurchaseByUOID" parameterType="string" resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"></include>
+  	from <include refid="t_purchase"></include>
+  	where order_id_from = #{_parameter}
+  </select>
   <!-- 任意一个条件查询是否存在重复订单:优先取订单号去判断 -->
   <select id="hasDoublePurchase" parameterType="map" resultMap="BaseResultMap">
   	select <include refid="Base_Column_List"></include>
@@ -416,7 +422,7 @@
   <insert id="addPurchase" parameterType="com.weizu.flowsys.web.trade.pojo.PurchasePo">
   	insert into <include refid="t_purchase"></include>
   	( <include refid="Base_Column_List"></include> )
-  	values (#{orderId},#{orderIdApi},#{orderIdFrom},#{accountId},#{chargeTel},#{pgId},#{orderAmount},#{orderArriveTime},
+  	values (#{orderId},#{secondOrderId},#{orderIdApi},#{orderIdFrom},#{accountId},#{chargeTel},#{pgId},#{orderAmount},#{orderArriveTime},
   	#{chargeTelDetail},#{chargeTelCity},#{orderResult},#{channelName},#{orderResultDetail},#{hasCallBack}, #{agencyCallIp},
   	 #{chargeValue}, #{purchaseFor} , #{epId} ) 
   </insert>

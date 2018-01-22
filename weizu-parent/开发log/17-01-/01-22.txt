@@ -1,0 +1,28 @@
+ type="text" placeholder="请输入页面标题并点击设置即可"
+
+.page-body-form {
+  width: 100%;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border: 1px solid #eee;
+}
+.page-body-form-item {
+  display: flex;
+  align-items: center;
+  margin-left: 30rpx;
+  border-bottom: 1px solid #eee;
+  height: 88rpx;
+  font-size: 34rpx;
+}
+
+<view class="page-body-form">
+          <view class="page-body-form-item" style="border-bottom: none;">
+            <text class="page-body-form-key">页面标题</text>
+            <input class="page-body-form-value" type="text" placeholder="请输入页面标题并点击设置即可" name="title"></input>
+          </view>
+        </view>
+        <view class="page-body-buttons">
+          <button class="page-body-button" type="primary" formType="submit">设置</button>
+        </view>

@@ -70,33 +70,12 @@ public class WeChatController {
 		//参数：serviceType和carrier
 		String carrier = ccpp.getCarrier();
 		if(StringHelper.isNotEmpty(carrier)){
-			Map<String,Object> map = PurchaseUtil.getOperatorMapByCarrier(carrier);
-			if(map != null){
-//				map.put("serviceType", ccpp.getServiceType());
-				try {
-					int operatorType;
-					String scopeCityCode;
-					operatorType = Integer.parseInt(map.get("operatorType").toString());
-					scopeCityCode = map.get("scopeCityCode").toString();
-					ccpp.setOperatorType(operatorType);
-					ccpp.setScopeCityCode(scopeCityCode);
-					
-//					List<PgDataPo> chargeList = operatorPgAO.pg_list_for_purchase(ccpp, 231);
-					ChargeAccountPo accountPo = chargeAccountAo.getAccountByAgencyId(231, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-					List<RatePgPo> ratePgList = rateDiscountAO.getRatePgForCharge(ccpp, accountPo.getId(), false);
-					
-//					RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo(carrier, serviceType, null,null,null,pgSize) , accountPo.getId(),true);
-					
-					response.getWriter().print(JSON.toJSONString(ratePgList));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}catch (NumberFormatException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				System.out.println(JSON.toJSONString(map));
-			}else{
-				System.out.println("没找到包体");
+			try {
+				ChargeAccountPo accountPo = chargeAccountAo.getAccountByAgencyId(231, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+				List<RatePgPo> ratePgList = rateDiscountAO.getRatePgForCharge(ccpp, accountPo.getId(), false);
+				response.getWriter().print(JSON.toJSONString(ratePgList));
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	}

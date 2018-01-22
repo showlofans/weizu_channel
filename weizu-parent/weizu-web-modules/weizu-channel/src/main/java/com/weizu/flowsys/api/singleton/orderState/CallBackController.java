@@ -179,6 +179,14 @@ public class CallBackController {
 		if(errcode.equals(0)){
 			Long orderId = Long.parseLong(user_order_id);				//用户订单号
 			PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
+			if(purchasePo == null){
+				purchasePo = purchaseDAO.getOnePurchase(transaction_id);
+			}
+			if(purchasePo == null){
+				successTag = "未找到该订单";
+				System.out.println("successTag:"+successTag);
+				return successTag;
+			}
 			Boolean hasCall = OrderResultEnum.SUCCESS.getCode().equals(purchasePo.getHasCallBack());
 			if(!hasCall){//上一次没有回调成功
 				String orderIdApi = transaction_id;
@@ -193,15 +201,15 @@ public class CallBackController {
 					break;
 				}
 				if(!"success".equals(res)){//success返ok
-					System.out.println("状态回调失败");
-					System.out.println(errcode+":" +transaction_id+":"  +user_order_id+":"  +number+":"  + status);
+//					System.out.println("状态回调失败");
+//					System.out.println(errcode+":" +transaction_id+":"  +user_order_id+":"  +number+":"  + status);
 					successTag = "状态回调失败";
 				}
 			}else{
 				System.out.println("已经有过回调");
 			}
 		}else{
-			System.out.println("errCode:" +errcode);
+//			System.out.println("errCode:" +errcode);
 		}
 		System.out.println("successTag:"+successTag);
 		return successTag;

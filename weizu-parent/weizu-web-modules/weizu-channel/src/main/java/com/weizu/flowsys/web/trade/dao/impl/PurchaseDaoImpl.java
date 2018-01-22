@@ -98,6 +98,11 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePo, Long> implements Purcha
 	public PurchasePo getOnePurchase(Long orderId) {
 		return sqlSessionTemplate.selectOne("getOnePurchase", orderId);
 	}
+	
+	@Override
+	public PurchasePo getOnePurchase(String userOrderId) {
+		return sqlSessionTemplate.selectOne("getOnePurchaseByUOID", userOrderId);
+	}
 
 	@Override
 	public TotalResult getTotalResultFromSuccess(Map<String,Object> map) {
@@ -142,5 +147,7 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePo, Long> implements Purcha
 		map.put("highTime", highTime);
 		return sqlSessionTemplate.selectOne("getLatestOneByTel", map);
 	}
+
+	
 
 }

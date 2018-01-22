@@ -64,6 +64,16 @@ public interface PurchaseDao extends Dao<PurchasePo, Long> {
 	PurchasePo getOnePurchase(Long orderId);
 	
 	/**
+	 * @description: 接口-根据用户订单号获得唯一的订单
+	 * @param userOrderId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月21日 上午10:35:05
+	 */
+	PurchasePo getOnePurchase(String userOrderId);
+	
+	
+	/**
 	 * @description: 查询代理商消费订单
 	 * @param map
 	 * @return

@@ -35,6 +35,7 @@ import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
+import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
 import com.weizu.flowsys.web.trade.pojo.RatePgPo;
 import com.weizu.web.foundation.String.StringHelper;
@@ -915,45 +916,55 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	
 	private Map<String,Object> getMapByParams(ChargeChannelParamsPo ccpp,
 			int accountId, Boolean judgeChannelState){
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("accountId", accountId);
-		params.put("bindState", BindStateEnum.BIND.getValue());
-		params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
-		Integer serviceType = ccpp.getServiceType();
 		String carrier = ccpp.getCarrier();
-		params.put("serviceType", serviceType);
-		int sLength = carrier.length();
-		String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动
-		if(ServiceTypeEnum.NATION_WIDE.getValue() != serviceType){
-			String scopeCityName = carrier.substring(0,sLength-2);
-			String scopeCityCode = ScopeCityEnum.getValueByDesc(scopeCityName);
-			params.put("scopeCityCode", scopeCityCode);
+		Map<String, Object> params = PurchaseUtil.getOperatorMapByCarrier(carrier);
+		if(params != null){
+			params.put("accountId", accountId);
+			params.put("bindState", BindStateEnum.BIND.getValue());
+			params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
+			Integer serviceType = ccpp.getServiceType();
+			params.put("serviceType", serviceType);
+			if(ServiceTypeEnum.NATION_WIDE.getValue() == serviceType){
+				params.put("scopeCityCode", ScopeCityEnum.QG.getValue());//使用全国的地区
+			}
+			
+//			int sLength = carrier.length();
+//			String oType = carrier.substring(sLength-2,sLength); //获得operatorType:运营商类型参数，移动
+//			if(ServiceTypeEnum.NATION_WIDE.getValue() != serviceType){
+//				String scopeCityName = carrier.substring(0,sLength-2);
+//				String scopeCityCode = ScopeCityEnum.getValueByDesc(scopeCityName);
+//				params.put("scopeCityCode", scopeCityCode);
+//			}else{
+//				params.put("scopeCityCode", ScopeCityEnum.QG.getValue());//使用全国的地区
+//			}
+//			int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
+//			params.put("operatorType", opType);
+			
+			
+			if(judgeChannelState){//需要判断通道状态:比如再次提交获得的费率，比如测试通道的时候
+				params.put("channelState", ChannelStateEnum.OPEN.getValue());
+			}
+			if (ccpp.getChannelType() == null) {
+				params.put("channelType", ChannelTypeEnum.ORDINARY.getValue());
+			} else {
+				params.put("channelType", ccpp.getChannelType());
+			}
+			if (ccpp.getPgType() == null) {
+				params.put("pgType", PgTypeEnum.PGDATA.getValue());
+			} else {
+				params.put("pgType", ccpp.getPgType());
+			}
+			if (StringHelper.isEmpty(ccpp.getPgValidity())) {
+				params.put("pgValidity", PgValidityEnum.MONTH_DAY_DATA.getValue());
+			} else {
+				params.put("pgValidity", ccpp.getPgValidity());
+			}
+			
+			if(ccpp.getPgSize() != null){
+				params.put("pgSize", ccpp.getPgSize());
+			}
 		}else{
-			params.put("scopeCityCode", ScopeCityEnum.QG.getValue());//使用全国的地区
-		}
-		int opType = OperatorTypeEnum.getValueByDesc(oType);//运营商类型
-		params.put("operatorType", opType);
-		if(judgeChannelState){//需要判断通道状态:比如再次提交获得的费率，比如测试通道的时候
-			params.put("channelState", ChannelStateEnum.OPEN.getValue());
-		}
-		if (ccpp.getChannelType() == null) {
-			params.put("channelType", ChannelTypeEnum.ORDINARY.getValue());
-		} else {
-			params.put("channelType", ccpp.getChannelType());
-		}
-		if (ccpp.getPgType() == null) {
-			params.put("pgType", PgTypeEnum.PGDATA.getValue());
-		} else {
-			params.put("pgType", ccpp.getPgType());
-		}
-		if (StringHelper.isEmpty(ccpp.getPgValidity())) {
-			params.put("pgValidity", PgValidityEnum.MONTH_DAY_DATA.getValue());
-		} else {
-			params.put("pgValidity", ccpp.getPgValidity());
-		}
-		
-		if(ccpp.getPgSize() != null){
-			params.put("pgSize", ccpp.getPgSize());
+			System.out.println("没找到包体");
 		}
 		return params;
 	}

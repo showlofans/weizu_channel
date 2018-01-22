@@ -36,26 +36,26 @@
 ////		purchaseDAO.addPurchase(purchasePo);
 ////	}
 //	
-//	@Test
-//	public void testGetPurchase(){
-//		PurchaseVO purchaseVO = new PurchaseVO();
-//		purchaseVO.setAgencyId(1);
-////		purchaseVO.setPgServiceType(PgServiceTypeEnum.PGCHARGE.getValue());
-////		purchaseVO.setPgServiceType(PgServiceTypeEnum.TELCHARGE.getValue());
-////		purchaseVO.setOrderState(OrderStateEnum.CHARGED.getValue());
-//		purchaseVO.setPurchaseFor(PgServiceTypeEnum.PGCHARGE.getValue());
-//		Map<String, Object> params = new HashMap<String, Object>();
-//		Pagination<PurchaseVO> pagination = purchaseAO.getPurchase(params,purchaseVO, new PageParam(1L, 10));
-//		List<PurchaseVO> records = pagination.getRecords();
-//		
-//		for (PurchaseVO purchaseVO2 : records) {
-////			System.out.println(purchaseVO2.getApDiscount());
-//			System.out.println(purchaseVO2.getAgencyId());
-////			System.out.println(purchaseVO2.getEp().getEpName());
-//		}
-//		
-//		System.out.println(pagination.getTotalRecordLong());		
-//	}
+////	@Test
+////	public void testGetPurchase(){
+////		PurchaseVO purchaseVO = new PurchaseVO();
+////		purchaseVO.setAgencyId(1);
+//////		purchaseVO.setPgServiceType(PgServiceTypeEnum.PGCHARGE.getValue());
+//////		purchaseVO.setPgServiceType(PgServiceTypeEnum.TELCHARGE.getValue());
+//////		purchaseVO.setOrderState(OrderStateEnum.CHARGED.getValue());
+////		purchaseVO.setPurchaseFor(PgServiceTypeEnum.PGCHARGE.getValue());
+////		Map<String, Object> params = new HashMap<String, Object>();
+////		Pagination<PurchaseVO> pagination = purchaseAO.getPurchase(params,purchaseVO, new PageParam(1L, 10));
+////		List<PurchaseVO> records = pagination.getRecords();
+////		
+////		for (PurchaseVO purchaseVO2 : records) {
+//////			System.out.println(purchaseVO2.getApDiscount());
+////			System.out.println(purchaseVO2.getAgencyId());
+//////			System.out.println(purchaseVO2.getEp().getEpName());
+////		}
+////		
+////		System.out.println(pagination.getTotalRecordLong());		
+////	}
 ////	@Test
 ////	public void testDate(){
 ////		PurchasePo purPo = purchaseDAO.getLatestOneByTel("15024732435", PgServiceTypeEnum.PGCHARGE.getValue());
@@ -160,14 +160,15 @@
 ////		System.out.println(resMsg);
 //////		System.out.println(resTel);
 ////	}
-////	@Test
-////	public void testGetPurchaseById(){
-////		PurchasePo po = purchaseDAO.getOnePurchase("705129750095470592");
-////		if(po != null)
-////		{
-////			System.out.println("success");
-////		}
-////	}
+//	@Test
+//	public void testGetPurchaseById(){
+////		PurchasePo po = purchaseDAO.getOnePurchase(705129750095470592l);
+//		PurchasePo po = purchaseDAO.getOnePurchase("20180120181412461518");
+//		if(po != null)
+//		{
+//			System.out.println("success");
+//		}
+//	}
 ////	@Test
 ////	public void testUpdate(){
 ////		PurchasePo purchasePo = new PurchasePo();
