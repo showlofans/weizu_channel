@@ -198,6 +198,16 @@ public interface PurchaseAO {
 	String batchCommitOrder(PurchaseVO purchaseVO);
 	
 	/**
+	 * @description: 批量更新订单状态
+	 * @param purchaseVO
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月4日 上午9:56:37
+	 */
+	String batchChangeOrderState(PurchaseVO purchaseVO);
+	
+	
+	/**
 	 * @description: 批量推送订单
 	 * @param purchaseVO 查询推送的订单
 	 * @return

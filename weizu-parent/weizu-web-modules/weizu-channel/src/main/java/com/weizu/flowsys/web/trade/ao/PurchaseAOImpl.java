@@ -87,6 +87,8 @@ import com.weizu.flowsys.web.channel.pojo.TelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.TelProductPo;
 import com.weizu.flowsys.web.http.ParamsEntityWeiZu;
 import com.weizu.flowsys.web.http.weizu.OrderStateResult;
+import com.weizu.flowsys.web.system_base.ao.SystemConfAO;
+import com.weizu.flowsys.web.system_base.pojo.SystemConfPo;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.dao.AccountPurchaseDao;
 import com.weizu.flowsys.web.trade.dao.ChargeLogDao;
@@ -161,6 +163,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 	private SendCallBackUtil sendCallBack;
 	@Resource
 	private ChargeLogDao chargeLogDao;
+	@Resource
+	private SystemConfAO systemConfAO;
 	
 	private Logger logger = Logger.getLogger("PurchaseAOImpl");
 //	@Resource
@@ -903,8 +907,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 //			if(!channelPo.getChannelState() == ChannelStateEnum.CLOSE.getValue()){
 				ChargeDTO chargeDTO= null;
 				String orderResultDetail = null;
+//				Long lastOrderId = purchasePo.getOrderId();
 				boolean doFlag = false;////重新生成第二个订单号,重新提交
 				do{
+					doFlag = false;
 					chargeDTO= chargeByBI(epPo, purchasePo,pc);
 					if(chargeDTO != null){
 						if(chargeDTO.getTipCode().equals(OrderResultEnum.SUCCESS.getCode()) ){
@@ -923,6 +929,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 									OrderUril ou1 = new OrderUril(1);
 									Long secondOrderId = ou1.nextId();
 									purchasePo.setSecondOrderId(secondOrderId);//设置订单号
+									purchasePo.setOrderId(secondOrderId);//为了提单，暂时设置为第二订单号
 								} catch (Exception e) {
 									e.printStackTrace();
 									res = "订单号生成失败";
@@ -935,6 +942,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 						orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+"平台直接返失败";
 					}
 				}while(doFlag);
+				purchasePo.setOrderId(orderId);//恢复原来的orderId,存入数据库
 				purchasePo.setOrderResult(orderResult);
 				purchasePo.setOrderResultDetail(orderResultDetail);
 				purchaseDAO.updateLocal(purchasePo,new WherePrams("order_id", "=", orderId));
@@ -993,6 +1001,26 @@ public class PurchaseAOImpl implements PurchaseAO {
 	 */
 	public ChargeDTO chargeByBI(ExchangePlatformPo epPo,PurchasePo purchasePo,ProductCodePo pc) {
 		BaseInterface bi = null;
+		ChargeDTO chargeDTO = null;
+		
+//		Map<String,Object> paramsMap = new HashMap<String, Object>();
+//		paramsMap.put("startTime", DateUtil.getStartTime().getTime());
+//		paramsMap.put("endTime", DateUtil.getEndTime().getTime());
+//		paramsMap.put("chargeTel", purchasePo.getChargeTel());
+//		long telNum = purchaseDAO.countPurchase(paramsMap);
+//		
+//		SystemConfPo systemConfPo =  systemConfAO.getByKey("chargeTelTimes_in_oneDay");
+//		int referNum = 0;
+//		if(systemConfPo == null){
+//			return chargeDTO;
+//		}else{
+//			referNum = Integer.parseInt(systemConfPo.getConfValue());
+//			if(telNum > referNum){
+//				chargeDTO = new ChargeDTO(-1, "超管一天之内的提交次数，可疑订单", null);
+//				return chargeDTO;
+//			}
+//		}
+		
 		Integer epFor = epPo.getEpFor();
 		String epEngId = epPo.getEpEngId();
 		//初始化平台密码
@@ -1003,7 +1031,6 @@ public class PurchaseAOImpl implements PurchaseAO {
 		}else if(PgServiceTypeEnum.TELCHARGE.getValue().equals(epFor)){
 			bi = HSingletonFactory.getSingleton(epEngId, new BaseP(pc,purchasePo.getOrderId(),purchasePo.getChargeTel(),epPo,DateUtil.formatPramm(purchasePo.getOrderArriveTime(), "yyyy-MM-dd")));
 		}
-		ChargeDTO chargeDTO = null;
 		
 		if(bi != null){
 //		long hourTimes = 60*60*1000;//小时/毫秒
@@ -1122,52 +1149,73 @@ public class PurchaseAOImpl implements PurchaseAO {
 			}
 			
 			
-			Long startTime = null;
-			Long endTime = null;
-			Long dateUtilStartTime = DateUtil.getStartTime().getTime();
-			Long dateUtilEndTime = DateUtil.getEndTime().getTime();
-			if(isCharged){//充值成功列表使用充值时间查询
-//				if(purchaseVO.getBackStartTimeStr() == null){//默认打开列表
-//					paramsMap.put("startTimeBack", dateUtilStartTime);
-//				}else if("".equals(purchaseVO.getBackStartTimeStr())){
-//					paramsMap.put("startTimeBack", dateUtilStartTime);
-//				}
-				if(StringHelper.isEmpty(purchaseVO.getBackStartTimeStr())){
-					paramsMap.put("startTimeBack", dateUtilStartTime);
-				}
-				else{
-					startTime = DateUtil.strToDate(purchaseVO.getBackStartTimeStr(), null).getTime();
+//			Long startTime = null;
+//			Long endTime = null;
+//			Long dateUtilStartTime = DateUtil.getStartTime().getTime();
+//			Long dateUtilEndTime = DateUtil.getEndTime().getTime();
+			if(isCharged){
+				if(StringHelper.isNotEmpty(purchaseVO.getBackStartTimeStr())){
+					long startTime = DateUtil.strToDate(purchaseVO.getBackStartTimeStr(), null).getTime();
 					paramsMap.put("startTimeBack", startTime);
 				}
-				
-				if(StringHelper.isEmpty(purchaseVO.getBackEndTimeStr())){//默认打开列表
-					paramsMap.put("endTimeBack", dateUtilEndTime);
-				}else{
-					endTime = DateUtil.strToDate(purchaseVO.getBackEndTimeStr(), null).getTime();
+				if(StringHelper.isNotEmpty(purchaseVO.getBackEndTimeStr())){
+					long endTime = DateUtil.strToDate(purchaseVO.getBackStartTimeStr(), null).getTime();
 					paramsMap.put("endTimeBack", endTime);
 				}
-			}else{//其他状态使用订单到达时间
-//				if(purchaseVO.getArriveStartTimeStr() == null){//默认打开列表
-//					paramsMap.put("startTime", dateUtilStartTime);
-//				}else if("".equals(purchaseVO.getArriveStartTimeStr())){
-//					paramsMap.put("startTime", null);
-//				}
-				if(StringHelper.isEmpty(purchaseVO.getArriveStartTimeStr())){
-					paramsMap.put("startTime", dateUtilStartTime);
-				}
-				else{
-					startTime = DateUtil.strToDate(purchaseVO.getArriveStartTimeStr(), null).getTime();
-					//System.out.println(purchaseVO.getArriveStartTimeStr());
+			}else{
+				if(StringHelper.isNotEmpty(purchaseVO.getArriveStartTimeStr())){
+					long startTime = DateUtil.strToDate(purchaseVO.getArriveStartTimeStr(), null).getTime();
 					paramsMap.put("startTime", startTime);
 				}
-				if(StringHelper.isEmpty(purchaseVO.getArriveEndTimeStr())){//默认打开列表
-					paramsMap.put("endTime", dateUtilEndTime);
-				}else{
-					endTime = DateUtil.strToDate(purchaseVO.getArriveEndTimeStr(), null).getTime();
+				if(StringHelper.isNotEmpty(purchaseVO.getArriveEndTimeStr())){
+					long endTime = DateUtil.strToDate(purchaseVO.getArriveEndTimeStr(), null).getTime();
 					paramsMap.put("endTime", endTime);
 				}
 			}
-//			paramsMap.put("isCharged", isCharged);
+			
+//			if(isCharged){//充值成功列表使用充值时间查询
+////				if(purchaseVO.getBackStartTimeStr() == null){//默认打开列表
+////					paramsMap.put("startTimeBack", dateUtilStartTime);
+////				}else if("".equals(purchaseVO.getBackStartTimeStr())){
+////					paramsMap.put("startTimeBack", dateUtilStartTime);
+////				}
+//				
+//				if(StringHelper.isEmpty(purchaseVO.getBackStartTimeStr())){
+//					paramsMap.put("startTimeBack", dateUtilStartTime);
+//				}
+//				else{
+//					startTime = DateUtil.strToDate(purchaseVO.getBackStartTimeStr(), null).getTime();
+//					paramsMap.put("startTimeBack", startTime);
+//				}
+//				
+//				if(StringHelper.isEmpty(purchaseVO.getBackEndTimeStr())){//默认打开列表
+//					paramsMap.put("endTimeBack", dateUtilEndTime);
+//				}else{
+//					endTime = DateUtil.strToDate(purchaseVO.getBackEndTimeStr(), null).getTime();
+//					paramsMap.put("endTimeBack", endTime);
+//				}
+//			}else{//其他状态使用订单到达时间
+////				if(purchaseVO.getArriveStartTimeStr() == null){//默认打开列表
+////					paramsMap.put("startTime", dateUtilStartTime);
+////				}else if("".equals(purchaseVO.getArriveStartTimeStr())){
+////					paramsMap.put("startTime", null);
+////				}
+//				if(StringHelper.isEmpty(purchaseVO.getArriveStartTimeStr())){
+//					paramsMap.put("startTime", dateUtilStartTime);
+//				}
+//				else{
+//					startTime = DateUtil.strToDate(purchaseVO.getArriveStartTimeStr(), null).getTime();
+//					//System.out.println(purchaseVO.getArriveStartTimeStr());
+//					paramsMap.put("startTime", startTime);
+//				}
+//				if(StringHelper.isEmpty(purchaseVO.getArriveEndTimeStr())){//默认打开列表
+//					paramsMap.put("endTime", dateUtilEndTime);
+//				}else{
+//					endTime = DateUtil.strToDate(purchaseVO.getArriveEndTimeStr(), null).getTime();
+//					paramsMap.put("endTime", endTime);
+//				}
+//			}
+////			paramsMap.put("isCharged", isCharged);
 			return paramsMap;
 		}
 		return null;
@@ -1188,9 +1236,37 @@ public class PurchaseAOImpl implements PurchaseAO {
 		Boolean isResultCharged = purchaseVO.getOrderResult() != null && (purchaseVO.getOrderResult() == OrderStateEnum.CHARGED.getValue() ||purchaseVO.getOrderResult() == OrderStateEnum.UNCHARGE.getValue());
 		Boolean isCharged = isStateCharged || isResultCharged; 
 		Map<String, Object> paramsMap = getMapByPojo(purchaseVO,isCharged);
+		boolean isReset = false;
+		Long dateUtilStartTime = DateUtil.getStartTime().getTime();
+		Long dateUtilEndTime = DateUtil.getEndTime().getTime();
+		if(isCharged){
+			if(purchaseVO.getBackStartTimeStr() == null && purchaseVO.getBackEndTimeStr() == null){
+				isReset = true;
+				paramsMap.put("startTimeBack", dateUtilStartTime);
+				paramsMap.put("endTimeBack", dateUtilEndTime);
+			}
+		}else{
+			if(purchaseVO.getArriveStartTimeStr() == null && purchaseVO.getArriveEndTimeStr() == null){
+				isReset = true;
+				paramsMap.put("startTime", dateUtilStartTime);
+				paramsMap.put("endTime", dateUtilEndTime);
+			}
+		}
 		long totalRecord = purchaseDAO.countPurchase(paramsMap);//今天的订单数量
-		//设置总记录数和页面参数和查询参数
-		totalRecord = resetTotalRecord(purchaseVO,paramsMap,isCharged,totalRecord);
+		if(isReset){
+			if(totalRecord == 0){
+				//设置总记录数和页面参数和查询参数
+				totalRecord = resetTotalRecord(purchaseVO,paramsMap,isCharged,totalRecord);
+			}else{
+				if(isCharged){
+					purchaseVO.setBackStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+					purchaseVO.setBackEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
+				}else{
+					purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));;
+					purchaseVO.setArriveEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
+				}
+			}
+		}
 		
 		int pageSize = pageParam.getPageSize();
 		Long pageNoLong = pageParam.getPageNoLong();
@@ -1318,9 +1394,38 @@ public class PurchaseAOImpl implements PurchaseAO {
 		
 		Map<String, Object> paramsMap = getMapByPojo(purchaseVO,isCharged);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		boolean isReset = false;
+		Long dateUtilStartTime = DateUtil.getStartTime().getTime();
+		Long dateUtilEndTime = DateUtil.getEndTime().getTime();
+		if(isCharged){
+			if(purchaseVO.getBackStartTimeStr() == null && purchaseVO.getBackEndTimeStr() == null){
+				isReset = true;
+				paramsMap.put("startTimeBack", dateUtilStartTime);
+				paramsMap.put("endTimeBack", dateUtilEndTime);
+			}
+		}else{
+			if(purchaseVO.getArriveStartTimeStr() == null && purchaseVO.getArriveEndTimeStr() == null){
+				isReset = true;
+				paramsMap.put("startTime", dateUtilStartTime);
+				paramsMap.put("endTime", dateUtilEndTime);
+			}
+		}
 		long totalRecord = purchaseDAO.countPurchase(paramsMap);//今天的订单数量
-		//设置总记录数和页面参数和查询参数paramsMap
-		totalRecord = resetTotalRecord(purchaseVO,paramsMap,isCharged,totalRecord);
+		if(isReset){
+			if(totalRecord == 0){
+				//设置总记录数和页面参数和查询参数
+				totalRecord = resetTotalRecord(purchaseVO,paramsMap,isCharged,totalRecord);
+			}else{
+				if(isCharged){
+					purchaseVO.setBackStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+					purchaseVO.setBackEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
+				}else{
+					purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));;
+					purchaseVO.setArriveEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
+				}
+			}
+		}
 		resultMap.put("totalRecord", totalRecord);
 		
 		List<PurchaseVO> records = purchaseDAO.getPurchase(paramsMap);
@@ -1393,64 +1498,65 @@ public class PurchaseAOImpl implements PurchaseAO {
 				}
 			}
 			totalRecord = purchaseDAO.countPurchase(paramsMap);//重置订单数量
-		}else{//有记录条件下，设置页面参数
-			Long dateUtilStartTime = null;
-			Long dateUtilEndTime = null;
-			if(isCharged){
-//				if(StringHelper.isEmpty(purchaseVO.getBackStartTimeStr())){
-//					dateUtilStartTime = Long.parseLong(paramsMap.get("startTimeBack").toString());
-//					purchaseVO.setBackStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
-//				}
-				if(purchaseVO.getBackStartTimeStr() == null){
-					dateUtilStartTime = Long.parseLong(paramsMap.get("startTimeBack").toString());
-					purchaseVO.setBackStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
-				}else if("".equals(purchaseVO.getBackStartTimeStr().trim())){
-//					paramsMap.put("startTimeBack", dateUtilStartTime);
-//					dateUtilStartTime = DateUtil.getStartTime().getTime();
-//					purchaseVO.setBackStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
-					paramsMap.put("startTimeBack",null);
-				}
-				//purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+		}
+//		else{//有记录条件下，设置页面参数
+//			Long dateUtilStartTime = null;
+//			Long dateUtilEndTime = null;
+//			if(isCharged){
+////				if(StringHelper.isEmpty(purchaseVO.getBackStartTimeStr())){
+////					dateUtilStartTime = Long.parseLong(paramsMap.get("startTimeBack").toString());
+////					purchaseVO.setBackStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+////				}
 //				if(purchaseVO.getBackStartTimeStr() == null){
 //					dateUtilStartTime = Long.parseLong(paramsMap.get("startTimeBack").toString());
 //					purchaseVO.setBackStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
 //				}else if("".equals(purchaseVO.getBackStartTimeStr().trim())){
-//					//为空或者值重新设置	
-//					paramsMap.put("startTimeBack", null);
-//					totalRecord = purchaseDAO.countPurchase(paramsMap);
+////					paramsMap.put("startTimeBack", dateUtilStartTime);
+////					dateUtilStartTime = DateUtil.getStartTime().getTime();
+////					purchaseVO.setBackStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+//					paramsMap.put("startTimeBack",null);
 //				}
-				if(StringHelper.isEmpty(purchaseVO.getBackEndTimeStr())){
-					dateUtilEndTime = Long.parseLong(paramsMap.get("endTimeBack").toString());
-					purchaseVO.setBackEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
-				}
-			}else{
-//				if(StringHelper.isEmpty(purchaseVO.getArriveStartTimeStr())){
+//				//purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+////				if(purchaseVO.getBackStartTimeStr() == null){
+////					dateUtilStartTime = Long.parseLong(paramsMap.get("startTimeBack").toString());
+////					purchaseVO.setBackStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+////				}else if("".equals(purchaseVO.getBackStartTimeStr().trim())){
+////					//为空或者值重新设置	
+////					paramsMap.put("startTimeBack", null);
+////					totalRecord = purchaseDAO.countPurchase(paramsMap);
+////				}
+//				if(StringHelper.isEmpty(purchaseVO.getBackEndTimeStr())){
+//					dateUtilEndTime = Long.parseLong(paramsMap.get("endTimeBack").toString());
+//					purchaseVO.setBackEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
+//				}
+//			}else{
+////				if(StringHelper.isEmpty(purchaseVO.getArriveStartTimeStr())){
+////					dateUtilStartTime = Long.parseLong(paramsMap.get("startTime").toString());
+////					purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+////				}
+//				if(purchaseVO.getArriveStartTimeStr() == null){
 //					dateUtilStartTime = Long.parseLong(paramsMap.get("startTime").toString());
 //					purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+//				}else if("".equals(purchaseVO.getArriveStartTimeStr().trim())){
+////					dateUtilStartTime = DateUtil.getStartTime().getTime();
+////					paramsMap.put("startTime", dateUtilStartTime);
+////					purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+//					paramsMap.put("startTime",null);
 //				}
-				if(purchaseVO.getArriveStartTimeStr() == null){
-					dateUtilStartTime = Long.parseLong(paramsMap.get("startTime").toString());
-					purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
-				}else if("".equals(purchaseVO.getArriveStartTimeStr().trim())){
-//					dateUtilStartTime = DateUtil.getStartTime().getTime();
-//					paramsMap.put("startTime", dateUtilStartTime);
-//					purchaseVO.setArriveStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
-					paramsMap.put("startTime",null);
-				}
-//				else{
-					//为空或者值重新设置:什么都不需要做，因为已经有记录，并且在第一次搜索的时候，就已经重置了搜索条件
-//					if("".equals(purchaseVO.getArriveStartTimeStr().trim())){
-//						//paramsMap.put("startTime", null);
-//						totalRecord = purchaseDAO.countPurchase(paramsMap);
-//					}
+////				else{
+//					//为空或者值重新设置:什么都不需要做，因为已经有记录，并且在第一次搜索的时候，就已经重置了搜索条件
+////					if("".equals(purchaseVO.getArriveStartTimeStr().trim())){
+////						//paramsMap.put("startTime", null);
+////						totalRecord = purchaseDAO.countPurchase(paramsMap);
+////					}
+////				}
+//				if(StringHelper.isEmpty(purchaseVO.getArriveEndTimeStr())){
+//					dateUtilEndTime = Long.parseLong(paramsMap.get("endTime").toString());
+//					purchaseVO.setArriveEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
 //				}
-				if(StringHelper.isEmpty(purchaseVO.getArriveEndTimeStr())){
-					dateUtilEndTime = Long.parseLong(paramsMap.get("endTime").toString());
-					purchaseVO.setArriveEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
-				}
-			}
-			totalRecord = purchaseDAO.countPurchase(paramsMap);
-		}
+//			}
+//			totalRecord = purchaseDAO.countPurchase(paramsMap);
+//		}
 		return totalRecord;
 	}
 
@@ -1710,6 +1816,44 @@ public class PurchaseAOImpl implements PurchaseAO {
 		return sb.toString();
 	}
 	
+	@Transactional
+	@Override
+	public String batchChangeOrderState(PurchaseVO purchaseVO) {
+		Map<String,Object> dataMap = getPurchaseMap(purchaseVO);
+		List<PurchaseVO> records = new ArrayList<PurchaseVO>();
+		if(dataMap.get("records") != null){
+			records = (List<PurchaseVO>)dataMap.get("records");
+		}
+//		String res = "success";
+//		while(res.equals("success")){
+//			
+//			res = ajaxCommitOrder(purchaseVO2.getOrderId(), purchaseVO2.getAccountId(), purchaseVO2.getChargeTelDetail());
+//		}
+		int successTag = 0;
+		int errorTag = 0;
+		String orderResultDetail = "批量手动失败";
+		if(purchaseVO.getOrderResult() == OrderStateEnum.CHARGED.getValue()){
+			orderResultDetail = "批量手动成功";
+		}
+		
+		for (PurchaseVO purchaseVO2 : records) {
+			String updateRes = accountPurchaseAO.updatePurchaseStateByMe(purchaseVO2.getOrderId(), purchaseVO.getOrderResult(), orderResultDetail,null);
+			if("success".equals(updateRes)){
+				successTag++;
+			}else{
+				errorTag++;
+			}
+		}
+		StringBuffer sb = new StringBuffer();
+		sb.append("批量了 ");
+		sb.append(successTag);
+		sb.append("单,失败了 ");
+		sb.append(errorTag);
+		sb.append("单");
+		System.out.println(sb.toString());
+		return sb.toString();
+	}
+	
 	@Override
 	public String batchPushOrder(PurchaseVO purchaseVO) {
 		Map<String,Object> dataMap = getPurchaseMap(purchaseVO);
@@ -1870,4 +2014,5 @@ public class PurchaseAOImpl implements PurchaseAO {
 			
 			return hbook;
 			}
+	
 }

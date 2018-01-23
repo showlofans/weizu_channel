@@ -105,6 +105,8 @@
 		</form>
 		<div class="cl pd-5 bg-1 bk-gray mt-20">
 			 <span class="l"><a href="javascript:;" onclick="batchCommit()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe603;</i> 批量提交</a></span>
+			 <span class="l"><a href="javascript:;" onclick="batchUpdate('1')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe603;</i> 批量成功</a></span>
+			 <span class="l"><a href="javascript:;" onclick="batchUpdate('0')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe603;</i> 批量失败</a></span>
 		</div>
 					
 	</div>
@@ -278,68 +280,62 @@ function editAgency(id){
 
 /**批量提交*/
 function batchCommit(){
-	/* var purchaseIds = "";
-	var accountIds = "";
-	$(".ckpur:checked").each(function(){ //遍历table里的全部checkbox
-       // allcheckbox += $(this).next().html() + ","; //获取所有checkbox的值
-        //alert($(this).is(':checked'));
-        	accountIds += $(this).next().html() + ","; //获取被选中的代理商id
-        	purchaseIds +=  $(this).next().next().next().html() + ",";
-    }); 
-        	//alert(accountIds);
-	if(accountIds.length > 1) //如果获取到
-    {*/
 		var totalRecordLong = $('#totalRecordLong').val();
 		if(totalRecordLong < 1){
 			layer.msg('没有订单可以提');
-		}else if(totalRecordLong > 15){
+		}
+		/* else if(totalRecordLong > 15){
 			layer.msg('不能批量提交过多订单最大为 15');
-		}else{
+		} */
+		else{
 			$.ajax({
 				type: 'POST',
 				url: "/flowsys/chargePg/batch_commit_order.do",
 				//dataType: 'json',
 				data: $('form').serialize(),
 				success: function(resp){
-					//$(obj).parents("tr").remove();
-					//alert
-						location.reload();
-					/* if(resp=="success"){
-						//layer.msg('更新绑定成功',{icon:1,time:1000});
-	               	 }else{
-						layer.msg('更新绑定失败',{icon:1,time:1000});
-	               	 } */
+					location.reload();
 				},
 				error:function(resp) {
 					console.log(resp.msg);
 				}
 			}); 
 		}
-    	/* accountIds = accountIds.substring(0, accountIds.length - 1);
-    	purchaseIds = purchaseIds.substring(0, purchaseIds.length - 1);
-    	alert(purchaseIds);
-    	$.ajax({
-			type: 'POST',
-			url: "",
-			//dataType: 'json',
-			data: {purchaseIds:purchaseIds,accountIds:accountIds},
-			success: function(resp){
-				//$(obj).parents("tr").remove();
-				//alert
-				if(resp=="success"){
-					//layer.msg('更新绑定成功',{icon:1,time:1000});
-					location.reload();
-               	 }else{
-					layer.msg('更新绑定失败',{icon:1,time:1000});
-               	 }
-			},
-			error:function(resp) {
-				console.log(resp.msg);
-			}
+}
+/**批量修改状态*/
+function batchUpdate(orderResult){
+	var totalRecordLong = $('#totalRecordLong').val();
+	if(totalRecordLong < 1){
+		layer.msg('没有订单可以修改状态');
+	}else{
+		var tag = "";
+		var msg='确认批量成功吗？';
+		//成功和失败
+		if('0'== orderResult){
+			msg='确认批量失败吗？';
+		}
+		layer.confirm(msg,function(index){
+			$.ajax({
+				type: 'POST',
+				url: "/flowsys/chargePg/batch_change_order.do",
+				//dataType: 'json',
+				data: $('form').serialize(),
+				async: false,
+				success: function(data){
+					if(resp != 'error'){
+						layer.msg(resp,{icon:1,time:1000});
+						layer.msg(resp);
+						location.reload();
+					}else{
+						layer.msg('手动修改失败',{icon:1,time:1000});
+					}
+				},
+				error:function(data) {
+					console.log(data.msg);
+				},
+			});		
 		});
-    	}else{
-    	alert("未选中");
-    }  */
+	}
 }
 function formSub(){
 	$("input[name='pageNoLong']").val('');
@@ -395,7 +391,7 @@ function changeState(vart,state){
 	var msgStr = '手动成功';
 	//成功和失败
 	if(state==0){
-		var msgStr = '手动失败';
+		msgStr = '手动失败';
 		msg='确认设置失败吗？';
 	}
 	layer.confirm(msg,function(index){

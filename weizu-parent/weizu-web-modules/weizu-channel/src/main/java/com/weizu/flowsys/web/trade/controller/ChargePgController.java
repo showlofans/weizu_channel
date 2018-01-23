@@ -115,7 +115,7 @@ public class ChargePgController {
 	private RateDiscountDao rateDiscountDao;
 	
 	@Resource
-	private AccountPurchaseAO agencyPurchaseAO;
+	private AccountPurchaseAO accountPurchaseAO;
 	@Resource
 	private AgencyAO agencyAO;
 	@Resource
@@ -898,7 +898,7 @@ public class ChargePgController {
 	@RequestMapping(value=ChargePgURL.UPDATE_PURCHASE_STATE)
 	@ResponseBody
 	public void updatePurchaseState(Long orderId,Integer orderResult, String orderResultDetail,HttpServletResponse response){
-		String updateRes = agencyPurchaseAO.updatePurchaseStateByMe(orderId, orderResult, orderResultDetail,null);
+		String updateRes = accountPurchaseAO.updatePurchaseStateByMe(orderId, orderResult, orderResultDetail,null);
 		response.setContentType("text/html;charset=utf-8");
 		try {
 			response.getWriter().print(updateRes);
@@ -1196,6 +1196,25 @@ public class ChargePgController {
 			if(purchaseVO.getOrderResult().equals(OrderStateEnum.DAICHONG.getValue())){
 				res = purchaseAO.batchCommitOrder(purchaseVO);
 			}
+		}
+		return res;
+	}
+	/**
+	 * @description: 批量将订单返回失败/成功
+	 * @param purchaseVO
+	 * @param request
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月23日 下午5:35:40
+	 */
+	@ResponseBody
+	@RequestMapping(value=ChargePgURL.BATCH_CHANGE_ORDER)
+	public String batchChangeOrder(PurchaseVO purchaseVO, HttpServletRequest request){
+		String res = "error";
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		if(agencyVO != null && agencyVO.getRootAgencyId() == 0){
+			//只有待冲的单子可以批量提交
+			res = purchaseAO.batchChangeOrderState(purchaseVO);
 		}
 		return res;
 	}
