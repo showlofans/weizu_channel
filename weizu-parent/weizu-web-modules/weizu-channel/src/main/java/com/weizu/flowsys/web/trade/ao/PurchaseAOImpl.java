@@ -86,6 +86,7 @@ import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.channel.pojo.TelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.TelProductPo;
 import com.weizu.flowsys.web.http.ParamsEntityWeiZu;
+import com.weizu.flowsys.web.http.ao.ValiUser;
 import com.weizu.flowsys.web.http.weizu.OrderStateResult;
 import com.weizu.flowsys.web.system_base.ao.SystemConfAO;
 import com.weizu.flowsys.web.system_base.pojo.SystemConfPo;
@@ -165,6 +166,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 	private ChargeLogDao chargeLogDao;
 	@Resource
 	private SystemConfAO systemConfAO;
+	@Resource
+	private ValiUser valiUser;
 	
 	private Logger logger = Logger.getLogger("PurchaseAOImpl");
 //	@Resource
@@ -922,24 +925,28 @@ public class PurchaseAOImpl implements PurchaseAO {
 							}
 							res = "success";
 						}else{
-							orderResult = OrderStateEnum.DAICHONG.getValue();
-							orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+chargeDTO.getTipMsg();
-							if(chargeDTO.getAjaxDoublePurchase()){//重新生成第二个订单号,重新提交
+							if(chargeDTO.getAjaxDoublePurchase()){//重新生成第二个订单号,重新提交(重复订单号)
 								try {
 									OrderUril ou1 = new OrderUril(1);
 									Long secondOrderId = ou1.nextId();
 									purchasePo.setSecondOrderId(secondOrderId);//设置订单号
 									purchasePo.setOrderId(secondOrderId);//为了提单，暂时设置为第二订单号
+									doFlag = true;//需要再循环调一次接口充值
 								} catch (Exception e) {
 									e.printStackTrace();
 									res = "订单号生成失败";
+									orderResult = OrderStateEnum.DAICHONG.getValue();
+									orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+chargeDTO.getTipMsg();
 								}
-								doFlag = true;
+							}
+							if(!doFlag){//如果没有成功生成新的订单号，设置为待冲
+								orderResult = OrderStateEnum.DAICHONG.getValue();
+								orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+chargeDTO.getTipMsg();
 							}
 						}
 					}else{
 						orderResult = OrderStateEnum.DAICHONG.getValue();
-						orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+"平台直接返失败";
+						orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+"chargeDTO为空，平台直接返失败";
 					}
 				}while(doFlag);
 				purchasePo.setOrderId(orderId);//恢复原来的orderId,存入数据库
@@ -1002,24 +1009,11 @@ public class PurchaseAOImpl implements PurchaseAO {
 	public ChargeDTO chargeByBI(ExchangePlatformPo epPo,PurchasePo purchasePo,ProductCodePo pc) {
 		BaseInterface bi = null;
 		ChargeDTO chargeDTO = null;
-		
-//		Map<String,Object> paramsMap = new HashMap<String, Object>();
-//		paramsMap.put("startTime", DateUtil.getStartTime().getTime());
-//		paramsMap.put("endTime", DateUtil.getEndTime().getTime());
-//		paramsMap.put("chargeTel", purchasePo.getChargeTel());
-//		long telNum = purchaseDAO.countPurchase(paramsMap);
-//		
-//		SystemConfPo systemConfPo =  systemConfAO.getByKey("chargeTelTimes_in_oneDay");
-//		int referNum = 0;
-//		if(systemConfPo == null){
-//			return chargeDTO;
-//		}else{
-//			referNum = Integer.parseInt(systemConfPo.getConfValue());
-//			if(telNum > referNum){
-//				chargeDTO = new ChargeDTO(-1, "超管一天之内的提交次数，可疑订单", null);
-//				return chargeDTO;
-//			}
-//		}
+		boolean canChargeTel = valiUser.checkChargeTel(purchasePo.getChargeTel(), purchasePo.getAccountId());
+		if(!canChargeTel){
+			chargeDTO = new ChargeDTO(-1, "提交次数与标准次数不匹配或者该号码还有未回调的订单", null);
+			return chargeDTO;
+		}
 		
 		Integer epFor = epPo.getEpFor();
 		String epEngId = epPo.getEpEngId();
@@ -1059,7 +1053,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				
 				if(chargeDTO.getChargeOrder() != null){
 //					System.out.println(chargeDTO.getChargeOrder().getOrderIdApi());//测试打印出对应平台的提单地址
-					logger.config("上游返回的订单号："+ chargeDTO.getChargeOrder().getOrderIdApi());//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
+					//logger.config("上游返回的订单号："+ chargeDTO.getChargeOrder().getOrderIdApi());//防止自己系统向上提单了，而自己数据库又没有最新的数据。以便核实订单结果
 				}
 			}
 		}
@@ -1111,6 +1105,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 			Boolean isPgcharge = PgServiceTypeEnum.PGCHARGE.getValue().equals(purchaseFor) || purchaseFor == null;
 			if(isPgcharge){
 				paramsMap.put("pgcharge", PgServiceTypeEnum.PGCHARGE.getValue());
+				paramsMap.put("purchaseFor", PgServiceTypeEnum.PGCHARGE.getValue());
 			}
 			if(purchaseVO.getAgencyId() != null){
 				paramsMap.put("agencyId", purchaseVO.getAgencyId());
@@ -1159,7 +1154,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 					paramsMap.put("startTimeBack", startTime);
 				}
 				if(StringHelper.isNotEmpty(purchaseVO.getBackEndTimeStr())){
-					long endTime = DateUtil.strToDate(purchaseVO.getBackStartTimeStr(), null).getTime();
+					long endTime = DateUtil.strToDate(purchaseVO.getBackEndTimeStr(), null).getTime();
 					paramsMap.put("endTimeBack", endTime);
 				}
 			}else{
@@ -1819,11 +1814,15 @@ public class PurchaseAOImpl implements PurchaseAO {
 	@Transactional
 	@Override
 	public String batchChangeOrderState(PurchaseVO purchaseVO) {
+		int originalResult = purchaseVO.getOrderState();
+		int newResult = purchaseVO.getOrderResult();
+		purchaseVO.setOrderResult(originalResult);//重新设置查询参数，使得不为成功列表，方便调用下面的方法
 		Map<String,Object> dataMap = getPurchaseMap(purchaseVO);
 		List<PurchaseVO> records = new ArrayList<PurchaseVO>();
 		if(dataMap.get("records") != null){
 			records = (List<PurchaseVO>)dataMap.get("records");
 		}
+		purchaseVO.setOrderResult(newResult);
 //		String res = "success";
 //		while(res.equals("success")){
 //			
@@ -1837,7 +1836,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 		}
 		
 		for (PurchaseVO purchaseVO2 : records) {
-			String updateRes = accountPurchaseAO.updatePurchaseStateByMe(purchaseVO2.getOrderId(), purchaseVO.getOrderResult(), orderResultDetail,null);
+			String updateRes = accountPurchaseAO.updatePurchaseStateByMe(purchaseVO2.getOrderId(), newResult, orderResultDetail,null);
 			if("success".equals(updateRes)){
 				successTag++;
 			}else{

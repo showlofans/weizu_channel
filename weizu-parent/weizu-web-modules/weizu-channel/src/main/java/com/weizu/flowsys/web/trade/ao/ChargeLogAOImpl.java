@@ -62,6 +62,8 @@ public class ChargeLogAOImpl implements ChargeLogAO {
 	 */
 	Map<String,Object> getMapByLog(ChargeLog chargeLog, Integer isException){
 		Map<String,Object> paramsMap = new HashMap<String, Object>();
+		
+		
 		if(StringHelper.isNotEmpty(chargeLog.getLogOutContent())){
 			paramsMap.put("logOutContent", chargeLog.getLogOutContent());
 		}
@@ -81,32 +83,71 @@ public class ChargeLogAOImpl implements ChargeLogAO {
 			paramsMap.put("chargeTel", chargeLog.getChargeTel());
 		}
 
+//		Integer chargeStatus = chargeLog.getChargeStatus();
 		if(chargeLog.getChargeDirection() != null){
 			paramsMap.put("chargeDirection", chargeLog.getChargeDirection());
+//			if(chargeStatus == null){
+//				
+//				if(IsExceptionEnum.POSITIVE.equals(chargeStatus)){//正常
+//					//看有没有方向，有方向，按照方向去设置其他在该方向上的正常编码
+//					paramsMap.put("chargeStatus", chargeLog.getChargeDirection());
+//					
+//				}else{
+//					
+//				}
+//			}else{
+//				
+//			}
 		}
+//		else{
+//			if(IsExceptionEnum.POSITIVE.equals(chargeStatus)){//正常
+//				//看有没有方向，有方向，按照方向去设置其他在该方向上的正常编码
+//				
+//			}else{
+//				
+//			}
+//		}
 		String startTimeStr = chargeLog.getStartTimeStr();
 		String endTimeStr = chargeLog.getEndTimeStr();
 		
-		if(startTimeStr == null){
+		if(startTimeStr == null && endTimeStr == null && chargeLog.getOrderId() == null){
 			Long startTime = DateUtil.getStartTime().getTime();
 			paramsMap.put("startTime", startTime);
 			chargeLog.setStartTimeStr(DateUtil.formatAll(startTime));
-		}else if("".equals(startTimeStr)){
-//			paramsMap.put("startTime", startTime);
-		}else{
-			Long startTime = DateUtil.strToDate(startTimeStr, null).getTime();
-			paramsMap.put("startTime", startTime);
-		}
-		if(endTimeStr == null){
 			Long endTime = DateUtil.getEndTime().getTime();
 			paramsMap.put("endTime", endTime);
 			chargeLog.setEndTimeStr(DateUtil.formatAll(endTime));
-		}else if("".equals(endTimeStr)){
-//			paramsMap.put("startTime", startTime);
 		}else{
-			Long endTime = DateUtil.strToDate(chargeLog.getEndTimeStr(), null).getTime();
-			paramsMap.put("endTime", endTime);
+			if(StringHelper.isNotEmpty(startTimeStr)){
+				Long startTime = DateUtil.strToDate(startTimeStr, null).getTime();
+				paramsMap.put("startTime", startTime);
+			}
+			if(StringHelper.isNotEmpty(endTimeStr)){
+				Long endTime = DateUtil.strToDate(chargeLog.getEndTimeStr(), null).getTime();
+				paramsMap.put("endTime", endTime);
+			}
 		}
+		
+//		if(startTimeStr == null){
+//			Long startTime = DateUtil.getStartTime().getTime();
+//			paramsMap.put("startTime", startTime);
+//			chargeLog.setStartTimeStr(DateUtil.formatAll(startTime));
+//		}else if("".equals(startTimeStr)){
+////			paramsMap.put("startTime", startTime);
+//		}else{
+//			Long startTime = DateUtil.strToDate(startTimeStr, null).getTime();
+//			paramsMap.put("startTime", startTime);
+//		}
+//		if(endTimeStr == null){
+//			Long endTime = DateUtil.getEndTime().getTime();
+//			paramsMap.put("endTime", endTime);
+//			chargeLog.setEndTimeStr(DateUtil.formatAll(endTime));
+//		}else if("".equals(endTimeStr)){
+////			paramsMap.put("startTime", startTime);
+//		}else{
+//			Long endTime = DateUtil.strToDate(chargeLog.getEndTimeStr(), null).getTime();
+//			paramsMap.put("endTime", endTime);
+//		}
 		
 //		else{
 //			paramsMap.put("startTime", null);

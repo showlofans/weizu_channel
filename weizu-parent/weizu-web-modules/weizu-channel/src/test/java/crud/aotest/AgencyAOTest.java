@@ -100,38 +100,43 @@
 ////	public void testBindStateEnum(){
 ////		System.out.println(BindStateEnum.toBindList().size());
 ////	}
+////	@Test
+////	public void testLogin(){
+//////		String userName = "博爱小强";// Lxq19930620
+//////		String userName = "流量代理";// xing081500
+//////		String userName = "罗大大";// 201103
+//////		String userName = "18706732390";// hou77833
+//////		String userName = "A661844";// 123456 
+//////		String userName = "xiao";// MzMzMjIxLi4u 密码编译
+//////		String userName = "renzhi";// MzMzMjIxLi4u 密码编译
+//////		String userName = "q284408088";// qq13542377481 密码编译
+//////		String userName = "123";// 123456
+////		String userName = "wechat";// 123456
+////		
+//////		String userName = "15735651540";// 123456
+//////		String userName = "LufuLL";// 123456
+//////		String userName = "15766286668";// 123456 id 200
+////		
+////		AgencyBackwardPo agencyPo = agencyVODao.get(new WherePrams("user_name", "=", userName));
+////		System.out.println(agencyPo.getId());
+////		//得到密码
+//////		System.out.println("8a982a8a5f7bd4d7015f7bd4d7c90000".equals("8a982a8a5f7bd4d7015f7bd4d7c90000"));
+//////		System.out.println(userName);//15754715147
+////		System.out.println("pass:"+agencyPo.getUserPass());
+////		String userPass = Hash.BASE_UTIL.decode(agencyPo.getUserPass());
+////		System.out.println("decodePass:"+userPass);
+//////		System.out.println(agencyPo.getCallBackIp());
+//////		System.out.println(agencyPo.getAgencyTag());
+//////		System.out.println(agencyPo.getUserApiKey());
+//////		agencyPo.setUserPass(userPass);//948109abc
+//////		Map<String, Object> resultMap = agencyAO.login(agencyPo);
+//////		AgencyBackwardPo resultPo = (AgencyBackwardPo) resultMap.get("entity");// 获得返回的登陆实体
+//////		System.out.println(resultPo.getAgencyTel());
+////	}
 //	@Test
-//	public void testLogin(){
-////		String userName = "博爱小强";// Lxq19930620
-////		String userName = "流量代理";// xing081500
-////		String userName = "罗大大";// 201103
-////		String userName = "18706732390";// hou77833
-////		String userName = "A661844";// 123456 
-////		String userName = "xiao";// MzMzMjIxLi4u 密码编译
-////		String userName = "renzhi";// MzMzMjIxLi4u 密码编译
-////		String userName = "q284408088";// qq13542377481 密码编译
-////		String userName = "123";// 123456
-//		String userName = "wechat";// 123456
-//		
-////		String userName = "15735651540";// 123456
-////		String userName = "LufuLL";// 123456
-////		String userName = "15766286668";// 123456 id 200
-//		
-//		AgencyBackwardPo agencyPo = agencyVODao.get(new WherePrams("user_name", "=", userName));
-//		System.out.println(agencyPo.getId());
-//		//得到密码
-////		System.out.println("8a982a8a5f7bd4d7015f7bd4d7c90000".equals("8a982a8a5f7bd4d7015f7bd4d7c90000"));
-////		System.out.println(userName);//15754715147
-//		System.out.println("pass:"+agencyPo.getUserPass());
-//		String userPass = Hash.BASE_UTIL.decode(agencyPo.getUserPass());
-//		System.out.println("decodePass:"+userPass);
-////		System.out.println(agencyPo.getCallBackIp());
-////		System.out.println(agencyPo.getAgencyTag());
-////		System.out.println(agencyPo.getUserApiKey());
-////		agencyPo.setUserPass(userPass);//948109abc
-////		Map<String, Object> resultMap = agencyAO.login(agencyPo);
-////		AgencyBackwardPo resultPo = (AgencyBackwardPo) resultMap.get("entity");// 获得返回的登陆实体
-////		System.out.println(resultPo.getAgencyTel());
+//	public void testcheckChargeTel(){
+//		boolean is = valiUser.checkChargeTel("13670430162", 1);
+//		System.out.println(is);
 //	}
 ////	@Test
 ////	public void testCheckName(){

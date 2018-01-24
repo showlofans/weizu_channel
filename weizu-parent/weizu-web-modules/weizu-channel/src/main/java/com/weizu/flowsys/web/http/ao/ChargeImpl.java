@@ -53,6 +53,8 @@ import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.http.entity.Charge;
 import com.weizu.flowsys.web.http.entity.ChargePo;
 import com.weizu.flowsys.web.http.entity.PurchaseLog;
+import com.weizu.flowsys.web.system_base.ao.SystemConfAO;
+import com.weizu.flowsys.web.system_base.pojo.SystemConfPo;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.dao.AccountPurchaseDao;
 import com.weizu.flowsys.web.trade.dao.ChargeLogDao;
@@ -109,8 +111,11 @@ public class ChargeImpl implements IChargeFacet {
 	@Resource
 	private ChargeLogDao chargeLogDao;
 	
+	@Resource
+	private SystemConfAO systemConfAO;
 	
-	private Logger logger = Logger.getLogger("ChargeImpl");
+	
+//	private Logger logger = Logger.getLogger("ChargeImpl");
 	
 	@Transactional
 	@Override
@@ -193,23 +198,32 @@ public class ChargeImpl implements IChargeFacet {
 					}else{//传单没有传回调地址,使用系统固定的回调地址
 						purchasePo.setAgencyCallIp(backPo.getCallBackIp());
 					}
-					
+					//增加订单
+					purResult = purchaseDAO.addPurchase(purchasePo);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				long recordId = 0l;
 				long supperRecordId = 0l;
+				//添加消费记录
+				int recAddRes = 0;
+				int supperRecAddRes = 0;
+				int apAddRes = 0;
+				int supperApAddRes = 0;
 				/** 更新登录用户账户信息**/
 				accountPo.addBalance(orderAmount,-1);
 				int accountRes = chargeAccountAO.updateAccount(accountPo);		//账户最后的结果
 				if(accountRes > 0){
 					//添加消费记录
-					chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
+					recAddRes = chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
 							agencyBeforeBalance, accountPo.getAccountBalance(), 
 							AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), PgServiceTypeEnum.PGCHARGE.getValue() , orderId));
 					recordId = chargeRecordDao.nextId() -1;
 					if(recordId != 0){
 						recAddTag = OrderResultEnum.SUCCESS.getCode();
+						AccountPurchasePo app = new AccountPurchasePo(accountId, orderId,ratePo.getChannelDiscountId(), orderAmount,accountId,recordId, orderAmount, backPo.getUserName(), orderPath, orderState);
+						app.setOrderStateDetail(orderStateDetail);
+						apAddRes = accountPurchaseDao.add(app);
 					}
 				}
 				/** 通道暂停也更新超管账户信息**/
@@ -218,12 +232,15 @@ public class ChargeImpl implements IChargeFacet {
 				
 				if(superAccountRes > 0){
 					//添加消费记录
-					chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), superOrderAmount,
+					supperRecAddRes = chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), superOrderAmount,
 							superAgencyBeforeBalance, superAccountPo.getAccountBalance(), 
 							AccountTypeEnum.DECREASE.getValue(), superAccountPo.getId(), 1 , orderId));
 					supperRecordId = chargeRecordDao.nextId() -1 ;
 					if(supperRecordId != 0){
 						supperRecAddTag = OrderResultEnum.SUCCESS.getCode();
+						AccountPurchasePo superApp = new AccountPurchasePo(superAccountPo.getId(), orderId,cdPo.getId(), superOrderAmount, accountPo.getId(),supperRecordId, orderAmount, backPo.getUserName(), orderPath, orderResult);
+						superApp.setOrderStateDetail(orderResultDetail);
+						supperApAddRes = accountPurchaseDao.add(superApp);
 					}
 				}
 				//记录下游日志
@@ -244,8 +261,8 @@ public class ChargeImpl implements IChargeFacet {
 				String logInContent = chargeParams.toString();
 				String logOutContent = "";
 				int tipCode = -1;
-				
-				if(pc != null){//可以通过接口充值
+				boolean canChargeByBI =  pc != null && purResult > 0 && supperApAddRes > 0 && supperRecAddRes > 0 && recAddRes > 0 && apAddRes > 0;
+				if(canChargeByBI){//可以通过接口充值(自己系统里有了订单，才去向上提单)
 					if(!isChannelStateClose){//canCharge：余额足够
 						BaseInterface bi = SingletonFactory.getSingleton(epPo.getEpEngId(), new BaseP(pc,orderId,chargeTel,epPo,DateUtil.formatPramm(purchasePo.getOrderArriveTime(), "yyyy-MM-dd")));
 						ChargeDTO chargeDTO = bi.charge();
@@ -294,28 +311,16 @@ public class ChargeImpl implements IChargeFacet {
 						tipCode = chargeOne.getTipCode();
 					}
 				}else{
-					chargeOne = new Charge(-1, "产品编码未配置,没有通过接口充值，不产生接口订单号", new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
+					chargeOne = new Charge(-1, "产品编码未配置,pc:"+(pc == null), new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
 					logOutContent = chargeOne.toString();
 					tipCode = chargeOne.getTipCode();
 					//logger.config(orderStateDetail + ":没有通过接口充值，不产生接口订单号");
 				}
-				//增加订单
-				purResult = purchaseDAO.addPurchase(purchasePo);
+				purchaseDAO.updatePurchaseState(purchasePo);
+//				//增加订单
+//				purResult = purchaseDAO.addPurchase(purchasePo);
 				//需要在添加订单之后，再添加账户订单关联记录
-				if(recordId != 0){
-					AccountPurchasePo app = new AccountPurchasePo(accountId, orderId,ratePo.getChannelDiscountId(), orderAmount,accountId,recordId, orderAmount, backPo.getUserName(), orderPath, orderState);
-					app.setOrderStateDetail(orderStateDetail);
-					accountPurchaseDao.add(app);
-//					supperRecAddTag = OrderResultEnum.SUCCESS.getCode();
-				}
-				if(supperRecordId != 0){
-					//			if(!isChannelStateClose){
-					AccountPurchasePo superApp = new AccountPurchasePo(superAccountPo.getId(), orderId,cdPo.getId(), superOrderAmount, accountPo.getId(),supperRecordId, orderAmount, backPo.getUserName(), orderPath, orderResult);
-					superApp.setOrderStateDetail(orderResultDetail);
-					accountPurchaseDao.add(superApp);
-//					recAddTag = OrderResultEnum.SUCCESS.getCode();
-					//			}
-				}
+				
 				//记录上游日志
 				ChargeLog chargeLog = new ChargeLog(logInContent, logOutContent, purchasePo.getOrderId(), purchasePo.getChargeTel(), tipCode, System.currentTimeMillis(), AgencyForwardEnum.FOWARD.getValue(), epPo.getEpPurchaseIp());
 				chargeLogDao.add(chargeLog);
@@ -453,6 +458,10 @@ public class ChargeImpl implements IChargeFacet {
 //					chargeLogDao.add(chargeLog);
 					return sqlMap;
 				}else{
+//					boolean canChargeTel = valiUser.checkChargeTel(chargeParams.getNumber(), accountPo.getId());
+//					if(!canChargeTel){
+//						
+//					}
 					ChannelChannelPo channelPo = channelChannelDao.get(new WherePrams("id", "=", ratePo.getChannelId()));
 //					boolean isChannelUseStateStoped = channelPo.getChannelUseState() == ChannelUseStateEnum.CLOSE.getValue();//通道状态停止
 //					if(isChannelUseStateStoped){//通道使用状态暂停，不能提单

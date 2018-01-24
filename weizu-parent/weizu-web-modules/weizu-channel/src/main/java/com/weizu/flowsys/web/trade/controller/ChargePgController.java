@@ -1194,7 +1194,7 @@ public class ChargePgController {
 			purchaseVO.setAgencyId(agencyVO.getId());//设置为当前登陆用户的订单
 			//只有待冲的单子可以批量提交
 			if(purchaseVO.getOrderResult().equals(OrderStateEnum.DAICHONG.getValue())){
-				res = purchaseAO.batchCommitOrder(purchaseVO);
+//				res = purchaseAO.batchCommitOrder(purchaseVO);
 			}
 		}
 		return res;
@@ -1213,6 +1213,7 @@ public class ChargePgController {
 		String res = "error";
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO != null && agencyVO.getRootAgencyId() == 0){
+			purchaseVO.setAgencyId(agencyVO.getId());//设置为当前登陆用户的订单
 			//只有待冲的单子可以批量提交
 			res = purchaseAO.batchChangeOrderState(purchaseVO);
 		}

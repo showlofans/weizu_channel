@@ -19,6 +19,7 @@
 //import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 //import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 //import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
+//import com.weizu.web.foundation.DateUtil;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -160,15 +161,15 @@
 ////		System.out.println(resMsg);
 //////		System.out.println(resTel);
 ////	}
-//	@Test
-//	public void testGetPurchaseById(){
-////		PurchasePo po = purchaseDAO.getOnePurchase(705129750095470592l);
-//		PurchasePo po = purchaseDAO.getOnePurchase("20180120181412461518");
-//		if(po != null)
-//		{
-//			System.out.println("success");
-//		}
-//	}
+////	@Test
+////	public void testGetPurchaseById(){
+//////		PurchasePo po = purchaseDAO.getOnePurchase(705129750095470592l);
+////		PurchasePo po = purchaseDAO.getOnePurchase("20180120181412461518");
+////		if(po != null)
+////		{
+////			System.out.println("success");
+////		}
+////	}
 ////	@Test
 ////	public void testUpdate(){
 ////		PurchasePo purchasePo = new PurchasePo();
@@ -252,4 +253,30 @@
 ////			System.out.println("一分钟以内有过该号码");
 ////		}
 ////	}
+////	@Test
+////	public void countTelNum(){
+////		Map<String,Object> paramsMap = new HashMap<String, Object>();
+////		paramsMap.put("startTime", DateUtil.getStartTime().getTime());
+////		paramsMap.put("endTime", DateUtil.getEndTime().getTime());
+////		String chargeTel = "15999707221";
+////		paramsMap.put("chargeTel", chargeTel);
+////		paramsMap.put("accountId", 1);
+//////		paramsMap.put("orderResult", 1);
+////		
+////		long telNum = purchaseDAO.countPurchase(paramsMap);
+////		System.out.println(chargeTel + "提交成功次数："+telNum);
+////	}
+//	@Test
+//	public void listPur(){
+//		Map<String,Object> paramsMap = new HashMap<String, Object>();
+//		paramsMap.put("orderResultIsNull", 1);
+//		paramsMap.put("purchaseFor", 1);
+//		paramsMap.put("pgcharge", 1);
+////		paramsMap.put("chargeTel", "15999707221");
+//		List<PurchaseVO> purchaseList = purchaseDAO.getPurchase(paramsMap);
+//		for (PurchaseVO purchaseVO : purchaseList) {
+//			System.out.println(purchaseVO.getChargeTel()+":"+DateUtil.formatAll(purchaseVO.getOrderArriveTime()));
+//		}
+//		System.out.println();
+//	}
 //}

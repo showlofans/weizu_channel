@@ -112,12 +112,12 @@
 					</c:if>
 					
 					 提交时间:
-					 <input type="text" style="width:150px" id="arriveStartTimeStr" class="input-text" name="arriveStartTimeStr"  value="${resultMap.searchParams.arriveStartTimeStr }"  onfocus="var arriveEndTimeStr=$dp.$('arriveEndTimeStr');WdatePicker({onpicked:function(){arriveEndTimeStr.focus();formSub();},startDate:'%y-%M-%d 00:00:00',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+					 <input type="text" style="width:150px" id="arriveStartTimeStr" class="input-text" name="arriveStartTimeStr"  value="${resultMap.searchParams.arriveStartTimeStr }"  onfocus="var arriveEndTimeStr=$dp.$('arriveEndTimeStr');WdatePicker({onpicked:function(){arriveEndTimeStr.focus();},startDate:'%y-%M-%d 00:00:00',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
 		                  	<em class="inputto">至</em>
 		            <input style="width:150px" type="text" class="input-text" id="arriveEndTimeStr" name="arriveEndTimeStr"   value="${resultMap.searchParams.arriveEndTimeStr }"  onfocus="WdatePicker({startDate:'%y-%M-%d 23:59:59',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'arriveStartTimeStr\')}',onpicked:function(){formSub();}})"/>
 					
-					<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+					<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
 				</div>
 		</form>
@@ -230,9 +230,28 @@
 								<c:when test="${loginContext.rootAgencyId == 0 }">
 									<c:forEach items="${resultMap.orderStateEnums }" var="orderStateEnum" varStatus="vs">
 										<c:if test="${purchase.orderResult == orderStateEnum.value }">
-											<span class="label label-primary radius mark">
-												${orderStateEnum.desc }
-											</span>
+											<c:choose>
+												<c:when test="${orderStateEnum.value == 0 }">
+													<span class="label label-danger radius mark">
+														${orderStateEnum.desc }
+													</span>
+												</c:when>
+												<c:when test="${orderStateEnum.value == 2 }">
+													<span class="label label-secondary radius mark">
+														${orderStateEnum.desc }
+													</span>
+												</c:when>
+												<c:when test="${orderStateEnum.value == 4 }">
+													<span class="label label-warning radius mark">
+														${orderStateEnum.desc }
+													</span>
+												</c:when>
+												<c:otherwise>
+													<span class="label label-success radius mark">
+														${orderStateEnum.desc }
+													</span>
+												</c:otherwise>
+											</c:choose>
 										</c:if>
 									</c:forEach>
 								</c:when>
@@ -259,8 +278,9 @@
 							</c:choose>
 						</td>
 						<td>
-							<span class="label label-success radius">
 								${purchase.orderPrice }
+							<span class="label label-warning radius">
+							
 							</span>
 						</td>
 						<c:if test="${loginContext.rootAgencyId == 0 }">

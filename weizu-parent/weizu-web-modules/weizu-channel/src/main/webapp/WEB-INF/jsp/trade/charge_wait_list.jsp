@@ -88,12 +88,12 @@
 					</c:if>
 					
 					 提交时间：
-					 <input type="text" style="width:150px" id="arriveStartTimeStr" class="input-text" name="arriveStartTimeStr"  value="${resultMap.searchParams.arriveStartTimeStr }"  onfocus="var arriveEndTimeStr=$dp.$('arriveEndTimeStr');WdatePicker({onpicked:function(){arriveEndTimeStr.focus();formSub();},startDate:'%y-%M-%d 00:00:00',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+					 <input type="text" style="width:150px" id="arriveStartTimeStr" class="input-text" name="arriveStartTimeStr"  value="${resultMap.searchParams.arriveStartTimeStr }"  onfocus="var arriveEndTimeStr=$dp.$('arriveEndTimeStr');WdatePicker({onpicked:function(){arriveEndTimeStr.focus();},startDate:'%y-%M-%d 00:00:00',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
 		                  	<em class="inputto">至</em>
 		            <input style="width:150px" type="text" class="input-text" id="arriveEndTimeStr" name="arriveEndTimeStr"   value="${resultMap.searchParams.arriveEndTimeStr }"  onfocus="WdatePicker({startDate:'%y-%M-%d 23:59:59',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'arriveStartTimeStr\')}',onpicked:function(){formSub();}})"/>
 					
-					<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<button class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+					<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
 					<%-- <input type="hidden" id="totalRecordLong" value="${resultMap.pagination.totalRecordLong }">  --%>
 					<input type="hidden" name="orderResult" value="${resultMap.searchParams.orderResult }">
@@ -105,8 +105,8 @@
 		</form>
 		<div class="cl pd-5 bg-1 bk-gray mt-20">
 			 <span class="l"><a href="javascript:;" onclick="batchCommit()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe603;</i> 批量提交</a></span>
-			 <span class="l"><a href="javascript:;" onclick="batchUpdate('1')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe603;</i> 批量成功</a></span>
-			 <span class="l"><a href="javascript:;" onclick="batchUpdate('0')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe603;</i> 批量失败</a></span>
+			 <span class="r"><a href="javascript:;" onclick="batchUpdate('1')" class="btn btn-success radius"><i class="Hui-iconfont">&#xe603;</i> 批量成功</a></span>&nbsp;&nbsp;
+			 <span class="r"><a href="javascript:;" onclick="batchUpdate('0')" class="btn btn-default radius"><i class="Hui-iconfont">&#xe603;</i> 批量失败</a></span>&nbsp;&nbsp;
 		</div>
 					
 	</div>
@@ -134,7 +134,7 @@
 					<th width="80">结果</th>
 					<th width="80">结果描述</th>
 					<th width="60">扣款</th>
-					<th width="60">操作</th>
+					<th width="80">操作</th>
 					<c:if test="${loginContext.rootAgencyId == 0 }">
 						<th width="120">通道名称</th>
 					</c:if>
@@ -218,6 +218,9 @@
 								<input type="hidden" value="${purchase.orderId }" >
 								<i class="Hui-iconfont">&#xe6dc;</i>
 							</a> 
+							<a  data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" data-href="/flowsys/chargeLog/charge_log_list.do?orderId=${purchase.orderId }" title="查看传单日志" onclick="Hui_admin_tab(this)" data-title="接口订单日志" href="javascript:void(0)">
+							<i class="Hui-iconfont">&#xe623;</i>
+							</a>
 						</td>
 						<c:if test="${loginContext.rootAgencyId == 0 }"><td>${purchase.channelName }</td> 
 						</c:if>
@@ -314,17 +317,21 @@ function batchUpdate(orderResult){
 		if('0'== orderResult){
 			msg='确认批量失败吗？';
 		}
+		//初始化状态
+		var originalResult = $('input[name=orderResult]').val();
 		layer.confirm(msg,function(index){
+			$('input[name=orderState]').val(originalResult);
+			$('input[name=orderResult]').val(orderResult);
 			$.ajax({
 				type: 'POST',
 				url: "/flowsys/chargePg/batch_change_order.do",
 				//dataType: 'json',
 				data: $('form').serialize(),
-				async: false,
+				async: true,
 				success: function(data){
-					if(resp != 'error'){
-						layer.msg(resp,{icon:1,time:1000});
-						layer.msg(resp);
+					if(data != 'error'){
+						layer.msg(data,{icon:1,time:1000});
+						//layer.msg(resp);
 						location.reload();
 					}else{
 						layer.msg('手动修改失败',{icon:1,time:1000});
@@ -335,6 +342,9 @@ function batchUpdate(orderResult){
 				},
 			});		
 		});
+		//还原状态参数
+		$('input[name=orderState]').val('');
+		$('input[name=orderResult]').val(originalResult);
 	}
 }
 function formSub(){
