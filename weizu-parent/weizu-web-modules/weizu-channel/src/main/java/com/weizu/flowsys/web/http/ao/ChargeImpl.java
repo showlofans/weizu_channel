@@ -198,6 +198,7 @@ public class ChargeImpl implements IChargeFacet {
 					}else{//传单没有传回调地址,使用系统固定的回调地址
 						purchasePo.setAgencyCallIp(backPo.getCallBackIp());
 					}
+					purchasePo.setEpId(channelPo.getEpId());
 					//增加订单
 					purResult = purchaseDAO.addPurchase(purchasePo);
 				} catch (Exception e) {
@@ -275,7 +276,6 @@ public class ChargeImpl implements IChargeFacet {
 							logOutContent = chargeOne.toString();
 							tipCode = chargeOne.getTipCode();
 						}else{
-							purchasePo.setEpId(channelPo.getEpId());
 							//上有接口充值返回异常
 							if(OrderResultEnum.SUCCESS.getCode().equals(chargeDTO.getTipCode())){
 								ChargeOrder co = chargeDTO.getChargeOrder();

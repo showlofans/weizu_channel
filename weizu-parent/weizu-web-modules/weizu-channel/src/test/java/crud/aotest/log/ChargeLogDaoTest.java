@@ -40,7 +40,9 @@
 //	@Test
 //	public void testLogin(){
 //		Map<String,Object> params = new HashMap<String, Object>();
-//		params.put("logInContent", "广州彩趣流量");
+////		params.put("logInContent", "广州彩趣流量");
+//		params.put("secondOrderId", 782307011936129024l);
+//		params.put("orderId", 782260406755266560l);
 //		List<ChargeLog> records = chargeLogDao.listChargeLog(params);
 //		for (ChargeLog chargeLog : records) {
 //			System.out.println(chargeLog.getChargeTel());

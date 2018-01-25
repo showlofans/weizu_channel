@@ -1,6 +1,7 @@
 package com.weizu.flowsys.web.system_base.ao;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.web.system_base.dao.SystemConfDaoInterface;
 import com.weizu.flowsys.web.system_base.pojo.SystemConfPo;
+import com.weizu.flowsys.web.system_base.url.ConfConstants;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
 
@@ -27,7 +29,7 @@ public class SystemConfAOImpl implements SystemConfAO {
 	private SystemConfDaoInterface systemConfDao;
 	
 	@Override
-	public List<SystemConfPo> getConf(SystemConfPo systemConfPo) {
+	public void getConf(SystemConfPo systemConfPo, Map<String,Object> resultMap) {
 		WherePrams where = new WherePrams("1", "=", 1);
 		if(StringHelper.isNotEmpty(systemConfPo.getConfKey())){
 			where.and("conf_key", "like", systemConfPo.getConfKey());
@@ -38,11 +40,20 @@ public class SystemConfAOImpl implements SystemConfAO {
 		if(StringHelper.isNotEmpty(systemConfPo.getConfDesc())){
 			where.and("conf_desc", "like", systemConfPo.getConfDesc());
 		}
+		
 		List<SystemConfPo> list = systemConfDao.list(where);
 		for (SystemConfPo systemConfPo2 : list) {
 			systemConfPo2.setLastAccessStr(DateUtil.formatPramm(systemConfPo2.getLastAccess(), "yyyy-MM-dd"));
+			String key = systemConfPo2.getConfKey();
+			if(ConfConstants.FAIL_BACK.equals(key)){
+				resultMap.put("failBack", systemConfPo2);
+			}
+			else if(ConfConstants.CHARGETELTIMES_IN_ONEDAY.equals(key)){
+				resultMap.put("chargeTelTimesInOneDay", systemConfPo2);
+			}
+			
 		}
-		return list;
+//		return list;
 	}
 
 	@Override

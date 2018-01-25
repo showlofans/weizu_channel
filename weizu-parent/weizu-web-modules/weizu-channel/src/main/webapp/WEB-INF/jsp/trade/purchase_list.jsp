@@ -316,6 +316,7 @@
 		<div class="container">
 			<p><!-- 感谢jQuery、layer、laypage、Validform、UEditor、My97DatePicker、iconfont、Datatables、WebUploaded、icheck、highcharts、bootstrap-Switch<br> -->
 				Copyright &copy;2017-2018 南昌微族科技有限公司 All Rights Reserved.<br>
+				<a href='http://www.miibeian.gov.cn' target='_blank'>赣ICP备18000855号-1</a>
 				<!-- 本后台系统由<a href="http://www.h-ui.net/" target="_blank" title="H-ui前端框架">H-ui前端框架</a>提供前端技术支持 -->
 				</p>
 		</div>

@@ -1044,6 +1044,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				sb.append("tipMsg:"+chargeDTO.getTipMsg()+",jsonStr:");
 				sb.append(chargeDTO.getJsonStr());
 				
+				
 				ChargeLog chargeLog = new ChargeLog(params, sb.toString(), purchasePo.getOrderId(), purchasePo.getChargeTel(), chargeDTO.getTipCode(), System.currentTimeMillis(), AgencyForwardEnum.FOWARD.getValue(), epPo.getEpPurchaseIp()+":tipMsg:"+chargeDTO.getTipMsg());
 				chargeLogDao.add(chargeLog);
 //				PurchasePo purPo = new PurchasePo();

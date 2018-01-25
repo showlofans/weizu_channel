@@ -37,9 +37,10 @@ public class SystemConfController {
 	public ModelAndView getConf(SystemConfPo systemConfPo){
 		Map<String,Object> resultMap = new HashMap<String,Object>();
 		resultMap.put("params", systemConfPo);
-		List<SystemConfPo> list = systemConfAO.getConf(systemConfPo);
-		resultMap.put("confList", list);
-		return new ModelAndView("/system_conf/systemConf_list", "resultMap", resultMap);
+		systemConfAO.getConf(systemConfPo,resultMap);
+//		List<SystemConfPo> list = systemConfAO.getConf(systemConfPo,resultMap);
+//		resultMap.put("confList", list);
+		return new ModelAndView("/systemConf/systemConf_list", "resultMap", resultMap);
 	}
 	
 	/**
@@ -54,7 +55,7 @@ public class SystemConfController {
 //		Map<String,Object> resultMap = new HashMap<String,Object>();
 		SystemConfPo systemConfPo = systemConfDao.get(id);
 //		resultMap.put("systemConfPo", systemConfPo);
-		return new ModelAndView("/system_conf/systemConf_edit_page", "systemConfPo", systemConfPo);
+		return new ModelAndView("/systemConf/systemConf_edit_page", "systemConfPo", systemConfPo);
 	}
 	
 	/**

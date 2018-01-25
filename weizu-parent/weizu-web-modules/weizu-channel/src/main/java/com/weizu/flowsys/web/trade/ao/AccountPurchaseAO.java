@@ -23,7 +23,7 @@ public interface AccountPurchaseAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年11月7日 下午4:40:31
 	 */
-	String batchUpdatePurchaseState(PurchaseVO purchaseVO);
+//	String batchUpdatePurchaseState(PurchaseVO purchaseVO);
 	/**
 	 * @description:回调的时候，更新状态:成功返成功，失败返等待
 	 * @param orderId 

@@ -37,17 +37,18 @@
 		<div class="text-c">
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
 			<div class="row cl formControls">
-			<span class="select-box inline">
+			<%-- <span class="select-box inline">
 				<select name="chargeStatus" class="select">
-				<option value="">提单方向</option>
+				<option value="">提单属性</option>
 				<c:forEach items="${resultMap.isExceptionEnums }" var="isExceptionEnum" varStatus="vs2">
 					<option value="${isExceptionEnum.value }" <c:if test="${isExceptionEnum.value == resultMap.searchParams.chargeStatus }"> selected</c:if>>${isExceptionEnum.desc }</option>
 				</c:forEach>
 			</select>
-			</span> 
+			</span>  --%>
 			订单号:<input type="text"  value="${resultMap.searchParams.orderId }" name="orderId" id="" placeholder=" 订单号" style="width:170px" class="input-text">
 			提单参数:<input type="text"  value="${resultMap.searchParams.logInContent }" name="logInContent" id="logInContent" placeholder=" 对下：代理商名称 /商务订单号；对上：产品编码/平台名称" style="width:350px" class="input-text">
-			提单结果:<input type="text"  value="${resultMap.searchParams.logOutContent }" name="logOutContent" id="" placeholder="对下：tipCode;对上：jsonStr" style="width:250px" class="input-text">
+			提单返回:<input type="text"  value="${resultMap.searchParams.logOutContent }" name="logOutContent" id="" placeholder="对下：tipCode;对上：jsonStr" style="width:250px" class="input-text">
+			状态码:<input type="text"  value="${resultMap.searchParams.chargeStatus }" name="chargeStatus" id="" placeholder="0,5001" style="width:80px" class="input-text">
 			</div>
 			<div class="row cl formControls" style="margin-top: 30dp">
 			<a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>手机号:<input type="text"  value="${resultMap.searchParams.chargeTel }" name="chargeTel" id="" placeholder=" 手机号" style="width:150px" class="input-text">

@@ -1,9 +1,7 @@
 package com.weizu.flowsys.web.trade.ao;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -14,6 +12,7 @@ import com.weizu.flowsys.api.singleton.orderState.ResponseJsonDTO;
 import com.weizu.flowsys.api.singleton.orderState.SendCallBackUtil;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
@@ -22,11 +21,12 @@ import com.weizu.flowsys.web.agency.dao.impl.ChargeRecordDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
+import com.weizu.flowsys.web.system_base.ao.SystemConfAO;
+import com.weizu.flowsys.web.system_base.pojo.SystemConfPo;
 import com.weizu.flowsys.web.trade.dao.AccountPurchaseDao;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.AccountPurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
-import com.weizu.flowsys.web.trade.pojo.PurchaseStateParams;
 import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 import com.weizu.web.foundation.String.StringHelper;
 
@@ -45,6 +45,8 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 	private AgencyVODaoInterface agencyVODao;
 	@Resource
 	private SendCallBackUtil sendCallBack;
+	@Resource
+	private SystemConfAO systemConfAO;
 	
 	@Transactional
 	@Override
@@ -68,7 +70,18 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 		String res = "error";
 		
 		if(unchargeNotSave){//手动失败，要返款
-			if(purchasePo != null && purchasePo.getOrderResult() != null && orderResult !=  purchasePo.getOrderResult()){//清除已经返款的记录
+			SystemConfPo syspo = systemConfAO.getByKey("fail_back");
+			boolean setWait = syspo != null && StringHelper.isNotEmpty(syspo.getConfValue()) && CallBackEnum.NEGATIVE.getValue().equals(Integer.parseInt(syspo.getConfValue()));
+			if(setWait){//失败设置为充值等待
+				//更新连接表//不是成功和失败，就是进行
+				ap = accountPurchaseDao.batchUpdateState(orderId, OrderStateEnum.CHARGING.getValue(), OrderStateEnum.CHARGING.getDesc());
+				orderResult = OrderStateEnum.CHARGING.getValue();
+				purchasePo1.setHasCallBack(OrderResultEnum.SUCCESS.getCode());
+				purchasePo1.setOrderResult(OrderStateEnum.DAICHONG.getValue());
+//				purchasePo1.setOrderResultDetail("失败设为等待");
+				//更新订单表
+				pur = purchaseDAO.updatePurchaseState(purchasePo1);//等待，但是原因显示失败的原因
+			}else if(purchasePo != null && purchasePo.getOrderResult() != null && orderResult !=  purchasePo.getOrderResult()){//清除已经返款的记录
 				List<AccountPurchasePo> list = accountPurchaseDao.list(new WherePrams("purchase_id", "=", orderId));
 //				Double agencyAfterBalance = 0.0d;
 					int batchAddCrt = 0;
@@ -221,13 +234,13 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 		return "error";
 	}
 
-	@Override
-	public String batchUpdatePurchaseState(PurchaseVO purchaseVO) {
-		String res = "error";
-		
-		
-		return res;
-	}
+//	@Override
+//	public String batchUpdatePurchaseState(PurchaseVO purchaseVO) {
+//		String res = "error";
+//		
+//		
+//		return res;
+//	}
 
 //	@Override
 //	public String updatePurchaseStateByApi(String orderIdApi, Long orderId,

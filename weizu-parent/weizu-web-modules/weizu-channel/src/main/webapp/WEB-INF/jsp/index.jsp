@@ -196,6 +196,14 @@
 				</ul>
 		</dd>
 	</dl>
+	<dl id="menu-system">
+			<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe6c6;</i>系统配置<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a data-href="/flowsys/systemConf/systemConf_list.do" data-title="系统配置信息" href="javascript:void(0)">系统配置信息</a></li>
+				</ul>
+		</dd>
+	</dl>
 	</c:if>
 	<dl id="menu-member">
 		<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe670;</i> 账户管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
