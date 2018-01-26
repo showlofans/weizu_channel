@@ -23,6 +23,8 @@ public class SystemConfPo extends Po {
 	private Long lastAccess;
 	@TempField
 	private String lastAccessStr;
+	@TempField
+	private String confDetail;
 	
 	/** 创建实体
 	 * @param confKey 
@@ -39,6 +41,18 @@ public class SystemConfPo extends Po {
 		this.lastAccess = lastAccess;
 	}
 	
+	public String getConfDetail() {
+		return confDetail;
+	}
+
+
+
+	public void setConfDetail(String confDetail) {
+		this.confDetail = confDetail;
+	}
+
+
+
 	public Integer getId() {
 		return id;
 	}

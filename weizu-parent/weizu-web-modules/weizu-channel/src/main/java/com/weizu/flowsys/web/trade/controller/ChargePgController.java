@@ -1181,7 +1181,7 @@ public class ChargePgController {
 	 * @description: 充值等待批量提交订单
 	 * @param purchaseVO
 	 * @return
-	 * @author:微族通道代码设计人 宁强
+	 * @author:微族通道代码设计人 宁强        
 	 * @createTime:2017年10月18日 下午4:05:52
 	 */
 	@ResponseBody
@@ -1194,7 +1194,7 @@ public class ChargePgController {
 			purchaseVO.setAgencyId(agencyVO.getId());//设置为当前登陆用户的订单
 			//只有待冲的单子可以批量提交
 			if(purchaseVO.getOrderResult().equals(OrderStateEnum.DAICHONG.getValue())){
-//				res = purchaseAO.batchCommitOrder(purchaseVO);
+				res = purchaseAO.batchCommitOrder(purchaseVO);
 			}
 		}
 		return res;

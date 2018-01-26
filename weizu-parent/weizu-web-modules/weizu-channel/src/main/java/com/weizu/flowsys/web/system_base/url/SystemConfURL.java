@@ -28,10 +28,17 @@ public class SystemConfURL extends BaseURL {
 	 */
 	public static final String SYSTEMCONF_EDIT_PAGE = "/systemConf_edit_page" + DYNAMIC_WEB_SUFFIX;
 	/**
-	 * 系统参数配置页面
+	 * 系统参数配置
 	 * <br>/flowsys/systemConf/systemConf_edit.do
 	 */
 	public static final String SYSTEMCONF_EDIT = "/systemConf_edit" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 修改失败返回参数
+	 * <br>/flowsys/systemConf/switch_fail_back.do
+	 */
+	public static final String SWITCH_FAIL_BACK = "/switch_fail_back" + DYNAMIC_WEB_SUFFIX;
+	
+	
 	
 	
 }

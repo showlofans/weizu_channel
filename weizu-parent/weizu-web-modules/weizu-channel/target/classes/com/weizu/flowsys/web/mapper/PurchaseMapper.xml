@@ -7,8 +7,8 @@
   <sql id="t_crt">charge_record</sql>
   <sql id="t_pg">operator_pg_data</sql>
   <sql id="t_tp">tel_product</sql>
-  <!-- <sql id="t_channel">channel_channel</sql>
-  <sql id="t_ep">exchange_platform</sql> -->
+  <!-- <sql id="t_channel">channel_channel</sql> -->
+  <sql id="t_ep">exchange_platform</sql>
   
   
   <resultMap id="BaseResultMap" type="com.weizu.flowsys.web.trade.pojo.PurchasePo" >
@@ -141,6 +141,8 @@
 	on pur.channel_id = channel.id -->
   	inner join <include refid="t_pg"></include> pg
   	on pg.id = pur.pg_id
+  	inner join <include refid="t_ep"></include> ep
+  	on ep.id = pur.ep_id
   	<where>
   		<include refid="condition_sql"></include>
   	</where>
@@ -416,6 +418,12 @@
 	</if>
 	<if test="orderState != null">
 		AND ap.order_state = #{orderState}
+	</if>
+	<if test="epId != null">
+		AND pur.ep_id = #{epId}
+	</if>
+	<if test="epName != null">
+		AND ep.ep_name LIKE concat("%",trim(#{epName}) ,"%")
 	</if>
   </sql>
   

@@ -58,6 +58,9 @@ public class ChannelForShowAOImpl implements ChannelForShowAO {
 		if(channelForShowPo.getLimitPrice() != null){
 			where.and("limit_price", "=", channelForShowPo.getLimitPrice());
 		}
+		if(channelForShowPo.getShowRateState() != null){
+			where.and("show_rate_state", "=", channelForShowPo.getShowRateState());
+		}
 		where.orderBy("operator_type");
 		where.orderBy("last_access desc");
 		return where;

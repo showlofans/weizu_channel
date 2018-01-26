@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.web.system_base.dao.SystemConfDaoInterface;
 import com.weizu.flowsys.web.system_base.pojo.SystemConfPo;
 import com.weizu.flowsys.web.system_base.url.ConfConstants;
@@ -43,9 +44,18 @@ public class SystemConfAOImpl implements SystemConfAO {
 		
 		List<SystemConfPo> list = systemConfDao.list(where);
 		for (SystemConfPo systemConfPo2 : list) {
-			systemConfPo2.setLastAccessStr(DateUtil.formatPramm(systemConfPo2.getLastAccess(), "yyyy-MM-dd"));
+			systemConfPo2.setLastAccessStr(DateUtil.formatAll(systemConfPo2.getLastAccess()));
+//			systemConfPo2.setLastAccessStr(DateUtil.formatPramm(systemConfPo2.getLastAccess(), "yyyy-MM-dd"));
 			String key = systemConfPo2.getConfKey();
 			if(ConfConstants.FAIL_BACK.equals(key)){
+				if(StringHelper.isNotEmpty(systemConfPo2.getConfValue())){
+					int confValue = Integer.parseInt(systemConfPo2.getConfValue());
+					if(CallBackEnum.POSITIVE.getValue().equals(confValue)){
+						systemConfPo2.setConfDetail("是");
+					}else{
+						systemConfPo2.setConfDetail("否");
+					}
+				}
 				resultMap.put("failBack", systemConfPo2);
 			}
 			else if(ConfConstants.CHARGETELTIMES_IN_ONEDAY.equals(key)){

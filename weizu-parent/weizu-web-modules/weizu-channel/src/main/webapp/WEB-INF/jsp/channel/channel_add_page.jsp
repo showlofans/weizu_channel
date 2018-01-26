@@ -175,7 +175,7 @@
 						</c:when>
 						<c:otherwise>
 							<div class="radio-box">
-								<input name="billType" id="billType-${vs.index }" class="radioItem" <c:if test="${chargeAccount1 == null }">disabled</c:if> type="radio" value="${billEnum.value }">
+								<input name="billType" id="billType-${vs.index }" class="radioItem"  type="radio" value="${billEnum.value }"><!-- <c:if test="${chargeAccount1 == null }">disabled</c:if> -->
 								<label for="billType-${vs.index }">${billEnum.desc }</label> 
 							</div>
 						</c:otherwise>

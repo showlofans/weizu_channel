@@ -56,12 +56,20 @@
 			</span> 
 			&nbsp;&nbsp;
 		<%-- 包体编码名称：<input type="text" value="${resultMap.searchParam.productName }" name="productName" id="" placeholder="包体编码名称" style="width:250px" class="input-text">&nbsp;&nbsp; --%>
-		<%-- 包体编码名称：<input type="text" value="${resultMap.searchParam.productName }" name="productName" id="" placeholder="包体编码名称" style="width:250px" class="input-text">&nbsp;&nbsp; --%>
 		<span class="select-box inline">
 			<select name="scopeCityCode" onchange="submitForm()" class="select">
 			<option value="">通道地区</option>
 			<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum">
 				<option value="${scopeCityEnum.value }" <c:if test="${scopeCityEnum.value == resultMap.searchParam.scopeCityCode }"> selected</c:if>>${scopeCityEnum.desc }</option>
+			</c:forEach>
+		</select>
+		</span> 
+		&nbsp;&nbsp;
+		<span class="select-box inline">
+			<select name="showRateState" onchange="submitForm()" class="select">
+			<option value="">通道状态</option>
+			<c:forEach items="${resultMap.channelUseStateEnums }" var="channelUseStateEnum">
+				<option value="${channelUseStateEnum.value }" <c:if test="${channelUseStateEnum.value == resultMap.searchParam.showRateState }"> selected</c:if>>${channelUseStateEnum.desc }</option>
 			</c:forEach>
 		</select>
 		</span> 
@@ -104,8 +112,8 @@
 					</div>
 				</c:when>
 				<c:otherwise>
-					<button type="button" class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<input value="查询" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
+					<button type="button" class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<span class="am-text-warning">标红表示维护</span>
 				</c:otherwise>
 			</c:choose>
@@ -270,6 +278,7 @@
 											<span>${limitPriceEnum.desc }</span>
 										</c:if>
 									</c:forEach>
+									<br/> ${showRate.lastAccessStr }
 							      </li><!-- <span class="am-icon-btn am-icon-file-text"></span> -->
 							  <c:if test="${(vs.index+1) % 4==0 }">
 							    </ul>

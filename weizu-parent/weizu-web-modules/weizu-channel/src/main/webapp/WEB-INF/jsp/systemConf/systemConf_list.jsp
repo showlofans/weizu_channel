@@ -20,7 +20,11 @@
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/H-ui.admin.css" />
 <link rel="stylesheet" type="text/css" href="/view/lib/Hui-iconfont/1.0.8/iconfont.css" />
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/skin/default/skin.css" id="skin" />
-<link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/style.css" />
+<link rel="stylesheet" type="text/css" href="/view/mine/Switch/bootstrapSwitch.css" />
+<style type="text/css">
+html { overflow-y: auto }
+.Hui-nav-toggle { display: none!important }
+</style>
 <!--[if IE 6]>
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
@@ -35,46 +39,65 @@
 		<thead>
 			<tr>
 				<th scope="col">参数说明</th>
-				<th scope="col">参数名</th>
 				<th scope="col">参数值</th>
+				<th scope="col">参数名</th>
 				<th scope="col">操作</th>
+				<th scope="col">最后更新</th>
 			</tr>
 		</thead>
 		<tbody>
 			<c:if test="${resultMap.failBack != null }">
 				<tr>
-					<th width="20%">
+					<th >
 						${resultMap.failBack.confDesc }
 					</th>
 					<td>
-						${resultMap.failBack.confKey }
-					</td>
-					<td>
 						${resultMap.failBack.confValue }
+						<span class="c-danger">(${resultMap.failBack.confDetail })</span>
 					</td>
+					<td width="30%">${resultMap.failBack.confKey }</td>
 					<td>
-						<a  data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" data-href="/flowsys/chargeLog/charge_log_list.do?orderId=${purchase.orderId }" title="查看传单日志" onclick="Hui_admin_tab(this)" data-title="接口订单日志" href="javascript:void(0)">
+						<div class="testswitch">  
+							<c:choose>
+								<c:when test="${resultMap.failBack.confValue == '1' }">
+						            <input class="testswitch-checkbox" id="onoffswitch" type="checkbox" checked>  
+								</c:when>
+								<c:otherwise>
+						            <input class="testswitch-checkbox" id="onoffswitch" type="checkbox">  
+								</c:otherwise>
+							</c:choose>
+				            <label class="testswitch-label" for="onoffswitch">  
+				                <span class="testswitch-inner" data-on="ON" data-off="OFF"></span>  
+				                <span class="testswitch-switch"></span>  
+				            </label>  
+				        </div> 
+					   <!--  <div id="mySwitch" class="switch" data-on="primary" data-off="info">
+					      <input type="checkbox"  checked />
+					    </div> -->
+						<%-- <a  data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" data-href="/flowsys/chargeLog/charge_log_list.do?orderId=${purchase.orderId }" title="查看传单日志" onclick="Hui_admin_tab(this)" data-title="接口订单日志" href="javascript:void(0)">
 							<i class="Hui-iconfont">&#xe623;</i>
-						</a>
+						</a> --%>
 					</td>
+					<td>${resultMap.failBack.lastAccessStr }</td>
 				</tr>
 			</c:if>
 			<c:if test="${resultMap.chargeTelTimesInOneDay != null }">
 				<tr>
-					<th width="20%">
+					<th >
 						${resultMap.chargeTelTimesInOneDay.confDesc }
 					</th>
 					<td>
-						${resultMap.chargeTelTimesInOneDay.confKey }
-					</td>
-					<td>
 						${resultMap.chargeTelTimesInOneDay.confValue }
+					</td>
+					<td width="30%">
+						${resultMap.chargeTelTimesInOneDay.confKey }
 					</td>
 					<td>
 						<a  data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" data-href="/flowsys/chargeLog/charge_log_list.do?orderId=${purchase.orderId }" title="查看传单日志" onclick="Hui_admin_tab(this)" data-title="接口订单日志" href="javascript:void(0)">
 							<i class="Hui-iconfont">&#xe623;</i>
 						</a>
 					</td>
+					<td>${resultMap.chargeTelTimesInOneDay.lastAccessStr }</td>
 				</tr>
 			</c:if>
 		</tbody>
@@ -93,5 +116,53 @@
 <script type="text/javascript" src="/view/lib/layer/2.4/layer.js"></script>
 <script type="text/javascript" src="/view/static/h-ui/js/H-ui.min.js"></script>
 <script type="text/javascript" src="/view/static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="/view/mine/Switch/bootstrapSwitch.js"></script>
+<script type="text/javascript">
+$().ready(function(){
+	
+	//修改失败返回
+	$("#onoffswitch").on('click', function(){  
+		var confKey = $(this).parent().parent().prev().html();
+        clickSwitch(confKey);  
+    });  
+  
+    var clickSwitch = function(confKey) {  
+    	var state = 0;
+        if ($("#onoffswitch").is(':checked')) {  
+        	//更新为1
+        	state = 1;
+            console.log("在ON的状态下");  
+        } else {  
+            console.log("在OFF的状态下");  
+        }  
+        $.ajax({
+			type: 'POST',
+			url: '/flowsys/systemConf/switch_fail_back.do',
+			//dataType: 'json',
+			data: {confKey:confKey, confValue:state},
+			async: false,
+			success: function(data){
+				//tag = data;
+				 //alert(data);
+				if(data=="success")
+				{
+					layer.msg('手动修改成功',{icon:1,time:1000});
+					location.reload();
+				}else{
+					layer.msg('手动修改失败',{icon:1,time:1000});
+				}
+			},
+			error:function(data) {
+				console.log(data.msg);
+			},
+		});
+    };  
+	/* $('#mySwitch').on('switch-change', function (e, data) {
+	    var $el = $(data.el), 
+	    value = data.value;
+	    console.log(e, $el, value);
+	}); */
+})
+</script>
 </body>
 </html>

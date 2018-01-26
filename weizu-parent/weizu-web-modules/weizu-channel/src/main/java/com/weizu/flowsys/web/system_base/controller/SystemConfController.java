@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.web.system_base.ao.SystemConfAO;
 import com.weizu.flowsys.web.system_base.dao.SystemConfDaoInterface;
 import com.weizu.flowsys.web.system_base.pojo.SystemConfPo;
@@ -69,6 +70,7 @@ public class SystemConfController {
 	@ResponseBody
 	@RequestMapping(value=SystemConfURL.SYSTEMCONF_EDIT)
 	public String editConf(SystemConfPo systemConfPo){
+		systemConfPo.setLastAccess(System.currentTimeMillis());
 		Integer i = systemConfDao.updateLocal(systemConfPo);
 		String res = "error";
 		if(i > 0){
@@ -76,5 +78,28 @@ public class SystemConfController {
 		}
 		return res;
 	}
+	/**
+	 * @description: 系统参数配置修改
+	 * @param systemConfPo
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月23日 下午4:05:48
+	 */
+	@Transactional
+	@ResponseBody
+	@RequestMapping(value=SystemConfURL.SWITCH_FAIL_BACK)
+	public String changeConf(String confKey, String confValue){
+		SystemConfPo systemConfPo = new SystemConfPo();
+		systemConfPo.setConfValue(confValue);
+		systemConfPo.setLastAccess(System.currentTimeMillis());
+		Integer i = systemConfDao.updateLocal(systemConfPo, new WherePrams("conf_key", "=", confKey));
+		String res = "error";
+		if(i > 0){
+			res = "success";
+		}
+		return res;
+	}
+	
+	
 	
 }
