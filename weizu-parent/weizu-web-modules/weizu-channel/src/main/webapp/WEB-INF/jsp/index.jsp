@@ -117,16 +117,6 @@
 						<li><a data-href="/flowsys/tel_channel/telchannel_list.do" data-title="话费通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费通道</a></li>
 					</ul>
 				</dd>
-				<c:if test="${power== 'no'}">
-					<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe643;</i> 对接管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-					<dd>
-						<ul>
-							<li><a data-href="/flowsys/platform/platform_list.do" data-title="平台列表" href="javascript:void(0)">平台列表</a></li>
-							<li><a data-href="/flowsys/productCode/product_code_list.do" data-title="流量编码" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量编码</a></li>
-							<li><a data-href="/flowsys/tel_product/telproduct_list.do" data-title="话费编码列表" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费编码</a></li>
-						</ul>
-					</dd>
-				</c:if>
 			</c:when>
 			<c:otherwise>
 				 <dt><i class="Hui-iconfont" style="font-size:20px;">&#xe643;</i> 我的通道<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
@@ -194,25 +184,6 @@
 			</ul>
 		</dd>
 	</dl>
-	<c:if test="${loginContext.rootAgencyId == 0 }">
-	<dl id="menu-article">
-			<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe6c6;</i> 标准价管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-			<dd>
-				<ul>
-					<li><a data-href="/flowsys/operatorPg/operatorPg_list.do" data-title="标准价管理" href="javascript:void(0)">标准价管理</a></li>
-					<li><a data-href="/flowsys/showRate/showRate_list.do?showModel=1" data-title="通道展示列表" href="javascript:void(0)">通道展示</a></li>
-				</ul>
-		</dd>
-	</dl>
-	<dl id="menu-system">
-			<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe6c6;</i>系统配置<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-			<dd>
-				<ul>
-					<li><a data-href="/flowsys/systemConf/systemConf_list.do" data-title="系统配置信息" href="javascript:void(0)">系统配置信息</a></li>
-				</ul>
-		</dd>
-	</dl>
-	</c:if>
 	<dl id="menu-member">
 		<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe670;</i> 账户管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 		<dd>
@@ -241,6 +212,35 @@
 			</ul>
 		</dd>
 	</dl>
+	<c:if test="${loginContext.rootAgencyId == 0 }">
+	<dl id="menu-article">
+			<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe6c6;</i> 标准价管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a data-href="/flowsys/operatorPg/operatorPg_list.do" data-title="标准价管理" href="javascript:void(0)">标准价管理</a></li>
+					<li><a data-href="/flowsys/showRate/showRate_list.do?showModel=1" data-title="通道展示列表" href="javascript:void(0)">通道展示</a></li>
+				</ul>
+		</dd>
+	</dl>
+	<dl id="menu-system">
+			<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe6c6;</i>系统配置<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a data-href="/flowsys/systemConf/systemConf_list.do" data-title="系统配置信息" href="javascript:void(0)">系统配置信息</a></li>
+				</ul>
+		</dd>
+		<c:if test="${power== 'no'}">
+			<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe643;</i> 对接管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a data-href="/flowsys/platform/platform_list.do" data-title="平台列表" href="javascript:void(0)">平台列表</a></li>
+					<li><a data-href="/flowsys/productCode/product_code_list.do" data-title="流量编码" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量编码</a></li>
+					<li><a data-href="/flowsys/tel_product/telproduct_list.do" data-title="话费编码列表" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费编码</a></li>
+				</ul>
+			</dd>
+		</c:if>
+	</dl>
+	</c:if>
 	
 	<c:if test="${not empty telLogin }">
 	<%-- <dl>

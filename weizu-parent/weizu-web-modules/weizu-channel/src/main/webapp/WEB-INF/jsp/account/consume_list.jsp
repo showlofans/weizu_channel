@@ -78,8 +78,8 @@
 				</c:forEach>
 			</select>
 			</span>
-			<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 			<button class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
+			<button type="button"class="btn btn-primary" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 			<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 		</div>
 	</form>

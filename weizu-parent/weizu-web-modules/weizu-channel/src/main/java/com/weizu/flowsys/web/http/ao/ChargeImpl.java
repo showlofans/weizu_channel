@@ -182,7 +182,7 @@ public class ChargeImpl implements IChargeFacet {
 				String accountDesc = "超管账户更新："+ OrderResultEnum.getEnum(supperRecAddTag).getMsg() + ",传单账户更新："+ OrderResultEnum.getEnum(recAddTag).getMsg();
 				ChargeLog chargeLog = new ChargeLog(chargeParams.toString(), chargeOne.toString(), null, chargeParams.getNumber(), chargeOne.getTipCode(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+":"+accountDesc);
 				chargeLogDao.add(chargeLog);
-				charge = new Charge(ChargeStatusEnum.AUTHENTICATION_FAILURE.getValue(), ChargeStatusEnum.LACK_OF_BALANCE.getDesc(), null);
+				charge = new Charge(ChargeStatusEnum.LACK_OF_BALANCE.getValue(), ChargeStatusEnum.LACK_OF_BALANCE.getDesc(), null);
 			}else{
 				//开始正常扣款
 				//记录上下游日志，添加订单记录和扣款

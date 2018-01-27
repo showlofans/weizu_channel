@@ -96,7 +96,7 @@
 			
 			<input type="text" value="${resultMap.searchParam.pgSize }" name="pgSize" id="" placeholder=" 包体大小" style="width:80px" class="input-text">
 			<input value="搜通道" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
-			<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
+			<button type="button"class="btn btn-primary" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 		</div>
 		<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 		</form>
