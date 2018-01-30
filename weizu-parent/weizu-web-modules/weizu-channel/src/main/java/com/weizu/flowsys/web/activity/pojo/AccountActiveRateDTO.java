@@ -13,6 +13,9 @@ public class AccountActiveRateDTO extends Po {
     private String agencyName;
 
     private Long rateDiscountId;
+    
+    private Long channelDiscountId;				//通道折扣id
+    
 
     private Long activeTime;
     
@@ -32,7 +35,7 @@ public class AccountActiveRateDTO extends Po {
 	public AccountActiveRateDTO(
 			Integer accountId, 
 			String agencyName,
-			Long rateDiscountId, Long activeTime, Integer bindState,
+			Long rateDiscountId,Long channelDiscountId, Long activeTime, Integer bindState,
 			Integer bindAgencyId) {
 		super();
 		this.accountId = accountId;
@@ -41,8 +44,23 @@ public class AccountActiveRateDTO extends Po {
 		this.activeTime = activeTime;
 		this.bindState = bindState;
 		this.bindAgencyId = bindAgencyId;
+		this.channelDiscountId = channelDiscountId;
 	}
 	
+	
+	
+	public Long getChannelDiscountId() {
+		return channelDiscountId;
+	}
+
+
+
+	public void setChannelDiscountId(Long channelDiscountId) {
+		this.channelDiscountId = channelDiscountId;
+	}
+
+
+
 	public String getAgencyMark() {
 		return agencyMark;
 	}

@@ -41,21 +41,21 @@
   
   
   <sql id="Base_Column_List" >
-    rate.id, cDiscount.operator_type, cDiscount.scope_city_code, active_discount,channel_discount_id,rate.bill_type,rate.channel_id
+    rate.id, cDiscount.operator_type, cDiscount.scope_city_code, active_discount,rate.channel_discount_id,rate.bill_type,rate.channel_id
   </sql>
   
   <sql id="Show_Rate_List">
   	b.active_discount,b.id,b.active_time,b.operator_type,b.service_type,b.scope_city_code,b.channel_id,b.channel_discount_id,b.bill_type,b.active_id,b.special_tag
   </sql>
   <sql id="Get_My_Rate">
-  	rate.id, rate.active_id,active.active_time, channel_discount_id,rate.active_discount,rate.bill_type,cd.operator_type,cd.service_type,cd.scope_city_code,rate.channel_id,cnel.special_tag 
+  	rate.id, rate.active_id,active.active_time, rate.channel_discount_id,rate.active_discount,rate.bill_type,cd.operator_type,cd.service_type,cd.scope_city_code,rate.channel_id,cnel.special_tag 
   </sql>
   <!-- 包体折扣信息 -->
   <sql id="ratePg_list">
   	rate.id rate_id, rate.channel_id, rate.active_discount, opd.pg_size, opd.pg_price, opd.id pg_id
   </sql>
   <sql id="My_Rate_List">
-  	rate.id, rate.active_id, active_discount,channel_discount_id,rate.bill_type 
+  	rate.id, rate.active_id, active_discount,rate.channel_discount_id,rate.bill_type 
   </sql>
   <!-- 根据包体id通道id获得绑定的折扣 -->
   <select id="getPriceByPg" parameterType="map" resultMap="MyRateResultMap">
@@ -116,7 +116,7 @@
   	</set>
   	<where>
   		<if test="channelDiscountId != null">
-  			channel_discount_id = #{channelDiscountId}
+  			rate.channel_discount_id = #{channelDiscountId}
   		</if>
   	</where>
   </update>

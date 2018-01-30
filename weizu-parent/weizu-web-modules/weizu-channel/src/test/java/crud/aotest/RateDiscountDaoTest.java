@@ -1,9 +1,5 @@
 //package crud.aotest;
 //
-//import java.util.HashMap;
-//import java.util.List;
-//import java.util.Map;
-//
 //import javax.annotation.Resource;
 //
 //import org.junit.Test;
@@ -11,12 +7,7 @@
 //import org.springframework.test.context.ContextConfiguration;
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
-//import com.alibaba.fastjson.JSON;
 //import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
-//import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
-//import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
-//import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
-//import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 //import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 //import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 //import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
@@ -24,8 +15,6 @@
 //import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 //import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 //import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
-//import com.weizu.flowsys.web.channel.pojo.PgDataPo;
-//import com.weizu.flowsys.web.trade.pojo.RatePgPo;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -183,11 +172,14 @@
 ////		}
 ////		
 ////	}
-////	@Test
-////	public void testGetRateForCharge(){
-////		ChargeAccountPo accountPo = chargeAccountAo.getAccountByAgencyId(231, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+//	@Test
+//	public void testGetRateForCharge(){
+//		
+//		ChargeAccountPo accountPo = chargeAccountAo.getAccountByAgencyId(233, BillTypeEnum.CORPORATE_BUSINESS.getValue());//233
+//		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo("广东移动", 1, 1, "20", 2,200), accountPo.getId(),false);
+//		System.out.println(ratePo== null);
 ////		System.out.println("accountId:"+accountPo.getId());
-////		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo("陕西移动",ServiceTypeEnum.PROVINCE_ROAMING.getValue(),null,null,null,null), accountPo.getId(), true);
+////		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo("上海移动",ServiceTypeEnum.PROVINCE.getValue(),null,null,null,1024), accountPo.getId(), true);
 ////		//{operatorType=0, channelState=0, billTypeRate=0, channelUseState=0, bindState=0, scopeCityCode=19, serviceType=1, agencyId=4}
 ////		if(ratePo != null){
 ////			System.out.println(ratePo.getActiveDiscount());
@@ -196,18 +188,18 @@
 ////			
 ////			System.out.println("error");
 ////		}
-////	}
-//	@Test
-//	public void testGetRatePgForCharge(){
-//		ChargeAccountPo accountPo = chargeAccountAo.getAccountByAgencyId(231, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-//		System.out.println("accountId:"+accountPo.getId());
-//		List<RatePgPo> ratePgList = rateDiscountAO.getRatePgForCharge(new ChargeChannelParamsPo("陕西移动",ServiceTypeEnum.PROVINCE_ROAMING.getValue(),null,null,null,null), accountPo.getId(), true);
-//		//{operatorType=0, channelState=0, billTypeRate=0, channelUseState=0, bindState=0, scopeCityCode=19, serviceType=1, agencyId=4}
-//		for (RatePgPo ratePgPo : ratePgList) {
-//			System.out.println(ratePgPo.getPgSize() + "M,折扣价："+ ratePgPo.getPgDiscountPrice());
-//		}
-//		System.out.println(JSON.toJSONString(ratePgList));
 //	}
+////	@Test
+////	public void testGetRatePgForCharge(){
+////		ChargeAccountPo accountPo = chargeAccountAo.getAccountByAgencyId(231, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+////		System.out.println("accountId:"+accountPo.getId());
+////		List<RatePgPo> ratePgList = rateDiscountAO.getRatePgForCharge(new ChargeChannelParamsPo("陕西移动",ServiceTypeEnum.PROVINCE_ROAMING.getValue(),null,null,null,null), accountPo.getId(), true);
+////		//{operatorType=0, channelState=0, billTypeRate=0, channelUseState=0, bindState=0, scopeCityCode=19, serviceType=1, agencyId=4}
+////		for (RatePgPo ratePgPo : ratePgList) {
+////			System.out.println(ratePgPo.getPgSize() + "M,折扣价："+ ratePgPo.getPgDiscountPrice());
+////		}
+////		System.out.println(JSON.toJSONString(ratePgList));
+////	}
 ////	@Test
 ////	public void testGetMyChildRate(){
 ////		Map<String,Object> pMap = new HashMap<String, Object>();

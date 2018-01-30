@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.weizu.web.foundation.String.StringHelper;
 
 /**
@@ -52,52 +54,78 @@ public class AddressUtils {
 		if (returnStr != null) {
 			// 处理返回的省市区信息
 //			System.out.println(returnStr);
-			String[] temp = returnStr.split(",");
-			if (temp.length < 3) {
-				return "0";// 无效IP，局域网测试
-			}
-			String region = (temp[5].split(":"))[1].replaceAll("\"", "");
-			region = decodeUnicode(region);// 省份
-
-			String country = "";
-			String area = "";
-			// String region = "";
+//			String[] temp = returnStr.split(",");
+//			if (temp.length < 3) {
+//				return "0";// 无效IP，局域网测试
+//			}
+//			String region = (temp[5].split(":"))[1].replaceAll("\"", "");
+//			region = decodeUnicode(region);// 省份
+//
+//			String country = "";
+//			String area = "";
+//			 String region = "";
+//			 String county = "";
+//			 String isp = "";
 			String city = "";
-			String county = "";
-			String isp = "";
-			for (int i = 0; i < temp.length; i++) {
-				switch (i) {
-				case 1:
-					country = (temp[i].split(":"))[2].replaceAll("\"", "");
-					country = decodeUnicode(country);// 国家
-					break;
-				case 3:
-					area = (temp[i].split(":"))[1].replaceAll("\"", "");
-					area = decodeUnicode(area);// 地区
-					break;
-				case 5:
-					region = (temp[i].split(":"))[1].replaceAll("\"", "");
-					region = decodeUnicode(region);// 省份
-					break;
-				case 7:
-					city = (temp[i].split(":"))[1].replaceAll("\"", "");
-					city = decodeUnicode(city);// 市区
-					break;
-				case 9:
-					county = (temp[i].split(":"))[1].replaceAll("\"", "");
-					county = decodeUnicode(county);// 地区
-					break;
-				case 11:
-					isp = (temp[i].split(":"))[1].replaceAll("\"", "");
-					isp = decodeUnicode(isp); // ISP公司
-					break;
+//			for (int i = 0; i < temp.length; i++) {
+//				switch (i) {
+//				case 1:
+//					country = (temp[i].split(":"))[2].replaceAll("\"", "");
+//					System.out.println("country:"+country);
+//					country = decodeUnicode(country);// 国家
+//					break;
+//				case 3:
+//					area = (temp[i].split(":"))[1].replaceAll("\"", "");
+//					System.out.println("area:"+area);
+//					area = decodeUnicode(area);// 地区
+//					break;
+//				case 5:
+//					region = (temp[i].split(":"))[1].replaceAll("\"", "");
+//					region = decodeUnicode(region);// 省份
+//					break;
+//				case 7:
+//					city = (temp[i].split(":"))[1].replaceAll("\"", "");
+//					System.out.println("city:"+city);
+//					city = decodeUnicode(city);// 市区
+//					break;
+//				case 9:
+//					county = (temp[i].split(":"))[1].replaceAll("\"", "");
+//					county = decodeUnicode(county);// 地区
+//					break;
+//				case 11:
+//					isp = (temp[i].split(":"))[1].replaceAll("\"", "");
+//					isp = decodeUnicode(isp); // ISP公司
+//					break;
+//				}
+//				System.out.println(returnStr);
+				JSONObject jsonObj = JSON.parseObject(returnStr);
+				int code = jsonObj.getIntValue("code");
+				if(code == 0){
+					JSONObject dataObj = jsonObj.getJSONObject("data");
+					city = dataObj.getString("city");
+//					area = dataObj.getString("area");
+//					region = dataObj.getString("region");
+//					county = dataObj.getString("county");
+//					isp = dataObj.getString("isp");
+//					country = dataObj.getString("country");
+					return city;
 				}
 			}
+//			System.out.println(temp);
+//			for (String tempStr : temp) {
+//				System.out.println(tempStr);
+//				JSONObject jsonObj = JSON.parseObject(tempStr);
+//				int code = jsonObj.getIntValue("code");
+//				if(code == 0){
+//					JSONObject dataObj = jsonObj.getJSONObject("data");
+//					city = dataObj.getString("city");
+//				}
+//			}
 
 //			System.out.println(country + "=" + area + "=" + region + "=" + city
 //					+ "=" + county + "=" + isp);
-			return city;
-		}
+//			return city;
+//		}
 		return null;
 	}
 
@@ -263,11 +291,13 @@ public class AddressUtils {
 				locMap.put("address", "未找到该地区");
 			}
 		} catch (UnsupportedEncodingException e) {
-			
 			e.printStackTrace();
 		} catch (Exception e) {
 			
 			e.printStackTrace();
+		}
+		if(StringHelper.isEmpty(address)){
+			return null;
 		}
 		return locMap;
 	}

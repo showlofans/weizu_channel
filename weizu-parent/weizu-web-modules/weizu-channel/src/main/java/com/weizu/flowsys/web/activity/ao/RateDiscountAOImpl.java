@@ -286,7 +286,7 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 			Integer bindAgencyId) {
 		long rateDiscountId = rateDiscountDao.nextId();
 		int addRes = rateDiscountDao.add(ratePo);
-		AccountActiveRateDTO aardto = new AccountActiveRateDTO(ratePo.getAccountId(), agencyName, rateDiscountId, System.currentTimeMillis(), BindStateEnum.BIND.getValue(), bindAgencyId);
+		AccountActiveRateDTO aardto = new AccountActiveRateDTO(ratePo.getAccountId(), agencyName, rateDiscountId,ratePo.getChannelDiscountId(), System.currentTimeMillis(), BindStateEnum.BIND.getValue(), bindAgencyId);
 		int addaardtoRes = agencyActiveRateDTODao.add(aardto);
 		if(addRes + addaardtoRes > 1){
 			return "success";
@@ -1038,8 +1038,8 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	}
 
 	@Override
-	public RateDiscountPo getPriceByPg(Integer pgId, Integer agencyId, Long channelId) {
-		RateDiscountPo ratePo = rateDiscountDao.getPriceByPg(agencyId, pgId,channelId);
+	public RateDiscountPo getPriceByPg(Integer pgId, Integer agencyId, Long channelId,Integer billType) {
+		RateDiscountPo ratePo = rateDiscountDao.getPriceByPg(agencyId, pgId,channelId, billType);
 		
 		return ratePo;
 	}

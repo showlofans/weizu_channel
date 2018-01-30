@@ -1,7 +1,8 @@
 //package crud.aotest.util;
 //
-//import java.io.File;
-//import java.util.LinkedList;
+//import java.util.Date;
+//
+//import com.weizu.web.foundation.DateUtil;
 //
 //public class StringUtilsTest {
 //	public static void main(String[] args) {
@@ -38,7 +39,10 @@
 ////		
 ////		System.out.println(ChargeStatusEnum.SCOPE_RATE_UNDEFINED.getValue());
 ////		traverseFolder2("D:\\Documents\\GitHub\\weizu_channel\\weizu-parent\\weizu-web-modules\\weizu-channel");
-//		traverseFolder1("D:\\Documents\\GitHub\\weizu_channel\\weizu-parent\\weizu-web-modules\\weizu-channel\\src");
+////		traverseFolder1("D:\\Documents\\GitHub\\weizu_channel\\weizu-parent\\weizu-web-modules\\weizu-channel\\src");
+//		Date date = DateUtil.strToDate("2018-01-29", "yyyy-MM-dd");
+//		System.out.println(date == null);
+//		System.out.println("2018-01-29".length());
 ////		int count = 0;
 ////		File[]fileList = new File("D:\\Documents\\GitHub\\weizu_channel\\weizu-parent\\weizu-web-modules\\weizu-channel").listFiles();
 ////		for (File file : fileList) {
@@ -78,70 +82,70 @@
 //	 * @author:微族通道代码设计人 宁强
 //	 * @createTime:2018年1月26日 上午11:00:02
 //	 */
-//	public static void traverseFolder1(String path){
-//		 int javaFileNum = 0, folderNum = 0,jspFileNum = 0, mapperFileNum = 0;
-//	        File file = new File(path);
-//	        if (file.exists()) {
-//	            LinkedList<File> list = new LinkedList<File>();
-//	            File[] files = file.listFiles();
-//	            for (File file2 : files) {
-//	                if (file2.isDirectory()) {
-////	                    System.out.println("文件夹:" + file2.getAbsolutePath());
-//	                    list.add(file2);
-//	                    folderNum++;
-//	                } else {
-//	                	String fileName = file2.getName();
-//	                	if(fileName.contains("Mapper.xml")){
-//	                		mapperFileNum++;
-//	                	}
-//	                	if(fileName.contains(".java") ){
-//	                		javaFileNum++;
-//	                	}
-//	                	if(fileName.contains(".jsp")){
-//	                		jspFileNum++;
-//	                	}
-////	                	fileNum++;
-////	                    System.out.println("文件:" + file2.getAbsolutePath());
-//	                }
-//	            }
-//	            File temp_file;
-//	            while (!list.isEmpty()) {
-//	                temp_file = list.removeFirst();
-//	                files = temp_file.listFiles();
-//	                for (File file2 : files) {
-//	                    if (file2.isDirectory()) {
-////	                        System.out.println("文件夹:" + file2.getAbsolutePath());
-//	                        list.add(file2);
-//	                        folderNum++;
-//	                    } else {
-//	                    	String fileName = file2.getName();
-////		                	if(fileName.contains(".java")  || fileName.contains("Mapper.xml") || fileName.contains(".jsp") ){
-////		                		fileNum++;
+////	public static void traverseFolder1(String path){
+////		 int javaFileNum = 0, folderNum = 0,jspFileNum = 0, mapperFileNum = 0;
+////	        File file = new File(path);
+////	        if (file.exists()) {
+////	            LinkedList<File> list = new LinkedList<File>();
+////	            File[] files = file.listFiles();
+////	            for (File file2 : files) {
+////	                if (file2.isDirectory()) {
+//////	                    System.out.println("文件夹:" + file2.getAbsolutePath());
+////	                    list.add(file2);
+////	                    folderNum++;
+////	                } else {
+////	                	String fileName = file2.getName();
+////	                	if(fileName.contains("Mapper.xml")){
+////	                		mapperFileNum++;
+////	                	}
+////	                	if(fileName.contains(".java") ){
+////	                		javaFileNum++;
+////	                	}
+////	                	if(fileName.contains(".jsp")){
+////	                		jspFileNum++;
+////	                	}
+//////	                	fileNum++;
+//////	                    System.out.println("文件:" + file2.getAbsolutePath());
+////	                }
+////	            }
+////	            File temp_file;
+////	            while (!list.isEmpty()) {
+////	                temp_file = list.removeFirst();
+////	                files = temp_file.listFiles();
+////	                for (File file2 : files) {
+////	                    if (file2.isDirectory()) {
+//////	                        System.out.println("文件夹:" + file2.getAbsolutePath());
+////	                        list.add(file2);
+////	                        folderNum++;
+////	                    } else {
+////	                    	String fileName = file2.getName();
+//////		                	if(fileName.contains(".java")  || fileName.contains("Mapper.xml") || fileName.contains(".jsp") ){
+//////		                		fileNum++;
+//////		                	}
+//////		                	if(fileName.contains(".jsp")){
+//////		                		fileNum++;
+//////		                	}
+////		                	if(fileName.contains("Mapper.xml")){
+////		                		mapperFileNum++;
+////		                	}
+////		                	if(fileName.contains(".java") ){
+////		                		javaFileNum++;
 ////		                	}
 ////		                	if(fileName.contains(".jsp")){
-////		                		fileNum++;
+////		                		jspFileNum++;
 ////		                	}
-//		                	if(fileName.contains("Mapper.xml")){
-//		                		mapperFileNum++;
-//		                	}
-//		                	if(fileName.contains(".java") ){
-//		                		javaFileNum++;
-//		                	}
-//		                	if(fileName.contains(".jsp")){
-//		                		jspFileNum++;
-//		                	}
-////	                        System.out.println("文件:" + file2.getAbsolutePath());
-////	                        fileNum++;
-//	                    }
-//	                }
-//	            }
-//	        } else {
-//	            System.out.println("文件不存在!");
-//	        }
-//	        String fileN = path.substring(path.lastIndexOf("\\")+1);
-//	        System.out.println(fileN + "文件夹共有:" + folderNum + ",java文件共有:" + javaFileNum + ",jsp文件共有:" + jspFileNum+ ",mapper文件共有:" + mapperFileNum);
-//	        System.out.println("总文件数："+ (jspFileNum + javaFileNum + mapperFileNum));
-//	}
+//////	                        System.out.println("文件:" + file2.getAbsolutePath());
+//////	                        fileNum++;
+////	                    }
+////	                }
+////	            }
+////	        } else {
+////	            System.out.println("文件不存在!");
+////	        }
+////	        String fileN = path.substring(path.lastIndexOf("\\")+1);
+////	        System.out.println(fileN + "文件夹共有:" + folderNum + ",java文件共有:" + javaFileNum + ",jsp文件共有:" + jspFileNum+ ",mapper文件共有:" + mapperFileNum);
+////	        System.out.println("总文件数："+ (jspFileNum + javaFileNum + mapperFileNum));
+////	}
 //	
 //	
 //}

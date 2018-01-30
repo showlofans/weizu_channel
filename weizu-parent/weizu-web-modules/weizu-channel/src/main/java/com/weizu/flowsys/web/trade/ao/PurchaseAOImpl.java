@@ -1150,21 +1150,25 @@ public class PurchaseAOImpl implements PurchaseAO {
 //			Long dateUtilStartTime = DateUtil.getStartTime().getTime();
 //			Long dateUtilEndTime = DateUtil.getEndTime().getTime();
 			if(isCharged){
-				if(StringHelper.isNotEmpty(purchaseVO.getBackStartTimeStr())){
-					long startTime = DateUtil.strToDate(purchaseVO.getBackStartTimeStr(), null).getTime();
+				String backStartTimeStr = purchaseVO.getBackStartTimeStr();
+				if(StringHelper.isNotEmpty(backStartTimeStr)){
+					long startTime = DateUtil.strToDate(backStartTimeStr, backStartTimeStr.trim().length() == 10?"yyyy-MM-dd":null).getTime();
 					paramsMap.put("startTimeBack", startTime);
 				}
-				if(StringHelper.isNotEmpty(purchaseVO.getBackEndTimeStr())){
-					long endTime = DateUtil.strToDate(purchaseVO.getBackEndTimeStr(), null).getTime();
+				String backEndTimeStr = purchaseVO.getBackEndTimeStr();
+				if(StringHelper.isNotEmpty(backEndTimeStr)){
+					long endTime = DateUtil.strToDate(backEndTimeStr, backEndTimeStr.trim().length() == 10?"yyyy-MM-dd":null).getTime();
 					paramsMap.put("endTimeBack", endTime);
 				}
 			}else{
-				if(StringHelper.isNotEmpty(purchaseVO.getArriveStartTimeStr())){
-					long startTime = DateUtil.strToDate(purchaseVO.getArriveStartTimeStr(), null).getTime();
+				String arriveStartTimeStr = purchaseVO.getArriveStartTimeStr();
+				if(StringHelper.isNotEmpty(arriveStartTimeStr)){
+					long startTime = DateUtil.strToDate(arriveStartTimeStr, arriveStartTimeStr.trim().length() == 10?"yyyy-MM-dd":null).getTime();
 					paramsMap.put("startTime", startTime);
 				}
-				if(StringHelper.isNotEmpty(purchaseVO.getArriveEndTimeStr())){
-					long endTime = DateUtil.strToDate(purchaseVO.getArriveEndTimeStr(), null).getTime();
+				String arriveEndTimeStr = purchaseVO.getArriveEndTimeStr();
+				if(StringHelper.isNotEmpty(arriveEndTimeStr)){
+					long endTime = DateUtil.strToDate(arriveEndTimeStr, arriveEndTimeStr.trim().length() == 10?"yyyy-MM-dd":null).getTime();
 					paramsMap.put("endTime", endTime);
 				}
 			}

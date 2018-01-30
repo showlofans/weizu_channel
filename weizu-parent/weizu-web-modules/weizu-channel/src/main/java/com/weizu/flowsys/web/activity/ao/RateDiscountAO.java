@@ -189,7 +189,7 @@ public interface RateDiscountAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年11月1日 上午9:41:10
 	 */
-	RateDiscountPo getPriceByPg(Integer id, Integer agencyId, Long channelId);
+	RateDiscountPo getPriceByPg(Integer id, Integer agencyId, Long channelId,Integer billType);
 	
 	/**
 	 * @description:

@@ -219,8 +219,11 @@
   		<!-- INNER join <include refid="agency_backward"></include> a1
    		on a1.id = act.agency_id -->
   	 	<where>
- 			<if test="rateDiscountId != null">
+ 			<!-- <if test="rateDiscountId != null">
  				 AND active.rate_discount_id= #{rateDiscountId}
+ 			</if> -->
+ 			<if test="channelDiscountId != null">
+ 				 AND active.channel_discount_id= #{channelDiscountId}
  			</if>
   	 	</where>)
  		<if test="userName != null">
@@ -256,8 +259,11 @@
   		<!-- INNER join <include refid="agency_backward"></include> a1
    		on a1.id = act.agency_id -->
   	 	<where>
- 			<if test="rateDiscountId != null">
+ 			<!-- <if test="rateDiscountId != null">
 				 AND active.rate_discount_id= #{rateDiscountId}
+ 			</if> -->
+ 			<if test="channelDiscountId != null">
+				 AND active.channel_discount_id= #{channelDiscountId}
  			</if>
   	 	</where>)
   	 	<if test="billType != null">
@@ -290,8 +296,11 @@
    		<if test="rateDiscountId != null">
    			AND active1.rate_discount_id = #{rateDiscountId}
    		</if>
+   		<if test="channelDiscountId != null">
+   			AND active1.channel_discount_id = #{channelDiscountId}
+   		</if>
    		<if test="userName != null">
-   			AND act.user_name like concat('%',#{userName},'%')
+   			AND act.agency_name like concat('%',#{userName},'%')
    		</if>
    		<if test="billType != null">
    			AND act.bill_type = #{billType}
@@ -329,7 +338,7 @@
    			AND active1.tel_rate_id = #{telRateId}
    		</if>
    		<if test="userName != null">
-   			AND act.user_name like concat('%',#{userName},'%')
+   			AND act.agency_name like concat('%',#{userName},'%')
    		</if>
    		<if test="billType != null">
    			AND act.bill_type = #{billType}
@@ -364,7 +373,7 @@
    			AND active1.tel_rate_id = #{telRateId}
    		</if>
    		<if test="userName != null">
-   			AND act.user_name like concat('%',#{userName},'%')
+   			AND act.agency_name like concat('%',#{userName},'%')
    		</if>
    		<if test="billType != null">
    			AND act.bill_type = #{billType}
@@ -391,6 +400,9 @@
    		</if>
    		<if test="rateDiscountId != null">
    			AND active1.rate_discount_id = #{rateDiscountId}
+   		</if>
+   		<if test="channelDiscountId != null">
+   			AND active1.channel_discount_id = #{channelDiscountId}
    		</if>
    		<if test="userName != null">
    			AND a2.user_name like concat('%',#{userName},'%')

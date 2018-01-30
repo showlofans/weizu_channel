@@ -873,9 +873,19 @@ public class RateController {
 		}
 		int rootAgencyId = agencyVO.getId();
 		PageParam pageParam = null;
+		Long channelDiscountId = null;
+		if(aardto.getRateDiscountId() != null){
+			RateDiscountPo ratePo1 = rateDiscountDao.get(aardto.getRateDiscountId());
+			channelDiscountId = ratePo1.getChannelDiscountId();
+			aardto.setChannelDiscountId(channelDiscountId);
+			if(ratePo == null){
+				return new ModelAndView("error", "errorMsg", "参数错误");
+			}
+		}
 		if(StringHelper.isNotEmpty(pageNo)){
 			pageParam = new PageParam(Integer.parseInt(pageNo), 10) ;
 		}else{//第一次进入页面
+			ratePo.setChannelDiscountId(channelDiscountId);
 			request.getSession().setAttribute("ratePo", ratePo);
 			pageParam = new PageParam(1, 10);
 		}

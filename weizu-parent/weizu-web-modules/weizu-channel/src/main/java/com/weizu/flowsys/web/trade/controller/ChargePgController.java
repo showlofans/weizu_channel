@@ -571,7 +571,7 @@ public class ChargePgController {
 				}
 				
 			}else{//不是超管
-				RateDiscountPo ratePo = rateDiscountAO.getPriceByPg(pgId, agencyVO.getId(),channelId);
+				RateDiscountPo ratePo = rateDiscountAO.getPriceByPg(pgId, agencyVO.getId(),channelId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 				if(ratePo != null){
 					ChargeAccountPo accountPo = chargeAccountAO.getAccountByAgencyId( agencyVO.getId(), ratePo.getBillType());
 					if(accountPo != null){

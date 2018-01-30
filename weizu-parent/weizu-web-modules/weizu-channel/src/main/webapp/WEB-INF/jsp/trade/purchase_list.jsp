@@ -235,22 +235,30 @@
 											<c:choose>
 												<c:when test="${orderStateEnum.value == 0 }">
 													<span class="label label-danger radius mark">
+														<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderResult=${orderStateEnum.value }&backStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&backEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值失败" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
 														${orderStateEnum.desc }
+														</a>
 													</span>
 												</c:when>
 												<c:when test="${orderStateEnum.value == 2 }">
 													<span class="label label-secondary radius mark">
+													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderResult=${orderStateEnum.value }&arriveStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&arriveEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值进行" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
 														${orderStateEnum.desc }
+													</a>
 													</span>
 												</c:when>
 												<c:when test="${orderStateEnum.value == 4 }">
 													<span class="label label-warning radius mark">
+													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderResult=${orderStateEnum.value }&arriveStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&arriveEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值等待" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
 														${orderStateEnum.desc }
+													</a>
 													</span>
 												</c:when>
 												<c:otherwise>
 													<span class="label label-success radius mark">
+													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderResult=${orderStateEnum.value }&backStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&backEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值成功" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
 														${orderStateEnum.desc }
+													</a>
 													</span>
 												</c:otherwise>
 											</c:choose>

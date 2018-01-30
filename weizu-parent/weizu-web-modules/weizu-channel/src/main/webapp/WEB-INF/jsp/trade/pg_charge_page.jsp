@@ -148,7 +148,7 @@
 					<input id="rateId" name="rateId" type="hidden" value="">
 				</c:otherwise>
 			</c:choose>
-			<br>折扣：<span id="rateDiscount" class="c-red">${resultMap.pageMsg }</span>
+			<br>折扣：<span id="rateDiscount" class="c-red">${resultMap.pageMsg }</span>(不带票)
 		</div>
 	</div>
 	

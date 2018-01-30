@@ -148,40 +148,42 @@ public class AgencyController {
 					.getAccountByAgencyId(resultPo.getId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
 			
 			HttpSession session = request.getSession();
-			Map<String,Object> addressMap  = addressUtils.getAddresses(request, "utf-8");
-			String address = addressMap.get("address").toString();
 			Boolean isSupperUser = resultPo.getRootAgencyId() != null && resultPo.getRootAgencyId() == 0;
-//			System.out.println(address);
 			session.setAttribute("rootAgency", agencyAO.getRootAgencyById(resultPo.getId()));// 保存登陆实体到session中
-			
-			if(isSupperUser && !("南昌市".equals(address)  || "内网IP".equals(address))){//|| "上海市".equals(address)
-				Map<String,Object> loginMap = new HashMap<String, Object>();
-				loginMap.put("userName", agencyBackward.getUserName());
-				loginMap.put("userPass", agencyBackward.getUserPass());
-				loginMap.put("msg", "该账号已限制登陆地区");
-				return new ModelAndView("/agency/login_page", "loginMap", loginMap);
+			Map<String,Object> addressMap  = addressUtils.getAddresses(request, "utf-8");
+//			System.out.println(address);
+			if(addressMap != null ){
+				String address = addressMap.get("address").toString();
+//				System.out.println("address:"+address);
+				if(isSupperUser && StringHelper.isNotEmpty(address) && !(address.contains("南昌")  || address.contains("内网"))){//|| "上海市".equals(address)
+					Map<String,Object> loginMap = new HashMap<String, Object>();
+					loginMap.put("userName", agencyBackward.getUserName());
+					loginMap.put("userPass", agencyBackward.getUserPass());
+					loginMap.put("msg", "该账号已限制登陆地区");
+					return new ModelAndView("/agency/login_page", "loginMap", loginMap);
 //				model.addAttribute(loginMap);
 //				return "/agency/login_page";
-			}else{
-				String eventIp = addressMap.get("ip").toString();
-				//得到上一次的登陆日志
-				System.out.println("访问remoteAddr:"+request.getRemoteAddr()+"\t" + request.getRemoteUser());
-				WherePrams where = new WherePrams("agency_id", "=", resultPo.getId()).and("event_state", "=", LoginStateEnum.ING.getValue());
-				where.orderBy("event_time",WherePrams.DESC);
-				where.limit(0, 1);
-				//已经拦截了等出去的登陆
-				AccountEventPo eventPo = accountEventAO.getLastByAgency(resultPo.getId(), EventTypeEnum.AGENCY_LOGIN.getValue());
-				if(eventPo != null){
-					session.setAttribute("loginIpAddress", eventPo.getEventLocation());
-					session.setAttribute("loginTime", eventPo.getEventTime()==null?System.currentTimeMillis():DateUtil.formatAll(eventPo.getEventTime()));
 				}else{
-					session.setAttribute("loginIpAddress", address);
-				}
-				
-				//添加登陆日志
-				accountEventDao.add(new AccountEventPo(resultPo.getId(), EventTypeEnum.AGENCY_LOGIN.getValue(), System.currentTimeMillis(), address, eventIp, LoginStateEnum.ING.getValue()+""));
+					String eventIp = addressMap.get("ip").toString();
+					//得到上一次的登陆日志
+//					System.out.println("访问remoteAddr:"+request.getRemoteAddr()+"\t" + request.getRemoteUser());
+					WherePrams where = new WherePrams("agency_id", "=", resultPo.getId()).and("event_state", "=", LoginStateEnum.ING.getValue());
+					where.orderBy("event_time",WherePrams.DESC);
+					where.limit(0, 1);
+					//已经拦截了等出去的登陆
+					AccountEventPo eventPo = accountEventAO.getLastByAgency(resultPo.getId(), EventTypeEnum.AGENCY_LOGIN.getValue());
+					if(eventPo != null){
+						session.setAttribute("loginIpAddress", eventPo.getEventLocation());
+						session.setAttribute("loginTime", eventPo.getEventTime()==null?System.currentTimeMillis():DateUtil.formatAll(eventPo.getEventTime()));
+					}else{
+						session.setAttribute("loginIpAddress", address);
+					}
+					
+					//添加登陆日志
+					accountEventDao.add(new AccountEventPo(resultPo.getId(), EventTypeEnum.AGENCY_LOGIN.getValue(), System.currentTimeMillis(), address, eventIp, LoginStateEnum.ING.getValue()+""));
 //				int logAdd = accountEventDao.add(new AccountEventPo(resultPo.getId(), EventTypeEnum.AGENCY_LOGIN.getValue(), System.currentTimeMillis(), address, eventIp, LoginStateEnum.ING.getValue()));
 //				System.out.println("日志成功添加："+logAdd);
+				}
 			}
 			//超管登陆的时候，默认如果没有对公账户，就给他创建一个对公账户
 			if(chargeAccountPo1 == null && isSupperUser){

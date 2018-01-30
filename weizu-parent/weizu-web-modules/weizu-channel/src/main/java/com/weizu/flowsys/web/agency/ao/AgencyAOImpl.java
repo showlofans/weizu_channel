@@ -629,6 +629,9 @@ public class AgencyAOImpl implements AgencyAO {
 		if(aardto.getRateDiscountId() != null){
 			paramsMap.put("rateDiscountId", aardto.getRateDiscountId());
 		}
+		if(aardto.getChannelDiscountId() != null){
+			paramsMap.put("channelDiscountId", aardto.getChannelDiscountId());
+		}
 		if(aardto.getAgencyTag() != null){
 			paramsMap.put("agencyTag", aardto.getAgencyTag());
 		}
