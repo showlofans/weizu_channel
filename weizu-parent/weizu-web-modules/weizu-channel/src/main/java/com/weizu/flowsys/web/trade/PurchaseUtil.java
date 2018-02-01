@@ -34,7 +34,9 @@ public class PurchaseUtil {
 	public static Map<String, Object> getScopeCityByCarrier(String carrier){
 		if(carrier != null){
 		for ( Map<String,Object> map : ScopeCityEnum.toList()) {
-				if (map.get("desc").toString().contains(carrier.substring(0,carrier.length()-2))) {
+			String pStr = map.get("desc").toString();
+			pStr = pStr.substring(0,pStr.length()-1);
+				if(carrier.contains(pStr)){
 					Map<String, Object> resultMap = new HashMap<String, Object>(); 
 					resultMap.put("scopeCityCode", map.get("value").toString());
 					resultMap.put("scopeCityName", map.get("desc").toString());

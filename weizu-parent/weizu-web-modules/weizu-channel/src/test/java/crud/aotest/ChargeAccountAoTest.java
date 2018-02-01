@@ -7,6 +7,7 @@
 //import org.springframework.test.context.ContextConfiguration;
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
+//import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 //import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 //import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 //import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
@@ -52,9 +53,16 @@
 ////		ChargeAccountPo accouontPo = chargeAccountDao.selectRootAccountByAgencyId(21, 0);
 ////		System.out.println(accouontPo.getAccountBalance());
 ////	}
+////	@Test
+////	public void getAccountByTransferId(){
+////		ChargeAccountPo accouontPo = chargeAccountDao.getAccountByTransferId(1l);
+////		System.out.println(accouontPo.getAccountBalance());
+////	}
 //	@Test
-//	public void getAccountByTransferId(){
-//		ChargeAccountPo accouontPo = chargeAccountDao.getAccountByTransferId(1l);
+//	public void getAccountByAgencyId(){
+//		//wechat:246
+//		ChargeAccountPo accouontPo = chargeAccountAO.getAccountByAgencyId(231, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+//		System.out.println(accouontPo.getId());
 //		System.out.println(accouontPo.getAccountBalance());
 //	}
 ////	@Test

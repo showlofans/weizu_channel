@@ -1,7 +1,9 @@
 package com.weizu.flowsys.web.trade;
 
+import org.dom4j.io.SAXReader;
 import org.w3c.dom.NodeList;
 
+import com.weizu.flowsys.web.trade.constant.WXPayConfig;
 import com.weizu.web.foundation.MD5;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -10,6 +12,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -71,7 +74,7 @@ public class WXPayUtil {
       sb.append(map.get(key));
       sb.append('&');
     }
-    sb.append(System.getenv("signKey"));
+    sb.append(WXPayConfig.KEY);
     System.out.println("第二次签名内容:" + sb);
 //    System.out.println("第二次签名SING:" + MD5.getMessageDigest(sb.toString().getBytes()).toUpperCase());
     String sign="";
@@ -215,5 +218,41 @@ public class WXPayUtil {
       e.printStackTrace();
       return null;
     }
+  }
+  
+  /**
+ * @description: 解析回调的xml文件(https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=9_7)
+ * @param resultXml
+ * @return
+ * @author:微族通道代码设计人 宁强
+ * @createTime:2018年2月1日 下午5:10:09
+ */
+public static Map<String,Object> xmlToMap(String resultXml){
+	  String nonceStr;
+	  Map<String, Object> map = new HashMap<String, Object>();
+	  DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	  DocumentBuilder builder;
+	    try {
+	      builder = dbf.newDocumentBuilder();
+	      InputStream inputStream = new ByteArrayInputStream(resultXml.getBytes());
+	      org.w3c.dom.Document doc = builder.parse(inputStream); //
+	      // 下面开始读取
+	      org.w3c.dom.Element root = doc.getDocumentElement(); // 获取根元素
+	      
+	      
+	      NodeList nl = root.getElementsByTagName("return_code");
+	      org.w3c.dom.Element el = (org.w3c.dom.Element) nl.item(0);
+	      org.w3c.dom.Node nd = el.getFirstChild();
+	      nonceStr = nd.getNodeValue();
+	      
+	      map.put("prepay_id", nonceStr);
+	      
+	      
+	      return map;
+	    } catch (Exception e) {
+	      e.printStackTrace();
+	      return null;
+	    }
+//	  return map;
   }
 }

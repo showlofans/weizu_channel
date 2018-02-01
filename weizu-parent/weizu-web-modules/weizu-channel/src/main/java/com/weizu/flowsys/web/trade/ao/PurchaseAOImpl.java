@@ -180,12 +180,12 @@ public class PurchaseAOImpl implements PurchaseAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年8月4日 下午3:16:02
 	 */
-	private PurchasePo initPurchase(PgChargeVO pcVO) {
-		return new PurchasePo(pcVO.getChargeTel(), pcVO.getPgId().toString(), pcVO.getChargeTelDetail());
-	}
-	private PurchasePo initPurchase(TelChargeVO tcVO) {
-		return new PurchasePo(tcVO.getChargeTel(), tcVO.getTelProductId().toString(), tcVO.getChargeTelDetail());
-	}
+//	private PurchasePo initPurchase(PgChargeVO pcVO) {
+//		return new PurchasePo(pcVO.getChargeTel(), pcVO.getPgId().toString(), pcVO.getChargeTelDetail());
+//	}
+//	private PurchasePo initPurchase(TelChargeVO tcVO) {
+//		return new PurchasePo(tcVO.getChargeTel(), tcVO.getTelProductId().toString(), tcVO.getChargeTelDetail());
+//	}
 	
 	@Override
 	public String purchase(TelChargeVO tcVO, ChargeAccountPo chargeAccountPo) {
@@ -199,7 +199,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 		//已经当前登陆用户余额充足，开始充值流程
 		//在订单信息完全添加完之后，再调用接口进行充值
 		//先添加一个基本的，再批量添加父级代理商和订单的绑定
-		PurchasePo purchasePo = initPurchase(tcVO);
+//		PurchasePo purchasePo = initPurchase(tcVO);
+		PurchasePo purchasePo = new PurchasePo(tcVO.getChargeTel(), tcVO.getTelProductId().toString(), tcVO.getChargeTelDetail());
 		purchasePo.setPurchaseFor(tcVO.getChargeFor());
 		PurchasePo latestPurchasePo = purchaseDAO.getLatestOneByTel(tcVO.getChargeTel(), tcVO.getChargeFor());
 		if(latestPurchasePo != null){
@@ -275,7 +276,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 		String chargeTelDetail = tcVO.getChargeTelDetail();
 		chargeTelDetail = chargeTelDetail.substring(0, chargeTelDetail.length()-2);//去掉运营商,得到归属地
 		String desct = chargeTelDetail.substring(chargeTelDetail.length()-2);
-		String operatorNameDesc = OperatorNameEnum.getDescBy(desct);			//运营商名称
+//		String operatorNameDesc = OperatorNameEnum.getDescBy(desct);			//运营商名称
 		purchasePo.setChargeTelCity(chargeTelDetail);
 		Boolean isChannelStateCanceled = telchannel.getTelchannelState() == ChannelStateEnum.CLOSE.getValue();
 		if(isChannelStateCanceled){
@@ -319,6 +320,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				purResult = purchaseDAO.addPurchase(purchasePo);
 				return "充值失败，通道暂停";
 			}else{
+				
 				if(chargeDTO == null ){//充值返充值进行
 					//通道折扣充值，不去添加订单
 					return "订单提交失败";
@@ -520,7 +522,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 		//已经当前登陆用户余额充足，开始充值流程
 		//在订单信息完全添加完之后，再调用接口进行充值
 		//先添加一个基本的，再批量添加父级代理商和订单的绑定
-		PurchasePo purchasePo = initPurchase(pcVO);
+//		PurchasePo purchasePo = initPurchase(pcVO);
+		PurchasePo purchasePo = new PurchasePo(pcVO.getChargeTel(), pcVO.getPgId().toString(), pcVO.getChargeTelDetail());
 		purchasePo.setPurchaseFor(pcVO.getChargeFor());
 		int accountId = pcVO.getAccountId();		//订单产生方代理商
 		Integer orderResult = null;		//默认订单状态
@@ -550,7 +553,11 @@ public class PurchaseAOImpl implements PurchaseAO {
 					String scopeCityCode = ScopeCityEnum.QG.getValue();
 					if(!pcVO.getServiceType().equals(ServiceTypeEnum.NATION_WIDE.getValue())){
 						Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier(purchasePo.getChargeTelDetail());
-						scopeCityCode = scopeMap.get("scopeCityCode").toString();
+						if(scopeMap != null){
+							scopeCityCode = scopeMap.get("scopeCityCode").toString();
+						}else{
+							System.out.println("获得地区编码失败");
+						}
 					}
 //					String scopeCityCode = StringHelper.isNotEmpty(chargeTelDetail)?PurchaseUtil.getScopeCityByCarrier(chargeTelDetail).get("scopeCityCode").toString():null;
 					dataPo = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, epPo.getId(), Integer.parseInt(purchasePo.getPgId())));
