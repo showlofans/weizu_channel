@@ -17,4 +17,10 @@ public class WXPayConfig {
     public static final String TRADETYPE = "JSAPI";  
     //微信统一下单接口地址  
     public static final String PAY_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";  
+    //微信退款申请地址
+    public static final String REFUND_URL = "https://api.mch.weixin.qq.com/secapi/pay/refund";  
+    
+    //wechat对应的账户id
+    public static final Integer ACCOUNTID = 246;  
+    
 }

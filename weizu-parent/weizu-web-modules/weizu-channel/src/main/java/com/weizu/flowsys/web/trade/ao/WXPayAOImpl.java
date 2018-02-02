@@ -1,6 +1,8 @@
 package com.weizu.flowsys.web.trade.ao;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import javax.annotation.Resource;
@@ -38,12 +40,15 @@ import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
+import com.weizu.flowsys.web.trade.WXPayUtil;
+import com.weizu.flowsys.web.trade.constant.WXPayConfig;
 import com.weizu.flowsys.web.trade.dao.AccountPurchaseDao;
 import com.weizu.flowsys.web.trade.dao.ChargeLogDao;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.AccountPurchasePo;
 import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
+import com.weizu.web.foundation.http.HttpRequest;
 
 /**
  * @description: 微信支付业务
@@ -231,6 +236,49 @@ public class WXPayAOImpl implements WXPayAO {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public String refund(PurchasePo purchasePo) {
+		Map<String,Object> reqMap = new TreeMap<String,Object>();
+		reqMap.put("appid", WXPayConfig.APPID);
+		 reqMap.put("mch_id", WXPayConfig.MCH_ID);
+		 reqMap.put("nonce_str", WXPayUtil.getNonce_str());
+		 reqMap.put("out_trade_no", purchasePo.getOrderId());
+		 reqMap.put("out_refund_no", purchasePo.getOrderId());
+		 Integer totalFee = (int) NumberTool.mul(100, purchasePo.getOrderAmount());
+		 reqMap.put("total_fee", totalFee); //订单总金额，单位为分
+		 reqMap.put("refund_fee", totalFee); //订单总金额，单位为分
+		 reqMap.put("refund_desc", purchasePo.getOrderResultDetail()); //订单总金额，单位为分
+		 String result = "error";
+		 try {
+			String reqStr = WXPayUtil.map2Xml(reqMap);
+			 System.out.println("微信请求参数："+ reqStr);
+			  String resultXml = HttpRequest.sendPost(WXPayConfig.REFUND_URL, reqStr);
+			  
+			  Map<String,Object> map = WXPayUtil.readStringXmlOut(resultXml);
+			  System.out.println("微信请求返回:" + resultXml);
+			  String returnCode = WXPayUtil.getReturnCode(resultXml);
+			  if("SUCCESS".equals(returnCode)){
+				  String resultCode = map.get("result_code").toString();
+				  if("SUCCESS".equals(resultCode)){//提交请求成功
+					  result = "success";
+				  }else{
+					  System.out.println(map.get("err_code").toString() + "<----->" + map.get("err_code_des").toString());
+				  }
+				  System.out.println("退款平台订单号:"+ map.get("out_trade_no").toString());
+				  System.out.println("sign签名:"+ map.get("sign").toString());
+				  System.out.println("退款单号:"+ map.get("refund_id").toString());
+				  System.out.println("退款金额:"+ map.get("refund_fee").toString());
+			  }else{
+				  System.out.println(returnCode + ":"+map.get("return_msg").toString());
+			  }
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	     
+		 return result;
 	}
 	
 }

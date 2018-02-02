@@ -5,14 +5,18 @@ import java.util.Map;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
+
 //import org.weizu.api.facet.orderState.PageOrder;
 import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelPo;
+import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
+import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.flowsys.web.http.ParamsEntityWeiZu;
 import com.weizu.flowsys.web.http.weizu.OrderStateResult;
 import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
@@ -41,6 +45,17 @@ public interface PurchaseAO {
 	 * @createTime:2017年12月2日 下午2:15:34
 	 */
 	String purchase(TelChargeVO tcVO, ChargeAccountPo accoutPo);
+	
+	/**
+	 * @description: 通过接口向上提单
+	 * @param epPo
+	 * @param purchasePo
+	 * @param pc
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年2月2日 下午2:14:28
+	 */
+	public ChargeDTO chargeByBI(ExchangePlatformPo epPo,PurchasePo purchasePo,ProductCodePo pc);
 	
 	
 	/**

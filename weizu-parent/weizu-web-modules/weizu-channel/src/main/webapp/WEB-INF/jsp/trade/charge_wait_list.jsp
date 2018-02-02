@@ -212,6 +212,7 @@
 							</a>
 							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeState(this,'0')" href="javascript:;" title="失败">
 								<input type="hidden" value="${purchase.orderId }" >
+								<%-- <input type="hidden" value="${purchase.agencyName }" > --%>
 								<i class="Hui-iconfont">&#xe6e5;</i>
 							</a> 
 							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="ajaxCommit(this,'${purchase.orderId }','${purchase.chargeTelDetail }','${purchase.fromAccountId }')" href="javascript:;" title="提交">
@@ -396,6 +397,8 @@ function ajaxCommit(vart,orderId,chargeTelDetail,accountId,billType){
 /**设置状态*/
 function changeState(vart,state){
 	var orderId = $(vart).children().eq(0).val();
+	/* var agencyName = $(vart).children().eq(1).val();
+	alert(agencyName); */
 	var tag = "";
 	var msg='确认设置成功吗？';
 	var msgStr = '手动成功';

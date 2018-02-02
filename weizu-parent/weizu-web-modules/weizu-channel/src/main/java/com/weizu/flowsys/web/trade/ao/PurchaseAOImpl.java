@@ -578,7 +578,6 @@ public class PurchaseAOImpl implements PurchaseAO {
 		}
 		Long orderId = null;
 		Long currentTime = System.currentTimeMillis();
-		ChargeDTO chargeDTO = null;
 		try {
 			OrderUril ou1 = new OrderUril(1);
 			orderId = ou1.nextId();
@@ -603,6 +602,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 		}
 		purchasePo.setChargeTelCity(chargeTelCity);
 		Boolean isChannelStateCanceled = channel.getChannelState() == ChannelStateEnum.CLOSE.getValue();
+		ChargeDTO chargeDTO = null;
 		if(isChannelStateCanceled){
 			orderResult = OrderStateEnum.DAICHONG.getValue();
 			orderResultDetail = "通道暂停等待";
@@ -1014,6 +1014,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 	 * @createTime:2017年8月17日 下午5:36:19
 	 */
 	public ChargeDTO chargeByBI(ExchangePlatformPo epPo,PurchasePo purchasePo,ProductCodePo pc) {
+		if(pc == null || purchasePo == null || epPo == null){
+			return null;
+		}
+		
 		BaseInterface bi = null;
 		ChargeDTO chargeDTO = null;
 		boolean canChargeTel = valiUser.checkChargeTel(purchasePo.getChargeTel(), purchasePo.getAccountId());

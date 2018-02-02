@@ -37,6 +37,13 @@ public class WeChatURL extends BaseURL {
 	 * <br>/flowsys/wechat/wxNotify.do
 	 */
 	public static final String WXNOTIFY = "/wxNotify" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 订单失败退款
+	 * <br>/flowsys/wechat/failByMe.do
+	 */
+	public static final String FAILBYME = "/failByMe" + DYNAMIC_WEB_SUFFIX;
+	
+	
 	
 	
 }
