@@ -74,7 +74,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 		boolean unchargeNotSave = orderResult == OrderStateEnum.UNCHARGE.getValue();
 		String res = "error";
 		
-		if(unchargeNotSave){//手动失败，要返款
+		if(unchargeNotSave || WXPayConfig.ACCOUNTID.equals(purchasePo.getAccountId())){//接口失败，微信用户或者设置了保存订单，设置为充值等待
 			SystemConfPo syspo = systemConfAO.getByKey("fail_back");
 			boolean setWait = syspo != null && StringHelper.isNotEmpty(syspo.getConfValue()) && CallBackEnum.NEGATIVE.getValue().equals(Integer.parseInt(syspo.getConfValue()));
 			if(setWait){//失败设置为充值等待

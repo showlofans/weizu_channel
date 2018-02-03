@@ -173,6 +173,7 @@
 			</ul>
 		</dd>
 	</dl>
+	<c:if test="${loginContext.userName != 'wechat' }">
 	<dl id="menu-comments">
 		<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe726;</i> 在线充值<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 		<dd>
@@ -184,6 +185,7 @@
 			</ul>
 		</dd>
 	</dl>
+	</c:if>
 	<dl id="menu-member">
 		<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe670;</i> 账户管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 		<dd>

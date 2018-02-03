@@ -41,7 +41,12 @@ public class WeChatURL extends BaseURL {
 	 * 订单失败退款
 	 * <br>/flowsys/wechat/failByMe.do
 	 */
-	public static final String FAILBYME = "/failByMe" + DYNAMIC_WEB_SUFFIX;
+//	public static final String FAILBYME = "/failByMe" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 订单失败退款
+	 * <br>/flowsys/wechat/wx_refund_notify.do
+	 */
+	public static final String WX_REFUND_NOTIFY = "/wx_refund_notify" + DYNAMIC_WEB_SUFFIX;
 	
 	
 	

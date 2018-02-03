@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSON;
@@ -28,6 +29,7 @@ import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
+import com.weizu.flowsys.util.apiEncode.Encrypt;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
@@ -47,7 +49,9 @@ import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.flowsys.web.trade.pojo.RatePgPo;
 import com.weizu.flowsys.web.trade.url.WeChatURL;
+import com.weizu.web.foundation.MD5;
 import com.weizu.web.foundation.String.StringHelper;
+import com.weizu.web.foundation.hash.Hash;
 import com.weizu.web.foundation.http.HttpRequest;
 
 /**
@@ -125,9 +129,11 @@ public class WeChatController {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2018年2月1日 上午10:23:38
 	 */
+	@Transactional
 	@RequestMapping(value=WeChatURL.GETPREPAYID)
 	public void getPrepayId(HttpServletResponse response,PgChargeVO pgChargeVO,String openid){
 		String jsonStr = "error";
+		System.out.println(pgChargeVO.toString());
 		if(pgChargeVO.getAccountId() != null){
 //			ChargeAccountPo accountPo = chargeAccountAo.getAccountById(pgChargeVO.getAccountId());
 			//充值
@@ -143,7 +149,7 @@ public class WeChatController {
 				     reqMap.put("body", new String("微族充值中心-流量充值".getBytes("UTF-8")));
 				     reqMap.put("out_trade_no", orderId);
 				     
-				     reqMap.put("total_fee", NumberTool.mul(pgChargeVO.getOrderAmount(), 100)); //订单总金额，单位为分
+				     reqMap.put("total_fee", (int)NumberTool.mul(pgChargeVO.getOrderAmount(), 100)); //订单总金额，单位为分
 //				     reqMap.put("spbill_create_ip", "192.168.0.1"); //用户端ip
 				     reqMap.put("notify_url", WXPayConfig.NOTIFY_URL); //通知地址
 				     reqMap.put("trade_type", WXPayConfig.TRADETYPE);
@@ -187,6 +193,7 @@ public class WeChatController {
 			}
 		}
 		try {
+			System.out.println("返回的参数："+jsonStr);
 			response.getWriter().print(jsonStr);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -215,86 +222,89 @@ public class WeChatController {
 //        Map<String,Object> resultMap = WXPayUtil.xmlToMap(sb.toString());
         Map<String,Object> resultMap = WXPayUtil.readStringXmlOut(sb.toString());
         
-        String returnCode = resultMap.get("return_code").toString();
         int successTag = 0;
-        if(returnCode.equals("SUCCESS")){
-            String resultCode = resultMap.get("result_code").toString();
-            if(resultCode.equals("SUCCESS")){
-            	  SortedMap<String, String> packageParams = new TreeMap<String, String>();
-                  packageParams.put("appid", resultMap.get("appid").toString());
+        if(resultMap != null){
+        	String returnCode = resultMap.get("return_code").toString();
+        	if(returnCode.equals("SUCCESS")){
+        		String resultCode = resultMap.get("result_code").toString();
+        		if(resultCode.equals("SUCCESS")){
+        			SortedMap<String, String> packageParams = new TreeMap<String, String>();
+        			packageParams.put("appid", resultMap.get("appid").toString());
 //                  String attachStr = resultMap.get("attach").toString();
 //                  packageParams.put("attach", resultMap.get("attach").toString());
 //                  packageParams.put("bank_type", resultMap.get("bank_type").toString());
-                  packageParams.put("cash_fee", resultMap.get("cash_fee").toString());//分
+        			packageParams.put("cash_fee", resultMap.get("cash_fee").toString());//分
 //                  packageParams.put("fee_type", resultMap.get("fee_type").toString());
 //                  packageParams.put("is_subscribe", resultMap.get("is_subscribe").toString());
 //                  packageParams.put("mch_id", resultMap.get("mch_id").toString());
 //                  packageParams.put("nonce_str", resultMap.get("nonce_str").toString());
 //                  packageParams.put("openid", resultMap.get("openid").toString());
-                  String orderIdStr = resultMap.get("out_trade_no").toString();
-                  packageParams.put("out_trade_no", orderIdStr);
-                  packageParams.put("result_code", resultMap.get("result_code").toString());
-                  packageParams.put("return_code", resultMap.get("return_code").toString());
+        			String orderIdStr = resultMap.get("out_trade_no").toString();
+        			packageParams.put("out_trade_no", orderIdStr);
+        			packageParams.put("result_code", resultMap.get("result_code").toString());
+        			packageParams.put("return_code", resultMap.get("return_code").toString());
 //                  packageParams.put("time_end", resultMap.get("time_end").toString());
-                  packageParams.put("total_fee", resultMap.get("total_fee").toString());//分
+        			packageParams.put("total_fee", resultMap.get("total_fee").toString());//分
 //                  packageParams.put("trade_type", resultMap.get("trade_type").toString());
-                  String transaction_id = resultMap.get("transaction_id").toString();
-                  packageParams.put("transaction_id", transaction_id);
+        			String transaction_id = resultMap.get("transaction_id").toString();
+        			packageParams.put("transaction_id", transaction_id);
 //                  String sign = WXPayUtil.getSign(resultMap);
-                  String originSign = resultMap.get("sign").toString();
+        			String originSign = resultMap.get("sign").toString();
 //                  if(sign.equals(originSign)){
-                	  //支付成功后，把状态改为进行，调用相应的通道平台向上提单
-                	  //(产品编码的获取,直接从订单表中取？)
+        			//支付成功后，把状态改为进行，调用相应的通道平台向上提单
+        			//(产品编码的获取,直接从订单表中取？)
 //        			  Long rateId = Long.parseLong(attachStr);
-                	  Long orderId = Long.parseLong(orderIdStr);
-                	  PurchasePo purchasePo = purchaseDAO.get(orderId);
-                	  if(purchasePo != null){
-                		  Integer epId = purchasePo.getEpId();
-                		  if(epId != null){
-                			  ExchangePlatformPo epPo = exchangePlatformDao.get(epId);
-                			  ProductCodePo dataPo = null;
-                			  if(EpEncodeTypeEnum.WITH_CODE.getValue().equals(epPo.getEpEncodeType())){
-                				  Map<String,Object> map = PurchaseUtil.getScopeCityByCarrier(purchasePo.getChargeTelDetail());
-                				  String scopeCityCode = map.get("scopeCityCode").toString();
-                				  dataPo = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, epPo.getId(), Integer.parseInt(purchasePo.getPgId())));
-                			  }else{
-                				  dataPo = productCodeAO.getOneProductCodeByPg(Integer.parseInt(purchasePo.getPgId()));
-                			  }
-                			  
-                			  ChargeDTO chargeDTO = purchaseAO.chargeByBI(epPo, purchasePo, dataPo);
-                			  Integer orderResult = null;
-                			  String orderResultDetail = "";
-                			  if(chargeDTO != null){
-            					if(chargeDTO.getTipCode().equals(OrderResultEnum.SUCCESS.getCode()) ){
-            						orderResult = OrderStateEnum.CHARGING.getValue();
-            						orderResultDetail = OrderStateEnum.CHARGING.getDesc();
-            						ChargeOrder co = chargeDTO.getChargeOrder();
-            						if(co != null){
-            							purchasePo.setOrderIdFrom(transaction_id);//将openid换成支付返回的支付id
-            							purchasePo.setOrderIdApi(co.getOrderIdApi());
-            							successTag++;
-            						}
-            					}else{
-            						orderResult = OrderStateEnum.DAICHONG.getValue();
-            						orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+chargeDTO.getTipMsg();
-            					}
-            				}else{
-            					orderResult = OrderStateEnum.DAICHONG.getValue();
-            					orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+"上游提交直接返失败";
-            				}
-                			  purchasePo.setOrderResult(orderResult);
-                			  purchasePo.setOrderResultDetail(orderResultDetail);
-                			  successTag += purchaseDAO.updatePurchaseState(purchasePo);
-                		  }
-                	  }
-                	  System.out.println("签名:"+originSign);
+        			Long orderId = Long.parseLong(orderIdStr);
+        			PurchasePo purchasePo = purchaseDAO.get(orderId);
+        			if(purchasePo != null){
+        				Integer epId = purchasePo.getEpId();
+        				if(epId != null){
+        					ExchangePlatformPo epPo = exchangePlatformDao.get(epId);
+        					ProductCodePo dataPo = null;
+        					if(EpEncodeTypeEnum.WITH_CODE.getValue().equals(epPo.getEpEncodeType())){
+        						Map<String,Object> map = PurchaseUtil.getScopeCityByCarrier(purchasePo.getChargeTelDetail());
+        						String scopeCityCode = map.get("scopeCityCode").toString();
+        						dataPo = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode, epPo.getId(), Integer.parseInt(purchasePo.getPgId())));
+        					}else{
+        						dataPo = productCodeAO.getOneProductCodeByPg(Integer.parseInt(purchasePo.getPgId()));
+        					}
+        					
+//        					ChargeDTO chargeDTO = purchaseAO.chargeByBI(epPo, purchasePo, dataPo);
+//        					Integer orderResult = null;
+//        					String orderResultDetail = "";
+//        					if(chargeDTO != null){
+//        						if(chargeDTO.getTipCode().equals(OrderResultEnum.SUCCESS.getCode()) ){
+//        							orderResult = OrderStateEnum.CHARGING.getValue();
+//        							orderResultDetail = OrderStateEnum.CHARGING.getDesc();
+//        							ChargeOrder co = chargeDTO.getChargeOrder();
+//        							if(co != null){
+////        								purchasePo.setOrderIdFrom(transaction_id);//将openid换成支付返回的支付id
+//        								purchasePo.setOrderIdApi(co.getOrderIdApi());
+//        								successTag++;
+//        							}
+//        						}else{
+//        							orderResult = OrderStateEnum.DAICHONG.getValue();
+//        							orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+chargeDTO.getTipMsg();
+//        						}
+//        					}else{
+//        						orderResult = OrderStateEnum.DAICHONG.getValue();
+//        						orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+"上游提交直接返失败";
+//        					}
+//        					purchasePo.setOrderResult(orderResult);
+//        					purchasePo.setOrderResultDetail(orderResultDetail);
+//        					successTag += purchaseDAO.updatePurchaseState(purchasePo);
+        					successTag++;
+        				}
+        			}
+        			System.out.println("签名:"+originSign);
 //                	  System.out.println("签名正确");
 //                  }
-            }else{
-            	System.out.println("支付失败");
-            }
-        }else{
-        	System.out.println("接收支付结果失败");
+        		}else{
+        			System.out.println("支付失败");
+        		}
+        	}else{
+        		System.out.println("接收支付结果失败");
+        	}
         }
         Map<String,Object> returnMap = new HashMap<String, Object>();
         if(successTag > 1){
@@ -313,4 +323,81 @@ public class WeChatController {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * @description: 微信返款结果推送
+	 * @param request
+	 * @param response
+	 * @author:微族通道代码设计人 宁强
+	 * @throws UnsupportedEncodingException 
+	 * @createTime:2018年2月3日 上午11:15:34
+	 */
+	@Transactional
+	@RequestMapping(value=WeChatURL.WX_REFUND_NOTIFY)
+	public void wxRefundNotify(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException{
+		//输入流读取推送过来的xml文件
+		StringBuilder sb = new StringBuilder();
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader((ServletInputStream)request.getInputStream()));
+			String line = null;
+			while((line = br.readLine())!=null){
+			    sb.append(line);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+//		        Map<String,Object> resultMap = WXPayUtil.xmlToMap(sb.toString());
+        Map<String,Object> resultMap = WXPayUtil.readStringXmlOut(sb.toString());
+        String returnCode = resultMap.get("return_code").toString();
+        if(returnCode.equals("SUCCESS")){
+        	Map<String,Object> returnMap = new HashMap<String, Object>();
+        	String appid = resultMap.get("appid").toString();
+        	String mch_id = resultMap.get("mch_id").toString();
+        	String nonce_str = resultMap.get("nonce_str").toString();
+        	String reqInfo = resultMap.get("req_info").toString();
+        	
+        	String baseDecode = Hash.BASE_UTIL.decode(reqInfo);
+    		System.out.println("BASE_UTIL解密结果："+ baseDecode);
+        	byte[] keys = MD5.getMd5("2IBtBXdrqC3kCBs4gaceL7nl2nnFadQv", MD5.LOWERCASE, "UTF-8").getBytes();
+        	String reqInfoXml = Encrypt.Aes256Decode(baseDecode.getBytes(), keys);
+        	System.out.println("aes解密后结果："+ reqInfoXml);
+        	Map<String,Object> reqInfoMap = WXPayUtil.readStringXmlOut(reqInfoXml);
+        	int upRes = 0;
+        	if(reqInfoMap != null){
+        		String refund_status = reqInfoMap.get("refund_status").toString();
+        		String out_trade_no = reqInfoMap.get("out_trade_no").toString();
+        		String orderResultDetail = "微信支付-";
+        		if("SUCCESS".equals(refund_status)){
+        			orderResultDetail += "退款成功";
+        		}else if("CHANGE".equals(refund_status)){
+        			orderResultDetail += "退款异常";
+        		}
+        		else if("REFUNDCLOSE".equals(refund_status)){
+        			orderResultDetail += "退款关闭";
+        		}
+        		PurchasePo purchasePo1 = purchaseDAO.getOnePurchase(Long.parseLong(out_trade_no));
+        		if(purchasePo1 != null){
+        			purchasePo1.setOrderBackTime(System.currentTimeMillis());
+        			purchasePo1.setOrderResultDetail(orderResultDetail);
+        			upRes = purchaseDAO.updatePurchaseState(purchasePo1);
+        		}
+        	}
+        	if(upRes > 0){
+        		returnMap.put("return_code", "SUCCESS");
+        		returnMap.put("return_msg", "OK");
+        	}else{
+        		returnMap.put("return_code", "FAIL");
+        	}
+        	try {
+    			String returnXMLStr = WXPayUtil.map2XmlNoSign(returnMap);
+    			System.out.println("返回给微信返款的的参数"+returnXMLStr);
+    			response.getWriter().print(returnXMLStr);
+    		} catch (UnsupportedEncodingException e) {
+    			e.printStackTrace();
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+        }
+	}
+	
 }

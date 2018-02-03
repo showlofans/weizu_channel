@@ -326,9 +326,13 @@ public class WXPayUtil {
 //              }
 //          }
       } catch (DocumentException e) {
-          e.printStackTrace();
+    	  System.out.println("读取xml字符串出错");
+    	  map = null;
+//          e.printStackTrace();
       } catch (Exception e) {
-          e.printStackTrace();
+    	  System.out.println("读取xml字符串出错");
+    	  map = null;
+//          e.printStackTrace();
       }
       return map;
   }

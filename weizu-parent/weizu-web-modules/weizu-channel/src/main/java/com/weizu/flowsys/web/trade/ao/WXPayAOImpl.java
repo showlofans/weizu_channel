@@ -259,19 +259,21 @@ public class WXPayAOImpl implements WXPayAO {
 			  Map<String,Object> map = WXPayUtil.readStringXmlOut(resultXml);
 			  System.out.println("微信请求返回:" + resultXml);
 			  String returnCode = WXPayUtil.getReturnCode(resultXml);
-			  if("SUCCESS".equals(returnCode)){
-				  String resultCode = map.get("result_code").toString();
-				  if("SUCCESS".equals(resultCode)){//提交请求成功
-					  result = "success";
+			  if(map != null){
+				  if("SUCCESS".equals(returnCode)){
+					  String resultCode = map.get("result_code").toString();
+					  if("SUCCESS".equals(resultCode)){//提交请求成功
+						  result = "success";
+					  }else{
+						  System.out.println(map.get("err_code").toString() + "<----->" + map.get("err_code_des").toString());
+					  }
+					  System.out.println("退款平台订单号:"+ map.get("out_trade_no").toString());
+					  System.out.println("sign签名:"+ map.get("sign").toString());
+					  System.out.println("退款单号:"+ map.get("refund_id").toString());
+					  System.out.println("退款金额:"+ map.get("refund_fee").toString());
 				  }else{
-					  System.out.println(map.get("err_code").toString() + "<----->" + map.get("err_code_des").toString());
+					  System.out.println(returnCode + ":"+map.get("return_msg").toString());
 				  }
-				  System.out.println("退款平台订单号:"+ map.get("out_trade_no").toString());
-				  System.out.println("sign签名:"+ map.get("sign").toString());
-				  System.out.println("退款单号:"+ map.get("refund_id").toString());
-				  System.out.println("退款金额:"+ map.get("refund_fee").toString());
-			  }else{
-				  System.out.println(returnCode + ":"+map.get("return_msg").toString());
 			  }
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
