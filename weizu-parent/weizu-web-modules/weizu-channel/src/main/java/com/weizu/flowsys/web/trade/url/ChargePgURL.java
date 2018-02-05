@@ -85,6 +85,10 @@ public class ChargePgURL extends BaseURL {
 	 */
 	public static final String UPDATE_PURCHASE_STATE = "/update_purchase_state" + DYNAMIC_WEB_SUFFIX;
 	/**
+	 * 成功的手动退款
+	 */
+	public static final String REFUND = "/refund" + DYNAMIC_WEB_SUFFIX;
+	/**
 	 * 获得充值通道
 	 */
 	public static final String AJAX_CHARGE_CHANNEL = "/ajax_charge_channel" + DYNAMIC_WEB_SUFFIX;

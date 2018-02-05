@@ -896,9 +896,29 @@ public class ChargePgController {
 	 * @createTime:2017年8月5日 下午6:06:13
 	 */
 	@RequestMapping(value=ChargePgURL.UPDATE_PURCHASE_STATE)
-	@ResponseBody
+//	@ResponseBody
 	public void updatePurchaseState(Long orderId,Integer orderResult, String orderResultDetail,HttpServletResponse response){
 		String updateRes = accountPurchaseAO.updatePurchaseStateByMe(orderId, orderResult, orderResultDetail,null);
+		response.setContentType("text/html;charset=utf-8");
+		try {
+			response.getWriter().print(updateRes);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * @description: 手动退款（不更新订单状态，更新订单详情）
+	 * @param orderId
+	 * @param orderResult
+	 * @param orderResultDetail
+	 * @param response
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年2月5日 上午9:21:13
+	 */
+	@RequestMapping(value=ChargePgURL.REFUND)
+//	@ResponseBody
+	public void refund(Long orderId,Integer orderResult, String orderResultDetail,HttpServletResponse response){
+		String updateRes = accountPurchaseAO.refund(orderId, orderResult, orderResultDetail, System.currentTimeMillis());
 		response.setContentType("text/html;charset=utf-8");
 		try {
 			response.getWriter().print(updateRes);

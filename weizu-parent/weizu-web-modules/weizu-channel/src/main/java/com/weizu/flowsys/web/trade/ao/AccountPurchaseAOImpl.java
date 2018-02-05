@@ -254,6 +254,19 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 		return "error";
 	}
 
+	@Override
+	public String refund(Long orderId, Integer orderResult,
+			String orderResultDetail, Long realBackTime) {
+		//更新连接表
+		int ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
+		//更新订单表
+		int pur = purchaseDAO.updatePurchaseState(new PurchasePo(orderId, null, realBackTime, orderResult, null, orderResultDetail));
+		if(pur + ap > 1){
+			return "success";
+		}
+		return "error_refund";
+	}
+
 //	@Override
 //	public String batchUpdatePurchaseState(PurchaseVO purchaseVO) {
 //		String res = "error";

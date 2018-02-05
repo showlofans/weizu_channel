@@ -138,6 +138,7 @@
 					<th width="80">结果描述</th>
 					<th width="60">扣款</th>
 					<th width="60">成本</th>
+					<th width="40">操作</th>
 					<c:if test="${loginContext.rootAgencyId == 0 }">
 						<th width="120">通道名称</th>
 					</c:if>
@@ -207,6 +208,12 @@
 						<td>${purchase.orderStateDetail }</td>
 						<td>${purchase.orderPrice }</td>
 						<td>${purchase.orderAmount }</td>
+						<td class="f-14 td-manage success">
+							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="refund(this)" href="javascript:;" title="退款">
+								<input type="hidden" value="${purchase.orderId }" >
+								<i class="Hui-iconfont">&#xe6e6;</i>
+							</a>
+						</td>
 						<c:if test="${loginContext.rootAgencyId == 0 }"><td>${purchase.channelName }</td> 
 						</c:if>
 						<td>
@@ -304,7 +311,36 @@ function batchPush(){
 		}
 	}); 
 }
-
+/**手动退款*/
+function refund(vart){
+	var orderId = $(vart).children().eq(0).val();
+	var state = 1;//不更新订单状态
+	var msg='确认手动退款吗？';
+	var msgStr = '手动退款';//更新订单详情
+	layer.confirm(msg,function(index){
+		$.ajax({
+			type: 'POST',
+			url: '/flowsys/chargePg/refund.do',
+			data: {orderId:orderId, orderResult:state,orderResultDetail:msgStr},
+			async: false,
+			success: function(data){
+				//tag = data;
+				 //alert(data);
+				if(data=="success")
+				{
+					layer.msg('手动修改成功',{icon:1,time:1000});
+					location.reload();
+				}else{
+					layer.msg('手动修改失败',{icon:1,time:1000});
+				}
+			},
+			error:function(data) {
+				console.log(data.msg);
+			},
+		});		
+	});
+	
+}	
 /**导出列表*/
 /* function exportS(){
 	$.ajax({
