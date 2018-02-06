@@ -292,18 +292,21 @@ function batchCommit(){
 			layer.msg('不能批量提交过多订单最大为 15');
 		} */
 		else{
-			$.ajax({
-				type: 'POST',
-				url: "/flowsys/chargePg/batch_commit_order.do",
-				//dataType: 'json',
-				data: $('form').serialize(),
-				success: function(resp){
-					location.reload();
-				},
-				error:function(resp) {
-					console.log(resp.msg);
-				}
-			}); 
+			layer.confirm("确认批量提交这"+totalRecordLong+"条记录吗",function(index){
+				$.ajax({
+					type: 'POST',
+					url: "/flowsys/chargePg/batch_commit_order.do",
+					//dataType: 'json',
+					data: $('form').serialize(),
+					success: function(resp){
+						location.reload();
+					},
+					error:function(resp) {
+						console.log(resp.msg);
+					}
+				}); 
+			})
+			
 		}
 }
 /**批量修改状态*/

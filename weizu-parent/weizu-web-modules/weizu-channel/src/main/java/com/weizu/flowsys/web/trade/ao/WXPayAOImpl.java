@@ -170,7 +170,7 @@ public class WXPayAOImpl implements WXPayAO {
 				System.out.println("调用接口异常，设置城市异常");
 				return null;
 			}
-			purchasePo.setOrderResult(OrderStateEnum.DAICHONG.getValue());
+			purchasePo.setOrderResult(OrderStateEnum.DAICHONG.getValue());//不在等待中，无法手动失败，成功）
 			purchasePo.setOrderResultDetail(orderResultDetail);
 			
 			int purResult = purchaseDAO.addPurchase(purchasePo);

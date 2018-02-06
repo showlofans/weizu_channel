@@ -1,0 +1,31 @@
+在Unix下，非root用户不能监听1024以下的端口号，这个Apache服务器就没办法绑定在80端口下。所以这里需要使用Linux的端口转发机制，把到80端口的服务请求都转到8080端口上。
+端口转发
+firewall-cmd --query-masquerade # 检查是否允许伪装IP
+firewall-cmd --add-masquerade   # 允许防火墙伪装IP
+firewall-cmd --remove-masquerade# 禁止防火墙伪装IP
+
+ firewall-cmd --add-forward-port=port=80:proto=tcp:toport=8082
+
+sudo firewall-cmd --reload
+
+nginx -s stop
+nginx -c /usr/local/webserver/nginx/conf/nginx.conf
+
+nginx编译模块
+./configure --prefix=/usr/local/webserver/nginx --add-module=/usr/local/webserver/nginx/nginx_sticky --with-http_stub_status_module --with-http_ssl_module --with-http_realip_module --with-openssl=/usr/local/webserver/openssl-1.0.2n
+
+/usr/local/webserver/nginx/sbin/
+
+需要将这个证书链包裹与服务器证书合并成一个文件。在这个文件里，服务器证书需要出现在认证方证书链的前面：
+
+$ cat www.example.com.crt bundle.crt > www.example.com.chained.crt
+
+
+openssl-1.0.2k-8.el7.x86_64
+
+
+ssl证书+http_ssl_module+openssl升级+linux端口转发（离开nginx，tomcat独立处理）
+
+小程序架构：订单记录，流量说明，问题售后
+
+将待冲改为未冲（只显示在订单列表中，不在等待中，无法手动失败，成功）
