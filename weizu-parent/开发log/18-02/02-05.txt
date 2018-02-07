@@ -19,7 +19,9 @@ return 444;
 }
 
 
---prefix=/usr/local/webserver/nginx --with-openssl=/usr/include/openssl --add-module=/usr/local/webserver/nginx/nginx_sticky --with-http_ssl_module
+--prefix=/usr/local/webserver/nginx --add-module=/usr/local/webserver/nginx/nginx_sticky --with-http_ssl_module
+
+--with-openssl=/usr/bin/openssl
 
 CORE_INCS="$CORE_INCS $OPENSSL/.openssl/include"
             CORE_DEPS="$CORE_DEPS $OPENSSL/.openssl/include/openssl/ssl.h"

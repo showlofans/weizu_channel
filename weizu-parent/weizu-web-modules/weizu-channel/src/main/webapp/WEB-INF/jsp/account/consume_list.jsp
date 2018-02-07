@@ -33,8 +33,9 @@
 <body onl>
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 代理商管理 <span class="c-gray en">&gt;</span>消费列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" ><i class="Hui-iconfont">&#xe6a6;</i></a></nav>
 <div class="page-container">
-	<form action="/flowsys/account/consume_list.do" method="post" id="formD" name="dataListForm">
+	<form class="form form-horizontal" action="/flowsys/account/consume_list.do" method="post" id="formD" name="dataListForm">
 		<div class="text-c">
+		<div class="row cl formControls">
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
 			显示模式:
 			<span class="select-box inline">
@@ -54,10 +55,6 @@
 				</c:forEach>
 			</select>
 			</span>
-			提交时间：
-			<input type="text" style="width:150px" class="input-text" name="startTimeStr"  value="${resultMap.searchParams.startTimeStr }"  onfocus="var endTimeStr=$dp.$('endTimeStr');WdatePicker({onpicked:function(){endTimeStr.focus();getConsume()},autoPickDate:true,startDate:'%y-%M-%d 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss' })"/>
-	            <em class="inputto">至</em>
-	        <input style="width:150px" type="text"  class="input-text" name="endTimeStr" id="endTimeStr"   value="${resultMap.searchParams.endTimeStr }"  onfocus="WdatePicker({onpicked:function(){getConsume()},autoPickDate:true,startDate:'%y-%M-%d 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
 			代理商名称:<input type="text" value="${resultMap.searchParams.userName }" name="userName" id="" placeholder=" 代理商名称" style="width:150px" class="input-text">
 			订单号:<input type="text" value="${resultMap.searchParams.purchaseId }" name="purchaseId" id="" placeholder=" 订单号" style="width:150px" class="input-text">
 			手机号:<input type="text" value="${resultMap.searchParams.chargeTel }" name="chargeTel" id="" placeholder=" 手机号" style="width:100px" class="input-text">
@@ -78,9 +75,18 @@
 				</c:forEach>
 			</select>
 			</span>
-			<button class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
-			<button type="button"class="btn btn-primary" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
+		</div>
+		<div class="row cl" style="margin-top: 30dp">
+			提交时间：
+			<input type="text" style="width:150px" class="input-text" name="startTimeStr"  value="${resultMap.searchParams.startTimeStr }"  onfocus="var endTimeStr=$dp.$('endTimeStr');WdatePicker({onpicked:function(){endTimeStr.focus();getConsume()},autoPickDate:true,startDate:'%y-%M-%d 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss' })"/>
+	            <em class="inputto">至</em>
+	        <input style="width:150px" type="text"  class="input-text" name="endTimeStr" id="endTimeStr"   value="${resultMap.searchParams.endTimeStr }"  onfocus="WdatePicker({onpicked:function(){getConsume()},autoPickDate:true,startDate:'%y-%M-%d 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+			&nbsp;&nbsp;<button class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
+			&nbsp;&nbsp;<button type="button"class="btn btn-primary" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
+			&nbsp;&nbsp;<button class="btn btn-success" onclick="grouWaypSearch()" type="button"><i class="Hui-iconfont">&#xe665;</i> 统计查询</button>
+		</div>
 			<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
+			<input type="hidden" id="groupWay" name="groupWay" value=""> 
 		</div>
 	</form>
 	</div>
@@ -165,7 +171,7 @@
 			</tbody>
 		</table>
 		<mytag:Pagination pagination="${resultMap.pagination}" queryForm="dataListForm" divId="recordId" />
-		<c:if test="${resultMap.searchParams.showModel == 1 }">
+		<c:if test="${resultMap.searchParams.showModel == 1 && not empty resultMap.groupAgencyList }">
 				<div class="pd-10 tags">
 				<ul id="Huifold1" class="Huifold">
 				  <li class="item">
@@ -249,6 +255,11 @@
 <!-- <script type="text/javascript" charset="utf8" src="/view/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> -->
 <script type="text/javascript">
 function getConsume(){
+	$('form').submit();
+}
+/**统计查询*/
+function grouWaypSearch(){
+	$('#groupWay').val('yes');
 	$('form').submit();
 }
 $(function(){

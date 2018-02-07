@@ -93,9 +93,9 @@ html { overflow-y: auto }
 						${resultMap.chargeTelTimesInOneDay.confKey }
 					</td>
 					<td>
-						<a  data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" data-href="/flowsys/chargeLog/charge_log_list.do?orderId=${purchase.orderId }" title="查看传单日志" onclick="Hui_admin_tab(this)" data-title="接口订单日志" href="javascript:void(0)">
+						<%-- <a  data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" data-href="/flowsys/chargeLog/charge_log_list.do?orderId=${purchase.orderId }" title="查看传单日志" onclick="Hui_admin_tab(this)" data-title="接口订单日志" href="javascript:void(0)">
 							<i class="Hui-iconfont">&#xe623;</i>
-						</a>
+						</a> --%>
 					</td>
 					<td>${resultMap.chargeTelTimesInOneDay.lastAccessStr }</td>
 				</tr>
@@ -128,34 +128,49 @@ $().ready(function(){
   
     var clickSwitch = function(confKey) {  
     	var state = 0;
+    	var msg = "";
         if ($("#onoffswitch").is(':checked')) {  
         	//更新为1
         	state = 1;
+        	msg = "确认直接失败订单";
             console.log("在ON的状态下");  
         } else {  
+        	msg = "确认保留所有失败订单";
             console.log("在OFF的状态下");  
         }  
-        $.ajax({
-			type: 'POST',
-			url: '/flowsys/systemConf/switch_fail_back.do',
-			//dataType: 'json',
-			data: {confKey:confKey, confValue:state},
-			async: false,
-			success: function(data){
-				//tag = data;
-				 //alert(data);
-				if(data=="success")
-				{
-					layer.msg('手动修改成功',{icon:1,time:1000});
-					location.reload();
-				}else{
-					layer.msg('手动修改失败',{icon:1,time:1000});
-				}
-			},
-			error:function(data) {
-				console.log(data.msg);
-			},
-		});
+        layer.confirm(msg,function(index){
+	        $.ajax({
+				type: 'POST',
+				url: '/flowsys/systemConf/switch_fail_back.do',
+				//dataType: 'json',
+				data: {confKey:confKey, confValue:state},
+				async: false,
+				success: function(data){
+					//tag = data;
+					 //alert(data);
+					if(data=="success")
+					{
+						layer.msg('手动修改成功',{icon:1,time:1000});
+						location.reload();
+					}else{
+						layer.msg('手动修改失败',{icon:1,time:1000});
+					}
+				},
+				error:function(data) {
+					console.log(data.msg);
+				},
+			});
+        },function(index){
+        	if ($("#onoffswitch").is(':checked')){
+	        	//$('#onoffswitch').removeClass('switch-off').addClass('switch-on');
+	        	$('#onoffswitch').prop('checked', false);
+        	}else{
+	        	//$('#onoffswitch').addClass('switch-off').removeClass('switch-on');
+	        	//$('#onoffswitch').attr('checked',true);
+	        	$('#onoffswitch').prop('checked', true);
+        	}
+        	//location.reload();
+        });
     };  
 	/* $('#mySwitch').on('switch-change', function (e, data) {
 	    var $el = $(data.el), 

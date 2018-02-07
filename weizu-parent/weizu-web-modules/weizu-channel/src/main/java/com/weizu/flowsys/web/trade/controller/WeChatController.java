@@ -20,15 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSON;
-import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
-import com.weizu.flowsys.api.weizu.charge.ChargeOrder;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.EpEncodeTypeEnum;
-import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
-import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
+import com.weizu.flowsys.util.WxPaySendPost;
 import com.weizu.flowsys.util.apiEncode.Encrypt;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
@@ -159,7 +156,10 @@ public class WeChatController {
 //				     reqMap.put("sign", sign);
 				     String reqStr = WXPayUtil.map2Xml(reqMap);
 				     System.out.println("微信请求参数："+ reqStr);
-				      String resultXml = HttpRequest.sendPost(WXPayConfig.PAY_URL, reqStr);
+//				      String resultXml = HttpRequest.sendPost(WXPayConfig.PAY_URL, reqStr);
+				     String resultXml = WxPaySendPost.sendPost(WXPayConfig.PAY_URL, reqStr);	
+				     
+				      
 				      System.out.println("微信请求返回:" + resultXml);
 				      String returnCode = WXPayUtil.getReturnCode(resultXml);
 				      if("SUCCESS".equals(returnCode)){

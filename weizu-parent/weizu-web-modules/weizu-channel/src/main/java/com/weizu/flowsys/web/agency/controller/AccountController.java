@@ -157,6 +157,7 @@ public class AccountController {
 	 */
 	@RequestMapping(value= AccountURL.CONSUME_LIST)
 	public ModelAndView getConsumeList(@RequestParam(value = "pageNo", required = false) String pageNo,
+			@RequestParam(value = "groupWay", required = false) String groupWay,
 			HttpServletRequest request,ConsumeRecordPo consumeRecordPo){
 		PageParam pageParam = null;
 		if(StringHelper.isNotEmpty(pageNo)){
@@ -183,9 +184,11 @@ public class AccountController {
 			}
 			
 			Pagination<ConsumeRecordPo> pagination =  chargeRecordAO.listConsumeRecord(resultMap,contextId,consumeRecordPo, pageParam);
-
-			List<GroupAgencyRecordPo> groupAgencyList =chargeRecordAO.groupAgencyRecord(contextId, consumeRecordPo);
-			resultMap.put("groupAgencyList", groupAgencyList);
+			
+			if("yes".equals(groupWay) || StringHelper.isEmpty(pageNo)){
+				List<GroupAgencyRecordPo> groupAgencyList =chargeRecordAO.groupAgencyRecord(contextId, consumeRecordPo);
+				resultMap.put("groupAgencyList", groupAgencyList);
+			}
 			resultMap.put("pagination", pagination);
 			resultMap.put("billTypeEnums", BillTypeEnum.toList());
 			resultMap.put("accountTypeEnums", AccountTypeEnum.toConsumeList());

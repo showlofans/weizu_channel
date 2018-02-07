@@ -40,9 +40,15 @@
 ////		System.out.println(ChargeStatusEnum.SCOPE_RATE_UNDEFINED.getValue());
 ////		traverseFolder2("D:\\Documents\\GitHub\\weizu_channel\\weizu-parent\\weizu-web-modules\\weizu-channel");
 ////		traverseFolder1("D:\\Documents\\GitHub\\weizu_channel\\weizu-parent\\weizu-web-modules\\weizu-channel\\src");
-//		Date date = DateUtil.strToDate("2018-01-29", "yyyy-MM-dd");
-//		System.out.println(date == null);
-//		System.out.println("2018-01-29".length());
+////		Date date = DateUtil.strToDate("2018-01-29", "yyyy-MM-dd");
+////		System.out.println(date == null);
+////		System.out.println("2018-01-29".length());
+//		
+//		String key = "qqqqqqqqqqqqqq360111199605236014";
+//		System.out.println(key.length());
+//		double d = 3.224d;
+//		int m = (int)(d*100);
+//		System.out.println(m);
 ////		int count = 0;
 ////		File[]fileList = new File("D:\\Documents\\GitHub\\weizu_channel\\weizu-parent\\weizu-web-modules\\weizu-channel").listFiles();
 ////		for (File file : fileList) {

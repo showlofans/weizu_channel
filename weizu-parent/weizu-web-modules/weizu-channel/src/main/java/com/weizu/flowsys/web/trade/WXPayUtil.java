@@ -60,7 +60,8 @@ public class WXPayUtil {
       sb2.append(map.get(key));
       sb2.append("</" + key + ">");
     }
-    sb.append(System.getenv("signKey"));
+    sb.append("key="+WXPayConfig.KEY);
+//    System.out.println("签名参数："+sb.toString());
     String sign = MD5.getMd5(sb.toString(), MD5.UPPERCASE, "utf-8");
 //    String sign = MD5.getMessageDigest(sb.toString().getBytes()).toUpperCase();
     sb2.append("<sign>");
@@ -99,7 +100,7 @@ public class WXPayUtil {
       sb.append(map.get(key));
       sb.append('&');
     }
-    sb.append(WXPayConfig.KEY);
+    sb.append("key="+ WXPayConfig.KEY);
     System.out.println("第二次签名内容:" + sb);
 //    System.out.println("第二次签名SING:" + MD5.getMessageDigest(sb.toString().getBytes()).toUpperCase());
     String sign="";
