@@ -196,14 +196,28 @@
 //	public void testGetRatePgForCharge(){
 //		ChargeAccountPo accountPo = chargeAccountAo.getAccountByAgencyId(231, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 //		System.out.println("accountId:"+accountPo.getId());
-//		List<RatePgPo> ratePgList = rateDiscountAO.getRatePgForCharge(new ChargeChannelParamsPo("陕西渭南移动",ServiceTypeEnum.PROVINCE.getValue(),null,null,null,null), accountPo.getId(), true);
+//		List<RatePgPo> ratePgList = rateDiscountAO.getRatePgForCharge(new ChargeChannelParamsPo("陕西渭南移动",ServiceTypeEnum.PROVINCE_ROAMING.getValue(),null,null,null,null), accountPo.getId(), true);
 //		//{operatorType=0, channelState=0, billTypeRate=0, channelUseState=0, bindState=0, scopeCityCode=19, serviceType=1, agencyId=4}
 //		System.out.println(ratePgList == null);
 //		if(ratePgList != null){
+//			int PICKEROTHERSIZE = 9;
+//			int ratePgSize = ratePgList.size();
+//			List<RatePgPo> rateShowList = ratePgList.subList(0, PICKEROTHERSIZE-1);//1-9(到第9个)
+//			List<RatePgPo> pickerList = ratePgList.subList(PICKEROTHERSIZE-1,ratePgSize);//9-12(从第9个开始)
+//			for (RatePgPo ratePgPo : pickerList) {
+////				System.out.println(ratePgPo.getPgSize() + "M,折扣价："+ ratePgPo.getPgDiscountPrice()+"\t1");
+//				System.out.println("id："+ ratePgPo.getPgId()+"\t1");
+//			}
+//			for (RatePgPo ratePgPo : rateShowList) {
+//				System.out.println("id："+ ratePgPo.getPgId()+"\t2");
+////				System.out.println(ratePgPo.getPgSize() + "M,折扣价："+ ratePgPo.getPgDiscountPrice()+"\t2");
+//			}
 //			for (RatePgPo ratePgPo : ratePgList) {
-//				System.out.println(ratePgPo.getPgSize() + "M,折扣价："+ ratePgPo.getPgDiscountPrice());
+//				System.out.println("id："+ ratePgPo.getPgId()+"\t3");
+////				System.out.println(ratePgPo.getPgSize() + "M,折扣价："+ ratePgPo.getPgDiscountPrice()+"\t2");
 //			}
 //			System.out.println(JSON.toJSONString(ratePgList));
+//			System.out.println("pickerSize="+pickerList.size()+"\tshowSize="+rateShowList.size()+"\trateSize="+ratePgList.size());
 //		}
 //	}
 ////	@Test

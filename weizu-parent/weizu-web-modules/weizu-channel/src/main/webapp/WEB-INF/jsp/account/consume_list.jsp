@@ -190,8 +190,17 @@
 				   			)
 				   			<b>+</b></h4>
 				   			<div class="info"> 
-						   		总笔数（保守统计）：${groupAgency.numb }<br>
-								交易金额 :${groupAgency.totalAmount }
+						   		总笔数（保守统计,含补款）：${groupAgency.numb }<br>
+						   		<c:forEach items="${resultMap.accountTypeEnums }" var="accountType" varStatus="vs1">
+								<c:if test="${groupAgency.accountType == accountType.value }"> ${accountType.desc }金额 :${groupAgency.totalAmount }</c:if>
+								</c:forEach>
+						   		<%-- <c:if test="${groupAgency.accountType == 1 }">
+									扣款金额 :${groupAgency.totalAmount }
+						   		</c:if>
+						   		<c:if test="${groupAgency.accountType == 2 }">
+									补款金额 :${groupAgency.totalAmount }
+						   		</c:if> --%>
+								<%-- 交易金额 :${groupAgency.totalAmount } --%>
 						    </div>
 						    </li>
 						 	<%-- <c:choose>

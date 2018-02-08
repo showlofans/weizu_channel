@@ -14,6 +14,8 @@ public class RatePgPo {
 	
 	private Integer pgSize;					//包体大小
 	
+	private String pgSizeStr;				//包体大小显示
+	
 	private Long rateId;					//费率id
 	
 	private Long channelId; 				//通道id
@@ -23,6 +25,15 @@ public class RatePgPo {
 	private Double pgDiscountPrice;			//包体折扣价
 	
 	private Double activeDiscount;			//费率折扣
+
+	
+	public String getPgSizeStr() {
+		return pgSizeStr;
+	}
+
+	public void setPgSizeStr(String pgSizeStr) {
+		this.pgSizeStr = pgSizeStr;
+	}
 
 	public Integer getPgId() {
 		return pgId;

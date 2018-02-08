@@ -1,7 +1,10 @@
 //package crud.aotest.util;
 //
 //import java.util.Date;
+//import java.util.HashSet;
+//import java.util.Set;
 //
+//import com.weizu.flowsys.core.util.NumberTool;
 //import com.weizu.web.foundation.DateUtil;
 //
 //public class StringUtilsTest {
@@ -45,10 +48,14 @@
 ////		System.out.println("2018-01-29".length());
 //		
 //		String key = "qqqqqqqqqqqqqq360111199605236014";
-//		System.out.println(key.length());
-//		double d = 3.224d;
-//		int m = (int)(d*100);
-//		System.out.println(m);
+////		System.out.println(key.length());
+////		double d = 3.226d;
+//////		d = NumberTool.round(d, 2);//四舍五入保留两位
+////		int m = (int)(d*100);
+////		System.out.println(m);
+//		Set<String> names = new HashSet<String>();
+//		StringBuffer sb = new StringBuffer(key);
+//		System.out.println(sb.toString().contains("qqqqqqqqqqqqqq360111199605236014")); 
 ////		int count = 0;
 ////		File[]fileList = new File("D:\\Documents\\GitHub\\weizu_channel\\weizu-parent\\weizu-web-modules\\weizu-channel").listFiles();
 ////		for (File file : fileList) {

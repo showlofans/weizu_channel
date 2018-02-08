@@ -247,7 +247,7 @@
         //淘宝接口    
        $.ajax({
              type: "get",
-             url: 'http://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel='+tel,
+             url: 'https://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel='+tel,
              dataType: "jsonp",
              contentType: "application/x-www-form-urlencoded; charset=utf-8", 
              jsonp: "callback",

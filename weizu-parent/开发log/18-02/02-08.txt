@@ -1,0 +1,33 @@
+10个就要把包涵9以后的截下来，放在picker中
+
+小程序设计（包体隐藏）
+折扣四舍五入设置
+
+如果是一个代理商，有一个代理商的扣款金额，补款金额，实际扣款，（发现订单消费统计问题）
+
+
+
+ <view id='section' wx:if="{{ratePgList.length <= 9}}">
+          <view class="flex-wrp" style="height: 100px;flex-direction:row; white-space:pre-line;" wx:if="{{condition}}" wx:for="{{ratePgList}}" >
+             <view class="flex-item bg-gray" data-index="{{index}}" bindtap='navigateToBuy'>{{item.pgSize}}M-{{item.activeDiscount}}\n原价：{{item.pgPrice}}\n折扣价：{{item.pgDiscountPrice}}</view>
+        </view>
+        </view>
+        <view id='section2' wx:if="{{ratePgList.length > 9}}">
+          <view class="flex-wrp" style="height: 100px;flex-direction:row; white-space:pre-line;" wx:if="{{index < 8}}" wx:for="{{ratePgList}}" >
+            <view class="flex-item bg-gray"   data-index="{{index}}" bindtap='navigateToBuy'>{{item.pgSize}}M-{{item.activeDiscount}}\n原价：{{item.pgPrice}}\n折扣价：{{item.pgDiscountPrice}}
+            </view>
+          </view>
+              <picker mode="selector" range='{{ratePgList}}' bindchange='pgPickerSelected' value='{{index}}'>
+           <view class="flex-wrp" style="height: 100px;flex-direction:row; white-space:pre-line;">
+            <view class="flex-item bg-gray">
+              <!-- <view  wx:if={{condition}}>
+                <view class="flex-item bg-gray" bindtap='navigateToBuy'>{{ratePgList[picker-index].pgSize}}M-{{ratePgList[picker-index].activeDiscount}}\n原价：{{ratePgList[picker-index].pgPrice}}\n折扣价：{{ratePgList[picker-index].pgDiscountPrice}}
+              </view>
+              
+            </view> -->
+                <text wx:if="{{index > 8}}">{{ratePgList[index].pgSize}}</text>
+            </view>
+          </view>
+              </picker>
+          <!-- <view >123</view> -->
+        </view>

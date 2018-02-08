@@ -30,7 +30,7 @@ public enum PgSizeEnum {
 	THREE_THOUSAND("3072M",3072),
 	FOUR_THOUSAND("4G",4096),
 	SIX_THOUSAND("6g",6144),
-	ELEVEN_THOUSAND("11G",11);
+	ELEVEN_THOUSAND("11G",11264);
 	
 	private String desc;	//	描述
 	private Integer value;	//包体大小

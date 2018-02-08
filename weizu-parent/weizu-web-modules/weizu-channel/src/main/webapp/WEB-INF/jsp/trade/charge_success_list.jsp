@@ -161,7 +161,8 @@
 						<td>${purchase.orderId }</td>
 						<td>${purchase.chargeTel }</td>
 						 <c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
-						 	<td>${purchase.pgSize }M</td>
+						 	<td>${purchase.pgSizeStr }</td>
+						 	<%-- <td>${purchase.pgSize }M</td> --%>
 						 </c:if>
 						 <td>
 						 	<c:choose>

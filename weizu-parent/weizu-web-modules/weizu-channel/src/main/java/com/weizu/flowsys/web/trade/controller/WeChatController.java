@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -24,6 +26,7 @@ import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.EpEncodeTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgSizeEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.WxPaySendPost;
 import com.weizu.flowsys.util.apiEncode.Encrypt;
@@ -83,6 +86,8 @@ public class WeChatController {
 	@Resource
 	private ProductCodeAO productCodeAO;
 	
+	public static final int PICKEROTHERSIZE = 9;
+	
 //	@ResponseBody
 	@RequestMapping(value=WeChatURL.INIT_FIRST_PAGE)
 	public void initFirstPage(HttpServletResponse response){
@@ -113,7 +118,25 @@ public class WeChatController {
 			try {
 				ChargeAccountPo accountPo = chargeAccountAo.getAccountByAgencyId(231, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 				List<RatePgPo> ratePgList = rateDiscountAO.getRatePgForCharge(ccpp, accountPo.getId(), false);
-				response.getWriter().print(JSON.toJSONString(ratePgList));
+				Map<String,Object> resultMap = new HashMap<String,Object>();
+				int ratePgSize = ratePgList.size();
+				if(ratePgList != null){
+					for (RatePgPo ratePgPo : ratePgList) {
+						ratePgPo.setPgSizeStr(PgSizeEnum.getEnum(ratePgPo.getPgSize()).getDesc());
+						ratePgPo.setPgDiscountPrice(NumberTool.round(ratePgPo.getPgDiscountPrice(), 2));//对折扣价进行四舍五入设置,保留两位
+					}
+					if(ratePgSize > PICKEROTHERSIZE){
+						List<RatePgPo> rateShowList = ratePgList.subList(0, PICKEROTHERSIZE-1);//0-8
+						List<RatePgPo> pickerList = ratePgList.subList(PICKEROTHERSIZE-1,ratePgSize);//8-
+						resultMap.put("pickerList", pickerList);
+						resultMap.put("rateShowList", rateShowList);
+					}else{
+						resultMap.put("pickerList", null);
+						resultMap.put("rateShowList", ratePgList);
+					}
+					response.getWriter().print(JSON.toJSONString(resultMap));
+				}
+//				response.getWriter().print(JSON.toJSONString(resultMap));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

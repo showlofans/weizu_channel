@@ -244,7 +244,7 @@
          //聚合接口
     	 $.ajax({
             type: "get",
-            url: 'http://apis.juhe.cn/mobile/get?phone='+tel+'&key=59b0973a9e6d8642b987ac04c1eb2c07',
+            url: 'https://apis.juhe.cn/mobile/get?phone='+tel+'&key=59b0973a9e6d8642b987ac04c1eb2c07',
             contentType: "application/x-www-form-urlencoded; charset=utf-8", 
             dataType: 'jsonp',
             crossDomain: true,

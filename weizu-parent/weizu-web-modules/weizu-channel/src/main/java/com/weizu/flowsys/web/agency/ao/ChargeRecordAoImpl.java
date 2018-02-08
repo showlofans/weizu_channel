@@ -1,8 +1,10 @@
 package com.weizu.flowsys.web.agency.ao;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -300,6 +302,21 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 				consumeRecordPo.setEndTimeStr(DateUtil.formatAll(System.currentTimeMillis()));
 			}
 			list = chargeRecordDao.groupAgencyRecord(params);
+//			StringBuffer sb = new StringBuffer("1");
+//			for (GroupAgencyRecordPo groupAgencyRecordPo : list) {
+//				boolean isDifferent = sb.toString().contains(groupAgencyRecordPo.getAgencyName());
+//				if(isDifferent){
+//					//第一个是补款，第二个是扣款
+//					if(AccountTypeEnum.DECREASE.getValue().equals(groupAgencyRecordPo.getAccountType())){
+//						list.re
+//					}
+//				}
+//				names.add(groupAgencyRecordPo.getAgencyName());
+//			}
+			
+			
+			
+			
 		}
 		return list;
 	}

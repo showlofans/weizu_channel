@@ -26,6 +26,7 @@
 //import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 //import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
 //import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordPo;
+//import com.weizu.web.foundation.DateUtil;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -113,18 +114,22 @@
 ////		System.out.println(res);
 ////	}
 //
-////	@Test
-////	public void testGroupAgencyList(){
-////		ConsumeRecordPo consumeRecordPo = new ConsumeRecordPo();
+//	@Test
+//	public void testGroupAgencyList(){
+//		ConsumeRecordPo consumeRecordPo = new ConsumeRecordPo();
 ////		consumeRecordPo.setAccountType(AccountTypeEnum.DECREASE.getValue());
-////		consumeRecordPo.setShowModel(AgencyLevelEnum.SUPPER_USER.getValue());
-////		consumeRecordPo.setChargeFor(PgServiceTypeEnum.PGCHARGE.getValue());
-////		List<GroupAgencyRecordPo> groupAgencyList =chargeRecordAO.groupAgencyRecord(1, consumeRecordPo);
-////		System.out.println(groupAgencyList.size());
-////		for (GroupAgencyRecordPo groupAgencyRecordPo : groupAgencyList) {
-////			System.out.println(groupAgencyRecordPo.getAgencyName()+":"+groupAgencyRecordPo.getNumb());
-////		}
-////	}
+//		consumeRecordPo.setShowModel(AgencyLevelEnum.SUPPER_USER.getValue());
+//		consumeRecordPo.setChargeFor(PgServiceTypeEnum.PGCHARGE.getValue());
+//		consumeRecordPo.setStartTime(DateUtil.getStartTime().getTime());
+//		consumeRecordPo.setEndTime(DateUtil.getEndTime().getTime());
+//		List<GroupAgencyRecordPo> groupAgencyList =chargeRecordAO.groupAgencyRecord(1, consumeRecordPo);
+//		System.out.println(groupAgencyList.size());
+//		double totalAmount = 0d;
+//		for (GroupAgencyRecordPo groupAgencyRecordPo : groupAgencyList) {
+//			System.out.print(groupAgencyRecordPo.getAgencyName()+":"+groupAgencyRecordPo.getAccountType()+":"+groupAgencyRecordPo.getNumb());
+//			System.out.println(groupAgencyRecordPo.getTotalAmount());
+//		}
+//	}
 //
 //
 //}

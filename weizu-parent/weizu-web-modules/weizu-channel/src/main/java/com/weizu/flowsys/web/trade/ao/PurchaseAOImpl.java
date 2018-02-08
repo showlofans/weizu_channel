@@ -48,6 +48,7 @@ import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgSizeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.OrderUril;
@@ -1385,6 +1386,11 @@ public class PurchaseAOImpl implements PurchaseAO {
 					if(purchaseVO2.getOrderBackTime() != null)
 					{
 						purchaseVO2.setOrderBackTimeStr(DateUtil.formatAll(purchaseVO2.getOrderBackTime()));
+					}
+					if(PgSizeEnum.getEnum(purchaseVO2.getPgSize()) != null){
+						purchaseVO2.setPgSizeStr(PgSizeEnum.getEnum(purchaseVO2.getPgSize()).getDesc());
+					}else{
+						purchaseVO2.setPgSizeStr(purchaseVO2.getPgSize() + "M");
 					}
 					if(purchaseVO2.getOrderArriveTime() != null){
 						purchaseVO2.setOrderArriveTimeStr(DateUtil.formatAll(purchaseVO2.getOrderArriveTime()));
