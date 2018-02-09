@@ -27,9 +27,9 @@ public enum PgSizeEnum {
 	SEVEN_HUNDRED("700M",700),
 	THOUSAND("1G",1024),
 	TWO_THOUSAND("2G",2048),
-	THREE_THOUSAND("3072M",3072),
+	THREE_THOUSAND("3G",3072),
 	FOUR_THOUSAND("4G",4096),
-	SIX_THOUSAND("6g",6144),
+	SIX_THOUSAND("6G",6144),
 	ELEVEN_THOUSAND("11G",11264);
 	
 	private String desc;	//	描述
@@ -52,7 +52,7 @@ public enum PgSizeEnum {
 
 		for (PgSizeEnum pgSizeEnum : enumArray)
 		{
-			if(value == pgSizeEnum.getValue())
+			if(pgSizeEnum.getValue().equals(value))
 			{
 				resultEnum = pgSizeEnum;
 				break;

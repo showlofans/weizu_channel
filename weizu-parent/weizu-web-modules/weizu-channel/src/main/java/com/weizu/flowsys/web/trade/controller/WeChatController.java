@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.EpEncodeTypeEnum;
@@ -121,10 +122,6 @@ public class WeChatController {
 				Map<String,Object> resultMap = new HashMap<String,Object>();
 				int ratePgSize = ratePgList.size();
 				if(ratePgList != null){
-					for (RatePgPo ratePgPo : ratePgList) {
-						ratePgPo.setPgSizeStr(PgSizeEnum.getEnum(ratePgPo.getPgSize()).getDesc());
-						ratePgPo.setPgDiscountPrice(NumberTool.round(ratePgPo.getPgDiscountPrice(), 2));//对折扣价进行四舍五入设置,保留两位
-					}
 					if(ratePgSize > PICKEROTHERSIZE){
 						List<RatePgPo> rateShowList = ratePgList.subList(0, PICKEROTHERSIZE-1);//0-8
 						List<RatePgPo> pickerList = ratePgList.subList(PICKEROTHERSIZE-1,ratePgSize);//8-
@@ -178,12 +175,12 @@ public class WeChatController {
 //				     String sign = WXPayUtil.getSign(reqMap);
 //				     reqMap.put("sign", sign);
 				     String reqStr = WXPayUtil.map2Xml(reqMap);
-				     System.out.println("微信请求参数："+ reqStr);
+//				     System.out.println("微信请求参数："+ reqStr);
 //				      String resultXml = HttpRequest.sendPost(WXPayConfig.PAY_URL, reqStr);
 				     String resultXml = WxPaySendPost.sendPost(WXPayConfig.PAY_URL, reqStr);	
 				     
 				      
-				      System.out.println("微信请求返回:" + resultXml);
+//				      System.out.println("微信请求返回:" + resultXml);
 				      String returnCode = WXPayUtil.getReturnCode(resultXml);
 				      if("SUCCESS".equals(returnCode)){
 				          String prepayId = WXPayUtil.getPrepayId(resultXml);
@@ -216,12 +213,53 @@ public class WeChatController {
 			}
 		}
 		try {
-			System.out.println("返回的参数："+jsonStr);
+//			System.out.println("返回的参数："+jsonStr);
 			response.getWriter().print(jsonStr);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * @description: 获得用户openId
+	 * @param request
+	 * @param response
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年2月9日 下午2:21:28
+	 */
+	@RequestMapping(value=WeChatURL.GETOPENID)
+	public void getOpenId(String jsCode, HttpServletResponse response){
+		StringBuffer paramSb = new StringBuffer();
+		paramSb.append("js_code="+jsCode);
+		paramSb.append("&appid="+WXPayConfig.APPID);
+		paramSb.append("&grant_type="+WXPayConfig.GRANT_TYPE);
+		paramSb.append("&secret="+WXPayConfig.APP_SECRET);
+//		System.out.println("paramSb:"+paramSb);
+		String jsonStr = HttpRequest.sendGet("https://api.weixin.qq.com/sns/jscode2session", paramSb.toString());
+//		System.out.println("返回json："+jsonStr);
+		JSONObject obj = JSON.parseObject(jsonStr);
+		Map<String,Object> returnMap = new HashMap<String, Object>();
+		if(obj != null){
+			String openid = obj.get("openid") == null?"": obj.get("openid").toString();
+			String session_key = obj.get("session_key") == null?"":obj.get("session_key").toString();
+			String unionid = obj.get("unionid") == null?"":obj.get("unionid").toString();
+			returnMap.put("openid", openid);
+//    	returnMap.put("session_key", session_key);
+			returnMap.put("unionid", unionid);
+			returnMap.put("msg", "success");
+		}else{
+			returnMap.put("msg", "error");
+		}
+		try {
+//			System.out.println("输出的字符串:"+JSON.toJSONString(returnMap));
+			response.getWriter().print(JSON.toJSONString(returnMap));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * @description: 微信支付结果推送(向上提单)
 	 * @param request

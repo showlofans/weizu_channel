@@ -28,6 +28,11 @@ public class WeChatURL extends BaseURL {
 	 */
 	public static final String GETPG_FOR_PURCHASE = "/getpg_for_purchase" + DYNAMIC_WEB_SUFFIX;
 	/**
+	 * 获得用户openId
+	 * <br>/flowsys/wechat/getOpenId.do
+	 */
+	public static final String GETOPENID = "/getOpenId" + DYNAMIC_WEB_SUFFIX;
+	/**
 	 * 生成订单，根据参数调用微信接口获得预支付id
 	 * <br>/flowsys/wechat/getPrepayId.do
 	 */

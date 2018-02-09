@@ -213,7 +213,7 @@
 ////				System.out.println(ratePgPo.getPgSize() + "M,折扣价："+ ratePgPo.getPgDiscountPrice()+"\t2");
 //			}
 //			for (RatePgPo ratePgPo : ratePgList) {
-//				System.out.println("id："+ ratePgPo.getPgId()+"\t3");
+//				System.out.println("id："+ ratePgPo.getPgId()+"\t3\tpgSizeStr:"+ratePgPo.getPgSizeStr());
 ////				System.out.println(ratePgPo.getPgSize() + "M,折扣价："+ ratePgPo.getPgDiscountPrice()+"\t2");
 //			}
 //			System.out.println(JSON.toJSONString(ratePgList));

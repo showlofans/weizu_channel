@@ -8,7 +8,7 @@ import com.aiyi.base.pojo.PurchasePo;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
-import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordPo;
+import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordVo;
 
 public interface ChargeRecordAO {
 	/**
@@ -60,7 +60,7 @@ public interface ChargeRecordAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2018年1月5日 下午2:24:41
 	 */
-	List<GroupAgencyRecordPo> groupAgencyRecord(Integer contextAgencyId,ConsumeRecordPo consumeRecordPo);
+	List<GroupAgencyRecordVo> groupAgencyRecord(Integer contextAgencyId,ConsumeRecordPo consumeRecordPo);
 	
 	/**
 	 * @description: 加载分页消费记录列表

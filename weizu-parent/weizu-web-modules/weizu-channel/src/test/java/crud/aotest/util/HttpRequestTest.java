@@ -36,9 +36,12 @@
 //////		String resultStr = WxPaySendPost.sendPost(WXPayConfig.PAY_URL, "<xml><appid>wxcf0590c3295581d8</appid><body>微族充值中心-流量充值</body><mch_id>1401974602</mch_id><nonce_str>APF0CHGIC16M117</nonce_str><notify_url>https://www.91weizu.cn/flowsys/wechat/wxNotify.do</notify_url><openid>oiuEW0c7ROWDfIZDTUcEmDFkQ9mc</openid><out_trade_no>787026305714491392</out_trade_no><total_fee>204</total_fee><trade_type>JSAPI</trade_type><sign>82A564CC6202221F0908FD6F02F99978</sign></xml>");
 ////		String resultStr = WxPaySendPost.sendPost(WXPayConfig.PAY_URL, reqStr);
 ////		System.out.println(resultStr);
-//		测试推送
-//		String params = "errcode=0&transaction_id=20180207152732819330&user_order_id=787104526988480512&number=13948437262&status=4";
-//		String jsonStr = HttpRequest.sendPost("https://www.91weizu.cn/flowsys/callBack/weizu.do", params);
-//		System.out.println(jsonStr);
+////		测试推送
+////		String params = "errcode=0&transaction_id=20180207152732819330&user_order_id=787104526988480512&number=13948437262&status=4";
+////		String jsonStr = HttpRequest.sendPost("https://www.91weizu.cn/flowsys/callBack/weizu.do", params);
+////		System.out.println(jsonStr);
+//		
+//		String openid = "oiuEW0c7ROWDfIZDTUcEmDFkQ9mc";
+//		
 //	}
 //}

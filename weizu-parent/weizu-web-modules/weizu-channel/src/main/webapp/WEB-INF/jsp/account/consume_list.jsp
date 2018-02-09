@@ -186,14 +186,21 @@
 										<span class="c-red" >
 										${billTypeEnum.desc }</span>
 									</c:if>
-								</c:forEach>
-				   			)
+								</c:forEach>)
+							<span r>实际扣款笔数：${groupAgency.numb } </span>
+							<span r>实际扣款金额：${groupAgency.totalAmount } </span>
+							<span r>有效订单率：${groupAgency.realOrderPer }% </span>
 				   			<b>+</b></h4>
 				   			<div class="info"> 
-						   		总笔数（保守统计,含补款）：${groupAgency.numb }<br>
-						   		<c:forEach items="${resultMap.accountTypeEnums }" var="accountType" varStatus="vs1">
+						   		<%-- 实际扣款笔数：${groupAgency.numb }<br>
+						   		实际扣款金额：${groupAgency.totalAmount }<br> --%>
+						   		总扣费次数：${groupAgency.decreaseNumb }<br>
+						   		总扣款金额：${groupAgency.decreaseAmount }<br>
+						   		总补款笔数：${groupAgency.replenishmentNumb }<br>
+						   		总补款金额：${groupAgency.replenishmentAmount }<br>
+						   		<%-- <c:forEach items="${resultMap.accountTypeEnums }" var="accountType" varStatus="vs1">
 								<c:if test="${groupAgency.accountType == accountType.value }"> ${accountType.desc }金额 :${groupAgency.totalAmount }</c:if>
-								</c:forEach>
+								</c:forEach> --%>
 						   		<%-- <c:if test="${groupAgency.accountType == 1 }">
 									扣款金额 :${groupAgency.totalAmount }
 						   		</c:if>

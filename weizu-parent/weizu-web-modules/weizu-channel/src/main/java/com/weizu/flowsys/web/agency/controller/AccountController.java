@@ -13,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -35,7 +34,7 @@ import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.CompanyCredentialsPo;
 import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
-import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordPo;
+import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordVo;
 import com.weizu.flowsys.web.agency.url.AccountURL;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
@@ -186,7 +185,13 @@ public class AccountController {
 			Pagination<ConsumeRecordPo> pagination =  chargeRecordAO.listConsumeRecord(resultMap,contextId,consumeRecordPo, pageParam);
 			
 			if("yes".equals(groupWay) || StringHelper.isEmpty(pageNo)){
-				List<GroupAgencyRecordPo> groupAgencyList =chargeRecordAO.groupAgencyRecord(contextId, consumeRecordPo);
+				List<GroupAgencyRecordVo> groupAgencyList =chargeRecordAO.groupAgencyRecord(contextId, consumeRecordPo);
+//				if(groupAgencyList.size() > 0){
+//					
+//					for (GroupAgencyRecordVo groupAgencyRecordVo : groupAgencyList) {
+//						
+//					}
+//				}
 				resultMap.put("groupAgencyList", groupAgencyList);
 			}
 			resultMap.put("pagination", pagination);

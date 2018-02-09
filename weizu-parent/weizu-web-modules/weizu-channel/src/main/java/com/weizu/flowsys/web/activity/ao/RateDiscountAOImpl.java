@@ -19,6 +19,7 @@ import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.PgSizeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
@@ -908,9 +909,13 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		Map<String, Object> params = getMapByParams(ccpp, accountId, judgeChannelState);
 		List<RatePgPo> ratePgList = rateDiscountDao.getRatePgForCharge(params);
 		for (RatePgPo ratePgPo : ratePgList) {
-			ratePgPo.setPgDiscountPrice(NumberTool.mul(ratePgPo.getPgPrice(), ratePgPo.getActiveDiscount()));
+			ratePgPo.setPgDiscountPrice(NumberTool.round(NumberTool.mul(ratePgPo.getPgPrice(), ratePgPo.getActiveDiscount()), 2));
+			if(PgSizeEnum.getEnum(ratePgPo.getPgSize()) != null){
+				ratePgPo.setPgSizeStr(PgSizeEnum.getEnum(ratePgPo.getPgSize()).getDesc()); 
+			}else{
+				ratePgPo.setPgSizeStr(ratePgPo.getPgSize() + "M");
+			}
 		}
-		
 		return ratePgList;
 	}
 	

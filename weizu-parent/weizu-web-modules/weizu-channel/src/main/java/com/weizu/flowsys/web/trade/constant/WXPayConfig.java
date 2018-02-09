@@ -8,7 +8,7 @@ public class WXPayConfig {
     //微信支付的商户密钥  
     public static final String KEY = "qqqqqqqqqqqqqq360111199605236014";  
     //获得openid的密钥
-//    public static final String app_secret = "9cb60b1746e195f0e0f6f39e82257dbc";  
+    public static final String APP_SECRET = "9cb60b1746e195f0e0f6f39e82257dbc";  
     //支付成功后的服务器回调url  
     public static final String NOTIFY_URL = "https://www.91weizu.cn/flowsys/wechat/wxNotify.do";  
     //签名方式，固定值  
@@ -23,4 +23,5 @@ public class WXPayConfig {
     //wechat对应的账户id
     public static final Integer ACCOUNTID = 246;  
     
+    public static final String GRANT_TYPE = "authorization_code";
 }

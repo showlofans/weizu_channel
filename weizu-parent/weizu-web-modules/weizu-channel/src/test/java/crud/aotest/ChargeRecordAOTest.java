@@ -26,6 +26,7 @@
 //import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 //import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
 //import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordPo;
+//import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordVo;
 //import com.weizu.web.foundation.DateUtil;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
@@ -120,14 +121,20 @@
 ////		consumeRecordPo.setAccountType(AccountTypeEnum.DECREASE.getValue());
 //		consumeRecordPo.setShowModel(AgencyLevelEnum.SUPPER_USER.getValue());
 //		consumeRecordPo.setChargeFor(PgServiceTypeEnum.PGCHARGE.getValue());
-//		consumeRecordPo.setStartTime(DateUtil.getStartTime().getTime());
-//		consumeRecordPo.setEndTime(DateUtil.getEndTime().getTime());
-//		List<GroupAgencyRecordPo> groupAgencyList =chargeRecordAO.groupAgencyRecord(1, consumeRecordPo);
+////		consumeRecordPo.setStartTime(DateUtil.getStartTime().getTime());
+////		consumeRecordPo.setEndTime(DateUtil.getEndTime().getTime());
+//		String startTimeStr = DateUtil.formatAll(DateUtil.getStartTime().getTime());
+//		String endTimeStr = DateUtil.formatAll(DateUtil.getEndTime().getTime());
+//		consumeRecordPo.setStartTimeStr(startTimeStr);
+//		consumeRecordPo.setEndTimeStr(endTimeStr);
+//		System.out.println("startTime:"+DateUtil.getStartTime().getTime());
+//		System.out.println("endTime:"+DateUtil.getEndTime().getTime());
+//		List<GroupAgencyRecordVo> groupAgencyList =chargeRecordAO.groupAgencyRecord(1, consumeRecordPo);
 //		System.out.println(groupAgencyList.size());
 //		double totalAmount = 0d;
-//		for (GroupAgencyRecordPo groupAgencyRecordPo : groupAgencyList) {
-//			System.out.print(groupAgencyRecordPo.getAgencyName()+":"+groupAgencyRecordPo.getAccountType()+":"+groupAgencyRecordPo.getNumb());
-//			System.out.println(groupAgencyRecordPo.getTotalAmount());
+//		for (GroupAgencyRecordVo groupAgencyRecordVo : groupAgencyList) {
+//			System.out.println(groupAgencyRecordVo.getAgencyName()+":"+groupAgencyRecordVo.getTotalAmount()+":"+groupAgencyRecordVo.getNumb());
+//			System.out.println(groupAgencyRecordVo.getDecreaseAmount()+":"+groupAgencyRecordVo.getDecreaseNumb());
 //		}
 //	}
 //

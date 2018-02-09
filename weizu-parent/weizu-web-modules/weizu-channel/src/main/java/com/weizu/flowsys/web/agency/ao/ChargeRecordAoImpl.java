@@ -1,10 +1,9 @@
 package com.weizu.flowsys.web.agency.ao;
 
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -20,11 +19,11 @@ import com.weizu.flowsys.operatorPg.enums.AgencyLevelEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeRecordDao;
-import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordPo;
+import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordVo;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
 
@@ -278,7 +277,7 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 	}
 	
 	@Override
-	public List<GroupAgencyRecordPo> groupAgencyRecord(Integer contextAgencyId,
+	public List<GroupAgencyRecordVo> groupAgencyRecord(Integer contextAgencyId,
 			ConsumeRecordPo consumeRecordPo) {
 		//consumeRecordPo.setShowModel(AgencyLevelEnum.SUPPER_USER.getValue());			//超管模式开启统计
 		Map<String, Object> params = getMapByConsume(consumeRecordPo,contextAgencyId); //
@@ -302,23 +301,53 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 				consumeRecordPo.setEndTimeStr(DateUtil.formatAll(System.currentTimeMillis()));
 			}
 			list = chargeRecordDao.groupAgencyRecord(params);
-//			StringBuffer sb = new StringBuffer("1");
-//			for (GroupAgencyRecordPo groupAgencyRecordPo : list) {
-//				boolean isDifferent = sb.toString().contains(groupAgencyRecordPo.getAgencyName());
-//				if(isDifferent){
-//					//第一个是补款，第二个是扣款
-//					if(AccountTypeEnum.DECREASE.getValue().equals(groupAgencyRecordPo.getAccountType())){
-//						list.re
-//					}
-//				}
-//				names.add(groupAgencyRecordPo.getAgencyName());
-//			}
-			
-			
-			
-			
 		}
-		return list;
+		//设置页面列表
+		List<GroupAgencyRecordVo> volist = new LinkedList<GroupAgencyRecordVo>();
+		if(list.size() > 0 ){
+			//处理重复的集合临时变量
+			Map<String,Object> agencyMap = new HashMap<String, Object>();//key是代理商名称，value是vo实体（临时变量）
+			
+			for (GroupAgencyRecordPo groupAgencyRecordPo : list) {
+				String agencyName = groupAgencyRecordPo.getAgencyName();
+				GroupAgencyRecordVo vo = null;
+				if(AccountTypeEnum.DECREASE.getValue().equals(groupAgencyRecordPo.getAccountType())){
+					Object objVO = agencyMap.get(agencyName);
+					if(objVO == null){//没有设置补款实体()
+						vo = new GroupAgencyRecordVo(groupAgencyRecordPo.getAgencyName(), groupAgencyRecordPo.getAccountId(), groupAgencyRecordPo.getBillType(), 0l, groupAgencyRecordPo.getNumb(), groupAgencyRecordPo.getTotalAmount(), 0.0d, groupAgencyRecordPo.getNumb(),groupAgencyRecordPo.getTotalAmount() );
+						agencyMap.put(agencyName, vo);
+					}else{//之前有了补款为主的统计实体
+						vo = (GroupAgencyRecordVo)objVO;//补款为主的统计实体
+						//添加扣款和实际扣款i信息
+						vo.setDecreaseNumb(groupAgencyRecordPo.getNumb());////当前总数设置为扣款总数
+						vo.setNumb(groupAgencyRecordPo.getNumb() - vo.getNumb());  //扣款总笔数减去补款总笔数 == 实际扣款笔数
+						vo.setDecreaseAmount(groupAgencyRecordPo.getTotalAmount());//当前总金额设置为扣款总金额
+						vo.setTotalAmount(NumberTool.sub(groupAgencyRecordPo.getTotalAmount(), vo.getTotalAmount()));////扣款总金额减去补款总金额 == 实际扣款总金额
+					}
+				}else if(AccountTypeEnum.Replenishment.getValue().equals(groupAgencyRecordPo.getAccountType())){
+					Object objVO = agencyMap.get(agencyName);
+					if(objVO == null){//没有设置扣款实体()
+						vo = new GroupAgencyRecordVo(groupAgencyRecordPo.getAgencyName(), groupAgencyRecordPo.getAccountId(), groupAgencyRecordPo.getBillType(), groupAgencyRecordPo.getNumb(), 0l, 0.0d,groupAgencyRecordPo.getTotalAmount(), groupAgencyRecordPo.getNumb(),groupAgencyRecordPo.getTotalAmount() );
+						agencyMap.put(agencyName, vo);
+					}else{//之前有了扣款为主的统计实体
+						vo = (GroupAgencyRecordVo)objVO;//扣款为主的统计实体
+						//添加扣款和实际扣款i信息
+						vo.setReplenishmentNumb(groupAgencyRecordPo.getNumb());////当前总数设置为补款总数
+						vo.setNumb(vo.getNumb() - groupAgencyRecordPo.getNumb());  //扣款总笔数减去补款总笔数 == 实际扣款笔数
+						vo.setReplenishmentAmount(groupAgencyRecordPo.getTotalAmount());//当前总金额设置为补款总金额
+						vo.setTotalAmount(NumberTool.sub(vo.getTotalAmount(), groupAgencyRecordPo.getTotalAmount()));////扣款总金额减去补款总金额 == 实际扣款总金额
+					}
+				}
+			}
+			//将map集合中的对象都取出来，放入list中
+			for (String key : agencyMap.keySet()) {
+				GroupAgencyRecordVo obj = (GroupAgencyRecordVo)agencyMap.get(key);
+				Double realOrderPer = NumberTool.mul(100, NumberTool.div(obj.getNumb() , obj.getDecreaseNumb(),4));
+				obj.setRealOrderPer(realOrderPer);
+				volist.add(obj);
+			}
+		}
+		return volist;
 	}
 
 	/**

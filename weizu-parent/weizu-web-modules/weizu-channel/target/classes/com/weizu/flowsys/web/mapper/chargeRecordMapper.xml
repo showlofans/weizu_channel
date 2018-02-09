@@ -118,11 +118,15 @@
 		<if test="startTime != null">
 			AND remittance_time &gt;= #{startTime}
 		</if>
+		<if test="userName != null"><!-- 超管模式，获得子代理商的账户消费信息 -->
+			AND act.agency_name LIKE CONCAT('%', TRIM(#{userName}), '%')
+		</if>
+		
 		<if test="endTime != null">
 			AND remittance_time &lt;= #{endTime}
 		</if>
 	</where>
-	GROUP BY act.agency_name,crt.account_type
+	GROUP BY act.id,crt.account_type
 	HAVING numb &gt; 0
   </select>
   
