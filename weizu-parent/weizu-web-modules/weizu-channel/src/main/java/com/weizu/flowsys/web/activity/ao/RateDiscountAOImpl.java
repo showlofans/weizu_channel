@@ -32,6 +32,7 @@ import com.weizu.flowsys.web.activity.pojo.DiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountShowDTO;
 import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
+import com.weizu.flowsys.web.channel.dao.OperatorPgDaoInterface;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
@@ -53,6 +54,9 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	@Resource
 	private PurchaseAO purchaseAO;
 	
+	@Resource
+	private OperatorPgDaoInterface operatorPgDao;
+	
 	/**
 	 * @description: 获得费率列表
 	 * @param ratePo
@@ -66,7 +70,7 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 //		return null;
 //	}
 	@Override
-	public Pagination<RateDiscountPo> getMyRateList(RateDiscountPo ratePo,Integer childAccountId,PageParam pageParam) {
+	public Pagination<RateDiscountPo> getMyRateList(RateDiscountPo ratePo,PageParam pageParam) {
 		Map<String, Object> paramsMap = getMapByRate(ratePo);
 		long toatalRecord = rateDiscountDao.countMyRate(paramsMap);
 		int pageSize = 10;
@@ -78,20 +82,30 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 			paramsMap.put("end", pageSize);
 		}
 		List<RateDiscountPo> records = rateDiscountDao.getMyRate(paramsMap);
-		for (RateDiscountPo ratePo1 : records) {
-			//初始化子费率
-			Map<String,Object> pMap = new HashMap<String, Object>();
+		if(ratePo.getAccountId() != null){//去查询子代理商账号下的费率
+			for (RateDiscountPo ratePo1 : records) {
+				//初始化子费率
+				Map<String,Object> pMap = new HashMap<String, Object>();
 //			pMap.put("bindState", BindStateEnum.BIND.getValue());
 //			pMap.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
-			pMap.put("activeId", ratePo1.getId());
-			pMap.put("accountId", childAccountId);
-			pMap.put("bindState", BindStateEnum.BIND.getValue());
-			RateDiscountPo childRatePo = rateDiscountDao.getMyChildRate(pMap);
-			ratePo1.setChildRatePo(childRatePo);
+				pMap.put("activeId", ratePo1.getId());
+				pMap.put("accountId", ratePo.getAccountId());
+				pMap.put("bindState", BindStateEnum.BIND.getValue());
+				RateDiscountPo childRatePo = rateDiscountDao.getMyChildRate(pMap);
+				ratePo1.setChildRatePo(childRatePo);
 //			for (RateDiscountPo rateDiscountPo : list) {
 //				rateDiscountPo.setBillTypeDesc(BillTypeEnum.getEnum(rateDiscountPo.getBillType()).getDesc());
 //			}
 //			ratePo1.setDiscountList(list);
+			}
+		}else{
+			for (RateDiscountPo ratePo1 : records) {
+				Map<String,Object> params = new HashMap<String, Object>();
+				params.put("channelId", ratePo1.getChannelId());
+				//初始化包体规格列表参数
+				List<PgDataPo> pgList = operatorPgDao.getPgByChanel(params);
+				ratePo1.setPgList(pgList);
+			}
 		}
 		return new Pagination<RateDiscountPo>(records, toatalRecord, pageNoLong, pageSize);
 	}
@@ -283,11 +297,11 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 	 */
 	@Transactional
 	@Override
-	public String addRateDiscount(RateDiscountPo ratePo, String agencyName,
+	public String addRateDiscount(RateDiscountPo ratePo, String childAgencyName,
 			Integer bindAgencyId) {
 		long rateDiscountId = rateDiscountDao.nextId();
 		int addRes = rateDiscountDao.add(ratePo);
-		AccountActiveRateDTO aardto = new AccountActiveRateDTO(ratePo.getAccountId(), agencyName, rateDiscountId,ratePo.getChannelDiscountId(), System.currentTimeMillis(), BindStateEnum.BIND.getValue(), bindAgencyId);
+		AccountActiveRateDTO aardto = new AccountActiveRateDTO(ratePo.getAccountId(), childAgencyName, rateDiscountId,ratePo.getChannelDiscountId(), System.currentTimeMillis(), BindStateEnum.BIND.getValue(), bindAgencyId);
 		int addaardtoRes = agencyActiveRateDTODao.add(aardto);
 		if(addRes + addaardtoRes > 1){
 			return "success";
@@ -343,6 +357,16 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 		{
 			resultMap.put("id", ratePo.getId());
 		}
+		if(StringHelper.isNotEmpty(ratePo.getScopeCityCode())){
+			resultMap.put("scopeCityCode", ratePo.getScopeCityCode());
+		}
+		if(ratePo.getOperatorType() != null){
+			resultMap.put("operatorType", ratePo.getOperatorType());
+		}
+		if(ratePo.getServiceType() != null){
+			resultMap.put("serviceType", ratePo.getServiceType());
+		}
+		
 		resultMap.put("bindState", BindStateEnum.BIND.getValue());
 		resultMap.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
 		return resultMap;

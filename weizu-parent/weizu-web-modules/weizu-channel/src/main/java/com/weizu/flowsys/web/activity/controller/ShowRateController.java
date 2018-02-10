@@ -27,6 +27,10 @@ import com.weizu.flowsys.web.activity.ao.ChannelForShowAO;
 import com.weizu.flowsys.web.activity.dao.IChannelForShowDao;
 import com.weizu.flowsys.web.activity.pojo.ChannelForShowPo;
 import com.weizu.flowsys.web.activity.url.ShowRateURL;
+import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
+import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
+import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
+import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.web.foundation.String.StringHelper;
 
 /**
@@ -45,6 +49,9 @@ public class ShowRateController {
 	@Resource
 	private ChannelForShowAO channelForShowAO;
 	
+	@Resource
+	private ChannelChannelDao channelChannelDao;
+	
 	/**
 	 * @description:展示通道添加页面
 	 * @param request
@@ -53,8 +60,18 @@ public class ShowRateController {
 	 * @createTime:2017年12月30日 上午10:18:42
 	 */
 	@RequestMapping(value=ShowRateURL.SHOWRATE_ADD_PAGE)
-	public ModelAndView showRateAddPage(HttpServletRequest request){
+	public ModelAndView showRateAddPage(HttpServletRequest request,
+			@RequestParam(value="channelId",required=false)Long channelId){
 		Map<String,Object> resultMap = new HashMap<String,Object>();
+		if(channelId != null){
+			ChannelChannelPo channelPo = channelChannelDao.getChannelById(channelId);
+			ChannelDiscountPo cdPo = channelPo.getDiscountList().get(0);
+			Double channelPrice = StringUtil2.getDiscountVO(cdPo.getChannelDiscount());
+			String channelPriceS = channelPrice.toString();
+			String channelPriceStr = channelPriceS.substring(0, channelPriceS.indexOf("."));
+			ChannelForShowPo channelForShowPo = new ChannelForShowPo(cdPo.getScopeCityCode(), cdPo.getServiceType(), cdPo.getOperatorType(), cdPo.getBillType(), channelPrice,channelPriceStr);
+			resultMap.put("channelForShowPo", channelForShowPo);
+		}
 		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
 		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 		resultMap.put("limitPriceEnums", LimitPriceEnum.toList());
@@ -110,16 +127,16 @@ public class ShowRateController {
 		ChannelForShowPo channelForShowPo = channelForShowDao.get(id);
 		
 		
-		String channelPriceStr = StringUtil2.getDiscountVO(channelForShowPo.getChannelPrice());
+		String channelPriceStr = StringUtil2.getDiscountVO(channelForShowPo.getChannelPrice()).toString();
 		channelPriceStr = channelPriceStr.substring(0, channelPriceStr.indexOf("."));
 		channelForShowPo.setChannelPriceStr(channelPriceStr);
 		if(channelForShowPo.getPrivateRate() != null && channelForShowPo.getPrivateRate() != 1.1d){
-			String privateRateStr = StringUtil2.getDiscountVO(channelForShowPo.getPrivateRate());
+			String privateRateStr = StringUtil2.getDiscountVO(channelForShowPo.getPrivateRate()).toString();
 			privateRateStr = privateRateStr.substring(0, privateRateStr.indexOf("."));
 			channelForShowPo.setPrivateRateStr(privateRateStr);
 		}
 		if(channelForShowPo.getBillRate() != null && channelForShowPo.getBillRate() != 1.1d){
-			String billRateStr = StringUtil2.getDiscountVO(channelForShowPo.getBillRate());
+			String billRateStr = StringUtil2.getDiscountVO(channelForShowPo.getBillRate()).toString();
 			billRateStr = billRateStr.substring(0, billRateStr.indexOf("."));
 			channelForShowPo.setBillRateStr(billRateStr);
 		}

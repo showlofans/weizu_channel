@@ -165,5 +165,9 @@ public class ChannelChannelDaoImpl extends DaoImpl<ChannelChannelPo, Long> imple
 		
 		return sqlSessionTemplate.selectList("getSpecialOpdType", params);
 	}
+	@Override
+	public ChannelChannelPo getChannelById(Long channelId) {
+		return sqlSessionTemplate.selectOne("getChannelById", channelId);
+	}
 
 }

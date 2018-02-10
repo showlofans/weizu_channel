@@ -131,7 +131,6 @@ public enum BusinessOneEnum {
 
 			list.add(map);
 		}
-
 		return list;
 	}
 	

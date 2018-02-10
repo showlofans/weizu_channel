@@ -116,11 +116,11 @@ public class WeChatController {
 		//参数：serviceType和carrier
 		String carrier = ccpp.getCarrier();
 		if(StringHelper.isNotEmpty(carrier)){
-			try {
 				ChargeAccountPo accountPo = chargeAccountAo.getAccountByAgencyId(231, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 				List<RatePgPo> ratePgList = rateDiscountAO.getRatePgForCharge(ccpp, accountPo.getId(), false);
 				Map<String,Object> resultMap = new HashMap<String,Object>();
 				int ratePgSize = ratePgList.size();
+			try {
 				if(ratePgList != null){
 					if(ratePgSize > PICKEROTHERSIZE){
 						List<RatePgPo> rateShowList = ratePgList.subList(0, PICKEROTHERSIZE-1);//0-8

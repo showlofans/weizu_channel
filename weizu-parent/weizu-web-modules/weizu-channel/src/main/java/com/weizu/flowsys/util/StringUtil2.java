@@ -118,7 +118,7 @@ public class StringUtil2 {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月19日 下午12:46:37
 	 */
-	public static String getDiscountVO(Double discountD) {
+	public static Double getDiscountVO(Double discountD) {
 		String channelDiscount = discountD + "";
 		int bit = channelDiscount.trim().length()
 				- channelDiscount.indexOf(".") - 1;// 位数
@@ -135,7 +135,7 @@ public class StringUtil2 {
 						* ATT.TRIPLE_NUMBER_DIVIDE;
 			}
 		}
-		return discount.toString();
+		return discount;
 	}
 
 	/**

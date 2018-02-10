@@ -48,7 +48,7 @@
   	b.active_discount,b.id,b.active_time,b.operator_type,b.service_type,b.scope_city_code,b.channel_id,b.channel_discount_id,b.bill_type,b.active_id,b.special_tag
   </sql>
   <sql id="Get_My_Rate">
-  	rate.id, rate.active_id,active.active_time, rate.channel_discount_id,rate.active_discount,rate.bill_type,cd.operator_type,cd.service_type,cd.scope_city_code,rate.channel_id,cnel.special_tag 
+  	rate.id, rate.active_id,active.active_time,rate.channel_id, rate.channel_discount_id,rate.active_discount,rate.bill_type,cd.operator_type,cd.service_type,cd.scope_city_code,cnel.special_tag 
   </sql>
   <!-- 包体折扣信息 -->
   <sql id="ratePg_list">
@@ -359,6 +359,15 @@
  	INNER JOIN <include refid="t_cnel"></include> cnel
  	on cnel.id=cd.channel_id
  	<where>
+ 		<if test="operatorType != null">
+	  		AND cd.operator_type = #{operatorType}
+	  	</if>
+	  	<if test="scopeCityCode != null">
+	  		AND cd.scope_city_code = #{scopeCityCode}
+	  	</if>
+	  	<if test="serviceType != null">
+	  		AND cd.service_type = #{serviceType}
+	  	</if>
  		<if test="accountId != null">
  			AND active.account_id = #{accountId}
  		</if>
@@ -397,6 +406,15 @@
  	INNER JOIN <include refid="t_cnel"></include> cnel
  	on cnel.id=cd.channel_id
  	<where>
+ 		<if test="operatorType != null">
+	  		AND cd.operator_type = #{operatorType}
+	  	</if>
+	  	<if test="scopeCityCode != null">
+	  		AND cd.scope_city_code = #{scopeCityCode}
+	  	</if>
+	  	<if test="serviceType != null">
+	  		AND cd.service_type = #{serviceType}
+	  	</if>
  		<if test="agencyId != null">
  			AND act.agency_id = #{agencyId}
  		</if>

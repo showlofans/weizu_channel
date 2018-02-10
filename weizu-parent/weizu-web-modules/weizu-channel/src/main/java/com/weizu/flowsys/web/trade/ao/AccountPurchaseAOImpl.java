@@ -215,7 +215,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 									AccountPurchasePo appPo = accountPurchasePo.clone();
 									appPo.setRecordId(recordId);
 									appPo.setOrderState(orderResult);
-									appPo.setOrderStateDetail(orderResultDetail);
+									appPo.setOrderStateDetail(OrderStateEnum.getEnum(orderResult).getDesc());
 									apList.add(appPo);
 									recordId++;
 								}

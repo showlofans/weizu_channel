@@ -30,17 +30,60 @@
 <title>配置折扣</title>
 </head>
 <body>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 代理商管理 <span class="c-gray en">&gt;</span> 配置折扣 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" ><i class="Hui-iconfont">&#xe6a6;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span>
+<c:choose>
+	<c:when test="${not empty resultMap.childAccountPo.id }">
+		 代理商管理 <span class="c-gray en">&gt;</span> 配置折扣
+	</c:when>
+	<c:otherwise>
+		 我的通道 <span class="c-gray en">&gt;</span> 流量通道  
+		
+	</c:otherwise>
+</c:choose>
+ <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a><a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" ><i class="Hui-iconfont">&#xe6a6;</i></a></nav>
 <div class="page-container">
 	<div class="text-c">
 	<form action="/flowsys/rate/my_rate_list.do" method="post" id="formD" name="dataListForm">
-		代理商名称： <input type="text" value="${childAccountPo.agencyName}" name="agencyName" readonly="readonly" id="agencyName" placeholder=" " style="width:80px" class="input-text">
-		账号类型：<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
-					<c:if test="${childAccountPo.billType == billTypeEnum.value }"> ${billTypeEnum.desc }</c:if>
-				</c:forEach>
+		<c:choose>
+			<c:when test="${not empty resultMap.childAccountPo.id }">
+				代理商名称： <input type="text" value="${resultMap.childAccountPo.agencyName}" name="agencyName" readonly="readonly" id="agencyName" placeholder=" " style="width:80px" class="input-text">
+				账号类型：<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+							<c:if test="${resultMap.childAccountPo.billType == billTypeEnum.value }"> ${billTypeEnum.desc }</c:if>
+						</c:forEach>
+				<input type="hidden" id="accountId" name="accountId" value="${resultMap.childAccountPo.id }"> 
+			</c:when>
+			<c:otherwise>
+			<span class="select-box inline">
+				<select name="scopeCityCode" class="select" onchange="submitForm()">
+					<option value="">通道地区</option>
+					<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum">
+						<option value="${scopeCityEnum.value }" <c:if test="${scopeCityEnum.value == resultMap.searchParam.scopeCityCode }"> selected</c:if>>${scopeCityEnum.desc }</option>
+					</c:forEach>
+				</select>
+			</span> 
+				<span class="select-box inline">
+					<select name="operatorType" class="select" onchange="submitForm()">
+					<option value="">运营商</option>
+					<c:forEach items="${resultMap.operatorTypes }" var="operatorTypeEnum" varStatus="vs1">
+						<option value="${operatorTypeEnum.value }" <c:if test="${operatorTypeEnum.value == resultMap.searchParam.operatorType }"> selected</c:if>>${operatorTypeEnum.desc }</option>
+					</c:forEach>
+				</select>
+				</span>
+				<span class="select-box inline">
+					<select name="serviceType"  id="serviceType" class="select" onchange="submitForm()">
+					<option value="">业务类型</option>
+					<c:forEach items="${resultMap.serviceTypeEnums }" var="sTypeEnum" varStatus="vs1">
+						<option value="${sTypeEnum.value }" <c:if test="${sTypeEnum.value == resultMap.searchParam.serviceType }"> selected</c:if>>${sTypeEnum.desc }</option>
+					</c:forEach>
+				</select>
+				</span>
+				<%-- <input type="text" value="${resultMap.searchParam.pgSize }" name="pgSize" id="" placeholder=" 包体大小" style="width:80px" class="input-text"> --%>
+				<input value="搜通道" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
+				<button type="button"class="btn btn-primary" onclick="javascript:location.replace(location.href);" value="重置">重置</button> 
+			</c:otherwise>
+		</c:choose>
 		<!-- <a class="btn btn-success" onclick="javascript:location.reload();">刷新</a> --><!-- <i class="Hui-iconfont">&#xe665;</i> -->
 		<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
-		<input type="hidden" name="accountId" value="${childAccountPo.id }"> 
 		</form>
 	</div>
 	<!-- <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加资讯" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加资讯</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div> -->
@@ -48,24 +91,32 @@
 		<table class="table table-border table-bordered table-bg table-hover table-sort">
 			<thead>
 				<tr class="text-c">
-					<th width="25"><input type="checkbox" name="" value=""></th>
+					<!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
 					<th >地区</th>
 					<th>运营商类型</th>
 					<th >业务类型</th>
 					<th>折扣</th>
 					<th>折扣类型</th>
-					<th>设置折扣</th>
-					<!-- <th>是否带</th> -->
-					<!-- <th>修改时间</th> -->
-					<!-- <th>通道规格</th> -->
+					<c:choose>
+						<c:when test="${not empty resultMap.childAccountPo.id }">
+							<th>设置折扣</th>
+							<!-- <th>是否带</th> -->
+							<!-- <th>修改时间</th> -->
+							<!-- <th>通道规格</th> -->
+							
+							<th>操作</th>
+						</c:when>
+						<c:otherwise>
+							<th>包体大小</th>
+						</c:otherwise>
+					</c:choose>
 					
-					<th>操作</th>
 				</tr>
 			</thead>
 			<tbody>
 				<c:forEach items="${resultMap.pagination.records }" var="ratePo" varStatus="vs">
 					<tr class="text-c">
-						<td><input type="checkbox" value="" name=""></td>
+						<!-- <td><input type="checkbox" value="" name=""></td> -->
 						<td>
 							<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum" varStatus="vs1">
 								<c:if test="${ratePo.scopeCityCode == scopeCityEnum.value }">
@@ -88,6 +139,7 @@
 							</c:forEach>
 						</td> 
 						<td style="display:none;" class="channelDiscountId">${ratePo.channelDiscountId }</td><!-- 通道折扣id -->
+						<td style="display:none;" class="channelId">${ratePo.channelId }</td><!-- 通道折扣id -->
 						<td style="display:none;" class="activeId">${ratePo.id }</td><!-- 通道折扣id -->
 						<td style="display:none;" class="billType">${ratePo.billType }</td><!-- 通道折扣id -->
 						<td style="display:none;" class="accountId">${ratePo.accountId }</td><!-- 通道折扣id -->
@@ -99,74 +151,98 @@
 								</c:if>
 							</c:forEach>
 						</td> 
+						<c:choose>
+							<c:when test="${not empty resultMap.childAccountPo.id }">
 								<td><input type="text" class="activeDiscount input-text" name="activeDiscount" id="" value="${ratePo.childRatePo.activeDiscount }" placeholder=" 费率折扣" style="width:80px">
 									<input class="billType" type="hidden" value="${ratePo.childRatePo.activeDiscount }">
 									<input class="childRateId" type="hidden" value="${ratePo.childRatePo.id }">
 								</td>
-								<%-- <td>
-									<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
-										<c:if test="${ratePo.childRatePo.billType ==  billTypeEnum.value}">
-											${billTypeEnum.desc }
-										</c:if>
-									</c:forEach>
-								</td> --%>
-								<!-- 根据费率设置折扣 -->
-						<%-- <c:choose>
-							<c:when test="${empty ratePo.discountList }">
-								<td><input type="text" value="" class="activeDiscount input-text" name="activeDiscount" id="" placeholder=" 费率折扣" style="width:80px"></td>
+										<%-- <td>
+											<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+												<c:if test="${ratePo.childRatePo.billType ==  billTypeEnum.value}">
+													${billTypeEnum.desc }
+												</c:if>
+											</c:forEach>
+										</td> --%>
+										<!-- 根据费率设置折扣 -->
+								<%-- <c:choose>
+									<c:when test="${empty ratePo.discountList }">
+										<td><input type="text" value="" class="activeDiscount input-text" name="activeDiscount" id="" placeholder=" 费率折扣" style="width:80px"></td>
+										<td>
+											<select name="billType"  class=" billType select" onchange="getBillType(this)">
+												<!-- <option value="">请选择</option> -->
+												<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+													<option value="${billTypeEnum.value }" >${billTypeEnum.desc }</option>
+												</c:forEach>
+											</select>
+										</td>
+									</c:when>
+									<c:otherwise>
+										<td><input type="text" value="${ratePo.discountList[0].activeDiscount }" class="activeDiscount input-text" name="activeDiscount" id="" placeholder=" 费率折扣" style="width:80px"></td>
+										<td><!-- <span class="select-box inline"> -->
+											<select class=" billType select" onchange="getBillType(this)">
+												<!-- <option value="">请选择</option> -->
+													<!-- 选中列表第一个费率 -->
+												<c:forEach items="${ratePo.discountList }" var="disPo" varStatus="vs1">
+													<c:if test="${disPo.billType == 1 }">
+														<option value="${disPo.id }">
+															${disPo.billTypeDesc }-${disPo.activeDiscount }
+														</option>
+														<c:set var="bill_co" value="1"></c:set>
+													</c:if>
+													<c:choose>
+														<c:when test="${disPo.billType == 0 }">
+															<option value="${disPo.id }">
+																${disPo.billTypeDesc }-${disPo.activeDiscount }
+															</option>
+															<c:set var="bill_indi" value="1"></c:set>
+														</c:when>
+													</c:choose>
+												</c:forEach>
+												<!-- 补足其他没有设置折扣的 -->
+												<c:if test="${empty bill_co }"><!-- 带票为空 -->
+													<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+														<c:if test="${1 == billTypeEnum.value }">
+															<option value="${billTypeEnum.value }" >${billTypeEnum.desc }</option>
+														</c:if>
+													</c:forEach>
+												</c:if>
+												<c:if test="${empty bill_indi }">
+													<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
+														<c:if test="${0 == billTypeEnum.value }">
+															<option value="${billTypeEnum.value }" >${billTypeEnum.desc }</option>
+														</c:if>
+													</c:forEach>
+												</c:if>
+														${disPo.billType }-${disPo.billTypeDesc }-${disPo.activeDiscount }
+											</select>
+											<!-- </span> -->
+										</td>
+									</c:otherwise>
+								</c:choose> --%>
 								<td>
-									<select name="billType"  class=" billType select" onchange="getBillType(this)">
-										<!-- <option value="">请选择</option> -->
-										<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
-											<option value="${billTypeEnum.value }" >${billTypeEnum.desc }</option>
-										</c:forEach>
-									</select>
+								<c:if test="${not empty ratePo.childRatePo}">
+									<button onclick="delChildRate(this)" class="btn btn-danger radius">删除</button>
+								</c:if> 
+								<button onclick="addUp(this)" class="btn btn-primary radius">设置</button>
 								</td>
 							</c:when>
 							<c:otherwise>
-								<td><input type="text" value="${ratePo.discountList[0].activeDiscount }" class="activeDiscount input-text" name="activeDiscount" id="" placeholder=" 费率折扣" style="width:80px"></td>
-								<td><!-- <span class="select-box inline"> -->
-									<select class=" billType select" onchange="getBillType(this)">
-										<!-- <option value="">请选择</option> -->
-											<!-- 选中列表第一个费率 -->
-										<c:forEach items="${ratePo.discountList }" var="disPo" varStatus="vs1">
-											<c:if test="${disPo.billType == 1 }">
-												<option value="${disPo.id }">
-													${disPo.billTypeDesc }-${disPo.activeDiscount }
-												</option>
-												<c:set var="bill_co" value="1"></c:set>
-											</c:if>
-											<c:choose>
-												<c:when test="${disPo.billType == 0 }">
-													<option value="${disPo.id }">
-														${disPo.billTypeDesc }-${disPo.activeDiscount }
-													</option>
-													<c:set var="bill_indi" value="1"></c:set>
-												</c:when>
-											</c:choose>
-										</c:forEach>
-										<!-- 补足其他没有设置折扣的 -->
-										<c:if test="${empty bill_co }"><!-- 带票为空 -->
-											<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
-												<c:if test="${1 == billTypeEnum.value }">
-													<option value="${billTypeEnum.value }" >${billTypeEnum.desc }</option>
-												</c:if>
-											</c:forEach>
-										</c:if>
-										<c:if test="${empty bill_indi }">
-											<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
-												<c:if test="${0 == billTypeEnum.value }">
-													<option value="${billTypeEnum.value }" >${billTypeEnum.desc }</option>
-												</c:if>
-											</c:forEach>
-										</c:if>
-												${disPo.billType }-${disPo.billTypeDesc }-${disPo.activeDiscount }
-									</select>
-									<!-- </span> -->
+								<td>
+									<c:forEach items="${ratePo.pgList }"  var="pgData" varStatus="vst">
+												${pgData.pgSize }&
+										<%-- <c:choose>
+											<c:when test="${pgData.pgSize == resultMap.searchParam.pgSize }">
+												<mark>${pgData.pgSize }&</mark>
+											</c:when>
+											<c:otherwise>
+											</c:otherwise>
+										</c:choose> --%>
+									</c:forEach>
 								</td>
 							</c:otherwise>
-						</c:choose> --%>
-						<td><button onclick="addUp(this)" class="btn btn-primary radius">设置</button></td>
+						</c:choose>
+						
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -188,12 +264,9 @@
 <script type="text/javascript" src="/view/static/h-ui/js/H-ui.min.js"></script> 
 <script type="text/javascript" src="/view/static/h-ui.admin/js/H-ui.admin.js"></script>
 <!--/_footer 作为公共模版分离出去-->
-
-<!--请在下方写此页面业务相关的脚本-->
-<script type="text/javascript" src="/view/lib/My97DatePicker/4.8/WdatePicker.js"></script> 
 <!-- jQuery -->
-<script type="text/javascript" charset="utf8" src="/view/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="/view/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="/view/mine/showRate.js"></script>
 <script type="text/javascript">
 /* function getBillType(vart){
 	var optionIn = $(vart).find('option:selected').text().trim();
@@ -211,8 +284,35 @@
 	//alert(arr[1]);
 } */
 /* $().ready(function() {
-	
+	$
 }) */
+//删除子折扣
+function delChildRate(vart){
+	var id = $(vart).parents('td').prev().children('.childRateId').val().trim(); //判断值是否为空
+	if(id != ''){
+		layer.confirm('确认删除费率吗？',function(index){
+			$.ajax({
+				type: 'POST',
+				async: false,
+				url: '/flowsys/rate/del_rate.do',
+				//dataType: 'json',
+				data: { rateDiscountId:id},
+				success: function(data){
+					layer.close(index);
+					layer.msg('删除成功', {icon:1,time:1000});
+					location.reload();
+				},
+				error:function(data) {
+					console.log(data.msg);
+					layer.msg("删除失败");
+				},
+			});	
+		});
+	}else{
+		layer.msg("无法删除");
+	}
+}
+
 //添加或者修改代理商的折扣
 function addUp(vart){//vart是提交按钮
 //	var optionIn = $(vart).parents('td').prev().children('.billType').find('option:selected').text().trim();
@@ -221,14 +321,16 @@ function addUp(vart){//vart是提交按钮
 	//var billType = arr[0];
 	//var billType =  $(vart).parents('td').prev().children('.billType').find('option:selected').val();
 	var cDiscountId = $(vart).parents('tr').children('.channelDiscountId').html().trim();//通道折扣Id
+	var channelId = $(vart).parents('tr').children('.channelId').html().trim();//通道折扣Id
 	//alert(cDiscountId);
-	var childAccountId = $('#childAccountId').val();//代理商账户Id
+	//var childAccountId = $('#childAccountId').val();//代理商账户Id
 	//alert(agencyId);
 	var activeId = $(vart).parents('tr').children('.activeId').html().trim();//父级折扣Id
 	var $ad = $(vart).parents('td').prev().children('.activeDiscount');
 	//var activeDiscount = $(vart).parents('td').prev().prev().children('.activeDiscount').val().trim();
 	var activeDiscount = $ad.val().trim();
 	var agencyName = $('#agencyName').val();
+	var accountId = $('#accountId').val();
 	
 	var activeDiscountNum = parseFloat(activeDiscount);
 	//alert(activeDiscountNum);
@@ -261,7 +363,7 @@ function addUp(vart){//vart是提交按钮
 						async: false,
 						url: '/flowsys/rate/add_my_rate.do',
 						//dataType: 'json',
-						data: { activeDiscount:activeDiscount, activeId:activeId, channelDiscountId:cDiscountId, billType:billType},
+						data: { activeDiscount:activeDiscount, activeId:activeId, channelDiscountId:cDiscountId,channelId:channelId, accountId:accountId,childAgencyName:agencyName, billType:billType},
 						success: function(data){
 							layer.close(index);
 							layer.msg('更新成功', {icon:1,time:1000});

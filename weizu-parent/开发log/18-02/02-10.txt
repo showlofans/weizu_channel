@@ -1,0 +1,22 @@
+wx-js:空的列表默认为''吗，如果手动设置为null，那也可以判断为null对象
+小程序不要出现三个以上的判断变量，否则会出现显示效果不佳的问题
+
+welcome.do 在rateController中
+
+{startTime=null, accountId=236, start=0, accountType=0, endTime=1518230188568, end=10}
+
+{startTime=null, start=10, accountType=0, contextAgencyId=48, userName=王小贱, endTime=1518230261000, end=10}
+
+迭代删除折扣，首页防止重新登陆的问题
+
+通道，通道折扣，费率，（删除子费率），级联删除
+
+展示通道，添加起来太麻烦，可能需要商务把最新的折扣发布出来，然后由专人负责整理
+（--展示通道绑定通道，进行编辑添加（通道展示项的地区，运营商，业务类型，带不带票，拿货价格）
+
+根据平台选通道，
+
+
+先添加平台，再添加通道，再从通道这里创建展示通道）
+
+

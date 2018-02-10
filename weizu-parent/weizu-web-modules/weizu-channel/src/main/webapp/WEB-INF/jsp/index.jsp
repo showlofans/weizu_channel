@@ -124,6 +124,8 @@
 					<ul>
 						<!-- <li><a data-href="/flowsys/channel/channel_list.do" data-title="流量通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量通道</a></li> -->
 						<li><a data-href="/flowsys/telRate/agency_telchannel_list.do" data-title="话费通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费通道</a></li>
+						<li><a data-href="/flowsys/rate/my_rate_list.do" data-title="流量通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量通道</a></li>
+						
 						<c:if test="${loginContext.agencyTag == 1 }">
 						<li><a data-href="/flowsys/showRate/showRate_list.do?showModel=0" data-title="通道展示列表" href="javascript:void(0)">通道展示(接口折扣)</a></li>
 						</c:if>

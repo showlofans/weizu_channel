@@ -356,6 +356,7 @@
 						</c:when>
 						</c:choose>
 						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="channel_stop('/flowsys/channel/channel_delete.do',${channel.id})" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> 
+						<a style="text-decoration:none" data-title='展示通道添加' onClick="showRate_add(this,'展示通道添加','/flowsys/showRate/showRate_add_page.do?channelId=${channel.id}',0)" href="javascript:;" title="展示通道添加"><i class="Hui-iconfont">&#xe600;</i></a> 
 						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="javascript:;" onclick="getRateList('/flowsys/rate/bind_rate_list.do',this)" data-title="折扣信息"><i class="Hui-iconfont">&#xe725;</i></a>
 						<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" data-href="javascript:;" onclick="editChannel(this,'/flowsys/channel/channel_edit_page.do?channelId=${channel.id}','编辑通道')" data-title="编辑通道"><i class="Hui-iconfont">&#xe6df;</i></a>
 						</td>
@@ -386,6 +387,7 @@
 <!-- jQuery -->
 <script type="text/javascript" charset="utf8" src="/view/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="/view/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="/view/mine/showRate.js"></script>
 <script type="text/javascript">
 /**获得费率列表**/
 function getRateList(url,objt){
