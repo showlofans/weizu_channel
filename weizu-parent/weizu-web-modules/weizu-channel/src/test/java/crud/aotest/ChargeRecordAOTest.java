@@ -73,24 +73,35 @@
 //	 * @author:POP产品研发部 宁强
 //	 * @createTime:2017年8月4日 下午4:08:26
 //	 */
-////	@Test
-////	public void testListConsumeRecord(){
-//////		ConsumeRecordPo crp = new ConsumeRecordPo();
-////////		crp.setAgencyId(4);
-////		Map<String,Object> parmasMap = new HashMap<String,Object>();
+//	@Test
+//	public void testListConsumeRecord(){
+////		ConsumeRecordPo crp = new ConsumeRecordPo();
+//////		crp.setAgencyId(4);
+//		Map<String,Object> parmasMap = new HashMap<String,Object>();
 ////		parmasMap.put("agencyId", 1);
-//////		Pagination<ConsumeRecordPo> pagination = chargeRecordAO.listConsumeRecord(parmasMap,4, crp, new PageParam(1, 10));
-//////		List<ConsumeRecordPo> list = pagination.getRecords();	
-////////		 System.out.println(list.size());
-//////		 System.out.println(list.get(0).getRemittanceTimeStr());
-//////		 System.out.println(list.get(0).getRemittanceTime());
-//////		 System.out.println(list.get(0).getPurchaseId());
+//		parmasMap.put("supperAgencyId", 1);
+//		parmasMap.put("userName", "saiduosai");
+////		parmasMap.put("userName", "saiduosai");
+//		parmasMap.put("accountType", AccountTypeEnum.Replenishment.getValue());
+////		Pagination<ConsumeRecordPo> pagination = chargeRecordAO.listConsumeRecord(parmasMap,4, crp, new PageParam(1, 10));
+////		List<ConsumeRecordPo> list = pagination.getRecords();	
+//////		 System.out.println(list.size());
+////		 System.out.println(list.get(0).getRemittanceTimeStr());
+////		 System.out.println(list.get(0).getRemittanceTime());
+////		 System.out.println(list.get(0).getPurchaseId());
 ////		System.out.println(chargeRecordDao.countConsume(parmasMap));
-//////		 for (ConsumeRecordPo po : list) {
-//////			 System.out.println(po.getRemittanceTimeStr());
-////////			System.out.println("username:"+chargeRecordPo.getUserName());
-//////		}
-////	}
+//		long startTime = DateUtil.strToDate("2018-02-08 00:00:00", null).getTime();
+//		long endTime = DateUtil.strToDate("2018-02-13 00:00:00", null).getTime();
+//		System.out.println("startTIme:"+startTime+"\t endTime:"+endTime);
+//		parmasMap.put("startTime", startTime);
+//		parmasMap.put("endTime", endTime);
+//		List<ConsumeRecordPo> list = chargeRecordDao.getConsume(parmasMap);
+//		 for (ConsumeRecordPo po : list) {
+//			 System.out.println(po.getChargeTel()+"\t"+po.getPurchaseId());
+////			 System.out.println(po.getRemittanceTimeStr());
+////			System.out.println("username:"+chargeRecordPo.getUserName());
+//		}
+//	}
 //	
 //	/**
 //	 * @description: 批量添加
@@ -115,28 +126,28 @@
 ////		System.out.println(res);
 ////	}
 //
-//	@Test
-//	public void testGroupAgencyList(){
-//		ConsumeRecordPo consumeRecordPo = new ConsumeRecordPo();
-////		consumeRecordPo.setAccountType(AccountTypeEnum.DECREASE.getValue());
-//		consumeRecordPo.setShowModel(AgencyLevelEnum.SUPPER_USER.getValue());
-//		consumeRecordPo.setChargeFor(PgServiceTypeEnum.PGCHARGE.getValue());
-////		consumeRecordPo.setStartTime(DateUtil.getStartTime().getTime());
-////		consumeRecordPo.setEndTime(DateUtil.getEndTime().getTime());
-//		String startTimeStr = DateUtil.formatAll(DateUtil.getStartTime().getTime());
-//		String endTimeStr = DateUtil.formatAll(DateUtil.getEndTime().getTime());
-//		consumeRecordPo.setStartTimeStr(startTimeStr);
-//		consumeRecordPo.setEndTimeStr(endTimeStr);
-//		System.out.println("startTime:"+DateUtil.getStartTime().getTime());
-//		System.out.println("endTime:"+DateUtil.getEndTime().getTime());
-//		List<GroupAgencyRecordVo> groupAgencyList =chargeRecordAO.groupAgencyRecord(1, consumeRecordPo);
-//		System.out.println(groupAgencyList.size());
-//		double totalAmount = 0d;
-//		for (GroupAgencyRecordVo groupAgencyRecordVo : groupAgencyList) {
-//			System.out.println(groupAgencyRecordVo.getAgencyName()+":"+groupAgencyRecordVo.getTotalAmount()+":"+groupAgencyRecordVo.getNumb());
-//			System.out.println(groupAgencyRecordVo.getDecreaseAmount()+":"+groupAgencyRecordVo.getDecreaseNumb());
-//		}
-//	}
+////	@Test
+////	public void testGroupAgencyList(){
+////		ConsumeRecordPo consumeRecordPo = new ConsumeRecordPo();
+//////		consumeRecordPo.setAccountType(AccountTypeEnum.DECREASE.getValue());
+////		consumeRecordPo.setShowModel(AgencyLevelEnum.SUPPER_USER.getValue());
+////		consumeRecordPo.setChargeFor(PgServiceTypeEnum.PGCHARGE.getValue());
+//////		consumeRecordPo.setStartTime(DateUtil.getStartTime().getTime());
+//////		consumeRecordPo.setEndTime(DateUtil.getEndTime().getTime());
+////		String startTimeStr = DateUtil.formatAll(DateUtil.getStartTime().getTime());
+////		String endTimeStr = DateUtil.formatAll(DateUtil.getEndTime().getTime());
+////		consumeRecordPo.setStartTimeStr(startTimeStr);
+////		consumeRecordPo.setEndTimeStr(endTimeStr);
+////		System.out.println("startTime:"+DateUtil.getStartTime().getTime());
+////		System.out.println("endTime:"+DateUtil.getEndTime().getTime());
+////		List<GroupAgencyRecordVo> groupAgencyList =chargeRecordAO.groupAgencyRecord(1, consumeRecordPo);
+////		System.out.println(groupAgencyList.size());
+////		double totalAmount = 0d;
+////		for (GroupAgencyRecordVo groupAgencyRecordVo : groupAgencyList) {
+////			System.out.println(groupAgencyRecordVo.getAgencyName()+":"+groupAgencyRecordVo.getTotalAmount()+":"+groupAgencyRecordVo.getNumb());
+////			System.out.println(groupAgencyRecordVo.getDecreaseAmount()+":"+groupAgencyRecordVo.getDecreaseNumb());
+////		}
+////	}
 //
 //
 //}

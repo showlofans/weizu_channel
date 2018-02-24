@@ -369,29 +369,34 @@ public class AgencyController {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月20日 上午9:48:07
 	 */
+//	@ResponseBody
 	@RequestMapping(value= AgencyURL.GET_VERIFY_CODE)
 	public void getVerifyCode(HttpServletRequest request,
-			HttpServletResponse response,@RequestParam(value="verifySize",required=false)String verifySize) throws IOException, ServletException {
-		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		
-		if(agencyVo != null){
+			HttpServletResponse response,@RequestParam(value="verifySize",required=false)String verifySize,Integer agencyId) throws IOException, ServletException {
+//		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		AgencyBackwardPo agencyPo = agencyAO.getAgencyById(agencyId);
+		if(agencyPo != null){
 			//String verifyCode = agencyAO.getVerifyCodeById(agencyVo.getId());//邀请码
 			String verifyCode = null;
 			if(StringHelper.isEmpty(verifySize)){
-				verifyCode = agencyVo.getUserName();
+				verifyCode = agencyPo.getUserName();
 			}else{
 				boolean check = true;
 				do{
 					verifyCode = VerifyCodeUtils.generateVerifyCode(Integer.parseInt(verifySize));
 					//通过了代理商表中代理商名称和邀请码验证，就可以
-					check = agencyAO.checkVerifyCode(verifyCode, agencyVo.getUserName());
+					check = agencyAO.checkVerifyCode(verifyCode, agencyPo.getUserName());
 				}while(!check);
 			}
-			agencyVo.setVerifyCode(verifyCode);//更新rootAgency的邀请码字段
-			if(agencyAO.updateAgency(agencyVo) <= 0){
+//			agencyAO.updateAgency(agencyPo);
+			agencyPo.setVerifyCode(verifyCode);//更新rootAgency的邀请码字段
+//			agencyVo.setVerifyCode(verifyCode);//更新rootAgency的邀请码字段
+			if(agencyAO.updateAgency(agencyPo) > 0){
 				verifyCode = "添加邀请码失败！";
+				response.getWriter().print("success"); 
+			}else{
+				response.getWriter().print("error"); 
 			}
-			response.getWriter().print(verifyCode); 
 		}else{
 			switchAccount(request,null);//返回到注册页面
 		}

@@ -34,6 +34,15 @@ public interface AgencyAO {
 	int updateAgency(AgencyBackwardVO agencyBackwardVO);
 	
 	/**
+	 * @description: 修改代理商
+	 * @param agencyBackwardPo
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年2月24日 下午6:23:48
+	 */
+	int updateAgency(AgencyBackwardPo agencyBackwardPo);
+	
+	/**
 	 * @description:登陆
 	 * @param agencyBackward
 	 * @return	结果集

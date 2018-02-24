@@ -178,7 +178,7 @@ public class ChargeImpl implements IChargeFacet {
 				orderResult = OrderStateEnum.UNCHARGE.getValue();
 				orderResultDetail = chargeParams.getUserName()+ "下游余额不足，未扣款直接失败"; 
 				//在日志中用5002来查余额不足的提单请求
-				chargeOne = new Charge(ChargeStatusEnum.LACK_OF_BALANCE.getValue(), orderResultDetail, new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
+				chargeOne = new Charge(ChargeStatusEnum.LACK_OF_BALANCE.getValue(), orderResultDetail, new ChargePo(null, chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
 				String accountDesc = "超管账户更新："+ OrderResultEnum.getEnum(supperRecAddTag).getMsg() + ",传单账户更新："+ OrderResultEnum.getEnum(recAddTag).getMsg();
 				ChargeLog chargeLog = new ChargeLog(chargeParams.toString(), chargeOne.toString(), null, chargeParams.getNumber(), chargeOne.getTipCode(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+":"+accountDesc);
 				chargeLogDao.add(chargeLog);

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.weizu.flowsys.api.singleton.orderState.ResponseJsonDTO;
 import com.weizu.flowsys.api.singleton.orderState.SendCallBackUtil;
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
@@ -103,16 +104,21 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 								ChargeAccountPo accountPo = chargeAccountDao.get(accountId);
 								Double orderAmount = accountPurchasePo.getOrderAmount();
 								Double accountBeforeBalance = accountPo.getAccountBalance();
+//								Double accountAfterBalance = NumberTool.add(accountBeforeBalance,orderAmount);
 								accountPo.addBalance(orderAmount, 1);
-								recordPoList.add(new ChargeRecordPo(realBackTime, orderAmount,
-										accountBeforeBalance, accountPo.getAccountBalance(), 
-										AccountTypeEnum.Replenishment.getValue(), accountId,  1 , orderId));
-								chargeAccountDao.updateLocal(accountPo, new WherePrams("id","=",accountId));
-								//根据已有的扣款记录去添加补款记录
-								AccountPurchasePo apPo = accountPurchaseDao.getAPByAccountType(orderId, accountId, AccountTypeEnum.DECREASE.getValue());
-								apPo.setRecordId(recordId);
-								apPoList.add(apPo);
-								recordId++ ;
+//								accountPo.setAccountBalance(accountAfterBalance);
+								int accountUpRes = chargeAccountDao.updateLocal(accountPo, new WherePrams("id","=",accountId));
+								if(accountUpRes > 0){
+									ChargeAccountPo accountAfterPo = chargeAccountDao.get(accountId);
+									recordPoList.add(new ChargeRecordPo(realBackTime, orderAmount,
+											accountBeforeBalance, accountAfterPo.getAccountBalance(), 
+											AccountTypeEnum.Replenishment.getValue(), accountId,  1 , orderId));
+									//根据已有的扣款记录去添加补款记录
+									AccountPurchasePo apPo = accountPurchaseDao.getAPByAccountType(orderId, accountId, AccountTypeEnum.DECREASE.getValue());
+									apPo.setRecordId(recordId);
+									apPoList.add(apPo);
+									recordId++ ;
+								}
 //								AccountPurchasePo apPo = new AccountPurchasePo(accountId, orderId, rateDiscountId, orderAmount, fromAccountId, recordId, orderPrice, fromAgencyName, orderPlatformPath, orderState)
 							}
 						}

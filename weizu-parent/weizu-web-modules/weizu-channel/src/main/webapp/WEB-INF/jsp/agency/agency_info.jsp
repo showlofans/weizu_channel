@@ -14,7 +14,7 @@
 </head>
 <body>
 	<form action="" method="" class="form form-horizontal" id="form-article-add">
-		<input type="hidden" value="${loginContext.id }" name="id">
+		<input type="hidden" value="${loginContext.id }" id="id" name="id">
 		<!-- 不能修改要原样保留的数据 -->
 		<input type="hidden" value="${loginContext.rootAgencyId }" name="rootAgencyId">
 		<%-- <input type="hidden" value="${loginContext.rootAgencyId }" name="rootAgencyId"> --%>
@@ -84,11 +84,11 @@
 					</select>邀请码
 					<!-- <input id="verifySize"  style="width:200px" maxlength="2" onkeyup='this.value=this.value.replace(/\D/gi,"")' class="input-text"  placeHolder="请输入要生成几位邀请码"> -->
 					<!-- <span  data-toggle="tooltip" data-placement="right" title="选择生成几位数的邀请码"><i class="Hui-iconfont">&#xe6cd;</i></span> -->
-					<a onclick="getVerifyCode(1)"><button class="btn btn-primary radius" >生成</button></a>
-					<a onclick="getVerifyCode(2)"><button class="btn btn-primary radius" >ID生成</button></a>
+					<button class="btn btn-primary radius" onclick="getVerifyCode(1)">生成</button>
+					<button class="btn btn-primary radius"  onclick="getVerifyCode(2)" >ID生成</button>
 				</div>
 				<!-- 直接获取 -->
-				<input type="text" style="width:200px" class="input-text" onkeyup="checkVerify()"  value="${loginContext.verifyCode }" placeholder="" id="verifyCode" name="verifyCode">
+				<input type="text" style="width:200px" class="input-text" onkeyup="checkVerify();"  value="${loginContext.verifyCode }" placeholder="" id="verifyCode" name="verifyCode">
 				<br>（编辑可重新生成）
 				 <button id="copy-button" class="btn btn-primary" data-clipboard-text="Copy Me!" title="Click to copy me." data-clipboard-target="verifyCode">复制</button>
 			</div>
@@ -124,11 +124,12 @@ function checkVerify() {
 		$(".verifyDiv").show(); 
 	}
 	else{
-		$("#verifyCode").val($(".verifyCodeHidden").html().trim())
+		//$("#verifyCode").val($(".verifyCodeHidden").html().trim())
 	}
 }
 //生成按钮，发送获得邀请码的ajax请求
 function getVerifyCode(tagVer){
+	var id = $("#id").val();
 	if(tagVer == 1){
 		var verifySize = $("#verifySize").val();
 		if(verifySize < 4){
@@ -136,13 +137,13 @@ function getVerifyCode(tagVer){
 		}else{
 			$.ajax({
 		        type:"get",
-		        url:"/flowsys/agency/get_verify_code.do?verifySize=" + verifySize,
+		        url:"/flowsys/agency/get_verify_code.do?verifySize=" + verifySize+"&agencyId="+id,
 		        async : false,
 		        success:function(d){
 			        	//alert(d);
-			        	if(d != '初始化邀请码失败！'){
-				        	 $("#verifyCode").show();
-				        	$("#verifyCode").val(d);//将邀请码填进编辑框
+			        	if(d == 'success'){
+				        	//$("#verifyCode").val(d);//将邀请码填进编辑框
+				        	 //$("#verifyCode").show();
 				        	layer.msg("修改成功！");
 			        	}
 			        	//var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
@@ -154,13 +155,13 @@ function getVerifyCode(tagVer){
 	}else if(tagVer == 2){
 		$.ajax({
 	        type:"get",
-	        url:"/flowsys/agency/get_verify_code.do",
+	        url:"/flowsys/agency/get_verify_code.do?agencyId="+id,
 	        async : false,
 	        success:function(d){
 		        	//alert(d);
-		        	if(d != '初始化邀请码失败！'){
-			        	 $("#verifyCode").show();
+		        	if(d == 'success'){
 			        	$("#verifyCode").val(d);//将邀请码填进编辑框
+			        	 $("#verifyCode").show();
 			        	layer.msg("修改成功！");
 		        	}
 		        	//var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
