@@ -72,8 +72,12 @@ public class ChargeAccountDao extends DaoImpl<ChargeAccountPo, Integer> implemen
 	}
 
 	@Override
-	public ChargeAccountPo getAccountByTransferId(Long transferId) {
-		return sqlSessionTemplate.selectOne("getAccountByTransferId", transferId);
+	public ChargeAccountPo getAccountByTransferId(Long transferId,String type) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("bankType", type);
+		map.put("fromBankId", "fromBankId");
+		map.put("id", transferId);
+		return sqlSessionTemplate.selectOne("getAccountByTransferId", map);
 	}
 
 	

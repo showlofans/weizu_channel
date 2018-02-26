@@ -15,6 +15,7 @@ import javax.xml.ws.spi.http.HttpContext;
 
 import org.apache.poi.hssf.util.HSSFColor.BROWN;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -144,12 +145,11 @@ public class AgencyController {
 		String resultMsg = resultMap.get("msg").toString();
 		//一定要分开来查，不能连表查
 		if (resultPo != null && "success".equals(resultMsg)) {
-			ChargeAccountPo chargeAccountPo1 = chargeAccountAO
-					.getAccountByAgencyId(resultPo.getId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
-			
 			HttpSession session = request.getSession();
 			Boolean isSupperUser = resultPo.getRootAgencyId() != null && resultPo.getRootAgencyId() == 0;
-			session.setAttribute("rootAgency", agencyAO.getRootAgencyById(resultPo.getId()));// 保存登陆实体到session中
+//			session.setAttribute("rootAgency", .getRootAgencyById(resultPo.getId()));// 保存登陆实体到session中
+			
+			//设置登陆ip和当前登陆日志
 			Map<String,Object> addressMap  = addressUtils.getAddresses(request, "utf-8");
 //			System.out.println(address);
 			if(addressMap != null ){
@@ -160,6 +160,7 @@ public class AgencyController {
 					loginMap.put("userName", agencyBackward.getUserName());
 					loginMap.put("userPass", agencyBackward.getUserPass());
 					loginMap.put("msg", "该账号已限制登陆地区");
+					//提前返回登陆页面，session中没有设置当前登陆实体，即使账号密码是对的
 					return new ModelAndView("/agency/login_page", "loginMap", loginMap);
 //				model.addAttribute(loginMap);
 //				return "/agency/login_page";
@@ -179,25 +180,25 @@ public class AgencyController {
 						session.setAttribute("loginIpAddress", address);
 					}
 					
-					//添加登陆日志
+					//添加最新登陆日志
 					accountEventDao.add(new AccountEventPo(resultPo.getId(), EventTypeEnum.AGENCY_LOGIN.getValue(), System.currentTimeMillis(), address, eventIp, LoginStateEnum.ING.getValue()+""));
 //				int logAdd = accountEventDao.add(new AccountEventPo(resultPo.getId(), EventTypeEnum.AGENCY_LOGIN.getValue(), System.currentTimeMillis(), address, eventIp, LoginStateEnum.ING.getValue()));
 //				System.out.println("日志成功添加："+logAdd);
 				}
 			}
+			//对私账户
+			
 			//超管登陆的时候，默认如果没有对公账户，就给他创建一个对公账户
+			ChargeAccountPo chargeAccountPo1 = chargeAccountAO
+					.getAccountByAgencyId(resultPo.getId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
 			if(chargeAccountPo1 == null && isSupperUser){
-				chargeAccountPo1 = new ChargeAccountPo(resultPo.getId(), resultPo.getRootAgencyId(),0.00d, BillTypeEnum.CORPORATE_BUSINESS.getValue(), System.currentTimeMillis(), agencyBackward.getUserName());
+				chargeAccountPo1 = new ChargeAccountPo(resultPo.getId(), resultPo.getRootAgencyId(),0.00d, BillTypeEnum.CORPORATE_BUSINESS.getValue(), System.currentTimeMillis(), resultPo.getUserName());
 				chargeAccountAO.createAccount(chargeAccountPo1);//给超管创建一个
 			}
-			//对私账户
+			//设置session中的总余额
 			ChargeAccountPo chargeAccountPo = chargeAccountAO
 					.getAccountByAgencyId(resultPo.getId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-			AgencyBackwardVO agencyVO = agencyAO.getVOByPo(resultPo);
-			session.setMaxInactiveInterval(24*60*60);//一天
-			
 			Double accountBalance = chargeAccountPo.getAccountBalance();
-			
 			if(chargeAccountPo1 != null){
 				accountBalance = NumberTool.add(accountBalance, chargeAccountPo1.getAccountBalance());
 			}
@@ -205,17 +206,14 @@ public class AgencyController {
 			//注册的时候已经保证了可以进行表连接
 			session.setAttribute("totalBalance", accountBalance);//对私
 //			session.setAttribute("chargeAccount1", chargeAccountPo1);//对公
-			
-			
-			
+			//判断登陆模式，设置显示方式
 			String agencyIp = agencyBackward.getAgencyIp();
 			if(StringHelper.isNotEmpty(agencyIp) && "telLogin".equals(agencyIp)){
-				session.setAttribute("telLogin", agencyIp);//对公
+				session.setAttribute("telLogin", agencyIp);//登陆方式，手机登陆
 			}
 			
-//			List<RateBackwardPo> rateList = rateBackwardDao.selectByRootId(resultPo.getId());
-//			session.setAttribute("loginContext", agencyVO);// 保存登陆实体到session中
-			
+			//根据登陆返回的实体进行权限设置
+			AgencyBackwardVO agencyVO = agencyAO.getVOByPo(resultPo);
 			if(agencyAO.checkNextSecondAgency(agencyVO.getId()) == 1){
 				//设置访问权限为限制(三级代理商)
 				session.setAttribute("power", "limited");
@@ -232,7 +230,8 @@ public class AgencyController {
 			}
 			session.setAttribute("loginContext", agencyVO);// 保存登陆实体到session中
 			/**设置消息*/
-			messageTool.setMsg(resultPo.getId(), session);
+//			messageTool.setMsg(resultPo.getId(), session);
+			session.setMaxInactiveInterval(24*60*60);//一天
 			
 			return new ModelAndView("/agency/login_page");// 返回登录人主要账户信息（余额，透支额）
 //			return "/agency/login_page";
@@ -246,23 +245,6 @@ public class AgencyController {
 			return new ModelAndView("/agency/login_page", "loginMap", loginMap);
 		}
 	}
-	/**
-	 * @description: 首页控制
-	 * @param request
-	 * @return
-	 * @author:微族通道代码设计人 宁强
-	 * @createTime:2017年12月9日 上午9:08:19
-	 */
-//	@RequestMapping(value=AgencyURL.INDEX)
-//	public String goIndex(HttpServletRequest request) {
-////		request.get
-//		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-//		if(agencyVo == null){
-//			return "/agency/login_page";
-//		}
-//		return "index";
-//	}
-
 	/**
 	 * @description: 跳转到注册页面
 	 * @param request
@@ -288,21 +270,21 @@ public class AgencyController {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月7日 下午6:45:53
 	 */
-	@RequestMapping(value = AgencyURL.WELCOME)
-	public ModelAndView welcomePage(HttpServletRequest request){
-		
-		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
-		String power = request.getSession().getAttribute("power").toString();
-		if("limited".equals(power))
-		{//三级代理商
-			
-		}
-//		chargeAccountAO.
-		Map<String,Object> resultMap = new HashMap<String, Object>();
-		resultMap.put("OperatorTypeEnums", OperatorTypeEnum.toList());
-		
-		return new ModelAndView("/agency/welcome_page","resultMap",resultMap);
-	}
+//	@RequestMapping(value = AgencyURL.WELCOME)
+//	public ModelAndView welcomePage(HttpServletRequest request){
+//		
+//		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+//		String power = request.getSession().getAttribute("power").toString();
+//		if("limited".equals(power))
+//		{//三级代理商
+//			
+//		}
+////		chargeAccountAO.
+//		Map<String,Object> resultMap = new HashMap<String, Object>();
+//		resultMap.put("OperatorTypeEnums", OperatorTypeEnum.toList());
+//		
+//		return new ModelAndView("/agency/welcome_page","resultMap",resultMap);
+//	}
 	/**
 	 * @description: 修改密码页面
 	 * @param request
@@ -371,6 +353,7 @@ public class AgencyController {
 	 */
 //	@ResponseBody
 	@RequestMapping(value= AgencyURL.GET_VERIFY_CODE)
+	@Transactional
 	public void getVerifyCode(HttpServletRequest request,
 			HttpServletResponse response,@RequestParam(value="verifySize",required=false)String verifySize,Integer agencyId) throws IOException, ServletException {
 //		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
@@ -392,7 +375,6 @@ public class AgencyController {
 			agencyPo.setVerifyCode(verifyCode);//更新rootAgency的邀请码字段
 //			agencyVo.setVerifyCode(verifyCode);//更新rootAgency的邀请码字段
 			if(agencyAO.updateAgency(agencyPo) > 0){
-				verifyCode = "添加邀请码失败！";
 				response.getWriter().print("success"); 
 			}else{
 				response.getWriter().print("error"); 

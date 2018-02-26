@@ -51,7 +51,7 @@ public interface ChargeAccountDaoInterface extends Dao<ChargeAccountPo, Integer>
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年10月12日 下午5:58:10
 	 */
-	ChargeAccountPo getAccountByTransferId(Long transferId);
+	ChargeAccountPo getAccountByTransferId(Long transferId, String type);
 	
 	
 }

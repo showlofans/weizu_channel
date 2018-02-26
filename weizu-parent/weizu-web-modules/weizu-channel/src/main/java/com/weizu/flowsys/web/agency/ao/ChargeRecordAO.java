@@ -6,19 +6,23 @@ import java.util.Map;
 import com.aiyi.base.pojo.PageParam;
 import com.aiyi.base.pojo.PurchasePo;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordVo;
 
 public interface ChargeRecordAO {
+	
 	/**
-	 * @description:修改代理商账户信息
-	 * @param chargeRecordPo
+	 * @description: 账户转账充值
+	 * @param toAccountPo
+	 * @param rechargeAmount
+	 * @param fromAccountPo
 	 * @return
-	 * @author:POP产品研发部 宁强
-	 * @createTime:2017年5月6日 下午4:06:02
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年2月25日 下午3:53:07
 	 */
-	int updateAccount(Integer accountId, Double rechargeAmount,Integer loginContextId);
+	int chargeAccount(ChargeAccountPo toAccountPo, Double rechargeAmount,ChargeAccountPo fromAccountPo);
 	
 	/**
 	 * @description:修改登陆用户账户余额

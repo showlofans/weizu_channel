@@ -327,7 +327,7 @@ public class ChargeImpl implements IChargeFacet {
 			}
 		}else{
 			charge = (Charge) sqlMap.get("exceptionDTO");
-			ChargeLog chargeLog = new ChargeLog(chargeParams.toString(), charge.toString(), null, chargeParams.getNumber(), charge.getTipCode(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+":异常-没有生成订单！");
+			ChargeLog chargeLog = new ChargeLog(JSON.toJSONString(chargeParams), JSON.toJSONString(charge), null, chargeParams.getNumber(), charge.getTipCode(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+":异常-没有生成订单！");
 			chargeLogDao.add(chargeLog);
 		}
 		return charge;

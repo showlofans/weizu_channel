@@ -43,12 +43,12 @@
 ////	 }
 ////	@Test
 ////	public void testGetEpByEpName(){
-////		String name = "河南趣闻分省";
+////		String name = "广州彩趣流量";
 ////		ExchangePlatformPo epPo = exchangePlatformAO.getEpByEpName(name);
 ////		if(epPo != null){
-//////			String userPass2 = Hash.BASE_UTIL.decode(epPo.getEpUserPass());
-//////			System.out.println("userName="+ epPo.getEpUserName()+" ,userPass="+ userPass2);
-////			System.out.println("userName="+ epPo.getEpUserName()+" ,userPass="+ epPo.getEpUserPass());
+////			String userPass2 = Hash.BASE_UTIL.decode(epPo.getEpUserPass());
+////			System.out.println("userName="+ epPo.getEpUserName()+" ,userPass="+ userPass2);
+//////			System.out.println("userName="+ epPo.getEpUserName()+" ,userPass="+ epPo.getEpUserPass());
 ////		}else{
 ////			System.out.println("没有该平台信息");
 ////		}
@@ -58,25 +58,27 @@
 ////		String resMsg = exchangePlatformAO.updateEpBalance();
 ////		System.out.println(resMsg);
 ////	}
-//	@Test
-//	public void testGetEpInPurchase(){
-//		ExchangePlatformPo epPo = exchangePlatformDao.getEpInPurchase(766087584798478336l);
-//		String epJsonStr = JSON.toJSONString(epPo);
-//		System.out.println(epJsonStr);
-//	}
 ////	@Test
-////	public void testGetEp(){
-//////		Pagination<ExchangePlatformPo>  pagination = exchangePlatformAO.getEp(4, null, null);
-//////		System.out.println(pagination.getRecords().size());
-////		List<ExchangePlatformPo> list = exchangePlatformDao.list(new WherePrams("id", "!=", "32"));
-////		for (ExchangePlatformPo exchangePlatformPo : list) {
-////			String epUserPass = exchangePlatformPo.getEpUserPass();
+////	public void testGetEpInPurchase(){
+////		ExchangePlatformPo epPo = exchangePlatformDao.getEpInPurchase(766087584798478336l);
+////		String epJsonStr = JSON.toJSONString(epPo);
+////		System.out.println(epJsonStr);
+////	}
+//	@Test
+//	public void testGetEp(){
+////		Pagination<ExchangePlatformPo>  pagination = exchangePlatformAO.getEp(4, null, null);
+////		System.out.println(pagination.getRecords().size());
+//		List<ExchangePlatformPo> list = exchangePlatformDao.list(new WherePrams("1", "=", "1"));//new WherePrams("id", "!=", "32")
+//		for (ExchangePlatformPo exchangePlatformPo : list) {
+//			String epUserPass = exchangePlatformPo.getEpUserPass();
+//			epUserPass = Hash.BASE_UTIL.decode(epUserPass);
+//			System.out.println("epName="+ exchangePlatformPo.getEpName()+"\tuserName="+ exchangePlatformPo.getEpUserName()+" ,userPass="+ epUserPass);
 ////			epUserPass = Hash.BASE_UTIL.encode(epUserPass);
 ////			exchangePlatformPo.setEpUserPass(epUserPass);
 ////			exchangePlatformDao.updateLocal(exchangePlatformPo);
-////		}
-////		System.out.println(list!= null? list.size():"空");
-////	}
+//		}
+//		System.out.println(list!= null? list.size():"空");
+//	}
 ////	@Test
 ////	public void testAddEp(){
 ////		int epId = new Long(exchangePlatformDao.nextId()).intValue();

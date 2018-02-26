@@ -43,6 +43,8 @@ public class TransferRecAOImpl implements TransferRecAO {
 	@Resource
 	private ChargeAccountDaoInterface chargeAccountDao;
 //	@Resource
+//	private ChargeAccountAo chargeAccountAO;
+//	@Resource
 //	private ChargeRecordDaoInterface chargeRecordDao;
 	@Resource
 	private ChargeRecordAO chargeRecordAO;
@@ -139,12 +141,24 @@ public class TransferRecAOImpl implements TransferRecAO {
 			 bankPo.setReferenceBalance(referAccountBanlance);
 			 up1 = bankAccountDao.updateLocal(bankPo,new WherePrams("id", "=", bankPo.getId()));
 			 
-			 ChargeAccountPo accountPo = chargeAccountDao.getAccountByTransferId(id);
+			 ChargeAccountPo accountPo = chargeAccountDao.getAccountByTransferId(id,"fromBankId");//来源银行卡，要加的账户
+			 ChargeAccountPo toAccountPo = chargeAccountDao.getAccountByTransferId(id,"toBankId");//转入银行卡，要减的账户
+			 int chargeAccountRes = 0;
+			 if(toAccountPo != null){
+				 if(toAccountPo.getAccountBalance() >=  transferAmount){
+					 chargeAccountRes = chargeRecordAO.chargeAccount(accountPo , transferAmount, toAccountPo);
+					 if(chargeAccountRes <= 0){
+						 return "noMoney";
+					 }
+				 }else{
+					 return "error";//余额不足，无法审核转账
+				 }
+			 }
 			 
-			 ChargeRecordPo paramsPo = new ChargeRecordPo(transferAmount, accountPo.getBillType(), AccountTypeEnum.INCREASE.getValue(), accountPo.getId());
-			 Integer loginContextId = bankPo.getAgencyId();
-			 int upAccount = chargeRecordAO.updateAccount(accountPo.getId(),transferAmount, loginContextId);
-			 up1 += upAccount -1 ;
+//			 ChargeRecordPo paramsPo = new ChargeRecordPo(transferAmount, accountPo.getBillType(), AccountTypeEnum.INCREASE.getValue(), accountPo.getId());
+//			 Integer loginContextId = bankPo.getAgencyId();
+//			 int upAccount = chargeRecordAO.updateAccount(accountPo.getId(),transferAmount, loginContextId);
+			 up1 += chargeAccountRes -1 ;
 			 
 			 //将转账金额设置为0
 			 transferPo.setTransferAmount(transferAmount);

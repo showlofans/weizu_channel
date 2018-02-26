@@ -63,8 +63,8 @@
     <h1 data-anchor-id="xbv3" id="南昌微族流量接口文档">平台接口文档</h1>
     <blockquote data-anchor-id="tger" class="white-blockquote"> 
    <p><strong>南昌微族流量充值平台入口：<a href="https://www.91weizu.cn" target="_blank">https://www.91weizu.cn</a>&nbsp; &nbsp;注册邀请码：询问商务</strong></p> 
-   <p>接口使用前提：完成对公账户的认证，获得apikey</p> 
-   <p><!-- 版本:V1.0  -->更新时间：2018-02-08 17:29:00</p> 
+   <p>接口使用前提：在账户管理中，完成对公账户的认证，获得apikey</p> 
+   <p><!-- 版本:V1.0  -->更新时间：2018-02-26 17:29:00</p> 
    <p><!-- 版本:V1.0  -->接口对接咨询：3004599415#qq.com</p> 
     </blockquote>
     <div class="md-section-divider"></div>
@@ -271,7 +271,7 @@
      <li>回调数据格式json </li>
      <li>响应内容: ok 为成功，其他则失败 </li>
      <!-- <li>响应说明: 超时或者非200状态码的 http 响应系统会判断回调失败，并且重新发起回调，共四次回调，间隔为30秒、60秒、120秒，300秒</li>  -->
-    </ul>
+    <li>
     <table data-anchor-id="06rb" class="table table-striped-white table-bordered"> 
      <thead> 
       <tr> 
@@ -299,7 +299,7 @@
       <tr> 
        <td style="text-align:left;">status</td> 
        <td style="text-align:left;">int 3</td> 
-       <td style="text-align:left;">充值结果:成功1失败0 </td> 
+       <td style="text-align:left;">充值结果:成功-1,失败-0 </td> 
       </tr> 
       <tr> 
        <td style="text-align:left;">statusDetail</td> 
@@ -314,6 +314,11 @@
       <tr> 
      </tbody>
     </table>
+    </li>
+    <li>推送JSON数据:
+    	<pre class="prettyprint linenums prettyprinted" data-anchor-id="9eqf"><ol class="linenums"><li class="L0"><code><span class="pun">{</span></code></li><li class="L4"><code><span class="pln">    </span><span class="str">&quot;orderIdFrom&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">&quot;20180226155956807609&quot;</span><span class="pun">,</span></code></li><li class="L5"><code><span class="pln">        </span><span class="str">&quot;timeStamp&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">1519632128299</span><span class="pun">,</span></code></li><li class="L6"><code><span class="pln">    </span><span class="str">&quot;chargeTel&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">&quot;13333333333&quot;</span><span class="pun">,</span></code></li><li class="L7"><code><span class="pln">    </span><span class="str">&quot;statusDetail&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">&quot;（手动推送）批量手动失败&quot;</span><span class="pun">,</span></code></li><li class="L9"><code><span class="pln">    </span><span class="str">&quot;status&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">0</span><span class="pun">,</span></code></li><li class="L0"><code><span class="pln">    </span><span class="str">&quot;orderId&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">793998072853041152</span></code></li><li class="L5"><code><span class="pun">}</span></code></li></ol></pre>
+    </li>
+    </ul>
     <div class="md-section-divider"></div> 
     <h3 data-anchor-id="hju9" id="3获取账号余额">3.获取账号余额</h3>
     <ul data-anchor-id="cqrx"> 

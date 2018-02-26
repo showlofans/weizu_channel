@@ -41,17 +41,25 @@
  	 </sql> -->
  	 
  	 <!-- 通过转账记录id找到关联的转账账户 -->
- 	 <select id="getAccountByTransferId" parameterType="long" resultMap="BaseResultMap">
+ 	 <select id="getAccountByTransferId" parameterType="map" resultMap="BaseResultMap">
  	 	select <include refid="Base_Column_List"></include>
  	 	FROM <include refid="t_account"></include> act
 		WHERE id = 
 		(SELECT bct.account_id
 		FROM <include refid="t_transfer"></include> tfrec
 		INNER JOIN <include refid="t_bct"></include> bct
-		on tfrec.from_bank_id=bct.id
+		<choose>
+			<when test="bankType == fromBankId ">
+				on tfrec.from_bank_id=bct.id
+			</when>
+			<otherwise>
+				on tfrec.to_bank_id=bct.id
+			</otherwise>
+		</choose>
+		
 		<where>
 			<!-- <if test=""></if> -->
-			tfrec.id = #{_parameter}
+			tfrec.id = #{id}
 		</where>
 		)
  	 </select>

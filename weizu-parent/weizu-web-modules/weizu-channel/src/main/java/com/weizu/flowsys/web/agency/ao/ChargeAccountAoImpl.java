@@ -208,7 +208,11 @@ public class ChargeAccountAoImpl implements ChargeAccountAo {
 
 	@Override
 	public CompanyCredentialsPo getCredentialByAgency(int agencytId, int confirmAgencyId) {
-		return companyCredentialsDao.get(new WherePrams("agency_id", "=", agencytId).and("confirm_agency_id", "=", confirmAgencyId));
+		return companyCredentialsDao.get(new WherePrams("agency_id", "=", agencytId).and("confirm_agency_id", "=", confirmAgencyId));//
+	}
+	@Override
+	public CompanyCredentialsPo getCredentialByAgency(int agencytId) {
+		return companyCredentialsDao.get(new WherePrams("agency_id", "=", agencytId));
 	}
 
 }

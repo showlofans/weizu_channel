@@ -17,16 +17,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.aiyi.base.pojo.PageParam;
+import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.ConfirmStateTransferEnum;
 import com.weizu.flowsys.operatorPg.enums.InOrOutEnum;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.ao.BankAccountAO;
 import com.weizu.flowsys.web.agency.ao.TransferRecAO;
 import com.weizu.flowsys.web.agency.dao.BankAccountDaoInterface;
+import com.weizu.flowsys.web.agency.dao.ChargeAccountDaoInterface;
 import com.weizu.flowsys.web.agency.dao.ITransferRecDao;
+import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.BankAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
@@ -46,6 +50,10 @@ public class BankAccountController {
 	private ITransferRecDao transferRecDao;
 	@Resource
 	private TransferRecAO transferRecAO;
+	@Resource
+	private ChargeAccountDaoInterface chargeAccountDao;
+	@Resource
+	private AgencyAO agencyAO;
 	
 	/**
 	 * @description: 绑定银行卡
@@ -62,7 +70,7 @@ public class BankAccountController {
 		
 		Map<String,Object> resultMap = new HashMap<String,Object>();
 		if(agencyVo != null){
-			bankAccountAO.getAttachBankList(accountId, agencyVo.getId(), resultMap);;
+			bankAccountAO.getAttachBankList(accountId, agencyVo.getId(), resultMap);
 		}else{
 			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！");
 		}
@@ -94,6 +102,7 @@ public class BankAccountController {
 			BankAccountPo originalBankPo = bankAccountDao.get(id);
 			if(originalBankPo != null){
 				BankAccountPo bankPo = new BankAccountPo(chileAccountId, originalBankPo.getRemittanceWay(), originalBankPo.getRemittanceBankAccount(), originalBankPo.getAccountName(), null, agencyVo.getId(), CallBackEnum.POSITIVE.getValue(), CallBackEnum.POSITIVE.getValue());
+				bankPo.setBaHide(CallBackEnum.NEGATIVE.getValue());
 				return bankAccountAO.attachBank(bankPo);
 			}
 		}
@@ -123,13 +132,22 @@ public class BankAccountController {
 	
 	
 	
+	/**
+	 * @description:我的银行卡列表 (母卡列表)
+	 * @param request
+	 * @param baHIde
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年2月26日 上午9:30:12
+	 */
 	@RequestMapping(value=BankAccountURL.MY_BANK_LIST)
-	public ModelAndView listBankAccount(HttpServletRequest request){
+	public ModelAndView listBankAccount(HttpServletRequest request,@RequestParam(value="baHide",required=false)Integer baHIde){
+		
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		
 		Map<String,Object> resultMap = new HashMap<String,Object>();
 		if(agencyVo != null){
-			bankAccountAO.getMyBankList(agencyVo.getId(), resultMap);
+			bankAccountAO.getMyBankList(agencyVo.getId(), baHIde, resultMap);
 		}else{
 			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！");
 		}
@@ -150,15 +168,18 @@ public class BankAccountController {
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		Map<String,Object> resultMap = new HashMap<String,Object>();
 		if(agencyVo != null){
+			//初始化列表信息
 			bankAccountAO.getPlusBankList(agencyVo.getRootAgencyId(),accountId, resultMap);
 		}else{
 			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！");
 		}
-			
+		//
 		BankAccountPo myBank = bankAccountAO.getBankPoById(id);//子代理商的银行卡id
-		if(myBank != null){
-			resultMap.put("myBank", myBank);
-		}
+		resultMap.put("myBank", myBank);
+		//查询父级代理商
+		AgencyBackwardPo rootAgency = agencyAO.getRootAgencyById(agencyVo.getRootAgencyId());
+		resultMap.put("rootAgency", rootAgency);
+		
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		return new ModelAndView("/bank/plus_bank_list", "resultMap", resultMap);
 	}
@@ -172,9 +193,10 @@ public class BankAccountController {
 	 * @createTime:2017年10月9日 下午3:44:33
 	 */
 	@RequestMapping(value=BankAccountURL.ADD_BANK_PAGE)
-	public ModelAndView addBankAccountPage(HttpServletRequest request,Integer billType){
+	public ModelAndView addBankAccountPage(HttpServletRequest request,Integer accountId){
 		Map<String,Object> resultMap = new HashMap<String,Object>();
-		resultMap.put("billType", billType);
+//		resultMap.put("billType", billType);
+		resultMap.put("accountId", accountId);
 //		resultMap.put("callBackEnums", CallBackEnum.toList());
 		return new ModelAndView("/bank/bank_add", "resultMap", resultMap);
 	}
@@ -189,24 +211,31 @@ public class BankAccountController {
 	@RequestMapping(value=BankAccountURL.ADD_BANK)
 	@ResponseBody
 	public String addBankAccount(HttpServletRequest request,BankAccountPo bankPo){
-		
 //		bankAccountDao.getOriginalBankA(paramsMap)
-		
-		if(BillTypeEnum.CORPORATE_BUSINESS.getValue().equals(bankPo.getBillType())){
-			ChargeAccountPo accountPo1 = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
-			if(accountPo1 != null){
-				bankPo.setAccountId(accountPo1.getId());
-				//添加银行卡
-				return bankAccountAO.addBank(bankPo);
-			}
-		}else{
-			ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
+		if(bankPo.getAccountId() != null){
+			ChargeAccountPo accountPo = chargeAccountDao.get(bankPo.getAccountId());
 			if(accountPo != null){
+				bankPo.setBillType(accountPo.getBillType());
 				bankPo.setAccountId(accountPo.getId());
 				//添加银行卡
 				return bankAccountAO.addBank(bankPo);
 			}
 		}
+//		if(BillTypeEnum.CORPORATE_BUSINESS.getValue().equals(bankPo.getBillType())){
+//			ChargeAccountPo accountPo1 = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount1");
+//			if(accountPo1 != null){
+//				bankPo.setAccountId(accountPo1.getId());
+//				//添加银行卡
+//				return bankAccountAO.addBank(bankPo);
+//			}
+//		}else{
+//			ChargeAccountPo accountPo = (ChargeAccountPo)request.getSession().getAttribute("chargeAccount");
+//			if(accountPo != null){
+//				bankPo.setAccountId(accountPo.getId());
+//				//添加银行卡
+//				return bankAccountAO.addBank(bankPo);
+//			}
+//		}
 		return "error";
 	}
 	/**
@@ -240,7 +269,7 @@ public class BankAccountController {
 		return new ModelAndView("/bank/bank_edit", "resultMap", resultMap);
 	}
 	/**
-	 * @description: 编辑银行卡i信息
+	 * @description: 编辑所有子母银行卡i信息
 	 * @param request
 	 * @param id
 	 * @return
@@ -250,12 +279,17 @@ public class BankAccountController {
 	@RequestMapping(value=BankAccountURL.EDIT_BANK)
 	@ResponseBody
 	public String editBankAccount(HttpServletRequest request,BankAccountPo bankPo){
-		int res = bankAccountDao.updateLocal(bankPo, new WherePrams("id", "=", bankPo.getId()));
-		if(res > 0){
-			return "success";
-		}else{
-			return "error";
+		String msg = "error";
+		if(bankPo.getId() != null){
+			BankAccountPo paramsPo = bankAccountDao.get(bankPo.getId());
+			if(paramsPo != null){
+				int res = bankAccountDao.updateLocal(bankPo, new WherePrams("agency_id", "=", paramsPo.getAgencyId()).and("remittance_bank_account", "=", paramsPo.getRemittanceBankAccount()));
+				if(res > 0){
+					msg = "success";
+				}
+			}
 		}
+		return msg;
 	}
 	/**
 	 * @description: 自己删除银行卡
@@ -265,18 +299,73 @@ public class BankAccountController {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年10月9日 下午4:42:31
 	 */
+//	@Deprecated
+//	@RequestMapping(value=BankAccountURL.DEL_BANK)
+//	@ResponseBody
+//	@Transactional
+//	public String delBankAccount(HttpServletRequest request,Long id){
+//		BankAccountPo bankPo = bankAccountDao.get(id);
+//		//删除子母银行卡
+//		int res = bankAccountDao.del(new WherePrams("agency_id", "=", bankPo.getAgencyId()).and("remittance_bank_account", "=", bankPo.getRemittanceBankAccount()));
+//		if(res > 0){
+//			return "success";
+//		}else{
+//			return "error";
+//		}
+//	}
+	/**
+	 * @description: 隐藏银行卡
+	 * @param request
+	 * @param id
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年2月25日 下午2:38:08
+	 */
 	@RequestMapping(value=BankAccountURL.DEL_BANK)
 	@ResponseBody
 	@Transactional
-	public String delBankAccount(HttpServletRequest request,Long id){
+	public String hideBankAccount(HttpServletRequest request,Long id){
 		BankAccountPo bankPo = bankAccountDao.get(id);
-		//删除子母银行卡
-		int res = bankAccountDao.del(new WherePrams("agency_id", "=", bankPo.getAgencyId()).and("remittance_bank_account", "=", bankPo.getRemittanceBankAccount()));
-		if(res > 0){
-			return "success";
-		}else{
-			return "error";
+		String msg = "error";
+		if(bankPo != null){
+			bankPo.setBaHide(CallBackEnum.POSITIVE.getValue());//设为隐藏
+			bankPo.setPolarity(CallBackEnum.POSITIVE.getValue());//改变银行卡的默认状态为不默认
+			bankPo.setLastAccess(System.currentTimeMillis());
+			int res = bankAccountDao.updateLocal(bankPo, new WherePrams("agency_id", "=", bankPo.getAgencyId()).and("remittance_bank_account", "=", bankPo.getRemittanceBankAccount()));
+			//删除子母银行卡
+//			int res = bankAccountDao.del(new WherePrams("agency_id", "=", bankPo.getAgencyId()).and("remittance_bank_account", "=", bankPo.getRemittanceBankAccount()));
+			if(res > 0){
+				msg = "success";
+			}	
 		}
+		return msg;
+	}
+	/**
+	 * @description: 银行卡上架/显示
+	 * @param request
+	 * @param id
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年2月26日 上午9:18:36
+	 */
+	@RequestMapping(value=BankAccountURL.SHOW_BANK)
+	@ResponseBody
+	@Transactional
+	public String showBankAccount(HttpServletRequest request,Long id){
+		BankAccountPo bankPo = bankAccountDao.get(id);
+		String msg = "error";
+		if(bankPo != null){
+			bankPo.setBaHide(CallBackEnum.NEGATIVE.getValue());//设为隐藏
+			bankPo.setLastAccess(System.currentTimeMillis());
+			bankPo.setPolarity(CallBackEnum.NEGATIVE.getValue());//上架改变银行卡的默认状态为默认
+			int res = bankAccountDao.updateLocal(bankPo, new WherePrams("agency_id", "=", bankPo.getAgencyId()).and("remittance_bank_account", "=", bankPo.getRemittanceBankAccount()));
+			//删除子母银行卡
+//			int res = bankAccountDao.del(new WherePrams("agency_id", "=", bankPo.getAgencyId()).and("remittance_bank_account", "=", bankPo.getRemittanceBankAccount()));
+			if(res > 0){
+				msg = "success";
+			}	
+		}
+		return msg;
 	}
 	/**
 	 * @description: 删除绑定银行卡

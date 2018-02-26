@@ -41,6 +41,8 @@ public class BankAccountPo extends Po implements Cloneable{
 	@TempField
 	private Double accountBalance;		//页面参数：绑定账户余额带票类型
 	
+	private Integer baHide;			//银行卡是否隐藏 1-隐藏，0-不隐藏 CallBackEnum
+	
 	private Long lastAccess;			//最后更新时间
 	@TempField
 	private String lastAccessStr;		//页面展示时间
@@ -69,6 +71,14 @@ public class BankAccountPo extends Po implements Cloneable{
             e.printStackTrace();  
         }  
 		return pvo;
+	}
+
+	public Integer getBaHide() {
+		return baHide;
+	}
+
+	public void setBaHide(Integer baHide) {
+		this.baHide = baHide;
 	}
 
 	public Long getLastAccess() {

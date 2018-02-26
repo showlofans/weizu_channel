@@ -48,6 +48,10 @@
 				<td>${resultMap.companyCredentialsPo.agencyName }</td>
 			</tr>
 			<tr>
+				<th class="text-r" width="35%">对接apikey:</th>
+				<td><span class="c-red">${resultMap.userApiKey }</span></td>
+			</tr>
+			<tr>
 				<th class="text-r" width="35%">对公余额：</th>
 				<td>${resultMap.billAccountPo.accountBalance }</td>
 			</tr>

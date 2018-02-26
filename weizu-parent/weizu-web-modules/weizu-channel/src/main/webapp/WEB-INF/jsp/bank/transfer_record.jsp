@@ -41,6 +41,8 @@
 				<!-- <input type="text" style="width:150px" class="input-text" name="start_datetime"  value="2017-05-26 00:00:00"  onClick="WdatePicker({startDate:'%y-%M-%d 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
 	                  	<em class="inputto">至</em>
 	            <input style="width:150px" type="text" class="input-text" name="end_datetime"   value="2017-05-26 23:59:59"  onClick="WdatePicker({startDate:'%y-%M-%d 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/> -->
+				银行卡：<span class="c-success">${resultMap.bankPo.remittanceWay }</span>
+				账号：<span class="c-success">${resultMap.bankPo.remittanceBankAccount }</span>
 				转账类型：<span class="select-box inline">
 							<select name="direction"  id="direction" class="select" onchange="formSub()">
 								<c:forEach items="${resultMap.inOrOutEnums }" var="inOrOutEnum" varStatus="vs1">
@@ -48,8 +50,6 @@
 								</c:forEach>
 							</select>
 						</span>
-				银行卡：<span class="c-success">${resultMap.bankPo.remittanceWay }</span>
-				账号：<span class="c-success">${resultMap.bankPo.remittanceBankAccount }</span>
 				<!-- <button name="" id="" class="btn btn-success"  type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button> -->
 				<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
 				<input type="hidden" name="bankId" value="${resultMap.bankPo.id }"> 
@@ -239,7 +239,11 @@ function transfer_shenhe(obj,id,confirmState){
 					{
 						layer.msg('审核通过成功', {icon:6,time:1000});
 						location.reload();
-					}else{
+					}
+					else if("noMoney" == data){
+						layer.msg('审核通过失败，账户余额不足', {icon:6,time:1000});
+					}
+					else{
 						layer.msg('审核通过失败', {icon:5,time:1000});
 					}
 				},

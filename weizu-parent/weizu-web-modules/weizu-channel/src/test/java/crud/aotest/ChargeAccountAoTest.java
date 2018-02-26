@@ -58,12 +58,25 @@
 ////		ChargeAccountPo accouontPo = chargeAccountDao.getAccountByTransferId(1l);
 ////		System.out.println(accouontPo.getAccountBalance());
 ////	}
+////	@Test
+////	public void getAccountByAgencyId(){
+////		//wechat:246
+////		ChargeAccountPo accouontPo = chargeAccountAO.getAccountByAgencyId(231, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+////		System.out.println(accouontPo.getId());
+////		System.out.println(accouontPo.getAccountBalance());
+////	}
+//	/**
+//	 * @description: 根据转账记录获得账户信息
+//	 * @author:微族通道代码设计人 宁强
+//	 * @createTime:2018年2月25日 下午5:13:04
+//	 */
 //	@Test
-//	public void getAccountByAgencyId(){
-//		//wechat:246
-//		ChargeAccountPo accouontPo = chargeAccountAO.getAccountByAgencyId(231, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-//		System.out.println(accouontPo.getId());
-//		System.out.println(accouontPo.getAccountBalance());
+//	public void testgetAccountByTransferId(){
+//		ChargeAccountPo accountPo = chargeAccountDao.getAccountByTransferId(10l, "fromBankId");
+//		ChargeAccountPo toAccountPo = chargeAccountDao.getAccountByTransferId(10l, "toBankId");
+//		System.out.println(accountPo.getAccountBalance());
+//		System.out.println(toAccountPo.getAccountBalance());
+//		
 //	}
 ////	@Test
 ////	public void getRootAccountById(){

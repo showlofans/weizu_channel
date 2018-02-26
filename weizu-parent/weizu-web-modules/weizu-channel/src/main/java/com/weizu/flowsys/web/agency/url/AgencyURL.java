@@ -17,6 +17,7 @@ public class AgencyURL extends BaseURL {
 	public static final String MODEL_NAME = "/flowsys/agency";
 	/**
 	 * 代理商登陆
+	 * <br>/flowsys/agency/home.do
 	 */
 	public static final String INDEX = "/home";
 	/**

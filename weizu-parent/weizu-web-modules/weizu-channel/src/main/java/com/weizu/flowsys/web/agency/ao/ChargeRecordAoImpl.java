@@ -41,25 +41,19 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 	
 	
 	
+
 	/**
-	 * @description:修改代理商账户信息
-	 * @param chargeRecordPo
-	 * @param agnecyId 当前登陆的代理商id
+	 * @description: 加款
+	 * @param chargeAccountPo 要加的账户
+	 * @param chargeAmount 
+	 * @param loginAccountPo 要减的账户
 	 * @return
-	 * @author:POP产品研发部 宁强
-	 * @createTime:2017年6月10日 下午12:23:46
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年2月25日 下午4:42:24
 	 */
 	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
-	public int updateAccount(Integer accountId, Double chargeAmount,Integer loginContextId) {
-		ChargeAccountPo chargeAccountPo = chargeAccountDao.get(accountId);
-		
-//		if(chargeRecordPo.getBillType() == BillTypeEnum.CORPORATE_BUSINESS.getValue()){
-//			
-//		}
-		
-//		int accountId = chargeRecordPo.getAccountId();
-		ChargeAccountPo loginAccountPo = chargeAccountDao.selectByAgencyId(loginContextId, chargeAccountPo.getBillType());
+	public int chargeAccount(ChargeAccountPo chargeAccountPo, Double chargeAmount,ChargeAccountPo loginAccountPo) {
 		/****************修改登陆账户********************/
 		/**充值前余额*/
 		double agencyBeforeBalance = loginAccountPo.getAccountBalance();

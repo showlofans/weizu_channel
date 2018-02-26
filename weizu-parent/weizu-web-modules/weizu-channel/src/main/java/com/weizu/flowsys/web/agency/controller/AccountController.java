@@ -237,7 +237,11 @@ public class AccountController {
 		AgencyBackwardVO agencyVo = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");//修改当前代理商账户
 		if(agencyVo != null)
 		{
-			result = chargeRecordAO.updateAccount(accountId,rechargeAmount, agencyVo.getId());
+			ChargeAccountPo chargeAccountPo = chargeAccountAO.getAccountById(accountId);
+			if(chargeAccountPo != null){
+				ChargeAccountPo loginAccountPo = chargeAccountAO.getAccountByAgencyId(agencyVo.getId(), chargeAccountPo.getBillType());
+				result = chargeRecordAO.chargeAccount(chargeAccountPo,rechargeAmount, loginAccountPo);
+			}
 		}
 		
 		if(result > 0){
@@ -347,10 +351,15 @@ public class AccountController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		if(agencyVo != null)
 		{
-			CompanyCredentialsPo companyCredentialsPo = chargeAccountAO.getCredentialByAgency(agencyId, agencyVo.getId());
+			CompanyCredentialsPo companyCredentialsPo = chargeAccountAO.getCredentialByAgency(agencyId);
 //			CompanyCredentialsPo ccpo = companyCredentialsDao.checkCraatedByAgencyId(agencyVo.getId());
 			if(companyCredentialsPo != null){
 				companyCredentialsPo.setConfirmTimeStr(DateUtil.formatAll(companyCredentialsPo.getConfirmTime()));
+			}
+			//查询验证用户的apikey
+			AgencyBackwardPo agencyPo = agencyAO.getAgencyById(agencyId);
+			if(agencyPo != null){
+				resultMap.put("userApiKey", agencyPo.getUserApiKey());
 			}
 			resultMap.put("companyCredentialsPo", companyCredentialsPo);
 			ChargeAccountPo billAccountPo = chargeAccountAO.getAccountByAgencyId(agencyId, BillTypeEnum.CORPORATE_BUSINESS.getValue());//获得对公账户余额
@@ -486,6 +495,8 @@ public class AccountController {
 //		
 		Map<String,Object> resultMap = new HashMap<String, Object>();
 		boolean secondAgency = agencyAO.checkSecondAgency(agencyVo.getId());
+		AgencyBackwardPo rootAgency = agencyAO.getRootAgencyById(agencyVo.getId());
+		resultMap.put("rootAgency",rootAgency);
 		resultMap.put("secondAgency",secondAgency);
 		resultMap.put("chargeAccount",chargeAccount);
 		resultMap.put("chargeAccount1",chargeAccount1);
