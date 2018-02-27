@@ -29,6 +29,7 @@ import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
+import com.weizu.flowsys.util.JsonFormatTool;
 import com.weizu.flowsys.util.OrderUril;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
@@ -180,7 +181,7 @@ public class ChargeImpl implements IChargeFacet {
 				//在日志中用5002来查余额不足的提单请求
 				chargeOne = new Charge(ChargeStatusEnum.LACK_OF_BALANCE.getValue(), orderResultDetail, new ChargePo(null, chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
 				String accountDesc = "超管账户更新："+ OrderResultEnum.getEnum(supperRecAddTag).getMsg() + ",传单账户更新："+ OrderResultEnum.getEnum(recAddTag).getMsg();
-				ChargeLog chargeLog = new ChargeLog(chargeParams.toString(), chargeOne.toString(), null, chargeParams.getNumber(), chargeOne.getTipCode(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+":"+accountDesc);
+				ChargeLog chargeLog = new ChargeLog(JSON.toJSONString(chargeParams), JSON.toJSONString(chargeOne), null, chargeParams.getNumber(), chargeOne.getTipCode(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+":"+accountDesc);
 				chargeLogDao.add(chargeLog);
 				charge = new Charge(ChargeStatusEnum.LACK_OF_BALANCE.getValue(), ChargeStatusEnum.LACK_OF_BALANCE.getDesc(), null);
 			}else{
@@ -247,7 +248,7 @@ public class ChargeImpl implements IChargeFacet {
 				//记录下游日志
 				charge = new Charge(ChargeStatusEnum.CHARGE_SUCCESS.getValue(), ChargeStatusEnum.CHARGE_SUCCESS.getDesc(), new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
 				String accountDesc = "超管账户更新："+ OrderResultEnum.getEnum(supperRecAddTag).getMsg() + ",传单账户更新："+ OrderResultEnum.getEnum(recAddTag).getMsg();
-				ChargeLog chargeLogBack = new ChargeLog(chargeParams.toString(), charge.toString(), orderId, chargeParams.getNumber(), charge.getTipCode(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+":"+accountDesc);
+				ChargeLog chargeLogBack = new ChargeLog(JSON.toJSONString(chargeParams),JSON.toJSONString(charge), orderId, chargeParams.getNumber(), charge.getTipCode(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+":"+accountDesc);
 				chargeLogDao.add(chargeLogBack);
 				
 				ExchangePlatformPo epPo = exchangePlatformDao.get(channelPo.getEpId());
@@ -259,7 +260,7 @@ public class ChargeImpl implements IChargeFacet {
 					pc = productCodeAO.getOneProductCodeByPg(pgData.getId());
 				}
 				//设置日志信息，根据上游充值状态，设置自己的订单结果状态
-				String logInContent = chargeParams.toString();
+				String logInContent = JSON.toJSONString(chargeParams); 
 				String logOutContent = "";
 				int tipCode = -1;
 				boolean canChargeByBI =  pc != null && purResult > 0 && supperApAddRes > 0 && supperRecAddRes > 0 && recAddRes > 0 && apAddRes > 0;
@@ -273,7 +274,7 @@ public class ChargeImpl implements IChargeFacet {
 							purchasePo.setOrderResult(orderResult);
 							purchasePo.setOrderResultDetail(orderResultDetail);
 							chargeOne = new Charge(ChargeStatusEnum.API_ERROR.getValue(), "chargeDTO为空", new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
-							logOutContent = chargeOne.toString();
+							logOutContent =  JSON.toJSONString(chargeOne);
 							tipCode = chargeOne.getTipCode();
 						}else{
 							//上有接口充值返回异常
@@ -307,12 +308,12 @@ public class ChargeImpl implements IChargeFacet {
 						purchasePo.setOrderResult(orderResult);
 						purchasePo.setOrderResultDetail(orderResultDetail);
 						chargeOne = new Charge(ChargeStatusEnum.CHANNEL_CLOSED.getValue(), orderResultDetail, new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
-						logOutContent = chargeOne.toString();
+						logOutContent =  JSON.toJSONString(chargeOne);
 						tipCode = chargeOne.getTipCode();
 					}
 				}else{
 					chargeOne = new Charge(-1, "产品编码未配置,pc:"+(pc == null), new ChargePo(purchasePo.getOrderId(), chargeParams.getNumber(), chargeParams.getFlowsize(), chargeParams.getBillType()));
-					logOutContent = chargeOne.toString();
+					logOutContent =  JSON.toJSONString(chargeOne);
 					tipCode = chargeOne.getTipCode();
 					//logger.config(orderStateDetail + ":没有通过接口充值，不产生接口订单号");
 				}

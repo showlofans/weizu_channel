@@ -225,6 +225,9 @@
  			<if test="channelDiscountId != null">
  				 AND active.channel_discount_id= #{channelDiscountId}
  			</if>
+ 			<if test="billType != null">
+	 			AND act.bill_type = #{billType}
+	 		</if>
   	 	</where>)
  		<if test="userName != null">
  			AND a2.user_name like concat('%',#{userName},'%') 

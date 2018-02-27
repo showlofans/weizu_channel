@@ -140,7 +140,7 @@ public class OuterAPIController {
 			//System.out.println("传单参数：" + chargeParams.toString());
 			charge = chargeImpl.charge(chargeParams);
 		} catch (Exception e) {
-			ChargeLog chargeLog = new ChargeLog(chargeParams.toString(), "无返回，有异常", null, chargeParams.getNumber(), ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc());
+			ChargeLog chargeLog = new ChargeLog(JSON.toJSON(chargeParams).toString(), "无返回，有异常", null, chargeParams.getNumber(), ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc());
 			chargeLogDao.add(chargeLog);
 			charge = new Charge(ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc(), null);
 			e.printStackTrace();
