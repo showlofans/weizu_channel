@@ -324,12 +324,14 @@
     select 
     count(*)
      FROM <include refid="t_purchase"></include> pur
-     inner join <include refid="t_ap"></include> ap
+	 inner join <include refid="t_ap"></include> ap
      on pur.order_id = ap.purchase_id
+     inner join <include refid="t_crt"></include> crt
+  	on crt.id=ap.record_id
 	 INNER join <include refid="t_account"></include> act
 	on ap.account_id=act.id 
-	inner join <include refid="t_crt"></include> crt
-  	on crt.id=ap.record_id
+	 INNER join <include refid="t_account"></include> act2
+	on ap.from_account_id=act2.id 
 	<choose>
 		<when test="pgcharge == purchaseFor"><!-- 流量充值 -->
 			INNER join <include refid="t_pg"></include> pg

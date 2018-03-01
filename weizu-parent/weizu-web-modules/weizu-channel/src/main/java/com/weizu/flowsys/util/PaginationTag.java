@@ -59,7 +59,7 @@ public class PaginationTag extends SimpleTagSupport {
 				.append(divClass).append("\">");
 		
 		if(pagination.getTotalRecord()==0 && pagination.getTotalRecordLong() == 0){
-			strBuf.append(" <span>").append(" 没有记录了！！</span> ");
+			strBuf.append(" <span>").append(" 没有找到相关记录！！</span> ");
 		}else if(pagination.getTotalRecordLong() != 0){
 			// 上一页
 			if (pagination.getPageNoLong() == 1) {

@@ -30,7 +30,7 @@ public class ChargeRecordPo extends Po implements Cloneable{
 	@TempField
 	private Integer billType; 			// 发票类型（1-对公，0-对私）
 
-	private Integer accountType; 		// 交易类型（1-给上家扣款，0-给下家充值)
+	private Integer accountType; 		// 交易类型（1-扣款，2-补款，0-充值，AccountTypeEnum)
 
 	private Integer accountId; 			// 账户id
 	

@@ -9,11 +9,14 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.weizu.api.outter.enums.ChargeStatusEnum;
 
+import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.AgencyForwardEnum;
 import com.weizu.flowsys.operatorPg.enums.EpEncodeTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
@@ -39,6 +42,8 @@ import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
+import com.weizu.flowsys.web.http.entity.Charge;
+import com.weizu.flowsys.web.http.entity.ChargePo;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.WXPayUtil;
 import com.weizu.flowsys.web.trade.constant.WXPayConfig;
@@ -46,6 +51,7 @@ import com.weizu.flowsys.web.trade.dao.AccountPurchaseDao;
 import com.weizu.flowsys.web.trade.dao.ChargeLogDao;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 import com.weizu.flowsys.web.trade.pojo.AccountPurchasePo;
+import com.weizu.flowsys.web.trade.pojo.ChargeLog;
 import com.weizu.flowsys.web.trade.pojo.PgChargeVO;
 import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 import com.weizu.web.foundation.http.HttpRequest;
@@ -127,7 +133,10 @@ public class WXPayAOImpl implements WXPayAO {
 							if(scopeMap != null){
 								scopeCityCode = scopeMap.get("scopeCityCode").toString();
 							}else{
-								System.out.println("获得地区编码失败");
+//								System.out.println("获得地区编码失败");
+								//记录下游日志
+								ChargeLog chargeLog = new ChargeLog(JSON.toJSONString(pgChargeVO)+"openid:"+openid, "获得地区编码失败", null, pgChargeVO.getChargeTel(), ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), System.currentTimeMillis(), AgencyForwardEnum.BACKWARD.getValue(), "微信小程序");
+								chargeLogDao.add(chargeLog);
 							}
 						}
 //						String scopeCityCode = StringHelper.isNotEmpty(chargeTelDetail)?PurchaseUtil.getScopeCityByCarrier(chargeTelDetail).get("scopeCityCode").toString():null;
@@ -137,12 +146,18 @@ public class WXPayAOImpl implements WXPayAO {
 					}
 //					dataPo = productCodeAO.getOneProductCode(new OneCodePo(scopeCityCode,channel.getEpId(), Integer.parseInt(purchasePo.getPgId())));
 					if(dataPo == null){
-						System.out.println("编码未配置");
+						//记录下游日志
+						ChargeLog chargeLog = new ChargeLog(JSON.toJSONString(pgChargeVO)+"openid:"+openid, "编码未配置", null, pgChargeVO.getChargeTel(), ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), System.currentTimeMillis(), AgencyForwardEnum.BACKWARD.getValue(), "微信小程序");
+						chargeLogDao.add(chargeLog);
+//						System.out.println("编码未配置");
 						return null;
 					}
 //				}
 			}else{
-				System.out.println("通道不存在");
+//				System.out.println("通道不存在");
+				//记录下游日志
+				ChargeLog chargeLog = new ChargeLog(JSON.toJSONString(pgChargeVO)+"openid:"+openid, "通道不存在", null, pgChargeVO.getChargeTel(), ChargeStatusEnum.SCOPE_RATE_UNDEFINED.getValue(), System.currentTimeMillis(), AgencyForwardEnum.BACKWARD.getValue(), "微信小程序");
+				chargeLogDao.add(chargeLog);
 				return null;
 			}
 			Long orderId = null;
@@ -166,8 +181,11 @@ public class WXPayAOImpl implements WXPayAO {
 				chargeTelCity = telMap.get("chargeTelCity").toString();
 				purchasePo.setChargeTelCity(chargeTelCity);
 			}else{
-				logger.config("调用接口异常，设置城市异常");
-				System.out.println("调用接口异常，设置城市异常");
+				//记录下游日志
+				ChargeLog chargeLog = new ChargeLog(JSON.toJSONString(pgChargeVO)+"openid:"+openid, "调用接口异常，设置城市异常", null, pgChargeVO.getChargeTel(), ChargeStatusEnum.CITY_NOT_FOUND.getValue(), System.currentTimeMillis(), AgencyForwardEnum.BACKWARD.getValue(), "微信小程序");
+				chargeLogDao.add(chargeLog);
+//				logger.config("调用接口异常，设置城市异常");
+//				System.out.println("调用接口异常，设置城市异常");
 				return null;
 			}
 			purchasePo.setOrderResult(OrderStateEnum.DAICHONG.getValue());//不在等待中，无法手动失败，成功）
@@ -232,7 +250,15 @@ public class WXPayAOImpl implements WXPayAO {
 			app.setApDiscount(cdisPo.getChannelDiscount());
 			int supperAPPAdd = accountPurchaseDao.add(app);
 			if(supperAPPAdd > 0 && purResult > 0){
+				Charge chargeOne = new Charge(ChargeStatusEnum.CHARGE_SUCCESS.getValue(), ChargeStatusEnum.CHARGE_SUCCESS.getDesc(), new ChargePo(orderId, pgChargeVO.getChargeTel(), null, billType));
+				//记录下游日志
+				ChargeLog chargeLog = new ChargeLog(JSON.toJSONString(pgChargeVO)+"openid:"+openid, JSON.toJSONString(chargeOne), orderId, pgChargeVO.getChargeTel(), ChargeStatusEnum.CHARGE_SUCCESS.getValue(), System.currentTimeMillis(), AgencyForwardEnum.BACKWARD.getValue(), "微信小程序:待付款");
+				chargeLogDao.add(chargeLog);
 				return orderId;
+			}else{
+				//记录下游日志
+				ChargeLog chargeLog = new ChargeLog(JSON.toJSONString(pgChargeVO)+"openid:"+openid, "订单添加失败", orderId, pgChargeVO.getChargeTel(), ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), System.currentTimeMillis(), AgencyForwardEnum.BACKWARD.getValue(), "微信小程序");
+				chargeLogDao.add(chargeLog);
 			}
 		}
 		return null;
