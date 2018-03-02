@@ -602,9 +602,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 			return "调用接口异常，设置城市异常";
 		}
 		purchasePo.setChargeTelCity(chargeTelCity);
-		Boolean isChannelStateCanceled = channel.getChannelState() == ChannelStateEnum.CLOSE.getValue();
+		Boolean isChannelStateCanceled = channel.getChannelState() == ChannelStateEnum.OPEN.getValue();
 		ChargeDTO chargeDTO = null;
-		if(isChannelStateCanceled){
+		if(!isChannelStateCanceled){
 			orderResult = OrderStateEnum.DAICHONG.getValue();
 			orderResultDetail = "通道暂停等待";
 		}else{//通道没有暂停

@@ -1,5 +1,7 @@
 package com.weizu.flowsys.web.agency.ao;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,6 +9,12 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +24,7 @@ import com.aiyi.base.pojo.PurchasePo;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.AgencyLevelEnum;
+import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeRecordDao;
@@ -24,6 +33,7 @@ import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordPo;
 import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordVo;
+import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
 
@@ -269,12 +279,153 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 		
 		return new Pagination<ConsumeRecordPo>(records,totalRecords,pageNo,pageSize);
 	}
+	@Override
+	public HSSFWorkbook exportConsumeRecord(Integer contextAgencyId,ConsumeRecordPo consumeRecordPo)
+	{
+		HSSFWorkbook hbook = null;
+		Map<String, Object> params = getMapByConsume(consumeRecordPo,contextAgencyId);
+		int totalRecords = chargeRecordDao.countConsume(params);
+		if(totalRecords == 0){
+			params.put("startTime",null);
+			consumeRecordPo.setStartTimeStr("");
+			if(StringHelper.isEmpty(consumeRecordPo.getEndTimeStr())){
+				params.put("endTime", System.currentTimeMillis());
+				consumeRecordPo.setEndTimeStr(DateUtil.formatAll(System.currentTimeMillis()));
+			}
+			totalRecords = chargeRecordDao.countConsume(params);
+		}else{
+			Long dateUtilStartTime = null;
+			if(consumeRecordPo.getStartTimeStr() == null){
+				dateUtilStartTime = Long.parseLong(params.get("startTime").toString());
+				consumeRecordPo.setStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+			}else if(" ".equals(consumeRecordPo.getStartTimeStr().trim())){
+//				dateUtilStartTime = DateUtil.getStartTime().getTime();
+//				params.put("startTime", dateUtilStartTime);
+				params.put("startTime",null);
+//				consumeRecordPo.setStartTimeStr(DateUtil.formatAll(dateUtilStartTime));
+//				totalRecords = chargeRecordDao.countConsume(params);
+			}
+			
+			if(StringHelper.isEmpty(consumeRecordPo.getEndTimeStr())){
+				Long dateUtilEndTime = Long.parseLong(params.get("endTime").toString());
+				consumeRecordPo.setEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
+//				purchaseVO.setBackEndTimeStr(DateUtil.formatAll(dateUtilEndTime));
+			}
+			totalRecords = chargeRecordDao.countConsume(params);
+		}
+		List<ConsumeRecordPo> records = chargeRecordDao.getConsume(params);
+		if(records != null){
+			
+			String[] header =
+			{ "所属代理商", "订单号", "手机号", "交易前余额", "交易费用", "交易后余额", "交易类型" ,  "交易时间" };
+
+			hbook = new HSSFWorkbook();
+
+			HSSFSheet hSheet = hbook.createSheet();
+
+			hSheet.setColumnWidth(0, 35 * 80);
+			hSheet.setColumnWidth(1, 35 * 150);
+			hSheet.setColumnWidth(2, 35 * 100);
+			
+			hSheet.setColumnWidth(3, 35 * 100);
+			hSheet.setColumnWidth(4, 35 * 100);
+			hSheet.setColumnWidth(5, 35 * 100);
+			hSheet.setColumnWidth(6, 35 * 80);
+			hSheet.setColumnWidth(7, 35 * 200);
+			HSSFRow hRow = hSheet.createRow(0);
+
+			HSSFCellStyle style = hbook.createCellStyle();
+			style.setFillForegroundColor(HSSFColor.LIME.index);
+			style.setFillBackgroundColor(HSSFColor.GREEN.index);
+			for (int i = 0; i < header.length; i++)
+			{
+				HSSFCell hCell = hRow.createCell(i);
+				hCell.setCellStyle(style);
+				hCell.setCellType(HSSFCell.CELL_TYPE_STRING);
+				hCell.setCellValue(header[i]);
+			}
+
+			int i = 0;
+			//String tradeType = "";				// 台账类型
+			//String tradeNo = "";				// 交易号
+			//初始化时间(引用变量)
+//			for (ConsumeRecordPo consumeRecordPo2 : records) {
+//				consumeRecordPo2.setRemittanceTimeStr(DateUtil.formatAll(consumeRecordPo2.getRemittanceTime()));
+//			}
+			for (ConsumeRecordPo consumeRecordPo2 : records)
+			{
+				i++;
+				hRow = hSheet.createRow(i);
+				//代理商名称
+				hRow.createCell(0).setCellValue(consumeRecordPo2.getUserName());
+				//订单号
+				hRow.createCell(1).setCellValue(consumeRecordPo2.getPurchaseId().toString());
+
+//				else if (r.getTradeType().equals("2"))
+//				{
+//					tradeType = "补款";
+//				}
+				// 充值号码
+				hRow.createCell(2).setCellValue(consumeRecordPo2.getChargeTel());
+//
+//				if (r.getTradeType().equals("2") || r.getTradeType().equals("3"))
+//				{
+//					tradeNo = r.getTradeId() + "";
+//				}
+//				else
+//				{
+//					tradeNo = r.getTradeNo();
+//				}
+				// "交易前余额", "交易费用", "交易后余额", "交易类型" ,  "交易时间"
+
+				// 交易前余额
+				hRow.createCell(3).setCellValue(NumberTool.round(consumeRecordPo2.getChargeBefore(), 3));
+				
+				// 交易费用
+				hRow.createCell(4).setCellValue(NumberTool.round(consumeRecordPo2.getRechargeAmount(), 3));
+				// 交易后余额
+				hRow.createCell(5).setCellValue(NumberTool.round(consumeRecordPo2.getChargeAfter(), 3));
+				//交易类型
+				hRow.createCell(6).setCellValue(AccountTypeEnum.getEnum(consumeRecordPo2.getAccountType()).getDesc() );
+			
+				// 订单完成时间
+				hRow.createCell(7).setCellValue(DateUtil.formatAll(consumeRecordPo2.getRemittanceTime()));
+				
+			}
+		}
+
+//			hRow = hSheet.createRow(i + 1);
+//
+//			hRow.createCell(0).setCellValue("实付金额：" + returnMap.get("alreadyPayAmt"));
+//			hRow.createCell(1).setCellValue("应付金额：" + returnMap.get("shouldPayAmt"));
+//			hRow.createCell(2).setCellValue("冻结金额：" + returnMap.get("freezingAmount"));
+//			hRow.createCell(3).setCellValue("金额期初：" + returnMap.get("preAmt"));
+//			hRow.createCell(4).setCellValue("可用金额：" + returnMap.get("userfulAmount"));
+//
+//			Map<String, Object> params = new HashMap<String, Object>();
+//			params.put("memberId", memberId);
+//			Pagination<InvoiceAccount> invoiceAccountPage = invoiceAccountService.queryPageInvoiceAccount(new PageParam(1, 15), params);
+//
+//			if (invoiceAccountPage != null && invoiceAccountPage.getTotalCount() > 0)
+//			{
+//				InvoiceAccount a = invoiceAccountPage.getRecordList().get(0);
+//				String preInvoiceRecord = VelocityTool.getPreInvoiceRecord(a.getMemberId());
+//
+//				hRow.createCell(5).setCellValue("应收票额：" + NumberTool.formatNumber(a.getPreBalance(), "###,###,##0.00"));
+//				hRow.createCell(6).setCellValue("已收票额：" + NumberTool.formatNumber(NumberUtils.sub(a.getBalance(), NumberUtils.parseDouble(preInvoiceRecord)), "###,###,##0.00"));
+//				hRow.createCell(7).setCellValue("票额期初：" + NumberTool.formatNumber(NumberUtils.parseDouble(preInvoiceRecord), "###,###,##0.00"));
+//				hRow.createCell(8).setCellValue("欠票票额：" + NumberTool.formatNumber(NumberUtils.sub(a.getPreBalance(), a.getBalance()), "###,###,##0.00"));
+//			}
+		
+		return hbook;
+	}
 	
 	@Override
 	public List<GroupAgencyRecordVo> groupAgencyRecord(Integer contextAgencyId,
 			ConsumeRecordPo consumeRecordPo) {
 		//consumeRecordPo.setShowModel(AgencyLevelEnum.SUPPER_USER.getValue());			//超管模式开启统计
 		Map<String, Object> params = getMapByConsume(consumeRecordPo,contextAgencyId); //
+		params.put("accountType", null);//统计需要忽略消费类型
 		if(consumeRecordPo.getStartTimeStr() == null){
 			Long dateUtilStartTime = null;
 			dateUtilStartTime = Long.parseLong(params.get("startTime").toString());
@@ -336,8 +487,10 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 			//将map集合中的对象都取出来，放入list中
 			for (String key : agencyMap.keySet()) {
 				GroupAgencyRecordVo obj = (GroupAgencyRecordVo)agencyMap.get(key);
-				Double realOrderPer = NumberTool.mul(100, NumberTool.div(obj.getNumb() , obj.getDecreaseNumb(),4));
-				obj.setRealOrderPer(realOrderPer);
+				if(!obj.getDecreaseNumb().equals(0)){
+					Double realOrderPer = NumberTool.mul(100, NumberTool.div(obj.getNumb() , obj.getDecreaseNumb(),4));
+					obj.setRealOrderPer(realOrderPer);
+				}
 				volist.add(obj);
 			}
 		}

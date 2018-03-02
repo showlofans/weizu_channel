@@ -84,6 +84,13 @@
 			&nbsp;&nbsp;<button class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
 			&nbsp;&nbsp;<button type="button"class="btn btn-primary" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 			&nbsp;&nbsp;<button class="btn btn-success" onclick="grouWaypSearch()" type="button"><i class="Hui-iconfont">&#xe665;</i> 统计查询</button>
+			<a href="/flowsys/account/export_consume_list.do?chargeTel=${resultMap.searchParams.chargeTel }&userName=${resultMap.searchParams.userName }&purchaseId=${resultMap.searchParams.purchaseId }&showModel=${resultMap.searchParams.showModel }
+					&accountType=${resultMap.searchParams.accountType }
+					&billType=${resultMap.searchParams.billType }
+					&startTimeStr=${resultMap.searchParams.startTimeStr }
+					&endTimeStr=${resultMap.searchParams.endTimeStr }
+					&chargeFor=${resultMap.searchParams.chargeFor }">【导出列表】
+			</a>
 		</div>
 			<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 			<input type="hidden" id="groupWay" name="groupWay" value=""> 

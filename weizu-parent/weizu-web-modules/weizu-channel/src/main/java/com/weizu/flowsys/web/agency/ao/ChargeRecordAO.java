@@ -3,6 +3,8 @@ package com.weizu.flowsys.web.agency.ao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
 import com.aiyi.base.pojo.PageParam;
 import com.aiyi.base.pojo.PurchasePo;
 import com.weizu.flowsys.util.Pagination;
@@ -76,6 +78,16 @@ public interface ChargeRecordAO {
 	 * @createTime:2017年7月3日 下午5:17:19
 	 */
 	Pagination<ConsumeRecordPo> listConsumeRecord(Map<String, Object> resultMap,Integer contextAgencyId,ConsumeRecordPo consumeRecordPo, PageParam pageParam);
+	
+	/**
+	 * @description: 导出消费记录列表
+	 * @param contextAgencyId
+	 * @param consumeRecordPo
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年3月2日 下午4:14:00
+	 */
+	HSSFWorkbook exportConsumeRecord(Integer contextAgencyId,ConsumeRecordPo consumeRecordPo);
 	
 	/**
 	 * @description:购买流量

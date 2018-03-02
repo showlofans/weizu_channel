@@ -1,6 +1,8 @@
 package com.weizu.flowsys.web.agency.controller;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,9 +11,11 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -36,6 +40,8 @@ import com.weizu.flowsys.web.agency.pojo.CompanyCredentialsPo;
 import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordVo;
 import com.weizu.flowsys.web.agency.url.AccountURL;
+import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
+import com.weizu.flowsys.web.trade.url.ChargePgURL;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.String.StringHelper;
 
@@ -210,6 +216,68 @@ public class AccountController {
 			return new ModelAndView("/account/consume_list", "resultMap", resultMap);
 		}else{
 			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
+		}
+	}
+	
+	/**
+	 * @description: 导出账户消费记录
+	 * @param purchaseVO
+	 * @param response
+	 * @param request
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年3月2日 下午4:09:27
+	 */
+	@RequestMapping(value=AccountURL.EXPORT_CONSUME_LIST, method=RequestMethod.GET)
+	public void exportConsumeList(ConsumeRecordPo consumeRecordPo,HttpServletResponse response,HttpServletRequest request){
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		if(agencyVO != null){
+			Integer contextId = agencyVO.getId();
+//			String contextAgencyName = agencyVo.getUserName();
+//			consumeRecordPo.setAgencyId(contextId);
+			if(consumeRecordPo.getChargeFor() == null){
+				consumeRecordPo.setChargeFor(PgServiceTypeEnum.PGCHARGE.getValue());
+			}
+			String exportAgencyName = "";
+			if(consumeRecordPo.getShowModel() == null){
+				if(agencyVO.getRootAgencyId() == 0){
+					consumeRecordPo.setShowModel(AgencyLevelEnum.SUPPER_USER.getValue());
+				}else{
+					consumeRecordPo.setShowModel(AgencyLevelEnum.PLAT_USER.getValue());
+					exportAgencyName = agencyVO.getUserName();//一般模式用当前登陆
+				}
+				if(StringHelper.isNotEmpty(consumeRecordPo.getUserName())){
+					exportAgencyName = consumeRecordPo.getUserName();
+				}
+			}
+//			purchaseVO.setChargeFor(PgServiceTypeEnum.PGCHARGE.getValue());
+			HSSFWorkbook hbook = chargeRecordAO.exportConsumeRecord(contextId, consumeRecordPo); 
+			if (hbook != null)
+			{
+				try
+				{
+					request.setCharacterEncoding("UTF-8");
+					response.reset();
+					response.setCharacterEncoding("UTF-8");
+					response.setContentType("application/msexcel;charset=UTF-8");
+					response.addHeader("Content-Disposition", "attachment;filename=\"" + new String((exportAgencyName+PgServiceTypeEnum.getEnum(consumeRecordPo.getChargeFor()).getDesc()+"订单消费记录" + DateUtil.formatPramm(new Date(), "yyyy-MM-dd") + ".xls").getBytes("GBK"), "ISO8859_1")
+					+ "\"");
+					OutputStream outputStream = response.getOutputStream();
+					hbook.write(outputStream);
+					outputStream.flush();
+					outputStream.close();
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}else{
+			try {
+				response.getOutputStream().print("alert('导出失败，未登录')");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	

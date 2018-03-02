@@ -430,7 +430,7 @@ public class ChargeImpl implements IChargeFacet {
 					return sqlMap;
 				}
 			}
-			Long highTime = System.currentTimeMillis() - 1000*60;//一分钟之前的时间
+			Long highTime = System.currentTimeMillis() - 1000*60*5;//五分钟之前的时间
 			PurchasePo latestPurchasePo = purchaseDAO.getLatestOneByTel(chargeParams.getNumber(), PgServiceTypeEnum.PGCHARGE.getValue(), highTime);
 			if(latestPurchasePo != null){
 				chargeEnum = ChargeStatusEnum.HAS_DOUBLE_PURCHAE;

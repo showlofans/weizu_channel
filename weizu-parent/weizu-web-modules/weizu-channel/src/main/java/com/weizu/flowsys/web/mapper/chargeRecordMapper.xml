@@ -308,9 +308,6 @@
 	<if test="end != null">
 	 	, #{end}
 	 </if>
-	 <if test="start == null &amp; end == null">
-	 	limit 0,10
-	 </if> 
   </select>
   <sql id="consume_condition_sql">
 		<if test="accountId != null">
