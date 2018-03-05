@@ -245,9 +245,9 @@ public class AccountController {
 					consumeRecordPo.setShowModel(AgencyLevelEnum.PLAT_USER.getValue());
 					exportAgencyName = agencyVO.getUserName();//一般模式用当前登陆
 				}
-				if(StringHelper.isNotEmpty(consumeRecordPo.getUserName())){
-					exportAgencyName = consumeRecordPo.getUserName();
-				}
+			}
+			if(StringHelper.isNotEmpty(consumeRecordPo.getUserName())){
+				exportAgencyName = consumeRecordPo.getUserName();
 			}
 //			purchaseVO.setChargeFor(PgServiceTypeEnum.PGCHARGE.getValue());
 			HSSFWorkbook hbook = chargeRecordAO.exportConsumeRecord(contextId, consumeRecordPo); 

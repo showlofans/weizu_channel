@@ -88,7 +88,7 @@ public class ChargeAccountAoImpl implements ChargeAccountAo {
 	@Override
 	public int updateAccount(ChargeAccountPo chargeAccountPo) {
 
-		return chargeAccountDao.updateByAgencyId(chargeAccountPo);
+		return chargeAccountDao.updateById(chargeAccountPo);
 	}
 
 	/**

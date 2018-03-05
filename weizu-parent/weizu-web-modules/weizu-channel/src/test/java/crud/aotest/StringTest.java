@@ -180,9 +180,10 @@
 ////		System.out.println(JSON.toJSONString(rp)); 
 ////		Order order = new Order(new OrderPo(1l, "123", "123", 10, 0.5d, "123", 0, "sorry"), 0, "成功");
 ////		System.out.println(JSON.toJSONString(order));
-//		
-//		System.out.println(DateUtil.formatAll(1514724915904l)); //第一笔订单时间
-//		System.out.println(DateUtil.formatAll(1514724925405l)); //第二笔订单时间
+//		Long str = 0l;
+//		System.out.println(str.equals(0l));
+////		System.out.println(DateUtil.formatAll(1514724915904l)); //第一笔订单时间
+////		System.out.println(DateUtil.formatAll(1514724925405l)); //第二笔订单时间
 ////		Double discount = 526.0d;
 ////		System.out.println(StringUtil2.getDiscountVO(discount)); 
 //		

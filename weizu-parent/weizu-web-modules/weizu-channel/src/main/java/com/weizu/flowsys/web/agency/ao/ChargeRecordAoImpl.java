@@ -487,7 +487,7 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 			//将map集合中的对象都取出来，放入list中
 			for (String key : agencyMap.keySet()) {
 				GroupAgencyRecordVo obj = (GroupAgencyRecordVo)agencyMap.get(key);
-				if(!obj.getDecreaseNumb().equals(0)){
+				if(!(obj.getDecreaseNumb().equals(0l))){
 					Double realOrderPer = NumberTool.mul(100, NumberTool.div(obj.getNumb() , obj.getDecreaseNumb(),4));
 					obj.setRealOrderPer(realOrderPer);
 				}

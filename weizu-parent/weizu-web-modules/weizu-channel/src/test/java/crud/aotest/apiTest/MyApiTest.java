@@ -18,6 +18,7 @@
 //import com.weizu.flowsys.api.weizu.facet.IOrderFacet;
 //import com.weizu.flowsys.api.weizu.order.QueryOrderParams;
 //import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+//import com.weizu.flowsys.util.WxPaySendPost;
 //import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
 //import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 //import com.weizu.flowsys.web.http.entity.Charge;
@@ -88,33 +89,33 @@
 //	 * @author:微族通道代码设计人 宁强
 //	 * @createTime:2017年9月1日 下午6:14:37
 //	 */
-//	@Test
-//	public void testOrder(){
-//		AgencyBackwardPo backPo = agencyVODao.getSecondAgency("123");
-//		if(backPo == null){
-//			System.out.println("不是二级代理商");
-//		}else{
-//			String sign = "";
-//			String apikey =backPo.getUserApiKey(); 
-//			String userPass = "";
-//			try {
-//				userPass = Hash.BASE_UTIL.decode(backPo.getUserPass());
-//				sign = MD5.getMd5("userName="+backPo.getUserName() +"&userPass="+ userPass +"&apikey="+apikey,null,null);
-//			} catch (UnsupportedEncodingException e) {
-//				e.printStackTrace();
-//			}
-//			Order order = orderFacade.getOrder(new QueryOrderParams(backPo.getUserName(), sign, 746904607271161856l, null));
-//			OrderPo orderPo = order.getOrderPo();
-////		String resultStr = HttpRequest.sendPost("http://api.lljypt.com/capi/query.balance", param.toString());
-////			System.out.println(balanceDTO.getAccountBalance());
-////			System.out.println(orderPo.toString());
-//			System.out.println(order.getTipMsg());
-//			System.out.println(orderPo.getStatus());
-//			System.out.println(orderPo.getStatusMSg());
+////	@Test
+////	public void testOrder(){
+////		AgencyBackwardPo backPo = agencyVODao.getSecondAgency("123");
+////		if(backPo == null){
+////			System.out.println("不是二级代理商");
+////		}else{
+////			String sign = "";
+////			String apikey =backPo.getUserApiKey(); 
+////			String userPass = "";
+////			try {
+////				userPass = Hash.BASE_UTIL.decode(backPo.getUserPass());
+////				sign = MD5.getMd5("userName="+backPo.getUserName() +"&userPass="+ userPass +"&apikey="+apikey,null,null);
+////			} catch (UnsupportedEncodingException e) {
+////				e.printStackTrace();
+////			}
+////			Order order = orderFacade.getOrder(new QueryOrderParams(backPo.getUserName(), sign, 746904607271161856l, null));
+////			OrderPo orderPo = order.getOrderPo();
+//////		String resultStr = HttpRequest.sendPost("http://api.lljypt.com/capi/query.balance", param.toString());
+//////			System.out.println(balanceDTO.getAccountBalance());
+//////			System.out.println(orderPo.toString());
+////			System.out.println(order.getTipMsg());
+////			System.out.println(orderPo.getStatus());
 ////			System.out.println(orderPo.getStatusMSg());
-////			System.out.println(orderPo.getNumber());
-//		}
-//	}
+//////			System.out.println(orderPo.getStatusMSg());
+//////			System.out.println(orderPo.getNumber());
+////		}
+////	}
 //	/**
 //	 * @description: 测试充值
 //	 * @author:微族通道代码设计人 宁强
@@ -153,8 +154,25 @@
 ////	}
 ////	@Test
 ////	public void testCallBack(){
-////		String res = HttpRequest.sendGet("http://120.55.162.224:8082/flowsys/callBack/weizu.do", "errcode=1&transaction_id=2&user_order_id=2&number=1&status=1");
+////		String res = HttpRequest.sendGet("https://www.91weizu.cn/flowsys/callBack/weizu.do", "errcode=1&transaction_id=2&user_order_id=2&number=1&status=1");
 ////		System.out.println(res);
 ////	}
+//	@Test
+//	public void testGetProductList(){
+//		AgencyBackwardPo backPo = agencyVODao.getSecondAgency("xiaoning");
+//		String sign = "";
+//		String apikey =backPo.getUserApiKey(); 
+//		String userPass = "";
+//		try {
+//			userPass = Hash.BASE_UTIL.decode(backPo.getUserPass());
+//			sign = MD5.getMd5("userName="+backPo.getUserName()+"&userPass="+ userPass + "&apikey="+apikey,null,null);
+//		} catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//		}
+////		String res =WxPaySendPost.sendGet("https://www.91weizu.cn/flowsys/weizuAPI/my_pgproduct_list", "userName=xiaoning&sign="+sign);
+//		String res =HttpRequest.sendGet("https://www.91weizu.cn/flowsys/weizuAPI/my_pgproduct_list", "userName=xiaoning&sign="+sign);
+//		
+//		System.out.println(res);
+//	}
 //	
 //}

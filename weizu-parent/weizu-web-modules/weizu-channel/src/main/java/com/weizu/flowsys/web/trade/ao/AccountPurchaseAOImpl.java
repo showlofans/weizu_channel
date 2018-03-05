@@ -58,7 +58,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 	
 	@Transactional
 	@Override
-	public String updatePurchaseState(PurchasePo purchasePo1) {
+	public synchronized String updatePurchaseState(PurchasePo purchasePo1) {
 		int ap = 0;
 		int pur = 0;
 		Long realBackTime = purchasePo1.getOrderBackTime();
@@ -97,6 +97,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 						List<ChargeRecordPo> recordPoList = new LinkedList<ChargeRecordPo>();
 						List<AccountPurchasePo> apPoList = new LinkedList<AccountPurchasePo>();
 						Long recordId = chargeRecordDao.nextId();		//没添加的消费记录Id
+						
 						for (AccountPurchasePo accountPurchasePo : list) {
 //							Integer accountId = accountPurchasePo.getaccountId();
 //							int billType = accountPurchasePo.getBillType();
@@ -113,10 +114,11 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 								if(needSet){//没有补款记录就可以补款
 									ChargeAccountPo accountPo = chargeAccountDao.get(accountId);
 									Double accountBeforeBalance = accountPo.getAccountBalance();
-	//								Double accountAfterBalance = NumberTool.add(accountBeforeBalance,orderAmount);
-									accountPo.addBalance(orderAmount, 1);
-	//								accountPo.setAccountBalance(accountAfterBalance);
-									int accountUpRes = chargeAccountDao.updateLocal(accountPo, new WherePrams("id","=",accountId));
+									Double accountAfterBalance = NumberTool.add(accountBeforeBalance,orderAmount);
+//									accountPo.setAccountBalance(NumberTool.add(orderAmount, accountBeforeBalance));
+									accountPo.setAccountBalance(accountAfterBalance);
+//									int accountUpRes = chargeAccountDao.updateLocal(accountPo, new WherePrams("id","=",accountId));
+									int accountUpRes = chargeAccountDao.updateById(accountPo);
 									if(accountUpRes > 0){
 										ChargeAccountPo accountAfterPo = chargeAccountDao.get(accountId);
 										//一个代理商账号，一个订单号只能有一笔补款的消费记录
@@ -177,7 +179,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 
 	@Transactional
 	@Override
-	public String updatePurchaseStateByMe(Long orderId, Integer orderResult,
+	public synchronized String updatePurchaseStateByMe(Long orderId, Integer orderResult,
 			String orderResultDetail, Long realBackTime) {
 		int ap = 0;
 		int pur = 0;

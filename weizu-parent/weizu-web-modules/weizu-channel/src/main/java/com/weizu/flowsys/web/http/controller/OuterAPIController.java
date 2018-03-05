@@ -199,7 +199,7 @@ public class OuterAPIController {
 	 * @createTime:2017年11月9日 下午2:15:56
 	 */
 	@ResponseBody
-	@RequestMapping(value=OuterApiURL.MY_PGPRODUCT_LIST,method=RequestMethod.GET)
+	@RequestMapping(value=OuterApiURL.MY_PGPRODUCT_LIST,method=RequestMethod.GET,produces = "text/json;charset=UTF-8")
 	public String myProductList(String userName,String sign,@RequestParam(value="operaterType", required=false)Integer operaterType){
 		PgProductParams pgParams = new PgProductParams(sign, userName);
 		pgParams.setOperaterType(operaterType);

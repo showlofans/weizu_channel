@@ -1,23 +1,19 @@
 package com.weizu.flowsys.util;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
-
-import org.springframework.stereotype.Service;
-
-import com.weizu.web.foundation.String.StringHelper;
 
 //@Service
 public class WxPaySendPost {
@@ -119,5 +115,67 @@ public class WxPaySendPost {
     	        e.printStackTrace();  
     	    }  
     	    return buffer.toString();  
+    }
+    
+    /**
+     * @description: 发送https：Get请求
+     * @param urls
+     * @param param
+     * @return
+     * @author:微族通道代码设计人 宁强
+     * @createTime:2018年3月3日 下午2:55:56
+     */
+    public static String sendGet(String urls, String param){
+    	String result = "";
+        BufferedReader in = null;
+        try {
+            String urlNameString = urls + "?" + param;
+          //创建SSLContext  
+    	    SSLContext sslContext=SSLContext.getInstance("SSL");  
+    	    TrustManager[] tm={new MyX509TrustManager()};  
+    	    //初始化  
+    	    sslContext.init(null, tm, new java.security.SecureRandom());;  
+    	    //获取SSLSocketFactory对象  
+    	    SSLSocketFactory ssf=sslContext.getSocketFactory();
+    	    
+            URL realUrl = new URL(urlNameString);
+            // 打开和URL之间的连接
+            HttpsURLConnection connection = (HttpsURLConnection) realUrl.openConnection();
+            connection.setSSLSocketFactory(ssf);  
+            // 设置通用的请求属性
+            connection.setRequestProperty("accept", "*/*");
+            connection.setRequestProperty("connection", "Keep-Alive");
+//            connection.setRequestProperty("user-agent",
+//                    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+            // 建立实际的连接
+            connection.connect();
+            // 获取所有响应头字段
+            Map<String, List<String>> map = connection.getHeaderFields();
+            // 遍历所有的响应头字段
+            for (String key : map.keySet()) {
+                System.out.println(key + "--->" + map.get(key));
+            }
+            // 定义 BufferedReader输入流来读取URL的响应
+            in = new BufferedReader(new InputStreamReader(
+                    connection.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null) {
+                result += line;
+            }
+        } catch (Exception e) {
+            System.out.println("发送GET请求出现异常！" + e);
+            e.printStackTrace();
+        }
+        // 使用finally块来关闭输入流
+        finally {
+            try {
+                if (in != null) {
+                    in.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+        return result;
     }
 }

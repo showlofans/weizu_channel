@@ -182,7 +182,7 @@
 				<div class="pd-10 tags">
 				<ul id="Huifold1" class="Huifold">
 				  <li class="item">
-				    <h4>代理商订单消费保守统计<b>-</b></h4>
+				    <h4>代理商订单消费保守统计-不用于精确对账<b>-</b></h4>
 				   	<ul id="Huifold11" class="Huifold">
 				   		<c:forEach items="${resultMap.groupAgencyList }" var="groupAgency" varStatus="vs">
 				   			 <li class="item">
@@ -194,9 +194,9 @@
 										${billTypeEnum.desc }</span>
 									</c:if>
 								</c:forEach>)
-							<span r>实际扣款笔数：${groupAgency.numb } </span>
-							<span r>实际扣款金额：${groupAgency.totalAmount } </span>
-							<span r>有效订单率：${groupAgency.realOrderPer }% </span>
+							<span >计算扣款笔数：${groupAgency.numb } </span>
+							<span >计算扣款金额：${groupAgency.totalAmount } </span>
+							<span >大致有效订单率：${groupAgency.realOrderPer }% </span>
 				   			<b>+</b></h4>
 				   			<div class="info"> 
 						   		<%-- 实际扣款笔数：${groupAgency.numb }<br>

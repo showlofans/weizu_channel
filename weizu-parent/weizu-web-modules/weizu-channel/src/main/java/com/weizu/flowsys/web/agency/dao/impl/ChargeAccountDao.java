@@ -67,8 +67,8 @@ public class ChargeAccountDao extends DaoImpl<ChargeAccountPo, Integer> implemen
 	 * @createTime:2017年5月22日 下午4:26:09
 	 */
 	@Override
-	public int updateByAgencyId(ChargeAccountPo chargeAccountPo) {
-		return sqlSessionTemplate.update("updateByAgencyId", chargeAccountPo);
+	public int updateById(ChargeAccountPo chargeAccountPo) {
+		return sqlSessionTemplate.update("updateById", chargeAccountPo);
 	}
 
 	@Override
@@ -78,6 +78,14 @@ public class ChargeAccountDao extends DaoImpl<ChargeAccountPo, Integer> implemen
 		map.put("fromBankId", "fromBankId");
 		map.put("id", transferId);
 		return sqlSessionTemplate.selectOne("getAccountByTransferId", map);
+	}
+
+	@Override
+	public int updateAccountBalance(Double accountBalance, Integer accountId) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("accountBalance", accountBalance);
+		map.put("id", accountId);
+		return sqlSessionTemplate.update("updateAccountBalance", map);
 	}
 
 	

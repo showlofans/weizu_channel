@@ -42,7 +42,7 @@ public interface ChargeAccountDaoInterface extends Dao<ChargeAccountPo, Integer>
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月22日 下午4:25:12
 	 */
-	int updateByAgencyId(ChargeAccountPo chargeAccountPo);
+	int updateById(ChargeAccountPo chargeAccountPo);
 	
 	/**
 	 * @description: 通过转账记录id找到关联的转账账户
@@ -52,6 +52,16 @@ public interface ChargeAccountDaoInterface extends Dao<ChargeAccountPo, Integer>
 	 * @createTime:2017年10月12日 下午5:58:10
 	 */
 	ChargeAccountPo getAccountByTransferId(Long transferId, String type);
+	
+	/**
+	 * @description: 更新账户余额
+	 * @param accountBalance
+	 * @param accountId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年3月5日 下午3:55:06
+	 */
+	int updateAccountBalance(Double accountBalance, Integer accountId);
 	
 	
 }
