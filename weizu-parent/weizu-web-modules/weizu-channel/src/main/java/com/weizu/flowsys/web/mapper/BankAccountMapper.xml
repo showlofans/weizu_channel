@@ -92,6 +92,9 @@
   		<if test="polarity != null">
   			AND bct.polarity = #{polarity}
   		</if>
+  		<if test="baHide != null">
+  			AND bct.ba_hide = #{baHide}
+  		</if>
   	</where>
   </select>
   

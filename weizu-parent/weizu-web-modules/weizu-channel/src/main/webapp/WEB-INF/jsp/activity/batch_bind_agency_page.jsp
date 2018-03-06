@@ -104,6 +104,7 @@
 				</c:forEach> --%>
 				<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 				<input type="hidden" id="rateDiscountId" name="rateDiscountId" value="${resultMap.aardto.rateDiscountId }"> 
+				<input type="hidden" id="channelDiscountId" name="channelDiscountId" value="${resultMap.aardto.channelDiscountId }">
 		</form>
 	</div>
 	<!-- <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加资讯" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加资讯</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div> -->
@@ -224,6 +225,7 @@ function changeBAllState(url,bindState, updateBindState){
 /**批量更新绑定状态*/
 function changeBState(url,bindState){
 	var rateDiscountId = $('#rateDiscountId').val();
+	var channelDiscountId = $('#channelDiscountId').val();
 	var accountIds = "";
 	$("input[name=agencyCheck]").each(function(){ //遍历table里的全部checkbox
        // allcheckbox += $(this).next().html() + ","; //获取所有checkbox的值
@@ -240,7 +242,7 @@ function changeBState(url,bindState){
 			type: 'POST',
 			url: url,
 			//dataType: 'json',
-			data: {bindState: bindState,rateDiscountId:rateDiscountId,accountIds:accountIds},
+			data: {bindState: bindState,rateDiscountId:rateDiscountId,channelDiscountId:channelDiscountId,accountIds:accountIds},
 			success: function(resp){
 				//$(obj).parents("tr").remove();
 				//alert

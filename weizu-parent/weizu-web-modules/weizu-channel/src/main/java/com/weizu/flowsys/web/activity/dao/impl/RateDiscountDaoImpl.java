@@ -233,11 +233,12 @@ public class RateDiscountDaoImpl extends DaoImpl<RateDiscountPo, Long> implement
 	}
 
 	@Override
-	public RateDiscountPo getPriceByPg(Integer agencyId, Integer pgId, Long channelId) {
+	public RateDiscountPo getPriceByPg(Integer agencyId, Integer pgId, Long channelId, Integer billType) {
 		Map<String,Object> params = new HashMap<String, Object>();
 		params.put("agencyId", agencyId);
 		params.put("pgId", pgId);
 		params.put("channelId", channelId);
+		params.put("billType", billType);
 		params.put("channelUseState", ChannelUseStateEnum.OPEN.getValue());
 		params.put("bindState", BindStateEnum.BIND.getValue());
 		return sqlSessionTemplate.selectOne("getPriceByPg",params);

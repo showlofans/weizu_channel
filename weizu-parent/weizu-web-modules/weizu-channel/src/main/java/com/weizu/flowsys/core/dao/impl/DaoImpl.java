@@ -139,12 +139,16 @@ public class DaoImpl<T extends Po, PK extends Serializable> implements Dao<T, PK
 		
 		for (int i = 0; i < pramList.size(); i++) {
 			prams += pramList.get(i).getFile();
-			if (pramList.get(i).getValue() == null) {
+			Object value= pramList.get(i).getValue();
+			if (value == null) {
 				values += "null";
-			}else if(pramList.get(i).getValue() instanceof Boolean){
-				values += "'" + ((boolean)pramList.get(i).getValue() == true ? 1 : 0) + "'";
-			}else{
-				values += "'" + pramList.get(i).getValue() + "'";
+			}else if(value instanceof Boolean){
+				values += "'" + ((boolean)value == true ? 1 : 0) + "'";
+			}else if(value instanceof Integer || value instanceof Long || value instanceof Double){
+				values += value;
+			}
+			else{
+				values += "'" + value + "'";
 			}
 			
 			if(i < pramList.size() -1){
@@ -152,6 +156,9 @@ public class DaoImpl<T extends Po, PK extends Serializable> implements Dao<T, PK
 				values += ",";
 			}
 		}
+		if(values.lastIndexOf(",") >= 0 && values.lastIndexOf(",") == values.trim().length()-1){
+			values = values.substring(0,values.lastIndexOf(","));
+		} 
 		sql += prams + ") value (" + values +");";
 		
 		SqlUtil.setFileValue(po, "id", nextId()); 

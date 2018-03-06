@@ -1,8 +1,6 @@
 //package crud.aotest;
 //
-//import java.util.HashMap;
 //import java.util.List;
-//import java.util.Map;
 //
 //import javax.annotation.Resource;
 //
@@ -13,10 +11,6 @@
 //
 //import com.alibaba.fastjson.JSON;
 //import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
-//import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
-//import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
-//import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
-//import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 //import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 //import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 //import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
@@ -24,7 +18,6 @@
 //import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 //import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 //import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
-//import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 //import com.weizu.flowsys.web.trade.pojo.RatePgPo;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
@@ -183,11 +176,15 @@
 ////		}
 ////		
 ////	}
-////	@Test
-////	public void testGetRateForCharge(){
-////		ChargeAccountPo accountPo = chargeAccountAo.getAccountByAgencyId(231, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+//	@Test
+//	public void testGetRateForCharge(){
+//		
+////		ChargeAccountPo accountPo = chargeAccountAo.getAccountByAgencyId(233, BillTypeEnum.CORPORATE_BUSINESS.getValue());//233
+//		
+//		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo("陕西移动", 2, 1, "30", 1,10) , 2, true);
+//		System.out.println(ratePo== null);
 ////		System.out.println("accountId:"+accountPo.getId());
-////		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo("陕西移动",ServiceTypeEnum.PROVINCE_ROAMING.getValue(),null,null,null,null), accountPo.getId(), true);
+////		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo("上海移动",ServiceTypeEnum.PROVINCE.getValue(),null,null,null,1024), accountPo.getId(), true);
 ////		//{operatorType=0, channelState=0, billTypeRate=0, channelUseState=0, bindState=0, scopeCityCode=19, serviceType=1, agencyId=4}
 ////		if(ratePo != null){
 ////			System.out.println(ratePo.getActiveDiscount());
@@ -196,18 +193,35 @@
 ////			
 ////			System.out.println("error");
 ////		}
-////	}
-//	@Test
-//	public void testGetRatePgForCharge(){
-//		ChargeAccountPo accountPo = chargeAccountAo.getAccountByAgencyId(231, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
-//		System.out.println("accountId:"+accountPo.getId());
-//		List<RatePgPo> ratePgList = rateDiscountAO.getRatePgForCharge(new ChargeChannelParamsPo("陕西移动",ServiceTypeEnum.PROVINCE_ROAMING.getValue(),null,null,null,null), accountPo.getId(), true);
-//		//{operatorType=0, channelState=0, billTypeRate=0, channelUseState=0, bindState=0, scopeCityCode=19, serviceType=1, agencyId=4}
-//		for (RatePgPo ratePgPo : ratePgList) {
-//			System.out.println(ratePgPo.getPgSize() + "M,折扣价："+ ratePgPo.getPgDiscountPrice());
-//		}
-//		System.out.println(JSON.toJSONString(ratePgList));
 //	}
+////	@Test
+////	public void testGetRatePgForCharge(){
+////		ChargeAccountPo accountPo = chargeAccountAo.getAccountByAgencyId(231, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+////		System.out.println("accountId:"+accountPo.getId());
+////		List<RatePgPo> ratePgList = rateDiscountAO.getRatePgForCharge(new ChargeChannelParamsPo("陕西渭南移动",ServiceTypeEnum.PROVINCE_ROAMING.getValue(),null,null,null,null), accountPo.getId(), true);
+////		//{operatorType=0, channelState=0, billTypeRate=0, channelUseState=0, bindState=0, scopeCityCode=19, serviceType=1, agencyId=4}
+////		System.out.println(ratePgList == null);
+////		if(ratePgList != null){
+////			int PICKEROTHERSIZE = 9;
+////			int ratePgSize = ratePgList.size();
+////			List<RatePgPo> rateShowList = ratePgList.subList(0, PICKEROTHERSIZE-1);//1-9(到第9个)
+////			List<RatePgPo> pickerList = ratePgList.subList(PICKEROTHERSIZE-1,ratePgSize);//9-12(从第9个开始)
+////			for (RatePgPo ratePgPo : pickerList) {
+//////				System.out.println(ratePgPo.getPgSize() + "M,折扣价："+ ratePgPo.getPgDiscountPrice()+"\t1");
+////				System.out.println("id："+ ratePgPo.getPgId()+"\t1");
+////			}
+////			for (RatePgPo ratePgPo : rateShowList) {
+////				System.out.println("id："+ ratePgPo.getPgId()+"\t2");
+//////				System.out.println(ratePgPo.getPgSize() + "M,折扣价："+ ratePgPo.getPgDiscountPrice()+"\t2");
+////			}
+////			for (RatePgPo ratePgPo : ratePgList) {
+////				System.out.println("id："+ ratePgPo.getPgId()+"\t3\tpgSizeStr:"+ratePgPo.getPgSizeStr());
+//////				System.out.println(ratePgPo.getPgSize() + "M,折扣价："+ ratePgPo.getPgDiscountPrice()+"\t2");
+////			}
+////			System.out.println(JSON.toJSONString(ratePgList));
+////			System.out.println("pickerSize="+pickerList.size()+"\tshowSize="+rateShowList.size()+"\trateSize="+ratePgList.size());
+////		}
+////	}
 ////	@Test
 ////	public void testGetMyChildRate(){
 ////		Map<String,Object> pMap = new HashMap<String, Object>();

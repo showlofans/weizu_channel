@@ -57,10 +57,10 @@ public class AllInteceptor implements HandlerInterceptor  {
 //	        	request.getSession().setAttribute("loginContext", agencyVO);
 	    			request.getSession().removeAttribute("loginContext");
 	    			//response.getWriter().print("请先登陆");
-	    			HttpSession session = request.getSession();
-	    			session.setAttribute("errorMsg", "您已在其他地方已退出登陆");
-	    			session.setAttribute("loginIpAddress", accountEventPo.getEventLocation());
-	    			session.setAttribute("loginTime", accountEventPo.getEventTime()==null?System.currentTimeMillis():DateUtil.formatAll(accountEventPo.getEventTime()));
+//	    			HttpSession session = request.getSession();
+//	    			session.setAttribute("errorMsg", "您已在其他地方已退出登陆");
+//	    			session.setAttribute("loginIpAddress", accountEventPo.getEventLocation());
+//	    			session.setAttribute("loginTime", accountEventPo.getEventTime()==null?System.currentTimeMillis():DateUtil.formatAll(accountEventPo.getEventTime()));
 	    			//response.sendRedirect("/WEB-INF/jsp/error");
 	    			return true;
 	    		}

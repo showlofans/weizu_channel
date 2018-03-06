@@ -31,7 +31,7 @@ public class AgencyBackwardPo extends Po{
 
     private String userEmail;				//代理商邮箱
 
-    private String agencyIp;				//代理商系统主页地址
+    private String agencyIp;				//代理商系统主页地址(判断登陆的方式是否为“telLogin”)
 
 //    private Long rateId;					//不带票费率id
     

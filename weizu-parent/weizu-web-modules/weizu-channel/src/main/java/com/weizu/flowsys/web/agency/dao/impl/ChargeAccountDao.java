@@ -67,13 +67,25 @@ public class ChargeAccountDao extends DaoImpl<ChargeAccountPo, Integer> implemen
 	 * @createTime:2017年5月22日 下午4:26:09
 	 */
 	@Override
-	public int updateByAgencyId(ChargeAccountPo chargeAccountPo) {
-		return sqlSessionTemplate.update("updateByAgencyId", chargeAccountPo);
+	public int updateById(ChargeAccountPo chargeAccountPo) {
+		return sqlSessionTemplate.update("updateById", chargeAccountPo);
 	}
 
 	@Override
-	public ChargeAccountPo getAccountByTransferId(Long transferId) {
-		return sqlSessionTemplate.selectOne("getAccountByTransferId", transferId);
+	public ChargeAccountPo getAccountByTransferId(Long transferId,String type) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("bankType", type);
+		map.put("fromBankId", "fromBankId");
+		map.put("id", transferId);
+		return sqlSessionTemplate.selectOne("getAccountByTransferId", map);
+	}
+
+	@Override
+	public int updateAccountBalance(Double accountBalance, Integer accountId) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("accountBalance", accountBalance);
+		map.put("id", accountId);
+		return sqlSessionTemplate.update("updateAccountBalance", map);
 	}
 
 	

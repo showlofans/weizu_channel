@@ -45,6 +45,14 @@ public interface ChargeAccountAo {
 	CompanyCredentialsPo getCredentialByAgency(int agencyId, int confirmAgencyId);
 	
 	/**
+	 * @description: 根据代理商id查询审核信息
+	 * @param agencyId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年2月26日 下午4:54:01
+	 */
+	CompanyCredentialsPo getCredentialByAgency(int agencyId);
+	/**
 	 * @description: 获得所有下级待审核的账户
 	 * @param rootAgencyId
 	 * @param confirmState

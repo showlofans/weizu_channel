@@ -15,7 +15,8 @@
 	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页  <span class="c-gray en">&gt;</span> 账户管理 <span class="c-gray en">&gt;</span> 申请加款 <span class="c-gray en">&gt;</span> 添加充值卡<a class="btn btn-danger radius r" style="line-height:1.6em;margin-top:3px" href="javascript:removeIframe();" title="关闭" ><i class="Hui-iconfont">&#xe6a6;</i></a></nav>
 	<form action="" method="" class="form form-horizontal" id="form-article-add">
 		<!-- 不能修改要原样保留的数据 -->
-		<input type="hidden" value="${resultMap.billType }" name="billType">
+		<input type="hidden" value="${resultMap.accountId }" name="accountId">
+		<%-- <input type="hidden" value="${resultMap.billType }" name="billType"> --%>
 		<input type="hidden" value="${loginContext.id }" name="agencyId">
 		
 		<div class="row cl">
@@ -64,7 +65,7 @@
 		</div>
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
-				<button class="btn btn-primary radius" type="submit" onclick="addBank()"><i class="Hui-iconfont">&#xe632;</i> 添加</button>
+				<button class="btn btn-primary radius" onclick="addBank()"><i class="Hui-iconfont">&#xe632;</i> 添加</button>
 				<button class="btn btn-primary radius" onClick="removeIframe()">取消</button>
 			</div>
 		</div>

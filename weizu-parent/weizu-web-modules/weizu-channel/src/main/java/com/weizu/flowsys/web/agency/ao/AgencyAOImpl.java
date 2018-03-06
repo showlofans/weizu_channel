@@ -162,7 +162,32 @@ public class AgencyAOImpl implements AgencyAO {
 //		chargeAccountDao.updateByAgencyId(chargeAccountPo);//更新信用值信息
 //		chargeAccountDao.updateByAgencyId(chargeAccountPo1);//更新信用值信息
 		//取代理商的其他信息
+//		agencyBackwardVO.setUserPass(userPass);
 		int upresult = agencyVODao.updateLocal(getPoByVo(agencyBackwardVO),new WherePrams("id", "=", agencyBackwardVO.getId()));
+//		int upresult = agencyVODao.updateByAgencyPO(getPoByVo(agencyBackwardVO));
+		return upresult;
+	}
+	/**
+	 * @description:编辑代理商
+	 * @param agencyBackward
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年5月22日 下午5:09:19
+	 */
+	@Transactional
+	@Override
+	public int updateAgency(AgencyBackwardPo agencyBackwardPo) {
+		//主要取信用值和代理商id
+//		ChargeAccountPo chargeAccountPo =  chargeAccountAO.getAccountByAgencyId(agencyBackwardVO.getId(),BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+//		ChargeAccountPo chargeAccountPo1 =  chargeAccountAO.getAccountByAgencyId(agencyBackwardVO.getId(),BillTypeEnum.CORPORATE_BUSINESS.getValue());
+//		chargeAccountPo.setAccountCredit(agencyBackwardVO.getAccountCredit());
+//		chargeAccountPo1.setAccountCredit(agencyBackwardVO.getAccountCredit());
+		
+//		chargeAccountDao.updateByAgencyId(chargeAccountPo);//更新信用值信息
+//		chargeAccountDao.updateByAgencyId(chargeAccountPo1);//更新信用值信息
+		//取代理商的其他信息
+//		agencyBackwardVO.setUserPass(userPass);
+		int upresult = agencyVODao.updateLocal(agencyBackwardPo,new WherePrams("id", "=", agencyBackwardPo.getId()));
 //		int upresult = agencyVODao.updateByAgencyPO(getPoByVo(agencyBackwardVO));
 		return upresult;
 	}
@@ -628,6 +653,9 @@ public class AgencyAOImpl implements AgencyAO {
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
 		if(aardto.getRateDiscountId() != null){
 			paramsMap.put("rateDiscountId", aardto.getRateDiscountId());
+		}
+		if(aardto.getChannelDiscountId() != null){
+			paramsMap.put("channelDiscountId", aardto.getChannelDiscountId());
 		}
 		if(aardto.getAgencyTag() != null){
 			paramsMap.put("agencyTag", aardto.getAgencyTag());

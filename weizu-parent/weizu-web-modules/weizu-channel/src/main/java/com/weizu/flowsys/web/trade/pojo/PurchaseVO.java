@@ -26,6 +26,8 @@ public class PurchaseVO implements Cloneable,Serializable {
 
     private Integer pgSize;						//包体大小
     
+    private String pgSizeStr;						//包体大小
+    
     private Double chargeValue;						//包体原价
     
     private Integer operatorType;				//运营商名称
@@ -110,6 +112,14 @@ public class PurchaseVO implements Cloneable,Serializable {
 		return pvo;
 	}
     
+	public String getPgSizeStr() {
+		return pgSizeStr;
+	}
+
+	public void setPgSizeStr(String pgSizeStr) {
+		this.pgSizeStr = pgSizeStr;
+	}
+
 	public Integer getEpId() {
 		return epId;
 	}

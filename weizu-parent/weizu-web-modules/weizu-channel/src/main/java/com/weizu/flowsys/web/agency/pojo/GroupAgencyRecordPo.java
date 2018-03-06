@@ -16,9 +16,19 @@ public class GroupAgencyRecordPo {
 	
 	private Integer billType;	
 	
+	private Integer accountType;
+	
 	private Long numb;					//订单消费总数（略小）
 	
 	private Double totalAmount;				//总扣款统计	
+
+	public Integer getAccountType() {
+		return accountType;
+	}
+
+	public void setAccountType(Integer accountType) {
+		this.accountType = accountType;
+	}
 
 	public String getAgencyName() {
 		return agencyName;

@@ -51,6 +51,19 @@ public class PgChargeVO {
 		this.cdisId = cdisId;
 	}
 
+	@Override
+	public String toString() {
+		return "PgChargeVO [channelId=" + channelId + ", chargeTel="
+				+ chargeTel + ", chargeTelDetail=" + chargeTelDetail
+				+ ", productCode=" + productCode + ", orderAmount="
+				+ orderAmount + ", chargeValue=" + chargeValue + ", pgId="
+				+ pgId + ", serviceType=" + serviceType + ", fromAgencyName="
+				+ fromAgencyName + ", accountId=" + accountId + ", rateId="
+				+ rateId + ", cdisId=" + cdisId + ", chargeFor=" + chargeFor
+				+ "]";
+	}
+
+
 	public PgChargeVO() {
 		super();
 		// TODO Auto-generated constructor stub

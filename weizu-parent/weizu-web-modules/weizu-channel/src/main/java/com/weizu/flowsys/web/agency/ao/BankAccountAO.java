@@ -14,7 +14,7 @@ public interface BankAccountAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年10月11日 上午10:49:51
 	 */
-	void getMyBankList(Integer contextId, Map<String,Object> resultMap);
+	void getMyBankList(Integer contextId, Integer baHide,Map<String,Object> resultMap);
 	
 	/**
 	 * @description: 根据子代理商账户id查询绑定的银行卡

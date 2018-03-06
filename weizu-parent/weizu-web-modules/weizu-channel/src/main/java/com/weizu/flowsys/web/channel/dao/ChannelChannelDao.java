@@ -102,5 +102,14 @@ public interface ChannelChannelDao extends Dao<ChannelChannelPo, Long> {
 	 * @createTime:2017年10月27日 上午10:24:59
 	 */
 	List<SpecialOpdType> getSpecialOpdType (SpecialOpdType specialOpdType);
+	
+	/**
+	 * @description: 通过通道id获得通道相关的信息
+	 * @param channelId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年2月10日 下午5:11:04
+	 */
+	ChannelChannelPo getChannelById(Long channelId);
 
 }

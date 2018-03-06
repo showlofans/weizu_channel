@@ -80,18 +80,21 @@
     <result column="charge_tel" property="chargeTel" />
   </resultMap>
   <sql id="Consume_Column_List">
-    crt.*,pc.charge_tel,act.bill_type
+    <!-- crt.*,pc.charge_tel,act.bill_type -->
+    crt.id,crt.remittance_time,crt.recharge_amount,crt.charge_before,crt.charge_after,crt.account_type,crt.account_id,crt.charge_for
+	,b.purchase_id,b.from_agency_name,b.charge_tel,b.bill_type
   </sql>
   <!-- 代理商订单消费统计 -->
    <resultMap id="GroupAgencyRecordMap" type="com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordPo">
     <result column="total_amount" jdbcType="DOUBLE" property="totalAmount" />
     <result column="bill_type" jdbcType="INTEGER" property="billType" />
+    <result column="account_type" jdbcType="INTEGER" property="accountType" />
     <result column="account_id" jdbcType="INTEGER" property="accountId" />
     <result column="numb" jdbcType="INTEGER" property="numb" />
     <result column="agency_name" jdbcType="VARCHAR" property="agencyName" />
   </resultMap>
   <sql id="group_Agency_List">
-    act.agency_name,act.id account_id,act.bill_type,
+    act.agency_name,act.id account_id,act.bill_type,crt.account_type,
 	COUNT(*) as numb, round(sum(crt.recharge_amount),4) total_amount
   </sql>
   <!-- 代理商订单消费统计 -->
@@ -117,11 +120,15 @@
 		<if test="startTime != null">
 			AND remittance_time &gt;= #{startTime}
 		</if>
+		<if test="userName != null"><!-- 超管模式，获得子代理商的账户消费信息 -->
+			AND act.agency_name LIKE CONCAT('%', TRIM(#{userName}), '%')
+		</if>
+		
 		<if test="endTime != null">
 			AND remittance_time &lt;= #{endTime}
 		</if>
 	</where>
-	GROUP BY act.agency_name
+	GROUP BY act.id,crt.account_type
 	HAVING numb &gt; 0
   </select>
   
@@ -187,19 +194,95 @@
   <select id="countConsume" parameterType="map" resultType="int">	
   	select count(*) 
   	from <include refid="t_record"></include> crt
-	INNER JOIN <include refid="t_ap"></include> ap
-	on ap.record_id=crt.id
+	INNER JOIN 
+	(select ap.purchase_id, ap.record_id,pc.charge_tel, act.bill_type
+	<choose>
+  		<when test="supperAgencyId != null">
+		  	,act.agency_name from_agency_name
+  		</when>
+  		<otherwise>
+		  	,ap.from_agency_name
+  		</otherwise>
+  	</choose>
+	from <include refid="t_ap"></include> ap
   	inner join <include refid="t_purchase"></include> pc
   	on ap.purchase_id=pc.order_id
 	INNER join <include refid="t_account"></include> act
-	on crt.account_id=act.id
+	on ap.account_id=act.id
+	<where>
+		<if test="agencyId != null">
+			act.agency_id=#{agencyId}
+		</if>
+		<if test="supperAgencyId != null">
+			act.supper_agency_id=#{supperAgencyId}
+		</if>
+		<if test="userName != null"><!-- 超管模式，获得子代理商的账户消费信息 -->
+			AND ap.from_agency_name LIKE CONCAT('%', TRIM(#{userName}), '%')
+		</if>
+		<if test="billType != null">
+			AND act.bill_type = #{billType}
+		</if>
+		
+		<if test="purchaseId != null">
+			AND pc.order_id = #{purchaseId}
+		</if>
+		<if test="chargeTel != null">
+			AND pc.charge_tel LIKE CONCAT('%', TRIM(#{chargeTel}), '%')
+		</if>
+	</where>
+	) b
+	ON crt.id=b.record_id
 	<where>
 		<include refid="consume_condition_sql"></include>
 	</where>
   </select>
   <select id="getConsume" parameterType="map" resultMap="ConsumeRecordMap">	
   	select <include refid="Consume_Column_List"></include>
-  	<choose>
+  	from <include refid="t_record"></include> crt
+	INNER JOIN 
+	(select ap.purchase_id, ap.record_id,pc.charge_tel, act.bill_type
+	<choose>
+  		<when test="supperAgencyId != null">
+		  	,act.agency_name from_agency_name
+  		</when>
+  		<otherwise>
+		  	,ap.from_agency_name
+  		</otherwise>
+  	</choose>
+	from <include refid="t_ap"></include> ap
+  	inner join <include refid="t_purchase"></include> pc
+  	on ap.purchase_id=pc.order_id
+	INNER join <include refid="t_account"></include> act
+	on ap.account_id=act.id
+	<where>
+		<if test="agencyId != null">
+			act.agency_id=#{agencyId}
+		</if>
+		<if test="supperAgencyId != null">
+			act.supper_agency_id=#{supperAgencyId}
+		</if>
+		<if test="userName != null"><!-- 超管模式，获得子代理商的账户消费信息 -->
+			AND ap.from_agency_name LIKE CONCAT('%', TRIM(#{userName}), '%')
+		</if>
+		<if test="billType != null">
+			AND act.bill_type = #{billType}
+		</if>
+		
+		<if test="purchaseId != null">
+			AND pc.order_id = #{purchaseId}
+		</if>
+		<if test="chargeTel != null">
+			AND pc.charge_tel LIKE CONCAT('%', TRIM(#{chargeTel}), '%')
+		</if>
+	</where>
+	) b
+	ON crt.id=b.record_id
+	<where>
+		<include refid="consume_condition_sql"></include>
+	</where>
+  	
+  	
+  	<!-- <choose>
   		<when test="supperAgencyId != null">
 		  	,act.agency_name from_agency_name
   		</when>
@@ -214,11 +297,9 @@
   	on ap.purchase_id=pc.order_id
 	INNER join <include refid="t_account"></include> act
 	on crt.account_id=act.id
-	<!-- INNER join <include refid="t_agency"></include> agb
-	on ap.agency_id=agb.id -->
 	<where>
 		<include refid="consume_condition_sql"></include>
-	</where>
+	</where> -->
 	order by crt.remittance_time desc, crt.account_type desc
   	<!-- order by -->
 	<if test="start != null">
@@ -227,17 +308,8 @@
 	<if test="end != null">
 	 	, #{end}
 	 </if>
-	 <if test="start == null &amp; end == null">
-	 	limit 0,10
-	 </if> 
   </select>
   <sql id="consume_condition_sql">
-		<if test="agencyId != null">
-			act.agency_id=#{agencyId}
-		</if>
-		<if test="supperAgencyId != null">
-			act.supper_agency_id=#{supperAgencyId}
-		</if>
 		<if test="accountId != null">
 			AND crt.account_id=#{accountId}
 			<!--  and ap.account_id=#{accountId} -->
@@ -257,16 +329,6 @@
 			</when>
 		</choose> -->
 		
-		<if test="userName != null"><!-- 超管模式，获得子代理商的账户消费信息 -->
-			AND ap.from_agency_name LIKE CONCAT('%', TRIM(#{userName}), '%')
-		</if>
-		<if test="billType != null">
-			AND act.bill_type = #{billType}
-		</if>
-		
-		<if test="purchaseId != null">
-			AND pc.order_id = #{purchaseId}
-		</if>
 		<choose>
 			<when test="accountType == null">
 				AND (account_type = 1 or account_type = 2)
@@ -282,8 +344,6 @@
 		<if test="endTime != null">
 			AND crt.remittance_time &lt;= #{endTime}
 		</if>
-		<if test="chargeTel != null">
-			AND pc.charge_tel LIKE CONCAT('%', TRIM(#{chargeTel}), '%')
-		</if>
+		
 	</sql>
 </mapper>

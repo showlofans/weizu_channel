@@ -42,10 +42,17 @@ public class BankAccountAOImpl implements BankAccountAO {
 //	private AgencyAO agencyAO;
 	
 	@Override
-	public void getMyBankList(Integer contextId,  Map<String,Object> resultMap) {
+	public void getMyBankList(Integer contextId, Integer baHide, Map<String,Object> resultMap) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("agencyId", contextId);
-		//map.put("polarity", CallBackEnum.POSITIVE.getValue());
+		
+		if(baHide != null){
+			map.put("baHide", baHide);
+		}else{
+			baHide = CallBackEnum.NEGATIVE.getValue();
+			map.put("baHide", CallBackEnum.NEGATIVE.getValue());
+		}
+		map.put("polarity", CallBackEnum.NEGATIVE.getValue());//加载母卡
 		List<BankAccountPo> dataList = bankAccountDao.getMyBankList(map);
 		//将列表分开展示
 		List<BankAccountPo> bankList0 = new LinkedList<BankAccountPo>();
@@ -68,6 +75,7 @@ public class BankAccountAOImpl implements BankAccountAO {
 		ChargeAccountPo chargeAccount1 = chargeAccountAO
 				.getAccountByAgencyId(contextId,BillTypeEnum.CORPORATE_BUSINESS.getValue());
 		resultMap.put("chargeAccount1", chargeAccount1);
+		resultMap.put("baHide", baHide);
 		ChargeAccountPo chargeAccount = chargeAccountAO
 				.getAccountByAgencyId(contextId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 		resultMap.put("chargeAccount", chargeAccount);
@@ -98,7 +106,7 @@ public class BankAccountAOImpl implements BankAccountAO {
 			}
 		}
 		bankPo.setLastAccess(System.currentTimeMillis());
-		
+		bankPo.setBaHide(CallBackEnum.NEGATIVE.getValue());
 		int res = bankAccountDao.add(bankPo);
 		if(res > 0){
 			return "success";

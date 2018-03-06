@@ -39,10 +39,15 @@ public class BankAccountURL extends BaseURL {
 	 */
 	public static final String EDIT_BANK = "/edit_bank" + DYNAMIC_WEB_SUFFIX;
 	/**
-	 * 银行卡删除
+	 * 银行卡删除/隐藏
 	 * <br> /flowsys/bankAccount/del_bank.do
 	 */
 	public static final String DEL_BANK = "/del_bank" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 银行卡上架/显示
+	 * <br> /flowsys/bankAccount/show_bank.do
+	 */
+	public static final String SHOW_BANK = "/show_bank" + DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 银行卡绑定删除
 	 * <br> /flowsys/bankAccount/del_bank_bind.do

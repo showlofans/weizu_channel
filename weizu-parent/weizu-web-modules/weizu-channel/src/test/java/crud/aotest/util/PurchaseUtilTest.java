@@ -21,12 +21,18 @@
 // */
 //public class PurchaseUtilTest {
 //	public static void main(String[] args) {
+//		Map<String,Object> scopeMap = PurchaseUtil.getScopeCityByCarrier("江西南昌移动");
+//		System.out.println(scopeMap.get("scopeCityCode").toString());
+//		
 ////		String url1 = "http://v.juhe.cn/joke/randJoke.php?key=3163fa316ed3ffd2eb0be5340b1f11cd";//获得随机很多条笑话
 ////		Map<String,Object> map = PurchaseUtil.getJokeByRand(url1);
 ////		String url = "http://v.juhe.cn/joke/content/text.php?key=3163fa316ed3ffd2eb0be5340b1f11cd";//获得随机很多条笑话
-////		Map<String,Object> map = PurchaseUtil.getJokeForNow(url);
-////		System.out.println(map.get("updatetime").toString());
-////		System.out.println(map.get("content").toString());
+////		List<Map<String,Object>> map = PurchaseUtil.getJokeForNow(url);
+////		for (Map<String, Object> map2 : map) {
+////			
+////		System.out.println(map2.get("updatetime").toString());
+////		System.out.println(map2.get("content").toString());
+////		}
 //		
 ////		long hourTimes = 60*60*1000;
 ////		long dateTimes = 24*hourTimes;
@@ -52,8 +58,8 @@
 ////		System.out.println(); 
 ////		Map<String,Object> map = PurchaseUtil.getOperatorsByTel("136995862589");
 ////		System.out.println(map.get("chargeTelDetail"));
-//		Map<String,Object> map = PurchaseUtil.getOperatorMapByCarrier("陕西移动");
-//		System.out.println(map.get("operatorType"));
+////		Map<String,Object> map = PurchaseUtil.getOperatorMapByCarrier("陕西移动");
+////		System.out.println(map.get("operatorType"));
 ////		try {
 ////			System.out.println("--------------文件系统信息如下--------------------");  
 ////			// 文件系统信息  

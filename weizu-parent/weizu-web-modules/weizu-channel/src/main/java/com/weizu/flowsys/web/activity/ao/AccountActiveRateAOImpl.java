@@ -104,7 +104,9 @@ public class AccountActiveRateAOImpl implements AccountActiveRateAO {
 					billType = activePo.getBillTypeRate();
 				}else{//没有查询参数，就用第一个通道折扣类型，作为费率折扣类型
 					billType = cdp1.getBillType();
+					activePo.setBillTypeRate(billType);
 				}
+				
 				List<RateDiscountPo> discountList = rateDiscountDao.getListByCDiscountId(channelDiscountId,billType);//折扣列表
 				
 				resultMap.put("discountList", discountList);//取折扣和折扣id
@@ -306,7 +308,7 @@ public class AccountActiveRateAOImpl implements AccountActiveRateAO {
 		{
 			paramsMap.put("rateDiscountId", activePo.getRateDiscountId());
 		}
-		if(activePo.getAgencyName() != null)
+		if(StringHelper.isNotEmpty(activePo.getAgencyName()))
 		{
 			paramsMap.put("agencyName", activePo.getAgencyName());
 		}
@@ -533,11 +535,12 @@ public class AccountActiveRateAOImpl implements AccountActiveRateAO {
 			int[] accountIds = new int[accountIdsi.length];
 			String[]agencyNames = new String[accountIdsi.length];
 			Long rateDiscountId = aardto.getRateDiscountId();
+			Long channelDiscountId = aardto.getChannelDiscountId();
 			for (int i = 0; i < accountIdsi.length; i++) {
 				accountIds[i] = Integer.parseInt(accountIdsi[i]);
 				agencyNames[i] = chargeAccountDao.get(accountIds[i]).getAgencyName();
 				//判断是否已经添加了该绑定
-				AccountActiveRatePo aarPo = accountActiveRateDao.get(new WherePrams("account_id", "=", accountIds[i]).and("rate_discount_id", "=", rateDiscountId).and("bind_state", "=", BindStateEnum.BIND.getValue()));
+				AccountActiveRatePo aarPo = accountActiveRateDao.get(new WherePrams("account_id", "=", accountIds[i]).and("rate_discount_id", "=", rateDiscountId).and("channel_discount_id", "=", channelDiscountId).and("bind_state", "=", BindStateEnum.BIND.getValue()));
 				if(aarPo != null){//已经添加过，就不再往list中添加了
 					accountIds[i] = accountIds[accountIds.length-1];//把最后一个元素替代指定的元素
 					accountIds = Arrays.copyOf(accountIds, accountIds.length-1);//数组缩容
@@ -548,7 +551,7 @@ public class AccountActiveRateAOImpl implements AccountActiveRateAO {
 			
 			List<AccountActiveRateDTO> list = new LinkedList<AccountActiveRateDTO>();
 			for (int i = 0; i < agencyNames.length; i++) {
-				AccountActiveRateDTO aardtoq = new AccountActiveRateDTO(accountIds[i], agencyNames[i], rateDiscountId, System.currentTimeMillis(), BindStateEnum.BIND.getValue(), aardto.getBindAgencyId());
+				AccountActiveRateDTO aardtoq = new AccountActiveRateDTO(accountIds[i], agencyNames[i], rateDiscountId,channelDiscountId, System.currentTimeMillis(), BindStateEnum.BIND.getValue(), aardto.getBindAgencyId());
 				list.add(aardtoq);
 			}
 			return accountActiveRateDao.batch_bindList(list);
@@ -576,7 +579,7 @@ public class AccountActiveRateAOImpl implements AccountActiveRateAO {
 			}else{
 				List<AccountActiveRateDTO> list = new LinkedList<AccountActiveRateDTO>();
 				for (AgencyBackwardVO agencyBackwardVO : agencyList) {
-					AccountActiveRateDTO aardtoq = new AccountActiveRateDTO(agencyBackwardVO.getAccountId(), agencyBackwardVO.getUserName(), aardto.getRateDiscountId(), System.currentTimeMillis(), updateBindState, aardto.getBindAgencyId());
+					AccountActiveRateDTO aardtoq = new AccountActiveRateDTO(agencyBackwardVO.getAccountId(), agencyBackwardVO.getUserName(), aardto.getRateDiscountId(),aardto.getChannelDiscountId(), System.currentTimeMillis(), updateBindState, aardto.getBindAgencyId());
 					list.add(aardtoq);
 				}
 				res = accountActiveRateDao.batch_bindList(list);

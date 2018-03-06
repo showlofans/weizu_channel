@@ -86,7 +86,7 @@
 					<th width="80">代理名称</th>
 					<th width="80">真实姓名</th>
 					<th width="80">联系电话</th>
-					<th width="80">邮箱</th>
+					<!-- <th width="80">邮箱</th> -->
 					<!-- <th width="75">地址</th> -->
 					<th width="60">余额</th>
 					<!-- <th width="60">信用</th> -->
@@ -132,7 +132,7 @@
 						</td>
 						<!-- <td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td> -->
 						<td>${agency.agencyTel }</td>
-						 <td>${agency.userEmail }</td>
+						 <%-- <td>${agency.userEmail }</td> --%>
 						<%-- <td>${agency.agencyIp }</td> --%>
 						<td style="display:none">${loginContext.id }</td>
 						<!-- title="/flowsys/account/charge_list.do?agencyId=${agency.id }" -->

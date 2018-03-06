@@ -34,15 +34,19 @@
 	<!-- <p class="f-20 text-success">欢迎使用微族通道系统 <span class="f-14">Beta</span>版本</p> -->
 	<!-- <p>登录次数：18 </p>
 	<p>上次登录IP：222.35.131.79.1  上次登录时间：2014-6-14 11:19:55</p> -->
+	<c:if test="${resultMap.baHide == 0 }">
+		<a data-toggle="tooltip" class="btn" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/my_bank_list.do?baHide=1" data-title="已下架银行卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">已下架充值卡</a>
+	</c:if>
+	
 	 <c:if test="${not empty resultMap.chargeAccount1 }">
 	 <table class="table table-border table-bordered table-bg">
 		<thead>
 			<tr >
 				<th colspan="5" scope="col"><span class="c-danger">对公账户余额：${resultMap.chargeAccount1.accountBalance }</span>
-					<c:if test="${not empty resultMap.bankList}">
-					<span class="text-r">
+					<c:if test="${not empty resultMap.bankList && resultMap.baHide == 0 }">
+					<span class="r">
 						<!-- <a style="text-decoration:none" class="btn radio btn-primary" onClick="bank_add('充值卡添加','/flowsys/bankAccount/add_bank_page.do',1)" href="javascript:;" title="添加充值卡"><i class="Hui-iconfont">&#xe600;</i>添加充值卡</a> -->
-						<a data-toggle="tooltip" class="btn radio btn-primary" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/add_bank_page.do?billType=1" data-title="添加充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">添加充值卡</a>
+						<a data-toggle="tooltip" class="btn radio btn-primary" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/add_bank_page.do?accountId=${resultMap.chargeAccount1.id }" data-title="添加充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">添加充值卡</a>
 					</span>
 					</c:if>
 				</th>
@@ -71,9 +75,8 @@
 							</td>
 							<!-- <td>已绑定</td> -->
 							<td class="td-manage">
+								<c:if test="${resultMap.baHide == 0 }">
 								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/plus_bank_list.do?id=${bank.id }&accountId=${resultMap.chargeAccount1.id}" data-title="请求充值" href="javascript:void(0)" onclick="Hui_admin_tab(this)">请求充值</a>
-								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/edit_bank_page.do?id=${bank.id }" data-title="编辑充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe6df;</i></a>
-								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="bank_del('/flowsys/bankAccount/del_bank.do',${bank.id }, '${bank.remittanceWay }')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>
 								<c:choose>
 									<c:when test="${bank.polarity == 0 }"><!-- 默认 -->
 										<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" title="取消默认" href="javascript:void(0)" onclick="changePolarity('/flowsys/bankAccount/change_bank_polarity.do',${bank.id },1)"><i class="Hui-iconfont">&#xe62c;</i></a>
@@ -82,6 +85,17 @@
 										<a data-toggle="tooltip" data-placement="top" style="text-decoration:none"  title="设置默认" href="javascript:void(0)" onclick="changePolarity('/flowsys/bankAccount/change_bank_polarity.do',${bank.id },0)"><i class="Hui-iconfont">&#xe607;</i></a>
 									</c:otherwise>
 								</c:choose>
+								</c:if>
+								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/edit_bank_page.do?id=${bank.id }" data-title="编辑充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe6df;</i></a>
+								<c:choose>
+									<c:when test="${resultMap.baHide == 0 }">
+										<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="bank_del('/flowsys/bankAccount/del_bank.do',${bank.id }, '${bank.remittanceWay }')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>
+									</c:when>
+									<c:otherwise>
+										<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="bank_show('/flowsys/bankAccount/show_bank.do',${bank.id }, '${bank.remittanceWay }')" href="javascript:;" title="上架"><i class="Hui-iconfont">&#xe6dc;</i></a>
+									</c:otherwise>
+								</c:choose>
+								
 								<a data-href="/flowsys/bankAccount/transfer_record.do?bankId=${bank.id }" style="text-decoration:none" data-title="转账记录" title="转账记录" onclick="Hui_admin_tab(this)">转账记录</a>
 								<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="transfer('${agency.id}')" href="javascript:;" title="卡充值"><i class="Hui-iconfont">&#xe604;</i></a> --%>
 								<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none" onClick="bindAgency('${agency.id}')" href="javascript:;" title="绑定代理商"><i class="Hui-iconfont">&#xe725;</i></a> --%>
@@ -104,12 +118,27 @@
 					</tr> --%>
 				</c:when>
 				<c:otherwise>
-				<tr class="text-c">
-					<td colspan="5">
-						<!-- <a style="text-decoration:none" class="btn radio btn-primary" onClick="bank_add('充值卡添加','/flowsys/bankAccount/add_bank_page.do',1)" href="javascript:;" title="添加充值卡"><i class="Hui-iconfont">&#xe600;</i>添加充值卡</a> -->
-						<a data-toggle="tooltip" class="btn radio btn-primary" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/add_bank_page.do?billType=1" data-title="添加充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">添加充值卡</a>
-					</td>
-				</tr>
+					<tr class="text-c">
+						<td colspan="5">
+							<c:choose>
+								<c:when test="${resultMap.baHide == 0  }">
+									<!-- <a style="text-decoration:none" class="btn radio btn-primary" onClick="bank_add('充值卡添加','/flowsys/bankAccount/add_bank_page.do',1)" href="javascript:;" title="添加充值卡"><i class="Hui-iconfont">&#xe600;</i>添加充值卡</a> -->
+									<a data-toggle="tooltip" class="btn radio btn-primary" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/add_bank_page.do?accountId=${resultMap.chargeAccount1.id }" data-title="添加充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">添加充值卡</a>	
+								</c:when>
+								<c:otherwise>
+									没有已下架充值卡记录
+								</c:otherwise>
+							</c:choose>
+						</td>
+					</tr>
+					<%-- <c:if test="${resultMap.baHide == 0  }">
+						<tr class="text-c">
+							<td colspan="5">
+								<!-- <a style="text-decoration:none" class="btn radio btn-primary" onClick="bank_add('充值卡添加','/flowsys/bankAccount/add_bank_page.do',1)" href="javascript:;" title="添加充值卡"><i class="Hui-iconfont">&#xe600;</i>添加充值卡</a> -->
+								<a data-toggle="tooltip" class="btn radio btn-primary" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/add_bank_page.do?accountId=${resultMap.chargeAccount1.id }" data-title="添加充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">添加充值卡</a>
+							</td>
+						</tr>
+					</c:if> --%>
 				</c:otherwise>
 			</c:choose>
 		</tbody>
@@ -121,10 +150,10 @@
 		<thead>
 			<tr>
 				<th colspan="7" scope="col"><span class="c-danger">对私账户余额：${resultMap.chargeAccount.accountBalance }</span>
-					<c:if test="${not empty resultMap.bankList0}">
-					<span class="text-r">
+					<c:if test="${not empty resultMap.bankList0 && resultMap.baHide == 0 }">
+					<span class="r">
 						<!-- <a style="text-decoration:none" class="btn radio btn-primary" onClick="bank_add('充值卡添加','/flowsys/bankAccount/add_bank_page.do',0)" href="javascript:;" title="添加充值卡"><i class="Hui-iconfont">&#xe600;</i>添加充值卡</a> -->
-						<a data-toggle="tooltip" class="btn radio btn-primary" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/add_bank_page.do?billType=0" data-title="添加充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">添加充值卡</a>
+						<a data-toggle="tooltip" class="btn radio btn-primary" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/add_bank_page.do?accountId=${resultMap.chargeAccount.id }" data-title="添加充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">添加充值卡</a>
 					</span>
 					</c:if>
 				</th>
@@ -152,16 +181,25 @@
 							</td>
 							<!-- <td>已绑定</td> -->
 							<td class="td-manage">
-								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/plus_bank_list.do?id=${bank.id }&accountId=${resultMap.chargeAccount.id}&billType=0" data-title="请求充值" href="javascript:void(0)" onclick="Hui_admin_tab(this)">请求充值</a>
+								<c:if test="${resultMap.baHide == 0 }">
+									<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/plus_bank_list.do?id=${bank.id }&accountId=${resultMap.chargeAccount.id}&billType=0" data-title="请求充值" href="javascript:void(0)" onclick="Hui_admin_tab(this)">请求充值</a>
+									<c:choose>
+										<c:when test="${bank.polarity == 0 }"><!-- 默认 -->
+											<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" title="取消默认" href="javascript:void(0)" onclick="changePolarity('/flowsys/bankAccount/change_bank_polarity.do',${bank.id },1)"><i class="Hui-iconfont">&#xe62c;</i></a>
+										</c:when>
+										<c:otherwise>
+											<a data-toggle="tooltip" data-placement="top" style="text-decoration:none"  title="设置默认" href="javascript:void(0)" onclick="changePolarity('/flowsys/bankAccount/change_bank_polarity.do',${bank.id },0)"><i class="Hui-iconfont">&#xe607;</i></a>
+										</c:otherwise>
+									</c:choose>
+								</c:if>
 								<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/edit_bank_page.do?id=${bank.id }" data-title="编辑充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)"><i class="Hui-iconfont">&#xe6df;</i></a>
 								<%-- <a data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" onClick="bank_edit('编辑充值卡','/flowsys/bankAccount/edit_bank_page.do', ${bank.id })" href="javascript:;" title="编辑充值卡"><i class="Hui-iconfont">&#xe6df;</i></a> --%>
-								<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="bank_del('/flowsys/bankAccount/del_bank.do',${bank.id }, '${bank.remittanceWay }')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>
 								<c:choose>
-									<c:when test="${bank.polarity == 0 }"><!-- 默认 -->
-										<a data-toggle="tooltip" data-placement="top" style="text-decoration:none" title="取消默认" href="javascript:void(0)" onclick="changePolarity('/flowsys/bankAccount/change_bank_polarity.do',${bank.id },1)"><i class="Hui-iconfont">&#xe62c;</i></a>
+									<c:when test="${resultMap.baHide == 0 }">
+										<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="bank_del('/flowsys/bankAccount/del_bank.do',${bank.id }, '${bank.remittanceWay }')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>
 									</c:when>
 									<c:otherwise>
-										<a data-toggle="tooltip" data-placement="top" style="text-decoration:none"  title="设置默认" href="javascript:void(0)" onclick="changePolarity('/flowsys/bankAccount/change_bank_polarity.do',${bank.id },0)"><i class="Hui-iconfont">&#xe607;</i></a>
+										<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" class="ml-5" onClick="bank_show('/flowsys/bankAccount/show_bank.do',${bank.id }, '${bank.remittanceWay }')" href="javascript:;" title="上架"><i class="Hui-iconfont">&#xe6dc;</i></a>
 									</c:otherwise>
 								</c:choose>
 								<a data-href="/flowsys/bankAccount/transfer_record.do?bankId=${bank.id }" style="text-decoration:none" data-title="转账记录" title="转账记录" onclick="Hui_admin_tab(this)">转账记录</a>
@@ -173,12 +211,28 @@
 					</c:forEach>
 				</c:when>
 				<c:otherwise>
+					<tr class="text-c">
+						<td colspan="5">
+							<c:choose>
+								<c:when test="${resultMap.baHide == 0  }">
+									<!-- <a style="text-decoration:none" class="btn radio btn-primary" onClick="bank_add('充值卡添加','/flowsys/bankAccount/add_bank_page.do',1)" href="javascript:;" title="添加充值卡"><i class="Hui-iconfont">&#xe600;</i>添加充值卡</a> -->
+									<a data-toggle="tooltip" class="btn radio btn-primary" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/add_bank_page.do?accountId=${resultMap.chargeAccount.id }" data-title="添加充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">添加充值卡</a>	
+								</c:when>
+								<c:otherwise>
+									没有已下架充值卡记录
+								</c:otherwise>
+							</c:choose>
+						</td>
+					</tr>
+				
+				<%-- <c:if test="${resultMap.baHide == 0  }">
 				<tr class="text-c">
 					<td colspan="5">
-						<a data-toggle="tooltip" class="btn radio btn-primary" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/add_bank_page.do?billType=0" data-title="添加充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">添加充值卡</a>
+						<a data-toggle="tooltip" class="btn radio btn-primary" data-placement="top" style="text-decoration:none" data-href="/flowsys/bankAccount/add_bank_page.do?accountId=${resultMap.chargeAccount.id }" data-title="添加充值卡" href="javascript:void(0)" onclick="Hui_admin_tab(this)">添加充值卡</a>
 						<!-- <a style="text-decoration:none" class="btn radio btn-primary" onClick="bank_add('充值卡添加','/flowsys/bankAccount/add_bank_page.do',0)" href="javascript:;" title="添加充值卡"><i class="Hui-iconfont">&#xe600;</i>添加充值卡</a> -->
 					</td>
 				</tr>
+				</c:if> --%>
 				</c:otherwise>
 			</c:choose>
 		</tbody>
@@ -222,6 +276,28 @@
 /*充值卡-删除*/
 function bank_del(url,id,bankName){
 	layer.confirm('确认要删除'+bankName+'充值卡吗？',function(index){
+		$.ajax({
+			type: 'POST',
+			url: url,
+			data: {id:id},
+			success: function(data){
+				if(data=="success")
+				{
+					layer.msg('删除成功!',{icon:1,time:1000});
+					location.reload();
+				}else{
+					layer.msg('删除失败!',{icon:2,time:1000});
+				}
+			},
+			error:function(data) {
+				console.log(data.msg);
+			}
+		});		
+	});
+}
+/*充值卡-展示*/
+function bank_show(url,id,bankName){
+	layer.confirm('确认要恢复'+bankName+'充值卡吗？',function(index){
 		$.ajax({
 			type: 'POST',
 			url: url,

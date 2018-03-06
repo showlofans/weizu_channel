@@ -85,6 +85,10 @@ public class ChargePgURL extends BaseURL {
 	 */
 	public static final String UPDATE_PURCHASE_STATE = "/update_purchase_state" + DYNAMIC_WEB_SUFFIX;
 	/**
+	 * 成功的手动退款
+	 */
+	public static final String REFUND = "/refund" + DYNAMIC_WEB_SUFFIX;
+	/**
 	 * 获得充值通道
 	 */
 	public static final String AJAX_CHARGE_CHANNEL = "/ajax_charge_channel" + DYNAMIC_WEB_SUFFIX;
@@ -101,6 +105,14 @@ public class ChargePgURL extends BaseURL {
 	 * 充值等待批量提交订单
 	 */
 	public static final String BATCH_COMMIT_ORDER = "/batch_commit_order" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 批量将订单返回失败/成功
+	 */
+	public static final String BATCH_CHANGE_ORDER = "/batch_change_order" + DYNAMIC_WEB_SUFFIX;
+//	/**
+//	 * 批量将订单返回成功
+//	 */
+//	public static final String BATCH_SUCCESS_ORDER = "/batch_success_order" + DYNAMIC_WEB_SUFFIX;
 	/**
 	 * 导出充值成功订单
 	 * <br>/flowsys/chargePg/export_charged_list.do

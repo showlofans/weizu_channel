@@ -1,19 +1,11 @@
 //package crud.aotest.util;
 //
-//import java.io.UnsupportedEncodingException;
-//import java.net.URLDecoder;
-//import java.util.Arrays;
-//import java.util.Map;
+//import java.util.Date;
+//import java.util.HashSet;
+//import java.util.Set;
 //
-//import org.weizu.api.outter.enums.ChargeStatusEnum;
-//
-//import com.alibaba.fastjson.JSON;
-//import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
-//import com.weizu.flowsys.util.JsonKeyEncodeUtil;
-//import com.weizu.flowsys.util.StringUtil2;
+//import com.weizu.flowsys.core.util.NumberTool;
 //import com.weizu.web.foundation.DateUtil;
-//import com.weizu.web.foundation.EncodingUtil;
-//import com.weizu.web.foundation.hash.Hash;
 //
 //public class StringUtilsTest {
 //	public static void main(String[] args) {
@@ -43,11 +35,130 @@
 ////		for (ChargeStatusEnum chargeStatusEnum : enums) {
 ////			System.out.println(chargeStatusEnum.getValue());
 ////		}
-//		ChargeDTO chargeDTO = new ChargeDTO();
-//		System.out.println(chargeDTO.getAjaxDoublePurchase());
-//		if(chargeDTO.getAjaxDoublePurchase()){
-//		}
+////		ChargeDTO chargeDTO = new ChargeDTO();
+////		System.out.println(chargeDTO.getAjaxDoublePurchase());
+////		if(chargeDTO.getAjaxDoublePurchase()){
+////		}
+////		
+////		System.out.println(ChargeStatusEnum.SCOPE_RATE_UNDEFINED.getValue());
+////		traverseFolder2("D:\\Documents\\GitHub\\weizu_channel\\weizu-parent\\weizu-web-modules\\weizu-channel");
+////		traverseFolder1("D:\\Documents\\GitHub\\weizu_channel\\weizu-parent\\weizu-web-modules\\weizu-channel\\src");
+////		Date date = DateUtil.strToDate("2018-01-29", "yyyy-MM-dd");
+////		System.out.println(date == null);
+////		System.out.println("2018-01-29".length());
 //		
-//		System.out.println(ChargeStatusEnum.SCOPE_RATE_UNDEFINED.getValue());
+//		String key = "qqqqqqqqqqqqqq360111199605236014";
+////		System.out.println(key.length());
+////		double d = 3.226d;
+//////		d = NumberTool.round(d, 2);//四舍五入保留两位
+////		int m = (int)(d*100);
+////		System.out.println(m);
+//		Set<String> names = new HashSet<String>();
+//		StringBuffer sb = new StringBuffer(key);
+//		System.out.println(sb.toString().contains("qqqqqqqqqqqqqq360111199605236014")); 
+////		int count = 0;
+////		File[]fileList = new File("D:\\Documents\\GitHub\\weizu_channel\\weizu-parent\\weizu-web-modules\\weizu-channel").listFiles();
+////		for (File file : fileList) {
+////			if(file.isFile()){
+////				count++;
+////			}
+////		}
+////		System.out.println("文件个数:"+count);
 //	}
+////	public static void traverseFolder2(String path){
+////		int count = 0;
+////		File file = new File(path);
+////        if (file.exists()) {
+////            File[] files = file.listFiles();
+////            if (files.length == 0) {
+////                System.out.println("文件夹是空的!");
+////                return;
+////            } else {
+////                for (File file2 : files) {
+////                    if (file2.isDirectory()) {
+//////                        System.out.println("文件夹:" + file2.getAbsolutePath());
+////                        traverseFolder2(file2.getAbsolutePath());
+////                    } else {
+////                    	count++;
+//////                        System.out.println("文件:" + file2.getAbsolutePath());
+////                    }
+////                }
+////            }
+////        } else {
+////            System.out.println("文件不存在!");
+////        }
+////        System.out.println("文件个数:"+count);
+////	}
+//	/**
+//	 * @description: 不递归调用查询文件个数
+//	 * @param path
+//	 * @author:微族通道代码设计人 宁强
+//	 * @createTime:2018年1月26日 上午11:00:02
+//	 */
+////	public static void traverseFolder1(String path){
+////		 int javaFileNum = 0, folderNum = 0,jspFileNum = 0, mapperFileNum = 0;
+////	        File file = new File(path);
+////	        if (file.exists()) {
+////	            LinkedList<File> list = new LinkedList<File>();
+////	            File[] files = file.listFiles();
+////	            for (File file2 : files) {
+////	                if (file2.isDirectory()) {
+//////	                    System.out.println("文件夹:" + file2.getAbsolutePath());
+////	                    list.add(file2);
+////	                    folderNum++;
+////	                } else {
+////	                	String fileName = file2.getName();
+////	                	if(fileName.contains("Mapper.xml")){
+////	                		mapperFileNum++;
+////	                	}
+////	                	if(fileName.contains(".java") ){
+////	                		javaFileNum++;
+////	                	}
+////	                	if(fileName.contains(".jsp")){
+////	                		jspFileNum++;
+////	                	}
+//////	                	fileNum++;
+//////	                    System.out.println("文件:" + file2.getAbsolutePath());
+////	                }
+////	            }
+////	            File temp_file;
+////	            while (!list.isEmpty()) {
+////	                temp_file = list.removeFirst();
+////	                files = temp_file.listFiles();
+////	                for (File file2 : files) {
+////	                    if (file2.isDirectory()) {
+//////	                        System.out.println("文件夹:" + file2.getAbsolutePath());
+////	                        list.add(file2);
+////	                        folderNum++;
+////	                    } else {
+////	                    	String fileName = file2.getName();
+//////		                	if(fileName.contains(".java")  || fileName.contains("Mapper.xml") || fileName.contains(".jsp") ){
+//////		                		fileNum++;
+//////		                	}
+//////		                	if(fileName.contains(".jsp")){
+//////		                		fileNum++;
+//////		                	}
+////		                	if(fileName.contains("Mapper.xml")){
+////		                		mapperFileNum++;
+////		                	}
+////		                	if(fileName.contains(".java") ){
+////		                		javaFileNum++;
+////		                	}
+////		                	if(fileName.contains(".jsp")){
+////		                		jspFileNum++;
+////		                	}
+//////	                        System.out.println("文件:" + file2.getAbsolutePath());
+//////	                        fileNum++;
+////	                    }
+////	                }
+////	            }
+////	        } else {
+////	            System.out.println("文件不存在!");
+////	        }
+////	        String fileN = path.substring(path.lastIndexOf("\\")+1);
+////	        System.out.println(fileN + "文件夹共有:" + folderNum + ",java文件共有:" + javaFileNum + ",jsp文件共有:" + jspFileNum+ ",mapper文件共有:" + mapperFileNum);
+////	        System.out.println("总文件数："+ (jspFileNum + javaFileNum + mapperFileNum));
+////	}
+//	
+//	
 //}

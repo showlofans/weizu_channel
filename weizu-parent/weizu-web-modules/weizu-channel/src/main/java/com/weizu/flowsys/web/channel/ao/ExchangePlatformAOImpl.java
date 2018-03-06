@@ -187,8 +187,8 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 //			exchangePlatformPo.setEpBalance(epBalance);
 			String lastAccessStr = DateUtil.formatPramm(exchangePlatformPo.getLastAccess(),"yyyy-MM-dd");
 			exchangePlatformPo.setLastAccessStr(lastAccessStr);
-//			String dataUserPass = Hash.BASE_UTIL.decode(exchangePlatformPo.getEpUserPass());
-//			exchangePlatformPo.setEpUserPass(dataUserPass);
+			String dataUserPass = Hash.BASE_UTIL.decode(exchangePlatformPo.getEpUserPass());
+			exchangePlatformPo.setEpUserPass(dataUserPass);
 		}
 		return new Pagination<ExchangePlatformPo>(records, toatalRecord, pageNo, pageSize);
 	}

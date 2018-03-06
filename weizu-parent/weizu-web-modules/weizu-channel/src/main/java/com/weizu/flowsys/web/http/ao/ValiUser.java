@@ -2,13 +2,18 @@
 package com.weizu.flowsys.web.http.ao;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
@@ -18,6 +23,11 @@ import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.channel.dao.impl.OperatorPgDao;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
+import com.weizu.flowsys.web.system_base.ao.SystemConfAO;
+import com.weizu.flowsys.web.system_base.pojo.SystemConfPo;
+import com.weizu.flowsys.web.trade.dao.PurchaseDao;
+import com.weizu.flowsys.web.trade.pojo.PurchaseVO;
+import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.MD5;
 import com.weizu.web.foundation.String.StringHelper;
 import com.weizu.web.foundation.hash.Hash;
@@ -38,6 +48,10 @@ public class ValiUser {
 	private AgencyVODaoInterface agencyVODao;
 	@Resource
 	private OperatorPgDao operatorPgDao;
+	@Resource
+	private PurchaseDao purchaseDAO;
+	@Resource
+	private SystemConfAO systemConfAO;
 	
 	
 	/**
@@ -109,13 +123,50 @@ public class ValiUser {
 		}else{
 			whereP.and("pg_validity", "=", pgDataPo.getPgValidity());
 		}
-		
-		
-		
-		
-		
 		PgDataPo pgData = operatorPgDao.get(whereP);
 		return pgData;
 	}
 	
+	/**
+	 * @description: 对上提单，对手机号的判断
+	 * @exception 对上提单的次数与次数限制不符,或者还有没有回调结果的订单
+	 * @param chargeTel
+	 * @param accountId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月24日 下午2:26:18
+	 */
+	public boolean checkChargeTel(String chargeTel, Integer accountId){
+		boolean canCharge = true;
+		Map<String,Object> paramsMap = new HashMap<String, Object>();
+		paramsMap.put("startTime", DateUtil.getStartTime().getTime());
+		paramsMap.put("endTime", DateUtil.getEndTime().getTime());
+		paramsMap.put("chargeTel", chargeTel);
+		paramsMap.put("accountId", accountId);
+		List<PurchaseVO> purchaseList = purchaseDAO.getPurchase(paramsMap);
+		int unCallCount = 0; 
+		for (PurchaseVO purchaseVO : purchaseList) {
+			if(OrderStateEnum.CHARGED.getValue() !=  purchaseVO.getOrderResult() && OrderStateEnum.UNCHARGE.getValue() !=  purchaseVO.getOrderResult()){
+				unCallCount ++ ;
+			}
+		}
+		if(unCallCount > 1){
+			//没有回调结果的单子多于一条，不允许再充值
+			canCharge = false;
+		}
+		if(canCharge){
+			long telNum = purchaseDAO.countPurchase(paramsMap);
+			SystemConfPo systemConfPo =  systemConfAO.getByKey("chargeTelTimes_in_oneDay");
+			int referNum = 0;
+			if(systemConfPo == null){
+				canCharge = false;
+			}else{
+				referNum = Integer.parseInt(systemConfPo.getConfValue());//整数
+				if(telNum > referNum){
+					canCharge = false;
+				}
+			}
+		}
+		return canCharge;
+	}
 }

@@ -36,9 +36,19 @@
 	<form class="form form-horizontal" action="/flowsys/chargeLog/charge_log_list.do" method="post" id="formD" name="dataListForm">
 		<div class="text-c">
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
-			<div class="row cl formControls">订单号:<input type="text"  value="${resultMap.searchParams.orderId }" name="orderId" id="" placeholder=" 订单号" style="width:200px" class="input-text">
+			<div class="row cl formControls">
+			<%-- <span class="select-box inline">
+				<select name="chargeStatus" class="select">
+				<option value="">提单属性</option>
+				<c:forEach items="${resultMap.isExceptionEnums }" var="isExceptionEnum" varStatus="vs2">
+					<option value="${isExceptionEnum.value }" <c:if test="${isExceptionEnum.value == resultMap.searchParams.chargeStatus }"> selected</c:if>>${isExceptionEnum.desc }</option>
+				</c:forEach>
+			</select>
+			</span>  --%>
+			订单号:<input type="text"  value="${resultMap.searchParams.orderId }" name="orderId" id="" placeholder=" 订单号" style="width:170px" class="input-text">
 			提单参数:<input type="text"  value="${resultMap.searchParams.logInContent }" name="logInContent" id="logInContent" placeholder=" 对下：代理商名称 /商务订单号；对上：产品编码/平台名称" style="width:350px" class="input-text">
-			提单结果:<input type="text"  value="${resultMap.searchParams.logOutContent }" name="logOutContent" id="" placeholder="对下：tipCode;对上：jsonStr" style="width:250px" class="input-text">
+			提单返回:<input type="text"  value="${resultMap.searchParams.logOutContent }" name="logOutContent" id="" placeholder="对下：tipCode;对上：jsonStr" style="width:250px" class="input-text">
+			状态码:<input type="text"  value="${resultMap.searchParams.chargeStatus }" name="chargeStatus" id="" placeholder="0,5001" style="width:80px" class="input-text">
 			</div>
 			<div class="row cl formControls" style="margin-top: 30dp">
 			<a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>手机号:<input type="text"  value="${resultMap.searchParams.chargeTel }" name="chargeTel" id="" placeholder=" 手机号" style="width:150px" class="input-text">
@@ -62,8 +72,8 @@
 			<input type="text" style="width:150px" class="input-text" name="startTimeStr"  value="${resultMap.searchParams.startTimeStr }"  onfocus="var endTimeStr=$dp.$('endTimeStr');WdatePicker({onpicked:function(){endTimeStr.focus();formSub();},autoPickDate:true,startDate:'%y-%M-%d 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss' })"/>
 	            <em class="inputto">至</em>
 	        <input style="width:150px" type="text"  class="input-text" name="endTimeStr" id="endTimeStr"   value="${resultMap.searchParams.endTimeStr }"  onfocus="WdatePicker({onpicked:function(){formSub();},autoPickDate:true,startDate:'%y-%M-%d 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
-			<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 			<button class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
+			<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 			<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }">
 			<input type="hidden" id="totalRecordLong" value="${resultMap.pagination.totalRecordLong }">
 			</div> 

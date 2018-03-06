@@ -32,6 +32,7 @@ import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
+import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.EpEncodeTypeEnum;
@@ -115,7 +116,7 @@ public class ChargePgController {
 	private RateDiscountDao rateDiscountDao;
 	
 	@Resource
-	private AccountPurchaseAO agencyPurchaseAO;
+	private AccountPurchaseAO accountPurchaseAO;
 	@Resource
 	private AgencyAO agencyAO;
 	@Resource
@@ -571,7 +572,7 @@ public class ChargePgController {
 				}
 				
 			}else{//不是超管
-				RateDiscountPo ratePo = rateDiscountAO.getPriceByPg(pgId, agencyVO.getId(),channelId);
+				RateDiscountPo ratePo = rateDiscountAO.getPriceByPg(pgId, agencyVO.getId(),channelId,BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 				if(ratePo != null){
 					ChargeAccountPo accountPo = chargeAccountAO.getAccountByAgencyId( agencyVO.getId(), ratePo.getBillType());
 					if(accountPo != null){
@@ -896,9 +897,29 @@ public class ChargePgController {
 	 * @createTime:2017年8月5日 下午6:06:13
 	 */
 	@RequestMapping(value=ChargePgURL.UPDATE_PURCHASE_STATE)
-	@ResponseBody
+//	@ResponseBody
 	public void updatePurchaseState(Long orderId,Integer orderResult, String orderResultDetail,HttpServletResponse response){
-		String updateRes = agencyPurchaseAO.updatePurchaseStateByMe(orderId, orderResult, orderResultDetail,null);
+		String updateRes = accountPurchaseAO.updatePurchaseStateByMe(orderId, orderResult, orderResultDetail,null);
+		response.setContentType("text/html;charset=utf-8");
+		try {
+			response.getWriter().print(updateRes);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * @description: 手动退款（不更新订单状态，更新订单详情）
+	 * @param orderId
+	 * @param orderResult
+	 * @param orderResultDetail
+	 * @param response
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年2月5日 上午9:21:13
+	 */
+	@RequestMapping(value=ChargePgURL.REFUND)
+//	@ResponseBody
+	public void refund(Long orderId,Integer orderResult, String orderResultDetail,HttpServletResponse response){
+		String updateRes = accountPurchaseAO.refund(orderId, orderResult, orderResultDetail, System.currentTimeMillis());
 		response.setContentType("text/html;charset=utf-8");
 		try {
 			response.getWriter().print(updateRes);
@@ -1181,7 +1202,7 @@ public class ChargePgController {
 	 * @description: 充值等待批量提交订单
 	 * @param purchaseVO
 	 * @return
-	 * @author:微族通道代码设计人 宁强
+	 * @author:微族通道代码设计人 宁强        
 	 * @createTime:2017年10月18日 下午4:05:52
 	 */
 	@ResponseBody
@@ -1196,6 +1217,26 @@ public class ChargePgController {
 			if(purchaseVO.getOrderResult().equals(OrderStateEnum.DAICHONG.getValue())){
 				res = purchaseAO.batchCommitOrder(purchaseVO);
 			}
+		}
+		return res;
+	}
+	/**
+	 * @description: 批量将订单返回失败/成功
+	 * @param purchaseVO
+	 * @param request
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年1月23日 下午5:35:40
+	 */
+	@ResponseBody
+	@RequestMapping(value=ChargePgURL.BATCH_CHANGE_ORDER)
+	public String batchChangeOrder(PurchaseVO purchaseVO, HttpServletRequest request){
+		String res = "error";
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		if(agencyVO != null && agencyVO.getRootAgencyId() == 0){
+			purchaseVO.setAgencyId(agencyVO.getId());//设置为当前登陆用户的订单
+			//只有待冲的单子可以批量提交
+			res = purchaseAO.batchChangeOrderState(purchaseVO);
 		}
 		return res;
 	}

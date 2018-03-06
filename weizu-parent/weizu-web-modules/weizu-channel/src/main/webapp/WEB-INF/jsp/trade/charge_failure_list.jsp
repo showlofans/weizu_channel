@@ -66,12 +66,12 @@
 					</c:if>
 					
 					 失败时间：
-					 <input type="text" style="width:150px" id="backStartTimeStr" class="input-text" name="backStartTimeStr"  value="${resultMap.searchParams.backStartTimeStr }"  onfocus="var backEndTimeStr=$dp.$('backEndTimeStr');WdatePicker({onpicked:function(){backEndTimeStr.focus();formSub();},startDate:'%y-%M-%d 00:00:00',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+					 <input type="text" style="width:150px" id="backStartTimeStr" class="input-text" name="backStartTimeStr"  value="${resultMap.searchParams.backStartTimeStr }"  onfocus="var backEndTimeStr=$dp.$('backEndTimeStr');WdatePicker({onpicked:function(){backEndTimeStr.focus();},startDate:'%y-%M-%d 00:00:00',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
 		                  	<em class="inputto">至</em>
 		            <input style="width:150px" type="text" class="input-text" id="backEndTimeStr" name="backEndTimeStr"   value="${resultMap.searchParams.backEndTimeStr }"  onfocus="WdatePicker({startDate:'%y-%M-%d 23:59:59',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'backStartTimeStr\')}',onpicked:function(){formSub();}})"/>
 					
-					<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+					<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
 					<c:if test="${loginContext.rootAgencyId == 0 }">
 						<button name="" id="" class="btn btn-primary radius" onclick="batchPush()" type="button"><i class="Hui-iconfont">&#xe665;</i> 批量推送</button>
@@ -129,7 +129,8 @@
 						<td>${purchase.orderId }</td>
 						<td>${purchase.chargeTel }</td>
 						  <c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
-						 	<td>${purchase.pgSize }M</td>
+						 	<td>${purchase.pgSizeStr }</td>
+						 	<%-- <td>${purchase.pgSize }M</td> --%>
 						 </c:if>
 						 <td>
 						 	<c:choose>

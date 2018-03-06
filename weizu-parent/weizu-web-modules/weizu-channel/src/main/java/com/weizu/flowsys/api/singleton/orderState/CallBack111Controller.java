@@ -95,10 +95,7 @@ public class CallBack111Controller {
             //初始化参数
             long orderId = Long.parseLong(out_trade_no.trim());
             
-            PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
-            if(purchasePo == null){
-				purchasePo = purchaseDAO.getOnePurchase(transaction_id);
-			}
+            PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);//数据库没有没有上游订单号
 			if(purchasePo == null){
 				successTag = "未找到该订单";
 				return successTag;

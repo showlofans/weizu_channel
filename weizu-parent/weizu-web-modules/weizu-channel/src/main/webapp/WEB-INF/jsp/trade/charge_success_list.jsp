@@ -48,7 +48,7 @@
 					所属代理商:<input type="text"  value="${resultMap.searchParams.agencyName }" name="agencyName" id="" placeholder=" 代理商名称" style="width:100px" class="input-text">
 					订单号:<input type="text"  value="${resultMap.searchParams.orderId }" name="orderId" id="" placeholder=" 订单号" style="width:250px" class="input-text">
 					充值时间:
-					 <input type="text" style="width:150px" id="backStartTimeStr" class="input-text" name="backStartTimeStr"  value="${resultMap.searchParams.backStartTimeStr }"  onfocus="var backEndTimeStr=$dp.$('backEndTimeStr');WdatePicker({onpicked:function(){backEndTimeStr.focus();formSub();},startDate:'%y-%M-%d 00:00:00',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+					 <input type="text" style="width:150px" id="backStartTimeStr" class="input-text" name="backStartTimeStr"  value="${resultMap.searchParams.backStartTimeStr }"  onfocus="var backEndTimeStr=$dp.$('backEndTimeStr');WdatePicker({onpicked:function(){backEndTimeStr.focus();},startDate:'%y-%M-%d 00:00:00',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
 		                  	<em class="inputto">至</em>
 		            <input style="width:150px" type="text" class="input-text" id="backEndTimeStr" name="backEndTimeStr"   value="${resultMap.searchParams.backEndTimeStr }"  onfocus="WdatePicker({startDate:'%y-%M-%d 23:59:59',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'backStartTimeStr\')}',onpicked:function(){formSub();}})"/>
 				</div>
@@ -138,6 +138,7 @@
 					<th width="80">结果描述</th>
 					<th width="60">扣款</th>
 					<th width="60">成本</th>
+					<th width="40">操作</th>
 					<c:if test="${loginContext.rootAgencyId == 0 }">
 						<th width="120">通道名称</th>
 					</c:if>
@@ -160,7 +161,8 @@
 						<td>${purchase.orderId }</td>
 						<td>${purchase.chargeTel }</td>
 						 <c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
-						 	<td>${purchase.pgSize }M</td>
+						 	<td>${purchase.pgSizeStr }</td>
+						 	<%-- <td>${purchase.pgSize }M</td> --%>
 						 </c:if>
 						 <td>
 						 	<c:choose>
@@ -207,6 +209,12 @@
 						<td>${purchase.orderStateDetail }</td>
 						<td>${purchase.orderPrice }</td>
 						<td>${purchase.orderAmount }</td>
+						<td class="f-14 td-manage success">
+							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="refund(this)" href="javascript:;" title="退款">
+								<input type="hidden" value="${purchase.orderId }" >
+								<i class="Hui-iconfont">&#xe6e6;</i>
+							</a>
+						</td>
 						<c:if test="${loginContext.rootAgencyId == 0 }"><td>${purchase.channelName }</td> 
 						</c:if>
 						<td>
@@ -304,7 +312,36 @@ function batchPush(){
 		}
 	}); 
 }
-
+/**手动退款*/
+function refund(vart){
+	var orderId = $(vart).children().eq(0).val();
+	var state = 1;//不更新订单状态
+	var msg='确认手动退款吗？';
+	var msgStr = '手动退款';//更新订单详情
+	layer.confirm(msg,function(index){
+		$.ajax({
+			type: 'POST',
+			url: '/flowsys/chargePg/refund.do',
+			data: {orderId:orderId, orderResult:state,orderResultDetail:msgStr},
+			async: false,
+			success: function(data){
+				//tag = data;
+				 //alert(data);
+				if(data=="success")
+				{
+					layer.msg('手动修改成功',{icon:1,time:1000});
+					location.reload();
+				}else{
+					layer.msg('手动修改失败',{icon:1,time:1000});
+				}
+			},
+			error:function(data) {
+				console.log(data.msg);
+			},
+		});		
+	});
+	
+}	
 /**导出列表*/
 /* function exportS(){
 	$.ajax({

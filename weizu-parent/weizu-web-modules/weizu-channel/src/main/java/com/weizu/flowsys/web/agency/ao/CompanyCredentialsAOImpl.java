@@ -178,6 +178,7 @@ public class CompanyCredentialsAOImpl implements CompanyCredentialsAO {
 				 AgencyBackwardPo agencyPo = agencyVODao.get(agencyId);
 				 String userName = agencyPo.getUserName();
 				 chargePo.setAgencyName(userName);
+				 chargePo.setSupperAgencyId(agencyPo.getRootAgencyId());
 				 chargePo.setCreateTime(ccpo.getConfirmTime());
 				 chargePo.setRemittanceBankAccount(ccpo.getBankAccount());
 				 int addCharge = chargeAccountDao.add(chargePo);

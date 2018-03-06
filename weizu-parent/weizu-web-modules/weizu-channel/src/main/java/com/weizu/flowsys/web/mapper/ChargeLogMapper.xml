@@ -62,8 +62,12 @@
   		</when>
   		<when test="orderId != null"><!--  -->
   			AND order_id = #{orderId}
+  			<if test="secondOrderId != null">
+		  		OR order_id = #{secondOrderId}
+		  	</if>
   		</when>
   	</choose>
+  	
   	<if test="chargeTel != null">
   		AND charge_tel = #{chargeTel}
   	</if>

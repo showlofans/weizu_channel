@@ -6,6 +6,7 @@ import java.util.List;
 import com.weizu.flowsys.core.annotation.po.TableName;
 import com.weizu.flowsys.core.annotation.po.TempField;
 import com.weizu.flowsys.core.beans.Po;
+import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 
 /**
  * @description: 费率折扣
@@ -51,6 +52,8 @@ public class RateDiscountPo extends Po implements Serializable{
 //    private List<RateDiscountPo> discountList;			//活动折扣列表
     @TempField
     private RateDiscountPo childRatePo;			//子费率活动折扣
+    @TempField
+    private List<PgDataPo> pgList;			//费率对应下的包体列表
     
     public RateDiscountPo() {
 		super();
@@ -68,6 +71,14 @@ public class RateDiscountPo extends Po implements Serializable{
     
 	public Integer getAgencyId() {
 		return agencyId;
+	}
+
+	public List<PgDataPo> getPgList() {
+		return pgList;
+	}
+
+	public void setPgList(List<PgDataPo> pgList) {
+		this.pgList = pgList;
 	}
 
 	public String getSpecialTag() {

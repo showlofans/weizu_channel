@@ -11,6 +11,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
 <meta http-equiv="Cache-Control" content="no-siteapp" />
+
 <!--[if lt IE 9]>
 <script type="text/javascript" src="lib/html5shiv.js"></script>
 <script type="text/javascript" src="lib/respond.min.js"></script>
@@ -22,6 +23,9 @@
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/skin/default/skin.css" id="skin" />
 <link rel="stylesheet" type="text/css" href="/view/static/h-ui.admin/css/style.css" />
 <link rel="stylesheet" type="text/css" href="/view/mine/paging.css" />
+<link rel="Bookmark" href="/view/iconW.jpg" />
+<link rel="Shortcut Icon" href="/view/iconW.jpg" />
+<link href="/view/iconW.jpg" type="image/x-icon" rel="icon"/>
 
 <link rel="stylesheet" type="text/css" href="/view/mine/amaze/admin.css" />
 <link rel="stylesheet" type="text/css" href="/view/mine/amaze/amazeui.css" />
@@ -56,12 +60,20 @@
 			</span> 
 			&nbsp;&nbsp;
 		<%-- 包体编码名称：<input type="text" value="${resultMap.searchParam.productName }" name="productName" id="" placeholder="包体编码名称" style="width:250px" class="input-text">&nbsp;&nbsp; --%>
-		<%-- 包体编码名称：<input type="text" value="${resultMap.searchParam.productName }" name="productName" id="" placeholder="包体编码名称" style="width:250px" class="input-text">&nbsp;&nbsp; --%>
 		<span class="select-box inline">
 			<select name="scopeCityCode" onchange="submitForm()" class="select">
 			<option value="">通道地区</option>
 			<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum">
 				<option value="${scopeCityEnum.value }" <c:if test="${scopeCityEnum.value == resultMap.searchParam.scopeCityCode }"> selected</c:if>>${scopeCityEnum.desc }</option>
+			</c:forEach>
+		</select>
+		</span> 
+		&nbsp;&nbsp;
+		<span class="select-box inline">
+			<select name="showRateState" onchange="submitForm()" class="select">
+			<option value="">通道状态</option>
+			<c:forEach items="${resultMap.channelUseStateEnums }" var="channelUseStateEnum">
+				<option value="${channelUseStateEnum.value }" <c:if test="${channelUseStateEnum.value == resultMap.searchParam.showRateState }"> selected</c:if>>${channelUseStateEnum.desc }</option>
 			</c:forEach>
 		</select>
 		</span> 
@@ -104,8 +116,8 @@
 					</div>
 				</c:when>
 				<c:otherwise>
-					<button type="button" class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<input value="查询" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
+					<button type="button" class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<span class="am-text-warning">标红表示维护</span>
 				</c:otherwise>
 			</c:choose>
@@ -270,6 +282,7 @@
 											<span>${limitPriceEnum.desc }</span>
 										</c:if>
 									</c:forEach>
+									<br/> ${showRate.lastAccessStr }
 							      </li><!-- <span class="am-icon-btn am-icon-file-text"></span> -->
 							  <c:if test="${(vs.index+1) % 4==0 }">
 							    </ul>

@@ -30,7 +30,7 @@ public interface RateDiscountAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月28日 下午5:53:00
 	 */
-	Pagination<RateDiscountPo> getMyRateList(RateDiscountPo ratePo,Integer childAgencyId,PageParam pageParam);
+	Pagination<RateDiscountPo> getMyRateList(RateDiscountPo ratePo,PageParam pageParam);
 	
 	/**
 	 * @description: 通过通道折扣id和账户id找到绑定的简单费率实体
@@ -89,7 +89,7 @@ public interface RateDiscountAO {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年7月29日 下午3:19:33
 	 */
-	String addRateDiscount(RateDiscountPo ratePo,String agencyName,Integer bindAgencyId);
+	String addRateDiscount(RateDiscountPo ratePo,String childAgencyName,Integer bindAgencyId);
 	
 	/**
 	 * @description: 修改费率折扣
@@ -189,7 +189,7 @@ public interface RateDiscountAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年11月1日 上午9:41:10
 	 */
-	RateDiscountPo getPriceByPg(Integer id, Integer agencyId, Long channelId);
+	RateDiscountPo getPriceByPg(Integer id, Integer agencyId, Long channelId,Integer billType);
 	
 	/**
 	 * @description:

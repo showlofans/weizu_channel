@@ -82,12 +82,12 @@
 					</c:if>
 					
 					 提交时间：
-					 <input type="text" style="width:150px" id="arriveStartTimeStr" class="input-text" name="arriveStartTimeStr"  value="${resultMap.searchParams.arriveStartTimeStr }"  onfocus="var arriveEndTimeStr=$dp.$('arriveEndTimeStr');WdatePicker({onpicked:function(){arriveEndTimeStr.focus();formSub();},startDate:'%y-%M-%d 00:00:00',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+					 <input type="text" style="width:150px" id="arriveStartTimeStr" class="input-text" name="arriveStartTimeStr"  value="${resultMap.searchParams.arriveStartTimeStr }"  onfocus="var arriveEndTimeStr=$dp.$('arriveEndTimeStr');WdatePicker({onpicked:function(){arriveEndTimeStr.focus();},startDate:'%y-%M-%d 00:00:00',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
 		                  	<em class="inputto">至</em>
 		            <input style="width:150px" type="text" class="input-text" id="arriveEndTimeStr" name="arriveEndTimeStr"   value="${resultMap.searchParams.arriveEndTimeStr }"  onfocus="WdatePicker({startDate:'%y-%M-%d 23:59:59',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'arriveStartTimeStr\')}',onpicked:function(){formSub();}})"/>
 					
-					<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+					<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
 					<input type="hidden" name="orderResult" value="${resultMap.searchParams.orderResult }">
 					<input type="hidden" name="orderState" value="${resultMap.searchParams.orderState }">
@@ -115,7 +115,7 @@
 					</c:if>
 					<th width="60">充值方式</th>
 					<c:if test="${loginContext.rootAgencyId == 0 }">
-						<th width="60">操作</th>
+						<th width="80">操作</th>
 					</c:if>
 					<th width="80">结果</th>
 					<th width="80">结果描述</th>
@@ -133,7 +133,8 @@
 						<td>${purchase.orderId }</td>
 						<td>${purchase.chargeTel }</td>
 						 <c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
-						 	<td>${purchase.pgSize }M</td>
+						 	<td>${purchase.pgSizeStr }</td>
+						 	<%-- <td>${purchase.pgSize }M</td> --%>
 						 </c:if>
 						 <td>
 						 	<c:choose>
@@ -178,6 +179,7 @@
 								<input type="hidden" value="${purchase.orderId }" >
 								<i class="Hui-iconfont">&#xe6e5;</i>
 							</a> 
+							<a  data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" data-href="/flowsys/chargeLog/charge_log_list.do?orderId=${purchase.orderId }" title="查看传单日志" onclick="Hui_admin_tab(this)" data-title="接口订单日志" href="javascript:void(0)"><i class="Hui-iconfont">&#xe623;</i></a>
 						</td>
 						</c:if>
 						<!-- 结果 -->

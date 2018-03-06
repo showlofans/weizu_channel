@@ -17,22 +17,22 @@ public class OuterApiURL extends BaseURL {
 	public static final String MODOE_NAME = "/flowsys/weizuAPI";
 	/**
 	 * 下游余额查询接口<br>
-	 * 真实地址：http://www.weizutec.top:28445/weizuAPI/my_balance.do
+	 * 真实地址：http://www.91weizu.cn/weizuAPI/my_balance.do
 	 */
 	public static final String MY_BALANCE = "/my_balance";
 	/**
 	 * 下游充值接口<br>
-	 * 真实地址：http://www.weizutec.top:28445/weizuAPI/charge.do
+	 * 真实地址：http://www.91weizu.cn/weizuAPI/charge.do
 	 */
 	public static final String CHARGE = "/charge";
 	/**
 	 * 下游主动查询接口<br>
-	 * 真实地址：http://www.weizutec.top:28445/weizuAPI/my_order_state.do
+	 * 真实地址：http://www.91weizu.cn/weizuAPI/my_order_state.do
 	 */
-	public static final String MY_ORDER_STATE = "/my_order_state";
+	public static final String MY_ORDER_STATE = "/my_order_states";
 	/**
 	 * 下游查询产品列表接口<br>
-	 * 真实地址：http://www.weizutec.top:28445/weizuAPI/my_pgproduct_list.do
+	 * 真实地址：http://www.91weizu.cn/weizuAPI/my_pgproduct_list.do
 	 */
 	public static final String MY_PGPRODUCT_LIST = "/my_pgproduct_list";
 }

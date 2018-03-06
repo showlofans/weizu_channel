@@ -61,7 +61,7 @@
 	<table class="table table-border table-bordered table-bg">
 		<thead>
 			<tr >
-				<th colspan="6" scope="col">请选择打款账户（联系电话：${rootAgency.agencyTel }联系人：${rootAgency.userRealName } ）
+				<th colspan="6" scope="col">请选择打款账户（联系电话：${resultMap.rootAgency.agencyTel }联系人：${resultMap.rootAgency.userRealName } ）
 					<!-- <span class="text-r">
 						<a style="text-decoration:none" class="btn radio btn-primary" onClick="bank_add('银行卡添加','/flowsys/bankAccount/add_bank_page.do',1)" href="javascript:;" title="添加银行卡"><i class="Hui-iconfont">&#xe600;</i>添加银行卡</a>
 					</span> -->
@@ -71,7 +71,7 @@
 				<th>银行卡名称</th>
 				<th>银行卡账号</th>
 				<th>账户真实姓名</th>
-				<th>加款金额</th>
+				<th>加款金额(元)</th>
 				<th>真实加款时间</th>
 				<th>操作</th>
 			</tr>

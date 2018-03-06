@@ -228,10 +228,10 @@
   <!-- 批量绑定 -->
   <insert id="batch_bindList" useGeneratedKeys="true" parameterType="java.util.List">
   	insert into <include refid="t_active"></include>
-  	(account_id, bind_agency_id, rate_discount_id, bind_state, agency_name, active_time)
+  	(account_id, bind_agency_id, rate_discount_id,channel_discount_id, bind_state, agency_name, active_time)
   	values
   	<foreach collection="list" separator="," item="active" index="index">
-  		(#{active.accountId},#{active.bindAgencyId},#{active.rateDiscountId},#{active.bindState},#{active.agencyName},#{active.activeTime})
+  		(#{active.accountId},#{active.bindAgencyId},#{active.rateDiscountId},#{active.channelDiscountId},#{active.bindState},#{active.agencyName},#{active.activeTime})
   	</foreach>
   </insert>
   

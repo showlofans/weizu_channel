@@ -1,0 +1,13 @@
+{operatorType=0, channelType=1, accountId=2, channelState=0, pgSize=10, channelUseState=0, pgType=1, bindState=0, serviceType=2, scopeCityCode=26, pgValidity=30}
+
+代理商账户绑定费率，费率来自通道折扣和通道
+
+首页和绑定折扣不一样?
+listActive aar
+getShowRate 
+getPriceByPg
+getRateForCharge
+
+rid 297
+
+走向灭亡

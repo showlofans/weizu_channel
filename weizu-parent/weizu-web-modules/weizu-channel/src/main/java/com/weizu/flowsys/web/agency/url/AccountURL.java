@@ -34,6 +34,10 @@ public class AccountURL extends BaseURL {
 	 */
 	public static final String CONSUME_LIST = "/consume_list" + DYNAMIC_WEB_SUFFIX;
 	/**
+	 * 导出账户消费记录
+	 */
+	public static final String EXPORT_CONSUME_LIST = "/export_consume_list" + DYNAMIC_WEB_SUFFIX;
+	/**
 	 * 开通对公账户页面
 	 */
 	public static final String OPEN_COMPANY_ACCOUNT_PAGE = "/open_company_account_page" + DYNAMIC_WEB_SUFFIX;

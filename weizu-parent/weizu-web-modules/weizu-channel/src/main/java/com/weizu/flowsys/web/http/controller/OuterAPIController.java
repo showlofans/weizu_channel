@@ -140,7 +140,7 @@ public class OuterAPIController {
 			//System.out.println("传单参数：" + chargeParams.toString());
 			charge = chargeImpl.charge(chargeParams);
 		} catch (Exception e) {
-			ChargeLog chargeLog = new ChargeLog(chargeParams.toString(), "无返回，有异常", null, chargeParams.getNumber(), ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc());
+			ChargeLog chargeLog = new ChargeLog(JSON.toJSON(chargeParams).toString(), "无返回，有异常", null, chargeParams.getNumber(), ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc());
 			chargeLogDao.add(chargeLog);
 			charge = new Charge(ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc(), null);
 			e.printStackTrace();
@@ -199,7 +199,7 @@ public class OuterAPIController {
 	 * @createTime:2017年11月9日 下午2:15:56
 	 */
 	@ResponseBody
-	@RequestMapping(value=OuterApiURL.MY_PGPRODUCT_LIST,method=RequestMethod.GET)
+	@RequestMapping(value=OuterApiURL.MY_PGPRODUCT_LIST,method=RequestMethod.GET,produces = "text/json;charset=UTF-8")
 	public String myProductList(String userName,String sign,@RequestParam(value="operaterType", required=false)Integer operaterType){
 		PgProductParams pgParams = new PgProductParams(sign, userName);
 		pgParams.setOperaterType(operaterType);

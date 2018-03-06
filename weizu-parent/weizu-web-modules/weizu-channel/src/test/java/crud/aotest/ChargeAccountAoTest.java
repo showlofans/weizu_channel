@@ -7,6 +7,7 @@
 //import org.springframework.test.context.ContextConfiguration;
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
+//import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 //import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 //import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 //import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
@@ -52,11 +53,31 @@
 ////		ChargeAccountPo accouontPo = chargeAccountDao.selectRootAccountByAgencyId(21, 0);
 ////		System.out.println(accouontPo.getAccountBalance());
 ////	}
+////	@Test
+////	public void getAccountByTransferId(){
+////		ChargeAccountPo accouontPo = chargeAccountDao.getAccountByTransferId(1l);
+////		System.out.println(accouontPo.getAccountBalance());
+////	}
 //	@Test
-//	public void getAccountByTransferId(){
-//		ChargeAccountPo accouontPo = chargeAccountDao.getAccountByTransferId(1l);
+//	public void getAccountByAgencyId(){
+//		//wechat:246-0 agencyid = 231
+//		//lufull: 198-0, 199-1agencyid = 187
+//		ChargeAccountPo accouontPo = chargeAccountAO.getAccountByAgencyId(187, BillTypeEnum.CORPORATE_BUSINESS.getValue());
+//		System.out.println(accouontPo.getId());
 //		System.out.println(accouontPo.getAccountBalance());
 //	}
+//	/**
+//	 * @description: 根据转账记录获得账户信息
+//	 * @author:微族通道代码设计人 宁强
+//	 * @createTime:2018年2月25日 下午5:13:04
+//	 */
+////	@Test
+////	public void testgetAccountByTransferId(){
+////		ChargeAccountPo accountPo = chargeAccountDao.getAccountByTransferId(10l, "fromBankId");
+////		ChargeAccountPo toAccountPo = chargeAccountDao.getAccountByTransferId(10l, "toBankId");
+////		System.out.println(accountPo.getAccountBalance());
+////		System.out.println(toAccountPo.getAccountBalance());
+////	}
 ////	@Test
 ////	public void getRootAccountById(){
 ////		ChargeAccountPo accouontPo = chargeAccountDao.getRootAccountById(2, 0);

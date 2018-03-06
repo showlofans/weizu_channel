@@ -88,12 +88,12 @@
 					</c:if>
 					
 					 提交时间：
-					 <input type="text" style="width:150px" id="arriveStartTimeStr" class="input-text" name="arriveStartTimeStr"  value="${resultMap.searchParams.arriveStartTimeStr }"  onfocus="var arriveEndTimeStr=$dp.$('arriveEndTimeStr');WdatePicker({onpicked:function(){arriveEndTimeStr.focus();formSub();},startDate:'%y-%M-%d 00:00:00',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+					 <input type="text" style="width:150px" id="arriveStartTimeStr" class="input-text" name="arriveStartTimeStr"  value="${resultMap.searchParams.arriveStartTimeStr }"  onfocus="var arriveEndTimeStr=$dp.$('arriveEndTimeStr');WdatePicker({onpicked:function(){arriveEndTimeStr.focus();},startDate:'%y-%M-%d 00:00:00',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
 		                  	<em class="inputto">至</em>
 		            <input style="width:150px" type="text" class="input-text" id="arriveEndTimeStr" name="arriveEndTimeStr"   value="${resultMap.searchParams.arriveEndTimeStr }"  onfocus="WdatePicker({startDate:'%y-%M-%d 23:59:59',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'arriveStartTimeStr\')}',onpicked:function(){formSub();}})"/>
 					
-					<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<button class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+					<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
 					<%-- <input type="hidden" id="totalRecordLong" value="${resultMap.pagination.totalRecordLong }">  --%>
 					<input type="hidden" name="orderResult" value="${resultMap.searchParams.orderResult }">
@@ -105,6 +105,8 @@
 		</form>
 		<div class="cl pd-5 bg-1 bk-gray mt-20">
 			 <span class="l"><a href="javascript:;" onclick="batchCommit()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe603;</i> 批量提交</a></span>
+			 <span class="r"><a href="javascript:;" onclick="batchUpdate('1')" class="btn btn-success radius"><i class="Hui-iconfont">&#xe603;</i> 批量成功</a></span>&nbsp;&nbsp;
+			 <span class="r"><a href="javascript:;" onclick="batchUpdate('0')" class="btn btn-default radius"><i class="Hui-iconfont">&#xe603;</i> 批量失败</a></span>&nbsp;&nbsp;
 		</div>
 					
 	</div>
@@ -132,7 +134,7 @@
 					<th width="80">结果</th>
 					<th width="80">结果描述</th>
 					<th width="60">扣款</th>
-					<th width="60">操作</th>
+					<th width="80">操作</th>
 					<c:if test="${loginContext.rootAgencyId == 0 }">
 						<th width="120">通道名称</th>
 					</c:if>
@@ -157,7 +159,8 @@
 						<td>${purchase.orderId }</td>
 						<td>${purchase.chargeTel }</td>
 						 <c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
-						 	<td>${purchase.pgSize }M</td>
+						 	<td>${purchase.pgSizeStr }</td>
+						 	<%-- <td>${purchase.pgSize }M</td> --%>
 						 </c:if>
 						 <td>
 							<c:choose>
@@ -210,12 +213,16 @@
 							</a>
 							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="changeState(this,'0')" href="javascript:;" title="失败">
 								<input type="hidden" value="${purchase.orderId }" >
+								<%-- <input type="hidden" value="${purchase.agencyName }" > --%>
 								<i class="Hui-iconfont">&#xe6e5;</i>
 							</a> 
 							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="ajaxCommit(this,'${purchase.orderId }','${purchase.chargeTelDetail }','${purchase.fromAccountId }')" href="javascript:;" title="提交">
 								<input type="hidden" value="${purchase.orderId }" >
 								<i class="Hui-iconfont">&#xe6dc;</i>
 							</a> 
+							<a  data-toggle="tooltip" data-placement="top" style="text-decoration:none;cursor:pointer" data-href="/flowsys/chargeLog/charge_log_list.do?orderId=${purchase.orderId }" title="查看传单日志" onclick="Hui_admin_tab(this)" data-title="接口订单日志" href="javascript:void(0)">
+							<i class="Hui-iconfont">&#xe623;</i>
+							</a>
 						</td>
 						<c:if test="${loginContext.rootAgencyId == 0 }"><td>${purchase.channelName }</td> 
 						</c:if>
@@ -278,68 +285,72 @@ function editAgency(id){
 
 /**批量提交*/
 function batchCommit(){
-	/* var purchaseIds = "";
-	var accountIds = "";
-	$(".ckpur:checked").each(function(){ //遍历table里的全部checkbox
-       // allcheckbox += $(this).next().html() + ","; //获取所有checkbox的值
-        //alert($(this).is(':checked'));
-        	accountIds += $(this).next().html() + ","; //获取被选中的代理商id
-        	purchaseIds +=  $(this).next().next().next().html() + ",";
-    }); 
-        	//alert(accountIds);
-	if(accountIds.length > 1) //如果获取到
-    {*/
 		var totalRecordLong = $('#totalRecordLong').val();
 		if(totalRecordLong < 1){
 			layer.msg('没有订单可以提');
-		}else if(totalRecordLong > 15){
+		}
+		/* else if(totalRecordLong > 15){
 			layer.msg('不能批量提交过多订单最大为 15');
-		}else{
+		} */
+		else{
+			layer.confirm("确认批量提交这"+totalRecordLong+"条记录吗",function(index){
+				$.ajax({
+					type: 'POST',
+					url: "/flowsys/chargePg/batch_commit_order.do",
+					//dataType: 'json',
+					data: $('form').serialize(),
+					success: function(resp){
+						location.reload();
+					},
+					error:function(resp) {
+						console.log(resp.msg);
+					}
+				}); 
+			})
+			
+		}
+}
+/**批量修改状态*/
+function batchUpdate(orderResult){
+	var totalRecordLong = $('#totalRecordLong').val();
+	if(totalRecordLong < 1){
+		layer.msg('没有订单可以修改状态');
+	}else{
+		var tag = "";
+		var msg='确认批量成功吗？';
+		//成功和失败
+		if('0'== orderResult){
+			msg='确认批量失败吗？';
+		}
+		//初始化状态
+		var originalResult = $('input[name=orderResult]').val();
+		layer.confirm(msg,function(index){
+			$('input[name=orderState]').val(originalResult);
+			$('input[name=orderResult]').val(orderResult);
 			$.ajax({
 				type: 'POST',
-				url: "/flowsys/chargePg/batch_commit_order.do",
+				url: "/flowsys/chargePg/batch_change_order.do",
 				//dataType: 'json',
 				data: $('form').serialize(),
-				success: function(resp){
-					//$(obj).parents("tr").remove();
-					//alert
+				async: true,
+				success: function(data){
+					if(data != 'error'){
+						layer.msg(data,{icon:1,time:1000});
+						//layer.msg(resp);
 						location.reload();
-					/* if(resp=="success"){
-						//layer.msg('更新绑定成功',{icon:1,time:1000});
-	               	 }else{
-						layer.msg('更新绑定失败',{icon:1,time:1000});
-	               	 } */
+					}else{
+						layer.msg('手动修改失败',{icon:1,time:1000});
+					}
 				},
-				error:function(resp) {
-					console.log(resp.msg);
-				}
-			}); 
-		}
-    	/* accountIds = accountIds.substring(0, accountIds.length - 1);
-    	purchaseIds = purchaseIds.substring(0, purchaseIds.length - 1);
-    	alert(purchaseIds);
-    	$.ajax({
-			type: 'POST',
-			url: "",
-			//dataType: 'json',
-			data: {purchaseIds:purchaseIds,accountIds:accountIds},
-			success: function(resp){
-				//$(obj).parents("tr").remove();
-				//alert
-				if(resp=="success"){
-					//layer.msg('更新绑定成功',{icon:1,time:1000});
-					location.reload();
-               	 }else{
-					layer.msg('更新绑定失败',{icon:1,time:1000});
-               	 }
-			},
-			error:function(resp) {
-				console.log(resp.msg);
-			}
+				error:function(data) {
+					console.log(data.msg);
+				},
+			});		
 		});
-    	}else{
-    	alert("未选中");
-    }  */
+		//还原状态参数
+		$('input[name=orderState]').val('');
+		$('input[name=orderResult]').val(originalResult);
+	}
 }
 function formSub(){
 	$("input[name='pageNoLong']").val('');
@@ -390,12 +401,14 @@ function ajaxCommit(vart,orderId,chargeTelDetail,accountId,billType){
 /**设置状态*/
 function changeState(vart,state){
 	var orderId = $(vart).children().eq(0).val();
+	/* var agencyName = $(vart).children().eq(1).val();
+	alert(agencyName); */
 	var tag = "";
 	var msg='确认设置成功吗？';
 	var msgStr = '手动成功';
 	//成功和失败
 	if(state==0){
-		var msgStr = '手动失败';
+		msgStr = '手动失败';
 		msg='确认设置失败吗？';
 	}
 	layer.confirm(msg,function(index){

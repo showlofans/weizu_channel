@@ -62,9 +62,9 @@
     <div class="md-section-divider"></div>
     <h1 data-anchor-id="xbv3" id="南昌微族流量接口文档">平台接口文档</h1>
     <blockquote data-anchor-id="tger" class="white-blockquote"> 
-   <p><strong>南昌微族流量充值平台入口：<a href="http://120.55.162.224" target="_blank">http://120.55.162.224</a>&nbsp; &nbsp;注册邀请码：询问商务</strong></p> 
-   <p>接口使用前提：完成对公账户的认证，获得apikey</p> 
-   <p><!-- 版本:V1.0  -->更新时间：2018-01-12 17:59:00</p> 
+   <p><strong>南昌微族流量充值平台入口：<a href="https://www.91weizu.cn" target="_blank">https://www.91weizu.cn</a>&nbsp; &nbsp;注册邀请码：询问商务</strong></p> 
+   <p>接口使用前提：在账户管理中，完成对公账户的认证，获得apikey</p> 
+   <p><!-- 版本:V1.0  -->更新时间：2018-02-26 17:29:00</p> 
    <p><!-- 版本:V1.0  -->接口对接咨询：3004599415#qq.com</p> 
     </blockquote>
     <div class="md-section-divider"></div>
@@ -114,8 +114,8 @@
     <ul data-anchor-id="ic13"> 
      <li>请求方式:
       <!-- POST/ -->GET</li> 
-     <li>举例地址:<a href="http://120.55.162.224/flowsys/weizuAPI/charge?userName=xxxx&amp;number=13333333333&amp;pgSize=5&amp;userOrderId=123123&amp;sign=225345C671534666D1232ACE718A690B" target="_blank">http://120.55.162.224/flowsys/weizuAPI/charge?userName=xxxx&amp;number=13333333333&amp;pgSize=5&amp;userOrderId=123123&amp;<!-- timestamp=1502677243503&amp; -->sign=225345C671534666D1232ACE718A690B</a></li> 
-     <li>请求地址:<a href="http://120.55.162.224/flowsys/weizuAPI/charge" target="_blank">http://120.55.162.224/flowsys/weizuAPI/charge </a></li> 
+     <li>举例地址:<a href="https://www.91weizu.cn/flowsys/weizuAPI/charge?userName=xxxx&amp;number=13333333333&amp;pgSize=5&amp;userOrderId=123123&amp;sign=225345C671534666D1232ACE718A690B" target="_blank">https://www.91weizu.cn/flowsys/weizuAPI/charge?userName=xxxx&amp;number=13333333333&amp;pgSize=5&amp;userOrderId=123123&amp;<!-- timestamp=1502677243503&amp; -->sign=225345C671534666D1232ACE718A690B</a></li> 
+     <li>请求地址:<a href="https://www.91weizu.cn/flowsys/weizuAPI/charge" target="_blank">https://www.91weizu.cn/flowsys/weizuAPI/charge </a></li> 
      <li>请求参数:</li> 
     </ul>
     <table data-anchor-id="3aar" class="table table-striped-white table-bordered"> 
@@ -271,7 +271,7 @@
      <li>回调数据格式json </li>
      <li>响应内容: ok 为成功，其他则失败 </li>
      <!-- <li>响应说明: 超时或者非200状态码的 http 响应系统会判断回调失败，并且重新发起回调，共四次回调，间隔为30秒、60秒、120秒，300秒</li>  -->
-    </ul>
+    <li>
     <table data-anchor-id="06rb" class="table table-striped-white table-bordered"> 
      <thead> 
       <tr> 
@@ -299,7 +299,7 @@
       <tr> 
        <td style="text-align:left;">status</td> 
        <td style="text-align:left;">int 3</td> 
-       <td style="text-align:left;">充值结果:成功1失败0 </td> 
+       <td style="text-align:left;">充值结果:成功-1,失败-0 </td> 
       </tr> 
       <tr> 
        <td style="text-align:left;">statusDetail</td> 
@@ -314,11 +314,16 @@
       <tr> 
      </tbody>
     </table>
+    </li>
+    <li>推送JSON数据:
+    	<pre class="prettyprint linenums prettyprinted" data-anchor-id="9eqf"><ol class="linenums"><li class="L0"><code><span class="pun">{</span></code></li><li class="L4"><code><span class="pln">    </span><span class="str">&quot;orderIdFrom&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">&quot;20180226155956807609&quot;</span><span class="pun">,</span></code></li><li class="L5"><code><span class="pln">    </span><span class="str">&quot;timeStamp&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">1519632128299</span><span class="pun">,</span></code></li><li class="L6"><code><span class="pln">    </span><span class="str">&quot;chargeTel&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">&quot;13333333333&quot;</span><span class="pun">,</span></code></li><li class="L7"><code><span class="pln">    </span><span class="str">&quot;statusDetail&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">&quot;（手动推送）批量手动失败&quot;</span><span class="pun">,</span></code></li><li class="L9"><code><span class="pln">    </span><span class="str">&quot;status&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">0</span><span class="pun">,</span></code></li><li class="L0"><code><span class="pln">    </span><span class="str">&quot;orderId&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">793998072853041152</span></code></li><li class="L5"><code><span class="pun">}</span></code></li></ol></pre>
+    </li>
+    </ul>
     <div class="md-section-divider"></div> 
     <h3 data-anchor-id="hju9" id="3获取账号余额">3.获取账号余额</h3>
     <ul data-anchor-id="cqrx"> 
      <li>请求方式:GET</li> 
-     <li>请求地址:<a href="http://120.55.162.224/flowsys/weizuAPI/my_balance?userName=xxxx&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2&amp;billType=0" target="_blank">http://120.55.162.224/flowsys/weizuAPI/my_balance?userName=xxxx&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2&amp;billType=0</a></li> 
+     <li>请求地址:<a href="https://www.91weizu.cn/flowsys/weizuAPI/my_balance?userName=xxxx&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2&amp;billType=0" target="_blank">https://www.91weizu.cn/flowsys/weizuAPI/my_balance?userName=xxxx&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2&amp;billType=0</a></li> 
      <li>数据格式:key=value</li> 
      <li>请求参数: 
       <table data-anchor-id="op24" class="table table-striped-white table-bordered"> 
@@ -380,10 +385,10 @@
      </tbody>
     </table>
     <div class="md-section-divider"></div> 
-    <h3 data-anchor-id="scug" id="4获取某一订单详情">4.获取某一订单详情</h3>
+    <h3 data-anchor-id="scug" id="4获取某一订单详情">4.获取某一订单详情(不要循环调用)</h3>
     <ul data-anchor-id="jkh7"> 
      <li>请求方式:GET</li> 
-     <li>请求地址:<a href="http://120.55.162.224/flowsys/weizuAPI/my_order_state?userName=xxxx&amp;orderId=745830224406515712&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2" target="_blank">http://120.55.162.224/flowsys/weizuAPI/my_order_state?userName=xxxx&amp;orderId=745830224406515712&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2</a></li> 
+     <li>请求地址:<a href="https://www.91weizu.cn/flowsys/weizuAPI/my_order_states?userName=xxxx&amp;orderId=745830224406515712&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2" target="_blank">https://www.91weizu.cn/flowsys/weizuAPI/my_order_states?userName=xxxx&amp;orderId=745830224406515712&amp;sign=1B0D437C2FEE8E14D33E487AEA504DA2</a></li> 
      <li>数据格式:key=value</li> 
      <li>请求参数:</li> 
     </ul>
@@ -430,7 +435,7 @@
     </table>
     <p data-anchor-id="tgfh">* 返回JSON数据:</p>
     <div class="md-section-divider"></div>
-    <pre class="prettyprint linenums prettyprinted" data-anchor-id="hzvo"><ol class="linenums"><li class="L0"><code><span class="pun">{</span></code></li><li class="L1"><code><span class="pln">    </span><span class="str">&quot;tipCode&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="lit">5001</span><span class="pun">,</span></code></li><li class="L2"><code><span class="pln">    </span><span class="str">&quot;tipMsg&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">&quot;参数正确&quot;</span><span class="pun">,</span></code></li><li class="L3"><code><span class="pln">    </span><span class="str">&quot;OrderPo&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span></code></li><li class="L4"><code><span class="pln">        </span><span class="str">&quot;orderId&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">745830224406515712</span><span class="pun">,</span></code></li><li class="L5"><code><span class="pln">        </span><span class="str">&quot;userOrderId&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">&quot;123&quot;</span><span class="pun">,</span></code></li><li class="L6"><code><span class="pln">        </span><span class="str">&quot;number&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">&quot;13333333333&quot;</span><span class="pun">,</span></code></li><li class="L7"><code><span class="pln">        </span><span class="str">&quot;pgSize&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">10</span><span class="pun">,</span></code></li><li class="L9"><code><span class="pln">        </span><span class="str">&quot;chargeFee&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">&quot;1.00&quot;</span><span class="pun">,</span></code></li><li class="L0"><code><span class="pln">        </span><span class="str">&quot;createdAt&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">&quot;2017-10-17 14:50:33&quot;</span><span class="pun">,</span></code></li><li class="L1"><code><span class="pln">        </span><span class="str">&quot;status&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="lit">1</span><span class="pun">,</span></code></li><li class="L2"><code><span class="pln">        </span><span class="str">&quot;statusMSg&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">&quot;充值成功&quot;</span></code></li><li class="L3"><code><span class="pln">    </span><span class="pun">}</span></code></li><li class="L4"><code><span class="pun">}</span></code></li></ol></pre>
+    <pre class="prettyprint linenums prettyprinted" data-anchor-id="hzvo"><ol class="linenums"><li class="L0"><code><span class="pun">{</span></code></li><li class="L1"><code><span class="pln">    </span><span class="str">&quot;tipCode&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="lit">5001</span><span class="pun">,</span></code></li><li class="L2"><code><span class="pln">    </span><span class="str">&quot;tipMsg&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">&quot;参数正确&quot;</span><span class="pun">,</span></code></li><li class="L3"><code><span class="pln">    </span><span class="str">&quot;orderPo&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span></code></li><li class="L4"><code><span class="pln">        </span><span class="str">&quot;orderId&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">745830224406515712</span><span class="pun">,</span></code></li><li class="L5"><code><span class="pln">        </span><span class="str">&quot;userOrderId&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">&quot;123&quot;</span><span class="pun">,</span></code></li><li class="L6"><code><span class="pln">        </span><span class="str">&quot;number&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">&quot;13333333333&quot;</span><span class="pun">,</span></code></li><li class="L7"><code><span class="pln">        </span><span class="str">&quot;pgSize&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">10</span><span class="pun">,</span></code></li><li class="L9"><code><span class="pln">        </span><span class="str">&quot;chargeFee&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">&quot;1.00&quot;</span><span class="pun">,</span></code></li><li class="L0"><code><span class="pln">        </span><span class="str">&quot;createdAt&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">&quot;2017-10-17 14:50:33&quot;</span><span class="pun">,</span></code></li><li class="L1"><code><span class="pln">        </span><span class="str">&quot;status&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="lit">1</span><span class="pun">,</span></code></li><li class="L2"><code><span class="pln">        </span><span class="str">&quot;statusMSg&quot;</span><span class="pun">:</span><span class="pln"> </span><span class="str">&quot;充值成功&quot;</span></code></li><li class="L3"><code><span class="pln">    </span><span class="pun">}</span></code></li><li class="L4"><code><span class="pun">}</span></code></li></ol></pre>
     <ul data-anchor-id="8hto"> 
      <li>返回说明:</li> 
     </ul>
@@ -444,7 +449,7 @@
      </thead> 
      <tbody>
       <tr> 
-       <td style="text-align:left;">order</td> 
+       <td style="text-align:left;">orderPo</td> 
        <td style="text-align:left;">object</td> 
        <td style="text-align:left;">订单对象</td> 
       </tr> 
@@ -511,12 +516,30 @@
        <td style="text-align:left;">服务器内部错误</td> 
       </tr> 
       <tr> 
-       <td style="text-align:left;">5009</td> 
-       <td style="text-align:left;">number参数有误</td> 
+      <tr> 
+       <td style="text-align:left;">5002</td> 
+       <td style="text-align:left;">余额不足</td> 
+      </tr> 
+      <tr> 
+       <td style="text-align:left;">5003</td> 
+       <td style="text-align:left;">缺少通道配置</td> 
+      </tr> 
+      <tr> 
+      <tr> 
+       <td style="text-align:left;">5005</td> 
+       <td style="text-align:left;">票务类型错误</td> 
       </tr> 
       <tr> 
        <td style="text-align:left;">5008</td> 
        <td style="text-align:left;">包体参数有误（pgSize和scope）</td> 
+      </tr> 
+      <tr> 
+       <td style="text-align:left;">5009</td> 
+       <td style="text-align:left;">number参数有误</td> 
+      </tr> 
+      <tr> 
+       <td style="text-align:left;">5010</td> 
+       <td style="text-align:left;">出现可疑重复订单</td> 
       </tr> 
       <tr> 
        <td style="text-align:left;">0</td> 

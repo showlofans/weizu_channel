@@ -63,7 +63,28 @@ public class ChannelForShowPo extends Po {
 	}
     
     
-    /** 更新通道状态构造函数
+    
+    /** 通过通道信息得到展示通道添加
+     * @param scopeCityCode
+     * @param serviceType
+     * @param operatorType
+     * @param channelBill
+     * @param channelPrice
+     */
+    public ChannelForShowPo(String scopeCityCode, Integer serviceType,
+		Integer operatorType, Integer channelBill, Double channelPrice,String channelPriceStr) {
+	super();
+	this.scopeCityCode = scopeCityCode;
+	this.serviceType = serviceType;
+	this.operatorType = operatorType;
+	this.channelBill = channelBill;
+	this.channelPrice = channelPrice;
+	this.channelPriceStr= channelPriceStr;
+}
+
+
+
+	/** 更新通道状态构造函数
      * @param id
      * @param showRateState
      */

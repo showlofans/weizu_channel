@@ -143,6 +143,19 @@
 	 	limit 0,10
 	 </if> 
   </select>
+  <!-- 通过通道id获得通道相关的信息 -->
+  <select id="getChannelById" parameterType="long"  resultMap="BaseResultMap">
+  	select <include refid="Base_Column_List"></include>
+  	from <include refid="t_ep"></include> ep 
+  	inner join	<include refid="t_channel"></include> channel
+  	on channel.ep_id = ep.id
+  	inner join <include refid="t_discount"></include> discount
+  	on channel.id = discount.channel_id
+  	<where>
+  		channel.id = #{_parameter}
+  	</where>
+  </select>
+  
   <!-- 通道充值页面返回实体 -->
   <select id="list_charge_channel" parameterType="map" resultMap="ChargeResultMap">
   	select <include refid="Charge_Colume_List"></include>

@@ -12,9 +12,21 @@
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//import com.alibaba.fastjson.JSON;
 //import com.alibaba.fastjson.JSONObject;
+//import com.weizu.flowsys.api.singleton.orderState.ResponseJsonDTO;
 //import com.weizu.flowsys.core.util.NumberTool;
 //import com.weizu.flowsys.util.StringUtil2;
+//import com.weizu.flowsys.web.http.entity.Charge;
+//import com.weizu.flowsys.web.http.entity.ChargePo;
+//import com.weizu.flowsys.web.http.entity.Order;
+//import com.weizu.flowsys.web.http.entity.OrderPo;
 //import com.weizu.flowsys.web.trade.dao.PurchaseDao;
 ////import com.weizu.flowsys.util.ClassUtil;
 ////import com.weizu.flowsys.util.StringUtil2;
@@ -162,8 +174,18 @@
 ////		}
 ////		System.out.println(md6Str);
 ////		System.out.println(md6Str.length());
-//		Double discount = 526.0d;
-//		System.out.println(StringUtil2.getDiscountVO(discount)); 
+////		Charge [tipCode=5001, tipMsg=success, ChargePo [orderId=793998072853041152, number=15113773085, pgSize=200, billType=0]]
+////		Charge charge = new Charge(5001, "success", new ChargePo(793998072853041152l, "15113773085", 200, 0));
+////		ResponseJsonDTO rp = new ResponseJsonDTO(793998072853041152l, "201605215415", 0, "", System.currentTimeMillis(), "15113773085");
+////		System.out.println(JSON.toJSONString(rp)); 
+////		Order order = new Order(new OrderPo(1l, "123", "123", 10, 0.5d, "123", 0, "sorry"), 0, "成功");
+////		System.out.println(JSON.toJSONString(order));
+//		Long str = 0l;
+//		System.out.println(str.equals(0l));
+////		System.out.println(DateUtil.formatAll(1514724915904l)); //第一笔订单时间
+////		System.out.println(DateUtil.formatAll(1514724925405l)); //第二笔订单时间
+////		Double discount = 526.0d;
+////		System.out.println(StringUtil2.getDiscountVO(discount)); 
 //		
 ////		UUIDGenerator generator = new UUIDGenerator();
 ////		String userApiKey = generator.generate().toString();

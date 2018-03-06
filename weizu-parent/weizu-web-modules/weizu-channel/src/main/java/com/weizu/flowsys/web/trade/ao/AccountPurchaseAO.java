@@ -23,7 +23,7 @@ public interface AccountPurchaseAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年11月7日 下午4:40:31
 	 */
-	String batchUpdatePurchaseState(PurchaseVO purchaseVO);
+//	String batchUpdatePurchaseState(PurchaseVO purchaseVO);
 	/**
 	 * @description:回调的时候，更新状态:成功返成功，失败返等待
 	 * @param orderId 
@@ -47,4 +47,17 @@ public interface AccountPurchaseAO {
 	 * @createTime:2017年9月28日 下午5:04:16
 	 */
 	String updatePurchaseStateByMe(Long orderId,Integer orderResult, String orderResultDetail, Long realBackTime);
+	
+	/**
+	 * @description: 手动退款
+	 * @param orderId
+	 * @param orderResult
+	 * @param orderResultDetail
+	 * @param realBackTime
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年2月5日 上午9:18:20
+	 */
+	String refund(Long orderId,Integer orderResult, String orderResultDetail, Long realBackTime);
+	
 }

@@ -107,21 +107,17 @@
 		<dl id="menu-product"><!-- menu_dropdown-arrow -->
 		<c:choose>
 			<c:when test="${loginContext.rootAgencyId == 0 }">
-					<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe643;</i> 通道管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-					<dd>
-						<ul>
-							<c:if test="${power== 'no'}">
-								<li><a data-href="/flowsys/platform/platform_list.do" data-title="平台管理" href="javascript:void(0)">平台管理</a></li>
-								<li><a data-href="/flowsys/productCode/product_code_list.do" data-title="流量编码" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量编码</a></li>
-							</c:if>
-							<li><a data-href="/flowsys/channel/channel_add_page.do" data-title="流量添加" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量添加</a></li>
-							<li><a data-href="/flowsys/channel/channel_list.do" data-title="流量通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量通道</a></li>
-							
-							<li><a data-href="/flowsys/tel_product/telproduct_list.do" data-title="话费编码列表" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费编码</a></li>
-							<li><a data-href="/flowsys/tel_channel/telchannel_add_page.do" data-title="话费通道添加" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费添加</a></li>
-							<li><a data-href="/flowsys/tel_channel/telchannel_list.do" data-title="话费通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费通道</a></li>
-						</ul>
-					</dd>
+				<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe643;</i> 通道管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+				<dd>
+					<ul>
+						<li><a data-href="/flowsys/channel/channel_add_page.do" data-title="流量添加" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量添加</a></li>
+						<li><a data-href="/flowsys/channel/channel_list.do" data-title="流量通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量通道</a></li>
+						
+						<li><a data-href="/flowsys/tel_channel/telchannel_add_page.do" data-title="话费通道添加" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费添加</a></li>
+						<li><a data-href="/flowsys/tel_channel/telchannel_list.do" data-title="话费通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费通道</a></li>
+						<li><a data-href="/flowsys/showRate/showRate_list.do?showModel=1" data-title="通道展示列表" href="javascript:void(0)">通道展示</a></li>
+					</ul>
+				</dd>
 			</c:when>
 			<c:otherwise>
 				 <dt><i class="Hui-iconfont" style="font-size:20px;">&#xe643;</i> 我的通道<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
@@ -129,6 +125,11 @@
 					<ul>
 						<!-- <li><a data-href="/flowsys/channel/channel_list.do" data-title="流量通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量通道</a></li> -->
 						<li><a data-href="/flowsys/telRate/agency_telchannel_list.do" data-title="话费通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费通道</a></li>
+						<li><a data-href="/flowsys/rate/my_rate_list.do" data-title="流量通道" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量通道</a></li>
+						
+						<c:if test="${loginContext.agencyTag == 1 }">
+						<li><a data-href="/flowsys/showRate/showRate_list.do?showModel=0" data-title="通道展示列表" href="javascript:void(0)">通道展示</a></li>
+						</c:if>
 					</ul>
 				</dd> 
 			</c:otherwise>
@@ -175,6 +176,7 @@
 			</ul>
 		</dd>
 	</dl>
+	<c:if test="${loginContext.userName != 'wechat' }">
 	<dl id="menu-comments">
 		<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe726;</i> 在线充值<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 		<dd>
@@ -184,16 +186,6 @@
 				<li><a data-href="/flowsys/chargePg/pg_batch_charge_page.do" title="批量充值" data-title="批量充值" href="javascript:;">流量批量充值</a></li> 
 				
 			</ul>
-		</dd>
-	</dl>
-	<c:if test="${loginContext.rootAgencyId == 0 }">
-	<dl id="menu-article">
-			<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe6c6;</i> 标准价管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-			<dd>
-				<ul>
-					<li><a data-href="/flowsys/operatorPg/operatorPg_list.do" data-title="标准价管理" href="javascript:void(0)">标准价管理</a></li>
-					<li><a data-href="/flowsys/showRate/showRate_list.do?showModel=1" data-title="通道展示列表" href="javascript:void(0)">通道展示</a></li>
-				</ul>
 		</dd>
 	</dl>
 	</c:if>
@@ -207,24 +199,51 @@
 				<li><a data-href="/flowsys/account/account_info.do" data-title="账户信息" href="javascript:void(0)">账户信息</a></li>
 				<li><a data-href="/flowsys/account/consume_list.do" data-title="订单消费" href="javascript:void(0)">订单消费</a></li>
 				<c:choose>
-					<c:when test="${empty telLogin }"><!-- 当前不是手机模式 -->
-						<li><a href="/flowsys/agency/logout.do?logOutModel=1" title="手机模式" target="_self">手机模式</a></li>
+					<c:when test="${loginContext.agencyTag != 1 && (companyAccount == 'yes' || power == 'no' ) }">
+						<li><a data-href="/flowsys/account/open_company_account_page.do" data-title="开通对公账号" href="javascript:void(0)">开通对公账号</a></li>
 					</c:when>
-					<c:otherwise>
-						<li><a href="/flowsys/agency/logout.do?logOutModel=2" title="一般模式" target="_self">一般模式</a></li>
-					</c:otherwise>
+					<c:when test="${loginContext.agencyTag == 1 && loginContext.rootAgencyId != 0 }"><!-- 有对公账户 -->
+						<li><a data-href="/flowsys/account/confirm_account_info.do?agencyId=${loginContext.id }" data-title="查看验证信息" href="javascript:void(0)">查看验证信息</a></li>
+					</c:when>
 				</c:choose>
-				<c:if test="${loginContext.agencyTag != 1 && (companyAccount == 'yes' || power == 'no' ) }">
-					<%-- <c:choose>
+				<%-- <c:if test="${loginContext.agencyTag != 1 && (companyAccount == 'yes' || power == 'no' ) }">
+					<c:choose>
 						<c:when test="${loginContext.agencyTag != 1 }">
 						
 						</c:when>
-					</c:choose> --%>
-					<li><a data-href="/flowsys/account/open_company_account_page.do" data-title="开通对公账号" href="javascript:void(0)">开通对公账号</a></li>
-				</c:if>
+					</c:choose>
+				</c:if> --%>
 			</ul>
 		</dd>
 	</dl>
+	<c:if test="${loginContext.rootAgencyId == 0 }">
+	<dl id="menu-article">
+			<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe6c6;</i> 标准价管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a data-href="/flowsys/operatorPg/operatorPg_list.do" data-title="标准价管理" href="javascript:void(0)">标准价管理</a></li>
+				</ul>
+		</dd>
+	</dl>
+	<dl id="menu-system">
+			<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe6c6;</i>系统配置<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a data-href="/flowsys/systemConf/systemConf_list.do" data-title="系统配置信息" href="javascript:void(0)">系统配置信息</a></li>
+				</ul>
+		</dd>
+		<c:if test="${power== 'no'}">
+			<dt><i class="Hui-iconfont" style="font-size:20px;">&#xe643;</i> 对接管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd>
+				<ul>
+					<li><a data-href="/flowsys/platform/platform_list.do" data-title="平台列表" href="javascript:void(0)">平台列表</a></li>
+					<li><a data-href="/flowsys/productCode/product_code_list.do" data-title="流量编码" href="javascript:void(0)"><i class="Hui-iconfont">&#xe675;</i> 流量编码</a></li>
+					<li><a data-href="/flowsys/tel_product/telproduct_list.do" data-title="话费编码列表" href="javascript:void(0)"><i class="Hui-iconfont">&#xe6a3;</i> 话费编码</a></li>
+				</ul>
+			</dd>
+		</c:if>
+	</dl>
+	</c:if>
 	
 	<c:if test="${not empty telLogin }">
 	<%-- <dl>
@@ -307,6 +326,14 @@
 			<c:if test="${loginContext.rootAgencyId == 0 }">
 				<li><a href="/view/index.html" title="平台页面模板" target="_blank">平台页面模板</a></li>
 			</c:if>
+			<c:choose>
+				<c:when test="${empty telLogin }"><!-- 当前不是手机模式 -->
+					<li><a href="/flowsys/agency/logout.do?logOutModel=1" title="手机模式" target="_self">手机模式</a></li>
+				</c:when>
+				<c:otherwise>
+					<li><a href="/flowsys/agency/logout.do?logOutModel=2" title="一般模式" target="_self">一般模式</a></li>
+				</c:otherwise>
+			</c:choose>
 				<li><a href="/view/mine/jk-doc/jk-doc.html" title="南昌微族流量接口文档" target="_blank">流量接口文档</a></li>
 				<li><a data-href="http://htmlify.wps.cn/doc/index.html?ksyun=hPT1Afio/word.html&theme=clear" data-title="平台操作指南" href="javascript:void(0)">平台操作指南</a></li>
 			</ul>

@@ -3,22 +3,28 @@ package com.weizu.flowsys.web.agency.ao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
 import com.aiyi.base.pojo.PageParam;
 import com.aiyi.base.pojo.PurchasePo;
 import com.weizu.flowsys.util.Pagination;
+import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
 import com.weizu.flowsys.web.agency.pojo.ConsumeRecordPo;
-import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordPo;
+import com.weizu.flowsys.web.agency.pojo.GroupAgencyRecordVo;
 
 public interface ChargeRecordAO {
+	
 	/**
-	 * @description:修改代理商账户信息
-	 * @param chargeRecordPo
+	 * @description: 账户转账充值
+	 * @param toAccountPo
+	 * @param rechargeAmount
+	 * @param fromAccountPo
 	 * @return
-	 * @author:POP产品研发部 宁强
-	 * @createTime:2017年5月6日 下午4:06:02
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年2月25日 下午3:53:07
 	 */
-	int updateAccount(Integer accountId, Double rechargeAmount,Integer loginContextId);
+	int chargeAccount(ChargeAccountPo toAccountPo, Double rechargeAmount,ChargeAccountPo fromAccountPo);
 	
 	/**
 	 * @description:修改登陆用户账户余额
@@ -60,7 +66,7 @@ public interface ChargeRecordAO {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2018年1月5日 下午2:24:41
 	 */
-	List<GroupAgencyRecordPo> groupAgencyRecord(Integer contextAgencyId,ConsumeRecordPo consumeRecordPo);
+	List<GroupAgencyRecordVo> groupAgencyRecord(Integer contextAgencyId,ConsumeRecordPo consumeRecordPo);
 	
 	/**
 	 * @description: 加载分页消费记录列表
@@ -72,6 +78,16 @@ public interface ChargeRecordAO {
 	 * @createTime:2017年7月3日 下午5:17:19
 	 */
 	Pagination<ConsumeRecordPo> listConsumeRecord(Map<String, Object> resultMap,Integer contextAgencyId,ConsumeRecordPo consumeRecordPo, PageParam pageParam);
+	
+	/**
+	 * @description: 导出消费记录列表
+	 * @param contextAgencyId
+	 * @param consumeRecordPo
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年3月2日 下午4:14:00
+	 */
+	HSSFWorkbook exportConsumeRecord(Integer contextAgencyId,ConsumeRecordPo consumeRecordPo);
 	
 	/**
 	 * @description:购买流量

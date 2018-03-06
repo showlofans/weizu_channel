@@ -1,0 +1,37 @@
+ssl证书1年
+聚合归属地接口，1年
+/usr/local/webserver/ssl
+
+server {
+listen       443;   #指定ssl监听端口
+server_name  www.example.com;
+ssl on;    #开启ssl支持
+ssl_certificate      /etc/nginx/server.pem;    #指定服务器证书路径
+ssl_certificate_key  /etc/nginx/server.key;    #指定私钥证书路径
+ssl_session_timeout  5m;
+ssl_protocols TLSv1 TLSv1.1 TLSv1.2;     #指定SSL服务器端支持的协议版本
+ssl_ciphers  ALL：!ADH：!EXPORT56：RC4+RSA：+HIGH：+MEDIUM：+LOW：+SSLv2：+EXP;    #指定加密算法
+ssl_prefer_server_ciphers   on;    #在使用SSLv3和TLS协议时指定服务器的加密算法要优先于客户端的加密算法
+#以下内容请按域名需要进行配置，此处仅供参考
+location / {
+return 444;
+}
+}
+
+
+--prefix=/usr/local/webserver/nginx --add-module=/usr/local/webserver/nginx/nginx_sticky --with-http_ssl_module
+
+--with-openssl=/usr/bin/openssl
+
+CORE_INCS="$CORE_INCS $OPENSSL/.openssl/include"
+            CORE_DEPS="$CORE_DEPS $OPENSSL/.openssl/include/openssl/ssl.h"
+            CORE_LIBS="$CORE_LIBS $OPENSSL/.openssl/lib/libssl.a"
+            CORE_LIBS="$CORE_LIBS $OPENSSL/.openssl/lib/libcrypto.a"
+            CORE_LIBS="$CORE_LIBS $NGX_LIBDL"
+
+ server {
+listen 80;
+server_name www.91weizu.cn;
+rewrite ^/(.*) https://$server_name$request_uri? permanent;
+}
+

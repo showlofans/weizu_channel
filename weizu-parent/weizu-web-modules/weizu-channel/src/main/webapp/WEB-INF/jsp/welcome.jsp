@@ -100,7 +100,7 @@
 	<table class="table table-border table-bordered table-bg mt-20">
 		<thead>
 			<tr>
-				<th colspan="2" scope="col">流量信息</th>
+				<th colspan="2" scope="col">流量信息(同一个地区出现多次，说明包体不一样)</th>
 			</tr>
 		</thead>
 		<tbody>

@@ -30,7 +30,7 @@ public enum ChargeStatusEnum {
 	/**
 	 * 欠费等待
 	 */
-	LACK_OF_BALANCE("欠费等待",5002),
+	LACK_OF_BALANCE("余额不足",5002),
 	/**
 	 * 缺少通道配置
 	 */

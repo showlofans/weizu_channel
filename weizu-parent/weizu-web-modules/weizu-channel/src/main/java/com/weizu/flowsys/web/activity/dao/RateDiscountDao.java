@@ -175,7 +175,7 @@ public interface RateDiscountDao extends Dao<RateDiscountPo, Long> {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年11月1日 上午9:53:48
 	 */
-	RateDiscountPo getPriceByPg(Integer agencyId, Integer pgId, Long channelId);
+	RateDiscountPo getPriceByPg(Integer agencyId, Integer pgId, Long channelId,Integer billType);
 	
 	long delRateByIteratorFun(Long rateId);
 	

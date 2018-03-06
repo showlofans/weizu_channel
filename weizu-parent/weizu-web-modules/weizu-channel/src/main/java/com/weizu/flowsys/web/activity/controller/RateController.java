@@ -448,18 +448,25 @@ public class RateController {
 	 * @createTime:2017年7月28日 下午5:38:02
 	 */
 	@RequestMapping(value=RateURL.MY_RATE_LIST)
-	public ModelAndView myRateList(@RequestParam(value = "pageNoLong", required = false) Long pageNoLong,
-			HttpServletRequest request,RateDiscountPo ratePo,String agencyName){
+	public ModelAndView myRateList(HttpServletRequest request,
+			@RequestParam(value = "pageNoLong", required = false) Long pageNoLong,
+			@RequestParam(value = "agencyName", required = false)String agencyName,
+//			@RequestParam(value = "pgSize", required = false)String pgSize,
+			RateDiscountPo ratePo){
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		if(agencyVO == null){
 			return new ModelAndView("error", "errorMsg", "系统维护之后，用户未登陆！！");
 		}
-		Integer childAccountId = -1;
+//		Integer childAccountId = null;
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		if(ratePo != null){
-			childAccountId = ratePo.getAccountId();
 //			request.getSession().setAttribute("childAccountId", childAccountId);
 //			request.getSession().setAttribute("childAgencyName", agencyName);
-			request.getSession().setAttribute("childAccountPo", chargeAccountDao.get(childAccountId));
+			if(ratePo.getAccountId() != null){
+//				childAccountId = ratePo.getAccountId();
+//				request.getSession().setAttribute("childAccountPo", chargeAccountDao.get(childAccountId));
+				resultMap.put("childAccountPo", chargeAccountDao.get(ratePo.getAccountId()));
+			}
 		}else{
 			return new ModelAndView("error", "errorMsg", "参数不对！！");
 		}
@@ -480,8 +487,7 @@ public class RateController {
 		}else{
 			pageParam = new PageParam(1l, 10);
 		}
-		Pagination<RateDiscountPo> pagination = rateDiscountAO.getMyRateList(ratePo,childAccountId, pageParam);
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		Pagination<RateDiscountPo> pagination = rateDiscountAO.getMyRateList(ratePo, pageParam);
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		resultMap.put("scopeCityEnums", ScopeCityEnum.toList());
 		resultMap.put("operatorTypes", OperatorTypeEnum.toList());
@@ -501,24 +507,29 @@ public class RateController {
 	 */
 	@ResponseBody
 	@RequestMapping(value=RateURL.ADD_MY_RATE)
-	public void addMyRate(HttpServletRequest request,RateDiscountPo ratePo,HttpServletResponse response){
+	public void addMyRate(HttpServletRequest request,RateDiscountPo ratePo,String childAgencyName, HttpServletResponse response){
 		String resAddDis = "error";
-		if(ratePo.getChannelDiscountId() != null){//根据通道折扣id设置通道id
-			ChannelDiscountPo cdPo = channelDiscountDao.get(ratePo.getChannelDiscountId());
-			ratePo.setChannelId(cdPo.getChannelId());
-		}
+//		if(ratePo.getChannelDiscountId() != null){//根据通道折扣id设置通道id
+//			ChannelDiscountPo cdPo = channelDiscountDao.get(ratePo.getChannelDiscountId());
+//			ratePo.setChannelId(cdPo.getChannelId());
+//		}
 		if(ratePo.getId() != null){//更新
 			resAddDis = rateDiscountAO.updateRateDiscount(ratePo);
 		}else{
 			AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 			if(agencyVO != null){
-				ChargeAccountPo childAccountPo = (ChargeAccountPo)request.getSession().getAttribute("childAccountPo");
+				if(ratePo.getAccountId() != null){
+//					ChargeAccountPo childAccountPo = chargeAccountDao.get(ratePo.getAccountId());
 //				String agencyName = request.getSession().getAttribute("childAgencyName").toString();
 //				String agencyIdStr = request.getSession().getAttribute("childAgencyId").toString();
-				int bindAgencyId = agencyVO.getId();
+					int bindAgencyId = agencyVO.getId();
 //				ratePo.setAgencyId();
-				ratePo.setAccountId(childAccountPo.getId());
-				resAddDis = rateDiscountAO.addRateDiscount(ratePo, childAccountPo.getAgencyName(), bindAgencyId);
+//					ratePo.setAccountId(childAccountPo.getId());
+					//添加一个新的折扣，同时把这个折扣绑定给该账户
+					resAddDis = rateDiscountAO.addRateDiscount(ratePo, childAgencyName, bindAgencyId);
+				}else{
+					System.out.println("没有找到相关账户");
+				}
 			}
 		}
 		try {
@@ -873,9 +884,19 @@ public class RateController {
 		}
 		int rootAgencyId = agencyVO.getId();
 		PageParam pageParam = null;
+		Long channelDiscountId = null;
+		if(aardto.getRateDiscountId() != null){
+			RateDiscountPo ratePo1 = rateDiscountDao.get(aardto.getRateDiscountId());
+			channelDiscountId = ratePo1.getChannelDiscountId();
+			aardto.setChannelDiscountId(channelDiscountId);
+			if(ratePo == null){
+				return new ModelAndView("error", "errorMsg", "参数错误");
+			}
+		}
 		if(StringHelper.isNotEmpty(pageNo)){
 			pageParam = new PageParam(Integer.parseInt(pageNo), 10) ;
 		}else{//第一次进入页面
+			ratePo.setChannelDiscountId(channelDiscountId);
 			request.getSession().setAttribute("ratePo", ratePo);
 			pageParam = new PageParam(1, 10);
 		}
