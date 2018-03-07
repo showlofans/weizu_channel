@@ -16,14 +16,19 @@ import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
+import com.weizu.flowsys.operatorPg.enums.EventTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.LoginStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
+import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeRecordDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
+import com.weizu.flowsys.web.log.AccountEventPo;
+import com.weizu.flowsys.web.log.dao.IAccountEventDao;
 import com.weizu.flowsys.web.system_base.ao.SystemConfAO;
 import com.weizu.flowsys.web.system_base.pojo.SystemConfPo;
 import com.weizu.flowsys.web.trade.WXPayUtil;
@@ -52,6 +57,10 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 	private SendCallBackUtil sendCallBack;
 	@Resource
 	private SystemConfAO systemConfAO;
+	@Resource
+	private ChargeAccountAo chargeAccountAO;
+	@Resource
+	private IAccountEventDao accountEventDao;
 	
 	@Resource
 	private WXPayAO wXPayAO;
@@ -114,11 +123,11 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 								if(needSet){//没有补款记录就可以补款
 									ChargeAccountPo accountPo = chargeAccountDao.get(accountId);
 									Double accountBeforeBalance = accountPo.getAccountBalance();
-									Double accountAfterBalance = NumberTool.add(accountBeforeBalance,orderAmount);
+//									Double accountAfterBalance = NumberTool.add(accountBeforeBalance,orderAmount);
 //									accountPo.setAccountBalance(NumberTool.add(orderAmount, accountBeforeBalance));
-									accountPo.setAccountBalance(accountAfterBalance);
+//									accountPo.setAccountBalance(accountAfterBalance);
 //									int accountUpRes = chargeAccountDao.updateLocal(accountPo, new WherePrams("id","=",accountId));
-									int accountUpRes = chargeAccountDao.updateById(accountPo);
+									int accountUpRes =  chargeAccountAO.updateAccount(accountId,orderAmount);
 									if(accountUpRes > 0){
 										ChargeAccountPo accountAfterPo = chargeAccountDao.get(accountId);
 										//一个代理商账号，一个订单号只能有一笔补款的消费记录
@@ -227,14 +236,21 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 									if(needSet){
 										ChargeAccountPo accountPo = chargeAccountDao.get(accountId);
 //									Double orderAmount = accountPurchasePo.getOrderAmount();
-										Double agencyBeforeBalance = accountPo.getAccountBalance();
-										accountPo.addBalance(orderAmount, 1);
-										recordPoList.add(new ChargeRecordPo(realBackTime, orderAmount,
-												agencyBeforeBalance, accountPo.getAccountBalance(), 
-												AccountTypeEnum.Replenishment.getValue(), accountId,  recordPo.getChargeFor() , orderId));
-										chargeAccountDao.updateLocal(accountPo, new WherePrams("id","=",accountId));
-										//更新连接表
-										ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
+										Double accountBeforeBalance = accountPo.getAccountBalance();
+//										Double accountAfterBalance = NumberTool.add(accountBeforeBalance,orderAmount);
+//										accountPo.setAccountBalance(NumberTool.add(orderAmount, accountBeforeBalance));
+//										accountPo.setAccountBalance(accountAfterBalance);
+//										int accountUpRes = chargeAccountDao.updateLocal(accountPo, new WherePrams("id","=",accountId));
+										int accountUpRes = chargeAccountAO.updateAccount(accountId,orderAmount);
+										if(accountUpRes > 0){
+											ChargeAccountPo accountAfterPo = chargeAccountDao.get(accountId);
+											recordPoList.add(new ChargeRecordPo(realBackTime, orderAmount,
+													accountBeforeBalance, accountAfterPo.getAccountBalance(), 
+													AccountTypeEnum.Replenishment.getValue(), accountId,  recordPo.getChargeFor() , orderId));
+//										chargeAccountDao.updateLocal(accountPo, new WherePrams("id","=",accountId));
+											//更新连接表
+											ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
+										}
 //								Long appId = accountPurchaseDao.nextId();
 										//同样的订单消费再添加一笔消费记录
 										AccountPurchasePo appPo = accountPurchasePo.clone();
@@ -287,6 +303,12 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 		int ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
 		//更新订单表
 		int pur = purchaseDAO.updatePurchaseState(new PurchasePo(orderId, null, realBackTime, orderResult, null, orderResultDetail));
+		
+//		 purchaseDAO.getOnePurchase(orderId);
+		
+		//添加最新登陆日志
+//		accountEventDao.add(new AccountEventPo(resultPo.getId(), EventTypeEnum.SUCCESS_REFUND.getValue(), System.currentTimeMillis(), "南昌", "120.55.162.224", orderId.toString()));
+		
 		if(pur + ap > 1){
 			return "success";
 		}

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.annotation.Resource;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.management.Query;
@@ -13,6 +14,11 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import com.weizu.flowsys.operatorPg.enums.EventTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.LoginStateEnum;
+import com.weizu.flowsys.web.log.AccountEventPo;
+import com.weizu.flowsys.web.log.ao.AccountEventAO;
+import com.weizu.flowsys.web.log.dao.IAccountEventDao;
 import com.weizu.web.foundation.DateUtil;
 
 /**
@@ -24,6 +30,9 @@ import com.weizu.web.foundation.DateUtil;
  * @version 1.0
  */
 public class PreloadListener implements ServletContextListener {
+	
+//	@Resource
+//	private IAccountEventDao accountEventDao;
 
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
@@ -35,7 +44,8 @@ public class PreloadListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent arg0) {
 		//init operation 
 		ServletContext application = arg0.getServletContext();
-		application.setAttribute("startupTime", DateUtil.formatAll());
+		String startTime = DateUtil.formatAll();
+		application.setAttribute("startupTime", startTime);
 		
 		String portstr = System.getProperty("reyo.localPort");
 		int port = portstr == null ? 0: Integer.parseInt(portstr);
@@ -44,6 +54,8 @@ public class PreloadListener implements ServletContextListener {
 			portNum = 382;
 		}
 		application.setAttribute("portNum", portNum);
+		//添加最新登陆日志
+//		accountEventDao.add(new AccountEventPo(portNum, EventTypeEnum.SYSTEM_UPDATE.getValue(), System.currentTimeMillis(), portstr+":南昌", "120.55.162.224", startTime));
 //		MBeanServer mb = ManagementFactory.getPlatformMBeanServer();
 		
 //		Set<ObjectName> objs = mb.queryNames(new ObjectName("*:type=Connector,*"),  

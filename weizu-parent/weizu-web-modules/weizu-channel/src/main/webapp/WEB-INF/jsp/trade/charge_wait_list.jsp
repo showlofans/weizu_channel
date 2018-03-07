@@ -104,7 +104,7 @@
 				</div>  -->
 		</form>
 		<div class="cl pd-5 bg-1 bk-gray mt-20">
-			 <span class="l"><a href="javascript:;" onclick="batchCommit()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe603;</i> 批量提交</a></span>
+			 <span class="l"><a href="javascript:;" onclick="batchCommit()" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe603;</i> 批量提交</a>&nbsp;上一次提交时间：${resultMap.batchCommitTimeStr }</span>
 			 <span class="r"><a href="javascript:;" onclick="batchUpdate('1')" class="btn btn-success radius"><i class="Hui-iconfont">&#xe603;</i> 批量成功</a></span>&nbsp;&nbsp;
 			 <span class="r"><a href="javascript:;" onclick="batchUpdate('0')" class="btn btn-default radius"><i class="Hui-iconfont">&#xe603;</i> 批量失败</a></span>&nbsp;&nbsp;
 		</div>

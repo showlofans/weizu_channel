@@ -44,6 +44,7 @@ import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
+import com.weizu.flowsys.web.agency.pojo.AccountBalanceSumPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.channel.ao.ChannelChannelAO;
@@ -996,6 +997,9 @@ public class RateController {
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 //		resultMap.put("operatorTypeEnums", OperatorTypeEnum.toList());
 		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
+		//初始化当前账户可用余额
+		List<AccountBalanceSumPo> sumList = chargeAccountAO.getBalanceSumByAgencyId(agencyVO.getId(), agencyVO.getRootAgencyId().equals(0));
+		resultMap.put("balanceSumList", sumList);// 保存可用余额到session中
 		return new ModelAndView("/welcome", "resultMap", resultMap);
 	}
 	/**

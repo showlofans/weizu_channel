@@ -36,7 +36,9 @@ import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.EpEncodeTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.EventTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.LoginStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
@@ -77,6 +79,9 @@ import com.weizu.flowsys.web.channel.pojo.SpecialCnelType;
 import com.weizu.flowsys.web.channel.pojo.SpecialOpdType;
 import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
 import com.weizu.flowsys.web.http.ao.ValiUser;
+import com.weizu.flowsys.web.log.AccountEventPo;
+import com.weizu.flowsys.web.log.ao.AccountEventAO;
+import com.weizu.flowsys.web.log.dao.IAccountEventDao;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.ao.AccountPurchaseAO;
 import com.weizu.flowsys.web.trade.ao.PurchaseAO;
@@ -130,6 +135,10 @@ public class ChargePgController {
 	private ExchangePlatformAO exchangePlatformAO;
 	@Resource
 	private ExchangePlatformDaoInterface exchangePlatformDao;
+	@Resource
+	private IAccountEventDao accountEventDao;
+	@Resource
+	private AccountEventAO accountEventAO;
 	
 	@Resource
 	private ValiUser valiUser;
@@ -835,10 +844,10 @@ public class ChargePgController {
 						System.out.println(callTag +"-开始统计总扣款");
 						TotalResult tot = purchaseAO.getTotalResultFromSuccess(purchaseVO);
 						Double totalCost = 0.00d;
-						for (PurchaseVO purchaseVO2 : records) {
-							totalCost = NumberTool.add(totalCost, purchaseVO2.getOrderAmount());
-						}
-						tot.setTotalCost(totalCost);
+//						for (PurchaseVO purchaseVO2 : records) {
+//							totalCost = NumberTool.add(totalCost, purchaseVO2.getOrderAmount());
+//						}
+//						tot.setTotalCost(totalCost);
 						System.out.println("总成本："+totalCost);
 						httpSession.setAttribute("tot", tot);
 					}
@@ -854,6 +863,10 @@ public class ChargePgController {
 				model = new ModelAndView("/trade/charging_list", "resultMap", resultMap);
 				break;
 			case 4://待充
+				AccountEventPo accountEventPo = accountEventAO.getLastByAgency(agencyVO.getId(), EventTypeEnum.BATCH_COMMIT_ORDER.getValue());
+				if(accountEventPo != null){
+					resultMap.put("batchCommitTimeStr", DateUtil.formatAll(accountEventPo.getEventTime()));
+				}
 				model = new ModelAndView("/trade/charge_wait_list", "resultMap", resultMap);
 				break;
 			default:
@@ -1216,6 +1229,8 @@ public class ChargePgController {
 			//只有待冲的单子可以批量提交
 			if(purchaseVO.getOrderResult().equals(OrderStateEnum.DAICHONG.getValue())){
 				res = purchaseAO.batchCommitOrder(purchaseVO);
+				//添加批量提交事务日志
+				accountEventDao.add(new AccountEventPo(agencyVO.getId(), EventTypeEnum.BATCH_COMMIT_ORDER.getValue(), System.currentTimeMillis(), "江西南昌", "120.55.162.224", purchaseVO.getAgencyName()));
 			}
 		}
 		return res;

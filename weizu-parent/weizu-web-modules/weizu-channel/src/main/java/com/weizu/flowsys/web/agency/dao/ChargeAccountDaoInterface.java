@@ -1,8 +1,10 @@
 package com.weizu.flowsys.web.agency.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import com.weizu.flowsys.core.dao.Dao;
+import com.weizu.flowsys.web.agency.pojo.AccountBalanceSumPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 
 public interface ChargeAccountDaoInterface extends Dao<ChargeAccountPo, Integer>  {
@@ -42,7 +44,7 @@ public interface ChargeAccountDaoInterface extends Dao<ChargeAccountPo, Integer>
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月22日 下午4:25:12
 	 */
-	int updateById(ChargeAccountPo chargeAccountPo);
+	int updateById(Map<String, Object> map);
 	
 	/**
 	 * @description: 通过转账记录id找到关联的转账账户
@@ -62,6 +64,15 @@ public interface ChargeAccountDaoInterface extends Dao<ChargeAccountPo, Integer>
 	 * @createTime:2018年3月5日 下午3:55:06
 	 */
 	int updateAccountBalance(Double accountBalance, Integer accountId);
+	
+	/**
+	 * @description:  统计真实平台余额
+	 * @param params
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年3月7日 下午3:11:39
+	 */
+	List<AccountBalanceSumPo> getBalanceSum(Map<String, Object> params);
 	
 	
 }

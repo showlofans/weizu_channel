@@ -42,6 +42,8 @@ import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.EpEncodeTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.EventTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.LoginStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
@@ -89,6 +91,8 @@ import com.weizu.flowsys.web.channel.pojo.TelProductPo;
 import com.weizu.flowsys.web.http.ParamsEntityWeiZu;
 import com.weizu.flowsys.web.http.ao.ValiUser;
 import com.weizu.flowsys.web.http.weizu.OrderStateResult;
+import com.weizu.flowsys.web.log.AccountEventPo;
+import com.weizu.flowsys.web.log.dao.IAccountEventDao;
 import com.weizu.flowsys.web.system_base.ao.SystemConfAO;
 import com.weizu.flowsys.web.system_base.pojo.SystemConfPo;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
@@ -161,6 +165,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 	private SystemConfAO systemConfAO;
 	@Resource
 	private ValiUser valiUser;
+	@Resource
+	private IAccountEventDao accountEventDao;
 	
 	private Logger logger = Logger.getLogger("PurchaseAOImpl");
 	
@@ -303,8 +309,9 @@ public class PurchaseAOImpl implements PurchaseAO {
 					agencyBeforeBalance = chargeAccountPo.getAccountBalance();
 					orderAmount = NumberTool.mul(chargeValue, telchannel.getTelchannelDiscount());//成本
 					agencyAfterBalance = NumberTool.sub(agencyBeforeBalance, orderAmount);
-					chargeAccountPo.setAccountBalance(agencyAfterBalance);
-					chargeAccountAO.updateAccount(chargeAccountPo);
+//					chargeAccountPo.setAccountBalance(agencyAfterBalance);
+					double editBalance = NumberTool.mul(orderAmount, -1);
+					chargeAccountAO.updateAccount(chargeAccountPo.getId(), editBalance);
 					int addRec = chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
 							agencyBeforeBalance, agencyAfterBalance, 
 							AccountTypeEnum.DECREASE.getValue(), accountId, tcVO.getChargeFor() , orderId));
@@ -343,7 +350,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 				orderAmount = NumberTool.mul(telRatePo.getActiveDiscount(), chargeValue);
 				chargeAccountPo.addBalance(orderAmount,-1);
 				/** 更新登录用户账户信息**/
-				recordRes = chargeAccountAO.updateAccount(chargeAccountPo);
+				double editBalance = NumberTool.mul(orderAmount, -1);
+				chargeAccountAO.updateAccount(chargeAccountPo.getId(), editBalance);
 				if(recordRes > 0){
 					Long telChannelId = telRatePo.getTelchannelId();			//折扣id
 					if(recordRes > 0){//开始把第一个消费记录，连接加上，
@@ -394,9 +402,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 					agencyBeforeBalance = ap_accountPo.getAccountBalance();
 					/**父费率减去子费率乘以价格，就是差价*/
 					balance = NumberTool.mul(NumberTool.sub(ratePo1.getActiveDiscount(), activeRatePo.getActiveDiscount()), chargeValue);
-					ap_accountPo.addBalance(balance,1);
+//					ap_accountPo.addBalance(balance,1);
 					/** 更新父级代理商账户信息**/
-					recordRes = chargeAccountAO.updateAccount(ap_accountPo);
+					
+					recordRes = chargeAccountAO.updateAccount(ap_accountPo.getId(), balance);
 					if(recordRes > 0){
 						/** 向消费记录表插入登陆用户数据 */
 						Double plusAmount = NumberTool.mul(ratePo1.getActiveDiscount(),chargeValue);
@@ -436,9 +445,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 				Double orderPrice = NumberTool.mul(chargeValue, ratePo1.getActiveDiscount());//价格
 				orderAmount = NumberTool.mul(chargeValue, telchannel.getTelchannelDiscount());//成本
 				agencyBeforeBalance = NumberTool.add(agencyBeforeBalance, orderPrice);//之前加上价格
-				agencyAfterBalance = NumberTool.sub(agencyBeforeBalance, orderAmount);
-				superAccountPo.setAccountBalance(agencyAfterBalance);
-				chargeAccountAO.updateAccount(superAccountPo);
+//				agencyAfterBalance = NumberTool.sub(agencyBeforeBalance, orderAmount);
+//				superAccountPo.setAccountBalance(agencyAfterBalance);
+				double editSuperBalance =  NumberTool.mul(orderAmount, -1);
+				chargeAccountAO.updateAccount(superAccountPo.getId(), editSuperBalance);
 				recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
 						agencyBeforeBalance, agencyAfterBalance, 
 						AccountTypeEnum.DECREASE.getValue(), superAccountPo.getId(),  tcVO.getChargeFor() , orderId));
@@ -616,8 +626,11 @@ public class PurchaseAOImpl implements PurchaseAO {
 					agencyBeforeBalance = chargeAccountPo.getAccountBalance();
 					orderAmount = NumberTool.mul(chargeValue, cdisPo.getChannelDiscount());//成本
 					agencyAfterBalance = NumberTool.sub(agencyBeforeBalance, orderAmount);
-					chargeAccountPo.setAccountBalance(agencyAfterBalance);
-					chargeAccountAO.updateAccount(chargeAccountPo);
+//					chargeAccountPo.setAccountBalance(agencyAfterBalance);
+					
+					double editSuperBalance =  NumberTool.mul(orderAmount, -1);
+					chargeAccountAO.updateAccount(chargeAccountPo.getId(), editSuperBalance);
+//					chargeAccountAO.updateAccount(chargeAccountPo);
 					int addRec = chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
 							agencyBeforeBalance, agencyAfterBalance, 
 							AccountTypeEnum.DECREASE.getValue(), accountId, pcVO.getChargeFor() , orderId));
@@ -653,7 +666,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 				orderAmount = NumberTool.mul(ratePo.getActiveDiscount(), chargeValue);
 				chargeAccountPo.addBalance(orderAmount,-1);
 				/** 更新登录用户账户信息**/
-				recordRes = chargeAccountAO.updateAccount(chargeAccountPo);
+//				recordRes = chargeAccountAO.updateAccount(chargeAccountPo);
+				
+				double editSuperBalance =  NumberTool.mul(orderAmount, -1);
+				recordRes = chargeAccountAO.updateAccount(chargeAccountPo.getId(), editSuperBalance);
 				if(recordRes > 0){
 					Long channelDiscountId = ratePo.getChannelDiscountId();			//折扣id
 					if(recordRes > 0){//开始把第一个消费记录，连接加上，
@@ -704,17 +720,23 @@ public class PurchaseAOImpl implements PurchaseAO {
 					agencyBeforeBalance = ap_accountPo.getAccountBalance();
 					/**父费率减去子费率乘以价格，就是差价*/
 					balance = NumberTool.mul(NumberTool.sub(ratePo1.getActiveDiscount(), activeRatePo.getActiveDiscount()), chargeValue);
-					ap_accountPo.addBalance(balance,1);
+//					ap_accountPo.addBalance(balance,1);
 					/** 更新父级代理商账户信息**/
-					recordRes = chargeAccountAO.updateAccount(ap_accountPo);
+					recordRes = chargeAccountAO.updateAccount(apAccountId, balance);
+					
+					//添加最新登陆日志
+//					accountEventDao.add(new AccountEventPo(ap_accountPo.getAgencyId(), EventTypeEnum.CHILDREN_PURCHASE_REBACK.getValue(), System.currentTimeMillis(), address, eventIp, LoginStateEnum.ING.getValue()+""));
+					
+//					recordRes = chargeAccountAO.updateAccount(ap_accountPo);
 					if(recordRes > 0){
 						/** 向消费记录表插入登陆用户数据 */
-						Double plusAmount = NumberTool.mul(ratePo1.getActiveDiscount(),chargeValue);
-						Double minusAmount = NumberTool.mul(activeRatePo.getActiveDiscount(),chargeValue);
-						agencyBeforeBalance = NumberTool.add(plusAmount, agencyBeforeBalance);	//重置充值前的余额为补款后的余额
-						agencyAfterBalance = NumberTool.sub(agencyBeforeBalance,minusAmount);
+						Double plusAmount = NumberTool.mul(ratePo1.getActiveDiscount(),chargeValue);//价格
+						Double minusAmount = NumberTool.mul(activeRatePo.getActiveDiscount(),chargeValue);//成本
+//						agencyBeforeBalance = NumberTool.add(plusAmount, agencyBeforeBalance);	//重置充值前的余额为补款后的余额
+//						agencyAfterBalance = NumberTool.sub(agencyBeforeBalance,minusAmount);
+						ChargeAccountPo accountAfterPo = chargeAccountAO.getAccountById(apAccountId);
 						recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), minusAmount,
-								agencyBeforeBalance, agencyAfterBalance, 
+								agencyBeforeBalance, accountAfterPo.getAccountBalance(), 
 								AccountTypeEnum.DECREASE.getValue(), apAccountId, pcVO.getChargeFor(), orderId));	
 						int orderPath = OrderPathEnum.CHILD_WEB_PAGE.getValue();
 						AccountPurchasePo app = new AccountPurchasePo(apAccountId, orderId, activeRatePo.getChannelDiscountId(), minusAmount,from_accountPo.getId(), recordId, plusAmount, fromAgencyName, orderPath, orderState);
@@ -740,8 +762,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 				orderAmount = NumberTool.mul(chargeValue, cdisPo.getChannelDiscount());//成本
 				agencyBeforeBalance = NumberTool.add(agencyBeforeBalance, orderPrice);//之前加上价格
 				agencyAfterBalance = NumberTool.sub(agencyBeforeBalance, orderAmount);
-				superAccountPo.setAccountBalance(agencyAfterBalance);
-				chargeAccountAO.updateAccount(superAccountPo);
+//				superAccountPo.setAccountBalance(agencyAfterBalance);
+				double editBalance =  NumberTool.mul(orderAmount, -1);
+				chargeAccountAO.updateAccount(superAccountPo.getId(), editBalance);
+//				chargeAccountAO.updateAccount(superAccountPo);
 				recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
 						agencyBeforeBalance, agencyAfterBalance, 
 						AccountTypeEnum.DECREASE.getValue(), superAccountPo.getId(),  pcVO.getChargeFor() , orderId));

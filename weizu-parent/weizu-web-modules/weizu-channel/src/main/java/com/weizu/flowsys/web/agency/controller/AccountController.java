@@ -190,7 +190,7 @@ public class AccountController {
 			
 			Pagination<ConsumeRecordPo> pagination =  chargeRecordAO.listConsumeRecord(resultMap,contextId,consumeRecordPo, pageParam);
 			
-			if("yes".equals(groupWay) || StringHelper.isEmpty(pageNo)){
+			if(("yes".equals(groupWay) || StringHelper.isEmpty(pageNo)) && agencyVo.getRootAgencyId() == 0){
 				List<GroupAgencyRecordVo> groupAgencyList =chargeRecordAO.groupAgencyRecord(contextId, consumeRecordPo);
 //				if(groupAgencyList.size() > 0){
 //					

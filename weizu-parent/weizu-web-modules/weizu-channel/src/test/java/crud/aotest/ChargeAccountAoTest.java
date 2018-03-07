@@ -1,5 +1,7 @@
 //package crud.aotest;
 //
+//import java.util.List;
+//
 //import javax.annotation.Resource;
 //
 //import org.junit.Test;
@@ -10,6 +12,7 @@
 //import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 //import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 //import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
+//import com.weizu.flowsys.web.agency.pojo.AccountBalanceSumPo;
 //import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
@@ -58,13 +61,21 @@
 ////		ChargeAccountPo accouontPo = chargeAccountDao.getAccountByTransferId(1l);
 ////		System.out.println(accouontPo.getAccountBalance());
 ////	}
+////	@Test
+////	public void getAccountByAgencyId(){
+////		//wechat:246-0 agencyid = 231
+////		//lufull: 198-0, 199-1agencyid = 187
+////		ChargeAccountPo accouontPo = chargeAccountAO.getAccountByAgencyId(187, BillTypeEnum.CORPORATE_BUSINESS.getValue());
+////		System.out.println(accouontPo.getId());
+////		System.out.println(accouontPo.getAccountBalance());
+////	}
 //	@Test
-//	public void getAccountByAgencyId(){
-//		//wechat:246-0 agencyid = 231
-//		//lufull: 198-0, 199-1agencyid = 187
-//		ChargeAccountPo accouontPo = chargeAccountAO.getAccountByAgencyId(187, BillTypeEnum.CORPORATE_BUSINESS.getValue());
-//		System.out.println(accouontPo.getId());
-//		System.out.println(accouontPo.getAccountBalance());
+//	public void getBalanceSum(){
+//		List<AccountBalanceSumPo> sumList = chargeAccountAO.getBalanceSumByAgencyId(1, true);
+////		List<AccountBalanceSumPo> sumList = chargeAccountAO.getBalanceSumByAgencyId(2, false);
+//		for (AccountBalanceSumPo accountBalanceSumPo : sumList) {
+//			System.out.println(accountBalanceSumPo.toString());
+//		}
 //	}
 //	/**
 //	 * @description: 根据转账记录获得账户信息

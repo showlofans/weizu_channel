@@ -83,7 +83,9 @@
 	        <input style="width:150px" type="text"  class="input-text" name="endTimeStr" id="endTimeStr"   value="${resultMap.searchParams.endTimeStr }"  onfocus="WdatePicker({onpicked:function(){getConsume()},autoPickDate:true,startDate:'%y-%M-%d 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
 			&nbsp;&nbsp;<button class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
 			&nbsp;&nbsp;<button type="button"class="btn btn-primary" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
+			<c:if test="${loginContext.rootAgencyId == 0 }">
 			&nbsp;&nbsp;<button class="btn btn-success" onclick="grouWaypSearch()" type="button"><i class="Hui-iconfont">&#xe665;</i> 统计查询</button>
+			</c:if>
 			<a href="/flowsys/account/export_consume_list.do?chargeTel=${resultMap.searchParams.chargeTel }&userName=${resultMap.searchParams.userName }&purchaseId=${resultMap.searchParams.purchaseId }&showModel=${resultMap.searchParams.showModel }
 					&accountType=${resultMap.searchParams.accountType }
 					&billType=${resultMap.searchParams.billType }

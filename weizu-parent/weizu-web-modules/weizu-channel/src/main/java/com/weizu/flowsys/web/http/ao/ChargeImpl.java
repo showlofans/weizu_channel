@@ -132,7 +132,6 @@ public class ChargeImpl implements IChargeFacet {
 			RateDiscountPo ratePo = (RateDiscountPo)sqlMap.get("ratePo");
 			ChannelChannelPo channelPo = (ChannelChannelPo)sqlMap.get("channelPo");
 			boolean isChannelStateClose = channelPo.getChannelState() == ChannelStateEnum.CLOSE.getValue();//通道关闭
-			int accountId = accountPo.getId();
 			int orderPath = OrderPathEnum.CHARGE_SOCKET.getValue();
 			int billType = chargeParams.getBillType();
 			
@@ -161,6 +160,9 @@ public class ChargeImpl implements IChargeFacet {
 					/**超管充值额（）*/
 					superOrderAmount = NumberTool.mul(cdPo.getChannelDiscount(), pgData.getPgPrice());
 				}
+			//重新获取账户余额
+//			ChargeAccountPo accountPo =  chargeAccountAO.getAccountByAgencyId(backPo.getId(), billType);
+			int accountId = accountPo.getId();
 			/**充值前余额*/
 			Double agencyBeforeBalance = accountPo.getAccountBalance();
 			/**充值额（）*/
@@ -185,6 +187,7 @@ public class ChargeImpl implements IChargeFacet {
 				chargeLogDao.add(chargeLog);
 				charge = new Charge(ChargeStatusEnum.LACK_OF_BALANCE.getValue(), ChargeStatusEnum.LACK_OF_BALANCE.getDesc(), null);
 			}else{
+//				accountPo.setAccountBalance(agencyAfterBalance);
 				//开始正常扣款
 				//记录上下游日志，添加订单记录和扣款
 				try {
@@ -212,13 +215,17 @@ public class ChargeImpl implements IChargeFacet {
 				int supperRecAddRes = 0;
 				int apAddRes = 0;
 				int supperApAddRes = 0;
+				double editBalance = NumberTool.mul(orderAmount, -1);
+				ChargeAccountPo accountBeforePo = chargeAccountAO.getAccountById(accountId);
+				agencyBeforeBalance = accountBeforePo.getAccountBalance();
+				int accountRes = chargeAccountAO.updateAccount(accountId, editBalance);		//账户最后的结果
 				/** 更新登录用户账户信息**/
-				accountPo.addBalance(orderAmount,-1);
-				int accountRes = chargeAccountAO.updateAccount(accountPo);		//账户最后的结果
+//				accountPo.addBalance(orderAmount,-1);
 				if(accountRes > 0){
 					//添加消费记录
+					ChargeAccountPo accountAfterPo = chargeAccountAO.getAccountById(accountId);//获取最新的账户余额去添加扣款前和后的余额
 					recAddRes = chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
-							agencyBeforeBalance, accountPo.getAccountBalance(), 
+							agencyBeforeBalance, accountAfterPo.getAccountBalance(), 
 							AccountTypeEnum.DECREASE.getValue(), accountPo.getId(), PgServiceTypeEnum.PGCHARGE.getValue() , orderId));
 					recordId = chargeRecordDao.nextId() -1;
 					if(recordId != 0){
@@ -229,8 +236,10 @@ public class ChargeImpl implements IChargeFacet {
 					}
 				}
 				/** 通道暂停也更新超管账户信息**/
-				superAccountPo.addBalance(superOrderAmount, -1);
-				int superAccountRes = chargeAccountAO.updateAccount(superAccountPo);
+//				superAccountPo.addBalance(superOrderAmount, -1);
+//				superAccountPo.setAccountBalance(NumberTool.sub(superAccountPo.getAccountBalance(), superOrderAmount));
+				double editSuperBalance = NumberTool.mul(superOrderAmount, -1);
+				int superAccountRes = chargeAccountAO.updateAccount(superAccountPo.getId(),editSuperBalance);
 				
 				if(superAccountRes > 0){
 					//添加消费记录

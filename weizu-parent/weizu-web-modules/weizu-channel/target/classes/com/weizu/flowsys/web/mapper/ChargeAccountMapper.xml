@@ -39,7 +39,37 @@
 	 <!-- <sql id="Root_Account_List">
     	charge.id, charge.account_balance, charge.account_credit,charge.agency_id
  	 </sql> -->
+ 	 <!-- 账户余额统计 -->
+ 	 <resultMap type="com.weizu.flowsys.web.agency.pojo.AccountBalanceSumPo" id="BalanceSumMap">
+ 	 	<!-- <id column="id" jdbcType="INTEGER" property="accountId" /> -->
+	    <result column="bill_type" jdbcType="INTEGER" property="billType" />
+	    <result column="balance_sum" jdbcType="DOUBLE" property="balanceSum" />
+ 	 </resultMap>
  	 
+ 	 <select id="getBalanceSum" parameterType="map" resultMap="BalanceSumMap">
+ 	 	SELECT round(sum(cat.account_balance),4) balance_sum,cat.bill_type
+ 	 	FROM <include refid="t_account"></include> cat
+		INNER JOIN <include refid="t_agency"></include> agb
+		on cat.agency_id=agb.id
+		<choose>
+			<when test="rootAgencyId == rootAgency">
+				<where>
+					 agb.root_agency_id != 0
+				 	<if test="virtualAgencyId != null">
+						and agb.id != #{virtualAgencyId}
+					</if>
+				</where>
+			</when>
+			<otherwise>
+				<where>
+					<if test="contextId != null">
+						FIND_IN_SET(agb.id,agencyQueryChildrenInfo(#{contextId}))
+					</if>
+				</where>
+			</otherwise>
+		</choose>
+		GROUP BY bill_type;
+ 	 </select>
  	 <!-- 通过转账记录id找到关联的转账账户 -->
  	 <select id="getAccountByTransferId" parameterType="map" resultMap="BaseResultMap">
  	 	select <include refid="Base_Column_List"></include>
@@ -66,11 +96,11 @@
  	 
 	 
 	 <!-- 通过代理商id更新代理商账户信息 -->
-	 <update id="updateById" parameterType="com.weizu.flowsys.web.agency.pojo.ChargeAccountPo">
+	 <update id="updateById" parameterType="map">
 	 	update <include refid="t_account"></include>
 	 	<set>
-	 		<if test="accountBalance != null">
-	 			account_balance = #{accountBalance},
+	 		<if test="editBalance != null">
+	 			account_balance = TRUNCATE(account_balance + #{editBalance} , 3),
 	 		</if>
 	 	</set>
 	 	<where>

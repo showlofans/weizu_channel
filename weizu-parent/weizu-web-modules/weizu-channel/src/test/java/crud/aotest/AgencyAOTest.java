@@ -106,7 +106,7 @@
 //	public void testLogin(){
 ////		String userName = "博爱小强";// Lxq19930620
 ////		String userName = "流量代理";// xing081500
-////		String userName = "罗大大";// 201103
+//		String userName = "罗大大";// 201103 48
 ////		String userName = "18706732390";// hou77833
 ////		String userName = "A661844";// 123456 
 ////		String userName = "xiao";// MzMzMjIxLi4u 密码编译
@@ -116,7 +116,7 @@
 ////		String userName = "456";// 123456
 ////		String userName = "WZ123";// 123456
 ////		String userName = "haiyi";// 123456
-//		String userName = "王小贱";// 123456
+////		String userName = "王小贱";// 123456
 ////		String userName = "wechat";// 123456 id231
 ////		String userName = "gzyl";// d9sjfwa@a99d7
 ////		String userName = "xiaoning";// d9sjfwa@a99d7

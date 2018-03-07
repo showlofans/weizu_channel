@@ -120,12 +120,12 @@
   <resultMap type="com.weizu.flowsys.web.trade.pojo.TotalResult" id="totalResultMap">
   	<result column="total_amount" jdbcType="DOUBLE" property="totalAmount"/>
   	<result column="total_price" jdbcType="DOUBLE" property="totalPrice"/>
-  	<!-- <result column="total_cost" jdbcType="DOUBLE" property="totalCost"/> -->
+  	 <result column="total_cost" jdbcType="DOUBLE" property="totalCost"/>
   	<result column="total_records" jdbcType="DOUBLE" property="totalRecords"/>
   </resultMap>
   
   <sql id="Total_Result_Column_List">
-  	round(sum(pg.pg_price),2) total_price, round(sum(ap.order_price),4) total_amount,<!-- FORMAT(sum(ap.order_amount),4) total_cost, --> count(*) total_records
+  	round(sum(pg.pg_price),2) total_price, round(sum(ap.order_price),4) total_amount,round(sum(ap.order_amount),4) total_cost,  count(*) total_records
   </sql>
   <!-- 查询统计信息 -->
   <select id="getTotalResultFromSuccess" parameterType="map" resultMap="totalResultMap">
