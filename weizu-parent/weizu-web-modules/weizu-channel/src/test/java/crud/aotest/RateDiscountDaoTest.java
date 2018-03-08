@@ -1,6 +1,7 @@
 //package crud.aotest;
 //
 //import java.util.List;
+//import java.util.Map;
 //
 //import javax.annotation.Resource;
 //
@@ -10,15 +11,22 @@
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
 //import com.alibaba.fastjson.JSON;
+//import com.weizu.flowsys.api.weizu.charge.ChargeParams;
+//import com.weizu.flowsys.core.beans.WherePrams;
 //import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
+//import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 //import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 //import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
 //import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 //import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 //import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
+//import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
+//import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 //import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 //import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
+//import com.weizu.flowsys.web.trade.PurchaseUtil;
 //import com.weizu.flowsys.web.trade.pojo.RatePgPo;
+//import com.weizu.web.foundation.hash.Hash;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
@@ -29,7 +37,11 @@
 //	@Resource
 //	private RateDiscountAO rateDiscountAO;
 //	@Resource
-//	private ChargeAccountAo chargeAccountAo;
+//	private ChargeAccountAo chargeAccountAO;
+//	
+//	
+//	@Resource
+//	private AgencyVODaoInterface agencyVODao;
 //	
 ////	@Resource
 ////	private AgencyActiveChannelAO agencyActiveChannelAO;
@@ -181,8 +193,19 @@
 //		
 ////		ChargeAccountPo accountPo = chargeAccountAo.getAccountByAgencyId(233, BillTypeEnum.CORPORATE_BUSINESS.getValue());//233
 //		
-//		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo("陕西移动", 2, 1, "30", 1,10) , 2, true);
-//		System.out.println(ratePo== null);
+////		String userName = "haiyi";
+////		AgencyBackwardPo agencyPo = agencyVODao.get(new WherePrams("user_name", "=", userName));
+////		String userPass = Hash.BASE_UTIL.decode(agencyPo.getUserPass());
+////		System.out.println("decodePass:"+userPass);
+////		ChargeAccountPo accountPo = chargeAccountAO.getAccountByAgencyId(agencyPo.getId(), BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+////		System.out.println(accountPo.getId());
+////		ChargeParams chargeParams = new ChargeParams(2, 1024, 1, ChannelTypeEnum.ORDINARY.getValue(), "30");
+////		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo("内蒙古移动", chargeParams.getScope(), chargeParams.getPgType(), chargeParams.getPgValidity(), chargeParams.getChannelType(),chargeParams.getFlowsize()), accountPo.getId(),false);
+////		System.out.println(ratePo== null);
+//		Map<String, Object> resMap = PurchaseUtil.getOperatorsByTel("14747360019");
+//		System.out.println(resMap.get("chargeTelDetail").toString());
+//		Map<String, Object> params = PurchaseUtil.getOperatorMapByCarrier(resMap.get("chargeTelDetail").toString());
+//		System.out.println(params == null);
 ////		System.out.println("accountId:"+accountPo.getId());
 ////		RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo("上海移动",ServiceTypeEnum.PROVINCE.getValue(),null,null,null,1024), accountPo.getId(), true);
 ////		//{operatorType=0, channelState=0, billTypeRate=0, channelUseState=0, bindState=0, scopeCityCode=19, serviceType=1, agencyId=4}

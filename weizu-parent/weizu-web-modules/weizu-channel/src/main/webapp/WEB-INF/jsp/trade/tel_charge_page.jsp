@@ -269,7 +269,7 @@
     	}
     }
    
-    var reg = /^(13|15|18)[0-9]{9}$/;//点击查询
+    var reg = /^(13|14|15|18)[0-9]{9}$/;//点击查询
     function ajaxPhone(){
     	 tel=$('input[name=chargeTel]').val();
          if(tel){

@@ -459,6 +459,7 @@ public class ChargeImpl implements IChargeFacet {
 				sqlMap.put("accountPo", accountPo);
 				String chargeTelDetail = resMap.get("chargeTelDetail").toString();
 				//折扣是忽略包体大小的
+//				System.out.println();
 				RateDiscountPo ratePo = rateDiscountAO.getRateForCharge(new ChargeChannelParamsPo(chargeTelDetail, chargeParams.getScope(), chargeParams.getPgType(), chargeParams.getPgValidity(), chargeParams.getChannelType(),chargeParams.getFlowsize()), accountPo.getId(),false);
 				if(ratePo == null){
 					chargeEnum = ChargeStatusEnum.SCOPE_RATE_UNDEFINED;

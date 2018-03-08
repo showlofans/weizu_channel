@@ -100,10 +100,10 @@
 		<thead>
 			<tr>
 				<th scope="col">账户类型</th>
-				<th scope="col"><span data-toggle="popover" data-placement="top"  title="自己和所有下级代理商的总余额">平台可用余额</span></th>
+				<th scope="col"><span data-toggle="popover" data-placement="top"  title="自己和所有下级代理商的总余额">平台可用余额（自己和所有下级代理商的总余额）</span></th>
 				<c:if test="${loginContext.rootAgencyId != 0 }">
-					<th scope="col"><span data-toggle="popover" data-placement="top"  title="账户余额">可提现余额</span></th>
-					<th scope="col"><span data-toggle="popover" data-placement="top"  title="(下级代理商)已分配余额=可用-可提现">已分配余额</span></th>
+					<th scope="col"><span data-toggle="popover" data-placement="top"  title="账户余额">可提现余额（账户余额）</span></th>
+					<th scope="col"><span data-toggle="popover" data-placement="top"  title="(下级代理商)已分配余额=可用-可提现">已分配余额（(下级代理商)已分配余额=可用-可提现）</span></th>
 				</c:if>
 			</tr>
 		</thead>
