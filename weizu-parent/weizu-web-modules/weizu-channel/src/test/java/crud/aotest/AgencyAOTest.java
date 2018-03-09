@@ -116,7 +116,10 @@
 ////		String userName = "456";// 123456
 ////		String userName = "WZ123";// 123456
 ////		String userName = "haiyi";// 123456
-//		String userName = "郭大大";// 123456
+////		String userName = "郭大大";// 123456
+////		String userName = "hy123";// 960528hy
+////		String userName = "wl123";// 960528 
+//		String userName = "13433777966";// 960528 
 ////		String userName = "王小贱";// 123456
 ////		String userName = "wechat";// 123456 id231
 ////		String userName = "gzyl";// d9sjfwa@a99d7
@@ -127,7 +130,9 @@
 ////		String userName = "15766286668";// 123456 id 200
 //		
 //		AgencyBackwardPo agencyPo = agencyVODao.get(new WherePrams("user_name", "=", userName));
-//		System.out.println(agencyPo.getId() + "\t" + agencyPo.getRootAgencyId());
+//		System.out.println(agencyPo.getId());
+////		String supperUserName = agencyVODao.get(agencyPo.getRootAgencyId()).getUserName();
+////		System.out.println( "suppperUserName:" + supperUserName);
 //		//得到密码
 ////		System.out.println("8a982a8a5f7bd4d7015f7bd4d7c90000".equals("8a982a8a5f7bd4d7015f7bd4d7c90000"));
 ////		System.out.println(userName);//15754715147

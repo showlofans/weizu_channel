@@ -67,7 +67,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 	
 	@Transactional
 	@Override
-	public synchronized String updatePurchaseState(PurchasePo purchasePo1) {
+	public String updatePurchaseState(PurchasePo purchasePo1) {
 		int ap = 0;
 		int pur = 0;
 		Long realBackTime = purchasePo1.getOrderBackTime();
@@ -188,7 +188,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 
 	@Transactional
 	@Override
-	public synchronized String updatePurchaseStateByMe(Long orderId, Integer orderResult,
+	public String updatePurchaseStateByMe(Long orderId, Integer orderResult,
 			String orderResultDetail, Long realBackTime) {
 		int ap = 0;
 		int pur = 0;

@@ -21,7 +21,7 @@ import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
-import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.TelServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
@@ -87,7 +87,7 @@ public class TelProductController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
 		resultMap.put("operatoerNameEnums", OperatorNameEnum.toList());
-		resultMap.put("serviceTypeEnums", HuaServiceTypeEnum.toList());
+		resultMap.put("serviceTypeEnums", TelServiceTypeEnum.toList());
 		resultMap.put("telchargeSpeedEnums", TelchargeSpeedEnum.toList());
 		WherePrams whereEp = new WherePrams("ep_for", "=", PgServiceTypeEnum.TELCHARGE.getValue());
 		if(StringHelper.isNotEmpty(telProductPo.getEpName())){
@@ -124,7 +124,7 @@ public class TelProductController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
-		resultMap.put("serviceTypeEnums", HuaServiceTypeEnum.toList());
+		resultMap.put("serviceTypeEnums", TelServiceTypeEnum.toList());
 		resultMap.put("telchargeSpeedEnums", TelchargeSpeedEnum.toList());
 		resultMap.put("chargeTelEnums", TelchannelTypeEnum.toList());			//话费基本类型枚举
 		PageParam pageParam = null;
@@ -137,7 +137,7 @@ public class TelProductController {
 //			telProductPo.setServiceType(HuaServiceTypeEnum.CITY.getValue());
 //		}
 		
-		resultMap.put("city", HuaServiceTypeEnum.CITY.getValue());
+		resultMap.put("city", TelServiceTypeEnum.CITY.getValue());
 		Pagination<TelProductPo> pagination = telProductAO.listTelProduct(telProductPo, pageParam);
 		resultMap.put("pagination", pagination);
 		

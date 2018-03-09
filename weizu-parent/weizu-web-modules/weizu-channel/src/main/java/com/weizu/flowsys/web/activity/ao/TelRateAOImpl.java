@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
-import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.TelServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.TelChannelTagEnum;
 import com.weizu.flowsys.web.activity.dao.ITelRateDao;
 import com.weizu.flowsys.web.activity.pojo.TelRatePo;
@@ -110,8 +110,8 @@ public class TelRateAOImpl implements TelRateAO {
 			params.put("serviceType", serviceType);
 
 			boolean cityProIn = StringHelper.isNotEmpty(telParams.getProvinceid()); //加入省市参数必须的条件
-			boolean cityIn = serviceType.equals(HuaServiceTypeEnum.CITY.getValue()) && StringHelper.isNotEmpty(telParams.getCityid());//加入市的条件
-			boolean provinceIn = serviceType.equals(HuaServiceTypeEnum.PROVINCE.getValue()) || cityIn ;//加入省份参数条件
+			boolean cityIn = serviceType.equals(TelServiceTypeEnum.CITY.getValue()) && StringHelper.isNotEmpty(telParams.getCityid());//加入市的条件
+			boolean provinceIn = serviceType.equals(TelServiceTypeEnum.PROVINCE.getValue()) || cityIn ;//加入省份参数条件
 			
 			if(provinceIn && cityProIn){
 				params.put("provinceid", telParams.getProvinceid());

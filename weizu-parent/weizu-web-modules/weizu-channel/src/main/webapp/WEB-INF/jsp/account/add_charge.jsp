@@ -27,7 +27,7 @@
 <![endif]-->
 <!--/meta 作为公共模版分离出去-->
 
-<title> - H-ui.admin 3.0</title>
+<title> 给代理商加款</title>
 <meta name="keywords" content="H-ui.admin 3.0,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
 <meta name="description" content="H-ui.admin 3.0，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
 </head>
@@ -82,7 +82,8 @@
 			<label class="form-label col-xs-4 col-sm-3">充值额：</label>
 			<div class="formControls col-xs-8 col-sm-9">
 				<input type="text" class="input-text" required="required" style="width:100px;" autocomplete="off" placeholder="请输入double值" name="rechargeAmount" id="rechargeAmount">元
-				<span style="display:none;" id="accountBalance">${resultMap.accountBalance }</span>
+				<span style="display:none;" id="accountBalance">${resultMap.accountBalance }</span><!-- 当前登陆账户余额 -->
+				<span style="display:none;" id="agencyAccountBalance">${resultMap.accountPo.accountBalance }</span><!-- 子代理商账户余额 -->
 				<%-- <c:choose>
 					<c:when test="${resultMap.accountPo.billType == 0 }">
 						<span style="display:none;" id="accountBalance">${resultMap.accountPo.accountBalance }</span>
@@ -129,7 +130,7 @@
 		</div> -->
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
-				<input class="btn btn-primary radius" onclick="save()" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+				<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
 				<button class="btn btn-primary radius" onClick="closeContextFrame();">取消</button>
 			</div>
 		</div>
@@ -158,6 +159,7 @@ $().ready(function() {
 		submitHandler : function(form) {
 			var rechargeAmount = parseFloat($('#rechargeAmount').val());
 			var accountBalance = parseFloat($('#accountBalance').html());
+			var agencyAccountBalance = parseFloat($('#agencyAccountBalance').html());//代理商余额
 			var contextRootId = $('#contextRootId').val();
 			//alert(contextRootId);
 			//alert(rechargeAmount);
@@ -166,7 +168,13 @@ $().ready(function() {
 				layer.msg('余额不足，请重新输入充值额！');
 				$('#rechargeAmount').val('');
 				$('#rechargeAmount').focus();
-			}else{
+			}
+			else if(contextRootId != 0 && rechargeAmount < 0 && (-1)*rechargeAmount > agencyAccountBalance){
+				layer.msg('不能将代理商的余额减为负数！');
+				$('#rechargeAmount').val('');
+				$('#rechargeAmount').focus();
+			}
+			else{
 				$.ajax({
 			        type:"post",
 			        url:"/flowsys/account/add_charge.do",

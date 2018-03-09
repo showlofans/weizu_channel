@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.core.beans.WherePrams;
-import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.TelServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.dao.ITelProductDao;
@@ -59,8 +59,8 @@ public class TelProductAOImpl implements TelProductAO {
 			params.put("serviceType", serviceType);
 
 			boolean cityProIn = StringHelper.isNotEmpty(telPo.getProvinceid()); //加入省市参数必须的条件
-			boolean cityIn = serviceType.equals(HuaServiceTypeEnum.CITY.getValue()) && StringHelper.isNotEmpty(telPo.getCityid());//加入市的条件
-			boolean provinceIn = serviceType.equals(HuaServiceTypeEnum.PROVINCE.getValue()) || cityIn ;//加入省份参数条件
+			boolean cityIn = serviceType.equals(TelServiceTypeEnum.CITY.getValue()) && StringHelper.isNotEmpty(telPo.getCityid());//加入市的条件
+			boolean provinceIn = serviceType.equals(TelServiceTypeEnum.PROVINCE.getValue()) || cityIn ;//加入省份参数条件
 			
 			if(provinceIn && cityProIn){
 				params.put("provinceid", telPo.getProvinceid());
@@ -171,7 +171,7 @@ public class TelProductAOImpl implements TelProductAO {
 			result = "exist";
 		}else{
 			int serviceType = telPo.getServiceType();
-			if(serviceType == HuaServiceTypeEnum.PROVINCE.getValue()){
+			if(serviceType == TelServiceTypeEnum.PROVINCE.getValue()){
 				telPo.setCityid("");
 			}
 			
@@ -190,7 +190,7 @@ public class TelProductAOImpl implements TelProductAO {
 		Integer serviceType = telPo.getServiceType();
 		//没有结果重新设置查询参数和页面参数
 		if(serviceType == null){//默认没有市内，加载省内，没有省内，加载全国
-			serviceType = HuaServiceTypeEnum.CITY.getValue();
+			serviceType = TelServiceTypeEnum.CITY.getValue();
 			do{
 				params.put("serviceType", serviceType);
 				totalRecord = telProductDao.countTelPro(params);

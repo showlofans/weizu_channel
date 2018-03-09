@@ -125,7 +125,15 @@
   </resultMap>
   
   <sql id="Total_Result_Column_List">
-  	round(sum(pg.pg_price),2) total_price, round(sum(ap.order_price),4) total_amount,round(sum(ap.order_amount),4) total_cost,  count(*) total_records
+  	<choose>
+		<when test="pgcharge == purchaseFor"><!-- 流量充值 -->
+			round(sum(pg.pg_price),2) total_price,
+		</when>
+		<otherwise>
+			round(sum(tp.charge_value),2) total_price,
+		</otherwise>
+	</choose>
+  	 round(sum(ap.order_price),4) total_amount,round(sum(ap.order_amount),4) total_cost,  count(*) total_records
   </sql>
   <!-- 查询统计信息 -->
   <select id="getTotalResultFromSuccess" parameterType="map" resultMap="totalResultMap">
@@ -138,9 +146,19 @@
   	 INNER join <include refid="t_account"></include> act
 	on ap.account_id=act.id 
   	<!-- inner join <include refid="t_channel"></include> channel
-	on pur.channel_id = channel.id -->
+	on pur.channel_id = channel.id
   	inner join <include refid="t_pg"></include> pg
-  	on pg.id = pur.pg_id
+  	on pg.id = pur.pg_id -->
+  	<choose>
+		<when test="pgcharge == purchaseFor"><!-- 流量充值 -->
+			INNER join <include refid="t_pg"></include> pg
+			on pg.id = pur.pg_id
+		</when>
+		<otherwise>
+			INNER join <include refid="t_tp"></include> tp
+			on tp.id = pur.pg_id
+		</otherwise>
+	</choose>
   	inner join <include refid="t_ep"></include> ep
   	on ep.id = pur.ep_id
   	<where>

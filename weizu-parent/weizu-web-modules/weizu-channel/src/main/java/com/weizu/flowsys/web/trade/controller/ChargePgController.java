@@ -37,7 +37,7 @@ import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.EpEncodeTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.EventTypeEnum;
-import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.TelServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.LoginStateEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
@@ -780,7 +780,7 @@ public class ChargePgController {
 		resultMap.put("orderPathEnums", OrderPathEnum.toList());
 		resultMap.put("orderStateEnums", OrderStateEnum.toList());
 		resultMap.put("serviceTypeEnums", ServiceTypeEnum.toList());
-		resultMap.put("huaServiceTypeEnums", HuaServiceTypeEnum.toList());  //话费业务类型
+		resultMap.put("huaServiceTypeEnums", TelServiceTypeEnum.toList());  //话费业务类型
 		resultMap.put("pgServiceTypeEnums", PgServiceTypeEnum.toList());	//充值业务类型
 		resultMap.put("pgcharge", PgServiceTypeEnum.PGCHARGE.getValue());	//充值业务类型
 		
@@ -1291,25 +1291,35 @@ public class ChargePgController {
 		if(agencyVO != null){
 			purchaseVO.setAgencyId(agencyVO.getId());//设置为当前登陆用户的订单
 //			purchaseVO.setChargeFor(PgServiceTypeEnum.PGCHARGE.getValue());
-			HSSFWorkbook hbook = purchaseAO.exportChargedList(purchaseVO, agencyVO.getAgencyTag()); 
-			if (hbook != null)
-			{
-				try
+			if(PgServiceTypeEnum.getEnum(purchaseVO.getPurchaseFor()) != null){
+				HSSFWorkbook hbook = purchaseAO.exportChargedList(purchaseVO, agencyVO.getAgencyTag()); 
+				if (hbook != null)
 				{
-					request.setCharacterEncoding("UTF-8");
-					response.reset();
-					response.setCharacterEncoding("UTF-8");
-					response.setContentType("application/msexcel;charset=UTF-8");
-					response.addHeader("Content-Disposition", "attachment;filename=\"" + new String(("成功订单记录" + DateUtil.formatPramm(new Date(), "yyyy-MM-dd") + ".xls").getBytes("GBK"), "ISO8859_1")
-					+ "\"");
-					OutputStream outputStream = response.getOutputStream();
-					hbook.write(outputStream);
-					outputStream.flush();
-					outputStream.close();
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
+					try
+					{
+						request.setCharacterEncoding("UTF-8");
+						response.reset();
+						response.setCharacterEncoding("UTF-8");
+						response.setContentType("application/msexcel;charset=UTF-8");
+						StringBuffer fileNameSb = new StringBuffer();
+						fileNameSb.append(agencyVO.getUserName());
+						fileNameSb.append("-");
+						fileNameSb.append(PgServiceTypeEnum.getEnum(purchaseVO.getPurchaseFor()).getDesc());
+						fileNameSb.append("-");
+						fileNameSb.append("成功订单记录");
+						fileNameSb.append(DateUtil.formatPramm(new Date(), "yyyy-MM-dd"));
+						fileNameSb.append(".xls");
+						response.addHeader("Content-Disposition", "attachment;filename=\"" + new String((fileNameSb.toString()).getBytes("GBK"), "ISO8859_1")
+						+ "\"");
+						OutputStream outputStream = response.getOutputStream();
+						hbook.write(outputStream);
+						outputStream.flush();
+						outputStream.close();
+					}
+					catch (Exception e)
+					{
+						e.printStackTrace();
+					}
 				}
 			}
 		}else{

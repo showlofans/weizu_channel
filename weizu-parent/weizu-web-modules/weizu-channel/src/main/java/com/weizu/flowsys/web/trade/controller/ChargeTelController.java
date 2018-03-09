@@ -16,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
-import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.TelServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.TelChannelTagEnum;
 import com.weizu.flowsys.operatorPg.enums.TelchargeSpeedEnum;
@@ -79,7 +79,7 @@ public class ChargeTelController {
 		Map<String,Object> resultMap = new HashMap<String,Object>();
 		if(agencyVO != null){
 			resultMap.put("telchargeSpeedEnums", TelchargeSpeedEnum.toList());
-			resultMap.put("huaServiceTypeEnum", HuaServiceTypeEnum.toList());
+			resultMap.put("huaServiceTypeEnum", TelServiceTypeEnum.toList());
 			resultMap.put("telChannelTagEnums", TelChannelTagEnum.toList());
 			return new ModelAndView("/trade/tel_charge_page","resultMap",resultMap);
 		}else{

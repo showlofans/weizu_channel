@@ -7,15 +7,21 @@
 //import org.springframework.test.context.ContextConfiguration;
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
+//import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
+//import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
+//import com.weizu.flowsys.web.trade.ao.AccountPurchaseAO;
 //import com.weizu.flowsys.web.trade.dao.AccountPurchaseDao;
 //import com.weizu.flowsys.web.trade.pojo.AccountPurchasePo;
+//import com.weizu.flowsys.web.trade.pojo.PurchasePo;
 //
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations={"classpath:spring-mybatis.xml"})
 //public class AcountPurchaseAOTest {
 //	@Resource
-//	private AccountPurchaseDao agencyPurchaseDao;
+//	private AccountPurchaseDao accountPurchaseDao;
+//	@Resource
+//	private AccountPurchaseAO accountPurchaseAO;
 //	
 //	/**
 //	 * @description: 批量添加
@@ -34,10 +40,19 @@
 ////		int res = agencyPurchaseDao.ap_addList(list);
 //////		System.out.println(res);
 ////	}
+////	@Test
+////	public void getAPByAccountType(){
+////		AccountPurchasePo apPo = agencyPurchaseDao.getAPByAccountType(744784836631203840l, 1,1);
+////		System.out.println(apPo.getOrderAmount());
+////	}
 //	@Test
-//	public void getAPByAccountType(){
-//		AccountPurchasePo apPo = agencyPurchaseDao.getAPByAccountType(744784836631203840l, 1,1);
-//		System.out.println(apPo.getOrderAmount());
+//	public void testUpdateState(){
+//		//wl123 hy123
+////		String res = accountPurchaseAO.updatePurchaseStateByMe(735701276200800256l, OrderStateEnum.UNCHARGE.getValue(), OrderStateEnum.UNCHARGE.getDesc(), System.currentTimeMillis());//
+////		String res = accountPurchaseAO.updatePurchaseStateByMe(735696780196319232l, OrderStateEnum.CHARGED.getValue(), OrderStateEnum.CHARGED.getDesc(), System.currentTimeMillis());//
+////		String res = accountPurchaseAO.updatePurchaseStateByMe(735696617457324032l, OrderStateEnum.CHARGED.getValue(), OrderStateEnum.CHARGED.getDesc(), System.currentTimeMillis());//
+//		String res = accountPurchaseAO.updatePurchaseStateByMe(735691086504136704l, OrderStateEnum.CHARGED.getValue(), OrderStateEnum.CHARGED.getDesc(), System.currentTimeMillis());//
+//		System.out.println(res);
 //	}
 ////	@Test
 ////	public void getOrderAmount(){

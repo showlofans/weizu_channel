@@ -123,12 +123,19 @@
 				折扣:
 				<span class="select-box inline">
 						<select name="rateDiscountId" id="rateDiscountId" class="select" onchange="dischange()">
-							<c:if test="${empty resultMap.discountList }">
+							<c:choose>
+								<c:when test="${empty resultMap.discountList }">
+									<option value="">没有配置折扣</option>
+								</c:when>
+								<c:otherwise>
+									<c:forEach items="${resultMap.discountList }" var="discount" varStatus="vs1">
+										<option value="${discount.id }" <c:if test="${discount.id == resultMap.searchParams.rateDiscountId }"> selected</c:if>>${discount.activeDiscount }</option>
+									</c:forEach>
+								</c:otherwise>
+							</c:choose>
+							<%-- <c:if test="${empty resultMap.discountList }">
 								<option value="">没有配置折扣</option>
-							</c:if>
-							<c:forEach items="${resultMap.discountList }" var="discountPo" varStatus="vs1">
-								<option value="${discountPo.id }" <c:if test="${discountPo.id == resultMap.searchParams.rateDiscountId }"> selected</c:if>>${discountPo.activeDiscount }</option>
-							</c:forEach>
+							</c:if> --%>
 					</select>
 				</span>
 				<%-- <input type="hidden" id="rateId" name="rateId" value="${resultMap.rateId }"> --%>
@@ -365,11 +372,14 @@ function setDiscount(){
 	var serviceType = $('#serviceType').val();
 	var operatorType = $('#operatorType').val();
 	var billType = $('#billTypeRate').val();
+	
+	var channelDiscountId = $('#channelDiscountId').val();
 	//alert(scopeCityCode);
 	$.ajax({
 		type: 'POST',
 		contentType: "application/x-www-form-urlencoded; charset=utf-8",
-		url: '/flowsys/rate/get_discount.do?scopeCityCode='+scopeCityCode+'&serviceType='+serviceType+'&operatorType='+operatorType+'&billType='+billType,
+		//url: '/flowsys/rate/get_discount.do?scopeCityCode='+scopeCityCode+'&serviceType='+serviceType+'&operatorType='+operatorType+'&billType='+billType,
+		url: '/flowsys/rate/get_discount.do?channelDiscountId='+channelDiscountId,
 		dataType: 'json',
 		success: function(resp){
 			//$(obj).parents("tr").remove();

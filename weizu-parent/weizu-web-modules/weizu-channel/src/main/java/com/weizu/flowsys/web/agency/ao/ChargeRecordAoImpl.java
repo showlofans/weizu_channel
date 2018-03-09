@@ -474,7 +474,7 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 				}else if(AccountTypeEnum.Replenishment.getValue().equals(groupAgencyRecordPo.getAccountType())){
 					Object objVO = agencyMap.get(agencyName);
 					if(objVO == null){//没有设置扣款实体()
-						vo = new GroupAgencyRecordVo(groupAgencyRecordPo.getAgencyName(), groupAgencyRecordPo.getAccountId(), groupAgencyRecordPo.getBillType(), groupAgencyRecordPo.getNumb(), 0l, 0.0d,groupAgencyRecordPo.getTotalAmount(), groupAgencyRecordPo.getNumb(),groupAgencyRecordPo.getTotalAmount() );
+						vo = new GroupAgencyRecordVo(groupAgencyRecordPo.getAgencyName(), groupAgencyRecordPo.getAccountId(), groupAgencyRecordPo.getBillType(), groupAgencyRecordPo.getNumb(), 0l, 0.0d,groupAgencyRecordPo.getTotalAmount(), 0l,0.0d );
 						agencyMap.put(agencyName, vo);
 					}else{//之前有了扣款为主的统计实体
 						vo = (GroupAgencyRecordVo)objVO;//扣款为主的统计实体

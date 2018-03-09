@@ -993,7 +993,7 @@ public class RateDiscountAOImpl implements RateDiscountAO {
 				params.put("pgSize", ccpp.getPgSize());
 			}
 		}else{
-			System.out.println("没找到包体");
+			System.out.println("获取地区编码和运营商失败");
 		}
 		return params;
 	}
