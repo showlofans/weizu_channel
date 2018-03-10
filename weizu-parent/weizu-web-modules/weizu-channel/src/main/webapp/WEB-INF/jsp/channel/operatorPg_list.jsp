@@ -140,9 +140,9 @@
 		<input type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'logmax\')||\'%y-%M-%d\'}' })" id="logmin" class="input-text Wdate" style="width:120px;">
 		-
 		<input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'logmin\')}',maxDate:'%y-%M-%d' })" id="logmax" class="input-text Wdate" style="width:120px;"> -->
-		<button type="button" class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
-		<button name="" id="" class="btn btn-success" type="submit" onclick="formSub()"><i class="Hui-iconfont">&#xe665;</i> 搜流量</button>
-		<a style="text-decoration:none" class="btn btn-success" onClick="pg_add('包体添加','/flowsys/operatorPg/pg_add_page.do')" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i>添加</a>
+		&nbsp;&nbsp;<button type="button" class="btn btn-primary" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
+		&nbsp;&nbsp;<button name="" id="" class="btn btn-success" type="submit" onclick="formSub()"><i class="Hui-iconfont">&#xe665;</i> 搜流量</button>
+		&nbsp;&nbsp;<a style="text-decoration:none" class="btn btn-default" onClick="pg_add('包体添加','/flowsys/operatorPg/pg_add_page.do')" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i>添加</a>
 		<!-- <button class="btn btn-success" onClick="pg_add('包体添加','pg_add_page.do')" value="添加流量包体">添加</button> -->
 		<input type="hidden" name="pageNo" value="${pagination.pageNo }"> 
 	</div>
@@ -239,7 +239,15 @@
 						<c:if test="${pg.pgInService == pgIn.value }"> ${pgIn.desc }</c:if>
 						</c:forEach></td> --%>
 						<td class="f-14 td-manage">
-						<a style="text-decoration:none" class="ml-5" onClick="pg_del(this,${pg.id})" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+						<c:choose>
+							<c:when test="${pg.cnelBindPgNum > 0}">
+								<a style="text-decoration:none" class="ml-5"data-href="/flowsys/channel/channel_list.do?operatorType=${pg.operatorType }&serviceType=${pg.serviceType}&pgValidity=${pg.pgValidity}&pgType=${pg.pgType}&channelType=${pg.circulateWay}&pgSize=${pg.pgSize}" data-title="订单消费" onclick="Hui_admin_tab(this)" href="javascript:;" title="查看相关通道"><i class="Hui-iconfont">&#xe686;</i></a>
+							</c:when>
+							<c:otherwise>
+								<a style="text-decoration:none" class="ml-5" onClick="pg_del(this,${pg.id})" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+							</c:otherwise>
+						</c:choose>
+						
 						</td>
 					</tr>
 				</c:forEach>

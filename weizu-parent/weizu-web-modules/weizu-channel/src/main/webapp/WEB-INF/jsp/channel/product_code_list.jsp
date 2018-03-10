@@ -108,9 +108,9 @@
 			</span>
 			&nbsp;&nbsp;
 			
-			<button type="button" class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
-			<a style="text-decoration:none" class="btn btn-success" onClick="pCode_add('产品编码添加','/flowsys/productCode/productCode_add_page.do')" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i>添加</a>
-			<input value="查询" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
+			<button type="button" class="btn btn-primary" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
+			&nbsp;&nbsp;<a style="text-decoration:none" class="btn btn-default" onClick="pCode_add('产品编码添加','/flowsys/productCode/productCode_add_page.do')" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i>添加</a>
+			&nbsp;&nbsp;<input value="查询" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
 			<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 		</div>
 		</form>

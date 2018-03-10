@@ -166,8 +166,16 @@ public class OperatorPgController {
 //		return new ModelAndView("operator_pg_list", "resultMap", resultMap);
 //	}
 	
+	/**
+	 * @description: 流量包列表
+	 * @param pageNo
+	 * @param operatorPgDataPo
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年3月10日 下午5:00:53
+	 */
 	@RequestMapping(value = OperatorPgURL.OPERATORPG_LIST)
-	public ModelAndView testPage(@RequestParam(value = "pageNo", required = false)String pageNo,OperatorPgDataPo operatorPgDataPo) {
+	public ModelAndView listPg(@RequestParam(value = "pageNo", required = false)String pageNo,OperatorPgDataPo operatorPgDataPo) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		//界面查询的话保证serviceType不为空--没有点查询就用默认
 //		if(operatorPgDataPo != null && operatorPgDataPo.getServiceType() == null){

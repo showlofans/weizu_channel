@@ -53,7 +53,7 @@
 					手机号:<input type="text"  value="${resultMap.searchParams.chargeTel }" name="chargeTel" id="" placeholder=" 手机号" style="width:150px" class="input-text">
 					归属地:<input type="text"  value="${resultMap.searchParams.chargeTelDetail }" name="chargeTelDetail" id="" placeholder=" 归属地" style="width:80px" class="input-text">
 					所属代理商:<input type="text"  value="${resultMap.searchParams.agencyName }" name="agencyName" id="" placeholder=" 代理商名称" style="width:100px" class="input-text">
-					订单号:<input type="text"  value="${resultMap.searchParams.orderId }" name="orderId" id="" placeholder=" 订单号" style="width:250px" class="input-text">
+					订单号:<input type="text"  value="${resultMap.searchParams.orderId }" name="orderId" id="" placeholder=" 订单号(18位)" style="width:250px" maxlength="19" onkeyup='this.value=this.value.replace(/\D/gi,"")' class="input-text">
 				</div>
 				
 				<div class="row cl" style="margin-top: 30dp">
@@ -196,11 +196,15 @@
 						 
 						<td>${purchase.chargeValue }</td>
 						<td>
+							<span class="c-warning">
+								<a style="text-decoration:none;" data-href="/flowsys/account/consume_list.do?purchaseId=${purchase.orderId }&userName=${purchase.agencyName}&pageNo=1" data-title="订单消费" onclick="Hui_admin_tab(this)" href="javascript:void(0)">
 								${purchase.orderPrice }
+								</a>
+							</span>
 							<span class="label label-warning radius">
 							</span>
 						</td>
-						<td class="btn-default">${purchase.chargeTel }</td>
+						<td>${purchase.chargeTel }</td>
 						 <%-- <td>${purchase.orderBackTimeStr }</td> --%>
 						<c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
 							 <td>${purchase.chargeTelCity }</td>

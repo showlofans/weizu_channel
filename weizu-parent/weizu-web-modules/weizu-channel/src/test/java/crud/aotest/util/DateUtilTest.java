@@ -18,7 +18,12 @@
 ////		long eighteenth = DateUtil.getEndTime().getTime() - hourTimes * 6 ;
 ////		System.out.println(DateUtil.formatAll(eighteenth));//当天的18:00
 //		
-//		System.out.println(DateUtil.formatAll(1506566260070l)); 
+////		System.out.println(DateUtil.formatAll(1506566260070l)); 
+//		
+//		System.out.println(DateUtil.getEndTime().getTime());
+//		System.out.println(DateUtil.getStartTime().getTime());
+//		
+//		
 //	}
 //	
 //	

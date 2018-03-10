@@ -203,10 +203,10 @@
 				   			<div class="info"> 
 						   		<%-- 实际扣款笔数：${groupAgency.numb }<br>
 						   		实际扣款金额：${groupAgency.totalAmount }<br> --%>
-						   		总扣费次数：${groupAgency.decreaseNumb }<br>
-						   		总扣款金额：${groupAgency.decreaseAmount }<br>
-						   		总补款笔数：${groupAgency.replenishmentNumb }<br>
-						   		总补款金额：${groupAgency.replenishmentAmount }<br>
+						   		提单扣费次数：${groupAgency.decreaseNumb }<br>
+						   		提单扣款金额：${groupAgency.decreaseAmount }<br>
+						   		失败补款笔数：${groupAgency.replenishmentNumb }<br>
+						   		失败补款金额：${groupAgency.replenishmentAmount }<br>
 						   		<%-- <c:forEach items="${resultMap.accountTypeEnums }" var="accountType" varStatus="vs1">
 								<c:if test="${groupAgency.accountType == accountType.value }"> ${accountType.desc }金额 :${groupAgency.totalAmount }</c:if>
 								</c:forEach> --%>

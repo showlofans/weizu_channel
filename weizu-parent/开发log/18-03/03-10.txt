@@ -1,23 +1,39 @@
 需要将直系代理商的充值记录标注出来，以便查验平台是否有了新的充值
+充值记录：
+非超管在充值明细只能查到自己的充值记录，子代理商的充值记录要在子代理商列表中查询；
+超管可以查到全部的充值记录；
+
 
 分页优化：解决搜索不能默认搜到第一页
 认证审核分页
 
-所有带搜索列表：充值列表charge_list，
-消费列表consume_list,
-流量通道绑定列表bind_rate_list,
-话费通道绑定列表telRate_bind_list
-子代理商列表child_agency_list,
-客户信息管理列表crm_list,
-流量通道列表channel_list,
-标准包列表operatorPg_list,
-平台列表platform_list,
-流量编码列表product_code_list,
-话费编码列表telproduct_list,
-话费通道列表列表tel_chanel_list,
-订单日志列表charge_log_list,
-订单列表purchase_list,
-成功列表cahrge_success_list
-失败列表cahrge_failure_list
-等待列表cahrge_wait_list
-进行列表cahrging_list
+(18)所有带搜索列表：充值列表charge_list，
+消费列表		consume_list,
+流量通道绑定列表	bind_rate_list,
+话费通道绑定列表	telRate_bind_list
+子代理商列表		child_agency_list,
+客户信息管理列表	crm_list,
+流量通道列表		channel_list,
+标准包列表		operatorPg_list,
+平台列表	platform_list,
+流量编码列表	product_code_list,
+话费编码列表	telproduct_list,
+话费通道列表列表	tel_chanel_list,
+订单日志列表	charge_log_list,
+订单列表	purchase_list,
+成功列表	charge_success_list
+失败列表	charge_failure_list
+等待列表	charge_wait_list
+进行列表	charging_list
+
+数据实体生成模型
+
+基本元素：包体 平台 代理商 折扣 订单
+额外功能：客户信息 充值卡 展示通道
+
+包体+平台=》编码
+包体+平台+折扣（编码+折扣）=》通道成本=》创建通道
+包体+代理商+折扣=》代理商价格=》配置绑定
+
+代理商+订单=》消费记录
+平台+代理商+订单=》订单日志

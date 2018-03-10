@@ -73,7 +73,7 @@
 	            <em class="inputto">至</em>
 	        <input style="width:150px" type="text"  class="input-text" name="endTimeStr" id="endTimeStr"   value="${resultMap.searchParams.endTimeStr }"  onfocus="WdatePicker({onpicked:function(){formSub();},autoPickDate:true,startDate:'%y-%M-%d 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
 			<button class="btn btn-success" type="submit"  onclick="formSub()"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
-			<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
+			<button type="button"class="btn btn-primary" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 			<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }">
 			<input type="hidden" id="totalRecordLong" value="${resultMap.pagination.totalRecordLong }">
 			</div> 

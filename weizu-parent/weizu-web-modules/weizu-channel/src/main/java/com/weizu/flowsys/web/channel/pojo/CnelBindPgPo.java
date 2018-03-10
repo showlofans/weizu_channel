@@ -1,5 +1,6 @@
 package com.weizu.flowsys.web.channel.pojo;
 
+import com.weizu.flowsys.core.annotation.po.TableName;
 import com.weizu.flowsys.core.beans.Po;
 
 /**
@@ -10,6 +11,7 @@ import com.weizu.flowsys.core.beans.Po;
  * @createTime:2017年9月16日 上午10:39:46
  * @version 1.0
  */
+@TableName(name="cnel_bind_pg")
 public class CnelBindPgPo extends Po {
 	private Long id;
 	private Long channelId;
