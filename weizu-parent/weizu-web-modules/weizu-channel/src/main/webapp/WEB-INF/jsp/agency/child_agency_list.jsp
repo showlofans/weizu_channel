@@ -62,7 +62,7 @@
 							</select>
 						</span>
 				</c:if>
-				<button name="" id="" class="btn btn-success"  type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜代理</button>
+				<button name="" id="" class="btn btn-success" onclick="formSub()" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜代理</button>
 				<c:if test="${loginContext.rootAgencyId == 0 }">
 					<a class="c-red" style="text-decoration:none" data-href="/flowsys/account/confirm_company_account_page.do" data-title="认证审核" title="认证审核" onclick="Hui_admin_tab(this)">认证审核</a>
 				</c:if>
@@ -221,10 +221,10 @@ function attach_bank(title,url,accountId){
     });
 }
 /*onchange通道状态*/
-function formSub(){
+/* function formSub(){
 	//alert($(vart).val());
 	$('form').submit();
-}
+} */
 /**重置密码*/
 /* function resetPass(agencyId){
 	layer.open({

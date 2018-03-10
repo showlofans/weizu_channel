@@ -46,7 +46,7 @@
 		</span>
 		<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 		<a style="text-decoration:none" class="btn btn-success" onClick="platform_add('平台信息添加','/flowsys/platform/platform_add_page.do')" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i> 添加</a>
-		<input value="搜平台" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
+		<input value="搜平台" class="btn btn-success" type="submit" onclick="formSub()"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
 		<span><a href="javascript:;" onclick="updateBalance()" class="btn btn-primary radius">刷新余额</a></span>
 		<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 		</form>
@@ -179,10 +179,10 @@ function platform_add(title,url){
     });
 	layer.full(index);
 }
-function formSub(){
+/* function formSub(){
 	$('form').submit();
 }
-
+ */
 /*平台-编辑*/
 function platform_edit(title,url,id,w,h){
 	var index = layer.open({

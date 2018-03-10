@@ -52,7 +52,7 @@
 								</c:forEach>
 							</select>
 						</span>
-				<button name="" id="" class="btn btn-success"  type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜客户</button>
+				<button name="" id="" class="btn btn-success"  type="submit"  onclick="formSub()"><i class="Hui-iconfont">&#xe665;</i> 搜客户</button>
 				<a style="text-decoration:none" class="btn btn-success" data-title='客户资料添加' onClick="crm_add(this,'客户资料添加','/flowsys/crm/crm_add_page.do',0)" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i>添加</a>
 				<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 				<%-- <input type="hidden" name="agencyTag" value="${resultMap.params.agencyTag }">  --%>
@@ -176,10 +176,10 @@ function crm_del(url,id){
 	});
 }
 /*onchange通道状态*/
-function formSub(){
+/* function formSub(){
 	//alert($(vart).val());
 	$('form').submit();
-}
+} */
 /*客户资料添加-添加*/
 function crm_add(obj,title,url,id){
 	//alert(id);

@@ -116,7 +116,7 @@
 		                  	<em class="inputto">至</em>
 		            <input style="width:150px" type="text" class="input-text" id="arriveEndTimeStr" name="arriveEndTimeStr"   value="${resultMap.searchParams.arriveEndTimeStr }"  onfocus="WdatePicker({startDate:'%y-%M-%d 23:59:59',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'arriveStartTimeStr\')}',onpicked:function(){formSub();}})"/>
 					
-					<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+					<button name="" id="" class="btn btn-success" type="submit" onclick="formSub()"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 					<button type="button"class="btn btn-primary" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
 				</div>
@@ -129,29 +129,29 @@
 					<!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
 					<!-- <th width="80">流量包Id</th> -->
 					<th width="100">所属代理商</th>
-					<th width="100">号码归属</th>
-					<th width="80">业务类型</th>
+					<th width="90">号码归属</th>
+					<th width="70">业务类型</th>
 					<c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
-						<th width="80">流量大小</th>
+						<th width="50">流量大小</th>
 					</c:if>
-					<th width="70">面值</th>
+					<th width="50">面值</th>
 					<th width="60">金额</th><!-- 返款 -->
-					<th width="120">手机号</th>
+					<th width="90">手机号</th>
 					<!-- <th width="150">充值时间</th> -->
 					
 					<c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
 						<th width="60">城市</th>
 					</c:if>
 					<th width="80">结果</th>
-					<th width="80">结果描述</th>
-					<th width="150">提交时间</th>
+					<th width="100">结果描述</th>
+					<th width="130">提交时间</th>
 					<c:if test="${loginContext.rootAgencyId == 0 }">
 						<th width="80">查看目录</th>
-						<th width="120">通道名称</th>
+						<th width="140">通道名称</th>
 					</c:if>
-					<th width="60">充值方式</th>
+					<th width="100">充值方式</th>
 					<th width="60">扣款类型</th>
-					<th width="150">订单号</th>
+					<th width="140">订单号</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -200,7 +200,7 @@
 							<span class="label label-warning radius">
 							</span>
 						</td>
-						<td>${purchase.chargeTel }</td>
+						<td class="btn-default">${purchase.chargeTel }</td>
 						 <%-- <td>${purchase.orderBackTimeStr }</td> --%>
 						<c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
 							 <td>${purchase.chargeTelCity }</td>
@@ -371,10 +371,10 @@
 <script src="/view/lib/bootstrap-datetimepicker.min.js"></script>
 <script src="/view/lib/bootstrap-datetimepicker.zh-CN.js"></script> -->
 <script type="text/javascript">
-function formSub(){
+/* function formSub(){
 	$("input[name='pageNoLong']").val('');
 	$('form').submit();
-}
+} */
 /*代理商-编辑*/
 function editAgency(id){
 	//var $agencyTr = $(obj).parent().parent();//tr标签
@@ -422,6 +422,7 @@ function getEp(orderId,obj){
 $(document).ready(function() {
 	$('.select').change(function(){
 		//$('form').submit();
+		$("input[name='pageNoLong']").val('');
 		formSub();
 	})
 	/* $('.purchaseFor').change(function(){//特殊需求

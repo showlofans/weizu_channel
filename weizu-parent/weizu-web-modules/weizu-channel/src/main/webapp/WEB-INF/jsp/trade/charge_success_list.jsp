@@ -79,7 +79,7 @@
 					
 					 归属地:<input type="text"  value="${resultMap.searchParams.chargeTelDetail }" name="chargeTelDetail" id="" placeholder=" 归属地" style="width:80px" class="input-text">
 					
-					<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+					<button name="" id="" class="btn btn-success" type="submit" onclick="formSub()"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 					<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					
 					<c:choose>
@@ -360,10 +360,10 @@ function refund(vart){
         }
     });
 } */
-function formSub(){
+/* function formSub(){
 	$("input[name='pageNoLong']").val('');
 	$('form').submit();
-}
+} */
 $(document).ready(function() {
 	$('.select').change(function(){
 		//$('form').submit();

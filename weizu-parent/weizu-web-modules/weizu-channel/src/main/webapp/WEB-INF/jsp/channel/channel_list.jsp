@@ -41,7 +41,7 @@
 			通道名称：<input type="text" value="${resultMap.searchParam.channelName }" name="channelName" id="" placeholder=" 通道名称" style="width:100px" class="input-text">
 			
 			<span class="select-box inline">
-				<select name="channelType" class="select" onchange="getChannelList()">
+				<select name="channelType" class="select" onchange="formSub()">
 				<option value="">通道类型</option>
 				<c:forEach items="${resultMap.channelTypeEnums }" var="channelTypeEnum" varStatus="vs1">
 					<option value="${channelTypeEnum.value }" <c:if test="${channelTypeEnum.value == resultMap.searchParam.channelType }"> class='c-blue' selected</c:if>>${channelTypeEnum.desc }</option>
@@ -52,7 +52,7 @@
 		
 		<div class="row cl" style="margin-top: 30dp">
 			<span class="select-box inline">
-				<select name="operatorType" class="select" onchange="getChannelList()">
+				<select name="operatorType" class="select" onchange="formSub()">
 				<option value="">运营商</option>
 				<c:forEach items="${resultMap.operatorTypeEnums }" var="operatorTypeEnum" varStatus="vs1">
 					<option value="${operatorTypeEnum.value }" <c:if test="${operatorTypeEnum.value == resultMap.searchParam.operatorType }"> selected</c:if>>${operatorTypeEnum.desc }</option>
@@ -60,7 +60,7 @@
 			</select>
 			</span>
 			<span class="select-box inline">
-				<select name="serviceType"  id="serviceType" class="select" onchange="getChannelList()">
+				<select name="serviceType"  id="serviceType" class="select" onchange="formSub()">
 				<option value="">业务类型</option>
 				<c:forEach items="${resultMap.serviceTypeEnums }" var="sTypeEnum" varStatus="vs1">
 					<option value="${sTypeEnum.value }" <c:if test="${sTypeEnum.value == resultMap.searchParam.serviceType }"> selected</c:if>>${sTypeEnum.desc }</option>
@@ -68,7 +68,7 @@
 			</select>
 			</span>
 			<span class="select-box inline">
-				<select name="pgType"  id="pgType" class="select" onchange="getChannelList()">
+				<select name="pgType"  id="pgType" class="select" onchange="formSub()">
 				<option value="">流量类型</option>
 				<c:forEach items="${resultMap.pgTypeEnums }" var="pgTypeEnum" varStatus="vs2">
 					<option value="${pgTypeEnum.value }" <c:if test="${pgTypeEnum.value == resultMap.searchParam.pgType }"> selected</c:if>>${pgTypeEnum.desc }</option>
@@ -76,7 +76,7 @@
 			</select>
 			</span>
 			<span class="select-box inline">
-				<select name="pgValidity"  id="pgValidity" class="select" onchange="getChannelList()">
+				<select name="pgValidity"  id="pgValidity" class="select" onchange="formSub()">
 				<option value="">有效期</option>
 				<c:forEach items="${resultMap.pgValidityEnums }" var="pgValidityEnum" varStatus="vs2">
 					<option value="${pgValidityEnum.value }" <c:if test="${pgValidityEnum.value == resultMap.searchParam.pgValidity }"> selected</c:if>>${pgValidityEnum.desc }</option>
@@ -84,7 +84,7 @@
 			</select>
 			</span>
 			<span class="select-box inline">
-				<select name="channelState" class="select" onchange="getChannelList()">
+				<select name="channelState" class="select" onchange="formSub()">
 				<option value="">通道状态</option>
 				<c:forEach items="${resultMap.channelStateEnums }" var="cstate" varStatus="vs1">
 					<option value="${cstate.value }" <c:if test="${cstate.value == resultMap.searchParam.channelState }"> selected</c:if>>${cstate.desc }</option>
@@ -95,7 +95,7 @@
 			<!-- <input type="hidden" value="" name="channelId" id="channelId"> -->
 			
 			<input type="text" value="${resultMap.searchParam.pgSize }" name="pgSize" id="" placeholder=" 包体大小" style="width:80px" class="input-text">
-			<input value="搜通道" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
+			<input value="搜通道" class="btn btn-success" type="submit"  onclick="formSub()"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
 			<button type="button"class="btn btn-primary" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 		</div>
 		<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
@@ -422,13 +422,10 @@ function editChannel(obj,url,title){
 	//Hui_admin_tab(objt);
 }
 /*onchange通道状态*/
-function getChannelList(){
+/* function getChannelList(){
 	//alert($(vart).val());
 	$('form').submit();
-	/* if($(vart).val() != ''){
-		$(vart).addClass('c-blue');
-	} */
-}
+}  */
 
 /*通道状态-修改*/
 function changeCState(obj,state){

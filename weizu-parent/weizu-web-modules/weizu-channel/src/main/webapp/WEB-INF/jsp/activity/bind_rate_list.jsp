@@ -122,7 +122,7 @@
 				</span>
 				折扣:
 				<span class="select-box inline">
-						<select name="rateDiscountId" id="rateDiscountId" class="select" onchange="dischange()">
+						<select name="rateDiscountId" id="rateDiscountId" class="select" onchange="formSub()">
 							<c:choose>
 								<c:when test="${empty resultMap.discountList }">
 									<option value="">没有配置折扣</option>
@@ -153,7 +153,7 @@
 				代理商名称： <input type="text" style="width:150px;" class="input-text ac_input" placeholder=" 代理商名称" value="${resultMap.searchParams.agencyName }" autocomplete="off" id="agencyName" name="agencyName">
 				<%-- 备注信息:<input type="text"  value="${resultMap.aardto.agencyMark }" name="agencyMark" id="" placeholder=" 用户备注" style="width:150px" class="input-text"> --%>
 				<!-- <button class="btn btn-success" type="reset"  value="重置">重置</button> -->
-				<button name="" id="" class="btn btn-success"  type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+				<button name="" id="" class="btn btn-success"  type="submit" onclick="formSub()"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 				<%-- <input type="hidden" id="rateId" name="id" value="${resultMap.discountList[0].id }">  --%>
 				<input type="hidden" id="pageNoLong" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
 				<input type="hidden" id="channelId" name="channelId" value="${resultMap.channelId }"> 
@@ -302,11 +302,11 @@ function batch_bind(url,id,w,h){
 }
 
 //onchange获得折扣
-function dischange(){
+/* function dischange(){
 	//alert(1);
 	$('#pageNoLong').val("1");
 	$('#formD').submit();
-}
+} */
 //更新绑定状态
 function changeBState(url,activeId,agencyName,bindS){
 	//alert(agencyName);

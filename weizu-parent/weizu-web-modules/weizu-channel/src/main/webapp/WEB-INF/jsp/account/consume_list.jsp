@@ -39,7 +39,7 @@
 		<!-- <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button> -->
 			显示模式:
 			<span class="select-box inline">
-			<select name="showModel" class="select" onchange="getConsume()" >
+			<select name="showModel" class="select" onchange="formSub()" >
 				<c:forEach items="${resultMap.agencyLevelEnums }" var="agencyLevelEnum" varStatus="vs1">
 					<option value="${agencyLevelEnum.value }" <c:if test="${resultMap.searchParams.showModel == agencyLevelEnum.value }"> selected</c:if>>${agencyLevelEnum.desc }</option>
 				</c:forEach>
@@ -49,7 +49,7 @@
 			</c:if> --%>
 			消费类型:
 			<span class="select-box inline">
-			<select name="chargeFor" class="select" onchange="getConsume()" >
+			<select name="chargeFor" class="select" onchange="formSub()" >
 				<c:forEach items="${resultMap.pgServiceTypeEnums }" var="pgServiceTypeEnum" varStatus="vs1">
 					<option value="${pgServiceTypeEnum.value }" <c:if test="${resultMap.searchParams.chargeFor == pgServiceTypeEnum.value }"> selected</c:if>>${pgServiceTypeEnum.desc }</option>
 				</c:forEach>
@@ -60,7 +60,7 @@
 			手机号:<input type="text" value="${resultMap.searchParams.chargeTel }" name="chargeTel" id="" placeholder=" 手机号" style="width:100px" class="input-text">
 			<!-- 交易类型: -->
 			<span class="select-box inline">
-			<select name="accountType" class="select" onchange="getConsume()" >
+			<select name="accountType" class="select" onchange="formSub()" >
 				<option value="">交易类型</option>
 				<c:forEach items="${resultMap.accountTypeEnums }" var="accountTypeE" varStatus="vs1">
 					<option value="${accountTypeE.value }" <c:if test="${resultMap.searchParams.accountType == accountTypeE.value }"> selected</c:if>>${accountTypeE.desc }</option>
@@ -68,7 +68,7 @@
 			</select>
 			</span>
 			<span class="select-box inline">
-			<select name="billType" class="select" onchange="getConsume()" >
+			<select name="billType" class="select" onchange="formSub()" >
 				<option value="">账户类型</option>
 				<c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
 					<option value="${billTypeEnum.value }" <c:if test="${resultMap.searchParams.billType == billTypeEnum.value }"> selected</c:if>>${billTypeEnum.desc }</option>
@@ -78,10 +78,10 @@
 		</div>
 		<div class="row cl" style="margin-top: 30dp">
 			提交时间：
-			<input type="text" style="width:150px" class="input-text" name="startTimeStr"  value="${resultMap.searchParams.startTimeStr }"  onfocus="var endTimeStr=$dp.$('endTimeStr');WdatePicker({onpicked:function(){endTimeStr.focus();getConsume()},autoPickDate:true,startDate:'%y-%M-%d 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss' })"/>
+			<input type="text" style="width:150px" class="input-text" name="startTimeStr"  value="${resultMap.searchParams.startTimeStr }"  onfocus="var endTimeStr=$dp.$('endTimeStr');WdatePicker({onpicked:function(){endTimeStr.focus();formSub()},autoPickDate:true,startDate:'%y-%M-%d 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss' })"/>
 	            <em class="inputto">至</em>
-	        <input style="width:150px" type="text"  class="input-text" name="endTimeStr" id="endTimeStr"   value="${resultMap.searchParams.endTimeStr }"  onfocus="WdatePicker({onpicked:function(){getConsume()},autoPickDate:true,startDate:'%y-%M-%d 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
-			&nbsp;&nbsp;<button class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
+	        <input style="width:150px" type="text"  class="input-text" name="endTimeStr" id="endTimeStr"   value="${resultMap.searchParams.endTimeStr }"  onfocus="WdatePicker({onpicked:function(){formSub()},autoPickDate:true,startDate:'%y-%M-%d 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+			&nbsp;&nbsp;<button class="btn btn-success" type="submit" onclick="formSub()"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
 			&nbsp;&nbsp;<button type="button"class="btn btn-primary" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 			<c:if test="${loginContext.rootAgencyId == 0 }">
 			&nbsp;&nbsp;<button class="btn btn-success" onclick="grouWaypSearch()" type="button"><i class="Hui-iconfont">&#xe665;</i> 统计查询</button>
@@ -279,9 +279,9 @@
 <script type="text/javascript" src="/view/lib/laypage/1.2/laypage.js"></script> -->
 <!-- <script type="text/javascript" charset="utf8" src="/view/lib/datatables/1.10.0/jquery.dataTables.min.js"></script> -->
 <script type="text/javascript">
-function getConsume(){
+/* function getConsume(){
 	$('form').submit();
-}
+} */
 /**统计查询*/
 function grouWaypSearch(){
 	$('#groupWay').val('yes');

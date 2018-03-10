@@ -72,7 +72,7 @@
 			<input type="text" style="width:150px" class="input-text" name="startTimeStr"  value="${resultMap.searchParams.startTimeStr }"  onfocus="var endTimeStr=$dp.$('endTimeStr');WdatePicker({onpicked:function(){endTimeStr.focus();formSub();},autoPickDate:true,startDate:'%y-%M-%d 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss' })"/>
 	            <em class="inputto">至</em>
 	        <input style="width:150px" type="text"  class="input-text" name="endTimeStr" id="endTimeStr"   value="${resultMap.searchParams.endTimeStr }"  onfocus="WdatePicker({onpicked:function(){formSub();},autoPickDate:true,startDate:'%y-%M-%d 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
-			<button class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
+			<button class="btn btn-success" type="submit"  onclick="formSub()"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
 			<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 			<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }">
 			<input type="hidden" id="totalRecordLong" value="${resultMap.pagination.totalRecordLong }">
@@ -195,9 +195,9 @@
 <!-- jQuery -->
 <script type="text/javascript" src="/view/lib/layer/2.4/layer.js"></script>
 <script type="text/javascript">
-function formSub(){
+/* function formSub(){
 	$('form').submit();
-}
+} */
 $(document).ready(function() {
 	$('.select').change(function(){
 		//$('form').submit();
