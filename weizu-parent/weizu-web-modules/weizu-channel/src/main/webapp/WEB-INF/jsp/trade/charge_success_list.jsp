@@ -120,29 +120,30 @@
 			<thead>
 				<tr class="text-c">
 					<th width="100">所属代理商</th>
-					<th width="150">订单号</th>
-					<th width="120">手机号</th>
+					<th width="80">号码归属</th>
+					<th width="70">业务类型</th>
 					<c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
-						<th width="80">流量大小</th>
+						<th width="60">流量大小</th>
 					</c:if>
-					<th width="80">业务类型</th>
-					<th width="70">面值</th>
-					<th width="140">提交时间</th>
-					<th width="140">充值时间</th>
-					<th width="100">号码归属</th>
+					<th width="50">面值</th>
+					<th width="60">扣款</th>
+					<th width="60">成本</th>
+					<th width="90">手机号</th>
 					<c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
 						<th width="60">城市</th>
 					</c:if>
-					<th width="60">充值方式</th>
 					<th width="80">结果</th>
-					<th width="80">结果描述</th>
-					<th width="60">扣款</th>
-					<th width="60">成本</th>
+					<th width="100">结果描述</th>
+					
 					<th width="40">操作</th>
+					<th width="140">提交时间</th>
+					<th width="140">充值时间</th>
 					<c:if test="${loginContext.rootAgencyId == 0 }">
-						<th width="120">通道名称</th>
+						<th width="110">通道名称</th>
 					</c:if>
+					<th width="100">充值方式</th>
 					<th width="60">通道类型</th>
+					<th width="150">订单号</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -158,12 +159,7 @@
 								</a>
 							</c:otherwise>
 						</c:choose></td>
-						<td>${purchase.orderId }</td>
-						<td>${purchase.chargeTel }</td>
-						 <c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
-						 	<td>${purchase.pgSizeStr }</td>
-						 	<%-- <td>${purchase.pgSize }M</td> --%>
-						 </c:if>
+						<td>${purchase.chargeTelDetail }</td>
 						 <td>
 						 	<c:choose>
 						 		<c:when test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }"><!-- 流量订单 -->
@@ -182,12 +178,43 @@
 						 		</c:otherwise>
 						 	</c:choose>
 						</td>
-						<td>${purchase.chargeValue }</td>
-						<td>${purchase.orderArriveTimeStr }</td>
-						 <td>${purchase.orderBackTimeStr }</td>
-						<td>${purchase.chargeTelDetail }</td>
+						 <c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
+						 	<td>${purchase.pgSizeStr }</td>
+						 	<%-- <td>${purchase.pgSize }M</td> --%>
+						 </c:if>
+						<td>${purchase.chargeValue }
+						<span class="label label-warning radius">
+							</span></td>
+						<td>${purchase.orderPrice }
+						<span class="label label-warning radius">
+							</span></td>
+						<td>${purchase.orderAmount }
+						<span class="label label-warning radius">
+							</span></td>
+						<td>${purchase.chargeTel }</td>
+						
 						<c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
 							 <td>${purchase.chargeTelCity }</td>
+						</c:if>
+						<!-- 结果 -->
+						<td>
+						<c:forEach items="${resultMap.orderStateEnums }" var="orderStateEnum" varStatus="vs">
+							<c:if test="${purchase.orderState == orderStateEnum.value }">
+								${orderStateEnum.desc }
+							</c:if>
+						</c:forEach>
+						</td>
+						<td>${purchase.orderStateDetail }</td>
+						<td class="f-14 td-manage success">
+							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="refund(this)" href="javascript:;" title="退款">
+								<input type="hidden" value="${purchase.orderId }" >
+								<i class="Hui-iconfont">&#xe6e6;</i>
+							</a>
+						</td>
+						<td>${purchase.orderArriveTimeStr }</td>
+						 <td>${purchase.orderBackTimeStr }</td>
+						<c:if test="${loginContext.rootAgencyId == 0 }">
+						<td>${purchase.channelName }</td> 
 						</c:if>
 						<!-- 充值方式 -->
 						<td>
@@ -197,26 +224,6 @@
 							</c:if>
 						</c:forEach>
 						</td>
-						<!-- 结果 -->
-						<td>
-						<c:forEach items="${resultMap.orderStateEnums }" var="orderStateEnum" varStatus="vs">
-							<c:if test="${purchase.orderState == orderStateEnum.value }">
-								${orderStateEnum.desc }
-							</c:if>
-						</c:forEach>
-						</td>
-						
-						<td>${purchase.orderStateDetail }</td>
-						<td>${purchase.orderPrice }</td>
-						<td>${purchase.orderAmount }</td>
-						<td class="f-14 td-manage success">
-							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="refund(this)" href="javascript:;" title="退款">
-								<input type="hidden" value="${purchase.orderId }" >
-								<i class="Hui-iconfont">&#xe6e6;</i>
-							</a>
-						</td>
-						<c:if test="${loginContext.rootAgencyId == 0 }"><td>${purchase.channelName }</td> 
-						</c:if>
 						<td>
 							<c:forEach items="${resultMap.billTypeEnums }" var="bTypeEnum" varStatus="vs">
 								<c:if test="${purchase.billType == bTypeEnum.value }">
@@ -224,6 +231,8 @@
 								</c:if>
 							</c:forEach>
 						</td>
+						
+						<td>${purchase.orderId }</td>
 					</tr>
 				</c:forEach>
 				<c:if test="${resultMap.pagination.records != null && resultMap.pagination.records.size() > 0 }">
@@ -235,7 +244,7 @@
 					<td  class="text-r c-success">总扣款</td>
 					<td colspan="2"  class="text-l c-warning">${tot.totalAmount }</td>
 					<td  class="text-r c-success">总成本</td>
-					<td colspan="4"  class="text-l c-warning">${tot.totalCost}</td>
+					<td colspan="5"  class="text-l c-warning">${tot.totalCost}</td>
 					<c:choose>
 						<c:when test="${loginContext.rootAgencyId == 0 }">
 							<td colspan="4"></td>
