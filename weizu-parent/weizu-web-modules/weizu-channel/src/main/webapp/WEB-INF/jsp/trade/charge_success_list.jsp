@@ -134,8 +134,9 @@
 					</c:if>
 					<th width="80">结果</th>
 					<th width="100">结果描述</th>
-					
+					<c:if test="${loginContext.rootAgencyId == 0 }">
 					<th width="40">操作</th>
+					</c:if>
 					<th width="140">提交时间</th>
 					<th width="140">充值时间</th>
 					<c:if test="${loginContext.rootAgencyId == 0 }">
@@ -205,12 +206,14 @@
 						</c:forEach>
 						</td>
 						<td>${purchase.orderStateDetail }</td>
+						<c:if test="${loginContext.rootAgencyId == 0 }">
 						<td class="f-14 td-manage success">
 							<a style="text-decoration:none" data-toggle="tooltip" data-placement="top" onClick="refund(this)" href="javascript:;" title="退款">
 								<input type="hidden" value="${purchase.orderId }" >
 								<i class="Hui-iconfont">&#xe6e6;</i>
 							</a>
 						</td>
+						</c:if>
 						<td>${purchase.orderArriveTimeStr }</td>
 						 <td>${purchase.orderBackTimeStr }</td>
 						<c:if test="${loginContext.rootAgencyId == 0 }">

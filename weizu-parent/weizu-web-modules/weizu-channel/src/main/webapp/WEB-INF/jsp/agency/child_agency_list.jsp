@@ -109,7 +109,7 @@
 							<c:when test="${agency.billType == 0 }">
 								<%-- <c:forEach items="${resultMap.billTypeEnums }" var="billTypeEnum" varStatus="vs1">
 									<c:if test="${billTypeEnum.value == 0 }"> --%>
-										<span class="c-red" ><!-- data-toggle="tooltip"   data-placement="right" title="${billTypeEnum.desc }" -->
+										<span class="c-red" title="${agency.accountId }"><!-- data-toggle="tooltip"   data-placement="right" title="${billTypeEnum.desc }" -->
 										${agency.userName }</span>
 									<%-- </c:if>
 								</c:forEach> --%>

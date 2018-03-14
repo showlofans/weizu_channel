@@ -106,7 +106,7 @@ public class TelRateController {
 		resultMap.put("bindStateEnums", BindStateEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		
-		return new ModelAndView("/activity/telRate_bind_list","resultMap",resultMap);
+		return new ModelAndView("/activity/bind_telRate_list","resultMap",resultMap);
 	}
 	
 	/**
@@ -190,6 +190,7 @@ public class TelRateController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		TelChannelParams telChannelParams = telChannelAO.selectByIdType(id, serviceType);
 		resultMap.put("telChannelParams", telChannelParams);//通道信息展示参数
+		resultMap.put("telchannelId", id);//通道id
 		resultMap.put("rateFor", AgencyTagEnum.DATA_USER.getValue());//费率折扣信息
 		if(telRateId != null){
 			TelRatePo telRatePo = telRateDao.get(telRateId);
@@ -546,12 +547,16 @@ public class TelRateController {
 	 */
 	@ResponseBody
 	@RequestMapping(value=TelRateURL.UPDATE_BINDTEL_STATE)
-	public String updateBindTelState(TelrateBindAccountPo telrateBindAccountPo){
+	public String updateBindTelState(TelrateBindAccountPo telrateBindAccountPo, HttpServletRequest request){
 		String result = "error";
-		 int res = telrateBindAccountAO.updateBindState(telrateBindAccountPo);
-		 if(res > 0){
-			 result = "success";
-		 }
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		if(agencyVO!= null){
+			telrateBindAccountPo.setBindAgencyId(agencyVO.getId());
+			int res = telrateBindAccountAO.updateBindState(telrateBindAccountPo);
+			if(res > 0){
+				result = "success";
+			}
+		}
 		return result;
 	}
 	

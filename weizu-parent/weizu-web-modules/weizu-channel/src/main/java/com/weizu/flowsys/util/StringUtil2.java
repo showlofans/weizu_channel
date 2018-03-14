@@ -266,6 +266,24 @@ public class StringUtil2 {
 		System.out.println(sb.toString());
 	}
 	
+	/**
+	 * @description: mapStr转成map
+	 * @param mapString
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年3月13日 下午3:08:20
+	 */
+	public static Map<String,Object>  mapStringToMap(String mapString){
+		Map<String,Object> map = new HashMap<String, Object>();
+		mapString = mapString.substring(1,mapString.length()-1);
+		String [] keyValues = mapString.split(",");
+		for (String keyValue : keyValues) {
+			String [] keyValueIn = keyValue.split("=");
+			map.put(keyValueIn[0], keyValueIn[1]); 
+		}
+		return map;
+	}
+	
 	
 	
 	

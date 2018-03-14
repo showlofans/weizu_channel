@@ -59,9 +59,10 @@ public class TelRateDaoImpl extends DaoImpl<TelRatePo, Long> implements ITelRate
 	}
 
 	@Override
-	public TelRatePo getPlatTelRateById(Long telRateId) {
+	public TelRatePo getPlatTelRateById(Long telRateId, Integer contextId) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("telRateId", telRateId);
+		map.put("createAgency", contextId);
 		map.put("platformUser", TelChannelTagEnum.PLATFORM_USER.getValue());
 		return sqlSessionTemplate.selectOne("getPlatTelRateById", map);
 	}

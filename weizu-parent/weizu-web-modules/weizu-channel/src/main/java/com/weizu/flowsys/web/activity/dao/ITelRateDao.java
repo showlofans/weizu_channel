@@ -43,7 +43,7 @@ public interface ITelRateDao extends Dao<TelRatePo, Long> {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2017年12月4日 下午4:59:20
 	 */
-	TelRatePo getPlatTelRateById(Long telRateId);
+	TelRatePo getPlatTelRateById(Long telRateId, Integer contextId);
 	
 	/**
 	 * @description: 通过参数得到唯一的话费折扣

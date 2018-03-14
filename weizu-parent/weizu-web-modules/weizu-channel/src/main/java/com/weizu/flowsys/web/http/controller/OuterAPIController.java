@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -139,8 +140,14 @@ public class OuterAPIController {
 		try {
 			//System.out.println("传单参数：" + chargeParams.toString());
 			charge = chargeImpl.charge(chargeParams);
-		} catch (Exception e) {
-			ChargeLog chargeLog = new ChargeLog(JSON.toJSON(chargeParams).toString(), "无返回，有异常", null, chargeParams.getNumber(), ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc());
+		}
+		catch(TooManyResultsException tmre){
+			ChargeLog chargeLog = new ChargeLog(JSON.toJSONString(chargeParams), "查询出多个结果", null, chargeParams.getNumber(), ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc());
+			chargeLogDao.add(chargeLog);
+			charge = new Charge(ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc(), null);
+		}
+		catch (Exception e) {
+			ChargeLog chargeLog = new ChargeLog(JSON.toJSONString(chargeParams), "无返回，有异常", null, chargeParams.getNumber(), ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc());
 			chargeLogDao.add(chargeLog);
 			charge = new Charge(ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc(), null);
 			e.printStackTrace();

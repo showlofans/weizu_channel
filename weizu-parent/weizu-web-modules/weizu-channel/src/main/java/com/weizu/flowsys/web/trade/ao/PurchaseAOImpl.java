@@ -713,7 +713,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 					activeRatePo = rateDiscountDao.get(ratePo1.getActiveId());		
 					String fromAgencyName = from_accountPo.getAgencyName();
 					int apBillType = activeRatePo.getBillType();
-					ap_accountPo  = chargeAccountDao.getRootAccountById(contextAccountId, apBillType) ;//重置为父级代理商的账户（无论是对公和对私都是有的）
+					ap_accountPo  = chargeAccountDao.getRootAccountById(from_accountPo.getId(), apBillType) ;//重置为父级代理商的账户（无论是对公和对私都是有的）
 					apAccountId = ap_accountPo.getId();
 					
 					/**业务判断和添加**/
@@ -737,7 +737,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 //						agencyBeforeBalance = NumberTool.add(plusAmount, agencyBeforeBalance);	//重置充值前的余额为补款后的余额
 //						agencyAfterBalance = NumberTool.sub(agencyBeforeBalance,minusAmount);
 						ChargeAccountPo accountAfterPo = chargeAccountAO.getAccountById(apAccountId);
-						recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), minusAmount,
+						recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), balance,
 								agencyBeforeBalance, accountAfterPo.getAccountBalance(), 
 								AccountTypeEnum.DECREASE.getValue(), apAccountId, pcVO.getChargeFor(), orderId));	
 						int orderPath = OrderPathEnum.CHILD_WEB_PAGE.getValue();
@@ -766,6 +766,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				agencyAfterBalance = NumberTool.sub(agencyBeforeBalance, orderAmount);
 //				superAccountPo.setAccountBalance(agencyAfterBalance);
 				double editBalance =  NumberTool.mul(orderAmount, -1);
+				
 				chargeAccountAO.updateAccount(superAccountPo.getId(), editBalance);
 //				chargeAccountAO.updateAccount(superAccountPo);
 				recordPoList.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
