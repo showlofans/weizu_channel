@@ -86,6 +86,9 @@
   		<if test="billType != null">
   			AND act.bill_type = #{billType}
   		</if>
+  		<if test="useState != null">
+  			AND bct.use_state = #{useState}
+  		</if>
   		<if test="inUseState != null">
   			AND (bct.use_state != #{inUseState} or bct.use_state is null )
   		</if>

@@ -32,7 +32,9 @@
 <body>
 <div class="page-container">
 	<p class="f-20 text-success">欢迎使用微族通道系统 <span title="最后更新时间：${startupTime }" class="f-14">Beta</span>版本 &nbsp;&nbsp; <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.reload();" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></p>
-	<p>最后更新时间：${startupTime }</p>
+	<p>最后更新时间：${startupTime }
+	<!-- 功能：  <input id="module" /> <a href="javascript:void(0)" class="btn-success" value="搜索" onclick="naviagteTo(this)"></button> -->
+	</p>
 	<c:if test="${not empty loginIpAddress }">
 		<p>上一次登陆地区：${loginIpAddress }&nbsp;&nbsp;${loginTime }</p>
 	</c:if>
@@ -378,6 +380,27 @@ var rootId = $('#rootAgencyId').html();
 if(rootId == 0 || rootId == '0'){
 	var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1265916742'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s22.cnzz.com/z_stat.php%3Fid%3D1265916742%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));
 }
+
+/* $(function() {
+    var availableTags = [
+	{ label: "流量添加", value: "/flowsys/channel/channel_add_page.do" },
+	{ label: "流量通道", value: "/flowsys/channel/channel_add_page.do" },
+	{ label: "话费添加", value: "/flowsys/channel/channel_add_page.do" },
+	{ label: "话费通道", value: "/flowsys/channel/channel_add_page.do" },
+	{ label: "通道展示", value: "/flowsys/channel/channel_add_page.do" },
+	{ label: "通道展示", value: "/flowsys/channel/channel_add_page.do" }
+    ];
+    $( "#module" ).autocomplete({
+      source: availableTags
+    });
+  });
+  //快速打开
+ function naviagteTo(vart){
+	  var hrefv = $('#module').val();
+	  layer.msg(hrefv);
+	 $(vart).attr('data-href',hrefv);
+	  Hui_admin_tab(vart);
+ } */
 </script>
 </body>
 </html>
