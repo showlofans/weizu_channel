@@ -249,11 +249,20 @@
 					<td  class="text-r c-success">总成本</td>
 					<td colspan="5"  class="text-l c-warning">${tot.totalCost}</td>
 					<c:choose>
-						<c:when test="${loginContext.rootAgencyId == 0 }">
-							<td colspan="4"></td>
+						<c:when test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
+							<c:choose>
+								<c:when test="${loginContext.rootAgencyId == 0 }">
+									<td colspan="4"></td>
+								</c:when>
+								<c:otherwise>
+									<td colspan="2"></td>
+								</c:otherwise>
+							</c:choose>
 						</c:when>
 						<c:otherwise>
-							<td colspan="3"></td>
+							<c:if test="${loginContext.rootAgencyId == 0 }">
+								<td colspan="2"></td>
+							</c:if>
 						</c:otherwise>
 					</c:choose>
 				</tr>

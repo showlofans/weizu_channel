@@ -94,7 +94,8 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 		if(exchangePlatformPo.getEpCallBack() == null){
 			exchangePlatformPo.setEpCallBack(CallBackEnum.NEGATIVE.getValue());
 		}
-		String epUserPass = Hash.BASE_UTIL.encode(exchangePlatformPo.getEpUserPass());
+		String epUserPass = exchangePlatformPo.getEpUserPass();
+		epUserPass =  Hash.BASE_UTIL.encode(epUserPass);
 		exchangePlatformPo.setEpUserPass(epUserPass);
 		int res = exchangePlatformDao.add(exchangePlatformPo);
 		if(res > 0){

@@ -43,7 +43,7 @@ public class TelRateAOImpl implements TelRateAO {
 	@Override
 	public void getRateForCharge(Map<String,Object> resultMap, TelChannelParams telChannelParams, Integer agencyId, Integer rootAgencyId) {
 		Map<String,Object> params = getParamsByTelChannel(telChannelParams);
-		int rateFor = telChannelParams.getRateFor();
+//		int rateFor = telChannelParams.getRateFor();
 //		if(AgencyTagEnum.PLATFORM_USER.getValue().equals(telChannelParams.getRateFor())){
 //			params.put("platformUser", AgencyTagEnum.PLATFORM_USER.getValue());
 //		}else if(AgencyTagEnum.DATA_USER.getValue().equals(telChannelParams.getRateFor())){
@@ -51,53 +51,57 @@ public class TelRateAOImpl implements TelRateAO {
 //		}
 //		Integer platUser = AgencyTagEnum.PLATFORM_USER.getValue();
 		
-		boolean isPlatUser = AgencyTagEnum.PLATFORM_USER.getValue().equals(telChannelParams.getRateFor());
-		AgencyTagEnum[] agencyEs = AgencyTagEnum.values();
+//		boolean isPlatUser = AgencyTagEnum.PLATFORM_USER.getValue().equals(telChannelParams.getRateFor());
+//		AgencyTagEnum[] agencyEs = AgencyTagEnum.values();
 		
 		
 		long totalRecord = 0;
-		boolean ifData = false;
+//		boolean ifData = false;
 		params.put("agencyId", agencyId);
 		params.put("rootAgencyId", rootAgencyId);
 //		if(rootAgencyId != null && rootAgencyId != 0){//不是超管
 //			params.put("rateForPlatform", CallBackEnum.POSITIVE.getValue());
 //		}
+//		rateFor = AgencyTagEnum.PLATFORM_USER.getValue();
+		params.put("platformUser", AgencyTagEnum.PLATFORM_USER.getValue());
+		params.put("dataUser", null);
 		
-		for (int i = 0; i < agencyEs.length; i++) {
-			if(isPlatUser){
-				rateFor = AgencyTagEnum.PLATFORM_USER.getValue();
-				params.put("platformUser", AgencyTagEnum.PLATFORM_USER.getValue());
-				params.put("dataUser", null);
-			}else{
-				rateFor = AgencyTagEnum.DATA_USER.getValue();
-				params.put("dataUser", AgencyTagEnum.DATA_USER.getValue());
-				params.put("platformUser", null);
-			}
-			totalRecord = telChannelDao.countMyTelChannel(params);
-			if(totalRecord != 0){
-				if(AgencyTagEnum.DATA_USER.getValue().equals(rateFor)){
-					ifData = true;
-				}
-				if(ifData){
-					Map<String,Object> cloneMap = getParamsByTelChannel(telChannelParams);
-					cloneMap.put("dataUser", AgencyTagEnum.DATA_USER.getValue());
-					cloneMap.put("platformUser", null);
-					long ifDataRes = telChannelDao.countMyTelChannel(cloneMap);
-					if(ifDataRes > 0){
-						ifData = true;
-					}
-				}
-				break;
-			}else{
-				isPlatUser = !isPlatUser;
-			}
-		}
+//		for (int i = 0; i < agencyEs.length; i++) {
+//			if(isPlatUser){
+//				rateFor = AgencyTagEnum.PLATFORM_USER.getValue();
+//				params.put("platformUser", AgencyTagEnum.PLATFORM_USER.getValue());
+//				params.put("dataUser", null);
+//			}else{
+//				rateFor = AgencyTagEnum.DATA_USER.getValue();
+//				params.put("dataUser", AgencyTagEnum.DATA_USER.getValue());
+//				params.put("platformUser", null);
+//			}
+//			totalRecord = telChannelDao.countMyTelChannel(params);
+//			if(totalRecord != 0){
+//				if(AgencyTagEnum.DATA_USER.getValue().equals(rateFor)){
+//					ifData = true;
+//				}
+//				if(ifData){
+//					Map<String,Object> cloneMap = getParamsByTelChannel(telChannelParams);
+//					cloneMap.put("dataUser", AgencyTagEnum.DATA_USER.getValue());
+//					cloneMap.put("platformUser", null);
+//					long ifDataRes = telChannelDao.countMyTelChannel(cloneMap);
+//					if(ifDataRes > 0){
+//						ifData = true;
+//					}
+//				}
+//				break;
+//			}else{
+//				isPlatUser = !isPlatUser;
+//			}
+//		}
+		totalRecord = telRateDao.countTelRateForCharge(params);
 		if(totalRecord > 0){
 			List<GetTelRatePo> telRateList = telRateDao.getTelRateForCharge(params);
 			resultMap.put("getRateList", telRateList);
-			if(ifData){
-				resultMap.put("dataUser", "yes");
-			}
+//			if(ifData){
+//				resultMap.put("dataUser", "yes");
+//			}
 		}else{
 			resultMap.put("msg", "没有该话费折扣");
 		}

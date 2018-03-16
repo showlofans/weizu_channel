@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
+import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.TelServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
@@ -102,9 +103,10 @@ public class ChargeTelController {
 		String jsonStr = "";
 		if(agencyVO != null){
 			Map<String,Object> resultMap = new HashMap<String, Object>();
-			if(telParams.getRateFor() == null){
-				telParams.setRateFor(agencyVO.getAgencyTag());
-			}
+//			if(telParams.getRateFor() == null){
+//				telParams.setRateFor(agencyVO.getAgencyTag());
+//			}
+//				telParams.setRateFor(AgencyTagEnum.PLATFORM_USER.getValue());
 			telRateAO.getRateForCharge(resultMap,telParams,agencyVO.getId(),agencyVO.getRootAgencyId());
 //			if(getRateList != null && getRateList.size() > 0){
 //				resultMap.put("getRateList", getRateList);
