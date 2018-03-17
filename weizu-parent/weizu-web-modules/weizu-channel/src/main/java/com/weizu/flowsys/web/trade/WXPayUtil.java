@@ -266,14 +266,15 @@ public class WXPayUtil {
           doc = DocumentHelper.parseText(xml); 
           // 获取根节点
           Element rootElt = doc.getRootElement(); 
+          
           // 拿到根节点的名称
-          System.out.println("根节点：" + rootElt.getName()); 
+//          System.out.println("根节点：" + rootElt.getName()); 
           
           List<Element> elelist = rootElt.elements();
           for(Iterator<Element> it = elelist.iterator();it.hasNext();){
         	   Element element = it.next();
         	   map.put(element.getName(), element.getTextTrim());
-        	   System.out.println(element.getName()+" : "+element.getTextTrim());
+//        	   System.out.println(element.getName()+" : "+element.getTextTrim());
     	  }
 
           // 获取根节点下的子节点head

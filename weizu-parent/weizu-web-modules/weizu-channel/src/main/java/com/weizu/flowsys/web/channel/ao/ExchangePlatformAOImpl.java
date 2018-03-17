@@ -49,7 +49,7 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 	
 	
 	/**
-	 * @description:通过平台名查找平台对象
+//	 * @description:通过平台名查找平台对象
 	 * @param name
 	 * @return
 	 * @author:POP产品研发部 宁强
@@ -286,9 +286,10 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 			BaseInterface bi = null;
 			if(PgServiceTypeEnum.PGCHARGE.getValue().equals(epFor)){//调用流量接口仓库
 				bi = SingletonFactory.getSingleton(epEngId, baseP);
-			}else if(PgServiceTypeEnum.TELCHARGE.getValue().equals(epFor)){
-				bi = HSingletonFactory.getSingleton(epEngId, baseP);
 			}
+//			else if(PgServiceTypeEnum.TELCHARGE.getValue().equals(epFor)){
+//				bi = HSingletonFactory.getSingleton(epEngId, baseP);
+//			}
 			String msg = epPo.getEpName() + ":余额更新失败";
 			boolean successTag = false;  
 			if(bi != null && bi.getBalance() != null){

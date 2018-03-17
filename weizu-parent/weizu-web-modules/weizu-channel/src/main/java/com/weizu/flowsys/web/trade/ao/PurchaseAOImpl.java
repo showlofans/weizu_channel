@@ -24,6 +24,8 @@ import org.weizu.api.outter.enums.ChargeStatusEnum;
 import com.aiyi.base.pojo.PageParam;
 import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.api.hsingleton.HSingletonFactory;
+import com.weizu.flowsys.api.hsingleton.TelBaseInterface;
+import com.weizu.flowsys.api.hsingleton.TelBaseP;
 import com.weizu.flowsys.api.singleton.BaseInterface;
 import com.weizu.flowsys.api.singleton.BaseP;
 import com.weizu.flowsys.api.singleton.OrderDTO;
@@ -38,6 +40,7 @@ import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.AgencyForwardEnum;
 import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
+import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
@@ -242,7 +245,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 			purchasePo.setOrderId(orderId);//设置订单号
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "订单添加异常";
+			return "订单号生成异常";
 		}
 		purchasePo.setChargeValue(chargeValue);
 		purchasePo.setOrderAmount(tcVO.getOrderAmount());
@@ -266,23 +269,23 @@ public class PurchaseAOImpl implements PurchaseAO {
 			orderResult = OrderStateEnum.DAICHONG.getValue();
 			orderResultDetail = "通道暂停等待";
 		}else{//通道没有暂停
-//			chargeDTO = chargeByBI(epPo, orderId, tcVO.getChargeTel(),dataPo.getId(), dataPo.getTelCode());
-//			if(chargeDTO != null){
-//				if(chargeDTO.getTipCode().equals(OrderResultEnum.SUCCESS.getCode()) ){
-//					orderResult = OrderStateEnum.CHARGING.getValue();
-//					orderResultDetail = OrderStateEnum.CHARGING.getDesc();
-//					ChargeOrder co = chargeDTO.getChargeOrder();
-//					if(co != null){
-//						purchasePo.setOrderIdApi(co.getOrderIdApi());
-//					}
-//				}else{
-//					orderResult = OrderStateEnum.DAICHONG.getValue();
-//					orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+chargeDTO.getTipMsg();
-//				}
-//			}else{
-//				orderResult = OrderStateEnum.DAICHONG.getValue();
-//				orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+"平台直接返失败";
-//			}
+			chargeDTO = chargeByBI(epPo, purchasePo, dataPo);
+			if(chargeDTO != null){
+				if(chargeDTO.getTipCode().equals(OrderResultEnum.SUCCESS.getCode()) ){
+					orderResult = OrderStateEnum.CHARGING.getValue();
+					orderResultDetail = OrderStateEnum.CHARGING.getDesc();
+					ChargeOrder co = chargeDTO.getChargeOrder();
+					if(co != null){
+						purchasePo.setOrderIdApi(co.getOrderIdApi());
+					}
+				}else{
+					orderResult = OrderStateEnum.DAICHONG.getValue();
+					orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+chargeDTO.getTipMsg();
+				}
+			}else{
+				orderResult = OrderStateEnum.DAICHONG.getValue();
+				orderResultDetail = OrderStateEnum.UNCHARGE.getDesc()+"平台直接返失败";
+			}
 		}
 		purchasePo.setOrderResult(orderResult);
 		purchasePo.setOrderResultDetail(orderResultDetail);
@@ -969,9 +972,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 		epPo.setEpUserPass(dataUserPass);
 		if(PgServiceTypeEnum.PGCHARGE.getValue().equals(epFor)){//调用流量接口仓库
 			bi = SingletonFactory.getSingleton(epEngId, new BaseP(pc,purchasePo.getOrderId(),purchasePo.getChargeTel(),epPo,DateUtil.formatPramm(purchasePo.getOrderArriveTime(), "yyyy-MM-dd")));
-		}else if(PgServiceTypeEnum.TELCHARGE.getValue().equals(epFor)){
-			bi = HSingletonFactory.getSingleton(epEngId, new BaseP(pc,purchasePo.getOrderId(),purchasePo.getChargeTel(),epPo,DateUtil.formatPramm(purchasePo.getOrderArriveTime(), "yyyy-MM-dd")));
 		}
+//		else if(PgServiceTypeEnum.TELCHARGE.getValue().equals(epFor)){
+//			bi = HSingletonFactory.getSingleton(epEngId, new BaseP(pc,purchasePo.getOrderId(),purchasePo.getChargeTel(),epPo,DateUtil.formatPramm(purchasePo.getOrderArriveTime(), "yyyy-MM-dd")));
+//		}
 		
 		if(bi != null){
 			chargeDTO = bi.charge();
@@ -985,6 +989,55 @@ public class PurchaseAOImpl implements PurchaseAO {
 				sb.append("tipMsg:"+chargeDTO.getTipMsg()+",jsonStr:");
 				sb.append(chargeDTO.getJsonStr());
 				
+				
+				ChargeLog chargeLog = new ChargeLog(params, sb.toString(), purchasePo.getOrderId(), purchasePo.getChargeTel(), chargeDTO.getTipCode(), System.currentTimeMillis(), AgencyForwardEnum.FOWARD.getValue(), epPo.getEpPurchaseIp()+":tipMsg:"+chargeDTO.getTipMsg());
+				chargeLogDao.add(chargeLog);
+			}
+		}
+		return chargeDTO;
+	}
+	/**
+	 * @description: 通过话费统一接口向上提单
+	 * @param epPo
+	 * @param purchasePo
+	 * @param telProductPo
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年3月17日 下午4:29:08
+	 */
+	public ChargeDTO chargeByBI(ExchangePlatformPo epPo,PurchasePo purchasePo,TelProductPo telProductPo) {
+		if(telProductPo == null || purchasePo == null || epPo == null){
+			return null;
+		}
+		
+		TelBaseInterface bi = null;
+		ChargeDTO chargeDTO = null;
+		boolean canChargeTel = valiUser.checkChargeTel(purchasePo.getChargeTel(), purchasePo.getAccountId());
+		if(!canChargeTel){
+			chargeDTO = new ChargeDTO(-1, "提交次数与标准次数不匹配或者该号码还有未回调的订单", null);
+			return chargeDTO;
+		}
+		
+		Integer epFor = epPo.getEpFor();
+		String epEngId = epPo.getEpEngId();
+		//初始化平台密码
+		String dataUserPass = Hash.BASE_UTIL.decode(epPo.getEpUserPass());
+		epPo.setEpUserPass(dataUserPass);
+		if(PgServiceTypeEnum.TELCHARGE.getValue().equals(epFor)){
+			bi = HSingletonFactory.getSingleton(epEngId);
+		}
+		
+		if(bi != null){
+			chargeDTO = bi.chargeTel(new TelBaseP(purchasePo.getOrderId(), purchasePo.getChargeTel(), epPo, telProductPo, DateUtil.formatAll(System.currentTimeMillis()), BillTypeEnum.BUSINESS_INDIVIDUAL.getValue()));
+			if(chargeDTO != null){//在后面：更新返回的订单id，方便主动查询
+				purchasePo.setEpId(epPo.getId());
+				
+				String params = "编码："+telProductPo.getTelCode()+"，平台名称:"+epPo.getEpName();
+				//返回参数
+				StringBuffer sb = new StringBuffer();
+				sb.append("tipCode:"+chargeDTO.getTipCode()+",");
+				sb.append("tipMsg:"+chargeDTO.getTipMsg()+",jsonStr:");
+				sb.append(chargeDTO.getJsonStr());
 				
 				ChargeLog chargeLog = new ChargeLog(params, sb.toString(), purchasePo.getOrderId(), purchasePo.getChargeTel(), chargeDTO.getTipCode(), System.currentTimeMillis(), AgencyForwardEnum.FOWARD.getValue(), epPo.getEpPurchaseIp()+":tipMsg:"+chargeDTO.getTipMsg());
 				chargeLogDao.add(chargeLog);
@@ -1182,9 +1235,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 									BaseP baseP = new BaseP(null,purchaseVO2.getOrderIdApi(),purchaseVO2.getChargeTel(),purchaseEp,DateUtil.formatPramm(purchaseVO2.getOrderArriveTime(), "yyyy-MM-dd"));
 									baseP.setOrderId(orderId);
 									bi = SingletonFactory.getSingleton(epEngId, baseP);
-								}else if(PgServiceTypeEnum.TELCHARGE.getValue().equals(epFor)){
-									bi = HSingletonFactory.getSingleton(epEngId, new BaseP(null,purchaseVO2.getOrderIdApi(),purchaseVO2.getChargeTel(),purchaseEp,DateUtil.formatPramm(purchaseVO2.getOrderArriveTime(), "yyyy-MM-dd")));
 								}
+//								else if(PgServiceTypeEnum.TELCHARGE.getValue().equals(epFor)){
+//									bi = HSingletonFactory.getSingleton(epEngId, new BaseP(null,purchaseVO2.getOrderIdApi(),purchaseVO2.getChargeTel(),purchaseEp,DateUtil.formatPramm(purchaseVO2.getOrderArriveTime(), "yyyy-MM-dd")));
+//								}
 								//是否需要更新订单状态条件
 								if(bi != null){
 									if(bi.getOrderState() == null){

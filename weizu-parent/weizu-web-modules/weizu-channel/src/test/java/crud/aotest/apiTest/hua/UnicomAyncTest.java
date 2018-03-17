@@ -10,6 +10,7 @@
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //import org.weizu.api.util.HttpRequest;
 //
+//import com.weizu.flowsys.api.hsingleton.TelBaseInterface;
 //import com.weizu.flowsys.util.StringUtil2;
 //import com.weizu.flowsys.web.channel.ao.ExchangePlatformAO;
 //import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
@@ -52,4 +53,9 @@
 //    	String jsonStr = HttpRequest.sendGet(requestUrl, params);
 //		System.out.println(jsonStr);
 //	}
+////	@Test
+////	public void testChargeTel(){
+////		
+////	}
+//	
 //}

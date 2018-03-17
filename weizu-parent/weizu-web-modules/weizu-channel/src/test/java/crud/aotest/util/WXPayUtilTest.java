@@ -9,7 +9,8 @@
 ////		String nonceStr = WXPayUtil.getNonce_str();
 ////		System.out.println("nonceStr:" + nonceStr);
 //		
-//		String xml = "<servlet><description></description><display-name>TestServlet</display-name><servlet-name>TestServlet</servlet-name><servlet-class>test.TestServlet</servlet-class></servlet>";
+//		String xml = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><response><code>00</code><desc>交易成功</desc><status>success</status><balance>0</balance></response>";
+////		String xml = "<servlet><description></description><display-name>TestServlet</display-name><servlet-name>TestServlet</servlet-name><servlet-class>test.TestServlet</servlet-class></servlet>";
 //		Map<String,Object> map = WXPayUtil.readStringXmlOut(xml);
 //		for (String key : map.keySet()) {
 //			String value = map.get(key).toString();
