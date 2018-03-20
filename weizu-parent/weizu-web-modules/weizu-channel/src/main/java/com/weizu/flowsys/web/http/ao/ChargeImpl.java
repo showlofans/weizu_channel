@@ -2,7 +2,6 @@ package com.weizu.flowsys.web.http.ao;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.annotation.Resource;
 
@@ -17,11 +16,13 @@ import com.weizu.flowsys.api.singleton.SingletonFactory;
 import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 import com.weizu.flowsys.api.weizu.charge.ChargeOrder;
 import com.weizu.flowsys.api.weizu.charge.ChargeParams;
+import com.weizu.flowsys.api.weizu.charge.ChargeTelParams;
 import com.weizu.flowsys.api.weizu.facet.IChargeFacet;
 import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.AgencyForwardEnum;
+import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.EpEncodeTypeEnum;
@@ -29,11 +30,13 @@ import com.weizu.flowsys.operatorPg.enums.OrderPathEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
-import com.weizu.flowsys.util.JsonFormatTool;
+import com.weizu.flowsys.operatorPg.enums.TelServiceTypeEnum;
 import com.weizu.flowsys.util.OrderUril;
 import com.weizu.flowsys.web.activity.ao.RateDiscountAO;
+import com.weizu.flowsys.web.activity.dao.ITelRateDao;
 import com.weizu.flowsys.web.activity.dao.RateDiscountDao;
 import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
+import com.weizu.flowsys.web.activity.pojo.TelRatePo;
 import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeRecordDao;
@@ -44,18 +47,22 @@ import com.weizu.flowsys.web.channel.ao.ProductCodeAO;
 import com.weizu.flowsys.web.channel.dao.ChannelChannelDao;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 import com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface;
+import com.weizu.flowsys.web.channel.dao.ICitiesDAO;
+import com.weizu.flowsys.web.channel.dao.IProcincesDAO;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
+import com.weizu.flowsys.web.channel.pojo.Cities;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
+import com.weizu.flowsys.web.channel.pojo.Provinces;
 import com.weizu.flowsys.web.http.entity.Charge;
 import com.weizu.flowsys.web.http.entity.ChargePo;
-import com.weizu.flowsys.web.http.entity.PurchaseLog;
+import com.weizu.flowsys.web.http.entity.ChargeTel;
+import com.weizu.flowsys.web.http.entity.ChargeTelPo;
 import com.weizu.flowsys.web.system_base.ao.SystemConfAO;
-import com.weizu.flowsys.web.system_base.pojo.SystemConfPo;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.flowsys.web.trade.dao.AccountPurchaseDao;
 import com.weizu.flowsys.web.trade.dao.ChargeLogDao;
@@ -114,6 +121,13 @@ public class ChargeImpl implements IChargeFacet {
 	
 	@Resource
 	private SystemConfAO systemConfAO;
+	@Resource
+	private ICitiesDAO citiesDao;
+	@Resource
+	private IProcincesDAO procincesDAO; 
+	
+	@Resource
+	private ITelRateDao telRateDao;
 	
 	
 //	private Logger logger = Logger.getLogger("ChargeImpl");
@@ -488,6 +502,85 @@ public class ChargeImpl implements IChargeFacet {
 			}
 		}
 		return sqlMap;
+	}
+
+	@Override
+	public ChargeTel charge(ChargeTelParams chargeTelParams) throws Exception {
+		AgencyBackwardPo backPo = valiUser.findAgency(chargeTelParams.getUserName(), chargeTelParams.getSign());
+		if(backPo == null){
+			return null;
+		}
+		String chargeTel = chargeTelParams.getNumber();
+		Map<String, Object> scopeMap = PurchaseUtil.getOperatorsByTel(chargeTel);//调用接口得到电话的归属地
+		if(scopeMap == null){
+			System.out.println("调用归属地接口异常!");
+			return null;
+		}
+		Double chargeValue = chargeTelParams.getChargeValue();
+		
+		
+		
+		
+		String chargeTelDetail = scopeMap.get("chargeTelDetail").toString();
+		
+		
+		Map<String, Object> rateParamsMap = getTelRateMapByParams(chargeTelParams, backPo, scopeMap);
+		TelRatePo telRatePo = telRateDao.getOneTelRateForCharge(rateParamsMap);
+		Double chargeAmount = NumberTool.mul(telRatePo.getActiveDiscount(), chargeValue);
+		ChargeTel chargeTelPo = new ChargeTel(1, "1", new ChargeTelPo(1l, chargeTel, chargeValue, chargeAmount, chargeTelParams.getBillType()));
+		
+		
+		
+//		String province = chargeTelDetail.substring(0,chargeTelDetail.length()-2);
+		
+		
+		
+		
+		
+		
+		return chargeTelPo;
+	}
+	
+	/**
+	 * @description: 获得话费折扣查询参数
+	 * @param chargeTelParams
+	 * @param backPo
+	 * @param resMap
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年3月20日 下午5:34:44
+	 */
+	private Map<String,Object> getTelRateMapByParams(ChargeTelParams chargeTelParams,AgencyBackwardPo backPo,Map<String, Object> resMap){
+		Map<String,Object> rateParamsMap = new HashMap<String, Object>(); 
+		int serviceType = chargeTelParams.getServiceType();
+		rateParamsMap.put("agencyId", backPo.getId());
+		rateParamsMap.put("rootAgencyId", backPo.getRootAgencyId());
+		rateParamsMap.put("platformUser", AgencyTagEnum.PLATFORM_USER.getValue());
+		rateParamsMap.put("dataUser", null);
+		rateParamsMap.put("serviceType", serviceType);
+		String province = resMap.get("scopeName").toString();
+		Provinces provinces = procincesDAO.get(new WherePrams("province", "like", province));
+		String provinceId = provinces.getProvinceid();
+		boolean cityProIn = StringHelper.isNotEmpty(provinceId);
+		boolean cityIn = false;
+		if(TelServiceTypeEnum.CITY.getValue() == serviceType){
+			String chargeTelCity = resMap.get("chargeTelCity").toString();
+			Cities cities = citiesDao.get(new WherePrams("city", "like", chargeTelCity));
+			String cityId = cities.getCityid();
+			cityIn = StringHelper.isNotEmpty(cityId) && cityProIn;//加入市的条件
+			rateParamsMap.put("cityid", cityId);
+		}
+		boolean provinceIn = serviceType == TelServiceTypeEnum.PROVINCE.getValue() || cityIn ;//加入省份参数条件
+		if(provinceIn && cityProIn){
+			rateParamsMap.put("provinceid", provinceId);
+		}
+		
+		String otype = resMap.get("operatorType").toString();
+		int operatorName = Integer.parseInt(otype);
+		rateParamsMap.put("operatorName", operatorName);
+		rateParamsMap.put("chargeValue", chargeTelParams.getChargeValue());
+		
+		return rateParamsMap;
 	}
 
 }

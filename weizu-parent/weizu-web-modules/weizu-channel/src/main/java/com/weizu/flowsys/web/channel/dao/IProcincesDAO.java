@@ -2,9 +2,10 @@ package com.weizu.flowsys.web.channel.dao;
 
 import java.util.List;
 
+import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.channel.pojo.Provinces;
 
-public interface IProcincesDAO {
+public interface IProcincesDAO extends Dao<Provinces, Integer> {
 	
 	/**
 	 * @description: 获得所有城市列表
@@ -13,4 +14,5 @@ public interface IProcincesDAO {
 	 * @createTime:2017年11月9日 下午5:41:05
 	 */
 	List<Provinces> getProvinces();
+	
 }	

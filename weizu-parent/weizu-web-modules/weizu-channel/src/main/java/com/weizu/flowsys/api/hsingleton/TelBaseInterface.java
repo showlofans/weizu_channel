@@ -1,6 +1,8 @@
 package com.weizu.flowsys.api.hsingleton;
 
+import com.weizu.flowsys.api.singleton.BalanceDTO;
 import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
+import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 
 /**
  * @description:话费向上统一接口
@@ -28,6 +30,15 @@ public interface TelBaseInterface {
 	 * @createTime:2018年3月17日 下午2:31:00
 	 */
 	TelOrderStateDTO getTelOrderState(TelBaseP baseP);
+	
+	/**
+	 * @description: 获取平台余额
+	 * @param baseP
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年3月19日 上午11:03:39
+	 */
+	BalanceDTO getBalance(ExchangePlatformPo epPo);
 	
 	/**
 	 * @description: 封装话费充值参数

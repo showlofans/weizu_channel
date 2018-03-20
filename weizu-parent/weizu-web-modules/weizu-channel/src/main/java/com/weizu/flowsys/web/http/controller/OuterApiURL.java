@@ -26,6 +26,11 @@ public class OuterApiURL extends BaseURL {
 	 */
 	public static final String CHARGE = "/charge";
 	/**
+	 * 下游充值接口<br>
+	 * 真实地址：http://www.91weizu.cn/weizuAPI/charge_tel.do
+	 */
+	public static final String CHARGE_TEL = "/charge_tel";
+	/**
 	 * 下游主动查询接口<br>
 	 * 真实地址：http://www.91weizu.cn/weizuAPI/my_order_state.do
 	 */

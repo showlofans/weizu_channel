@@ -35,6 +35,15 @@ public interface ITelRateDao extends Dao<TelRatePo, Long> {
 	 * @createTime:2017年12月1日 下午4:56:18
 	 */
 	List<GetTelRatePo> getTelRateForCharge(Map<String,Object> map);
+
+	/**
+	 * @description:异步获得唯一的价格折扣信息
+	 * @param map
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年3月20日 下午5:03:09
+	 */
+	TelRatePo getOneTelRateForCharge(Map<String,Object> map);
 	
 	
 	Long countTelRateForCharge(Map<String,Object> map);

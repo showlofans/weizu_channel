@@ -185,9 +185,11 @@
 ////		Long str = 0l;
 ////		System.out.println(str.equals(0l));
 ////		System.out.println("798346861839650816".length());
-//		String mapStr = "{chargeSpeed=2, dataUser=null, rootAgencyId=1, platformUser=0, provinceid=440000, negative=0, positive=1, serviceType=1, bind=0, agencyId=4, useOpen=0}";
-//		Map<String,Object> map = StringUtil2.mapStringToMap(mapStr);
-//		System.out.println(map.toString());
+////		String mapStr = "{chargeSpeed=2, dataUser=null, rootAgencyId=1, platformUser=0, provinceid=440000, negative=0, positive=1, serviceType=1, bind=0, agencyId=4, useOpen=0}";
+////		Map<String,Object> map = StringUtil2.mapStringToMap(mapStr);
+////		System.out.println(map.toString());
+//		String ctd = "江西移动";
+//		System.out.println(ctd.substring(0, ctd.length()-2));
 ////		System.out.println(DateUtil.formatAll(1514724915904l)); //第一笔订单时间
 ////		System.out.println(DateUtil.formatAll(1514724925405l)); //第二笔订单时间
 ////		Double discount = 526.0d;

@@ -16,6 +16,7 @@ import org.weizu.api.outter.enums.ChargeStatusEnum;
 import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.api.singleton.BalanceDTO;
 import com.weizu.flowsys.api.weizu.charge.ChargeParams;
+import com.weizu.flowsys.api.weizu.charge.ChargeTelParams;
 import com.weizu.flowsys.api.weizu.charge.PgProductParams;
 import com.weizu.flowsys.api.weizu.facet.IBalanceFacet;
 import com.weizu.flowsys.api.weizu.facet.IChargeFacet;
@@ -30,6 +31,7 @@ import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.AddressUtils;
 import com.weizu.flowsys.web.http.entity.Charge;
+import com.weizu.flowsys.web.http.entity.ChargeTel;
 import com.weizu.flowsys.web.http.entity.Order;
 import com.weizu.flowsys.web.http.entity.PgProduct;
 import com.weizu.flowsys.web.http.entity.PurchaseLog;
@@ -160,6 +162,57 @@ public class OuterAPIController {
 //		System.out.println(jsonResult);
 		return jsonResult;
 	}
+	
+	/**
+	 * @description: 话费充值
+	 * @param number
+	 * @param userName
+	 * @param sign
+	 * @param serviceType
+	 * @param billType
+	 * @param reportUrl
+	 * @param userOrderId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年3月20日 下午2:35:12
+	 */
+	@ResponseBody
+	@RequestMapping(value=OuterApiURL.CHARGE_TEL,produces = "text/json;charset=UTF-8")
+	public String chargeTel(String number, String userName, String sign,Double chargeValue,
+			@RequestParam(value="chargeSpeed",required=false) Integer chargeSpeed,
+			@RequestParam(value="billType",required=false) Integer billType,
+			@RequestParam(value="serviceType",required=false) Integer serviceType,
+			@RequestParam(value="reportUrl",required=false) String reportUrl,
+			@RequestParam(value="userOrderId",required=false) String userOrderId){
+		ChargeTelParams chargeTelParams = new ChargeTelParams(number, userName, sign, reportUrl, userOrderId, chargeValue);
+		if(chargeSpeed == null){
+			chargeTelParams.setChargeSpeed(chargeSpeed);
+		}else{
+			chargeTelParams.setChargeSpeed(chargeSpeed);
+		}
+		
+		if(chargeSpeed == null){
+			
+		}else{
+			chargeTelParams.setBillType(billType);
+		}
+		
+		if(chargeSpeed == null){
+			
+		}else{
+			chargeTelParams.setServiceType(serviceType);
+		}
+		ChargeTel chargeTel = null;
+		try {
+			chargeTel = chargeImpl.charge(chargeTelParams);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return JSON.toJSONString(chargeTel);
+	}
+	
 	@Resource
 	private AddressUtils addressUtils;
 	

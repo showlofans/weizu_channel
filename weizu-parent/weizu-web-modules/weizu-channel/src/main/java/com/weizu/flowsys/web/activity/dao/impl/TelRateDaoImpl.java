@@ -85,5 +85,14 @@ public class TelRateDaoImpl extends DaoImpl<TelRatePo, Long> implements ITelRate
 		return sqlSessionTemplate.selectOne("getTelRateByParams", map);
 	}
 
+	@Override
+	public TelRatePo getOneTelRateForCharge(Map<String, Object> map) {
+		map.put("positive", CallBackEnum.POSITIVE.getValue());//bindSide
+		map.put("negative", CallBackEnum.NEGATIVE.getValue());//话费折扣添加黑名单用户
+		map.put("bind", BindStateEnum.BIND.getValue());//绑定状态
+		map.put("useOpen", ChannelUseStateEnum.OPEN.getValue());
+		return sqlSessionTemplate.selectOne("getOneTelRateForCharge", map);
+	}
+
 
 }
