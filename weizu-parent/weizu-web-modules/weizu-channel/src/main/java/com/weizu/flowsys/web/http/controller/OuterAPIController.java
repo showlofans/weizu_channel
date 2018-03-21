@@ -29,6 +29,8 @@ import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.TelServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.TelchargeSpeedEnum;
 import com.weizu.flowsys.util.AddressUtils;
 import com.weizu.flowsys.web.http.entity.Charge;
 import com.weizu.flowsys.web.http.entity.ChargeTel;
@@ -183,33 +185,44 @@ public class OuterAPIController {
 			@RequestParam(value="billType",required=false) Integer billType,
 			@RequestParam(value="serviceType",required=false) Integer serviceType,
 			@RequestParam(value="reportUrl",required=false) String reportUrl,
-			@RequestParam(value="userOrderId",required=false) String userOrderId){
+			@RequestParam(value="userOrderId",required=false) String userOrderId,
+			HttpServletRequest request){
+		
 		ChargeTelParams chargeTelParams = new ChargeTelParams(number, userName, sign, reportUrl, userOrderId, chargeValue);
+		//充值速度-慢充
 		if(chargeSpeed == null){
-			chargeTelParams.setChargeSpeed(chargeSpeed);
+			chargeTelParams.setChargeSpeed(TelchargeSpeedEnum.SLOW.getValue());
 		}else{
 			chargeTelParams.setChargeSpeed(chargeSpeed);
 		}
-		
-		if(chargeSpeed == null){
-			
+		//票务-带票
+		if(billType == null){
+			chargeTelParams.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());
 		}else{
 			chargeTelParams.setBillType(billType);
 		}
-		
-		if(chargeSpeed == null){
-			
+		//业务-省内话费
+		if(serviceType == null){
+			chargeTelParams.setServiceType(TelServiceTypeEnum.PROVINCE.getValue());
 		}else{
 			chargeTelParams.setServiceType(serviceType);
+		}
+		try {
+			 String ip = addressUtils.getIp(request);
+			 chargeTelParams.setRequestIp(ip);
+		} catch (Exception e1) {
+			chargeTelParams.setRequestIp("未知ip");
+			e1.printStackTrace();
 		}
 		ChargeTel chargeTel = null;
 		try {
 			chargeTel = chargeImpl.charge(chargeTelParams);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			ChargeLog chargeLog = new ChargeLog(JSON.toJSONString(chargeTelParams), "无返回，有异常", null, chargeTelParams.getNumber(), ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), System.currentTimeMillis(),AgencyForwardEnum.BACKWARD.getValue(),chargeTelParams.getRequestIp()+ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc());
+			chargeLogDao.add(chargeLog);
+			chargeTel = new ChargeTel(ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc(), null);
 			e.printStackTrace();
 		}
-		
 		return JSON.toJSONString(chargeTel);
 	}
 	

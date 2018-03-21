@@ -211,11 +211,12 @@ public class PurchaseAOImpl implements PurchaseAO {
 		ExchangePlatformPo epPo = null;
 		TelProductPo dataPo = telProductDao.get(tcVO.getTelProductId());
 		purchasePo.setEpId(dataPo.getEpId());
-		if(dataPo == null){
-			logger.config("编码未配置");
-			System.out.println("编码未配置");
-			return "产品待更新，产品暂不支持购买！！";
-		}else if (telchannel == null){
+//		if(dataPo == null){
+//			logger.config("编码未配置");
+//			System.out.println("编码未配置");
+//			return "产品待更新，产品暂不支持购买！！";
+//		}else 
+		if (telchannel == null){
 			logger.config("通道不存在");
 			System.out.println("通道不存在");
 			return "产品待更新，产品暂不支持购买！！";
@@ -352,7 +353,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 				/**充值前余额*/
 				agencyBeforeBalance = chargeAccountPo.getAccountBalance();
 				/**充值额（）*/
-				orderAmount = NumberTool.mul(telRatePo.getActiveDiscount(), chargeValue);
+				orderAmount = tcVO.getOrderAmount();
 				chargeAccountPo.addBalance(orderAmount,-1);
 				/** 更新登录用户账户信息**/
 				double editBalance = NumberTool.mul(orderAmount, -1);

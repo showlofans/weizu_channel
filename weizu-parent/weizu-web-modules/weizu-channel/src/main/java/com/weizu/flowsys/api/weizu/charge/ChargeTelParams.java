@@ -20,6 +20,8 @@ public class ChargeTelParams {
 	private String userOrderId;
 	private Double chargeValue;
 	
+	 private String requestIp;			//请求地址
+	
 	public ChargeTelParams(String number, String userName, String sign,
 			 Double chargeValue) {
 		super();
@@ -40,7 +42,13 @@ public class ChargeTelParams {
 		this.chargeValue = chargeValue;
 	}
 
+	public String getRequestIp() {
+		return requestIp;
+	}
 
+	public void setRequestIp(String requestIp) {
+		this.requestIp = requestIp;
+	}
 
 	public Double getChargeValue() {
 		return chargeValue;

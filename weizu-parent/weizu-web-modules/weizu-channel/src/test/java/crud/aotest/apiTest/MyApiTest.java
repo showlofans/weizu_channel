@@ -164,11 +164,11 @@
 //		}
 //		
 //		ChargeTel chargeTelPo = null;
-//		ChargeTelParams ctp = new ChargeTelParams("13728420997", userName, sign, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue(), 200d);
+//		ChargeTelParams ctp = new ChargeTelParams("13728420997", userName, sign, 200d);
 //		ctp.setChargeSpeed(TelchargeSpeedEnum.SLOW.getValue());
 //		ctp.setServiceType(TelServiceTypeEnum.PROVINCE.getValue());
+//		ctp.setBillType(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 //		try {
-//			
 //			chargeTelPo = chargeImpl.charge(ctp);
 //		} catch (Exception e) {
 //			chargeTelPo = new ChargeTel(ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc(), null);
@@ -176,7 +176,9 @@
 //			e.printStackTrace();
 //		}
 //		if(chargeTelPo != null){
-//			 System.out.println(chargeTelPo.getChargeTelPo().getChargeAmount());;
+//			if(chargeTelPo.getChargeTelPo() != null){
+//				System.out.println(chargeTelPo.getChargeTelPo().getOrderId());;
+//			}
 //			System.out.println(chargeTelPo.getTipMsg());
 //		}
 ////		System.out.println(ChargeStatusEnum.CHANNEL_CLOSED.getDesc());
