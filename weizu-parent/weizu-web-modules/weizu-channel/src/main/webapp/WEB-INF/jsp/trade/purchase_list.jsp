@@ -197,7 +197,7 @@
 						<td>${purchase.chargeValue }</td>
 						<td>
 							<span class="c-warning">
-								<a style="text-decoration:none;" data-href="/flowsys/account/consume_list.do?purchaseId=${purchase.orderId }&userName=${purchase.agencyName}&pageNo=1" data-title="订单消费" onclick="Hui_admin_tab(this)" href="javascript:void(0)">
+								<a style="text-decoration:none;" data-href="/flowsys/account/consume_list.do?purchaseId=${purchase.orderId }&userName=${purchase.agencyName}&pageNo=1&chargeFor=${purchase.purchaseFor}" data-title="订单消费" onclick="Hui_admin_tab(this)" href="javascript:void(0)">
 								${purchase.orderPrice }
 								</a>
 							</span>
@@ -219,28 +219,28 @@
 											<c:choose>
 												<c:when test="${orderStateEnum.value == 0 }">
 													<span class="label label-danger radius mark">
-														<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderResult=${orderStateEnum.value }&backStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&backEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值失败" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
+														<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderResult=${orderStateEnum.value }&purchaseFor=${resultMap.searchParams.purchaseFor }&backStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&backEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值失败" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
 														${orderStateEnum.desc }
 														</a>
 													</span>
 												</c:when>
 												<c:when test="${orderStateEnum.value == 2 }">
 													<span class="label label-secondary radius mark">
-													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderResult=${orderStateEnum.value }&arriveStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&arriveEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值进行" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
+													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderResult=${orderStateEnum.value }&purchaseFor=${resultMap.searchParams.purchaseFor }&arriveStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&arriveEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值进行" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
 														${orderStateEnum.desc }
 													</a>
 													</span>
 												</c:when>
 												<c:when test="${orderStateEnum.value == 4 }">
 													<span class="label label-warning radius mark">
-													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderResult=${orderStateEnum.value }&arriveStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&arriveEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值等待" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
+													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderResult=${orderStateEnum.value }&purchaseFor=${resultMap.searchParams.purchaseFor }&arriveStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&arriveEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值等待" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
 														${orderStateEnum.desc }
 													</a>
 													</span>
 												</c:when>
 												<c:otherwise>
 													<span class="label label-success radius mark">
-													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderResult=${orderStateEnum.value }&backStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&backEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值成功" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
+													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderResult=${orderStateEnum.value }&purchaseFor=${resultMap.searchParams.purchaseFor }&backStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&backEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值成功" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
 														${orderStateEnum.desc }
 													</a>
 													</span>
@@ -255,21 +255,21 @@
 											<c:choose>
 												<c:when test="${orderStateEnum.value == 0 }">
 													<span class="label label-danger radius mark">
-														<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderState=${orderStateEnum.value }&backStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&backEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值失败" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
+														<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderState=${orderStateEnum.value }&purchaseFor=${resultMap.searchParams.purchaseFor }&backStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&backEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值失败" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
 														${orderStateEnum.desc }
 														</a>
 													</span>
 												</c:when>
 												<c:when test="${orderStateEnum.value == 2 }">
 													<span class="label label-secondary radius mark">
-													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderState=${orderStateEnum.value }&arriveStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&arriveEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值进行" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
+													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderState=${orderStateEnum.value }&purchaseFor=${resultMap.searchParams.purchaseFor }&arriveStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&arriveEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值进行" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
 														${orderStateEnum.desc }
 													</a>
 													</span>
 												</c:when>
 												<c:otherwise>
 													<span class="label label-success radius mark">
-													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderState=${orderStateEnum.value }&backStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&backEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值成功" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
+													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderState=${orderStateEnum.value }&purchaseFor=${resultMap.searchParams.purchaseFor }&backStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&backEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值成功" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
 														${orderStateEnum.desc }
 													</a>
 													</span>

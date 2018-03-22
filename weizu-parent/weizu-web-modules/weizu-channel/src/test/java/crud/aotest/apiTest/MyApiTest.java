@@ -149,6 +149,7 @@
 //////		String resultStr = HttpRequest.sendPost("http://api.lljypt.com/capi/query.balance", param.toString());
 //////		System.out.println(balanceDTO.getAccountBalance());
 ////	}
+//	//下游充值
 //	@Test
 //	public void testChargeTel(){
 //		String userName = "xiaoning";
@@ -164,22 +165,24 @@
 //		}
 //		
 //		ChargeTel chargeTelPo = null;
-//		ChargeTelParams ctp = new ChargeTelParams("13728420997", userName, sign, 200d);
-//		ctp.setChargeSpeed(TelchargeSpeedEnum.SLOW.getValue());
-//		ctp.setServiceType(TelServiceTypeEnum.PROVINCE.getValue());
+//		ChargeTelParams ctp = new ChargeTelParams("13699562589", userName, sign, 10d);
+//		ctp.setChargeSpeed(TelchargeSpeedEnum.FAST.getValue());
+//		ctp.setServiceType(TelServiceTypeEnum.NATION_WIDE.getValue());
 //		ctp.setBillType(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 //		try {
 //			chargeTelPo = chargeImpl.charge(ctp);
 //		} catch (Exception e) {
 //			chargeTelPo = new ChargeTel(ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc(), null);
-//			System.out.println();
+//			System.out.println("1");
 //			e.printStackTrace();
 //		}
 //		if(chargeTelPo != null){
 //			if(chargeTelPo.getChargeTelPo() != null){
-//				System.out.println(chargeTelPo.getChargeTelPo().getOrderId());;
+//				System.out.println(chargeTelPo.getChargeTelPo().getOrderId());
 //			}
 //			System.out.println(chargeTelPo.getTipMsg());
+//		}else{
+//			System.out.println("chargeTelPo:"+chargeTelPo==null);
 //		}
 ////		System.out.println(ChargeStatusEnum.CHANNEL_CLOSED.getDesc());
 //		

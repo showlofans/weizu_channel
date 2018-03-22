@@ -189,9 +189,9 @@ public class OuterAPIController {
 			HttpServletRequest request){
 		
 		ChargeTelParams chargeTelParams = new ChargeTelParams(number, userName, sign, reportUrl, userOrderId, chargeValue);
-		//充值速度-慢充
+		//充值速度-快充
 		if(chargeSpeed == null){
-			chargeTelParams.setChargeSpeed(TelchargeSpeedEnum.SLOW.getValue());
+			chargeTelParams.setChargeSpeed(TelchargeSpeedEnum.FAST.getValue());
 		}else{
 			chargeTelParams.setChargeSpeed(chargeSpeed);
 		}

@@ -26,6 +26,8 @@ import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.api.hsingleton.HSingletonFactory;
 import com.weizu.flowsys.api.hsingleton.TelBaseInterface;
 import com.weizu.flowsys.api.hsingleton.TelBaseP;
+import com.weizu.flowsys.api.hsingleton.TelOrderIn;
+import com.weizu.flowsys.api.hsingleton.TelOrderStateDTO;
 import com.weizu.flowsys.api.singleton.BaseInterface;
 import com.weizu.flowsys.api.singleton.BaseP;
 import com.weizu.flowsys.api.singleton.OrderDTO;
@@ -1229,6 +1231,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 							boolean negCallBack = CallBackEnum.NEGATIVE.getValue().equals(purchaseEp.getEpCallBack());
 							if(negCallBack){//不支持回调就用主动查询，查询订单状态
 								BaseInterface bi = null;
+								TelBaseInterface tbi = null;
 								Integer epFor = purchaseEp.getEpFor();
 								String epEngId = purchaseEp.getEpEngId();
 								Long orderId = purchaseVO2.getOrderId();
@@ -1237,16 +1240,16 @@ public class PurchaseAOImpl implements PurchaseAO {
 									baseP.setOrderId(orderId);
 									bi = SingletonFactory.getSingleton(epEngId, baseP);
 								}
-//								else if(PgServiceTypeEnum.TELCHARGE.getValue().equals(epFor)){
-//									bi = HSingletonFactory.getSingleton(epEngId, new BaseP(null,purchaseVO2.getOrderIdApi(),purchaseVO2.getChargeTel(),purchaseEp,DateUtil.formatPramm(purchaseVO2.getOrderArriveTime(), "yyyy-MM-dd")));
-//								}
+								else if(PgServiceTypeEnum.TELCHARGE.getValue().equals(epFor)){
+									tbi = HSingletonFactory.getSingleton(epEngId);
+								}
 								//是否需要更新订单状态条件
 								if(bi != null){
-									if(bi.getOrderState() == null){
+									OrderDTO orderDTO = bi.getOrderState();
+									if(orderDTO == null){
 										//更新订单表
 										purchaseDAO.updatePurchaseState(new PurchasePo(purchaseVO2.getOrderId(), null, System.currentTimeMillis(), null, null, ChargeStatusEnum.API_ERROR.getDesc()+"查询状态"));//purchaseVO2.getOrderId(), System.currentTimeMillis(), orderIn.getStatus(), orderIn.getMsg(), null
 									}else{
-										OrderDTO orderDTO = bi.getOrderState();
 										OrderIn orderIn = orderDTO.getOrderIn();
 										boolean updateCondition = orderIn!= null && !purchaseVO2.getOrderResult().equals(orderIn.getStatus());
 										if(updateCondition){
@@ -1266,6 +1269,34 @@ public class PurchaseAOImpl implements PurchaseAO {
 											purchaseDAO.updatePurchaseState(new PurchasePo(purchaseVO2.getOrderId(), null, System.currentTimeMillis(), orderIn.getStatus(), OrderResultEnum.SUCCESS.getCode(), orderIn.getMsg()));//purchaseVO2.getOrderId(), System.currentTimeMillis(), orderIn.getStatus(), orderIn.getMsg(), null
 										}
 										
+									}
+								}else if(tbi != null){//话费主动查询订单状态
+									TelBaseP telBaseP = new TelBaseP(purchaseVO2.getOrderIdApi(),purchaseVO2.getChargeTel(), purchaseEp, null, purchaseVO2.getOrderArriveTime().toString(), accountPo.getBillType());
+									TelOrderStateDTO orderDTO = tbi.getTelOrderState(telBaseP);
+									telBaseP.setOrderId(orderId);
+									if(orderDTO == null){
+										//更新订单表
+										purchaseDAO.updatePurchaseState(new PurchasePo(purchaseVO2.getOrderId(), null, System.currentTimeMillis(), null, null, ChargeStatusEnum.API_ERROR.getDesc()+"查询状态"));//purchaseVO2.getOrderId(), System.currentTimeMillis(), orderIn.getStatus(), orderIn.getMsg(), null
+									}else{
+										TelOrderIn orderIn = orderDTO.getTelOrderIn();
+//										TelOrderIn orderIn = orderDTO.getOrderIn();
+										boolean updateCondition = orderIn!= null && !purchaseVO2.getOrderResult().equals(orderIn.getStatus());
+										if(updateCondition){
+											//更新订单状态//返回状态和原先数据库状态不相符
+	//										Long ts = orderIn.getCreated_at_time();
+											Long ts = System.currentTimeMillis();
+											
+											int orderState = orderIn.getStatus();
+											String orderStateDetail = orderIn.getMsg();
+											purchaseVO2.setOrderBackTimeStr(DateUtil.formatAll(ts));
+											purchaseVO2.setOrderState(orderState);
+											purchaseVO2.setOrderStateDetail(orderStateDetail);
+											String res = accountPurchaseAO.updatePurchaseState(new PurchasePo(purchaseVO2.getOrderId(), null, ts, orderState, null, orderStateDetail));//purchaseVO2.getOrderId(), orderState, orderStateDetail,ts
+											System.out.println("更新订单状态数据库结果："+res);
+											//把查询的结果利用接口推给下游
+											//更新订单表
+											purchaseDAO.updatePurchaseState(new PurchasePo(purchaseVO2.getOrderId(), null, System.currentTimeMillis(), orderIn.getStatus(), OrderResultEnum.SUCCESS.getCode(), orderIn.getMsg()));//purchaseVO2.getOrderId(), System.currentTimeMillis(), orderIn.getStatus(), orderIn.getMsg(), null
+										}
 									}
 								}
 							}

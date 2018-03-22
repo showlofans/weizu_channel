@@ -54,7 +54,7 @@ public class UnicomAync implements TelBaseInterface{
 	
 	@Override
 	public ChargeDTO chargeTel(TelBaseP baseP) {
-		String telParams = toTelParams();
+		String telParams = toTelParams(baseP);
 		String xmlStr = HttpRequest.sendGet(baseP.getEpo().getEpPurchaseIp(), telParams);
 		Map<String, Object> resultMap = WXPayUtil.readStringXmlOut(xmlStr);
 		String codeStr = resultMap.get("code").toString();
@@ -72,7 +72,7 @@ public class UnicomAync implements TelBaseInterface{
 
 	@Override
 	public TelOrderStateDTO getTelOrderState(TelBaseP baseP) {
-		String params = toTelOrderParams();
+		String params = toTelOrderParams(baseP);
 		String xmlStr = HttpRequest.sendGet(baseP.getEpo().getEpOrderStateIp(), params);
 		
 		return readOrderXmlStr(xmlStr, baseP);
@@ -132,7 +132,7 @@ public class UnicomAync implements TelBaseInterface{
 	}
 	
 	@Override
-	public String toTelParams() {
+	public String toTelParams(TelBaseP telBaseP) {
 		ExchangePlatformPo epPo = telBaseP.getEpo();
 		String epOtherP = epPo.getEpOtherParams();
 		StringBuffer signBuff = new StringBuffer();
@@ -172,7 +172,7 @@ public class UnicomAync implements TelBaseInterface{
 //	}
 
 	@Override
-	public String toTelOrderParams() {
+	public String toTelOrderParams(TelBaseP telBaseP) {
 		ExchangePlatformPo epPo = telBaseP.getEpo();
 		String epOtherP = epPo.getEpOtherParams();
 		String userId = epOtherP.substring(epOtherP.indexOf("=")+1,epOtherP.indexOf("&"));
@@ -215,14 +215,14 @@ public class UnicomAync implements TelBaseInterface{
 		StringBuffer paramsBuff = new StringBuffer();
 		paramsBuff.append("sign="+sign);
 		paramsBuff.append("&userId="+userId);
-		String xmlStr = HttpRequest.sendGet(epPo.getEpOrderStateIp(), paramsBuff.toString());
+		String xmlStr = HttpRequest.sendGet(epPo.getEpBalanceIp(), paramsBuff.toString());
 		Document doc = null;
 		try {
 			// 将字符串转为XML
 			doc = DocumentHelper.parseText(xmlStr);
 			// 获取根节点
 			Element rootElt = doc.getRootElement();
-			String code = rootElt.element("status").getText();
+			String code = rootElt.element("code").getText();
 			int tipCode = OrderResultEnum.SUCCESS.getCode();
 			if(!code.equals("00")){
 				tipCode = OrderResultEnum.ERROR.getCode();

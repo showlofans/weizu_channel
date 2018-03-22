@@ -66,6 +66,9 @@ public class ValiUser {
 		//userapikey作为参数穿进去
 		
 //		AgencyBackwardPo backPo1 = agencyBackwardDao.get(new WherePrams("user_name","=",userName));
+		if(StringHelper.isEmpty(userName) || StringHelper.isEmpty(sign)){
+			return null;
+		}
 		AgencyBackwardPo backPo = agencyVODao.getSecondAgency(userName);
 //		AgencyBackwardPo backPo = agencyVODao.
 		if(backPo == null){

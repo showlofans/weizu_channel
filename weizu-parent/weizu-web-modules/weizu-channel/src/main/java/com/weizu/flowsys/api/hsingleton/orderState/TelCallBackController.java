@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.weizu.flowsys.core.util.hibernate.util.StringHelper;
 import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.web.trade.ao.AccountPurchaseAO;
@@ -43,8 +44,12 @@ public class TelCallBackController {
 	@RequestMapping(value=TelCallBackURL.UNICOMAYNC,method=RequestMethod.GET)
 	public String UnicomAyncCallBack(String userId,String bizId, String ejId, 
 			String downstreamSerialno,String status, String sign){
-		System.out.println("bizId:"+bizId+"ejId:"+ejId+"downstreamSerialno:"+downstreamSerialno+"status:"+status);
+		System.out.println("bizId:"+bizId+"ejId:"+ejId+"\tdownstreamSerialno:"+downstreamSerialno+"\tstatus:"+status);
 		String successTag = "success";
+		if(StringHelper.isEmpty(downstreamSerialno)){
+			successTag = "未找到该订单";
+			return successTag;
+		}
 		long orderId = Long.parseLong(downstreamSerialno);
         
         PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);//数据库没有没有上游订单号

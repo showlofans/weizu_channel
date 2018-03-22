@@ -46,7 +46,7 @@ public interface TelBaseInterface {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2018年3月17日 下午2:32:23
 	 */
-	String toTelParams();
+	String toTelParams(TelBaseP baseP);
 	
 	
 	/**
@@ -55,5 +55,5 @@ public interface TelBaseInterface {
 	 * @author:微族通道代码设计人 宁强
 	 * @createTime:2018年3月17日 下午2:33:35
 	 */
-	String toTelOrderParams();
+	String toTelOrderParams(TelBaseP baseP);
 }

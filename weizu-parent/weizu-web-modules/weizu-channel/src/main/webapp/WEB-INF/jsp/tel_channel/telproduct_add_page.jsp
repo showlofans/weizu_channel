@@ -50,7 +50,9 @@
 				</span>
 			</div>
 		</div>
-		<input type="hidden" name="epName" value="${resultMap.epList[0].epName }">
+		<c:forEach items="${resultMap.epList }" var="ep" varStatus="vs1">
+			<c:if test="${ep.id == resultMap.epId }"> <input type="hidden" name="epName" value="${ep.epName }"></c:if>
+		</c:forEach>
 		<div class="row cl">
 		<label class="form-label col-xs-4 col-sm-3">运营商类型：</label>
 			<div class="formControls col-xs-8 col-sm-9">

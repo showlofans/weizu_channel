@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.aiyi.base.pojo.PageParam;
 import com.weizu.flowsys.api.hsingleton.HSingletonFactory;
+import com.weizu.flowsys.api.hsingleton.TelBaseInterface;
 import com.weizu.flowsys.api.singleton.BalanceDTO;
 import com.weizu.flowsys.api.singleton.BaseInterface;
 import com.weizu.flowsys.api.singleton.BaseP;
@@ -284,15 +285,17 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 			BaseP baseP = new BaseP();
 			baseP.setEpo(epPo);
 			BaseInterface bi = null;
+			TelBaseInterface tbi = null;
 			if(PgServiceTypeEnum.PGCHARGE.getValue().equals(epFor)){//调用流量接口仓库
 				bi = SingletonFactory.getSingleton(epEngId, baseP);
 			}
-//			else if(PgServiceTypeEnum.TELCHARGE.getValue().equals(epFor)){
-//				bi = HSingletonFactory.getSingleton(epEngId, baseP);
-//			}
+			else if(PgServiceTypeEnum.TELCHARGE.getValue().equals(epFor)){
+				tbi = HSingletonFactory.getSingleton(epEngId);
+			}
+			
 			String msg = epPo.getEpName() + ":余额更新失败";
 			boolean successTag = false;  
-			if(bi != null && bi.getBalance() != null){
+			if(bi != null){
 				BalanceDTO balanceDTO = bi.getBalance();
 				if(balanceDTO != null && OrderResultEnum.SUCCESS.getCode().equals(balanceDTO.getTipCode())){
 					epPo.setEpBalance(balanceDTO.getAccountBalance());
@@ -304,7 +307,19 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 						successNum++;
 					}
 				}
-			}
+			}else if(tbi != null){
+				BalanceDTO balanceDTO = tbi.getBalance(epPo);
+				if(balanceDTO != null && OrderResultEnum.SUCCESS.getCode().equals(balanceDTO.getTipCode())){
+					epPo.setEpBalance(balanceDTO.getAccountBalance());
+					//更新平台余额
+					int res = exchangePlatformDao.updateLocal(epPo);
+					if(res > 0){
+						msg = epPo.getEpName() + ":余额更新成功";
+						successTag = true;
+						successNum++;
+					}
+				}
+			} 
 			if(!successTag){
 				errorNum++;
 			}

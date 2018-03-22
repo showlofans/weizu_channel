@@ -335,7 +335,8 @@
 				</c:otherwise>
 			</c:choose>
 				<li><a href="/view/mine/jk-doc/jk-doc.html" title="南昌微族流量接口文档" target="_blank">流量接口文档</a></li>
-				<li><a data-href="http://htmlify.wps.cn/doc/index.html?ksyun=hPT1Afio/word.html&theme=clear" data-title="平台操作指南" href="javascript:void(0)">平台操作指南</a></li>
+				<li><a href="/view/mine/jk-doc/tel-doc.html" title="南昌微族话费接口文档" target="_blank">话费接口文档</a></li>
+				<!-- <li><a data-href="http://htmlify.wps.cn/doc/index.html?ksyun=hPT1Afio/word.html&theme=clear" data-title="平台操作指南" href="javascript:void(0)">平台操作指南</a></li> -->
 			</ul>
 		</dd>
 	</dl>

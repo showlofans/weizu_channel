@@ -18,8 +18,8 @@ public class TelCallBackURL extends BaseURL {
 	
 	/**
 	 * 连城连回调
-	 * <br>/flowsys/telcallBack/unicomAync
+	 * <br>/flowsys/telcallBack/unicomAync.do
 	 */
-	public static final String UNICOMAYNC = "/unicomAync";
+	public static final String UNICOMAYNC = "/unicomAync" + DYNAMIC_WEB_SUFFIX;
 	
 }

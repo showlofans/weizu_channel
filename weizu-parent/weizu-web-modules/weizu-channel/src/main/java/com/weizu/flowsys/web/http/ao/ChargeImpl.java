@@ -204,8 +204,11 @@ public class ChargeImpl implements IChargeFacet {
 		Map<String, Object> rateParamsMap = getTelRateMapByParams(chargeTelParams, backPo, scopeMap);
 		TelRatePo telRatePo = null;
 		TelChannelPo telChannelPo = null;
+		Double chargeValue = chargeTelParams.getChargeValue();
+		Double chargeAmount = 0d ;
 		try {
 			telRatePo = telRateDao.getOneTelRateForCharge(rateParamsMap);
+			chargeAmount = NumberTool.mul(telRatePo.getActiveDiscount(), chargeValue);
 //			TelChannelPo telChannel = telChannelAO.selectByIdType(telRatePo.getTelchannelId(), chargeTelParams.getServiceType());
 		} catch (TooManyResultsException e) {
 			chargeEnum = ChargeStatusEnum.SCOPE_RATE_UNDEFINED;
@@ -221,8 +224,6 @@ public class ChargeImpl implements IChargeFacet {
 			chargeLogDao.add(chargeLog);
 			return chargeTelPo;
 		}
-		Double chargeValue = chargeTelParams.getChargeValue();
-		Double chargeAmount = NumberTool.mul(telRatePo.getActiveDiscount(), chargeValue);
 		
 		Double beforeBalance = accountPo.getAccountBalance();
 		if(beforeBalance < chargeAmount){
@@ -329,11 +330,17 @@ public class ChargeImpl implements IChargeFacet {
 				}
 			}
 		}
+		//下游正常返回，开始记录下游日志
+		chargeTelPo = new ChargeTel(ChargeStatusEnum.CHARGE_SUCCESS.getValue(), ChargeStatusEnum.CHARGE_SUCCESS.getDesc(), new ChargeTelPo(orderId, chargeTel, chargeValue, chargeAmount, billType));
+//		String accountDesc = "超管账户更新："+ OrderResultEnum.getEnum(supperRecAddTag).getMsg() + ",传单账户更新："+ OrderResultEnum.getEnum(recAddTag).getMsg();
+		ChargeLog chargeLogBack = new ChargeLog(JSON.toJSONString(chargeTelParams),JSON.toJSONString(chargeTelPo), orderId, chargeTel, chargeTelPo.getTipCode(), orderArriveTime,AgencyForwardEnum.BACKWARD.getValue(),chargeTelParams.getRequestIp());
+		chargeLogDao.add(chargeLogBack);
+		
 		String logInContent = JSON.toJSONString(chargeTelParams); 
 		ChargeTel chargeOne = null;
 		String logOutContent = "";
 		int tipCode = -1;
-		boolean canChargeByBI =  purResult > 0 && supperApAddRes > 0 && supperRecAddRes > 0 && recAddRes > 0 && apAddRes > 0;
+		boolean canChargeByBI = !isChannelStateClose && purResult > 0 && supperApAddRes > 0 && supperRecAddRes > 0 && recAddRes > 0 && apAddRes > 0;
 		if(canChargeByBI){
 			TelBaseInterface tbi = HSingletonFactory.getSingleton(epPo.getEpEngId());
 			ChargeDTO chargeDTO = tbi.chargeTel(new TelBaseP(orderId, chargeTel, epPo, telProductPo, orderArriveTime+"", billType));
@@ -372,19 +379,19 @@ public class ChargeImpl implements IChargeFacet {
 				tipCode = chargeDTO.getTipCode();
 			}
 			purchaseDAO.updatePurchaseState(purchasePo);
+			//记录上游日志
+			ChargeLog chargeLog = new ChargeLog(logInContent, logOutContent, purchasePo.getOrderId(), purchasePo.getChargeTel(), tipCode, orderArriveTime, AgencyForwardEnum.FOWARD.getValue(), epPo.getEpPurchaseIp());
+			chargeLogDao.add(chargeLog);
 		}
-		else{
-			chargeOne = new ChargeTel(-1, "订单添加失败，没有调用上游接口", new ChargeTelPo(orderId, chargeTel, chargeValue, chargeAmount, chargeTelParams.getBillType()));
-			logOutContent =  JSON.toJSONString(chargeOne);
-			tipCode = chargeOne.getTipCode();
-		}
+//		else{//没调接口
+//			chargeOne = new ChargeTel(-1, "订单添加失败，没有调用上游接口", new ChargeTelPo(orderId, chargeTel, chargeValue, chargeAmount, chargeTelParams.getBillType()));
+//			logOutContent =  JSON.toJSONString(chargeOne);
+//			tipCode = chargeOne.getTipCode();
+//		}
 //			//增加订单
 //			purResult = purchaseDAO.addPurchase(purchasePo);
 		//需要在添加订单之后，再添加账户订单关联记录
 		
-		//记录上游日志
-		ChargeLog chargeLog = new ChargeLog(logInContent, logOutContent, purchasePo.getOrderId(), purchasePo.getChargeTel(), tipCode, orderArriveTime, AgencyForwardEnum.FOWARD.getValue(), epPo.getEpPurchaseIp());
-		chargeLogDao.add(chargeLog);
 		return chargeTelPo;
 	}
 	@Transactional
@@ -778,23 +785,25 @@ public class ChargeImpl implements IChargeFacet {
 		rateParamsMap.put("platformUser", AgencyTagEnum.PLATFORM_USER.getValue());
 		rateParamsMap.put("dataUser", null);
 		rateParamsMap.put("serviceType", serviceType);
-		String province = resMap.get("scopeName").toString();
-		Provinces provinces = procincesDAO.get(new WherePrams("province", "like", province));
-		String provinceId = provinces.getProvinceid();
-		boolean cityProIn = StringHelper.isNotEmpty(provinceId);
-		boolean cityIn = false;
-		if(TelServiceTypeEnum.CITY.getValue() == serviceType){
-			String chargeTelCity = resMap.get("chargeTelCity").toString();
-			Cities cities = citiesDao.get(new WherePrams("city", "like", chargeTelCity));
-			String cityId = cities.getCityid();
-			cityIn = StringHelper.isNotEmpty(cityId) && cityProIn;//加入市的条件
-			rateParamsMap.put("cityid", cityId);
+		if(TelServiceTypeEnum.NATION_WIDE.getValue() != serviceType){//排除全国类型，归属地带来的地区查找问题
+			//归属地查询
+			String province = resMap.get("scopeName").toString();
+			Provinces provinces = procincesDAO.get(new WherePrams("province", "like", province));
+			String provinceId = provinces.getProvinceid();
+			boolean cityProIn = StringHelper.isNotEmpty(provinceId);
+			boolean cityIn = false;
+			if(TelServiceTypeEnum.CITY.getValue() == serviceType){
+				String chargeTelCity = resMap.get("chargeTelCity").toString();
+				Cities cities = citiesDao.get(new WherePrams("city", "like", chargeTelCity));
+				String cityId = cities.getCityid();
+				cityIn = StringHelper.isNotEmpty(cityId) && cityProIn;//加入市的条件
+				rateParamsMap.put("cityid", cityId);
+			}
+			boolean provinceIn = serviceType == TelServiceTypeEnum.PROVINCE.getValue() || cityIn ;//加入省份参数条件
+			if(provinceIn && cityProIn){
+				rateParamsMap.put("provinceid", provinceId);
+			}
 		}
-		boolean provinceIn = serviceType == TelServiceTypeEnum.PROVINCE.getValue() || cityIn ;//加入省份参数条件
-		if(provinceIn && cityProIn){
-			rateParamsMap.put("provinceid", provinceId);
-		}
-		
 		String otype = resMap.get("operatorType").toString();
 		int operatorName = Integer.parseInt(otype);
 		rateParamsMap.put("operatorName", operatorName);
