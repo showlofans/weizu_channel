@@ -334,7 +334,7 @@
   			has_call_back = #{hasCallBack}
   		</if>
   	</set>
-  	<where>order_id = #{orderId}</where>
+  	<where>order_id = #{orderId}  or second_order_id =  #{orderId}</where>
   </update>
   
   <!-- 根据参数订单总记录数 -->

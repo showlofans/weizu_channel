@@ -107,6 +107,7 @@ public class ChargeTelController {
 //				telParams.setRateFor(agencyVO.getAgencyTag());
 //			}
 //				telParams.setRateFor(AgencyTagEnum.PLATFORM_USER.getValue());
+			
 			telRateAO.getRateForCharge(resultMap,telParams,agencyVO.getId(),agencyVO.getRootAgencyId());
 //			if(getRateList != null && getRateList.size() > 0){
 //				resultMap.put("getRateList", getRateList);

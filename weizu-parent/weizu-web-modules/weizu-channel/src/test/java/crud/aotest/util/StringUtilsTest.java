@@ -1,9 +1,14 @@
 //package crud.aotest.util;
 //
+//import java.util.ArrayList;
 //import java.util.Date;
+//import java.util.HashMap;
 //import java.util.HashSet;
+//import java.util.List;
+//import java.util.Map;
 //import java.util.Set;
 //
+//import com.alibaba.fastjson.JSON;
 //import com.weizu.flowsys.core.util.NumberTool;
 //import com.weizu.web.foundation.DateUtil;
 //
@@ -47,15 +52,30 @@
 ////		System.out.println(date == null);
 ////		System.out.println("2018-01-29".length());
 //		
-//		String key = "qqqqqqqqqqqqqq360111199605236014";
-////		System.out.println(key.length());
-////		double d = 3.226d;
-//////		d = NumberTool.round(d, 2);//四舍五入保留两位
-////		int m = (int)(d*100);
-////		System.out.println(m);
-//		Set<String> names = new HashSet<String>();
-//		StringBuffer sb = new StringBuffer(key);
-//		System.out.println(sb.toString().contains("qqqqqqqqqqqqqq360111199605236014")); 
+////		String key = "qqqqqqqqqqqqqq360111199605236014";
+//////		System.out.println(key.length());
+//////		double d = 3.226d;
+////////		d = NumberTool.round(d, 2);//四舍五入保留两位
+//////		int m = (int)(d*100);
+//////		System.out.println(m);
+////		Set<String> names = new HashSet<String>();
+////		StringBuffer sb = new StringBuffer(key);
+////		System.out.println(sb.toString().contains("qqqqqqqqqqqqqq360111199605236014")); 
+//		
+//		Map<String,Object> map1 = new HashMap<String,Object>();
+//		Map<String,Object> map = new HashMap<String,Object>();
+//		List<Map<String,Object>> mapList = new ArrayList<Map<String,Object>>();
+//		map.put("req_sn", "rs_100104");
+//		map.put("mob_no", "13699562589");
+//		map.put("prod_code", "100M_QG"); 
+//		
+//		map1.put("req_sn", "rs_100103");
+//		map1.put("mob_no", "13699562589");
+//		map1.put("prod_code", "100M_QG"); 
+//		mapList.add(map1);
+//		mapList.add(map);
+//		String jsonStr = JSON.toJSONString(mapList);
+//		System.out.println(jsonStr);
 ////		int count = 0;
 ////		File[]fileList = new File("D:\\Documents\\GitHub\\weizu_channel\\weizu-parent\\weizu-web-modules\\weizu-channel").listFiles();
 ////		for (File file : fileList) {

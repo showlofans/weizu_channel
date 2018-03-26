@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
+import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.TelServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.TelChannelTagEnum;
 import com.weizu.flowsys.web.activity.dao.ITelRateDao;
@@ -55,16 +56,10 @@ public class TelRateAOImpl implements TelRateAO {
 //		AgencyTagEnum[] agencyEs = AgencyTagEnum.values();
 		
 		
-		long totalRecord = 0;
-//		boolean ifData = false;
-		params.put("agencyId", agencyId);
-		params.put("rootAgencyId", rootAgencyId);
 //		if(rootAgencyId != null && rootAgencyId != 0){//不是超管
 //			params.put("rateForPlatform", CallBackEnum.POSITIVE.getValue());
 //		}
 //		rateFor = AgencyTagEnum.PLATFORM_USER.getValue();
-		params.put("platformUser", AgencyTagEnum.PLATFORM_USER.getValue());
-		params.put("dataUser", null);
 		
 //		for (int i = 0; i < agencyEs.length; i++) {
 //			if(isPlatUser){
@@ -95,16 +90,33 @@ public class TelRateAOImpl implements TelRateAO {
 //				isPlatUser = !isPlatUser;
 //			}
 //		}
-		totalRecord = telRateDao.countTelRateForCharge(params);
-		if(totalRecord > 0){
-			List<GetTelRatePo> telRateList = telRateDao.getTelRateForCharge(params);
-			resultMap.put("getRateList", telRateList);
+		if(rootAgencyId == 0){//超管，获取通道折扣
+			params.put("telchannelState", ChannelStateEnum.OPEN.getValue());
+			List<GetTelRatePo> telRateList = telChannelDao.getTelChannelForCharge(params);
+			if(telRateList != null && telRateList.size() > 0){
+				resultMap.put("getRateList", telRateList);
+			}else{
+				resultMap.put("msg", "没有该话费折扣");
+			}
+		}else{
+			long totalRecord = 0;
+//			boolean ifData = false;
+			params.put("agencyId", agencyId);
+			params.put("rootAgencyId", rootAgencyId);
+			params.put("platformUser", AgencyTagEnum.PLATFORM_USER.getValue());
+			params.put("dataUser", null);
+			totalRecord = telRateDao.countTelRateForCharge(params);
+			if(totalRecord > 0){
+				List<GetTelRatePo> telRateList = telRateDao.getTelRateForCharge(params);
+				resultMap.put("getRateList", telRateList);
 //			if(ifData){
 //				resultMap.put("dataUser", "yes");
 //			}
-		}else{
-			resultMap.put("msg", "没有该话费折扣");
+			}else{
+				resultMap.put("msg", "没有该话费折扣");
+			}
 		}
+		
 //		return telRateList;
 	}
 	private Map<String,Object> getParamsByTelChannel(TelChannelParams telParams){

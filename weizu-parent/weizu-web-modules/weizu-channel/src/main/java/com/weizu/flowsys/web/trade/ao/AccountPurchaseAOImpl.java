@@ -73,13 +73,15 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 		Long realBackTime = purchasePo1.getOrderBackTime();
 		if(realBackTime == null){
 			realBackTime = System.currentTimeMillis();
-			purchasePo1.setOrderBackTime(System.currentTimeMillis());
+			purchasePo1.setOrderBackTime(realBackTime);
 		}
 		Integer orderResult = purchasePo1.getOrderResult();
-		Long orderId = purchasePo1.getOrderId();//参数订单号id
+		Long orderId = purchasePo1.getOrderId();//参数订单号id(最后一个订单号)
 		PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
-		orderId = purchasePo.getOrderId();
-		purchasePo1.setOrderId(purchasePo.getOrderId()); //得到真正从下级代理商传过来的orderId
+		if(purchasePo.getSecondOrderId() != null){
+			orderId = purchasePo.getOrderId();
+			purchasePo1.setOrderId(orderId);
+		}
 		String orderResultDetail = purchasePo1.getOrderResultDetail();
 		
 		//失败直接返款判定
@@ -138,7 +140,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 										//一个代理商账号，一个订单号只能有一笔补款的消费记录
 										recordPoList.add(new ChargeRecordPo(realBackTime, orderAmount,
 												accountBeforeBalance, accountAfterPo.getAccountBalance(), 
-												AccountTypeEnum.Replenishment.getValue(), accountId,  1 , orderId));
+												AccountTypeEnum.Replenishment.getValue(), accountId,  purchasePo.getPurchaseFor() , orderId));
 										//根据已有的扣款记录去添加补款记录
 										AccountPurchasePo apPo = accountPurchaseDao.getAPByAccountType(orderId, accountId, AccountTypeEnum.DECREASE.getValue());
 										apPo.setRecordId(recordId);

@@ -95,8 +95,30 @@
 	<if test="serviceType == 1 ">,pc.province</if> <!-- 省内和市内 -->
   	<if test="serviceType == 2">,pc.province,ct.city</if><!-- 市内 -->
   </sql>
-  
-  
+  <!-- 话费折扣获取 -->
+  <resultMap type="com.weizu.flowsys.web.trade.pojo.GetTelRatePo" id="GetTelRateMap">
+    <result column="bill_type" property="billType" jdbcType="INTEGER" />
+    <result column="active_discount" property="activeDiscount" jdbcType="DOUBLE" />
+    <!-- 话费编码 -->
+    <result column="charge_value" property="chargeValue" jdbcType="INTEGER" />
+    <result column="tel_code" property="telCode" jdbcType="VARCHAR" />
+    <result column="telchannel_id" property="telchannelId" jdbcType="BIGINT" />
+    <result column="telProduct_id" property="telProductId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="GetTelRate_Column_List">
+  	td.bill_type,td.telchannel_discount active_discount,tp.tel_code,tp.charge_value,
+  	td.id telchannel_id,tp.id telProduct_id
+  </sql>
+  <!-- 话费通道折扣获取 -->
+  <select id="getTelChannelForCharge" parameterType="map" resultMap="GetTelRateMap">
+  	select <include refid="GetTelRate_Column_List"></include>
+  	from <include refid="t_telchannel"></include> td
+  	INNER JOIN <include refid="t_tel_product"></include> tp
+	on td.tel_product_id=tp.id
+	<where>
+		<include refid="conditon_sql"></include>
+	</where>
+  </select>
   
   <!-- 统计我的话费通道总记录 -->
   <select id="countMyTelChannel" parameterType="map" resultType="long">
@@ -286,9 +308,6 @@
 	 </if>
 	<if test="end != null">
 	 	, #{end}
-	 </if>
-	 <if test="start == null &amp; end == null">
-	 	limit 0,10
 	 </if>
   </select>
   <!-- 通过id和ServiceType获得通道的(含地区)详细信息 -->

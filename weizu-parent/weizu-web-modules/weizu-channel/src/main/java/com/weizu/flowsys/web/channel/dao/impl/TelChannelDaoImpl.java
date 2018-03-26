@@ -16,6 +16,7 @@ import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.web.channel.dao.ITelChannelDao;
 import com.weizu.flowsys.web.channel.pojo.TelChannelParams;
 import com.weizu.flowsys.web.channel.pojo.TelChannelPo;
+import com.weizu.flowsys.web.trade.pojo.GetTelRatePo;
 
 /**
  * @description: 话费通道dao层实现类
@@ -64,6 +65,12 @@ public class TelChannelDaoImpl extends DaoImpl<TelChannelPo, Long> implements IT
 		params.put("bind", BindStateEnum.BIND.getValue());//绑定状态
 		params.put("useOpen", ChannelUseStateEnum.OPEN.getValue());
 		return sqlSessionTemplate.selectOne("countMyTelChannel",params);
+	}
+
+	@Override
+	public List<GetTelRatePo> getTelChannelForCharge(Map<String, Object> params) {
+		
+		return sqlSessionTemplate.selectList("getTelChannelForCharge", params);
 	}
 	
 

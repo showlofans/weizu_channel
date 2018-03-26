@@ -231,8 +231,11 @@ public class ExchangePlatformAOImpl implements ExchangePlatformAO {
 			if(epPo.getEpCallBack() == null){
 				epPo.setEpCallBack(CallBackEnum.NEGATIVE.getValue());
 			}
-			String epUserPass = Hash.BASE_UTIL.encode(epPo.getEpUserPass());
-			epPo.setEpUserPass(epUserPass);
+			if(!epPo.getEpUserPass().equals(ep.getEpUserPass())){
+				String epUserPass = Hash.BASE_UTIL.encode(epPo.getEpUserPass());
+				epPo.setEpUserPass(epUserPass);
+			}
+			
 			int upRes = exchangePlatformDao.updateLocal(epPo);
 			if(upRes > 0){
 				flag = "success";
