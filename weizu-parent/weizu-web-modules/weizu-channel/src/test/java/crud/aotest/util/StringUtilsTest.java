@@ -10,6 +10,7 @@
 //
 //import com.alibaba.fastjson.JSON;
 //import com.weizu.flowsys.core.util.NumberTool;
+//import com.weizu.flowsys.util.StringUtil2;
 //import com.weizu.web.foundation.DateUtil;
 //
 //public class StringUtilsTest {
@@ -62,6 +63,7 @@
 ////		StringBuffer sb = new StringBuffer(key);
 ////		System.out.println(sb.toString().contains("qqqqqqqqqqqqqq360111199605236014")); 
 //		
+//		Map<String,Object> paramsMap = new HashMap<String,Object>();
 //		Map<String,Object> map1 = new HashMap<String,Object>();
 //		Map<String,Object> map = new HashMap<String,Object>();
 //		List<Map<String,Object>> mapList = new ArrayList<Map<String,Object>>();
@@ -74,8 +76,14 @@
 //		map1.put("prod_code", "100M_QG"); 
 //		mapList.add(map1);
 //		mapList.add(map);
+//		
 //		String jsonStr = JSON.toJSONString(mapList);
-//		System.out.println(jsonStr);
+//		paramsMap.put("data", mapList);
+//		paramsMap.put("code", 1);
+//		String jsonStr2 = JSON.toJSONString(paramsMap);
+//		System.out.println(jsonStr2);
+//		
+//		
 ////		int count = 0;
 ////		File[]fileList = new File("D:\\Documents\\GitHub\\weizu_channel\\weizu-parent\\weizu-web-modules\\weizu-channel").listFiles();
 ////		for (File file : fileList) {

@@ -57,10 +57,15 @@ public class CallBackURL extends BaseURL{
 	 */
 	public static final String HONGJIA = "/Hongjia"+ DYNAMIC_WEB_SUFFIX;
 	/**
-	 * 流量汇系统回调接口<br>
+	 * 彩趣流量汇系统回调接口<br>
 	 * 真实地址：http://120.55.162.224/flowsys/callBack/LiuLiangHui.do<br>
 	 */
 	public static final String LIULIANGHUI = "/LiuLiangHui"+ DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 杭州弯流流量系统回调接口<br>
+	 * 真实地址：http://www.91weizu.cn/flowsys/callBack/ctra.do<br>
+	 */
+	public static final String CTRA = "/ctra"+ DYNAMIC_WEB_SUFFIX;
 	
 	
 	

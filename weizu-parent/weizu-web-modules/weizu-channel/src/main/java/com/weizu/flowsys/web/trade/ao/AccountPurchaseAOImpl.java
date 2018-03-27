@@ -277,7 +277,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 							ap = accountPurchaseDao.ap_addList(apList);
 						}
 						//更新订单表(只更新超管的订单详情)
-						pur = purchaseDAO.updatePurchaseState(new PurchasePo(orderId, null, realBackTime, orderResult, null, orderResultDetail));
+						pur = purchaseDAO.updatePurchaseState(new PurchasePo(orderId, null, realBackTime, orderResult, OrderResultEnum.SUCCESS.getCode(), orderResultDetail));
 						
 					}
 			}else{
