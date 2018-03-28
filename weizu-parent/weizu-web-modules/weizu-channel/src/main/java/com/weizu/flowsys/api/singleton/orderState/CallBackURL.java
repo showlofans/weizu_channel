@@ -66,6 +66,11 @@ public class CallBackURL extends BaseURL{
 	 * 真实地址：http://www.91weizu.cn/flowsys/callBack/ctra.do<br>
 	 */
 	public static final String CTRA = "/ctra"+ DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 智胜新-生东网络-格科恒信息平台回调接口<br>
+	 * 真实地址：http://www.91weizu.cn/flowsys/callBack/flux.do<br>
+	 */
+	public static final String FLUX = "/flux"+ DYNAMIC_WEB_SUFFIX;
 	
 	
 	

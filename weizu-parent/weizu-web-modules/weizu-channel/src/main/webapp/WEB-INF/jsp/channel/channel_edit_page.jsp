@@ -103,7 +103,7 @@
 $().ready(function() {
     $("#cnelEditForm").validate({
     	submitHandler : function(form) {
-    		var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
+    		//var index = parent.layer.getFrameIndex(window.name); //获取当前窗体索引
     		$.ajax({
     	        type: "post",
     	        data: $('form').serialize(),//表单数据
@@ -113,7 +113,8 @@ $().ready(function() {
     	        	//alert(d);
     	            if(d == 'success'){
     	                layer.msg('保存成功！');//保存成功提示
-	    	            layer.close(index); ////执行关闭
+    	                removeIframe();
+	    	            //layer.close(index); ////执行关闭
     	            }else{
     	                layer.msg('保存异常!');
     	            }

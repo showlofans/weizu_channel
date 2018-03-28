@@ -19,6 +19,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import com.weizu.flowsys.api.singleton.OrderDTO;
+import com.weizu.flowsys.api.singleton.OrderIn;
 import com.weizu.flowsys.api.singleton.ProductDTO;
 import com.weizu.flowsys.api.singleton.ProductIn;
 import com.weizu.flowsys.core.beans.WherePrams;
@@ -202,14 +204,67 @@ public class CallBack111Controller {
 			//根据订单号去更新数据库，并返回回调结果
 			
 		} catch (JSONException e) {  
-			e.printStackTrace();  
+			return "内部错误：json解析异常";  
 		}  
 		resultMap.put("code", code);
 		String returnStr = JSON.toJSONString(resultMap);
 		System.out.println("返回值："+returnStr);
 		return returnStr;
 	}
-	
+	/**
+	 * @description: 智胜新-生东网络-格科恒信息平台回调接口
+	 * @param key
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年3月28日 下午5:46:10
+	 */
+	@ResponseBody
+	@RequestMapping(value=CallBackURL.FLUX,method=RequestMethod.POST,produces="application/json;charset=UTF-8")//charset=UTF-8
+	public String fluxCallBack(@RequestBody String key){
+		String successTag = "ok";
+		
+		String statusDetail = "";
+		int myStatus = -1;
+		try {  
+			System.out.println("返回值:"+key);
+			JSONObject obj = JSON.parseObject(key);
+//			JSONObject headerObj = obj.getJSONObject("header");
+			JSONObject payloadObj = obj.getJSONObject("payload");
+			
+			JSONObject dataObj = payloadObj.getJSONObject("data");
+			String orderIdStr = dataObj.getString("orderid");
+			String orderIdApi = dataObj.getString("orderno");
+			String desc = dataObj.getString("desc");
+			String time = dataObj.getString("transtime");
+			int result = dataObj.getIntValue("result");
+			//初始化参数
+			long orderId = Long.parseLong(orderIdStr.trim());
+			
+			PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);//数据库没有没有上游订单号
+			if(purchasePo == null){
+				return "未找到该订单";
+			}
+			Boolean hasCall = OrderResultEnum.SUCCESS.getCode().equals(purchasePo.getHasCallBack());
+			String res = "";
+			if(!hasCall){//上一次没有回调成功
+				if(result == 0){
+					myStatus = OrderStateEnum.CHARGED.getValue();
+					statusDetail = OrderStateEnum.CHARGED.getDesc();
+				}else{
+					myStatus = OrderStateEnum.UNCHARGE.getValue();
+					statusDetail = desc;
+				}
+				Long chargeTime = DateUtil.strToDate(time, "").getTime();
+				res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, orderIdApi, chargeTime, myStatus,OrderResultEnum.SUCCESS.getCode() , statusDetail));
+				if(!"success".equals(res)){
+					successTag = res;
+				}
+			}
+        } catch (JSONException e) {  
+            return "内部错误";
+        } 
+		return successTag;
+	}
 	
 	
 	

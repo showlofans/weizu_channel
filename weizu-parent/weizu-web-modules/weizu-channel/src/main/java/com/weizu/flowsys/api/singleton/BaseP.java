@@ -81,7 +81,12 @@ public class BaseP {
 	public String getOrderIdApi() {
 		return orderIdApi;
 	}
-//	public String getAddParams() {
+	
+public void setOrderIdApi(String orderIdApi) {
+		this.orderIdApi = orderIdApi;
+	}
+
+	//	public String getAddParams() {
 //		return addParams;
 //	}
 //	public void setAddParams(String addParams) {
