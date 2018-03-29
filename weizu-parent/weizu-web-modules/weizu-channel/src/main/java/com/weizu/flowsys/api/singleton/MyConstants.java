@@ -48,6 +48,10 @@ public class MyConstants {
 	 * 智胜新-生东网络-格科恒信息平台英文标志
 	 */
 	public final static String FLUX_ENG = "Flux";
+	/**
+	 * 江苏卡池-网池充值平台英文标志
+	 */
+	public final static String KPOOL_ENG = "KPool";
 	
 	
 	

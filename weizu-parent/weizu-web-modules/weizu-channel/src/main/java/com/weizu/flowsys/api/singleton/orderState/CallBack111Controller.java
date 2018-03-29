@@ -134,6 +134,64 @@ public class CallBack111Controller {
 //		System.out.println(successTag);
 		return successTag;
 	}
+	/**
+	 * @description: 江苏卡池-网池充值平台回调接口
+	 * @param key
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年3月29日 下午4:22:46
+	 */
+	@ResponseBody
+	@RequestMapping(value=CallBackURL.KPOOL,method=RequestMethod.POST,produces="application/json;charset=UTF-8")//charset=UTF-8
+	public String kpoolCallBack(@RequestBody String key){
+//		System.out.println(key);
+		String successTag = "1";
+		String statusDetail = "";
+		int myStatus = -1;
+		try {  
+			JSONObject obj = JSON.parseObject(key);
+			String orderid = obj.getString("orderid");
+			String userid = obj.getString("userid");
+			String bizid = obj.getString("bizid");
+			String mobile = obj.getString("mobile");//本地订单号
+			String resultCode = obj.getString("resultCode");
+			String resultMsg = obj.getString("resultMsg");
+			String sign = obj.getString("key");
+//            System.out.println("其它参数：time-"+time+"mch_id-"+mch_id+"goods_id-"+goods_id+"phone-"+phone);
+			//初始化参数
+			long orderId = Long.parseLong(bizid.trim());
+			
+			PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);//数据库没有没有上游订单号
+			if(purchasePo == null){
+				successTag = "未找到该订单";
+				return successTag;
+			}
+			Boolean hasCall = OrderResultEnum.SUCCESS.getCode().equals(purchasePo.getHasCallBack());
+			String res = "";
+			if(!hasCall){//上一次没有回调成功
+				//Long orderBackTime = DateUtil.strToDate(report_time, null).getTime();
+				if("T00003".equals(resultCode)){
+					myStatus = OrderStateEnum.CHARGED.getValue();
+					statusDetail = OrderStateEnum.CHARGED.getDesc();
+				}else if("T00004".equals(resultCode)){
+					myStatus = OrderStateEnum.UNCHARGE.getValue();
+					statusDetail = resultMsg;
+				}
+				Long chargeTime = System.currentTimeMillis();
+				res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, orderid, chargeTime, myStatus,OrderResultEnum.SUCCESS.getCode() , statusDetail));
+				if(!"success".equals(res)){
+					successTag = res;
+				}
+			}
+			System.out.println("code:"+resultCode+"<--------->code_desc:"+resultMsg);
+			//根据订单号去更新数据库，并返回回调结果
+			
+		} catch (JSONException e) {  
+			e.printStackTrace();  
+		}  
+//		System.out.println(successTag);
+		return successTag;
+	}
 	
 	/**
 	 * @description: 杭州弯流流量系统回调接口

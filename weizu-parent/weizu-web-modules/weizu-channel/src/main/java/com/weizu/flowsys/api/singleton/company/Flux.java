@@ -1,13 +1,12 @@
 package com.weizu.flowsys.api.singleton.company;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import org.weizu.api.util.HttpRequest;
+
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.weizu.flowsys.api.singleton.BalanceDTO;
@@ -22,13 +21,11 @@ import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
-import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
 import com.weizu.flowsys.web.channel.pojo.ProductCodePo;
 import com.weizu.web.foundation.DateUtil;
 import com.weizu.web.foundation.MD5;
 import com.weizu.web.foundation.String.StringHelper;
-import com.weizu.web.foundation.http.HttpRequest;
 
 public class Flux implements BaseInterface {
 	private static Flux instance = new Flux();  
@@ -58,6 +55,7 @@ public class Flux implements BaseInterface {
 		if(returnJson == null){
 			return null;
 		}
+		System.out.println("返回值："+returnJson);
 		try {
 			JSONObject obj = JSON.parseObject(returnJson);
 			JSONObject headerObj = obj.getJSONObject("header");
@@ -149,8 +147,7 @@ public class Flux implements BaseInterface {
 					myStatus = OrderStateEnum.CHARGED.getValue();
 					msg = OrderStateEnum.CHARGED.getDesc();
 				}else{//2-尚未充值
-					msg = OrderStateEnum.CHARGING.getDesc();
-					myStatus = OrderStateEnum.CHARGING.getValue();
+					return orderDTO;
 				}
 				OrderIn orderId = new OrderIn(myStatus, msg);
             	//用我这边默认的对私账户充值

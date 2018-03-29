@@ -240,7 +240,7 @@
 												</c:when>
 												<c:otherwise>
 													<span class="label label-success radius mark">
-													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderResult=${orderStateEnum.value }&purchaseFor=${resultMap.searchParams.purchaseFor }&backStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&backEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值成功" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
+													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderResult=${orderStateEnum.value }&purchaseFor=${resultMap.searchParams.purchaseFor }&backStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&backEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }&agencyName=${purchase.agencyName }" data-title="充值成功" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
 														${orderStateEnum.desc }
 													</a>
 													</span>

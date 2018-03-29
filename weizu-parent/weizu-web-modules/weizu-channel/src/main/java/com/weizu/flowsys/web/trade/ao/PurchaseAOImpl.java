@@ -962,11 +962,11 @@ public class PurchaseAOImpl implements PurchaseAO {
 		
 		BaseInterface bi = null;
 		ChargeDTO chargeDTO = null;
-		boolean canChargeTel = valiUser.checkChargeTel(purchasePo.getChargeTel(), purchasePo.getAccountId());
-		if(!canChargeTel){
-			chargeDTO = new ChargeDTO(-1, "提交次数与标准次数不匹配或者该号码还有未回调的订单", null);
-			return chargeDTO;
-		}
+//		boolean canChargeTel = valiUser.checkChargeTel(purchasePo.getChargeTel(), purchasePo.getAccountId());
+//		if(!canChargeTel){
+//			chargeDTO = new ChargeDTO(-1, "提交次数与标准次数不匹配或者该号码还有未回调的订单", null);
+//			return chargeDTO;
+//		}
 		
 		Integer epFor = epPo.getEpFor();
 		String epEngId = epPo.getEpEngId();
@@ -1248,7 +1248,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 									OrderDTO orderDTO = bi.getOrderState();
 									if(orderDTO == null){
 										//更新订单表
-										purchaseDAO.updatePurchaseState(new PurchasePo(purchaseVO2.getOrderId(), null, System.currentTimeMillis(), null, null, ChargeStatusEnum.API_ERROR.getDesc()+"查询状态"));//purchaseVO2.getOrderId(), System.currentTimeMillis(), orderIn.getStatus(), orderIn.getMsg(), null
+//										purchaseDAO.updatePurchaseState(new PurchasePo(purchaseVO2.getOrderId(), null, System.currentTimeMillis(), null, null, ChargeStatusEnum.API_ERROR.getDesc()+"查询状态"));//purchaseVO2.getOrderId(), System.currentTimeMillis(), orderIn.getStatus(), orderIn.getMsg(), null
 									}else{
 										OrderIn orderIn = orderDTO.getOrderIn();
 										boolean updateCondition = orderIn!= null && !purchaseVO2.getOrderResult().equals(orderIn.getStatus());

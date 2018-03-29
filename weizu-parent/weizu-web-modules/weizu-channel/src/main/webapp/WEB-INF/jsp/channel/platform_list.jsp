@@ -116,7 +116,7 @@
 						</td>
 						<%-- <td class="f-14 td-manage">${platform.epUserPass }</td> --%>
 						<td class="f-14 td-manage"><div class="f-12 c-999">
-						<span data-toggle="tooltip" data-placement="top" title="${platform.epApikey }">${fn:substring(platform.epApikey,0,10)}</span>
+						<span data-toggle="popover" data-placement="top" title="${platform.epApikey }">${fn:substring(platform.epApikey,0,10)}</span>
 						</div></td>
 						<%-- <td><div class="f-12 c-999">
 						<a title="${platform.epIp }" href="${platform.epIp }" target="_blank">${fn:substring(platform.epIp,0,10)}</a><!--  onclick="Hui_admin_tab(this)" -->
@@ -133,10 +133,10 @@
 							<%-- <a style="text-decoration:none" onClick="platform_del('/flowsys/platform/platform_del.do','${platform.id}','${platform.epName }')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> --%> 
 							<a style="text-decoration:none" class="ml-5" onClick="platform_edit('平台信息编辑','/flowsys/platform/platform_edit_page.do?epId=${platform.id}','10001')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> <!-- <a style="text-decoration:none" class="ml-5" onClick="platform_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a> --></td>
 						<td><div class="f-12 c-999">
-						<span data-toggle="tooltip"  data-placement="top" style="text-decoration: none;" title="${platform.epIp }"><a title="${platform.epIp }" href="${platform.epIp }" target="_blank">${platform.epPurchaseIp }</a></span>
+						<span data-toggle="popover"  data-placement="top" style="text-decoration: none;" title="${platform.epIp }"><a title="${platform.epIp }" href="${platform.epIp }" target="_blank">${platform.epPurchaseIp }</a></span>
 						</div></td>
 						<td>
-							${platform.epOtherParams }
+							<span data-toggle="popover" data-placement="top" title="${platform.epOtherParams }">${fn:substring(platform.epOtherParams,0,10)}}</span>
 						</td>
 					</tr>
 				</c:forEach>

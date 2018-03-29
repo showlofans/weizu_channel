@@ -3,6 +3,7 @@ package com.weizu.flowsys.api.singleton;
 import com.weizu.flowsys.api.singleton.company.Ctra;
 import com.weizu.flowsys.api.singleton.company.Flux;
 import com.weizu.flowsys.api.singleton.company.Hongjia;
+import com.weizu.flowsys.api.singleton.company.KPool;
 import com.weizu.flowsys.api.singleton.company.Lefeng;
 import com.weizu.flowsys.api.singleton.company.LiuLiangHui;
 import com.weizu.flowsys.api.singleton.company.Lljypt;
@@ -62,6 +63,10 @@ public class SingletonFactory {
 		//智胜新-生东网络-格科恒信息平台英文标志
 		else if(MyConstants.FLUX_ENG.equals(epEngId)){
 			bi = Flux.getInstance(epEngId, baseParams);
+		}
+		//江苏卡池-网池充值平台英文标志
+		else if(MyConstants.KPOOL_ENG.equals(epEngId)){
+			bi = KPool.getInstance(epEngId, baseParams);
 		}
 		
 		return bi;
