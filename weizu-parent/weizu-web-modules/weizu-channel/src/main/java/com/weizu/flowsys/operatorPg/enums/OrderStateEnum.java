@@ -8,23 +8,23 @@ import java.util.Map;
 public enum OrderStateEnum {
 	
 	/**
-	 * 未充值
+	 * 未充值-8
 	 */
 	WEICHONG("系统：未充",8),
 	/**
-	 * 等待充值
+	 * 等待充值-4
 	 */
 	DAICHONG("系统：待充",4),
 	/**
-	 * 正在充值
+	 * 正在充值-2
 	 */
 	CHARGING("系统：正在充值",2),
 	/**
-	 * 充值成功
+	 * 充值成功-1
 	 */
 	CHARGED("系统：成功",1),
 	/**
-	 * 充值失败
+	 * 充值失败-0
 	 */
 	UNCHARGE("系统：失败",0);
 	

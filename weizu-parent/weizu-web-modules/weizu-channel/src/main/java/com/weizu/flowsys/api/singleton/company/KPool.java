@@ -62,7 +62,6 @@ public class KPool implements BaseInterface {
 			 	if(StringHelper.isEmpty(result) || "exception".equals(result)){
 			 		return null;
 			 	}
-			 	System.out.println("返回值："+ result);
 	            JSONObject obj = JSON.parseObject(result);
 	            String resultCode = obj.getString("resultCode");
 	    	    String resultMsg = obj.getString("resultMsg");
@@ -71,6 +70,8 @@ public class KPool implements BaseInterface {
 	            	chargeDTO = new ChargeDTO(OrderResultEnum.SUCCESS.getCode(), resultMsg, new ChargeOrder(resultMsg, baseParams.getChargeTel(), baseParams.getProductCodePo().getProductCode(), 0));
 	            }else{
 	            	chargeDTO = new ChargeDTO(OrderResultEnum.ERROR.getCode(), resultMsg, null);
+	            	System.out.println("返回值："+ result);
+	            	System.out.println(resultCode+"<--->"+resultMsg);  
 	            }
 	          //用我这边默认的对私账户充值
 //	            String epEngId = epPo.getEpEngId();
@@ -81,7 +82,6 @@ public class KPool implements BaseInterface {
 	            //用我这边默认的对私账户充值
 //	            chargeDTO = new ChargeDTO(tipCode, tipMsg, new ChargeOrder(orderIdApi, baseParams.getChargeTel(), baseParams.getProductCode(), billType));
 			    // 最后输出到控制台  
-	            System.out.println(resultCode+"<--->"+resultMsg);  
 	            chargeDTO.setJsonStr(result);//设置返回的json串日志信息
 	        } catch (JSONException e) {  
 	            e.printStackTrace();  

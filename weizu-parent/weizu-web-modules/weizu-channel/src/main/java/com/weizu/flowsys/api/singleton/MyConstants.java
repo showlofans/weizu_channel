@@ -52,6 +52,14 @@ public class MyConstants {
 	 * 江苏卡池-网池充值平台英文标志
 	 */
 	public final static String KPOOL_ENG = "KPool";
+	/**
+	 * 顺园平台英文标志
+	 */
+	public final static String SHUNYUAN_ENG = "ShunYuan";
+	/**
+	 * 兴芃平台英文标志
+	 */
+	public final static String XINGPENG_ENG = "XingPeng";
 	
 	
 	

@@ -28,8 +28,8 @@ public class HttpRequestPost {
     public static String doPost(String apiUrl, Map<String, Object> params) {  
         String httpStr = null;  
     	try {
-//    		System.out.println("请求参数："+params);
-			RequestConfig config = RequestConfig.custom().setConnectTimeout(5000).setSocketTimeout(3000).build();  
+    		System.out.println("请求参数："+params);
+			RequestConfig config = RequestConfig.custom().setConnectTimeout(5000).build();  
 			CloseableHttpClient httpclient = HttpClientBuilder.create().setDefaultRequestConfig(config).build();  
 			List<NameValuePair> pairs = null;
 			if (params != null && !params.isEmpty()) {

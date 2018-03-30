@@ -76,6 +76,16 @@ public class CallBackURL extends BaseURL{
 	 * 真实地址：https://www.91weizu.cn/flowsys/callBack/KPool.do<br>
 	 */
 	public static final String KPOOL = "/KPool"+ DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 顺园平台回调接口<br>
+	 * 真实地址：https://www.91weizu.cn/flowsys/callBack/ShunYuan.do<br>
+	 */
+	public static final String SHUNYUAN = "/ShunYuan"+ DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 兴芃平台回调接口<br>
+	 * 真实地址：https://www.91weizu.cn/flowsys/callBack/xingPeng.do<br>
+	 */
+	public static final String XINGPENG = "/xingPeng"+ DYNAMIC_WEB_SUFFIX;
 	
 	
 	

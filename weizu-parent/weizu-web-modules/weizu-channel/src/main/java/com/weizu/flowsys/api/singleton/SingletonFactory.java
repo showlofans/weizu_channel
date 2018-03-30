@@ -8,8 +8,10 @@ import com.weizu.flowsys.api.singleton.company.Lefeng;
 import com.weizu.flowsys.api.singleton.company.LiuLiangHui;
 import com.weizu.flowsys.api.singleton.company.Lljypt;
 import com.weizu.flowsys.api.singleton.company.Maiyuan;
+import com.weizu.flowsys.api.singleton.company.ShunYuan;
 import com.weizu.flowsys.api.singleton.company.Wantull;
 import com.weizu.flowsys.api.singleton.company.Weizu;
+import com.weizu.flowsys.api.singleton.company.XingPeng;
 import com.weizu.flowsys.api.singleton.company.Zxpay;
 
 public class SingletonFactory {
@@ -67,6 +69,14 @@ public class SingletonFactory {
 		//江苏卡池-网池充值平台英文标志
 		else if(MyConstants.KPOOL_ENG.equals(epEngId)){
 			bi = KPool.getInstance(epEngId, baseParams);
+		}
+		//顺园平台英文标志
+		else if(MyConstants.SHUNYUAN_ENG.equals(epEngId)){
+			bi = ShunYuan.getInstance(epEngId, baseParams);
+		}
+		//兴芃平台英文标志
+		else if(MyConstants.XINGPENG_ENG.equals(epEngId)){
+			bi = XingPeng.getInstance(epEngId, baseParams);
 		}
 		
 		return bi;

@@ -323,6 +323,111 @@ public class CallBack111Controller {
         } 
 		return successTag;
 	}
+	/**
+	 * @description: 顺园平台平台回调接口
+	 * @param key
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年3月30日 下午2:05:17
+	 */
+	@ResponseBody
+	@RequestMapping(value=CallBackURL.SHUNYUAN,method=RequestMethod.POST,produces="application/json;charset=UTF-8")//charset=UTF-8
+	public String shunYuanCallBack(@RequestBody String key){
+		String errorTag = "error";
+		String statusDetail = "";
+		int myStatus = -1;
+		try {  
+			System.out.println("返回值:"+key);
+			JSONArray jsonArray = JSON.parseArray("OrderList");
+			if(jsonArray != null){
+				for (Object object : jsonArray) {
+					JSONObject subObj = (JSONObject)object;
+					String orderIdApi= subObj.getString("Id");
+					String orderIdStr = subObj.getString("OrderCode");
+					String desc = subObj.getString("Message");
+					int status = subObj.getIntValue("Status");
+					//初始化参数
+					long orderId = Long.parseLong(orderIdStr.trim());
+					
+					PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);//数据库没有没有上游订单号
+					if(purchasePo == null){
+						return "未找到该订单";
+					}
+					Boolean hasCall = OrderResultEnum.SUCCESS.getCode().equals(purchasePo.getHasCallBack());
+					String res = "";
+					if(!hasCall){//上一次没有回调成功
+						if(status == 0){
+							myStatus = OrderStateEnum.CHARGED.getValue();
+							statusDetail = OrderStateEnum.CHARGED.getDesc();
+						}else {
+							myStatus = OrderStateEnum.UNCHARGE.getValue();
+							statusDetail = desc;
+						}
+						Long chargeTime = System.currentTimeMillis();
+						res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderId, orderIdApi, chargeTime, myStatus,OrderResultEnum.SUCCESS.getCode() , statusDetail));
+						if("success".equals(res)){
+							errorTag = res;
+						}
+					}else{//已经有过回调，设置为成功
+						errorTag = "1";
+					}
+					
+				}
+			}
+		} catch (JSONException e) {  
+			errorTag = "内部错误";
+		} 
+		return errorTag;
+	}
+	/**
+	 * @description: 兴芃回调
+	 * @param taskId
+	 * @param orderId
+	 * @param mobile
+	 * @param status
+	 * @param msg
+	 * @param reportTime
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年3月30日 下午3:52:06
+	 */
+	@ResponseBody
+	@RequestMapping(value=CallBackURL.XINGPENG,method=RequestMethod.POST)//charset=UTF-8
+	public String xingPengCallBack(String taskId, String orderId,String mobile,
+			String status,String msg,String reportTime){
+			String successTag = "ok";
+			boolean isNull = StringHelper.isEmpty(orderId) || StringHelper.isEmpty(status);
+			if(!isNull){
+				//初始化参数
+				long orderIdl = Long.parseLong(orderId.trim());
+				
+				PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderIdl);//数据库没有没有上游订单号
+				if(purchasePo == null){
+					return "未找到该订单";
+				}
+				Boolean hasCall = OrderResultEnum.SUCCESS.getCode().equals(purchasePo.getHasCallBack());
+				String res = "";
+				if(!hasCall){//上一次没有回调成功
+					int result = Integer.parseInt(status);
+					int myStatus = -1;
+					String statusDetail = "";
+					if(result == 0){
+						myStatus = OrderStateEnum.CHARGED.getValue();
+						statusDetail = OrderStateEnum.CHARGED.getDesc();
+					}else {
+						myStatus = OrderStateEnum.UNCHARGE.getValue();
+						statusDetail = msg;
+					}
+//					Long chargeTime = System.currentTimeMillis();
+					Long chargeTime = DateUtil.strToDate(reportTime, "yyyy-MM-dd HH：mm：ss").getTime();
+					res = accountPurchaseAO.updatePurchaseState(new PurchasePo(orderIdl, taskId, chargeTime, myStatus,OrderResultEnum.SUCCESS.getCode() , statusDetail));
+					if(!"success".equals(res)){
+						successTag = res;
+					}
+				}
+			}
+		return successTag;
+	}
 	
 	
 	
