@@ -6,6 +6,7 @@ import java.util.Map;
 import com.weizu.flowsys.core.dao.Dao;
 import com.weizu.flowsys.web.channel.pojo.TelChannelParams;
 import com.weizu.flowsys.web.channel.pojo.TelChannelPo;
+import com.weizu.flowsys.web.trade.pojo.GetTelRatePo;
 
 public interface ITelChannelDao extends Dao<TelChannelPo, Long> {
 	/**
@@ -25,6 +26,14 @@ public interface ITelChannelDao extends Dao<TelChannelPo, Long> {
 	 * @createTime:2017年11月14日 下午5:16:41
 	 */
 	public List<TelChannelParams> getTelChannel(Map<String,Object> params);
+	/**
+	 * @description: 获得可充值的话费折扣
+	 * @param telParams
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2017年11月14日 下午5:16:41
+	 */
+	public List<GetTelRatePo> getTelChannelForCharge(Map<String,Object> params);
 	
 	/**
 	 * @description: 统计话费通道总记录

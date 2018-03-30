@@ -12,7 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
-import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
+import com.weizu.flowsys.operatorPg.enums.TelServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.TelChannelTagEnum;
 import com.weizu.flowsys.web.activity.dao.ITelRateDao;
 import com.weizu.flowsys.web.activity.pojo.TelRatePo;
@@ -43,7 +44,7 @@ public class TelRateAOImpl implements TelRateAO {
 	@Override
 	public void getRateForCharge(Map<String,Object> resultMap, TelChannelParams telChannelParams, Integer agencyId, Integer rootAgencyId) {
 		Map<String,Object> params = getParamsByTelChannel(telChannelParams);
-		int rateFor = telChannelParams.getRateFor();
+//		int rateFor = telChannelParams.getRateFor();
 //		if(AgencyTagEnum.PLATFORM_USER.getValue().equals(telChannelParams.getRateFor())){
 //			params.put("platformUser", AgencyTagEnum.PLATFORM_USER.getValue());
 //		}else if(AgencyTagEnum.DATA_USER.getValue().equals(telChannelParams.getRateFor())){
@@ -51,56 +52,71 @@ public class TelRateAOImpl implements TelRateAO {
 //		}
 //		Integer platUser = AgencyTagEnum.PLATFORM_USER.getValue();
 		
-		boolean isPlatUser = AgencyTagEnum.PLATFORM_USER.getValue().equals(telChannelParams.getRateFor());
-		AgencyTagEnum[] agencyEs = AgencyTagEnum.values();
+//		boolean isPlatUser = AgencyTagEnum.PLATFORM_USER.getValue().equals(telChannelParams.getRateFor());
+//		AgencyTagEnum[] agencyEs = AgencyTagEnum.values();
 		
 		
-		long totalRecord = 0;
-		boolean ifData = false;
-		params.put("agencyId", agencyId);
-		params.put("rootAgencyId", rootAgencyId);
 //		if(rootAgencyId != null && rootAgencyId != 0){//不是超管
 //			params.put("rateForPlatform", CallBackEnum.POSITIVE.getValue());
 //		}
+//		rateFor = AgencyTagEnum.PLATFORM_USER.getValue();
 		
-		for (int i = 0; i < agencyEs.length; i++) {
-			if(isPlatUser){
-				rateFor = AgencyTagEnum.PLATFORM_USER.getValue();
-				params.put("platformUser", AgencyTagEnum.PLATFORM_USER.getValue());
-				params.put("dataUser", null);
+//		for (int i = 0; i < agencyEs.length; i++) {
+//			if(isPlatUser){
+//				rateFor = AgencyTagEnum.PLATFORM_USER.getValue();
+//				params.put("platformUser", AgencyTagEnum.PLATFORM_USER.getValue());
+//				params.put("dataUser", null);
+//			}else{
+//				rateFor = AgencyTagEnum.DATA_USER.getValue();
+//				params.put("dataUser", AgencyTagEnum.DATA_USER.getValue());
+//				params.put("platformUser", null);
+//			}
+//			totalRecord = telChannelDao.countMyTelChannel(params);
+//			if(totalRecord != 0){
+//				if(AgencyTagEnum.DATA_USER.getValue().equals(rateFor)){
+//					ifData = true;
+//				}
+//				if(ifData){
+//					Map<String,Object> cloneMap = getParamsByTelChannel(telChannelParams);
+//					cloneMap.put("dataUser", AgencyTagEnum.DATA_USER.getValue());
+//					cloneMap.put("platformUser", null);
+//					long ifDataRes = telChannelDao.countMyTelChannel(cloneMap);
+//					if(ifDataRes > 0){
+//						ifData = true;
+//					}
+//				}
+//				break;
+//			}else{
+//				isPlatUser = !isPlatUser;
+//			}
+//		}
+		if(rootAgencyId == 0){//超管，获取通道折扣
+			params.put("telchannelState", ChannelStateEnum.OPEN.getValue());
+			List<GetTelRatePo> telRateList = telChannelDao.getTelChannelForCharge(params);
+			if(telRateList != null && telRateList.size() > 0){
+				resultMap.put("getRateList", telRateList);
 			}else{
-				rateFor = AgencyTagEnum.DATA_USER.getValue();
-				params.put("dataUser", AgencyTagEnum.DATA_USER.getValue());
-				params.put("platformUser", null);
-			}
-			totalRecord = telChannelDao.countMyTelChannel(params);
-			if(totalRecord != 0){
-				if(AgencyTagEnum.DATA_USER.getValue().equals(rateFor)){
-					ifData = true;
-				}
-				if(ifData){
-					Map<String,Object> cloneMap = getParamsByTelChannel(telChannelParams);
-					cloneMap.put("dataUser", AgencyTagEnum.DATA_USER.getValue());
-					cloneMap.put("platformUser", null);
-					long ifDataRes = telChannelDao.countMyTelChannel(cloneMap);
-					if(ifDataRes > 0){
-						ifData = true;
-					}
-				}
-				break;
-			}else{
-				isPlatUser = !isPlatUser;
-			}
-		}
-		if(totalRecord > 0){
-			List<GetTelRatePo> telRateList = telRateDao.getTelRateForCharge(params);
-			resultMap.put("getRateList", telRateList);
-			if(ifData){
-				resultMap.put("dataUser", "yes");
+				resultMap.put("msg", "没有该话费折扣");
 			}
 		}else{
-			resultMap.put("msg", "没有该话费折扣");
+			long totalRecord = 0;
+//			boolean ifData = false;
+			params.put("agencyId", agencyId);
+			params.put("rootAgencyId", rootAgencyId);
+			params.put("platformUser", AgencyTagEnum.PLATFORM_USER.getValue());
+			params.put("dataUser", null);
+			totalRecord = telRateDao.countTelRateForCharge(params);
+			if(totalRecord > 0){
+				List<GetTelRatePo> telRateList = telRateDao.getTelRateForCharge(params);
+				resultMap.put("getRateList", telRateList);
+//			if(ifData){
+//				resultMap.put("dataUser", "yes");
+//			}
+			}else{
+				resultMap.put("msg", "没有该话费折扣");
+			}
 		}
+		
 //		return telRateList;
 	}
 	private Map<String,Object> getParamsByTelChannel(TelChannelParams telParams){
@@ -110,8 +126,8 @@ public class TelRateAOImpl implements TelRateAO {
 			params.put("serviceType", serviceType);
 
 			boolean cityProIn = StringHelper.isNotEmpty(telParams.getProvinceid()); //加入省市参数必须的条件
-			boolean cityIn = serviceType.equals(HuaServiceTypeEnum.CITY.getValue()) && StringHelper.isNotEmpty(telParams.getCityid());//加入市的条件
-			boolean provinceIn = serviceType.equals(HuaServiceTypeEnum.PROVINCE.getValue()) || cityIn ;//加入省份参数条件
+			boolean cityIn = serviceType.equals(TelServiceTypeEnum.CITY.getValue()) && StringHelper.isNotEmpty(telParams.getCityid());//加入市的条件
+			boolean provinceIn = serviceType.equals(TelServiceTypeEnum.PROVINCE.getValue()) || cityIn ;//加入省份参数条件
 			
 			if(provinceIn && cityProIn){
 				params.put("provinceid", telParams.getProvinceid());

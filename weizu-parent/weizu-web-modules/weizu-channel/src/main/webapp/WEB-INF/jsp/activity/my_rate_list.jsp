@@ -373,6 +373,7 @@ function addUp(vart){//vart是提交按钮
 							console.log(data.msg);
 						},
 					});	
+					location.reload();
 				});
 				
 				//$(vart).removeAttr('disabled');

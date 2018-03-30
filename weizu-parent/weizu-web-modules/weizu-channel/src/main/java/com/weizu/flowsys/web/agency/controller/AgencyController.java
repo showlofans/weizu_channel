@@ -43,6 +43,7 @@ import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
 import com.weizu.flowsys.web.agency.ao.ChargeRecordAO;
 import com.weizu.flowsys.web.agency.dao.BankAccountDaoInterface;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
+import com.weizu.flowsys.web.agency.pojo.AccountBalanceSumPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardVO;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
@@ -229,6 +230,7 @@ public class AgencyController {
 				session.setAttribute("power", "no");
 			}
 			session.setAttribute("loginContext", agencyVO);// 保存登陆实体到session中
+			
 			/**设置消息*/
 //			messageTool.setMsg(resultPo.getId(), session);
 			session.setMaxInactiveInterval(24*60*60);//一天

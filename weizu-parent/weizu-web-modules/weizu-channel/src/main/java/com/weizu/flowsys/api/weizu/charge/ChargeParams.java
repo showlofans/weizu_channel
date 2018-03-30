@@ -26,6 +26,18 @@ public class ChargeParams {
     
     private String requestIp;			//请求地址
 	
+    
+    
+	public ChargeParams(Integer scope, Integer flowsize, Integer pgType,
+			Integer channelType, String pgValidity) {
+		super();
+		this.scope = scope;
+		this.flowsize = flowsize;
+		this.pgType = pgType;
+		this.channelType = channelType;
+		this.pgValidity = pgValidity;
+	}
+
 	public ChargeParams(String userName, String number, Integer flowsize,
 			Integer scope, String sign, Integer billType, Long orderArriveTime) {
 		super();

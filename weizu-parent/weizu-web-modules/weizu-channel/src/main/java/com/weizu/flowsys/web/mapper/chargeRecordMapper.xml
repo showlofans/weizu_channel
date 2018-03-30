@@ -101,10 +101,13 @@
   <select id="groupAgencyRecord" parameterType="map" resultMap="GroupAgencyRecordMap">
   	select <include refid="group_Agency_List"></include>
   	FROM <include refid="t_record"></include> crt
+  	INNER JOIN <include refid="t_ap"></include> ap
+	on ap.record_id=crt.id
 	inner join <include refid="t_account"></include> act
-	on act.id=crt.account_id
+	<!-- on act.id=crt.account_id -->
+	on ap.account_id=act.id
 	<where>
-		purchase_id is not NULL
+		crt.purchase_id is not NULL
 		<if test="supperAgencyId != null">
 			AND act.supper_agency_id=#{supperAgencyId}
 		</if>
@@ -125,7 +128,7 @@
 		</if>
 		
 		<if test="endTime != null">
-			AND remittance_time &lt;= #{endTime}
+			AND crt.remittance_time &lt;= #{endTime}
 		</if>
 	</where>
 	GROUP BY act.id,crt.account_type

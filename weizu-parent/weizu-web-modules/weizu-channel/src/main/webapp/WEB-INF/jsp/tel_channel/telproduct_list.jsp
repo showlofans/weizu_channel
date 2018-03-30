@@ -50,7 +50,7 @@
 		&nbsp;&nbsp;
 		 <!--  业务类型： -->
 		 <span class="select-box inline">
-			<select name="serviceType" class="select" onchange="submitForm()">
+			<select name="serviceType" class="select" onchange="formSub()">
 				<!-- <option value="">业务类型</option> -->
 				<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
 					<option value="${serviceTypeEnum.value }" <c:if test="${serviceTypeEnum.value == resultMap.params.serviceType }"> selected</c:if>>${serviceTypeEnum.desc }</option>
@@ -81,7 +81,7 @@
 		&nbsp;&nbsp;
 		 <!--  运营商类型： -->
 		 <span class="select-box inline">
-			<select name="operatorName" class="select"  onchange="submitForm()">
+			<select name="operatorName" class="select"  onchange="formSub()">
 				<option value="">运营商类型</option>
 				<c:forEach items="${resultMap.operatorNameEnums }" var="operatorNameEnum" varStatus="vs1">
 					<option value="${operatorNameEnum.value }" <c:if test="${operatorNameEnum.value == resultMap.params.operatorName }"> selected</c:if>>${operatorNameEnum.desc }</option>
@@ -91,7 +91,7 @@
 		&nbsp;&nbsp;
 		 <!--  充值类型： -->
 		 <span class="select-box inline">
-			<select name="telchargeSpeed" class="select"  onchange="submitForm()">
+			<select name="telchargeSpeed" class="select"  onchange="formSub()">
 				<option value="">充值类型</option>
 				<c:forEach items="${resultMap.telchargeSpeedEnums }" var="telchargeSpeedEnum" varStatus="vs1">
 					<option value="${telchargeSpeedEnum.value }" <c:if test="${telchargeSpeedEnum.value == resultMap.params.chargeSpeed }"> selected</c:if>>${telchargeSpeedEnum.desc }</option>
@@ -102,7 +102,7 @@
 		<%-- &nbsp;&nbsp;
 			<!-- 包状态 -->
 		<span class="select-box inline">
-			<select name="pgInService" class="select"  onchange="submitForm()">
+			<select name="pgInService" class="select"  onchange="formSub()">
 			<option value="">包状态</option>
 			<c:forEach items="${resultMap.pgInEnums }" var="pgIn" varStatus="vs1">
 				<option value="${pgIn.value }" <c:if test="${pgIn.value == resultMap.params.pgInService }"> selected</c:if>>${pgIn.desc }</option>
@@ -117,9 +117,9 @@
 		 限制描述:<input type="text" value="${resultMap.params.limitDescription }" name="limitDescription" id="" placeholder="限制描述" style="width:80px" class="input-text">
 		<%-- 流量大小:<input type="text" value="${resultMap.params.pgSize }" name="pgSize" id="" placeholder="大小" style="width:80px" class="input-text">
 		原价：<input type="text" value="${resultMap.params.pgPrice }" name="pgPrice" id="" placeholder=" 原价" style="width:80px" class="input-text">元 --%>
-		<button type="button" class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
-		<button name="" id=""  class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜编码</button>
-		<a style="text-decoration:none" class="btn btn-success" onClick="telPc_add('话费编码添加','/flowsys/tel_product/telproduct_add_page.do')" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i>添加</a>
+		&nbsp;&nbsp;<button type="button" class="btn btn-primary" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
+		&nbsp;&nbsp;<button name="" id=""  class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜编码</button>
+		&nbsp;&nbsp;<a style="text-decoration:none" class="btn btn-default" onClick="telPc_add('话费编码添加','/flowsys/tel_product/telproduct_add_page.do')" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i>添加</a>
 		<input type="hidden" name="pageNoLong" value="${pagination.pageNoLong }"> 
 	</div>
 </form>
@@ -271,9 +271,9 @@ function initCity(){
 
 
 /**onchange提交表单*/
-function submitForm(){
+/* function submitForm(){
 	$('form').submit();
-}
+} */
 /*话费编码-添加*/
 function telPc_add(title,url){
 	//alert("sd");pageTitle=' + title +"&

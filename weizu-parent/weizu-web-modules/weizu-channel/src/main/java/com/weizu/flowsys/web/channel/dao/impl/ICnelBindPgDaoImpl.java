@@ -7,10 +7,12 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.weizu.flowsys.core.dao.Dao;
+import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.web.channel.dao.ICnelBindPgDao;
 import com.weizu.flowsys.web.channel.pojo.CnelBindPgPo;
 @Repository(value="cnelBindPgDao")
-public class ICnelBindPgDaoImpl implements ICnelBindPgDao {
+public class ICnelBindPgDaoImpl extends DaoImpl<CnelBindPgPo, Long> implements ICnelBindPgDao {
 
 	@Resource
 	private SqlSessionTemplate sqlSessionTemplate;

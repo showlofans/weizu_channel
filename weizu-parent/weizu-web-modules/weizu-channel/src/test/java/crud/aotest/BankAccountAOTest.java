@@ -36,37 +36,40 @@
 //	@Resource
 //	private TransferRecAO transferRecAO;
 //	
-////	@Test
-////	public void getMyBankList(){
-////		Map<String,Object> resultMap = new HashMap<String,Object>();
-////		bankAccountAO.getMyBankList(1, resultMap);
-////		List<BankAccountPo> bankList = (List<BankAccountPo>) resultMap.get("bankList");
-////		for (BankAccountPo bankAccountPo : bankList) {
+//	@Test
+//	public void getMyBankList(){
+//		Map<String,Object> resultMap = new HashMap<String,Object>();
+//		bankAccountAO.getMyBankList(1,null, resultMap);
+//		List<BankAccountPo> bankList = (List<BankAccountPo>) resultMap.get("bankList");
+//		List<BankAccountPo> bankList0 = (List<BankAccountPo>) resultMap.get("bankList0");
+//		System.out.println(bankList.size()+bankList0.size());
+//		for (BankAccountPo bankAccountPo : bankList) {
 ////			System.out.println(bankAccountPo.getLastAccessStr());
-////		}
-//////		System.out.println(bankList.size());
-////	}
+//			System.out.println(bankAccountPo.getRemittanceWay());
+//		}
+////		System.out.println(bankList.size());
+//	}
 //	
 //	/**
 //	 * @description: 更新银行卡的展示状态
 //	 * @author:微族通道代码设计人 宁强
 //	 * @createTime:2018年2月25日 下午4:34:20
 //	 */
-//	@Test
-//	public void showBank(){
-//		BankAccountPo bankPo = bankAccountDao.get(12l);
-//		String msg = "error";
-//		if(bankPo != null){
-//			bankPo.setBaHide(CallBackEnum.NEGATIVE.getValue());//设为隐藏
-////			bankPo.setPolarity(CallBackEnum.POSITIVE.getValue());//改变银行卡的默认状态为不默认
-//			int res = bankAccountDao.updateLocal(bankPo, new WherePrams("agency_id", "=", bankPo.getAgencyId()).and("remittance_bank_account", "=", bankPo.getRemittanceBankAccount()));
-//			//删除子母银行卡
-////			int res = bankAccountDao.del(new WherePrams("agency_id", "=", bankPo.getAgencyId()).and("remittance_bank_account", "=", bankPo.getRemittanceBankAccount()));
-//			if(res > 0){
-//				msg = "success";
-//			}	
-//		}
-//	}
+////	@Test
+////	public void showBank(){
+////		BankAccountPo bankPo = bankAccountDao.get(12l);
+////		String msg = "error";
+////		if(bankPo != null){
+////			bankPo.setBaHide(CallBackEnum.NEGATIVE.getValue());//设为隐藏
+//////			bankPo.setPolarity(CallBackEnum.POSITIVE.getValue());//改变银行卡的默认状态为不默认
+////			int res = bankAccountDao.updateLocal(bankPo, new WherePrams("agency_id", "=", bankPo.getAgencyId()).and("remittance_bank_account", "=", bankPo.getRemittanceBankAccount()));
+////			//删除子母银行卡
+//////			int res = bankAccountDao.del(new WherePrams("agency_id", "=", bankPo.getAgencyId()).and("remittance_bank_account", "=", bankPo.getRemittanceBankAccount()));
+////			if(res > 0){
+////				msg = "success";
+////			}	
+////		}
+////	}
 ////	@Test
 ////	public void updateBank(){
 ////		BankAccountPo bankPo = new BankAccountPo();

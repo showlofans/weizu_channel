@@ -577,7 +577,7 @@
   		AND active.agency_id = #{agencyId}
   	</if> -->
   	<if test="channelDiscountId != null">
-  		AND cDiscount.channel_discount_id = #{channelDiscountId}
+  		AND cDiscount.id = #{channelDiscountId}
   	</if>
   </sql>
  <!--  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >

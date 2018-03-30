@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,6 +16,7 @@ import org.weizu.api.outter.enums.ChargeStatusEnum;
 import com.alibaba.fastjson.JSON;
 import com.weizu.flowsys.api.singleton.BalanceDTO;
 import com.weizu.flowsys.api.weizu.charge.ChargeParams;
+import com.weizu.flowsys.api.weizu.charge.ChargeTelParams;
 import com.weizu.flowsys.api.weizu.charge.PgProductParams;
 import com.weizu.flowsys.api.weizu.facet.IBalanceFacet;
 import com.weizu.flowsys.api.weizu.facet.IChargeFacet;
@@ -27,8 +29,11 @@ import com.weizu.flowsys.operatorPg.enums.ChannelTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgValidityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.TelServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.TelchargeSpeedEnum;
 import com.weizu.flowsys.util.AddressUtils;
 import com.weizu.flowsys.web.http.entity.Charge;
+import com.weizu.flowsys.web.http.entity.ChargeTel;
 import com.weizu.flowsys.web.http.entity.Order;
 import com.weizu.flowsys.web.http.entity.PgProduct;
 import com.weizu.flowsys.web.http.entity.PurchaseLog;
@@ -139,8 +144,14 @@ public class OuterAPIController {
 		try {
 			//System.out.println("传单参数：" + chargeParams.toString());
 			charge = chargeImpl.charge(chargeParams);
-		} catch (Exception e) {
-			ChargeLog chargeLog = new ChargeLog(JSON.toJSON(chargeParams).toString(), "无返回，有异常", null, chargeParams.getNumber(), ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc());
+		}
+		catch(TooManyResultsException tmre){
+			ChargeLog chargeLog = new ChargeLog(JSON.toJSONString(chargeParams), "查询出多个结果", null, chargeParams.getNumber(), ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc());
+			chargeLogDao.add(chargeLog);
+			charge = new Charge(ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc(), null);
+		}
+		catch (Exception e) {
+			ChargeLog chargeLog = new ChargeLog(JSON.toJSONString(chargeParams), "无返回，有异常", null, chargeParams.getNumber(), ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc());
 			chargeLogDao.add(chargeLog);
 			charge = new Charge(ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc(), null);
 			e.printStackTrace();
@@ -153,6 +164,68 @@ public class OuterAPIController {
 //		System.out.println(jsonResult);
 		return jsonResult;
 	}
+	
+	/**
+	 * @description: 话费充值
+	 * @param number
+	 * @param userName
+	 * @param sign
+	 * @param serviceType
+	 * @param billType
+	 * @param reportUrl
+	 * @param userOrderId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年3月20日 下午2:35:12
+	 */
+	@ResponseBody
+	@RequestMapping(value=OuterApiURL.CHARGE_TEL,produces = "text/json;charset=UTF-8")
+	public String chargeTel(String number, String userName, String sign,Double chargeValue,
+			@RequestParam(value="chargeSpeed",required=false) Integer chargeSpeed,
+			@RequestParam(value="billType",required=false) Integer billType,
+			@RequestParam(value="serviceType",required=false) Integer serviceType,
+			@RequestParam(value="reportUrl",required=false) String reportUrl,
+			@RequestParam(value="userOrderId",required=false) String userOrderId,
+			HttpServletRequest request){
+		
+		ChargeTelParams chargeTelParams = new ChargeTelParams(number, userName, sign, reportUrl, userOrderId, chargeValue);
+		//充值速度-快充
+		if(chargeSpeed == null){
+			chargeTelParams.setChargeSpeed(TelchargeSpeedEnum.FAST.getValue());
+		}else{
+			chargeTelParams.setChargeSpeed(chargeSpeed);
+		}
+		//票务-带票
+		if(billType == null){
+			chargeTelParams.setBillType(BillTypeEnum.CORPORATE_BUSINESS.getValue());
+		}else{
+			chargeTelParams.setBillType(billType);
+		}
+		//业务-省内话费
+		if(serviceType == null){
+			chargeTelParams.setServiceType(TelServiceTypeEnum.PROVINCE.getValue());
+		}else{
+			chargeTelParams.setServiceType(serviceType);
+		}
+		try {
+			 String ip = addressUtils.getIp(request);
+			 chargeTelParams.setRequestIp(ip);
+		} catch (Exception e1) {
+			chargeTelParams.setRequestIp("未知ip");
+			e1.printStackTrace();
+		}
+		ChargeTel chargeTel = null;
+		try {
+			chargeTel = chargeImpl.charge(chargeTelParams);
+		} catch (Exception e) {
+			ChargeLog chargeLog = new ChargeLog(JSON.toJSONString(chargeTelParams), "无返回，有异常", null, chargeTelParams.getNumber(), ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), System.currentTimeMillis(),AgencyForwardEnum.BACKWARD.getValue(),chargeTelParams.getRequestIp()+ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc());
+			chargeLogDao.add(chargeLog);
+			chargeTel = new ChargeTel(ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc(), null);
+			e.printStackTrace();
+		}
+		return JSON.toJSONString(chargeTel);
+	}
+	
 	@Resource
 	private AddressUtils addressUtils;
 	

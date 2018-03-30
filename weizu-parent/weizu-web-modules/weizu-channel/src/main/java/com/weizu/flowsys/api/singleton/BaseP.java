@@ -26,6 +26,13 @@ public class BaseP {
 		super();
 	}
 	
+	/** 查询状态
+	 * @param productCodePo
+	 * @param orderIdApi
+	 * @param chargeTel
+	 * @param epo
+	 * @param otherParams
+	 */
 	public BaseP(ProductCodePo productCodePo, String orderIdApi, String chargeTel,
 			 ExchangePlatformPo epo,String otherParams) {
 		super();
@@ -37,6 +44,13 @@ public class BaseP {
 		this.otherParams = otherParams;
 		this.epo = epo;
 	}
+	/** 提单参数
+	 * @param productCodePo
+	 * @param orderId
+	 * @param chargeTel
+	 * @param epo
+	 * @param otherParams
+	 */
 	public BaseP(ProductCodePo productCodePo,Long orderId,String chargeTel,ExchangePlatformPo epo,String otherParams) {
 //		this.epDTO = epDTO;
 		this.epo = epo;
@@ -67,7 +81,12 @@ public class BaseP {
 	public String getOrderIdApi() {
 		return orderIdApi;
 	}
-//	public String getAddParams() {
+	
+public void setOrderIdApi(String orderIdApi) {
+		this.orderIdApi = orderIdApi;
+	}
+
+	//	public String getAddParams() {
 //		return addParams;
 //	}
 //	public void setAddParams(String addParams) {

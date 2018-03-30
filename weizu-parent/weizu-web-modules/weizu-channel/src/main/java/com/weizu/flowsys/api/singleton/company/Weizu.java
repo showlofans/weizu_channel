@@ -145,7 +145,7 @@ public class Weizu implements BaseInterface {
             		myStatus = OrderStateEnum.CHARGED.getValue();
             		break;
             	case 8://充值失败
-				myStatus = OrderStateEnum.UNCHARGE.getValue();
+            		myStatus = OrderStateEnum.UNCHARGE.getValue();
             		break;
             	default:
             		break;

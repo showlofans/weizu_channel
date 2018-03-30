@@ -1,0 +1,4 @@
+接口文档地址：http://b2c.wpool.cn/guide.html
+apikey： 05eca487011488946e9c4b8442823e35
+用户id：P22613
+账号：17607084827

@@ -82,6 +82,15 @@
 		<property name="minIdle" value="${minIdle}"></property>
 		<!-- 获取连接最大等待时间 -->
 		<property name="maxWait" value="${maxWait}"></property>
+		
+		 <property name="validationQuery" value="SELECT 1"></property>
+		 <property name="testWhileIdle" value="true"></property>
+		 <property name="testOnBorrow" value="true"></property>
+		 <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}"></property><!-- 3600000 -->
+		 <property name="numTestsPerEvictionRun" value="${numTestsPerEvictionRun}"></property><!-- 50 -->
+		 <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}"></property><!-- 120000 -->
+		 <property name="removeAbandoned" value="true"/>
+		 <property name="removeAbandonedTimeout" value="${removeAbandonedTimeout}"/><!-- 6000000 -->
 	</bean>
 	
 	

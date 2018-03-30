@@ -33,7 +33,7 @@
 <body>
 <header class="navbar-wrapper">
 	<div class="navbar navbar-fixed-top">
-		<div class="container-fluid cl"> <a title="系统最新更新时间：${applicationScope.startupTime }" class="logo navbar-logo f-l mr-10 hidden-xs" href="#">微族通道系统Beta${portNum }</a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="#">微族通道系统Beta</a> 
+		<div class="container-fluid cl"> <a title="系统最新更新时间：${applicationScope.startupTime }" class="logo navbar-logo f-l mr-10 hidden-xs" href="/home">微族通道系统Beta${portNum }</a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="#">微族通道系统Beta</a> 
 			<span class="logo navbar-slogan f-l mr-10 hidden-xs">
 			</span> 
 			<a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:;">&#xe667;</a>
@@ -335,7 +335,8 @@
 				</c:otherwise>
 			</c:choose>
 				<li><a href="/view/mine/jk-doc/jk-doc.html" title="南昌微族流量接口文档" target="_blank">流量接口文档</a></li>
-				<li><a data-href="http://htmlify.wps.cn/doc/index.html?ksyun=hPT1Afio/word.html&theme=clear" data-title="平台操作指南" href="javascript:void(0)">平台操作指南</a></li>
+				<li><a href="/view/mine/jk-doc/tel-doc.html" title="南昌微族话费接口文档" target="_blank">话费接口文档</a></li>
+				<!-- <li><a data-href="http://htmlify.wps.cn/doc/index.html?ksyun=hPT1Afio/word.html&theme=clear" data-title="平台操作指南" href="javascript:void(0)">平台操作指南</a></li> -->
 			</ul>
 		</dd>
 	</dl>

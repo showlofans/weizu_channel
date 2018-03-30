@@ -75,8 +75,10 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 				AccountTypeEnum.DECREASE.getValue(), loginAccountPo.getId(),1,null));
 		
 		/** 更新登录用户账户信息**/
-		loginAccountPo.addBalance(chargeAmount,-1);
-		chargeAccountAO.updateAccount(loginAccountPo);
+//		loginAccountPo.addBalance(chargeAmount,-1);
+		
+		double editBalance = NumberTool.mul(chargeAmount, -1);
+		chargeAccountAO.updateAccount(loginAccountPo.getId(), editBalance);
 		
 		
 		/****************修改子代理商账户********************************************/
@@ -99,8 +101,8 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 
 		/** 更新账户表的余额值 */
 //		chargeAccountPo.addBalance(chargeAmount,0);
-		chargeAccountPo.setAccountBalance(afterBalance);
-		int resultMsg2 = chargeAccountAO.updateAccount(chargeAccountPo);
+//		chargeAccountPo.setAccountBalance(afterBalance);
+		int resultMsg2 = chargeAccountAO.updateAccount(chargeAccountPo.getId(), chargeAmount);
 		return resultMsg + resultMsg2 - 1 ;
 	}
 
@@ -472,7 +474,7 @@ public class ChargeRecordAoImpl implements ChargeRecordAO {
 				}else if(AccountTypeEnum.Replenishment.getValue().equals(groupAgencyRecordPo.getAccountType())){
 					Object objVO = agencyMap.get(agencyName);
 					if(objVO == null){//没有设置扣款实体()
-						vo = new GroupAgencyRecordVo(groupAgencyRecordPo.getAgencyName(), groupAgencyRecordPo.getAccountId(), groupAgencyRecordPo.getBillType(), groupAgencyRecordPo.getNumb(), 0l, 0.0d,groupAgencyRecordPo.getTotalAmount(), groupAgencyRecordPo.getNumb(),groupAgencyRecordPo.getTotalAmount() );
+						vo = new GroupAgencyRecordVo(groupAgencyRecordPo.getAgencyName(), groupAgencyRecordPo.getAccountId(), groupAgencyRecordPo.getBillType(), groupAgencyRecordPo.getNumb(), 0l, 0.0d,groupAgencyRecordPo.getTotalAmount(), 0l,0.0d );
 						agencyMap.put(agencyName, vo);
 					}else{//之前有了扣款为主的统计实体
 						vo = (GroupAgencyRecordVo)objVO;//扣款为主的统计实体

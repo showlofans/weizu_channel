@@ -33,6 +33,9 @@ public class PgDataPo extends Po {
     private Long channelId;				//通道id
     @TempField
     private String productCode;		//产品编码
+    @TempField
+    private Long cnelBindPgNum;		//包体绑定的通道数量
+    
 
 	/** 验证包体是否存在的必须参数
 	 * @param operatorType
@@ -70,6 +73,14 @@ public class PgDataPo extends Po {
 		this.circulateWay = circulateWay;
 	}
 	
+	public Long getCnelBindPgNum() {
+		return cnelBindPgNum;
+	}
+
+	public void setCnelBindPgNum(Long cnelBindPgNum) {
+		this.cnelBindPgNum = cnelBindPgNum;
+	}
+
 	public String getProductCode() {
 		return productCode;
 	}

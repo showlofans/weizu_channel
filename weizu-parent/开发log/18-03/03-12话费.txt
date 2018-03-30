@@ -1,0 +1,30 @@
+数据折扣和平台折扣分离
+平台折扣只在页面充值有用，数据折扣，在接口传单的时候，有用
+接口传单获取折扣，从绑定列表中获取
+
+那数据折扣和平台折扣怎么区分展示给接口用户呢
+
+折扣显示列表，接口用户优先显示数据级折扣；平台级用户只显示平台折扣
+
+添加话费折扣有问题，添加加载不出来
+
+唯一性捕获异常，打印错误原因，回滚。getAccountType
+
+折扣显示问题，如果优先选择绑定的折扣，
+
+统一获得所有可用折扣的方法，
+统一根据一些条件获得代理商的话费折扣
+
+15017844477
+
+mychannel
+{ dataUser=null, rootAgencyId=1, platformUser=0, negative=0, positive=1, serviceType=1, bind=0, agencyId=4,  useOpen=0}
+
+
+getRate:
+{chargeSpeed=2, dataUser=null, rootAgencyId=1, platformUser=0, provinceid=440000, negative=0, positive=1, serviceType=1, bind=0, agencyId=4, useOpen=0}
+
+{chargeSpeed=2, dataUser=null, rootAgencyId=1, platformUser=0, provinceid=440000, negative=0, positive=1, serviceType=1, bind=0, agencyId=4, useOpen=0}
+
+
+

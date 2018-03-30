@@ -50,7 +50,7 @@
 		 <%-- <c:if test="${resultMap.params.pgServiceType ==1 }"> --%><!-- 流量还是话费 -->
 			 <!--  包体有效期： -->
 			 <span class="select-box inline">
-				<select name="pgValidity" class="select"  onchange="submitForm()">
+				<select name="pgValidity" class="select"  onchange="formSub()">
 					<option value="">包体有效期</option>
 					<c:forEach items="${resultMap.pgValidityEnums }" var="pgValidityEnum" varStatus="vs1">
 						<option value="${pgValidityEnum.value }" <c:if test="${pgValidityEnum.value == resultMap.params.pgValidity }"> selected</c:if>>${pgValidityEnum.desc }</option>
@@ -60,7 +60,7 @@
 			&nbsp;&nbsp;
 			 <!--  流量流通方式： -->
 			 <span class="select-box inline">
-				<select name="circulateWay" class="select"  onchange="submitForm()">
+				<select name="circulateWay" class="select"  onchange="formSub()">
 					<option value="">流量流通方式</option>
 					<c:forEach items="${resultMap.channelTypeEnums }" var="channelTypeEnum" varStatus="vs1">
 						<option value="${channelTypeEnum.value }" <c:if test="${channelTypeEnum.value == resultMap.params.circulateWay }"> selected</c:if>>${channelTypeEnum.desc }</option>
@@ -72,7 +72,7 @@
 		
 		 <!--  运营商类型： -->
 		 <span class="select-box inline">
-			<select name="operatorType" class="select"  onchange="submitForm()">
+			<select name="operatorType" class="select"  onchange="formSub()">
 				<option value="">运营商类型</option>
 				<c:forEach items="${resultMap.operatoerTypeEnums }" var="operatorTypeEnum" varStatus="vs1">
 					<option value="${operatorTypeEnum.value }" <c:if test="${operatorTypeEnum.value == resultMap.params.operatorType }"> selected</c:if>>${operatorTypeEnum.desc }</option>
@@ -82,7 +82,7 @@
 		&nbsp;&nbsp;
 		 <!--  流量类型： -->
 		 <span class="select-box inline">
-			<select name="serviceType" class="select" onchange="submitForm()">
+			<select name="serviceType" class="select" onchange="formSub()">
 				<option value="">业务类型</option>
 				<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceTypeEnum" varStatus="vs1">
 					<option value="${serviceTypeEnum.value }" <c:if test="${serviceTypeEnum.value == resultMap.params.serviceType }"> selected</c:if>>${serviceTypeEnum.desc }</option>
@@ -92,7 +92,7 @@
 		&nbsp;&nbsp;
 			<!-- 包状态 -->
 		<span class="select-box inline">
-			<select name="pgInService" class="select"  onchange="submitForm()">
+			<select name="pgInService" class="select"  onchange="formSub()">
 			<option value="">包状态</option>
 			<c:forEach items="${resultMap.pgInEnums }" var="pgIn" varStatus="vs1">
 				<option value="${pgIn.value }" <c:if test="${pgIn.value == resultMap.params.pgInService }"> selected</c:if>>${pgIn.desc }</option>
@@ -104,7 +104,7 @@
 		&nbsp;&nbsp;
 			<!-- 包状态 -->
 		<span class="select-box inline">
-			<select name="pgType" class="select"  onchange="submitForm()">
+			<select name="pgType" class="select"  onchange="formSub()">
 			<option value="">流量类型</option>
 			<c:forEach items="${resultMap.pgTypeEnums }" var="pgTypeEnum" varStatus="vs1">
 				<option value="${pgTypeEnum.value }" <c:if test="${pgTypeEnum.value == resultMap.params.pgType }"> selected</c:if>>${pgTypeEnum.desc }</option>
@@ -126,7 +126,7 @@
 		</span> 
 		 <!--  地区城市： -->
 		 <span class="select-box inline">
-			<select class="select" id="city" onchange="submitForm()">
+			<select class="select" id="city" onchange="formSub()">
 				<option value="">城市</option>
 			</select>
 		</span> 
@@ -140,9 +140,9 @@
 		<input type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'logmax\')||\'%y-%M-%d\'}' })" id="logmin" class="input-text Wdate" style="width:120px;">
 		-
 		<input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'logmin\')}',maxDate:'%y-%M-%d' })" id="logmax" class="input-text Wdate" style="width:120px;"> -->
-		<button type="button" class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
-		<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜流量</button>
-		<a style="text-decoration:none" class="btn btn-success" onClick="pg_add('包体添加','/flowsys/operatorPg/pg_add_page.do')" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i>添加</a>
+		&nbsp;&nbsp;<button type="button" class="btn btn-primary" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
+		&nbsp;&nbsp;<button name="" id="" class="btn btn-success" type="submit" onclick="formSub()"><i class="Hui-iconfont">&#xe665;</i> 搜流量</button>
+		&nbsp;&nbsp;<a style="text-decoration:none" class="btn btn-default" onClick="pg_add('包体添加','/flowsys/operatorPg/pg_add_page.do')" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i>添加</a>
 		<!-- <button class="btn btn-success" onClick="pg_add('包体添加','pg_add_page.do')" value="添加流量包体">添加</button> -->
 		<input type="hidden" name="pageNo" value="${pagination.pageNo }"> 
 	</div>
@@ -239,7 +239,15 @@
 						<c:if test="${pg.pgInService == pgIn.value }"> ${pgIn.desc }</c:if>
 						</c:forEach></td> --%>
 						<td class="f-14 td-manage">
-						<a style="text-decoration:none" class="ml-5" onClick="pg_del(this,${pg.id})" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+						<c:choose>
+							<c:when test="${pg.cnelBindPgNum > 0}">
+								<a style="text-decoration:none" class="ml-5"data-href="/flowsys/channel/channel_list.do?operatorType=${pg.operatorType }&serviceType=${pg.serviceType}&pgValidity=${pg.pgValidity}&pgType=${pg.pgType}&channelType=${pg.circulateWay}&pgSize=${pg.pgSize}" data-title="订单消费" onclick="Hui_admin_tab(this)" href="javascript:;" title="查看相关通道"><i class="Hui-iconfont">&#xe686;</i></a>
+							</c:when>
+							<c:otherwise>
+								<a style="text-decoration:none" class="ml-5" onClick="pg_del(this,${pg.id})" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
+							</c:otherwise>
+						</c:choose>
+						
 						</td>
 					</tr>
 				</c:forEach>
@@ -311,9 +319,9 @@
 
 
 /**onchange提交表单*/
-function submitForm(){
+/* function submitForm(){
 	$('form').submit();
-}
+} */
 /*包体-添加*/
 function pg_add(title,url){
 	//alert("sd");pageTitle=' + title +"&

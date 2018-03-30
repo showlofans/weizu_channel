@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.weizu.flowsys.web.agency.pojo.AccountBalanceSumPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.CompanyCredentialsPo;
 
@@ -88,7 +89,7 @@ public interface ChargeAccountAo {
 	 * @author:POP产品研发部 宁强
 	 * @createTime:2017年5月6日 上午10:43:21
 	 */
-	int updateAccount(ChargeAccountPo chargeAccountPo);
+	int updateAccount(Integer id, Double editBalance);
 	
 	/**
 	 * @description:通过代理商id获得账户信息（包涵Id的简易账户信息）
@@ -128,6 +129,16 @@ public interface ChargeAccountAo {
 	 */
 	ChargeAccountPo getAccountById(int accountId);
 	
+	
+	/**
+	 * @description: 统计真实平台余额
+	 * @param agencyId
+	 * @param isRootAgency
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年3月7日 下午2:54:42
+	 */
+	List<AccountBalanceSumPo> getBalanceSumByAgencyId(Integer agencyId, boolean isRootAgency);
 	
 	
 	

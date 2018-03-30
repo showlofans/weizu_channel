@@ -90,9 +90,9 @@ public class AgencyAOImpl implements AgencyAO {
 				ChargeAccountPo chargePo = new ChargeAccountPo(agencyId,agencyVO.getRootAgencyId(), 0.00d, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue(), agencyBackward.getCreateTime(), agencyBackward.getUserName());
 				int addCharge = chargeAccountDao.add(chargePo);
 				if(addCharge > 0){
-					int accountId = (int) (chargeAccountDao.nextId()-1);
-					chargePo.setId(accountId);
-					httpSession.setAttribute("chargeAccount",chargePo);
+//					int accountId = (int) (chargeAccountDao.nextId()-1);
+//					chargePo.setId(accountId);
+//					httpSession.setAttribute("chargeAccount",chargePo);
 					return PgInServiceEnum.OPEN.getValue();
 				}
 			}

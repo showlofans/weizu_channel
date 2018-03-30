@@ -37,9 +37,29 @@ public class MyConstants {
 	 */
 	public final static String HONGJIA_ENG = "Hongjia";
 	/**
-	 * 流量汇平台英文标志
+	 * 流量汇平台英文标志(彩趣)
 	 */
 	public final static String LIULIANGHUI_ENG = "LiuLiangHui";
+	/**
+	 * 杭州弯流平台英文标志
+	 */
+	public final static String CTRA_ENG = "Ctra";
+	/**
+	 * 智胜新-生东网络-格科恒信息平台英文标志
+	 */
+	public final static String FLUX_ENG = "Flux";
+	/**
+	 * 江苏卡池-网池充值平台英文标志
+	 */
+	public final static String KPOOL_ENG = "KPool";
+	/**
+	 * 顺园平台英文标志
+	 */
+	public final static String SHUNYUAN_ENG = "ShunYuan";
+	/**
+	 * 兴芃平台英文标志
+	 */
+	public final static String XINGPENG_ENG = "XingPeng";
 	
 	
 	

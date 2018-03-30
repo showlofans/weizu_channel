@@ -52,7 +52,7 @@ public class BankAccountAOImpl implements BankAccountAO {
 			baHide = CallBackEnum.NEGATIVE.getValue();
 			map.put("baHide", CallBackEnum.NEGATIVE.getValue());
 		}
-		map.put("polarity", CallBackEnum.NEGATIVE.getValue());//加载母卡
+		map.put("useState", CallBackEnum.NEGATIVE.getValue());//加载母卡
 		List<BankAccountPo> dataList = bankAccountDao.getMyBankList(map);
 		//将列表分开展示
 		List<BankAccountPo> bankList0 = new LinkedList<BankAccountPo>();
@@ -107,6 +107,7 @@ public class BankAccountAOImpl implements BankAccountAO {
 		}
 		bankPo.setLastAccess(System.currentTimeMillis());
 		bankPo.setBaHide(CallBackEnum.NEGATIVE.getValue());
+		bankPo.setUseState(CallBackEnum.NEGATIVE.getValue());
 		int res = bankAccountDao.add(bankPo);
 		if(res > 0){
 			return "success";

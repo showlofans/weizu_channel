@@ -38,7 +38,7 @@
 		<div class="row cl formControls">
 		平台名称：<input type="text" value="${resultMap.searchParam.epName }" name="epName" id="epName" placeholder=" 平台名称" style="width:150px" class="input-text">&nbsp;&nbsp;
 		<span class="select-box inline">
-				<select name="operatorType" onchange="submitForm()" class="select">
+				<select name="operatorType" onchange="formSub()" class="select">
 				<option value="">运营商</option>
 				<c:forEach items="${resultMap.operatorTypeEnums }" var="otypeEnum" varStatus="vs2">
 					<option value="${otypeEnum.value }" <c:if test="${otypeEnum.value == resultMap.searchParam.operatorType }"> selected</c:if>>${otypeEnum.desc }</option>
@@ -49,7 +49,7 @@
 		<%-- 包体编码名称：<input type="text" value="${resultMap.searchParam.productName }" name="productName" id="" placeholder="包体编码名称" style="width:250px" class="input-text">&nbsp;&nbsp; --%>
 		<%-- 包体编码名称：<input type="text" value="${resultMap.searchParam.productName }" name="productName" id="" placeholder="包体编码名称" style="width:250px" class="input-text">&nbsp;&nbsp; --%>
 		<span class="select-box inline">
-			<select name="scopeCityCode" onchange="submitForm()" class="select">
+			<select name="scopeCityCode" onchange="formSub()" class="select">
 			<option value="">编码地区</option>
 			<c:forEach items="${resultMap.scopeCityEnums }" var="scopeCityEnum">
 				<option value="${scopeCityEnum.value }" <c:if test="${scopeCityEnum.value == resultMap.searchParam.scopeCityCode }"> selected</c:if>>${scopeCityEnum.desc }</option>
@@ -58,7 +58,7 @@
 		</span> 
 		&nbsp;&nbsp;
 		<span class="select-box inline">
-			<select name="serviceType" onchange="submitForm()" class="select">
+			<select name="serviceType" onchange="formSub()" class="select">
 			<option value="">业务类型</option>
 			<c:forEach items="${resultMap.serviceTypeEnums }" var="serviceType" varStatus="vs1">
 				<option value="${serviceType.value }" <c:if test="${serviceType.value == resultMap.searchParam.serviceType }"> selected</c:if>>${serviceType.desc }</option>
@@ -69,7 +69,7 @@
 		产品编码：<input type="text" value="${resultMap.searchParam.productCode }" name="productCode" id="" placeholder=" 产品编码" style="width:150px" class="input-text">&nbsp;&nbsp; --%>
 		<%-- 对接平台：
 		<span class="select-box inline">
-			<select id="epId" name="epId" class="select" onchange="submitForm()">
+			<select id="epId" name="epId" class="select" onchange="formSub()">
 			<c:forEach items="${resultMap.epList }" var="ep" varStatus="vs2">
 				<option value="${ep.epId }" <c:if test="${ep.epId == resultMap.searchParam.epId }"> selected</c:if>>${ep.epName }</option>
 			</c:forEach>
@@ -79,7 +79,7 @@
 		
 		<div class="row cl" style="margin-top: 30dp">
 			<span class="select-box inline">
-				<select name="pgValidity" class="select"  onchange="submitForm()">
+				<select name="pgValidity" class="select"  onchange="formSub()">
 					<option value="">包体有效期</option>
 					<c:forEach items="${resultMap.pgValidityEnums }" var="pgValidityEnum" varStatus="vs1">
 						<option value="${pgValidityEnum.value }" <c:if test="${pgValidityEnum.value == resultMap.searchParam.pgValidity }"> selected</c:if>>${pgValidityEnum.desc }</option>
@@ -89,7 +89,7 @@
 			&nbsp;&nbsp;
 			 <!--  流量流通方式： -->
 			 <span class="select-box inline">
-				<select name="circulateWay" class="select"  onchange="submitForm()">
+				<select name="circulateWay" class="select"  onchange="formSub()">
 					<option value="">流量流通方式</option>
 					<c:forEach items="${resultMap.channelTypeEnums }" var="channelTypeEnum" varStatus="vs1">
 						<option value="${channelTypeEnum.value }" <c:if test="${channelTypeEnum.value == resultMap.searchParam.circulateWay }"> selected</c:if>>${channelTypeEnum.desc }</option>
@@ -99,7 +99,7 @@
 			&nbsp;&nbsp;
 			<!-- 包状态 -->
 			<span class="select-box inline">
-				<select name="pgType" class="select"  onchange="submitForm()">
+				<select name="pgType" class="select"  onchange="formSub()">
 				<option value="">流量类型</option>
 				<c:forEach items="${resultMap.pgTypeEnums }" var="pgTypeEnum" varStatus="vs1">
 					<option value="${pgTypeEnum.value }" <c:if test="${pgTypeEnum.value == resultMap.searchParam.pgType }"> selected</c:if>>${pgTypeEnum.desc }</option>
@@ -108,9 +108,9 @@
 			</span>
 			&nbsp;&nbsp;
 			
-			<button type="button" class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
-			<a style="text-decoration:none" class="btn btn-success" onClick="pCode_add('产品编码添加','/flowsys/productCode/productCode_add_page.do')" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i>添加</a>
-			<input value="查询" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
+			<button type="button" class="btn btn-primary" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
+			&nbsp;&nbsp;<a style="text-decoration:none" class="btn btn-default" onClick="pCode_add('产品编码添加','/flowsys/productCode/productCode_add_page.do')" href="javascript:;" title="添加"><i class="Hui-iconfont">&#xe600;</i>添加</a>
+			&nbsp;&nbsp;<input value="查询" class="btn btn-success" type="submit"><!-- <i class="Hui-iconfont">&#xe665;</i> -->
 			<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 		</div>
 		</form>
@@ -225,10 +225,10 @@ function produce_del(url,codeId){
 }
 
 /*提交表单**/
-function submitForm(){
+/* function submitForm(){
 	$("input[name='pageNo']").val('');
 	$('form').submit();
-}
+} */
 
 /*产品编码-添加*/
 function pCode_add(title,url){

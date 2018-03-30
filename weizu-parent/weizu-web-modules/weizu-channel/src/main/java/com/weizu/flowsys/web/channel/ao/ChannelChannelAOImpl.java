@@ -368,6 +368,7 @@ public class ChannelChannelAOImpl implements ChannelChannelAO {
 					//更新这些地区的折扣
 					//地区一样，那么通道折扣id一定也一样。
 					getCD.setId(oldCd.getId());
+					res = "success";//适应只更新带票与不带票的情况
 					if(oldCd.getChannelDiscount().doubleValue() != getCD.getChannelDiscount().doubleValue()){//看是否一样
 						initCDByChannelPo(channelPo,getCD);
 						res = channelDiscountAO.updateChannelDiscount(getCD, ifUpdateRate);

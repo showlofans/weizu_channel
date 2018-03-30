@@ -92,11 +92,11 @@
 				<c:choose>
 					<c:when test="${resultMap.aardto.bindState==1 }"><!-- 已解绑：批量绑定 -->
 						<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBState('/flowsys/rate/batch_update_bind_state.do',0)" href="javascript:;" title="批量绑定"><i class="Hui-iconfont">&#xe60e;</i>批量绑定</a>
-						<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBAllState('/flowsys/rate/batch_bind_allagency.do',1,0)" href="javascript:;" title="全量绑定"><i class="Hui-iconfont">&#xe60e;</i>全量绑定</a>
+						<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-primary" data-placement="top"  onClick="changeBAllState('/flowsys/rate/batch_bind_allagency.do',1,0)" href="javascript:;" title="全量绑定"><i class="Hui-iconfont">&#xe60e;</i>全量绑定</a>
 					</c:when>
 					<c:otherwise><!-- 未绑定 -->
 						<a style="text-decoration:none" data-toggle="tooltip" class="btn btn-success" data-placement="top"  onClick="changeBAllState('/flowsys/rate/batch_bind_allagency.do',2,0)" href="javascript:;" title="全量增加"><i class="Hui-iconfont">&#xe60e;</i>全量增加</a>
-						<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="changeBState('/flowsys/rate/batch_bind_agency.do',0)" href="javascript:;" > 批量增加</a>
+						<a style="text-decoration:none" name="" id="" class="btn btn-primary"  type="button" onclick="changeBState('/flowsys/rate/batch_bind_agency.do',0)" href="javascript:;" > 批量增加</a>
 					</c:otherwise>
 				</c:choose>
 				<%-- <c:forEach items="${resultMap.bindStateEnums }" var="bState" varStatus="vst">

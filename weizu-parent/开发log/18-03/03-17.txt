@@ -1,0 +1,8 @@
+{chargeSpeed=1, dataUser=null, rootAgencyId=1, platformUser=0, provinceid=440000, negative=0, positive=1, serviceType=1, bind=0, agencyId=2, useOpen=0}
+
+接口优化：充值用充值的参数，获取余额用新的参数
+
+话费接口，以自己能够提供的参数为准，将自己能提供的参数分为各种，
+专为充值的参数
+
+在市场里面站稳脚跟

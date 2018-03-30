@@ -21,6 +21,10 @@ public enum EventTypeEnum {
 	 */
 	AGENCY_LOGIN("登陆",1),
 	/**
+	 * 成功退款-0
+	 */
+	SUCCESS_REFUND("成功退款",0),
+	/**
 	 * 申请加款-2
 	 */
 	ACCOUNT_CHARGE("申请加款",2),
@@ -36,6 +40,18 @@ public enum EventTypeEnum {
 	 * 有新代理商注册-5
 	 */
 	AGENCY_REGISTER("新代理商注册",5),
+	/**
+	 * 订单批量提交-6
+	 */
+	BATCH_COMMIT_ORDER("订单批量提交",6),
+	/**
+	 * 系统更新日志-7
+	 */
+	SYSTEM_UPDATE("系统更新",7),
+	/**
+	 * 下级代理商提单返款-9
+	 */
+	CHILDREN_PURCHASE_REBACK("下级代理商提单返款",9),
 	/**
 	 * 修改密码-8
 	 */

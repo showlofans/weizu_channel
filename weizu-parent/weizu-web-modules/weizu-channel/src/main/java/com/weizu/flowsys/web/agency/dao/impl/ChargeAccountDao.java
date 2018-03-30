@@ -2,6 +2,7 @@ package com.weizu.flowsys.web.agency.dao.impl;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.web.agency.dao.ChargeAccountDaoInterface;
+import com.weizu.flowsys.web.agency.pojo.AccountBalanceSumPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 
 @Repository("chargeAccountDao")
@@ -67,8 +69,8 @@ public class ChargeAccountDao extends DaoImpl<ChargeAccountPo, Integer> implemen
 	 * @createTime:2017年5月22日 下午4:26:09
 	 */
 	@Override
-	public int updateById(ChargeAccountPo chargeAccountPo) {
-		return sqlSessionTemplate.update("updateById", chargeAccountPo);
+	public int updateById(Map<String, Object> map) {
+		return sqlSessionTemplate.update("updateById", map);
 	}
 
 	@Override
@@ -86,6 +88,11 @@ public class ChargeAccountDao extends DaoImpl<ChargeAccountPo, Integer> implemen
 		map.put("accountBalance", accountBalance);
 		map.put("id", accountId);
 		return sqlSessionTemplate.update("updateAccountBalance", map);
+	}
+
+	@Override
+	public List<AccountBalanceSumPo> getBalanceSum(Map<String, Object> params) {
+		return sqlSessionTemplate.selectList("getBalanceSum", params);
 	}
 
 	

@@ -10,23 +10,20 @@
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //import org.weizu.api.outter.enums.ChargeStatusEnum;
 //
-//import com.weizu.flowsys.api.singleton.BalanceDTO;
-//import com.weizu.flowsys.api.weizu.charge.ChargeDTO;
 //import com.weizu.flowsys.api.weizu.charge.ChargeParams;
+//import com.weizu.flowsys.api.weizu.charge.ChargeTelParams;
 //import com.weizu.flowsys.api.weizu.facet.IBalanceFacet;
 //import com.weizu.flowsys.api.weizu.facet.IChargeFacet;
 //import com.weizu.flowsys.api.weizu.facet.IOrderFacet;
-//import com.weizu.flowsys.api.weizu.order.QueryOrderParams;
 //import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
-//import com.weizu.flowsys.util.WxPaySendPost;
+//import com.weizu.flowsys.operatorPg.enums.TelServiceTypeEnum;
+//import com.weizu.flowsys.operatorPg.enums.TelchargeSpeedEnum;
 //import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
 //import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 //import com.weizu.flowsys.web.http.entity.Charge;
-//import com.weizu.flowsys.web.http.entity.Order;
-//import com.weizu.flowsys.web.http.entity.OrderPo;
+//import com.weizu.flowsys.web.http.entity.ChargeTel;
 //import com.weizu.web.foundation.MD5;
 //import com.weizu.web.foundation.hash.Hash;
-//import com.weizu.web.foundation.http.HttpRequest;
 //
 ///**
 // * @description:
@@ -136,7 +133,7 @@
 ////		
 ////		Charge charge = null;
 ////		try {
-////			charge = chargeImpl.charge(new ChargeParams(backPo.getUserName(), "13804828479", 10, 2, sign, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue(), "123456123"));
+////			charge = chargeImpl.charge(new ChargeParams(backPo.getUserName(), "13804828479", 10, 2, sign, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue(), System.currentTimeMillis()));
 ////		} catch (Exception e) {
 ////			charge = new Charge(ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc(), null);
 ////			System.out.println();
@@ -152,14 +149,11 @@
 //////		String resultStr = HttpRequest.sendPost("http://api.lljypt.com/capi/query.balance", param.toString());
 //////		System.out.println(balanceDTO.getAccountBalance());
 ////	}
-////	@Test
-////	public void testCallBack(){
-////		String res = HttpRequest.sendGet("https://www.91weizu.cn/flowsys/callBack/weizu.do", "errcode=1&transaction_id=2&user_order_id=2&number=1&status=1");
-////		System.out.println(res);
-////	}
+//	//下游充值
 //	@Test
-//	public void testGetProductList(){
-//		AgencyBackwardPo backPo = agencyVODao.getSecondAgency("xiaoning");
+//	public void testChargeTel(){
+//		String userName = "xiaoning";
+//		AgencyBackwardPo backPo = agencyVODao.getSecondAgency(userName);
 //		String sign = "";
 //		String apikey =backPo.getUserApiKey(); 
 //		String userPass = "";
@@ -169,10 +163,55 @@
 //		} catch (UnsupportedEncodingException e) {
 //			e.printStackTrace();
 //		}
-////		String res =WxPaySendPost.sendGet("https://www.91weizu.cn/flowsys/weizuAPI/my_pgproduct_list", "userName=xiaoning&sign="+sign);
-//		String res =HttpRequest.sendGet("https://www.91weizu.cn/flowsys/weizuAPI/my_pgproduct_list", "userName=xiaoning&sign="+sign);
 //		
-//		System.out.println(res);
+//		ChargeTel chargeTelPo = null;
+//		ChargeTelParams ctp = new ChargeTelParams("13699562589", userName, sign, 10d);
+//		ctp.setChargeSpeed(TelchargeSpeedEnum.FAST.getValue());
+//		ctp.setServiceType(TelServiceTypeEnum.NATION_WIDE.getValue());
+//		ctp.setBillType(BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+//		try {
+//			chargeTelPo = chargeImpl.charge(ctp);
+//		} catch (Exception e) {
+//			chargeTelPo = new ChargeTel(ChargeStatusEnum.CHARGE_INNER_ERROR.getValue(), ChargeStatusEnum.CHARGE_INNER_ERROR.getDesc(), null);
+//			System.out.println("1");
+//			e.printStackTrace();
+//		}
+//		if(chargeTelPo != null){
+//			if(chargeTelPo.getChargeTelPo() != null){
+//				System.out.println(chargeTelPo.getChargeTelPo().getOrderId());
+//			}
+//			System.out.println(chargeTelPo.getTipMsg());
+//		}else{
+//			System.out.println("chargeTelPo:"+chargeTelPo==null);
+//		}
+////		System.out.println(ChargeStatusEnum.CHANNEL_CLOSED.getDesc());
+//		
+////		BalanceDTO balanceDTO = balanceFacade.myBalance(backPo.getUserName(), sign, BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
+//		
+////		String resultStr = HttpRequest.sendPost("http://api.lljypt.com/capi/query.balance", param.toString());
+////		System.out.println(balanceDTO.getAccountBalance());
 //	}
+////	@Test
+////	public void testCallBack(){
+////		String res = HttpRequest.sendGet("https://www.91weizu.cn/flowsys/callBack/weizu.do", "errcode=1&transaction_id=2&user_order_id=2&number=1&status=1");
+////		System.out.println(res);
+////	}
+////	@Test
+////	public void testGetProductList(){
+////		AgencyBackwardPo backPo = agencyVODao.getSecondAgency("xiaoning");
+////		String sign = "";
+////		String apikey =backPo.getUserApiKey(); 
+////		String userPass = "";
+////		try {
+////			userPass = Hash.BASE_UTIL.decode(backPo.getUserPass());
+////			sign = MD5.getMd5("userName="+backPo.getUserName()+"&userPass="+ userPass + "&apikey="+apikey,null,null);
+////		} catch (UnsupportedEncodingException e) {
+////			e.printStackTrace();
+////		}
+//////		String res =WxPaySendPost.sendGet("https://www.91weizu.cn/flowsys/weizuAPI/my_pgproduct_list", "userName=xiaoning&sign="+sign);
+////		String res =HttpRequest.sendGet("https://www.91weizu.cn/flowsys/weizuAPI/my_pgproduct_list", "userName=xiaoning&sign="+sign);
+////		
+////		System.out.println(res);
+////	}
 //	
 //}

@@ -121,7 +121,7 @@
 		
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
-				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+				<button class="btn btn-primary radius" type="button" onClick="save()"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
 				<button class="btn btn-primary radius" onClick="cancelEdit()">取消</button>
 			</div>
 		</div>
@@ -135,6 +135,16 @@
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
 <script type="text/javascript" src="/view/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 <script type="text/javascript">
+function save(){
+	var activeDiscount =parseFloat($('#activeDiscount').val());
+	if(activeDiscount < 1){
+		$('form').submit();
+	}else{
+		layer.msg('折扣不能大于1');
+		$('#activeDiscount').focus();
+	}
+}
+
 $().ready(function() {
     $("#bindRateForm").validate({
     	submitHandler : function(form) {

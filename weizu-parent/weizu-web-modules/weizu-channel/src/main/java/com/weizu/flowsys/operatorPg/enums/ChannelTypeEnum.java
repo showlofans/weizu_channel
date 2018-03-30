@@ -22,19 +22,19 @@ import com.weizu.flowsys.web.channel.pojo.SpecialCnelType;
 public enum ChannelTypeEnum {
 	
 	/**
-	 * 普通流量	
+	 * 普通流量-1	
 	 */
 	ORDINARY("普通流量",1),
 	/**
-	 * 红包流量	
+	 * 红包流量-2
 	 */
 	RED_PACKET("红包流量",2),
 	/**
-	 * 转移流量	
+	 * 转移流量-3
 	 */
 	MOBILE("转移流量",3),//通道类型（1-普通通道包，2-红包通道，3-转移包，4-共享包）
 	/**
-	 * 对公业务
+	 * 共享流量-4
 	 */
 	PUBLIC_SHARE("共享流量",4);
 	

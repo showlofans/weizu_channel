@@ -70,7 +70,7 @@
 			<!-- 搜索条件 -->
 				折扣类型
 				<span class="select-box inline">
-						<select name="billType" id="billType" class="select" onchange="setDiscount()">
+						<select name="billType" id="billType" class="select" onchange="formSub()">
 							<c:forEach items="${resultMap.billTypeEnums }" var="billEnum" varStatus="vs">
 								<option value="${billEnum.value }" <c:if test="${resultMap.tbaVO.billType==billEnum.value }">selected</c:if>>${billEnum.desc }</option>
 							</c:forEach>
@@ -78,7 +78,7 @@
 				</span>
 				折扣:
 				<span class="select-box inline">
-					<select name="telRateId" id="telRateId" class="select" onchange="dischange()">
+					<select name="telRateId" id="telRateId" class="select" onchange="formSub()">
 						<c:if test="${empty resultMap.telrateList }">
 							<option value="">没有配置折扣</option>
 						</c:if>
@@ -99,7 +99,7 @@
 				<a style="text-decoration:none" name="" id="" class="btn btn-success"  type="button" onclick="delRateDiscount()" href="javascript:;" > 删除折扣</a> 
 				<br><br>
 				代理商名称： <input type="text" style="width:150px;" class="input-text ac_input" value="${resultMap.tbaVO.agencyName }" autocomplete="off" id="agencyName" name="agencyName">
-				<button name="" id="" class="btn btn-success"  type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+				<button name="" id="" class="btn btn-success"  type="submit" onclick="formSub()"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 				<input type="hidden" id="pageNoLong" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
 		</form>
 	</div> 
@@ -238,11 +238,11 @@ function batch_bind(title,url,id,w,h){
 }
 
 //onchange获得折扣
-function dischange(){
+/* function dischange(){
 	//alert(1);
 	$('#pageNoLong').val("1");
 	$('#formD').submit();
-}
+} */
 
 function changeBState(url,activeId,bindS){
 	$.ajax({
@@ -324,9 +324,10 @@ function changeBState(url,activeId,bindS){
 
 
 //onchange获得选中的option,设置折扣列表
-function setDiscount(){
+/* function setDiscount(){
 	$('#pageNoLong').val("1");
     $('#formD').submit();
+} */
 	//var scopeCityCode = $('#selDiscount option:selected').val();
 	/* var scopeCityCode = $('#scopeCityCode').val();
 	var serviceType = $('#serviceType').val();
@@ -366,7 +367,7 @@ function setDiscount(){
 			console.log(resp.msg);
 		},
 	});	 */
-}
+
 
 /*折扣-添加页面 */
 function addRate(url,title){

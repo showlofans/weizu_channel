@@ -68,7 +68,7 @@ import com.weizu.web.foundation.http.HttpRequest;
 public class WXPayAOImpl implements WXPayAO {
 
 	@Resource
-	private ChargeAccountAo chargeAccountAo;
+	private ChargeAccountAo chargeAccountAO;
 	@Resource
 	private PurchaseDao purchaseDAO;
 	@Resource
@@ -106,7 +106,7 @@ public class WXPayAOImpl implements WXPayAO {
 	@Override
 	public Long purchase(PgChargeVO pgChargeVO, String openid) {
 		Integer accountId = pgChargeVO.getAccountId();
-		ChargeAccountPo accountPo = chargeAccountAo.getAccountById(accountId);
+		ChargeAccountPo accountPo = chargeAccountAO.getAccountById(accountId);
 //		pgChargeVO.setFromAgencyName(accountPo.getAgencyName());
 		RateDiscountPo ratePo = rateDiscountDao.get(pgChargeVO.getRateId());
 		if(ratePo != null){
@@ -202,7 +202,10 @@ public class WXPayAOImpl implements WXPayAO {
 			Double orderAmount = NumberTool.mul(ratePo.getActiveDiscount(), chargeValue);
 			accountPo.addBalance(orderAmount,-1);
 			/** 更新登录用户账户信息**/
-			recordRes = chargeAccountAo.updateAccount(accountPo);
+			double editBalance = NumberTool.mul(orderAmount, -1);
+			recordRes = chargeAccountAO.updateAccount(accountPo.getId(), editBalance);
+			
+//			recordRes = chargeAccountAo.updateAccount(accountPo);
 			Integer orderState = OrderStateEnum.CHARGING.getValue();
 			if(recordRes > 0){
 				Long channelDiscountId = ratePo.getChannelDiscountId();			//折扣id
@@ -235,8 +238,12 @@ public class WXPayAOImpl implements WXPayAO {
 			orderAmount = NumberTool.mul(chargeValue, cdisPo.getChannelDiscount());//成本
 			agencyBeforeBalance = NumberTool.add(agencyBeforeBalance, orderPrice);//之前加上价格
 			Double agencyAfterBalance = NumberTool.sub(agencyBeforeBalance, orderAmount);
-			superAccountPo.setAccountBalance(agencyAfterBalance);
-			chargeAccountAo.updateAccount(superAccountPo);
+//			superAccountPo.setAccountBalance(agencyAfterBalance);
+			
+			double editSuperBalance = NumberTool.mul(orderAmount, -1);
+			recordRes = chargeAccountAO.updateAccount(superAccountPo.getId(), editSuperBalance);
+			
+//			chargeAccountAo.updateAccount(superAccountPo);
 			chargeRecordDao.add(new ChargeRecordPo(System.currentTimeMillis(), orderAmount,
 					agencyBeforeBalance, agencyAfterBalance, 
 					AccountTypeEnum.DECREASE.getValue(), superAccountPo.getId(),  pgChargeVO.getChargeFor() , orderId));

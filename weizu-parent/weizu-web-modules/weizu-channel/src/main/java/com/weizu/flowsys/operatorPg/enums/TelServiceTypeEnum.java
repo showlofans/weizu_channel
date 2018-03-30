@@ -13,7 +13,7 @@ import java.util.Map;
  * @createTime:2017年11月15日 下午3:46:10
  * @version 1.0
  */
-public enum HuaServiceTypeEnum {
+public enum TelServiceTypeEnum {
 	/**
 	 * 市内话费-2
 	 */
@@ -30,24 +30,24 @@ public enum HuaServiceTypeEnum {
 	private String desc;
 	private int value;
 	
-	private HuaServiceTypeEnum(String desc, int value) {
+	private TelServiceTypeEnum(String desc, int value) {
 		this.desc = desc;
 		this.value = value;
 	}
 
-	public static HuaServiceTypeEnum getEnum(Integer value)
+	public static TelServiceTypeEnum getEnum(Integer value)
 	{
 		if (value == null)
 		{
 			return null;
 		}
 
-		HuaServiceTypeEnum resultEnum = null;
+		TelServiceTypeEnum resultEnum = null;
 
 		// 获取附件类型枚举数组
-		HuaServiceTypeEnum[] enumArray = HuaServiceTypeEnum.values();
+		TelServiceTypeEnum[] enumArray = TelServiceTypeEnum.values();
 
-		for (HuaServiceTypeEnum serviceTypeEnum : enumArray)
+		for (TelServiceTypeEnum serviceTypeEnum : enumArray)
 		{
 			if(value.equals(serviceTypeEnum.getValue()))
 			{
@@ -68,12 +68,12 @@ public enum HuaServiceTypeEnum {
 	public static Map<String, Map<String, Object>> toMap()
 	{
 		// 获取附件类型枚举数组
-		HuaServiceTypeEnum[] enumArray = HuaServiceTypeEnum.values();
+		TelServiceTypeEnum[] enumArray = TelServiceTypeEnum.values();
 
 		// 定义枚举MAP
 		Map<String, Map<String, Object>> enumMap = new HashMap<String, Map<String, Object>>(enumArray.length);
 
-		for (HuaServiceTypeEnum serviceTypeEnum : enumArray)
+		for (TelServiceTypeEnum serviceTypeEnum : enumArray)
 		{
 			String key = String.valueOf(getEnum(serviceTypeEnum.getValue()));
 
@@ -96,12 +96,12 @@ public enum HuaServiceTypeEnum {
 	public static List<Map<String, Object>> toList()
 	{
 		// 获取附件类型枚举数组
-		HuaServiceTypeEnum[] enumArray = HuaServiceTypeEnum.values();
+		TelServiceTypeEnum[] enumArray = TelServiceTypeEnum.values();
 
 		// 定义枚举list
 		List<Map<String, Object>> attachmentTypeMapList = new ArrayList<Map<String, Object>>(enumArray.length);
 
-		for (HuaServiceTypeEnum serviceTypeEnum : enumArray)
+		for (TelServiceTypeEnum serviceTypeEnum : enumArray)
 		{
 			Map<String, Object> serviceTypeMap = new HashMap<String, Object>(2);
 			serviceTypeMap.put("desc", serviceTypeEnum.getDesc());

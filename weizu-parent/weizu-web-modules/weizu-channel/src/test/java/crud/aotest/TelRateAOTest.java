@@ -10,8 +10,12 @@
 //import org.junit.runner.RunWith;
 //import org.springframework.test.context.ContextConfiguration;
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+//import org.weizu.api.outter.enums.ChargeStatusEnum;
 //
+//import com.weizu.flowsys.operatorPg.enums.TelchargeSpeedEnum;
+//import com.weizu.flowsys.util.StringUtil2;
 //import com.weizu.flowsys.web.activity.dao.ITelRateDao;
+//import com.weizu.flowsys.web.channel.dao.ITelChannelDao;
 //import com.weizu.flowsys.web.trade.pojo.GetTelRatePo;
 //
 ///**
@@ -29,17 +33,60 @@
 //	@Resource
 //	private ITelRateDao telRateDao;
 //	
+//	@Resource
+//	private ITelChannelDao telChannelDao;
+//	
+////	@Test
+////	public void getTelRateForCharge(){
+////		Map<String,Object> map = new HashMap<String, Object>();
+//////		map.put("agencyId", 3);
+//////		map.put("provinceid", 440000);
+//////		map.put("cityid", 440100);
+//////		map.put("rootAgencyId", 2);
+//////		List<GetTelRatePo> getTelRateList = telRateDao.getTelRateForCharge(map);
+//////		System.out.println("id\tactive_discount\tbill_type\tcharge_value\ttel_code");
+//////		String mapStr = "{chargeSpeed=2, dataUser=null, rootAgencyId=1, platformUser=0, provinceid=440000, negative=0, positive=1, serviceType=1, bind=0, agencyId=4, useOpen=0}";
+//////		Map<String,Object> map = StringUtil2.mapStringToMap(mapStr);
+////		
+////		
+////		map.put("chargeSpeed", TelchargeSpeedEnum.FAST.getValue());
+////		map.put("rootAgencyId", 1);
+////		map.put("platformUser", 0);
+////		map.put("agencyId", 2);
+////		map.put("negative", 0);
+////		map.put("positive", 1);
+////		map.put("serviceType", 1);
+////		map.put("bind", 0);
+////		map.put("provinceid", 440000);
+////		map.put("useOpen", 0);
+////		List<GetTelRatePo> getTelRateList = telRateDao.getTelRateForCharge(map);
+////		for (GetTelRatePo getTelRatePo : getTelRateList) {
+////			System.out.println(getTelRatePo.getId()+ "\t"+getTelRatePo.getActiveDiscount()+ "\t"+getTelRatePo.getBillType()+ "\t"+getTelRatePo.getChargeValue()+ "\t" + getTelRatePo.getTelCode());
+////		}
+////		
+////	}
 //	@Test
-//	public void getTelRateForCharge(){
+//	public void getTelChannelForCharge(){
 //		Map<String,Object> map = new HashMap<String, Object>();
-//		map.put("agencyId", 3);
+////		map.put("agencyId", 3);
+////		map.put("provinceid", 440000);
+////		map.put("cityid", 440100);
+////		map.put("rootAgencyId", 2);
+////		List<GetTelRatePo> getTelRateList = telRateDao.getTelRateForCharge(map);
+////		System.out.println("id\tactive_discount\tbill_type\tcharge_value\ttel_code");
+////		String mapStr = "{chargeSpeed=2, dataUser=null, rootAgencyId=1, platformUser=0, provinceid=440000, negative=0, positive=1, serviceType=1, bind=0, agencyId=4, useOpen=0}";
+////		Map<String,Object> map = StringUtil2.mapStringToMap(mapStr);
+//		
+//		
+//		map.put("chargeSpeed", TelchargeSpeedEnum.SLOW.getValue());
+//		map.put("serviceType", 1);
 //		map.put("provinceid", 440000);
-//		map.put("cityid", 440100);
-//		map.put("rootAgencyId", 2);
-//		List<GetTelRatePo> getTelRateList = telRateDao.getTelRateForCharge(map);
-//		System.out.println("id\tactive_discount\tbill_type\tcharge_value\ttel_code");
+//		List<GetTelRatePo> getTelRateList = telChannelDao.getTelChannelForCharge(map);
 //		for (GetTelRatePo getTelRatePo : getTelRateList) {
-//			System.out.println(getTelRatePo.getId()+ "\t"+getTelRatePo.getActiveDiscount()+ "\t"+getTelRatePo.getBillType()+ "\t"+getTelRatePo.getChargeValue()+ "\t" + getTelRatePo.getTelCode());
+//			System.out.println(getTelRatePo.getTelchannelId()+ "\t"+getTelRatePo.getActiveDiscount()+ "\t"+getTelRatePo.getBillType()+ "\t"+getTelRatePo.getChargeValue()+ "\t" + getTelRatePo.getTelCode());
 //		}
+//		
 //	}
+//	
+//	
 //}

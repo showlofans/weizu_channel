@@ -18,7 +18,7 @@ import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
-import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.TelServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.util.StringUtil2;
 import com.weizu.flowsys.web.activity.dao.ITelRateDao;
@@ -137,7 +137,7 @@ public class TelChannelAOImpl implements TelChannelAO {
 		Integer serviceType = telParams.getServiceType();
 		//没有结果重新设置查询参数和页面参数
 		if(serviceType == null){//默认没有市内，加载省内，没有省内，加载全国
-			serviceType = HuaServiceTypeEnum.CITY.getValue();
+			serviceType = TelServiceTypeEnum.CITY.getValue();
 			do{
 				params.put("serviceType", serviceType);
 				totalRecord = telChannelDao.countTelChanenl(params);
@@ -186,7 +186,7 @@ public class TelChannelAOImpl implements TelChannelAO {
 		boolean isPlatUser = AgencyTagEnum.PLATFORM_USER.getValue().equals(telChannelParams.getRateFor());
 		//没有结果重新设置查询参数和页面参数
 		if(serviceType == null){//默认没有市内，加载省内，没有省内，加载全国
-			serviceType = HuaServiceTypeEnum.CITY.getValue();
+			serviceType = TelServiceTypeEnum.CITY.getValue();
 			AgencyTagEnum[] agencyEs = AgencyTagEnum.values();
 			do{
 				params.put("serviceType", serviceType);
@@ -219,7 +219,7 @@ public class TelChannelAOImpl implements TelChannelAO {
 			if(totalRecord > 0){
 				serviceType++;
 			}else{
-				serviceType = HuaServiceTypeEnum.PROVINCE.getValue();
+				serviceType = TelServiceTypeEnum.PROVINCE.getValue();
 			}
 			telChannelParams.setServiceType(serviceType); //设置页面参数
 		}else{
@@ -395,7 +395,7 @@ public class TelChannelAOImpl implements TelChannelAO {
 		boolean isPlatUser = AgencyTagEnum.PLATFORM_USER.getValue().equals(telChannelParams.getRateFor());
 		//没有结果重新设置查询参数和页面参数
 		if(serviceType == null){//默认没有市内，加载省内，没有省内，加载全国
-			serviceType = HuaServiceTypeEnum.CITY.getValue();
+			serviceType = TelServiceTypeEnum.CITY.getValue();
 			AgencyTagEnum[] agencyEs = AgencyTagEnum.values();
 			do{
 				params.put("serviceType", serviceType);
@@ -428,7 +428,7 @@ public class TelChannelAOImpl implements TelChannelAO {
 			if(totalRecord > 0){
 				serviceType++;
 			}else{
-				serviceType = HuaServiceTypeEnum.PROVINCE.getValue();
+				serviceType = TelServiceTypeEnum.PROVINCE.getValue();
 			}
 			telChannelParams.setServiceType(serviceType); //设置页面参数
 		}else{

@@ -1,5 +1,8 @@
 package com.weizu.flowsys.web.channel.pojo;
 
+import com.weizu.flowsys.core.annotation.po.TableName;
+import com.weizu.flowsys.core.beans.Po;
+
 /**
  * @description: 城市编码实体
  * @projectName:weizu-channel
@@ -8,7 +11,8 @@ package com.weizu.flowsys.web.channel.pojo;
  * @createTime:2017年11月9日 下午5:25:59
  * @version 1.0
  */
-public class Cities {
+@TableName(name="cities")
+public class Cities extends Po{
 	
 	private Integer id;						//id
 	

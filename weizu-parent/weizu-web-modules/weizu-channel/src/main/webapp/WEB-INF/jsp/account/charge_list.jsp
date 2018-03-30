@@ -41,8 +41,8 @@
 			<input type="text" style="width:150px" class="input-text" name="startTimeStr"  value="${resultMap.searchParams.startTimeStr }"  onfocus="var endTimeStr=$dp.$('endTimeStr');WdatePicker({onpicked:function(){endTimeStr.focus();formSub();},autoPickDate:true,startDate:'%y-%M-%d 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss' })"/>
 	            <em class="inputto">至</em>
 	        <input style="width:150px" type="text"  class="input-text" name="endTimeStr" id="endTimeStr"   value="${resultMap.searchParams.endTimeStr }"  onfocus="WdatePicker({onpicked:function(){formSub();},autoPickDate:true,startDate:'%y-%M-%d 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
-			<button type="button"class="btn btn-success" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
-			<button class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
+			&nbsp;&nbsp;<button type="button"class="btn btn-primary" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
+			&nbsp;&nbsp;<button class="btn btn-success" type="submit" onclick="formSub()"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
 			<input type="hidden" name="accountId" value="${resultMap.searchParams.accountId }"> 
 			<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 		</div>
@@ -119,9 +119,9 @@
 <script type="text/javascript" charset="utf8" src="/view/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="/view/lib/laypage/1.2/laypage.js"></script> -->
 <script type="text/javascript">
-function formSub(){
+/* function formSub(){
 	$('form').submit();
-}
+} */
 /* function search1(){
 	alert($("#startTime").val());
 	alert($("#endTime").val());

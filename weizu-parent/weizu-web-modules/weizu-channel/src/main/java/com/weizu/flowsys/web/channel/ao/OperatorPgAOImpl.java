@@ -15,7 +15,7 @@ import com.aiyi.base.pojo.PageParam;
 import com.aiyi.base.pojo.PageTag;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.weizu.flowsys.api.weizu.charge.PgProductParams;
+import com.weizu.flowsys.core.beans.WherePrams;
 import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
 import com.weizu.flowsys.operatorPg.enums.EpEncodeTypeEnum;
@@ -23,12 +23,12 @@ import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgInServiceEnum;
 import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
-import com.weizu.flowsys.operatorPg.enums.PgSizeEnum;
 import com.weizu.flowsys.operatorPg.enums.ScopeCityEnum;
 import com.weizu.flowsys.operatorPg.enums.ServiceTypeEnum;
 import com.weizu.flowsys.util.Pagination;
 import com.weizu.flowsys.web.channel.dao.ChannelDiscountDao;
 import com.weizu.flowsys.web.channel.dao.ExchangePlatformDaoInterface;
+import com.weizu.flowsys.web.channel.dao.ICnelBindPgDao;
 import com.weizu.flowsys.web.channel.dao.impl.OperatorPgDao;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
 import com.weizu.flowsys.web.channel.pojo.ExchangePlatformPo;
@@ -36,7 +36,6 @@ import com.weizu.flowsys.web.channel.pojo.OneCodePo;
 import com.weizu.flowsys.web.channel.pojo.OperatorPgDataPo;
 import com.weizu.flowsys.web.channel.pojo.PgDataPo;
 import com.weizu.flowsys.web.channel.pojo.SuperPurchaseParam;
-import com.weizu.flowsys.web.http.entity.PgProduct;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
 import com.weizu.web.foundation.String.StringHelper;
 
@@ -49,6 +48,8 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 	private ChannelDiscountDao channelDiscountDao;
 	@Resource
 	private ExchangePlatformDaoInterface exchangePlatformDao;
+	@Resource
+	private ICnelBindPgDao cnelBindPgDao;
 
 	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
@@ -464,6 +465,10 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 		params.put("start", (pageNo-1) * pageSize);
 		params.put("end", pageSize);
 		List<PgDataPo> recordList = operatorPgDao.list(params);
+		for (PgDataPo pgDataPo : recordList) {
+			long countRes = cnelBindPgDao.count(new WherePrams("pg_id", "=", pgDataPo.getId()));
+			pgDataPo.setCnelBindPgNum(countRes);
+		}
 		return new Pagination<PgDataPo>(recordList, totalElements, pageNo, pageSize);
 	}
 
@@ -654,6 +659,10 @@ public class OperatorPgAOImpl implements OperatorPgAO {
 	@Transactional
 	@Override
 	public String delPg(Integer pgId) {
+//		long countRes = cnelBindPgDao.count(new WherePrams("pg_id", "=", pgId));
+//		if(countRes > 0){
+//			return "删除失败，请先清理相关通道";
+//		}else
 		if(operatorPgDao.del(pgId) > 0){
 			return "success";
 		}

@@ -21,6 +21,12 @@ public class OrderIn implements Cloneable {
 	private int status;							//订单状态
 	private String msg;							//订单状态描述
 	
+	public OrderIn(int status, String msg) {
+		super();
+		this.status = status;
+		this.msg = msg;
+	}
+
 	/** 数据库订单
 	 * @param transaction_id
 	 * @param user_order_id

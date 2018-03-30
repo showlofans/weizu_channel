@@ -53,6 +53,9 @@
 			<if test="platformUser != null">
 				AND tt1.rate_for=#{platformUser}
 			</if>
+			<if test="createAgency != null">
+				AND tt1.create_agency=#{createAgency}
+			</if>
 		</where>
 			<!-- WHERE tt2.id=7 and tt1.rate_for=0; -->
    </select>
@@ -102,7 +105,8 @@
 		on tc.tel_product_id=tp.id
 		<where>
 			<if test="platformUser != null">
-				 AND tt.rate_for = #{platformUser}
+				AND tt.rate_for = #{platformUser}
+			</if>
 				AND tt.id NOT IN(
 					SELECT tt2.id from <include refid="t_telrate"></include> tt2
 					INNER JOIN <include refid="t_tba"></include> tba
@@ -120,8 +124,9 @@
 							AND tba.bind_side = #{negative}
 						</if>
 			<!-- 		AND tba.bind_state=1 and tba.bind_side = 0 -->
-				</where>)
-			</if>
+				</where>) 
+			<!-- <if test="platformUser != null">
+			</if> -->
 			<!-- <if test="platformUser != null">
 				 AND tt.rate_for = #{platformUser}
 			</if> -->
@@ -131,6 +136,258 @@
 			<if test="cityid != null">
 				AND tp.cityid = #{cityid}
 			</if>
+			<if test="useOpen != null">
+				AND tc.telchannel_use_state = #{useOpen}
+			</if>
+			<if test="rootAgencyId != null">
+				AND tt.create_agency = #{rootAgencyId}
+			</if>
+<!-- 			AND tt.id NOT IN(
+				SELECT tt2.id from <include refid="t_telrate"></include> tt2
+				INNER JOIN <include refid="t_tba"></include> tba
+				on tt2.id = tba.tel_rate_id
+				INNER JOIN <include refid="t_cat"></include> cat
+				on cat.id=tba.account_id
+				<where>
+					<if test="agencyId != null">
+						AND cat.agency_id = #{agencyId}
+					</if>
+					<if test="bind != null">
+						AND tba.bind_state = #{bind}
+					</if>
+					<if test="negative != null">
+						AND tba.bind_side = #{negative}
+					</if>
+		AND tba.bind_state=1 and tba.bind_side = 0
+				</where>) -->			
+			<if test="chargeSpeed != null">
+		  		AND tp.charge_speed = #{chargeSpeed}
+		  	</if>
+		  	<if test="serviceType != null">
+		  		AND tp.service_type = #{serviceType}
+		  	</if>
+		  	<if test="operatorName != null">
+		  		AND tp.operator_name = #{operatorName}
+		  	</if>
+		  	
+			<!-- <if test="dataUser != null">
+			</if> -->
+		  <!-- 	or tt.id in(
+		  		SELECT tt3.id from <include refid="t_telrate"></include> tt3
+		  		INNER JOIN <include refid="t_telchannel"></include> tc2
+				on tt3.telchannel_id=tc2.id
+				INNER JOIN <include refid="t_tba"></include> tba2
+				on tt3.id = tba2.tel_rate_id
+				INNER JOIN <include refid="t_cat"></include> cat
+				on cat.id=tba2.account_id
+				<where>
+					<if test="agencyId != null">
+						AND cat.agency_id = #{agencyId}
+					</if>
+					<if test="bind != null">
+						AND tba2.bind_state = #{bind}
+					</if>
+					<if test="positive != null">
+						AND tba2.bind_side = #{positive}
+					</if>
+					<if test="dataUser != null">
+						AND tt3.rate_for = #{dataUser} 
+					</if>
+					<if test="useOpen != null">
+						AND tc2.telchannel_use_state = #{useOpen}
+					</if>
+				</where>) -->
+				OR tt.id in(
+		  		SELECT tt3.id from <include refid="t_telrate"></include> tt3
+		  		INNER JOIN <include refid="t_telchannel"></include> tc2
+				on tt3.telchannel_id=tc2.id
+				INNER JOIN <include refid="t_tel_product"></include> tp2
+				on tc2.tel_product_id=tp2.id
+				INNER JOIN <include refid="t_tba"></include> tba2
+				on tt3.id = tba2.tel_rate_id
+				INNER JOIN <include refid="t_cat"></include> cat
+				on cat.id=tba2.account_id
+				<where>
+					<if test="dataUser != null">
+						AND tt3.rate_for = #{dataUser} 
+					</if>
+					<if test="agencyId != null">
+						AND cat.agency_id = #{agencyId}
+					</if>
+					<if test="bind != null">
+						AND tba2.bind_state = #{bind}
+					</if>
+					<if test="positive != null">
+						AND tba2.bind_side = #{positive}
+					</if>
+					<if test="useOpen != null">
+						AND tc2.telchannel_use_state = #{useOpen}
+					</if>
+					<if test="chargeSpeed != null">
+				  		AND tp2.charge_speed = #{chargeSpeed}
+				  	</if>
+				  	<if test="serviceType != null">
+				  		AND tp2.service_type = #{serviceType}
+				  	</if>
+				  	<if test="operatorName != null">
+				  		AND tp2.operator_name = #{operatorName}
+				  	</if>
+					<if test="provinceid != null">
+						AND tp2.provinceid = #{provinceid}
+					</if>
+					<if test="cityid != null">
+						AND tp2.cityid = #{cityid}
+					</if>
+				  	<if test="rootAgencyId != null">
+						AND tt3.create_agency = #{rootAgencyId}
+					</if>
+				</where>)
+		</where>
+   </select>
+   <!-- 获得唯一话费充值折扣 -->
+   <select id="getOneTelRateForCharge" parameterType="map" resultMap="BaseResultMap">
+   		select <include refid="Base_Column_List"></include>
+   		from <include refid="t_telrate"></include> tt1
+   		INNER JOIN <include refid="t_telchannel"></include> tc
+		on tt1.telchannel_id=tc.id
+		INNER JOIN <include refid="t_tel_product"></include> tp
+		on tc.tel_product_id=tp.id
+		<where>
+			<if test="platformUser != null">
+				AND tt1.rate_for = #{platformUser}
+			</if>
+				AND tt1.id NOT IN(
+					SELECT tt2.id from <include refid="t_telrate"></include> tt2
+					INNER JOIN <include refid="t_tba"></include> tba
+					on tt2.id = tba.tel_rate_id
+					INNER JOIN <include refid="t_cat"></include> cat
+					on cat.id=tba.account_id
+					<where>
+						<if test="agencyId != null">
+							AND cat.agency_id = #{agencyId}
+						</if>
+						<if test="bind != null">
+							AND tba.bind_state = #{bind}
+						</if>
+						<if test="negative != null">
+							AND tba.bind_side = #{negative}
+						</if>
+			<!-- 		AND tba.bind_state=1 and tba.bind_side = 0 -->
+				</where>) 
+			<!-- <if test="platformUser != null">
+			</if> -->
+			<!-- <if test="platformUser != null">
+				 AND tt.rate_for = #{platformUser}
+			</if> -->
+			<if test="provinceid != null">
+				AND tp.provinceid = #{provinceid}
+			</if>
+			<if test="cityid != null">
+				AND tp.cityid = #{cityid}
+			</if>
+			<if test="useOpen != null">
+				AND tc.telchannel_use_state = #{useOpen}
+			</if>
+			<if test="rootAgencyId != null">
+				AND tt1.create_agency = #{rootAgencyId}
+			</if>
+			<if test="chargeValue != null">
+				AND tp.charge_value = #{chargeValue}
+			</if>
+			<if test="chargeSpeed != null">
+		  		AND tp.charge_speed = #{chargeSpeed}
+		  	</if>
+		  	<if test="serviceType != null">
+		  		AND tp.service_type = #{serviceType}
+		  	</if>
+		  	<if test="operatorName != null">
+		  		AND tp.operator_name = #{operatorName}
+		  	</if>
+				OR tt1.id in(
+		  		SELECT tt3.id from <include refid="t_telrate"></include> tt3
+		  		INNER JOIN <include refid="t_telchannel"></include> tc2
+				on tt3.telchannel_id=tc2.id
+				INNER JOIN <include refid="t_tel_product"></include> tp2
+				on tc2.tel_product_id=tp2.id
+				INNER JOIN <include refid="t_tba"></include> tba2
+				on tt3.id = tba2.tel_rate_id
+				INNER JOIN <include refid="t_cat"></include> cat
+				on cat.id=tba2.account_id
+				<where>
+					<if test="dataUser != null">
+						AND tt3.rate_for = #{dataUser} 
+					</if>
+					<if test="agencyId != null">
+						AND cat.agency_id = #{agencyId}
+					</if>
+					<if test="bind != null">
+						AND tba2.bind_state = #{bind}
+					</if>
+					<if test="positive != null">
+						AND tba2.bind_side = #{positive}
+					</if>
+					<if test="useOpen != null">
+						AND tc2.telchannel_use_state = #{useOpen}
+					</if>
+					<if test="chargeSpeed != null">
+				  		AND tp2.charge_speed = #{chargeSpeed}
+				  	</if>
+				  	<if test="serviceType != null">
+				  		AND tp2.service_type = #{serviceType}
+				  	</if>
+				  	<if test="chargeValue != null">
+						AND tp2.charge_value = #{chargeValue}
+					</if>
+				  	<if test="operatorName != null">
+				  		AND tp2.operator_name = #{operatorName}
+				  	</if>
+					<if test="provinceid != null">
+						AND tp2.provinceid = #{provinceid}
+					</if>
+					<if test="cityid != null">
+						AND tp2.cityid = #{cityid}
+					</if>
+				  	<if test="rootAgencyId != null">
+						AND tt3.create_agency = #{rootAgencyId}
+					</if>
+				</where>)
+		</where>
+   </select>
+   <!-- 获得统一话费充值折扣 -->
+   <select id="countTelRateForCharge" parameterType="map" resultType="long">
+   		select count(*)
+   		from <include refid="t_telrate"></include> tt
+   		INNER JOIN <include refid="t_telchannel"></include> tc
+		on tt.telchannel_id=tc.id
+		INNER JOIN <include refid="t_tel_product"></include> tp
+		on tc.tel_product_id=tp.id
+		<where>
+			<if test="platformUser != null">
+				AND tt.rate_for = #{platformUser}
+			</if>
+				AND tt.id NOT IN(
+					SELECT tt2.id from <include refid="t_telrate"></include> tt2
+					INNER JOIN <include refid="t_tba"></include> tba
+					on tt2.id = tba.tel_rate_id
+					INNER JOIN <include refid="t_cat"></include> cat
+					on cat.id=tba.account_id
+					<where>
+						<if test="agencyId != null">
+							AND cat.agency_id = #{agencyId}
+						</if>
+						<if test="bind != null">
+							AND tba.bind_state = #{bind}
+						</if>
+						<if test="negative != null">
+							AND tba.bind_side = #{negative}
+						</if>
+			<!-- 		AND tba.bind_state=1 and tba.bind_side = 0 -->
+				</where>) 
+			<!-- <if test="platformUser != null">
+			</if> -->
+			<!-- <if test="platformUser != null">
+				 AND tt.rate_for = #{platformUser}
+			</if> -->
 			<if test="useOpen != null">
 				AND tc.telchannel_use_state = #{useOpen}
 			</if>
@@ -161,31 +418,17 @@
 		  	<if test="operatorName != null">
 		  		AND tp.operator_name = #{operatorName}
 		  	</if>
-		  	<if test="dataUser != null">
-			  	AND tt.id in(
-			  		SELECT tt3.id from <include refid="t_telrate"></include> tt3
-			  		INNER JOIN <include refid="t_telchannel"></include> tc2
-					on tt3.telchannel_id=tc2.id
-					INNER JOIN <include refid="t_tba"></include> tba2
-					on tt3.id = tba2.tel_rate_id
-					INNER JOIN <include refid="t_cat"></include> cat
-					on cat.id=tba2.account_id
-					<where>
-						AND tt3.rate_for = #{dataUser} 
-						<if test="agencyId != null">
-							AND cat.agency_id = #{agencyId}
-						</if>
-						<if test="bind != null">
-							AND tba2.bind_state = #{bind}
-						</if>
-						<if test="positive != null">
-							AND tba2.bind_side = #{positive}
-						</if>
-						<if test="useOpen != null">
-							AND tc2.telchannel_use_state = #{useOpen}
-						</if>
-					</where>)
+			<if test="provinceid != null">
+				AND tp.provinceid = #{provinceid}
 			</if>
+			<if test="cityid != null">
+				AND tp.cityid = #{cityid}
+			</if>
+		  	<if test="rootAgencyId != null">
+				AND tt.create_agency = #{rootAgencyId}
+			</if>
+			<!-- <if test="dataUser != null">
+			</if> -->
 		  <!-- 	or tt.id in(
 		  		SELECT tt3.id from <include refid="t_telrate"></include> tt3
 		  		INNER JOIN <include refid="t_telchannel"></include> tc2
@@ -211,6 +454,53 @@
 						AND tc2.telchannel_use_state = #{useOpen}
 					</if>
 				</where>) -->
+					OR tt.id in(
+			  		SELECT tt3.id from <include refid="t_telrate"></include> tt3
+			  		INNER JOIN <include refid="t_telchannel"></include> tc2
+					on tt3.telchannel_id=tc2.id
+					INNER JOIN <include refid="t_tel_product"></include> tp2
+					on tc2.tel_product_id=tp2.id
+					INNER JOIN <include refid="t_tba"></include> tba2
+					on tt3.id = tba2.tel_rate_id
+					INNER JOIN <include refid="t_cat"></include> cat
+					on cat.id=tba2.account_id
+					<where>
+						<if test="dataUser != null">
+							AND tt3.rate_for = #{dataUser} 
+						</if>
+						<if test="agencyId != null">
+							AND cat.agency_id = #{agencyId}
+						</if>
+						<if test="bind != null">
+							AND tba2.bind_state = #{bind}
+						</if>
+						<if test="positive != null">
+							AND tba2.bind_side = #{positive}
+						</if>
+						<if test="useOpen != null">
+							AND tc2.telchannel_use_state = #{useOpen}
+						</if>
+						<if test="chargeSpeed != null">
+					  		AND tp2.charge_speed = #{chargeSpeed}
+					  	</if>
+					  	<if test="serviceType != null">
+					  		AND tp2.service_type = #{serviceType}
+					  	</if>
+					  	<if test="operatorName != null">
+					  		AND tp2.operator_name = #{operatorName}
+					  	</if>
+						<if test="provinceid != null">
+							AND tp2.provinceid = #{provinceid}
+						</if>
+						<if test="cityid != null">
+							AND tp2.cityid = #{cityid}
+						</if>
+					  	<if test="rootAgencyId != null">
+							AND tt3.create_agency = #{rootAgencyId}
+						</if>
+					</where>)
+					<!-- <if test="dataUser != null">
+				</if> -->
 		</where>
    </select>
   

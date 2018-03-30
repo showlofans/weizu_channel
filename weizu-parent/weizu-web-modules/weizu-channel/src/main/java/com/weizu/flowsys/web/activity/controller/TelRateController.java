@@ -22,7 +22,7 @@ import com.weizu.flowsys.operatorPg.enums.AgencyTagEnum;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.BindStateEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
-import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.TelServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
@@ -102,11 +102,11 @@ public class TelRateController {
 		request.getSession().setAttribute("telChannelParams", telChannelParams);//通道信息展示参数
 		
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
-		resultMap.put("huaServiceTypeEnums", HuaServiceTypeEnum.toList());
+		resultMap.put("huaServiceTypeEnums", TelServiceTypeEnum.toList());
 		resultMap.put("bindStateEnums", BindStateEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		
-		return new ModelAndView("/activity/telRate_bind_list","resultMap",resultMap);
+		return new ModelAndView("/activity/bind_telRate_list","resultMap",resultMap);
 	}
 	
 	/**
@@ -126,7 +126,7 @@ public class TelRateController {
 		}
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
-		resultMap.put("serviceTypeEnums", HuaServiceTypeEnum.toList());
+		resultMap.put("serviceTypeEnums", TelServiceTypeEnum.toList());
 		resultMap.put("telchargeSpeedEnums", TelchargeSpeedEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());					//商务类型
 		resultMap.put("telChannelTagEnums", TelChannelTagEnum.toList());
@@ -143,7 +143,7 @@ public class TelRateController {
 		Pagination<TelChannelParams> pagination = telChannelAO.getAgencyTelChannel(pageParam, telParams, agencyVO.getRootAgencyId(),agencyVO.getId());
 		resultMap.put("pagination", pagination);
 		
-		resultMap.put("city", HuaServiceTypeEnum.CITY.getValue());
+		resultMap.put("city", TelServiceTypeEnum.CITY.getValue());
 		List<Provinces> provinces = procincesDAO.getProvinces();
 		resultMap.put("provinces", provinces);
 		resultMap.put("params", telParams);
@@ -190,13 +190,14 @@ public class TelRateController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		TelChannelParams telChannelParams = telChannelAO.selectByIdType(id, serviceType);
 		resultMap.put("telChannelParams", telChannelParams);//通道信息展示参数
+		resultMap.put("telchannelId", id);//通道id
 		resultMap.put("rateFor", AgencyTagEnum.DATA_USER.getValue());//费率折扣信息
 		if(telRateId != null){
 			TelRatePo telRatePo = telRateDao.get(telRateId);
 			resultMap.put("telRatePo", telRatePo);//费率折扣信息
 		}
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
-		resultMap.put("huaServiceTypeEnums", HuaServiceTypeEnum.toList());
+		resultMap.put("huaServiceTypeEnums", TelServiceTypeEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		resultMap.put("telChannelTagEnums", TelChannelTagEnum.toList());
 		
@@ -271,7 +272,7 @@ public class TelRateController {
 		
 		resultMap.put("telChannelParams", telChannelParams);//通道信息展示参数
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
-		resultMap.put("huaServiceTypeEnums", HuaServiceTypeEnum.toList());
+		resultMap.put("huaServiceTypeEnums", TelServiceTypeEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
 		resultMap.put("telChannelTagEnums", TelChannelTagEnum.toList());
 		
@@ -546,12 +547,16 @@ public class TelRateController {
 	 */
 	@ResponseBody
 	@RequestMapping(value=TelRateURL.UPDATE_BINDTEL_STATE)
-	public String updateBindTelState(TelrateBindAccountPo telrateBindAccountPo){
+	public String updateBindTelState(TelrateBindAccountPo telrateBindAccountPo, HttpServletRequest request){
 		String result = "error";
-		 int res = telrateBindAccountAO.updateBindState(telrateBindAccountPo);
-		 if(res > 0){
-			 result = "success";
-		 }
+		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
+		if(agencyVO!= null){
+			telrateBindAccountPo.setBindAgencyId(agencyVO.getId());
+			int res = telrateBindAccountAO.updateBindState(telrateBindAccountPo);
+			if(res > 0){
+				result = "success";
+			}
+		}
 		return result;
 	}
 	

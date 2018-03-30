@@ -2,6 +2,10 @@ package com.weizu.flowsys.web.channel.pojo;
 
 import java.util.List;
 
+import com.weizu.flowsys.core.annotation.po.TableName;
+import com.weizu.flowsys.core.annotation.po.TempField;
+import com.weizu.flowsys.core.beans.Po;
+
 /**
  * @description: 省份编码实体
  * @projectName:weizu-channel
@@ -10,14 +14,15 @@ import java.util.List;
  * @createTime:2017年11月9日 下午5:21:14
  * @version 1.0
  */
-public class Provinces {
+@TableName(name="provinces")
+public class Provinces extends Po {
 	
 	private Integer id;						//id
 	
 	private String provinceid;				//省份编码
 	
 	private String province;				//省份名称
-	
+	@TempField
 	private List<Cities> cities;			//城市列表
 	
 	public List<Cities> getCities() {

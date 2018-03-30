@@ -9,8 +9,8 @@ package com.weizu.flowsys.api.hsingleton;
  * @version 1.0
  */
 public class HuaConstants {
-	/**公司英文标识**/
-//	public final static String WEIZU_ENG = "Weizu";
+	/**连城连话费**/
+	public final static String UNICOMAYNC_ENG = "UnicomAync";
 //	
 //	/**
 //	 * 行云流水对公

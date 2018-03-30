@@ -50,7 +50,7 @@
 				</span>
 			</div>
 		</div>
-		<input type="hidden" name="epName" value="${resultMap.epList[0].epName }">
+		<input type="hidden" id="epName" name="epName" value="${ep.epName }"></input>
 		<div class="row cl">
 		<label class="form-label col-xs-4 col-sm-3">运营商类型：</label>
 			<div class="formControls col-xs-8 col-sm-9">
@@ -188,6 +188,7 @@ function province_change(v){
 /**修改平台名称*/
 function changeEpName(){
 	var epName = $('#selectEpId option:selected').text();
+	//layer.msg(epName);
 	$('#epName').val(epName);
 }
 //保证非空

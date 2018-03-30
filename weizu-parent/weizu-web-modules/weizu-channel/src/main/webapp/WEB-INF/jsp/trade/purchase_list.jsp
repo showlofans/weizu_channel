@@ -53,7 +53,7 @@
 					手机号:<input type="text"  value="${resultMap.searchParams.chargeTel }" name="chargeTel" id="" placeholder=" 手机号" style="width:150px" class="input-text">
 					归属地:<input type="text"  value="${resultMap.searchParams.chargeTelDetail }" name="chargeTelDetail" id="" placeholder=" 归属地" style="width:80px" class="input-text">
 					所属代理商:<input type="text"  value="${resultMap.searchParams.agencyName }" name="agencyName" id="" placeholder=" 代理商名称" style="width:100px" class="input-text">
-					订单号:<input type="text"  value="${resultMap.searchParams.orderId }" name="orderId" id="" placeholder=" 订单号" style="width:250px" class="input-text">
+					订单号:<input type="text"  value="${resultMap.searchParams.orderId }" name="orderId" id="" placeholder=" 订单号(18位)" style="width:250px" maxlength="19" onkeyup='this.value=this.value.replace(/\D/gi,"")' class="input-text">
 				</div>
 				
 				<div class="row cl" style="margin-top: 30dp">
@@ -116,7 +116,7 @@
 		                  	<em class="inputto">至</em>
 		            <input style="width:150px" type="text" class="input-text" id="arriveEndTimeStr" name="arriveEndTimeStr"   value="${resultMap.searchParams.arriveEndTimeStr }"  onfocus="WdatePicker({startDate:'%y-%M-%d 23:59:59',autoPickDate:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'arriveStartTimeStr\')}',onpicked:function(){formSub();}})"/>
 					
-					<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+					<button name="" id="" class="btn btn-success" type="submit" onclick="formSub()"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 					<button type="button"class="btn btn-primary" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
 				</div>
@@ -129,29 +129,29 @@
 					<!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
 					<!-- <th width="80">流量包Id</th> -->
 					<th width="100">所属代理商</th>
-					<th width="100">号码归属</th>
-					<th width="80">业务类型</th>
+					<th width="90">号码归属</th>
+					<th width="70">业务类型</th>
 					<c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
-						<th width="80">流量大小</th>
+						<th width="50">流量大小</th>
 					</c:if>
-					<th width="70">面值</th>
+					<th width="50">面值</th>
 					<th width="60">金额</th><!-- 返款 -->
-					<th width="120">手机号</th>
+					<th width="90">手机号</th>
 					<!-- <th width="150">充值时间</th> -->
 					
 					<c:if test="${resultMap.pgcharge == resultMap.searchParams.purchaseFor }">
 						<th width="60">城市</th>
 					</c:if>
 					<th width="80">结果</th>
-					<th width="80">结果描述</th>
-					<th width="150">提交时间</th>
+					<th width="100">结果描述</th>
+					<th width="130">提交时间</th>
 					<c:if test="${loginContext.rootAgencyId == 0 }">
 						<th width="80">查看目录</th>
-						<th width="120">通道名称</th>
+						<th width="140">通道名称</th>
 					</c:if>
-					<th width="60">充值方式</th>
+					<th width="100">充值方式</th>
 					<th width="60">扣款类型</th>
-					<th width="150">订单号</th>
+					<th width="140">订单号</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -196,7 +196,11 @@
 						 
 						<td>${purchase.chargeValue }</td>
 						<td>
+							<span class="c-warning">
+								<a style="text-decoration:none;" data-href="/flowsys/account/consume_list.do?purchaseId=${purchase.orderId }&userName=${purchase.agencyName}&pageNo=1&chargeFor=${purchase.purchaseFor}" data-title="订单消费" onclick="Hui_admin_tab(this)" href="javascript:void(0)">
 								${purchase.orderPrice }
+								</a>
+							</span>
 							<span class="label label-warning radius">
 							</span>
 						</td>
@@ -215,28 +219,28 @@
 											<c:choose>
 												<c:when test="${orderStateEnum.value == 0 }">
 													<span class="label label-danger radius mark">
-														<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderResult=${orderStateEnum.value }&backStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&backEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值失败" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
+														<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderResult=${orderStateEnum.value }&purchaseFor=${resultMap.searchParams.purchaseFor }&backStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&backEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值失败" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
 														${orderStateEnum.desc }
 														</a>
 													</span>
 												</c:when>
 												<c:when test="${orderStateEnum.value == 2 }">
 													<span class="label label-secondary radius mark">
-													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderResult=${orderStateEnum.value }&arriveStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&arriveEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值进行" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
+													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderResult=${orderStateEnum.value }&purchaseFor=${resultMap.searchParams.purchaseFor }&arriveStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&arriveEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值进行" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
 														${orderStateEnum.desc }
 													</a>
 													</span>
 												</c:when>
 												<c:when test="${orderStateEnum.value == 4 }">
 													<span class="label label-warning radius mark">
-													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderResult=${orderStateEnum.value }&arriveStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&arriveEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值等待" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
+													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderResult=${orderStateEnum.value }&purchaseFor=${resultMap.searchParams.purchaseFor }&arriveStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&arriveEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值等待" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
 														${orderStateEnum.desc }
 													</a>
 													</span>
 												</c:when>
 												<c:otherwise>
 													<span class="label label-success radius mark">
-													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderResult=${orderStateEnum.value }&backStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&backEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值成功" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
+													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderResult=${orderStateEnum.value }&purchaseFor=${resultMap.searchParams.purchaseFor }&backStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&backEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }&agencyName=${purchase.agencyName }" data-title="充值成功" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
 														${orderStateEnum.desc }
 													</a>
 													</span>
@@ -251,21 +255,21 @@
 											<c:choose>
 												<c:when test="${orderStateEnum.value == 0 }">
 													<span class="label label-danger radius mark">
-														<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderState=${orderStateEnum.value }&backStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&backEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值失败" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
+														<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderState=${orderStateEnum.value }&purchaseFor=${resultMap.searchParams.purchaseFor }&backStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&backEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值失败" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
 														${orderStateEnum.desc }
 														</a>
 													</span>
 												</c:when>
 												<c:when test="${orderStateEnum.value == 2 }">
 													<span class="label label-secondary radius mark">
-													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderState=${orderStateEnum.value }&arriveStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&arriveEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值进行" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
+													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderState=${orderStateEnum.value }&purchaseFor=${resultMap.searchParams.purchaseFor }&arriveStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&arriveEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值进行" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
 														${orderStateEnum.desc }
 													</a>
 													</span>
 												</c:when>
 												<c:otherwise>
 													<span class="label label-success radius mark">
-													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderState=${orderStateEnum.value }&backStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&backEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值成功" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
+													<a style="text-decoration:none;" data-href="/flowsys/chargePg/purchase_list.do?orderState=${orderStateEnum.value }&purchaseFor=${resultMap.searchParams.purchaseFor }&backStartTimeStr=${resultMap.searchParams.arriveStartTimeStr }&backEndTimeStr=${resultMap.searchParams.arriveEndTimeStr }" data-title="充值成功" href="javascript:void(0)" onclick="Hui_admin_tab(this)">
 														${orderStateEnum.desc }
 													</a>
 													</span>
@@ -371,10 +375,10 @@
 <script src="/view/lib/bootstrap-datetimepicker.min.js"></script>
 <script src="/view/lib/bootstrap-datetimepicker.zh-CN.js"></script> -->
 <script type="text/javascript">
-function formSub(){
+/* function formSub(){
 	$("input[name='pageNoLong']").val('');
 	$('form').submit();
-}
+} */
 /*代理商-编辑*/
 function editAgency(id){
 	//var $agencyTr = $(obj).parent().parent();//tr标签
@@ -422,6 +426,7 @@ function getEp(orderId,obj){
 $(document).ready(function() {
 	$('.select').change(function(){
 		//$('form').submit();
+		$("input[name='pageNoLong']").val('');
 		formSub();
 	})
 	/* $('.purchaseFor').change(function(){//特殊需求

@@ -26,7 +26,7 @@
 <meta name="description" content="">
 </head>
 <!-- <body class="login_bj"> -->
-<body style="overflow:hidden;">
+<body style="overflow:hidden;" onload="ifIndex()">
 <div class="loginWraper">
   <div id="loginform" class="loginBox">
   <c:choose>
@@ -37,6 +37,7 @@
   		<h3 class="title">欢迎注册</h3> 
   	</c:otherwise>
   </c:choose>
+  <input type="hidden" id="id" value="${loginContext.id }">
     <form class="form form-horizontal" id="regForm" action="/flowsys/agency/register.do" method="post">
       <div class="row cl">
         <label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe6cb;</i></label>
@@ -213,6 +214,13 @@ function testHas(){
 	    	}
 	    });
 	});
+	function ifIndex(){
+		var $id = $('#id').val();
+		//alert($id);
+		if($id != ''){
+			window.location.href='/home';
+		}
+	}
 </script>
 </body>
 </html>

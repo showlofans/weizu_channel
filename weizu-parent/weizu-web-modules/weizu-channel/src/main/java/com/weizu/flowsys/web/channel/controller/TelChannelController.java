@@ -19,7 +19,7 @@ import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.CallBackEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelStateEnum;
 import com.weizu.flowsys.operatorPg.enums.ChannelUseStateEnum;
-import com.weizu.flowsys.operatorPg.enums.HuaServiceTypeEnum;
+import com.weizu.flowsys.operatorPg.enums.TelServiceTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorNameEnum;
 import com.weizu.flowsys.operatorPg.enums.OperatorTypeEnum;
 import com.weizu.flowsys.operatorPg.enums.PgServiceTypeEnum;
@@ -61,7 +61,7 @@ public class TelChannelController {
 		resultMap.put("telchargeSpeedEnums", TelchargeSpeedEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());					//商务类型
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
-		resultMap.put("serviceTypeEnums", HuaServiceTypeEnum.toList());
+		resultMap.put("serviceTypeEnums", TelServiceTypeEnum.toList());
 		resultMap.put("epFor", PgServiceTypeEnum.TELCHARGE.getValue());
 		
 		List<Provinces> provinces = procincesDAO.getProvinces();
@@ -112,7 +112,7 @@ public class TelChannelController {
 		resultMap.put("channelStateEnums", ChannelStateEnum.toList());
 		resultMap.put("channelUseStateEnums", ChannelUseStateEnum.toList());
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
-		resultMap.put("serviceTypeEnums", HuaServiceTypeEnum.toList());
+		resultMap.put("serviceTypeEnums", TelServiceTypeEnum.toList());
 		resultMap.put("telchargeSpeedEnums", TelchargeSpeedEnum.toList());
 		resultMap.put("callBackEnums", CallBackEnum.toList());
 		
@@ -132,7 +132,7 @@ public class TelChannelController {
 		Pagination<TelChannelParams> pagination = telChannelAO.getTelChannel(telParams, pageParam);
 		resultMap.put("pagination", pagination);
 		
-		resultMap.put("city", HuaServiceTypeEnum.CITY.getValue());
+		resultMap.put("city", TelServiceTypeEnum.CITY.getValue());
 		List<Provinces> provinces = procincesDAO.getProvinces();
 		resultMap.put("provinces", provinces);
 		resultMap.put("params", telParams);
@@ -158,7 +158,7 @@ public class TelChannelController {
 		resultMap.put("telChannelParams", telChannelParams);					//通道信息
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());					//商务类型
 		resultMap.put("operatorNameEnums", OperatorNameEnum.toList());
-		resultMap.put("serviceTypeEnums", HuaServiceTypeEnum.toList());
+		resultMap.put("serviceTypeEnums", TelServiceTypeEnum.toList());
 		resultMap.put("telchargeSpeedEnums", TelchargeSpeedEnum.toList());
 		return new ModelAndView("/tel_channel/telchannel_edit_page", "resultMap", resultMap);
 	}

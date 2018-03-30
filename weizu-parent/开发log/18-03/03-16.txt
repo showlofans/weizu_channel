@@ -1,0 +1,19 @@
+离你很近的女生，就会动心。
+那南笙呢，那旁边的女会计呢
+
+在心里面的位置是什么样的
+
+{chargeSpeed=2, dataUser=null, rootAgencyId=1, platformUser=0, provinceid=440000, negative=0, positive=1, serviceType=1, bind=0, agencyId=2, useOpen=0}
+
+获取我的话费通道方法和异步获取话费包体不一致。
+
+{chargeSpeed=2, dataUser=1, rootAgencyId=1, platformUser=null, provinceid=440000, negative=0, positive=1, serviceType=1, bind=0, agencyId=2, useOpen=0}
+
+{chargeSpeed=2, dataUser=null, rootAgencyId=1, platformUser=0, provinceid=440000, negative=0, positive=1, serviceType=1, bind=0, agencyId=2, useOpen=0}
+
+totalRecord = 1  wrong
+{chargeSpeed=2, dataUser=1, rootAgencyId=1, platformUser=null, provinceid=440000, negative=0, positive=1, serviceType=1, bind=0, agencyId=2, useOpen=0}
+
+totalRecord = 4 right
+{chargeSpeed=2, dataUser=null, rootAgencyId=1, platformUser=0, provinceid=440000, negative=0, positive=1, serviceType=1, bind=0, agencyId=2, useOpen=0}
+

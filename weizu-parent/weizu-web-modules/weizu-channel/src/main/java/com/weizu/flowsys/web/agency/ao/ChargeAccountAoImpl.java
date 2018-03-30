@@ -1,7 +1,9 @@
 package com.weizu.flowsys.web.agency.ao;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -11,10 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.weizu.flowsys.core.beans.WherePrams;
+import com.weizu.flowsys.core.util.NumberTool;
 import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
 import com.weizu.flowsys.web.agency.dao.ChargeAccountDaoInterface;
 import com.weizu.flowsys.web.agency.dao.CompanyCredentialsDao;
+import com.weizu.flowsys.web.agency.pojo.AccountBalanceSumPo;
+import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.CompanyCredentialsPo;
 import com.weizu.web.foundation.DateUtil;
@@ -86,9 +91,11 @@ public class ChargeAccountAoImpl implements ChargeAccountAo {
 
 	@Transactional(isolation = Isolation.SERIALIZABLE)
 	@Override
-	public int updateAccount(ChargeAccountPo chargeAccountPo) {
-
-		return chargeAccountDao.updateById(chargeAccountPo);
+	public int updateAccount(Integer id, Double editBalance) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", id);
+		map.put("editBalance", editBalance);
+		return chargeAccountDao.updateById(map);
 	}
 
 	/**
@@ -213,6 +220,29 @@ public class ChargeAccountAoImpl implements ChargeAccountAo {
 	@Override
 	public CompanyCredentialsPo getCredentialByAgency(int agencytId) {
 		return companyCredentialsDao.get(new WherePrams("agency_id", "=", agencytId));
+	}
+
+	@Override
+	public List<AccountBalanceSumPo> getBalanceSumByAgencyId(Integer contextId,
+			boolean isRootAgency) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("rootAgency", "root");
+		if(isRootAgency){
+			AgencyBackwardPo virtualAgencyPo = agencyVODao.get(new WherePrams("user_name", "=", "xiaoning"));//不记录真实统计余额的代理商
+			params.put("virtualAgencyId", virtualAgencyPo.getId());
+			params.put("rootAgencyId", "root");
+		}else{
+			params.put("contextId", contextId);
+			params.put("rootAgencyId", "not");
+		}
+		List<AccountBalanceSumPo> sumList = chargeAccountDao.getBalanceSum(params);
+		for (AccountBalanceSumPo accountBalanceSumPo : sumList) {
+			Integer billType = accountBalanceSumPo.getBillType();
+			ChargeAccountPo chargeAccountPo = getAccountByAgencyId(contextId, billType);//对私
+			accountBalanceSumPo.setAbleBalance(chargeAccountPo.getAccountBalance());
+			accountBalanceSumPo.setUnableBalance(NumberTool.sub(accountBalanceSumPo.getBalanceSum(), chargeAccountPo.getAccountBalance()));
+		}
+		return sumList;
 	}
 
 }

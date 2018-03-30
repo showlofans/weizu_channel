@@ -106,7 +106,7 @@
 //	public void testLogin(){
 ////		String userName = "博爱小强";// Lxq19930620
 ////		String userName = "流量代理";// xing081500
-////		String userName = "罗大大";// 201103
+////		String userName = "罗大大";// 201103 48
 ////		String userName = "18706732390";// hou77833
 ////		String userName = "A661844";// 123456 
 ////		String userName = "xiao";// MzMzMjIxLi4u 密码编译
@@ -116,17 +116,26 @@
 ////		String userName = "456";// 123456
 ////		String userName = "WZ123";// 123456
 ////		String userName = "haiyi";// 123456
-//		String userName = "王小贱";// 123456
+////		String userName = "郭大大";// 123456
+////		String userName = "hy123";// 960528hy
+////		String userName = "wl123";// 960528 
+//		String userName = "13433777966";// 664228as 
+////		String userName = "wzkj";// wzkj 
+////		String userName = "王小贱";// 201103
+////		String userName = "184545468";// 00000000
 ////		String userName = "wechat";// 123456 id231
 ////		String userName = "gzyl";// d9sjfwa@a99d7
 ////		String userName = "xiaoning";// d9sjfwa@a99d7
+////		String userName = "saiduosai";// sds741789
 //		
 ////		String userName = "15735651540";// 123456
 ////		String userName = "LufuLL";// 123456
 ////		String userName = "15766286668";// 123456 id 200
 //		
 //		AgencyBackwardPo agencyPo = agencyVODao.get(new WherePrams("user_name", "=", userName));
-//		System.out.println(agencyPo.getId() + "\t" + agencyPo.getRootAgencyId());
+//		System.out.println(agencyPo.getId());
+////		String supperUserName = agencyVODao.get(agencyPo.getRootAgencyId()).getUserName();
+////		System.out.println( "suppperUserName:" + supperUserName);
 //		//得到密码
 ////		System.out.println("8a982a8a5f7bd4d7015f7bd4d7c90000".equals("8a982a8a5f7bd4d7015f7bd4d7c90000"));
 ////		System.out.println(userName);//15754715147

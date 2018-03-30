@@ -101,8 +101,6 @@
 				</span>
 		</div>
 	</div>
-	
-		
 		
 	<div class="row cl" id="pg">
 		<label class="form-label col-xs-4 col-sm-3"><!--<span class="c-red">*</span>-->话费面值：</label>
@@ -192,7 +190,7 @@
 			        data: $('form').serialize(),//表单数据
 			        async : false,
 			        success:function(d){
-			        	if(d == '订单提交成功'){
+			        	if(d == 'success'){
 				        	removeIframe();
 			        	}else{
 			        		alert(d + "充值失败");
@@ -269,7 +267,7 @@
     	}
     }
    
-    var reg = /^(13|15|18)[0-9]{9}$/;//点击查询
+    var reg = /^(13|14|15|18|17)[0-9]{9}$/;//点击查询
     function ajaxPhone(){
     	 tel=$('input[name=chargeTel]').val();
          if(tel){
@@ -282,7 +280,6 @@
          }
     }
     
-    var rootAgencyId = $('#rootAgencyId').val();
     /**
 	 * 乘法运算，避免数据相乘小数点后产生多位数和计算精度损失。
 	 *
@@ -427,6 +424,7 @@
 		  		    }
 		  		    	//alert(itag2);
 		  		    if(itag2 > 0){//得到了省份名称
+			  		  	var rootAgencyId = $('#rootAgencyId').val();
 		  		    	var chargeSpeed = $('#chargeSpeed').val();
 		  		  		var url = '/flowsys/chargeTel/ajax_charge_telpc.do?provinceid=' + provinceid;
 		  		  		url += '&cityid=';
@@ -435,6 +433,11 @@
 		  		  		url += sType1;
 		  		  		url += '&chargeSpeed=';
 		  		  		url += chargeSpeed;
+		  		  		if(rootAgencyId == 0){
+		  		  			var epName = $('#epName').val();
+			  		  		url += '&epName=';
+			  		  		url += epName;
+		  		  		}
 		  		  		//alert(itag2);
 		  		  	if($('#rateForDiv').is(':visible')){
 			  		  	url += '&rateFor=';

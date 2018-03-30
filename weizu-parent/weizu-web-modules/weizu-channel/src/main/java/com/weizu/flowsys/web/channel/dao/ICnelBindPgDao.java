@@ -2,6 +2,9 @@ package com.weizu.flowsys.web.channel.dao;
 
 import java.util.List;
 
+import com.weizu.flowsys.core.dao.Dao;
+import com.weizu.flowsys.core.dao.impl.DaoImpl;
+import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.CnelBindPgPo;
 
 /**
@@ -12,7 +15,7 @@ import com.weizu.flowsys.web.channel.pojo.CnelBindPgPo;
  * @createTime:2017年9月16日 上午10:50:29
  * @version 1.0
  */
-public interface ICnelBindPgDao {
+public interface ICnelBindPgDao extends Dao<CnelBindPgPo, Long> {
 	
 	/**
 	 * @description:批量绑定

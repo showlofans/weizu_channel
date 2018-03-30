@@ -1,5 +1,7 @@
 //package crud.aotest;
 //
+//import java.util.List;
+//
 //import javax.annotation.Resource;
 //
 //import org.junit.Test;
@@ -7,9 +9,13 @@
 //import org.springframework.test.context.ContextConfiguration;
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
+//import com.weizu.flowsys.core.beans.WherePrams;
 //import com.weizu.flowsys.operatorPg.enums.BillTypeEnum;
 //import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
+//import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
 //import com.weizu.flowsys.web.agency.dao.impl.ChargeAccountDao;
+//import com.weizu.flowsys.web.agency.pojo.AccountBalanceSumPo;
+//import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 //import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 //
 //@RunWith(SpringJUnit4ClassRunner.class)
@@ -18,6 +24,9 @@
 //	
 //	@Resource
 //	private ChargeAccountAo chargeAccountAO;
+//	
+//	@Resource
+//	private AgencyVODaoInterface agencyVODao;
 //	
 //	@Resource
 //	private ChargeAccountDao chargeAccountDao;
@@ -62,10 +71,20 @@
 //	public void getAccountByAgencyId(){
 //		//wechat:246-0 agencyid = 231
 //		//lufull: 198-0, 199-1agencyid = 187
-//		ChargeAccountPo accouontPo = chargeAccountAO.getAccountByAgencyId(187, BillTypeEnum.CORPORATE_BUSINESS.getValue());
+//		String userName = "haiyi";
+//		AgencyBackwardPo agencyPo = agencyVODao.get(new WherePrams("user_name", "=", userName));
+//		ChargeAccountPo accouontPo = chargeAccountAO.getAccountByAgencyId(agencyPo.getId(), BillTypeEnum.BUSINESS_INDIVIDUAL.getValue());
 //		System.out.println(accouontPo.getId());
 //		System.out.println(accouontPo.getAccountBalance());
 //	}
+////	@Test
+////	public void getBalanceSum(){
+////		List<AccountBalanceSumPo> sumList = chargeAccountAO.getBalanceSumByAgencyId(1, true);
+//////		List<AccountBalanceSumPo> sumList = chargeAccountAO.getBalanceSumByAgencyId(2, false);
+////		for (AccountBalanceSumPo accountBalanceSumPo : sumList) {
+////			System.out.println(accountBalanceSumPo.toString());
+////		}
+////	}
 //	/**
 //	 * @description: 根据转账记录获得账户信息
 //	 * @author:微族通道代码设计人 宁强

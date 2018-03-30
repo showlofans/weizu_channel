@@ -122,13 +122,20 @@
 				</span>
 				折扣:
 				<span class="select-box inline">
-						<select name="rateDiscountId" id="rateDiscountId" class="select" onchange="dischange()">
-							<c:if test="${empty resultMap.discountList }">
+						<select name="rateDiscountId" id="rateDiscountId" class="select" onchange="formSub()">
+							<c:choose>
+								<c:when test="${empty resultMap.discountList }">
+									<option value="">没有配置折扣</option>
+								</c:when>
+								<c:otherwise>
+									<c:forEach items="${resultMap.discountList }" var="discount" varStatus="vs1">
+										<option value="${discount.id }" <c:if test="${discount.id == resultMap.searchParams.rateDiscountId }"> selected</c:if>>${discount.activeDiscount }</option>
+									</c:forEach>
+								</c:otherwise>
+							</c:choose>
+							<%-- <c:if test="${empty resultMap.discountList }">
 								<option value="">没有配置折扣</option>
-							</c:if>
-							<c:forEach items="${resultMap.discountList }" var="discountPo" varStatus="vs1">
-								<option value="${discountPo.id }" <c:if test="${discountPo.id == resultMap.searchParams.rateDiscountId }"> selected</c:if>>${discountPo.activeDiscount }</option>
-							</c:forEach>
+							</c:if> --%>
 					</select>
 				</span>
 				<%-- <input type="hidden" id="rateId" name="rateId" value="${resultMap.rateId }"> --%>
@@ -146,7 +153,7 @@
 				代理商名称： <input type="text" style="width:150px;" class="input-text ac_input" placeholder=" 代理商名称" value="${resultMap.searchParams.agencyName }" autocomplete="off" id="agencyName" name="agencyName">
 				<%-- 备注信息:<input type="text"  value="${resultMap.aardto.agencyMark }" name="agencyMark" id="" placeholder=" 用户备注" style="width:150px" class="input-text"> --%>
 				<!-- <button class="btn btn-success" type="reset"  value="重置">重置</button> -->
-				<button name="" id="" class="btn btn-success"  type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+				<button name="" id="" class="btn btn-success"  type="submit" onclick="formSub()"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 				<%-- <input type="hidden" id="rateId" name="id" value="${resultMap.discountList[0].id }">  --%>
 				<input type="hidden" id="pageNoLong" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
 				<input type="hidden" id="channelId" name="channelId" value="${resultMap.channelId }"> 
@@ -295,11 +302,11 @@ function batch_bind(url,id,w,h){
 }
 
 //onchange获得折扣
-function dischange(){
+/* function dischange(){
 	//alert(1);
 	$('#pageNoLong').val("1");
 	$('#formD').submit();
-}
+} */
 //更新绑定状态
 function changeBState(url,activeId,agencyName,bindS){
 	//alert(agencyName);
@@ -365,11 +372,14 @@ function setDiscount(){
 	var serviceType = $('#serviceType').val();
 	var operatorType = $('#operatorType').val();
 	var billType = $('#billTypeRate').val();
+	
+	var channelDiscountId = $('#channelDiscountId').val();
 	//alert(scopeCityCode);
 	$.ajax({
 		type: 'POST',
 		contentType: "application/x-www-form-urlencoded; charset=utf-8",
-		url: '/flowsys/rate/get_discount.do?scopeCityCode='+scopeCityCode+'&serviceType='+serviceType+'&operatorType='+operatorType+'&billType='+billType,
+		//url: '/flowsys/rate/get_discount.do?scopeCityCode='+scopeCityCode+'&serviceType='+serviceType+'&operatorType='+operatorType+'&billType='+billType,
+		url: '/flowsys/rate/get_discount.do?channelDiscountId='+channelDiscountId,
 		dataType: 'json',
 		success: function(resp){
 			//$(obj).parents("tr").remove();

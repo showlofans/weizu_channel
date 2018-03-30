@@ -22,7 +22,7 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>用户账户：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text isContainsSpecialChar" style="width:200px" value="${loginContext.userName }" placeholder="" id="userName" name="userName" >
+				<input type="text" class="input-text isContainsSpecialChar" style="width:200px" readonly="readonly" value="${loginContext.userName }" placeholder="" id="userName" name="userName" >
 			</div>
 		</div>
 		<div class="row cl">

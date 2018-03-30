@@ -7,11 +7,12 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
+import com.weizu.flowsys.core.dao.impl.DaoImpl;
 import com.weizu.flowsys.web.channel.dao.IProcincesDAO;
 import com.weizu.flowsys.web.channel.pojo.Provinces;
 
 @Service("procincesDAO")
-public class ProcincesDAOImpl implements IProcincesDAO {
+public class ProcincesDAOImpl extends DaoImpl<Provinces, Integer> implements IProcincesDAO {
 
 	@Resource
 	private SqlSessionTemplate sqlSessionTemplateASS;
