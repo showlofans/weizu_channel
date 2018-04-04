@@ -154,7 +154,7 @@
 			<thead>
 				<tr class="text-c">
 					<!-- <th width="25"><input type="checkbox" name="" value=""></th> -->
-					<!-- <th width="80">流量包Id</th> -->
+					<th width="80">流量包Id</th>
 					
 					<!-- <th width="80">属性</th> -->
 					<th width="200">包名称</th>
@@ -178,7 +178,7 @@
 				<c:forEach items="${resultMap.pagination.records }" var="pg" varStatus="vs">
 					<tr class="text-c">
 						<!-- <td><input type="checkbox" value="" name=""></td> -->
-						<%-- <td>${pg.pgId }</td> --%>
+						 <td>${pg.id }</td>
 						<%-- <td><c:forEach items="${resultMap.pgServiceTypeEnums }" var="pgServiceType" varStatus="vs1">
 						<c:if test="${pg.pgServiceType == pgServiceType.value }"> ${pgServiceType.desc }</c:if>
 						</c:forEach>

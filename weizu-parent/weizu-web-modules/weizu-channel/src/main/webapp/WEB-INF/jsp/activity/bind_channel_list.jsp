@@ -46,11 +46,14 @@
 				<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
 		</form>
 	</div> --%>
-	<div class="text-c" style="display:none;">
+	<div class="text-c" >
 		<form action="/flowsys/rate/bind_channel_list.do" method="post" id="formD" name="dataListForm">
 			<input type="hidden" name="pageNo" value="${resultMap.pagination.pageNo }"> 
-			<input type="hidden" name="accountId" value="${childAccountPo.id }"> 
-			<input type="hidden" name="agencyName" value="${childAccountPo.agencyName }"> 
+			<input type="hidden" name="accountId" value="${resultMap.childAccountPo.id }"> 
+			<input type="hidden" name="agencyName" value="${resultMap.childAccountPo.agencyName }"> 
+			<input type="text" value="${resultMap.scopeCityName }" name="scopeCityName" id="scopeCityName" placeholder=" 通道地区" style="width:150px" class="input-text"></input>
+			<button name="" id="" class="btn btn-success"  type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+			<button type="button"class="btn btn-primary" onclick="resetPlace()" value="重置">重置</button>
 		</form>
 	</div>
 	<!-- <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加资讯" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加资讯</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div> -->
@@ -58,7 +61,7 @@
 			<!-- <sapn>通道名称：微族科技</sapn>
 			<sapn>是否带票：不带票</sapn>
 			<sapn>通道折扣：云南85</sapn> -->
-			<sapn>代理商名称：${childAccountPo.agencyName }</sapn><br>
+			<sapn>代理商名称：${resultMap.childAccountPo.agencyName }</sapn><br>
 			高级通道开通状态：<sapn>
 			<c:choose>
 				<c:when test="${isOpen == 1 }">开通</c:when>
@@ -68,6 +71,7 @@
 			</c:choose></sapn><br>
 			<!-- <sapn>通道折扣：云南85</sapn> -->
 			<a style="text-decoration:none" class="btn btn-success" onclick="Hui_admin_tab(this)" data-href="/flowsys/rate/bind_channel_page.do" title="" data-title="添加通道">添加通道</a>
+			
 		<table class="table table-border table-bordered table-bg table-hover table-sort">
 			<thead>
 				<tr class="text-c">
@@ -152,6 +156,11 @@
 <script type="text/javascript">
 function onSub(){
 	location.reload();
+}
+//重置搜索地区
+function resetPlace(){
+	$('#scopeCityName').val('');
+	$('form').submit();	
 }
 //更新绑定状态
 function changeBState(url,activeId,bindS){

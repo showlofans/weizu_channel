@@ -1,11 +1,18 @@
 //package crud.aotest;
 //
 //import java.io.UnsupportedEncodingException;
+//import java.util.Arrays;
 //import java.util.Date;
 //import java.util.Map;
 //import java.util.Random;
+//import java.util.TreeMap;
 //
 //import org.junit.Test;
+//
+//
+//
+//
+//
 //
 //
 //
@@ -30,6 +37,8 @@
 //import com.weizu.flowsys.web.http.entity.Order;
 //import com.weizu.flowsys.web.http.entity.OrderPo;
 //import com.weizu.flowsys.web.trade.dao.PurchaseDao;
+//import com.weizu.flowsys.web.trade.pojo.pdd.PddParams;
+//import com.weizu.flowsys.web.trade.pojo.pdd.PddPgParams;
 ////import com.weizu.flowsys.util.ClassUtil;
 ////import com.weizu.flowsys.util.StringUtil2;
 ////import com.weizu.flowsys.util.UUIDGenerator;
@@ -188,8 +197,31 @@
 ////		String mapStr = "{chargeSpeed=2, dataUser=null, rootAgencyId=1, platformUser=0, provinceid=440000, negative=0, positive=1, serviceType=1, bind=0, agencyId=4, useOpen=0}";
 ////		Map<String,Object> map = StringUtil2.mapStringToMap(mapStr);
 ////		System.out.println(map.toString());
-//		String ctd = "江西移动";
-//		System.out.println(ctd.substring(0, ctd.length()-2));
+////		String ctd = "江西移动";
+////		System.out.println(ctd.substring(0, ctd.length()-2));
+////		
+////		Map<String,Object> treeMap = new TreeMap<String, Object>();
+////		treeMap.put("key", 1);
+////		treeMap.put("ey", 1);
+////		String key = treeMap.toString();
+////		key = key.substring(1,key.length()-1);
+////		System.out.println(key);
+////		 String [] paramsA = key.split(",");
+////         StringBuffer tempStr =  new StringBuffer();
+////         for (String pa : paramsA) {
+////        	 tempStr.append(pa.trim()).append("&");
+////		}
+////         System.out.println(tempStr);
+////		double d = 88.78d;
+////		Long dl = Math.round(d);
+////		System.out.println(dl);
+//		
+//		String[] arr = new String[]{"outOrderNo","amount","mobile","signType","notifyUrl","mctNo","proNo"};
+//		Arrays.sort(arr);
+//		for (String string : arr) {
+//			System.out.print(string+",");
+//		}
+//		
 ////		System.out.println(DateUtil.formatAll(1514724915904l)); //第一笔订单时间
 ////		System.out.println(DateUtil.formatAll(1514724925405l)); //第二笔订单时间
 ////		Double discount = 526.0d;

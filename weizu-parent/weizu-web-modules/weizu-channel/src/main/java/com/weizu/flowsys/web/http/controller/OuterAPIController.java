@@ -1,7 +1,5 @@
 package com.weizu.flowsys.web.http.controller;
 
-import java.util.Map;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -36,7 +34,7 @@ import com.weizu.flowsys.web.http.entity.Charge;
 import com.weizu.flowsys.web.http.entity.ChargeTel;
 import com.weizu.flowsys.web.http.entity.Order;
 import com.weizu.flowsys.web.http.entity.PgProduct;
-import com.weizu.flowsys.web.http.entity.PurchaseLog;
+import com.weizu.flowsys.web.http.url.OuterApiURL;
 import com.weizu.flowsys.web.trade.dao.ChargeLogDao;
 import com.weizu.flowsys.web.trade.pojo.ChargeLog;
 import com.weizu.web.foundation.String.StringHelper;

@@ -31,6 +31,21 @@ public class ChargeTelParams {
 		this.sign = sign;
 	}
 	
+	public ChargeTelParams(String number, String sign, Integer serviceType,
+			Integer chargeSpeed, String reportUrl, String userOrderId,
+			Double chargeValue) {
+		super();
+		this.number = number;
+		this.sign = sign;
+		this.serviceType = serviceType;
+		this.chargeSpeed = chargeSpeed;
+		this.reportUrl = reportUrl;
+		this.userOrderId = userOrderId;
+		this.chargeValue = chargeValue;
+	}
+
+
+
 	public ChargeTelParams(String number, String userName, String sign,
 			String reportUrl, String userOrderId, Double chargeValue) {
 		super();

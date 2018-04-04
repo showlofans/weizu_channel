@@ -27,6 +27,7 @@ import com.weizu.flowsys.web.agency.dao.impl.ChargeRecordDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeRecordPo;
+import com.weizu.flowsys.web.http.url.PDDApiURL;
 import com.weizu.flowsys.web.log.AccountEventPo;
 import com.weizu.flowsys.web.log.dao.IAccountEventDao;
 import com.weizu.flowsys.web.system_base.ao.SystemConfAO;
@@ -61,6 +62,9 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 	private ChargeAccountAo chargeAccountAO;
 	@Resource
 	private IAccountEventDao accountEventDao;
+	
+	@Resource
+	private PDDChargeAO pddChargeAO;
 	
 	@Resource
 	private WXPayAO wXPayAO;
@@ -176,13 +180,21 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 			//更新订单表
 			pur = purchaseDAO.updatePurchaseState(purchasePo1);
 		}
+		AgencyBackwardPo agencyPo = agencyVODao.getAgencyByAccountId(purchasePo.getAccountId());
 		if(purchasePo != null){
 			if(StringHelper.isNotEmpty(purchasePo.getAgencyCallIp())){
-				sendCallBack.sendCallBack(new ResponseJsonDTO(orderId, purchasePo.getOrderIdFrom(), orderResult, "系统推送"+orderResultDetail, System.currentTimeMillis(),purchasePo.getChargeTel()), purchasePo.getAgencyCallIp());
+				if(agencyPo.getId().equals(PDDApiURL.agency_id)){//拼多多的订单，单独返回调
+					pddChargeAO.sendCallBack(purchasePo, purchasePo.getAgencyCallIp());
+				}else{
+					sendCallBack.sendCallBack(new ResponseJsonDTO(orderId, purchasePo.getOrderIdFrom(), orderResult, "系统推送"+orderResultDetail, System.currentTimeMillis(),purchasePo.getChargeTel()), purchasePo.getAgencyCallIp());
+				}
 			}else{
-				AgencyBackwardPo agencyPo = agencyVODao.getAgencyByAccountId(purchasePo.getAccountId());
 				if(agencyPo != null && StringHelper.isNotEmpty(agencyPo.getCallBackIp()) && !orderResult.equals(OrderStateEnum.CHARGING.getValue())){//不是充值进行，才返回调
-					sendCallBack.sendCallBack(new ResponseJsonDTO(orderId, purchasePo.getOrderIdFrom(), orderResult, "系统推送"+orderResultDetail, System.currentTimeMillis(),purchasePo.getChargeTel()), agencyPo.getCallBackIp());
+					if(agencyPo.getId().equals(PDDApiURL.agency_id)){
+						pddChargeAO.sendCallBack(purchasePo, agencyPo.getCallBackIp());
+					}else{
+						sendCallBack.sendCallBack(new ResponseJsonDTO(orderId, purchasePo.getOrderIdFrom(), orderResult, "系统推送"+orderResultDetail, System.currentTimeMillis(),purchasePo.getChargeTel()), agencyPo.getCallBackIp());
+					}
 				}
 			}
 		}
