@@ -386,7 +386,7 @@ public class RateController {
 	 */
 	@RequestMapping(value=RateURL.BIND_CHANNEL_LIST)
 	public ModelAndView bindChannelList(@RequestParam(value = "pageNo", required = false) String pageNo,
-			HttpServletRequest request,AccountActiveRatePo activePo)
+			HttpServletRequest request,AccountActiveRatePo activePo,@RequestParam(value = "scopeCityName", required = false)String scopeCityName)
 	{
 		AgencyBackwardVO agencyVO = (AgencyBackwardVO)request.getSession().getAttribute("loginContext");
 		
@@ -400,9 +400,15 @@ public class RateController {
 		}else{
 			pageParam = new PageParam(1, 10);
 		}
-		Pagination<AccountActiveRatePo> pagination = accountActiveRateAO.listActive(pageParam, activePo);
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
+		if(StringHelper.isNotEmpty(scopeCityName)){
+			String scopeCityCode = ScopeCityEnum.getValueByDesc(scopeCityName);
+			activePo.setScopeCityCode(scopeCityCode);
+			resultMap.put("scopeCityName", scopeCityName);
+		}
+		Pagination<AccountActiveRatePo> pagination = accountActiveRateAO.listActive(pageParam, activePo);
+		
 		resultMap.put("pagination", pagination);
 		resultMap.put("bindStateEnums", BindStateEnum.toList());
 		resultMap.put("billTypeEnums", BillTypeEnum.toList());
@@ -416,8 +422,9 @@ public class RateController {
 			{
 				request.getSession().setAttribute("isOpen", 1);
 			}
+			resultMap.put("childAccountPo", accountPo1);
 		}
-		request.getSession().setAttribute("childAccountPo", chargeAccountDao.get(activePo.getAccountId()));
+//		request.getSession().setAttribute("childAccountPo", chargeAccountDao.get(activePo.getAccountId()));
 //		request.getSession().setAttribute("childAccountId", activePo.getAccountId());
 //		request.getSession().setAttribute("childAgencyName", activePo.getAgencyName());
 		return new ModelAndView("/activity/bind_channel_list","resultMap",resultMap);

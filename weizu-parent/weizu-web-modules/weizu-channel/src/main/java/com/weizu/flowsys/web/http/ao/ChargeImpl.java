@@ -44,6 +44,7 @@ import com.weizu.flowsys.web.activity.pojo.RateDiscountPo;
 import com.weizu.flowsys.web.activity.pojo.TelRatePo;
 import com.weizu.flowsys.web.agency.ao.AgencyAO;
 import com.weizu.flowsys.web.agency.ao.ChargeAccountAo;
+import com.weizu.flowsys.web.agency.dao.AgencyVODaoInterface;
 import com.weizu.flowsys.web.agency.dao.impl.ChargeRecordDao;
 import com.weizu.flowsys.web.agency.pojo.AgencyBackwardPo;
 import com.weizu.flowsys.web.agency.pojo.ChargeAccountPo;
@@ -58,6 +59,7 @@ import com.weizu.flowsys.web.channel.dao.ICitiesDAO;
 import com.weizu.flowsys.web.channel.dao.IProcincesDAO;
 import com.weizu.flowsys.web.channel.dao.ITelChannelDao;
 import com.weizu.flowsys.web.channel.dao.ITelProductDao;
+import com.weizu.flowsys.web.channel.dao.impl.OperatorPgDao;
 import com.weizu.flowsys.web.channel.pojo.ChannelChannelPo;
 import com.weizu.flowsys.web.channel.pojo.ChannelDiscountPo;
 import com.weizu.flowsys.web.channel.pojo.ChargeChannelParamsPo;
@@ -111,6 +113,9 @@ public class ChargeImpl implements IChargeFacet {
 	private PurchaseDao purchaseDAO;
 	
 	@Resource
+	private AgencyVODaoInterface agencyVODao;
+	
+	@Resource
 	private ChargeAccountAo chargeAccountAO;
 	
 	@Resource
@@ -148,6 +153,9 @@ public class ChargeImpl implements IChargeFacet {
 	@Resource
 	private ITelProductDao telProductDao;
 	
+	@Resource
+	private OperatorPgDao operatorPgDao;
+	
 //	private Logger logger = Logger.getLogger("ChargeImpl");
 	@Transactional
 	@Override
@@ -176,15 +184,15 @@ public class ChargeImpl implements IChargeFacet {
 				return chargeTelPo;
 			}
 		}
-//		Long highTime = System.currentTimeMillis() - 1000*60*5;//五分钟之前的时间
-//		PurchasePo latestPurchasePo = purchaseDAO.getLatestOneByTel(chargeTelParams.getNumber(), PgServiceTypeEnum.TELCHARGE.getValue(), highTime);
-//		if(latestPurchasePo != null){
-//			chargeEnum = ChargeStatusEnum.HAS_DOUBLE_PURCHAE;
-//			chargeTelPo = new ChargeTel(chargeEnum.getValue(),chargeEnum.getDesc(), null);
-////			ChargeLog chargeLog = new ChargeLog(chargeParams.toString(), charge.toString(), null, chargeParams.getNumber(), charge.getTipCode(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+":一分钟内多次传的可疑订单");
-////			chargeLogDao.add(chargeLog);
-//			return chargeTelPo;
-//		}
+		Long highTime = System.currentTimeMillis() - 1000*60*5;//五分钟之前的时间
+		PurchasePo latestPurchasePo = purchaseDAO.getLatestOneByTel(chargeTelParams.getNumber(), PgServiceTypeEnum.TELCHARGE.getValue(), highTime);
+		if(latestPurchasePo != null){
+			chargeEnum = ChargeStatusEnum.HAS_DOUBLE_PURCHAE;
+			chargeTelPo = new ChargeTel(chargeEnum.getValue(),chargeEnum.getDesc(), null);
+//			ChargeLog chargeLog = new ChargeLog(chargeParams.toString(), charge.toString(), null, chargeParams.getNumber(), charge.getTipCode(), chargeParams.getOrderArriveTime(),AgencyForwardEnum.BACKWARD.getValue(),chargeParams.getRequestIp()+":一分钟内多次传的可疑订单");
+//			chargeLogDao.add(chargeLog);
+			return chargeTelPo;
+		}
 		int billType = chargeTelParams.getBillType();
 		ChargeAccountPo accountPo =  chargeAccountAO.getAccountByAgencyId(backPo.getId(), billType);
 		if(accountPo == null){
@@ -655,7 +663,13 @@ public class ChargeImpl implements IChargeFacet {
 		Map<String, Object> sqlMap = new HashMap<String, Object>();
 		
 		Charge charge = null;
-		AgencyBackwardPo backPo = valiUser.findAgency(chargeParams.getUserName(), chargeParams.getSign());
+		boolean pdd = "拼多多".equals(chargeParams.getUserName());
+		AgencyBackwardPo backPo = null;
+		if(!pdd){
+			backPo = valiUser.findAgency(chargeParams.getUserName(), chargeParams.getSign());
+		}else{
+			backPo = agencyVODao.getSecondAgency(chargeParams.getUserName());
+		}
 		//充值用户不合法
 		if(backPo == null)
 		{
@@ -680,8 +694,12 @@ public class ChargeImpl implements IChargeFacet {
 			return sqlMap;
 		}else{
 			otype = Integer.parseInt(resMap.get("operatorType").toString());
-			PgDataPo pgData = valiUser.findPg(new PgDataPo(otype,  chargeParams.getFlowsize(), chargeParams.getScope(), chargeParams.getPgType(), chargeParams.getPgValidity(),chargeParams.getChannelType()));//,,,PgServiceTypeEnum.PGCHARGE.getValue()
-			
+			PgDataPo pgData = null;
+			if(pdd){
+				pgData = operatorPgDao.get(chargeParams.getFlowsize());
+			}else{
+				pgData = valiUser.findPg(new PgDataPo(otype,  chargeParams.getFlowsize(), chargeParams.getScope(), chargeParams.getPgType(), chargeParams.getPgValidity(),chargeParams.getChannelType()));//,,,PgServiceTypeEnum.PGCHARGE.getValue()
+			}
 			if(pgData == null)
 			{
 				chargeEnum = ChargeStatusEnum.PG_NOT_FOUND;
