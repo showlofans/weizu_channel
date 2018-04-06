@@ -118,6 +118,11 @@ public class ChargePgURL extends BaseURL {
 	 * <br>/flowsys/chargePg/export_charged_list.do
 	 */
 	public static final String EXPORT_CHARGED_LIST = "/export_charged_list" + DYNAMIC_WEB_SUFFIX;
+	/**
+	 * 导出充值成功订单
+	 * <br>/flowsys/chargePg/export_charged_list.do
+	 */
+//	public static final String EXPORT_CHARGED_LIST = "/export_charged_list" + DYNAMIC_WEB_SUFFIX;
 	
 	/**
 	 * 批量推送结果

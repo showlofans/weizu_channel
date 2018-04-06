@@ -46,7 +46,7 @@ public class PDDApiURL extends BaseURL {
 	/**
 	 * client_id
 	 */
-	public static final String client_id = "F0F3672F76D5B59C3783A795BDA39293";
+	public static final String client_id = "1709112";
 	/**
 	 * sign_type
 	 */

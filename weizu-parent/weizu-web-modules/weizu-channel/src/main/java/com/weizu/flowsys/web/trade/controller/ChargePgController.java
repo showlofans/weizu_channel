@@ -1306,7 +1306,14 @@ public class ChargePgController {
 						fileNameSb.append("-");
 						fileNameSb.append(PgServiceTypeEnum.getEnum(purchaseVO.getPurchaseFor()).getDesc());
 						fileNameSb.append("-");
-						fileNameSb.append("成功订单记录");
+						String orderStateDesc = "";
+						if(purchaseVO.getOrderResult() != null){
+							orderStateDesc = OrderStateEnum.getEnum(purchaseVO.getOrderResult()).getDesc();
+						}
+						if(purchaseVO.getOrderState() != null){
+							orderStateDesc = OrderStateEnum.getEnum(purchaseVO.getOrderState()).getDesc();
+						}
+						fileNameSb.append(orderStateDesc + "订单记录");
 						fileNameSb.append(DateUtil.formatPramm(new Date(), "yyyy-MM-dd"));
 						fileNameSb.append(".xls");
 						response.addHeader("Content-Disposition", "attachment;filename=\"" + new String((fileNameSb.toString()).getBytes("GBK"), "ISO8859_1")

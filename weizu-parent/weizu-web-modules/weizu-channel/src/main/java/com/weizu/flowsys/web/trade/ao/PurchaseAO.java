@@ -239,5 +239,14 @@ public interface PurchaseAO {
 	 * @createTime:2017年11月7日 下午2:27:29
 	 */
 	HSSFWorkbook exportChargedList(PurchaseVO purchaseVO, Integer agencyTag);
+	/**
+	 * @description: 导出失败订单
+	 * @param purchaseVO
+	 * @param agencyTag
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年4月6日 下午3:02:49
+	 */
+//	HSSFWorkbook exportUnChargedList(PurchaseVO purchaseVO, Integer agencyTag);
 	
 }

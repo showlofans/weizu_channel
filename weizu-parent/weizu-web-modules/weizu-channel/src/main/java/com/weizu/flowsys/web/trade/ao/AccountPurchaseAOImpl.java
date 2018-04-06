@@ -111,7 +111,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 					if(list != null && list.size() > 0){
 						List<ChargeRecordPo> recordPoList = new LinkedList<ChargeRecordPo>();
 						List<AccountPurchasePo> apPoList = new LinkedList<AccountPurchasePo>();
-						Long recordId = chargeRecordDao.nextId();		//没添加的消费记录Id
+						long recordId = chargeRecordDao.nextId();		//没添加的消费记录Id
 						
 						for (AccountPurchasePo accountPurchasePo : list) {
 //							Integer accountId = accountPurchasePo.getaccountId();
@@ -132,7 +132,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 								boolean needSet = consumePo != null && orderAmount.equals(consumePo.getRechargeAmount()) && (recordPo == null || (consumePo.getRechargeAmount().equals(recordPo.getRechargeAmount())));
 								if(needSet){//没有补款记录就可以补款
 									ChargeAccountPo accountPo = chargeAccountDao.get(accountId);
-									Double accountBeforeBalance = accountPo.getAccountBalance();
+									double accountBeforeBalance = accountPo.getAccountBalance();
 //									Double accountAfterBalance = NumberTool.add(accountBeforeBalance,orderAmount);
 //									accountPo.setAccountBalance(NumberTool.add(orderAmount, accountBeforeBalance));
 //									accountPo.setAccountBalance(accountAfterBalance);
@@ -215,9 +215,9 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 			realBackTime = System.currentTimeMillis();
 		}
 		PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
+		boolean hasCall = purchasePo != null && OrderResultEnum.SUCCESS.getCode().equals(purchasePo.getHasCallBack());
 		boolean isWechat = purchasePo.getAccountId().equals(WXPayConfig.ACCOUNTID);
-		if(orderResult == OrderStateEnum.UNCHARGE.getValue()){//手动失败，要返款
-			
+		if(orderResult == OrderStateEnum.UNCHARGE.getValue() && !hasCall){//手动失败，要返款.并且没有回调过
 			if(purchasePo != null && purchasePo.getOrderResult() != null && OrderStateEnum.UNCHARGE.getValue() !=  purchasePo.getOrderResult()){//清除已经返款的记录
 				if(isWechat && pur > 0){//wechat账户的订单
 					String refundRes = wXPayAO.refund(purchasePo);

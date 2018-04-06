@@ -1594,6 +1594,8 @@ public class PurchaseAOImpl implements PurchaseAO {
 		if(dataMap.get("records") != null){
 			records = (List<PurchaseVO>)dataMap.get("records");
 		}
+		
+		
 		purchaseVO.setOrderResult(newResult);
 		int successTag = 0;
 		int errorTag = 0;
@@ -1601,6 +1603,10 @@ public class PurchaseAOImpl implements PurchaseAO {
 		if(purchaseVO.getOrderResult() == OrderStateEnum.CHARGED.getValue()){
 			orderResultDetail = "批量手动成功";
 		}
+		//把所有的订单放到队列当中，然后从队列中开始取，然后处理
+//		for (PurchaseVO purchaseVO2 : records) {
+//			
+//		}
 		
 		for (PurchaseVO purchaseVO2 : records) {
 			String updateRes = accountPurchaseAO.updatePurchaseStateByMe(purchaseVO2.getOrderId(), newResult, orderResultDetail,null);
@@ -1744,7 +1750,7 @@ public class PurchaseAOImpl implements PurchaseAO {
 					}
 				}else{
 					String[] header =
-						{ "所属代理商", "订单号", "手机号", "流量大小", "面值", "折扣", "扣款金额" ,  "订单完成时间" };
+						{ "所属代理商", "订单号", "手机号", "业务类型", "流量大小", "面值", "折扣", "扣款金额" ,  "订单完成时间" };
 					
 					Boolean isDataUser = AgencyTagEnum.DATA_USER.getValue().equals(agencyTag);
 					if(isDataUser){
@@ -1762,10 +1768,11 @@ public class PurchaseAOImpl implements PurchaseAO {
 					hSheet.setColumnWidth(3, 35 * 100);
 					hSheet.setColumnWidth(4, 35 * 100);
 					hSheet.setColumnWidth(5, 35 * 100);
-					hSheet.setColumnWidth(6, 35 * 80);
-					hSheet.setColumnWidth(7, 35 * 200);
+					hSheet.setColumnWidth(6, 35 * 100);
+					hSheet.setColumnWidth(7, 35 * 80);
+					hSheet.setColumnWidth(8, 35 * 200);
 					if(isDataUser){
-						hSheet.setColumnWidth(8, 35 * 200);
+						hSheet.setColumnWidth(9, 35 * 200);
 					}
 					HSSFRow hRow = hSheet.createRow(0);
 					
@@ -1793,21 +1800,23 @@ public class PurchaseAOImpl implements PurchaseAO {
 						hRow.createCell(1).setCellValue(r.getOrderId().toString());
 						// 充值号码
 						hRow.createCell(2).setCellValue(r.getChargeTel());
+						//业务类型
+						hRow.createCell(3).setCellValue(ServiceTypeEnum.getEnum(r.getServiceType()).getDesc());
 						//包体大小
-						hRow.createCell(3).setCellValue(r.getPgSize());
+						hRow.createCell(4).setCellValue(r.getPgSize());
 						// 面值
-						hRow.createCell(4).setCellValue(r.getChargeValue());
+						hRow.createCell(5).setCellValue(r.getChargeValue());
 						
 						// 折扣
-						hRow.createCell(5).setCellValue(r.getApDiscount()==null?0d:r.getApDiscount());
+						hRow.createCell(6).setCellValue(r.getApDiscount()==null?0d:r.getApDiscount());
 						// 扣款金额
-						hRow.createCell(6).setCellValue(NumberTool.round(r.getOrderAmount(), 3));
+						hRow.createCell(7).setCellValue(NumberTool.round(r.getOrderAmount(), 3));
 						// 订单完成时间
-						hRow.createCell(7).setCellValue(DateUtil.formatAll(r.getOrderBackTime()));
+						hRow.createCell(8).setCellValue(DateUtil.formatAll(r.getOrderBackTime()));
 						
 						if(isDataUser){
 							// 代理商订单号
-							hRow.createCell(8).setCellValue(r.getOrderIdFrom());
+							hRow.createCell(9).setCellValue(r.getOrderIdFrom());
 						}
 					}
 					
@@ -1817,5 +1826,163 @@ public class PurchaseAOImpl implements PurchaseAO {
 			}
 			return hbook;
 		}
+//	@Override
+//	public HSSFWorkbook exportUnChargedList(PurchaseVO purchaseVO,Integer agencyTag) {
+//		
+//		HSSFWorkbook hbook = null;
+//		Map<String,Object> dataMap = getPurchaseMap(purchaseVO);
+//		boolean isTel = PgServiceTypeEnum.TELCHARGE.getValue().equals(purchaseVO.getPurchaseFor());
+//		
+//		List<PurchaseVO> records = new ArrayList<PurchaseVO>();
+//		if(dataMap.get("records") != null){
+//			records = (List<PurchaseVO>)dataMap.get("records");
+//			if(isTel){//导出话费
+//				String[] header =
+//					{ "所属代理商", "订单号", "手机号", "业务类型", "面值", "折扣", "扣款金额(成本)" ,  "订单完成时间" };
+//				
+//				Boolean isDataUser = AgencyTagEnum.DATA_USER.getValue().equals(agencyTag);
+//				if(isDataUser){
+//					header=Arrays.copyOf(header, header.length+1);
+//					header[header.length-1] = "来源订单号";
+//				}
+//				
+//				hbook = new HSSFWorkbook();
+//				
+//				HSSFSheet hSheet = hbook.createSheet();
+//				
+//				hSheet.setColumnWidth(0, 35 * 100);
+//				hSheet.setColumnWidth(1, 35 * 150);
+//				hSheet.setColumnWidth(2, 35 * 100);
+//				hSheet.setColumnWidth(3, 35 * 100);
+//				hSheet.setColumnWidth(4, 35 * 100);
+//				hSheet.setColumnWidth(5, 35 * 100);
+//				hSheet.setColumnWidth(6, 35 * 100);
+//				hSheet.setColumnWidth(7, 35 * 200);
+//				if(isDataUser){
+//					hSheet.setColumnWidth(8, 35 * 200);
+//				}
+//				HSSFRow hRow = hSheet.createRow(0);
+//				
+//				HSSFCellStyle style = hbook.createCellStyle();
+//				style.setFillForegroundColor(HSSFColor.LIME.index);
+//				style.setFillBackgroundColor(HSSFColor.GREEN.index);
+//				for (int i = 0; i < header.length; i++)
+//				{
+//					HSSFCell hCell = hRow.createCell(i);
+//					hCell.setCellStyle(style);
+//					hCell.setCellType(HSSFCell.CELL_TYPE_STRING);
+//					hCell.setCellValue(header[i]);
+//				}
+//				
+//				int i = 0;
+//				//String tradeType = "";				// 台账类型
+//				//String tradeNo = "";				// 交易号
+//				for (PurchaseVO r : records)
+//				{
+//					i++;
+//					hRow = hSheet.createRow(i);
+//					//代理商名称
+//					hRow.createCell(0).setCellValue(r.getAgencyName());
+//					//订单号
+//					hRow.createCell(1).setCellValue(r.getOrderId().toString());
+//					// 充值号码
+//					hRow.createCell(2).setCellValue(r.getChargeTel());
+//					//业务类型
+//					hRow.createCell(3).setCellValue(TelServiceTypeEnum.getEnum(r.getServiceType()).getDesc());
+//					
+//					
+//					// 面值
+//					hRow.createCell(4).setCellValue(r.getChargeValue());
+//					
+//					// 折扣
+//					hRow.createCell(5).setCellValue(r.getApDiscount()==null?0d:r.getApDiscount());
+//					// 扣款金额
+//					hRow.createCell(6).setCellValue(NumberTool.round(r.getOrderAmount(), 3));
+//					// 订单完成时间
+//					hRow.createCell(7).setCellValue(DateUtil.formatAll(r.getOrderBackTime()));
+//					
+//					if(isDataUser){
+//						// 代理商订单号
+//						hRow.createCell(8).setCellValue(r.getOrderIdFrom());
+//					}
+//				}
+//			}else{
+//				String[] header =
+//					{ "所属代理商", "订单号", "手机号", "业务类型", "流量大小", "面值", "折扣", "扣款金额" ,  "订单完成时间" };
+//				
+//				Boolean isDataUser = AgencyTagEnum.DATA_USER.getValue().equals(agencyTag);
+//				if(isDataUser){
+//					header=Arrays.copyOf(header, header.length+1);
+//					header[header.length-1] = "来源订单号";
+//				}
+//				
+//				hbook = new HSSFWorkbook();
+//				
+//				HSSFSheet hSheet = hbook.createSheet();
+//				
+//				hSheet.setColumnWidth(0, 35 * 80);
+//				hSheet.setColumnWidth(1, 35 * 150);
+//				hSheet.setColumnWidth(2, 35 * 100);
+//				hSheet.setColumnWidth(3, 35 * 100);
+//				hSheet.setColumnWidth(4, 35 * 100);
+//				hSheet.setColumnWidth(5, 35 * 100);
+//				hSheet.setColumnWidth(6, 35 * 100);
+//				hSheet.setColumnWidth(7, 35 * 80);
+//				hSheet.setColumnWidth(8, 35 * 200);
+//				if(isDataUser){
+//					hSheet.setColumnWidth(9, 35 * 200);
+//				}
+//				HSSFRow hRow = hSheet.createRow(0);
+//				
+//				HSSFCellStyle style = hbook.createCellStyle();
+//				style.setFillForegroundColor(HSSFColor.LIME.index);
+//				style.setFillBackgroundColor(HSSFColor.GREEN.index);
+//				for (int i = 0; i < header.length; i++)
+//				{
+//					HSSFCell hCell = hRow.createCell(i);
+//					hCell.setCellStyle(style);
+//					hCell.setCellType(HSSFCell.CELL_TYPE_STRING);
+//					hCell.setCellValue(header[i]);
+//				}
+//				
+//				int i = 0;
+//				//String tradeType = "";				// 台账类型
+//				//String tradeNo = "";				// 交易号
+//				for (PurchaseVO r : records)
+//				{
+//					i++;
+//					hRow = hSheet.createRow(i);
+//					//代理商名称
+//					hRow.createCell(0).setCellValue(r.getAgencyName());
+//					//订单号
+//					hRow.createCell(1).setCellValue(r.getOrderId().toString());
+//					// 充值号码
+//					hRow.createCell(2).setCellValue(r.getChargeTel());
+//					//业务类型
+//					hRow.createCell(3).setCellValue(ServiceTypeEnum.getEnum(r.getServiceType()).getDesc());
+//					//包体大小
+//					hRow.createCell(4).setCellValue(r.getPgSize());
+//					// 面值
+//					hRow.createCell(5).setCellValue(r.getChargeValue());
+//					
+//					// 折扣
+//					hRow.createCell(6).setCellValue(r.getApDiscount()==null?0d:r.getApDiscount());
+//					// 扣款金额
+//					hRow.createCell(7).setCellValue(NumberTool.round(r.getOrderAmount(), 3));
+//					// 订单完成时间
+//					hRow.createCell(8).setCellValue(DateUtil.formatAll(r.getOrderBackTime()));
+//					
+//					if(isDataUser){
+//						// 代理商订单号
+//						hRow.createCell(9).setCellValue(r.getOrderIdFrom());
+//					}
+//				}
+//				
+//			}
+//			
+//			
+//		}
+//		return hbook;
+//	}
 	
 }
