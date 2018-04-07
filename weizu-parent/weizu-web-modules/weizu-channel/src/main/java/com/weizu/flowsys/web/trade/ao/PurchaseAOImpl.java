@@ -102,6 +102,7 @@ import com.weizu.flowsys.web.log.dao.IAccountEventDao;
 import com.weizu.flowsys.web.system_base.ao.SystemConfAO;
 import com.weizu.flowsys.web.system_base.pojo.SystemConfPo;
 import com.weizu.flowsys.web.trade.PurchaseUtil;
+import com.weizu.flowsys.web.trade.constant.WXPayConfig;
 import com.weizu.flowsys.web.trade.dao.AccountPurchaseDao;
 import com.weizu.flowsys.web.trade.dao.ChargeLogDao;
 import com.weizu.flowsys.web.trade.dao.PurchaseDao;
@@ -1582,42 +1583,133 @@ public class PurchaseAOImpl implements PurchaseAO {
 		System.out.println(sb.toString());
 		return sb.toString();
 	}
-	
+	@Resource
+	private WXPayAO wXPayAO;
 	@Transactional
 	@Override
 	public String batchChangeOrderState(PurchaseVO purchaseVO) {
 		int originalResult = purchaseVO.getOrderState();
 		int newResult = purchaseVO.getOrderResult();
 		purchaseVO.setOrderResult(originalResult);//重新设置查询参数，使得不为成功列表，方便调用下面的方法
+		
+		//查询待处理订单
 		Map<String,Object> dataMap = getPurchaseMap(purchaseVO);
 		List<PurchaseVO> records = new ArrayList<PurchaseVO>();
 		if(dataMap.get("records") != null){
 			records = (List<PurchaseVO>)dataMap.get("records");
 		}
 		
-		
+		long realBackTime = System.currentTimeMillis();
 		purchaseVO.setOrderResult(newResult);
 		int successTag = 0;
 		int errorTag = 0;
-		String orderResultDetail = "批量手动失败";
-		if(purchaseVO.getOrderResult() == OrderStateEnum.CHARGED.getValue()){
-			orderResultDetail = "批量手动成功";
+		String orderResultDetail = "批量手动成功";
+		boolean uncharge = newResult == OrderStateEnum.UNCHARGE.getValue();
+		if(uncharge){
+			orderResultDetail = "批量手动失败";
 		}
-		//把所有的订单放到队列当中，然后从队列中开始取，然后处理
-//		for (PurchaseVO purchaseVO2 : records) {
-//			
-//		}
+		int ap = 0;
+		int pur = 0;
 		
+		//取出所有要处理的订单号,同时分离小程序退款订单请求
+		List<Long> orderIds = new LinkedList<Long>();
+		Map<Long,Object> orderApMap = new HashMap<Long, Object>();
 		for (PurchaseVO purchaseVO2 : records) {
-			String updateRes = accountPurchaseAO.updatePurchaseStateByMe(purchaseVO2.getOrderId(), newResult, orderResultDetail,null);
-			if("success".equals(updateRes)){
-				successTag++;
-			}else{
-				errorTag++;
+			int orderResult = purchaseVO2.getOrderResult();
+			if(!OrderResultEnum.SUCCESS.getCode().equals(purchaseVO2.getHasCallBack())){//只给没有回调成功的订单返回调
+				if(purchaseVO2.getAccountId().equals(WXPayConfig.ACCOUNTID)){//wechat账户的订单
+					PurchasePo purchasePo = new PurchasePo();
+					purchasePo.setOrderAmount(purchaseVO2.getOrderAmount());
+					purchasePo.setOrderResultDetail(purchaseVO2.getOrderResultDetail());
+					purchasePo.setOrderId(purchaseVO2.getOrderId());
+					String refundRes = wXPayAO.refund(purchasePo);
+					if("success".equals(refundRes)){
+						orderResultDetail = "微信退款请求提交成功。";
+					}else{
+						//微信退款请求失败 需要再次手动失败，所以放在充值等待当中
+						orderResult = OrderStateEnum.DAICHONG.getValue();
+						orderResultDetail = "微信退款请求提交失败!";
+					}
+					//更新订单表(只更新超管的订单详情)
+					pur = purchaseDAO.updatePurchaseState(new PurchasePo(purchaseVO2.getOrderId(), null, realBackTime, orderResult, OrderResultEnum.SUCCESS.getCode(), orderResultDetail));
+				}else{
+					orderIds.add(purchaseVO2.getOrderId());
+					orderApMap.put(purchaseVO2.getOrderId(), purchaseVO2.getAccountId());
+				}
 			}
 		}
+		//更新代理商订单状态
+		ap = accountPurchaseDao.batchUpdateState(orderIds, newResult, orderResultDetail);
+		
+		//处理失败订单退款
+		if(uncharge){//手动失败，返款
+			//获得所有与订单有关的扣款列表
+			List<AccountPurchasePo> list = accountPurchaseDao.selectByOrderIds(orderIds);
+			if(list != null && list.size() > 0){
+				List<ChargeRecordPo> recordPoList = new LinkedList<ChargeRecordPo>();
+				List<AccountPurchasePo> apList = new LinkedList<AccountPurchasePo>();
+				long recordId = chargeRecordDao.nextId();
+				for (AccountPurchasePo accountPurchasePo : list) {
+					Integer accountId = accountPurchasePo.getAccountId();
+					long purchaseId = accountPurchasePo.getPurchaseId();
+					if(accountId != null){
+						//获得退费类型 
+						ChargeRecordPo recordPo = chargeRecordDao.get(accountPurchasePo.getRecordId()) ;
+						//有过扣款记录,并且要补的金额和扣款金额一致，并且没有补款记录或者有补款记录但是补款和消费金额是一致的（方便处理并发带来的异常补款）
+						Double orderAmount = accountPurchasePo.getOrderAmount();
+						Integer pur_accountId = Integer.parseInt(orderApMap.get(purchaseId).toString());//获得订单所绑定的账号id
+						if(!pur_accountId.equals(accountId)){//中间代理,余额先加成本价，再减去售价
+							Double orderPrice = accountPurchasePo.getOrderPrice();
+							orderAmount = NumberTool.sub(orderAmount, orderPrice);//
+						}
+						ChargeAccountPo accountPo = chargeAccountDao.get(accountId);
+						Double accountBeforeBalance = accountPo.getAccountBalance();
+						chargeAccountAO.updateAccount(accountId,orderAmount);
+						ChargeAccountPo accountAfterPo = chargeAccountDao.get(accountId);
+						recordPoList.add(new ChargeRecordPo(realBackTime, orderAmount,
+								accountBeforeBalance, accountAfterPo.getAccountBalance(), 
+								AccountTypeEnum.Replenishment.getValue(), accountId,  recordPo.getChargeFor() , purchaseId));
+						//同样的订单消费再添加一笔消费记录
+						AccountPurchasePo appPo = accountPurchasePo.clone();
+						appPo.setRecordId(recordId);
+						appPo.setOrderState(newResult);
+						appPo.setOrderStateDetail(OrderStateEnum.getEnum(newResult).getDesc());
+						apList.add(appPo);
+						recordId++;
+					}
+				}
+				//批量添加补款记录信息
+				chargeRecordDao.crt_addList(recordPoList);		
+				ap = accountPurchaseDao.ap_addList(apList);
+			}
+		}
+		
+		//批量更新订单状态
+		if(orderIds != null || orderIds.size() > 0){//微信用户如果更新了订单，就不需要再更新订单了，只需要更新上面的余额和消费即可
+			//更新订单表(只更新超管的订单详情)
+			pur = purchaseDAO.batchUpdatePurchaseState(orderIds, newResult, orderResultDetail, OrderResultEnum.SUCCESS.getCode(), realBackTime);
+		}
+		
+		//批量推送所有订单状态
+		for (PurchaseVO purchaseVO2 : records) {
+			long orderId = purchaseVO2.getOrderId();
+			if(!purchaseVO2.getAccountId().equals(WXPayConfig.ACCOUNTID)){
+				if(StringHelper.isNotEmpty(purchaseVO2.getAgencyCallIp())){
+					sendCallBack.sendCallBack(new ResponseJsonDTO(orderId, purchaseVO2.getOrderIdFrom(), newResult, "（手动推送）"+orderResultDetail, System.currentTimeMillis(),purchaseVO2.getChargeTel()), purchaseVO2.getAgencyCallIp());
+				}else{
+					AgencyBackwardPo agencyPo = agencyVODao.getAgencyByAccountId(purchaseVO2.getAccountId());
+					if(agencyPo != null && StringHelper.isNotEmpty(agencyPo.getCallBackIp()) && OrderStateEnum.CHARGING.getValue() != newResult){//不是充值进行，才返回调
+						sendCallBack.sendCallBack(new ResponseJsonDTO(orderId, purchaseVO2.getOrderIdFrom(), newResult, "（手动推送）"+orderResultDetail, System.currentTimeMillis(),purchaseVO2.getChargeTel()), agencyPo.getCallBackIp());
+					}
+				}
+			}
+			if(pur + ap > 1){
+				successTag++;
+			}
+			errorTag++;
+		}
 		StringBuffer sb = new StringBuffer();
-		sb.append("批量了 ");
+		sb.append("批量操作了 ");
 		sb.append(successTag);
 		sb.append("单,失败了 ");
 		sb.append(errorTag);
@@ -1726,22 +1818,22 @@ public class PurchaseAOImpl implements PurchaseAO {
 						//代理商名称
 						hRow.createCell(0).setCellValue(r.getAgencyName());
 						//订单号
-						hRow.createCell(1).setCellValue(r.getOrderId().toString());
+						hRow.createCell(1).setCellValue(r.getOrderId() == null?"":r.getOrderId().toString());
 						// 充值号码
 						hRow.createCell(2).setCellValue(r.getChargeTel());
 						//业务类型
-						hRow.createCell(3).setCellValue(TelServiceTypeEnum.getEnum(r.getServiceType()).getDesc());
+						hRow.createCell(3).setCellValue(TelServiceTypeEnum.getEnum(r.getServiceType()) == null ? "无":TelServiceTypeEnum.getEnum(r.getServiceType()).getDesc());
 						
 						
 						// 面值
-						hRow.createCell(4).setCellValue(r.getChargeValue());
+						hRow.createCell(4).setCellValue(r.getChargeValue() == null ? 0d:r.getChargeValue());
 						
 						// 折扣
 						hRow.createCell(5).setCellValue(r.getApDiscount()==null?0d:r.getApDiscount());
 						// 扣款金额
 						hRow.createCell(6).setCellValue(NumberTool.round(r.getOrderAmount(), 3));
 						// 订单完成时间
-						hRow.createCell(7).setCellValue(DateUtil.formatAll(r.getOrderBackTime()));
+						hRow.createCell(7).setCellValue(r.getOrderBackTime() == null ? "无": DateUtil.formatAll(r.getOrderBackTime()));
 						
 						if(isDataUser){
 							// 代理商订单号
@@ -1797,22 +1889,22 @@ public class PurchaseAOImpl implements PurchaseAO {
 						//代理商名称
 						hRow.createCell(0).setCellValue(r.getAgencyName());
 						//订单号
-						hRow.createCell(1).setCellValue(r.getOrderId().toString());
+						hRow.createCell(1).setCellValue(r.getOrderId() == null ? "无":r.getOrderId().toString());
 						// 充值号码
 						hRow.createCell(2).setCellValue(r.getChargeTel());
 						//业务类型
-						hRow.createCell(3).setCellValue(ServiceTypeEnum.getEnum(r.getServiceType()).getDesc());
+						hRow.createCell(3).setCellValue(ServiceTypeEnum.getEnum(r.getServiceType()) == null ?"空":ServiceTypeEnum.getEnum(r.getServiceType()).getDesc());
 						//包体大小
 						hRow.createCell(4).setCellValue(r.getPgSize());
 						// 面值
-						hRow.createCell(5).setCellValue(r.getChargeValue());
+						hRow.createCell(5).setCellValue(r.getChargeValue() == null ? 0d:r.getChargeValue());
 						
 						// 折扣
 						hRow.createCell(6).setCellValue(r.getApDiscount()==null?0d:r.getApDiscount());
 						// 扣款金额
-						hRow.createCell(7).setCellValue(NumberTool.round(r.getOrderAmount(), 3));
+						hRow.createCell(7).setCellValue(r.getOrderAmount() == null ? 0d:NumberTool.round(r.getOrderAmount(), 3));
 						// 订单完成时间
-						hRow.createCell(8).setCellValue(DateUtil.formatAll(r.getOrderBackTime()));
+						hRow.createCell(8).setCellValue(r.getOrderBackTime() == null ? "":DateUtil.formatAll(r.getOrderBackTime()));
 						
 						if(isDataUser){
 							// 代理商订单号

@@ -1,5 +1,8 @@
 //package crud.aotest;
 //
+//import java.util.ArrayList;
+//import java.util.List;
+//
 //import javax.annotation.Resource;
 //
 //import org.junit.Test;
@@ -7,6 +10,7 @@
 //import org.springframework.test.context.ContextConfiguration;
 //import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 //
+//import com.weizu.flowsys.core.beans.WherePrams;
 //import com.weizu.flowsys.operatorPg.enums.AccountTypeEnum;
 //import com.weizu.flowsys.operatorPg.enums.OrderResultEnum;
 //import com.weizu.flowsys.operatorPg.enums.OrderStateEnum;
@@ -55,9 +59,23 @@
 ////		String res = accountPurchaseAO.updatePurchaseStateByMe(735691086504136704l, OrderStateEnum.CHARGED.getValue(), OrderStateEnum.CHARGED.getDesc(), System.currentTimeMillis());//
 ////		System.out.println(res);
 ////	}
+////	@Test
+////	public void testAGetApByAccountType(){
+////		 accountPurchaseDao.getAPByAccountType(798318209164906496l, 289, AccountTypeEnum.DECREASE.getValue());
+////	}
+//	
 //	@Test
-//	public void testAGetApByAccountType(){
-//		 accountPurchaseDao.getAPByAccountType(798318209164906496l, 289, AccountTypeEnum.DECREASE.getValue());
+//	public void testListAP(){
+////		Long[] orderIds = new Long[]{808405367410135040l, 808403930391252992l};
+//		List<Long> orderIds = new ArrayList<Long>();
+//		orderIds.add(808405367410135040l);
+//		orderIds.add(808403930391252992l);
+//		List<AccountPurchasePo> list = accountPurchaseDao.selectByOrderIds(orderIds);
+////		String sqlStr = "808405367410135040, 808403930391252992";
+//		for (AccountPurchasePo accountPurchasePo : list) {
+//			System.out.println(accountPurchasePo.getApDiscount());
+//		}
+//		
 //	}
 ////	@Test
 ////	public void getOrderAmount(){

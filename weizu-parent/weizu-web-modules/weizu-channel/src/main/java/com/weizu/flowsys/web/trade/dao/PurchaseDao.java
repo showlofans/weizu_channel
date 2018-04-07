@@ -28,6 +28,14 @@ public interface PurchaseDao extends Dao<PurchasePo, Long> {
 	 */
 	int updatePurchaseState(PurchasePo purchasePo1);
 	/**
+	 * @description: 手动批量更新订单状态
+	 * @param purchaseParams
+	 * @return
+	 * @author:POP产品研发部 宁强
+	 * @createTime:2017年6月13日 上午10:52:50
+	 */
+	int batchUpdatePurchaseState(List<Long> orderIds, Integer orderResult, String orderResultDetail, Integer callBack, Long backTime);
+	/**
 	 * @description: 添加订单
 	 * @param purchasePo
 	 * @return

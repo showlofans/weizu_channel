@@ -10,6 +10,7 @@
     <result column="purchase_id" property="purchaseId" jdbcType="BIGINT" />
     <result column="channel_discount_id" property="channelDiscountId" jdbcType="BIGINT" />
     <result column="order_amount" property="orderAmount" jdbcType="DOUBLE" />
+    <result column="ap_discount" property="apDiscount" jdbcType="DOUBLE" />
     <!-- <result column="bill_type" property="billType" jdbcType="INTEGER" /> -->
     <result column="order_state" property="orderState" jdbcType="INTEGER" />
     <result column="order_state_detail" property="orderStateDetail" jdbcType="VARCHAR" />
@@ -20,14 +21,32 @@
     <result column="record_id" property="recordId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, account_id, purchase_id, channel_discount_id, order_amount, <!-- bill_type, --> order_state,order_platform_path,order_state_detail, order_price, from_agency_name 
+    id, account_id, purchase_id, channel_discount_id, order_amount, ap_discount,<!-- bill_type, --> order_state,order_platform_path,order_state_detail, order_price, from_agency_name 
   </sql>
   <sql id="APBase_Column_List" >
-    ap.id, ap.account_id, ap.purchase_id, ap.channel_discount_id, ap.order_amount, ap.order_state,ap.order_platform_path,ap.order_state_detail, ap.order_price, ap.from_agency_name 
+    ap.id, ap.account_id, ap.purchase_id, ap.channel_discount_id, ap.ap_discount, ap.order_amount, ap.order_state,ap.order_platform_path,ap.order_state_detail, ap.order_price, ap.from_agency_name,ap.record_id 
   </sql>
   <sql id="Add_Column_List" >
    account_id, purchase_id, channel_discount_id, ap_discount,order_amount,  order_state,order_state_detail, order_platform_path, order_price, from_agency_name,from_account_id,record_id
   </sql>
+  <!-- 通过订单id列表得到消费列表 -->
+  <select id="selectByOrderIds" parameterType="map" resultMap="BaseResultMap">
+  	select <include refid="APBase_Column_List"></include>
+  	from <include refid="t_ap"></include> ap
+  	inner join <include refid="t_rec"></include> crt
+  	on crt.id=ap.record_id
+  	<where>
+  		<if test="orderIds != null">
+	  		AND ap.purchase_id in <foreach item="orderId" index="index" collection="orderIds" open="(" separator="," close=")">#{orderId}</foreach>
+  		</if>
+  		<if test="accountType != null">
+	  		AND crt.account_type = #{accountType}
+  		</if>
+  		<if test="orderId != null">
+	  		AND ap.purchase_id = #{orderId}
+  		</if>
+  	</where>
+  </select>
   <!-- 根据代理商和订单号获得订单的成本 -->
   <!-- <select id="getOrderAmount" parameterType="map" resultType="double">
   	select order_amount from <include refid="t_ap"></include>
@@ -81,6 +100,9 @@
   	<where>
   		<if test="purchaseId != null">
   			purchase_id = #{purchaseId}
+  		</if>
+  		<if test="orderIds != null">
+	  		AND purchase_id in <foreach item="orderId" index="index" collection="orderIds" open="(" separator="," close=")">#{orderId}</foreach>
   		</if>
   	</where>
   </update>
