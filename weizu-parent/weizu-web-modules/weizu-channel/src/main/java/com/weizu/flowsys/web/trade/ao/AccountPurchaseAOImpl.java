@@ -111,7 +111,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 					if(list != null && list.size() > 0){
 						List<ChargeRecordPo> recordPoList = new LinkedList<ChargeRecordPo>();
 						List<AccountPurchasePo> apPoList = new LinkedList<AccountPurchasePo>();
-						Long recordId = chargeRecordDao.nextId();		//没添加的消费记录Id
+						long recordId = chargeRecordDao.nextId();		//没添加的消费记录Id
 						
 						for (AccountPurchasePo accountPurchasePo : list) {
 //							Integer accountId = accountPurchasePo.getaccountId();
@@ -132,7 +132,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 								boolean needSet = consumePo != null && orderAmount.equals(consumePo.getRechargeAmount()) && (recordPo == null || (consumePo.getRechargeAmount().equals(recordPo.getRechargeAmount())));
 								if(needSet){//没有补款记录就可以补款
 									ChargeAccountPo accountPo = chargeAccountDao.get(accountId);
-									Double accountBeforeBalance = accountPo.getAccountBalance();
+									double accountBeforeBalance = accountPo.getAccountBalance();
 //									Double accountAfterBalance = NumberTool.add(accountBeforeBalance,orderAmount);
 //									accountPo.setAccountBalance(NumberTool.add(orderAmount, accountBeforeBalance));
 //									accountPo.setAccountBalance(accountAfterBalance);
@@ -215,93 +215,70 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 			realBackTime = System.currentTimeMillis();
 		}
 		PurchasePo purchasePo = purchaseDAO.getOnePurchase(orderId);
+		if(purchasePo == null) return "error";
+		boolean hasCall = OrderResultEnum.SUCCESS.getCode().equals(purchasePo.getHasCallBack());
 		boolean isWechat = purchasePo.getAccountId().equals(WXPayConfig.ACCOUNTID);
-		if(orderResult == OrderStateEnum.UNCHARGE.getValue()){//手动失败，要返款
-			
-			if(purchasePo != null && purchasePo.getOrderResult() != null && OrderStateEnum.UNCHARGE.getValue() !=  purchasePo.getOrderResult()){//清除已经返款的记录
-				if(isWechat && pur > 0){//wechat账户的订单
-					String refundRes = wXPayAO.refund(purchasePo);
-					if("success".equals(refundRes)){
-						orderResultDetail = "微信退款请求提交成功。";
-					}else{
-						//微信退款请求失败 需要再次手动失败，所以放在充值等待当中
-						orderResult = OrderStateEnum.DAICHONG.getValue();
-						orderResultDetail = "微信退款请求提交失败!";
-					}
+		if(orderResult == OrderStateEnum.UNCHARGE.getValue() && !hasCall){//手动失败，要返款.并且没有回调过
+			//清除已经返款的记录
+			if(isWechat){//wechat账户的订单
+				String refundRes = wXPayAO.refund(purchasePo);
+				if("success".equals(refundRes)){
+					orderResultDetail = "微信退款请求提交成功。";
+				}else{
+					//微信退款请求失败 需要再次手动失败，所以放在充值等待当中
+					orderResult = OrderStateEnum.DAICHONG.getValue();
+					orderResultDetail = "微信退款请求提交失败!";
 				}
-				List<AccountPurchasePo> list = accountPurchaseDao.list(new WherePrams("purchase_id", "=", orderId));
-//				Double agencyAfterBalance = 0.0d;
-					int batchAddCrt = 0;
-					if(list != null && list.size() > 0){
-						if(OrderStateEnum.DAICHONG.getValue() != orderResult){//微信请求退款失败
-							List<ChargeRecordPo> recordPoList = new LinkedList<ChargeRecordPo>();
-							List<AccountPurchasePo> apList = new LinkedList<AccountPurchasePo>();
-							long recordId = chargeRecordDao.nextId();
-							for (AccountPurchasePo accountPurchasePo : list) {
-//							Integer agencyId = agencyPurchasePo.getAgencyId();
-//							int billType = agencyPurchasePo.getBillType();
-//							ChargeAccountPo accountPo = chargeAccountDao.get(new WherePrams("agency_id", "=", agencyId).and("bill_type", "=", billType));
-								Integer accountId = accountPurchasePo.getAccountId();
-								
-								if(accountId != null){
-									//一个代理商账号，一个订单号只能有一笔补款的消费记录
-//									ChargeRecordPo recordPo = chargeRecordDao.get(new WherePrams("account_type", "=", AccountTypeEnum.Replenishment.getValue()).and("account_id", "=", accountId).and("purchase_id", "=", orderId));
-									//获得退费类型 
-									ChargeRecordPo recordPo = chargeRecordDao.get(accountPurchasePo.getRecordId()) ;
-									ChargeRecordPo consumePo = chargeRecordDao.get(new WherePrams("account_type", "=", AccountTypeEnum.DECREASE.getValue()).and("account_id", "=", accountId).and("purchase_id", "=", orderId));
-									//有过扣款记录,并且要补的金额和扣款金额一致，并且没有补款记录或者有补款记录但是补款和消费金额是一致的（方便处理并发带来的异常补款）
-									Double orderAmount = accountPurchasePo.getOrderAmount();
-									if(!purchasePo.getAccountId().equals(accountId)){//中间代理,余额先加成本价，再减去售价
-										Double orderPrice = accountPurchasePo.getOrderPrice();
-										orderAmount = NumberTool.sub(orderAmount, orderPrice);//
-									}
-									boolean needSet = consumePo != null && orderAmount.equals(consumePo.getRechargeAmount()) && (recordPo == null || (consumePo.getRechargeAmount().equals(recordPo.getRechargeAmount())));
-									if(needSet){
-										ChargeAccountPo accountPo = chargeAccountDao.get(accountId);
-//									Double orderAmount = accountPurchasePo.getOrderAmount();
-										Double accountBeforeBalance = accountPo.getAccountBalance();
-//										Double accountAfterBalance = NumberTool.add(accountBeforeBalance,orderAmount);
-//										accountPo.setAccountBalance(NumberTool.add(orderAmount, accountBeforeBalance));
-//										accountPo.setAccountBalance(accountAfterBalance);
-//										int accountUpRes = chargeAccountDao.updateLocal(accountPo, new WherePrams("id","=",accountId));
-										int accountUpRes = chargeAccountAO.updateAccount(accountId,orderAmount);
-//										if(accountUpRes > 0){
-											ChargeAccountPo accountAfterPo = chargeAccountDao.get(accountId);
-											recordPoList.add(new ChargeRecordPo(realBackTime, orderAmount,
-													accountBeforeBalance, accountAfterPo.getAccountBalance(), 
-													AccountTypeEnum.Replenishment.getValue(), accountId,  recordPo.getChargeFor() , orderId));
-//										chargeAccountDao.updateLocal(accountPo, new WherePrams("id","=",accountId));
-											//更新连接表
-//										}
-//								Long appId = accountPurchaseDao.nextId();
-										//同样的订单消费再添加一笔消费记录
-										AccountPurchasePo appPo = accountPurchasePo.clone();
-										appPo.setRecordId(recordId);
-										appPo.setOrderState(orderResult);
-										appPo.setOrderStateDetail(OrderStateEnum.getEnum(orderResult).getDesc());
-										apList.add(appPo);
-										recordId++;
-									}
-								}
-							}
-							ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
-							batchAddCrt = chargeRecordDao.crt_addList(recordPoList);		//批量添加补款记录信息
-							ap = accountPurchaseDao.ap_addList(apList);
-						}
-						//更新订单表(只更新超管的订单详情)
-						pur = purchaseDAO.updatePurchaseState(new PurchasePo(orderId, null, realBackTime, orderResult, OrderResultEnum.SUCCESS.getCode(), orderResultDetail));
-						
-					}
-			}else{
-				System.out.println("订单不存在");
-				return "error";
 			}
-			
+			//获得扣款列表
+			List<AccountPurchasePo> list = accountPurchaseDao.selectByOrderId(orderId);
+			if(list != null && list.size() > 0){
+				if(OrderStateEnum.DAICHONG.getValue() != orderResult){//微信请求退款失败
+					List<ChargeRecordPo> recordPoList = new LinkedList<ChargeRecordPo>();
+					List<AccountPurchasePo> apList = new LinkedList<AccountPurchasePo>();
+					long recordId = chargeRecordDao.nextId();
+					//更新代理商订单状态
+					ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
+					for (AccountPurchasePo accountPurchasePo : list) {
+						Integer accountId = accountPurchasePo.getAccountId();
+						if(accountId != null){
+							//获得退费类型 
+							ChargeRecordPo recordPo = chargeRecordDao.get(accountPurchasePo.getRecordId()) ;
+							//有过扣款记录,并且要补的金额和扣款金额一致，并且没有补款记录或者有补款记录但是补款和消费金额是一致的（方便处理并发带来的异常补款）
+							Double orderAmount = accountPurchasePo.getOrderAmount();
+							if(!purchasePo.getAccountId().equals(accountId)){//中间代理,余额先加成本价，再减去售价
+								Double orderPrice = accountPurchasePo.getOrderPrice();
+								orderAmount = NumberTool.sub(orderAmount, orderPrice);//
+							}
+							ChargeAccountPo accountPo = chargeAccountDao.get(accountId);
+//									Double orderAmount = accountPurchasePo.getOrderAmount();
+							Double accountBeforeBalance = accountPo.getAccountBalance();
+							chargeAccountAO.updateAccount(accountId,orderAmount);
+							ChargeAccountPo accountAfterPo = chargeAccountDao.get(accountId);
+							recordPoList.add(new ChargeRecordPo(realBackTime, orderAmount,
+									accountBeforeBalance, accountAfterPo.getAccountBalance(), 
+										AccountTypeEnum.Replenishment.getValue(), accountId,  recordPo.getChargeFor() , orderId));
+							//同样的订单消费再添加一笔消费记录
+							AccountPurchasePo appPo = accountPurchasePo.clone();
+							appPo.setRecordId(recordId);
+							appPo.setOrderState(orderResult);
+							appPo.setOrderStateDetail(OrderStateEnum.getEnum(orderResult).getDesc());
+							apList.add(appPo);
+							recordId++;
+						}
+					}
+					//批量添加补款记录信息
+					chargeRecordDao.crt_addList(recordPoList);		
+					ap = accountPurchaseDao.ap_addList(apList);
+				}
+				//更新订单表(只更新超管的订单详情)
+				pur = purchaseDAO.updatePurchaseState(new PurchasePo(orderId, null, realBackTime, orderResult, OrderResultEnum.SUCCESS.getCode(), orderResultDetail));
+			}
 		}else{
 			//更新连接表
 			ap = accountPurchaseDao.batchUpdateState(orderId, orderResult, orderResultDetail);
 			//更新订单表
-			pur = purchaseDAO.updatePurchaseState(new PurchasePo(orderId, null, realBackTime, orderResult, null, orderResultDetail));
+			pur = purchaseDAO.updatePurchaseState(new PurchasePo(orderId, null, realBackTime, orderResult, OrderResultEnum.SUCCESS.getCode(), orderResultDetail));
 		}
 		if(purchasePo != null && !isWechat){
 			if(StringHelper.isNotEmpty(purchasePo.getAgencyCallIp())){
@@ -313,7 +290,7 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 				}
 			}
 		}
-		if(pur + ap > 1){
+		if(pur > 0){
 			return "success";
 		}
 		return "error";
@@ -338,18 +315,14 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 		//根据成功列表的扣款记录，添加补款记录,同时更新余额
 		for (AccountPurchasePo accountPurchasePo : list) {
 			Integer accountId = accountPurchasePo.getAccountId();
-			ChargeRecordPo recordPo = chargeRecordDao.get(accountPurchasePo.getRecordId()) ;
-			ChargeRecordPo consumePo = chargeRecordDao.get(new WherePrams("account_type", "=", AccountTypeEnum.DECREASE.getValue()).and("account_id", "=", accountId).and("purchase_id", "=", orderId));
 			//有过扣款记录,并且要补的金额和扣款金额一致，并且没有补款记录或者有补款记录但是补款和消费金额是一致的（方便处理并发带来的异常补款）
+			ChargeRecordPo recordPo = chargeRecordDao.get(new WherePrams("account_type", "=", AccountTypeEnum.DECREASE.getValue()).and("account_id", "=", accountId).and("purchase_id", "=", orderId));
 			Double orderAmount = accountPurchasePo.getOrderAmount();
 			if(!purchasePo.getAccountId().equals(accountId)){//中间代理,余额先加成本价，再减去售价
 				Double orderPrice = accountPurchasePo.getOrderPrice();
 				orderAmount = NumberTool.sub(orderAmount, orderPrice);//
 			}
-			boolean needSet = consumePo != null && orderAmount.equals(consumePo.getRechargeAmount()) && (recordPo == null || (consumePo.getRechargeAmount().equals(recordPo.getRechargeAmount())));
-			if(needSet){
 				ChargeAccountPo accountPo = chargeAccountDao.get(accountId);
-//			Double orderAmount = accountPurchasePo.getOrderAmount();
 				Double accountBeforeBalance = accountPo.getAccountBalance();
 				int accountUpRes = chargeAccountAO.updateAccount(accountId,orderAmount);
 //				if(accountUpRes > 0){
@@ -364,7 +337,6 @@ public class AccountPurchaseAOImpl implements AccountPurchaseAO {
 				appPo.setOrderStateDetail("成功-手动退款");
 				apList.add(appPo);
 				recordId++;
-			}
 		}
 		chargeRecordDao.crt_addList(recordPoList);		//批量添加补款记录信息
 		accountPurchaseDao.ap_addList(apList);

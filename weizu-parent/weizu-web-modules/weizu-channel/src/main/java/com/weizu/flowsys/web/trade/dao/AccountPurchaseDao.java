@@ -34,6 +34,17 @@ public interface AccountPurchaseDao extends Dao<AccountPurchasePo, Long> {
 	int batchUpdateState(Long purchaseId, Integer orderResult, String orderResultDettail);
 	
 	/**
+	 * @description: 批量更新代理商订单状态（推送订单结果的时候
+	 * @param orderIds
+	 * @param orderState
+	 * @param orderStateDetail
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年4月7日 下午5:00:45
+	 */
+	int batchUpdateState(List<Long> orderIds, Integer orderState, String orderStateDetail);
+	
+	/**
 	 * @description:根据代理商和订单号获得订单的成本
 	 * @param purchaseId
 	 * @param agencyId
@@ -52,4 +63,22 @@ public interface AccountPurchaseDao extends Dao<AccountPurchasePo, Long> {
 	 * @createTime:2017年10月14日 下午12:15:44
 	 */
 	AccountPurchasePo getAPByAccountType(Long purchaseId,Integer accountId,Integer accountType);
+	
+	/**
+	 * @description: 通过订单id列表得到消费列表
+	 * @param orderIds
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年4月7日 上午10:28:08
+	 */
+	List<AccountPurchasePo> selectByOrderIds(List<Long> orderIds);
+	
+	/**
+	 * @description: 通过订单id得到消费列表
+	 * @param orderId
+	 * @return
+	 * @author:微族通道代码设计人 宁强
+	 * @createTime:2018年4月7日 下午3:43:45
+	 */
+	List<AccountPurchasePo> selectByOrderId(Long orderId);
 }

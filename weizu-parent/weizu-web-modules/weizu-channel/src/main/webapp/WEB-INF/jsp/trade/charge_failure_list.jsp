@@ -73,12 +73,39 @@
 					<button name="" id="" class="btn btn-success" type="submit" onclick="formSub()"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
 					<button type="button"class="btn btn-primary" onclick="javascript:location.replace(location.href);" value="重置">重置</button>
 					<input type="hidden" name="pageNoLong" value="${resultMap.pagination.pageNoLong }"> 
-					<c:if test="${loginContext.rootAgencyId == 0 }">
+					<c:choose>
+						<c:when test="${loginContext.rootAgencyId == 0 }">
+							<a href="/flowsys/chargePg/export_charged_list.do?chargeTel=${resultMap.searchParams.chargeTel }&agencyName=${resultMap.searchParams.agencyName }&orderId=${resultMap.searchParams.orderId }&chargeTelDetail=${resultMap.searchParams.chargeTelDetail }
+											&operatorType=${resultMap.searchParams.operatorType }
+											&billType=${resultMap.searchParams.billType }
+											&channelName=${resultMap.searchParams.channelName }
+											&backStartTimeStr=${resultMap.searchParams.backStartTimeStr }
+											&backEndTimeStr=${resultMap.searchParams.backEndTimeStr }
+											&purchaseFor=${resultMap.searchParams.purchaseFor }
+											&orderResult=${resultMap.searchParams.orderResult }">【导出列表】
+							</a>
+							<button name="" id="" class="btn btn-primary radius" onclick="batchPush()" type="button"><i class="Hui-iconfont">&#xe665;</i> 批量推送</button>
+							<input type="hidden" name="orderResult" value="${resultMap.searchParams.orderResult }">
+						</c:when>
+						<c:otherwise>
+							<a href="/flowsys/chargePg/export_charged_list.do?chargeTel=${resultMap.searchParams.chargeTel }&agencyName=${resultMap.searchParams.agencyName }&orderId=${resultMap.searchParams.orderId }&chargeTelDetail=${resultMap.searchParams.chargeTelDetail }
+											&operatorType=${resultMap.searchParams.operatorType }
+											&billType=${resultMap.searchParams.billType }
+											&channelName=${resultMap.searchParams.channelName }
+											&backStartTimeStr=${resultMap.searchParams.backStartTimeStr }
+											&backEndTimeStr=${resultMap.searchParams.backEndTimeStr }
+											&purchaseFor=${resultMap.searchParams.purchaseFor }
+											&orderState=${resultMap.searchParams.orderState }">【导出列表】
+							</a>
+							<input type="hidden" name="orderState" value="${resultMap.searchParams.orderState }">
+						</c:otherwise>
+					</c:choose>
+					<%-- <c:if test="${loginContext.rootAgencyId == 0 }">
 						<button name="" id="" class="btn btn-primary radius" onclick="batchPush()" type="button"><i class="Hui-iconfont">&#xe665;</i> 批量推送</button>
-					</c:if>
+					</c:if> --%>
 					
-					<input type="hidden" name="orderResult" value="${resultMap.searchParams.orderResult }">
-					<input type="hidden" name="orderState" value="${resultMap.searchParams.orderState }">
+					<%-- <input type="hidden" name="orderResult" value="${resultMap.searchParams.orderResult }">
+					<input type="hidden" name="orderState" value="${resultMap.searchParams.orderState }"> --%>
 				</div>
 		</form>
 	</div>

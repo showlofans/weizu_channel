@@ -516,6 +516,7 @@ public class ChargeImpl implements IChargeFacet {
 						recAddTag = OrderResultEnum.SUCCESS.getCode();
 						AccountPurchasePo app = new AccountPurchasePo(accountId, orderId,ratePo.getChannelDiscountId(), orderAmount,accountId,recordId, orderAmount, backPo.getUserName(), orderPath, orderState);
 						app.setOrderStateDetail(orderStateDetail);
+						app.setApDiscount(ratePo.getActiveDiscount());
 						apAddRes = accountPurchaseDao.add(app);
 					}
 				}
@@ -535,6 +536,7 @@ public class ChargeImpl implements IChargeFacet {
 						supperRecAddTag = OrderResultEnum.SUCCESS.getCode();
 						AccountPurchasePo superApp = new AccountPurchasePo(superAccountPo.getId(), orderId,cdPo.getId(), superOrderAmount, accountPo.getId(),supperRecordId, orderAmount, backPo.getUserName(), orderPath, orderResult);
 						superApp.setOrderStateDetail(orderResultDetail);
+						superApp.setApDiscount(cdPo.getChannelDiscount());
 						supperApAddRes = accountPurchaseDao.add(superApp);
 					}
 				}

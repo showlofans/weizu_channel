@@ -86,6 +86,20 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePo, Long> implements Purcha
 		int updatePurchase = sqlSessionTemplate.update("updatePurState", purchasePo1);
 		return updatePurchase;
 	}
+	
+	@Override
+	public int batchUpdatePurchaseState(List<Long> orderIds,
+			Integer orderResult, String orderResultDetail, Integer callBack,
+			Long backTime) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("orderResult", orderResult);
+		params.put("orderResultDetail", orderResultDetail);
+		params.put("hasCallBack", callBack);
+		params.put("orderBackTime", backTime);
+		params.put("orderIds", orderIds);
+		int updatePurchase = sqlSessionTemplate.update("batchUpdatePurState", params);
+		return updatePurchase;
+	}
 
 	/**
 	 * @description: 通过订单号查询订单
@@ -147,7 +161,5 @@ public class PurchaseDaoImpl extends DaoImpl<PurchasePo, Long> implements Purcha
 		map.put("highTime", highTime);
 		return sqlSessionTemplate.selectOne("getLatestOneByTel", map);
 	}
-
-	
 
 }
