@@ -1,6 +1,0 @@
-接口文档地址：http://dg.gzyouquan.com/showdoc/index.php?s=/Home/item/pwd/item_id/3
-密码：qwe666
-
-彩趣后台（流量汇）：http://dg.gzyouquan.com/admsp/public/admin
-账号：weizu 密码：..
-apikey:weizu_channel
